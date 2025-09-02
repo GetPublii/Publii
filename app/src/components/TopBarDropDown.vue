@@ -1,17 +1,25 @@
 <template>
-    <div
+      <div
         @click="toggleSubmenu"
         class="topbar-app-settings"
         :title="$t('ui.moreItems')">
-        <span class="topbar-app-settings-icon">
-            <template v-if="!this.submenuIsOpen">
-                <span 
-                    v-if="notificationsStatus === false"
-                    class="topbar-app-settings-icon-no-decision"></span>
-                <span 
-                    v-if="notificationsStatus === 'accepted' && notificationsCount > 0"
-                    class="topbar-app-settings-icon-updates-available"></span>
-            </template>
+        
+        <!-- Bell icon when updates available AND menu is closed -->
+        <span v-if="!submenuIsOpen && notificationsStatus === 'accepted' && notificationsCount > 0" 
+            class="topbar-app-settings-bell">
+            <icon
+                name="notification"
+                customWidth="22"
+                customHeight="22" />
+            <span class="topbar-app-settings-bell-badge">{{ notificationsCount }}</span>
+        </span>
+
+        <!-- Three dots icon when menu is open OR no updates -->
+        <span v-else
+            class="topbar-app-settings-icon"
+            :class="{ 'is-active': submenuIsOpen }">
+            <span v-if="notificationsStatus === false && !submenuIsOpen"
+                class="topbar-app-settings-icon-no-decision"></span>
         </span>
 
         <ul
@@ -139,7 +147,6 @@ export default {
             right: -1px;
             top: 50%;
             width: 3px;
-            transition: var(--transition);
 
             &:after,
             &:before {
@@ -156,65 +163,44 @@ export default {
             &:before {
                 top: 6px;
             }
+        }
 
-            &-updates-available {
-                animation: pulseCore 1.8s ease-in-out infinite;
+        &-bell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 100%;
+            width: 35px;
+            margin-left: -1.7rem;
+ 
+
+            svg {
+                color: var(--icon-secondary-color);
+            }
+
+           &-badge {
+                align-items: center;
+                aspect-ratio: 1/1;
                 background: rgba(var(--warning-rgb), 1);
+                border: 2px solid var(--bg-site);
                 border-radius: 50%;
-                display: block;
-                height: 4px;
-                width: 4px;
-                left: 50%;
-                top: 50%;
+                color: white;
+                display: flex;
+                font-size: 1rem;
+                font-weight: var(--font-weight-semibold);
+                height: 19px;
+                justify-content: center;
+                min-height: 19px;
+                min-width: 19px;
+                padding: 0 4px; 
                 position: absolute;
-                transform: translate(-50%, -50%);
-                z-index: 2;
-
-
-                &::before,
-                &::after {
-                    border: 1px solid rgba(var(--warning-rgb), .4);
-                    border-radius: 50%;
-                    content: '';
-                    height: 100%;
-                    width: 100%;
-                    left: 50%;
-                    top: 50%;
-                    position: absolute;
-                    transform: translate(-50%, -50%) scale(0.6);
-                    opacity: 0;
-                    z-index: 1;
-                    animation: ripple 2s ease-out infinite;
-                }
-
-                &::after {
-                    animation-delay: 1s; 
-                }
-            }
-
-            @keyframes pulseCore {
-                0%, 100% {
-                    transform: translate(-50%, -50%) scale(1);
-                }
-                50% {
-                    transform: translate(-50%, -50%) scale(1.4);
-                }
-            }
-
-            @keyframes ripple {
-                0% {
-                    opacity: 0.6;
-                    transform: translate(-50%, -50%) scale(0.8);
-                }
-                60% {
-                    opacity: 0.3;
-                }
-                100% {
-                    opacity: 0;
-                    transform: translate(-50%, -50%) scale(5);
-                }
+                right: 0;
+                top: 6px;
+                width: auto;   
             }
         }
+
     }
 
     &-app-settings {

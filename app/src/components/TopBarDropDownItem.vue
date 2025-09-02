@@ -79,68 +79,30 @@ li {
         }
 
         &:has(.badge) {
-            color: rgba(var(--warning-rgb), 1);
+            align-items: center;
+            display: flex;
         }
 
         .badge {
             align-items: center;
+            aspect-ratio: 1/1;
+            background: rgba(var(--warning-rgb), 1);
+            border: 2px solid var(--bg-site);
             border-radius: 50%;
-            color: rgba(var(--warning-rgb), 1);
+            color: white;
             display: inline-flex;
-            font-size: 1.2rem;
-            font-weight: var(--font-weight-bold);
-            height: 1.6rem;
+            font-size: 1rem;
+            font-weight: var(--font-weight-semibold);
+            height: 20px;
             justify-content: center;
-            line-height: 1;
-            margin-left: 5px;
+            min-height: 20px;
+            min-width: 20px;
+            padding: 6px; 
             position: relative;
-            vertical-align: text-top;
-            white-space: nowrap;
-            width: 1.6rem;
+            right: -2px;
+            top: -1px;
+            width: auto;   
             z-index: 2;
-
-            &::before,
-            &::after {
-                animation: ripple 2s ease-out infinite;
-                border: 1px solid rgba(var(--warning-rgb), .4);
-                border-radius: 50%;
-                content: '';
-                height: 100%;
-                left: 50%;
-                opacity: 0;
-                position: absolute;
-                top: 50%;
-                transform: translate(-50%, -50%) scale(0.6);
-                width: 100%;
-                z-index: 1;
-            }
-
-            &::after {
-               animation-delay: 1s;
-            }
-        }
-
-        @keyframes pulseCore {
-            0%, 100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.4);
-            }
-        }
-
-        @keyframes ripple {
-            0% {
-                opacity: 0.8;
-                transform: translate(-50%, -50%) scale(0.9);
-            }
-            60% {
-                opacity: 0.4;
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(2);
-            }
         }
     }
 }
