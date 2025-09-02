@@ -156,6 +156,64 @@ export default {
             &:before {
                 top: 6px;
             }
+
+            &-updates-available {
+                animation: pulseCore 1.8s ease-in-out infinite;
+                background: rgba(var(--warning-rgb), 1);
+                border-radius: 50%;
+                display: block;
+                height: 4px;
+                width: 4px;
+                left: 50%;
+                top: 50%;
+                position: absolute;
+                transform: translate(-50%, -50%);
+                z-index: 2;
+
+
+                &::before,
+                &::after {
+                    border: 1px solid rgba(var(--warning-rgb), .4);
+                    border-radius: 50%;
+                    content: '';
+                    height: 100%;
+                    width: 100%;
+                    left: 50%;
+                    top: 50%;
+                    position: absolute;
+                    transform: translate(-50%, -50%) scale(0.6);
+                    opacity: 0;
+                    z-index: 1;
+                    animation: ripple 2s ease-out infinite;
+                }
+
+                &::after {
+                    animation-delay: 1s; 
+                }
+            }
+
+            @keyframes pulseCore {
+                0%, 100% {
+                    transform: translate(-50%, -50%) scale(1);
+                }
+                50% {
+                    transform: translate(-50%, -50%) scale(1.4);
+                }
+            }
+
+            @keyframes ripple {
+                0% {
+                    opacity: 0.6;
+                    transform: translate(-50%, -50%) scale(0.8);
+                }
+                60% {
+                    opacity: 0.3;
+                }
+                100% {
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(5);
+                }
+            }
         }
     }
 

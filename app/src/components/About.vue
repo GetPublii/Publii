@@ -1,18 +1,14 @@
 <template>
     <div class="about" ref="content">
         <div class="about-wrapper">
-            <div class="heading">
-                <h1 class="title">
-                    {{ $t('publii.aboutPublii') }}
-                </h1>
-
+            <p-header :title="$t('publii.aboutPublii')">
                 <p-button
                     :onClick="goBack"
                     type="clean back"
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
-            </div>
+            </p-header>
 
             <p class="about-version">{{ $t('publii.currentPubliiVersion') }}: {{ appVersion.version }} (build {{ appVersion.build }})</p>
 

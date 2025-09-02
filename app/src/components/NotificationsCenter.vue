@@ -5,10 +5,13 @@
         'notifications-list-view': true 
     }">
         <div class="notifications-wrapper">
-            <div class="heading">
-                <h1 class="title">
-                    {{ $t('notifications.notifications') }}
-                </h1>
+            <p-header :title="$t('notifications.notifications')">
+                <p-button
+                    :onClick="goBack"
+                    type="clean back"
+                    slot="buttons">
+                    {{ $t('ui.goBack') }}
+                </p-button>
 
                 <p-button
                     v-if="notificationsStatus === 'accepted'"
@@ -19,21 +22,12 @@
                     :disabled="receivingNotificationsInProgress">
                     {{ $t('notifications.checkUpdates') }}
                 </p-button>
+           </p-header>
 
-                <p-button
-                    :onClick="goBack"
-                    type="clean back"
-                    slot="buttons">
-                    {{ $t('ui.goBack') }}
-                </p-button>
-            </div>
-
-            <div 
+            <fields-group :title="$t('notifications.news')"
                 v-if="newsToDisplay.length > 0" 
                 class="notification">
-                <h2 class="notification-title">
-                    {{ $t('notifications.news') }}
-                </h2>
+               
 
                 <ul class="notification-list">
                     <li 
@@ -43,8 +37,8 @@
                         :data-type="news.type">
                         <div class="notification-item-content">
                             <icon
-                                customWidth="64"
-                                customHeight="64"
+                                customWidth="52"
+                                customHeight="52"
                                 :name="icons[news.type]"
                                 class="notification-item-icon" />
 
@@ -62,7 +56,7 @@
                             <button
                                 v-if="news.link"
                                 @click.prevent="openLink(news.link)">
-                                {{ $t('notifications.readMore') }}
+                                {{ $t('notifications.viewDetails') }}
                             </button>
                             <button
                                 @click.prevent="markAsRead(news.id)">
@@ -71,59 +65,60 @@
                         </div>
                     </li>
                 </ul>
-            </div>
+            </fields-group>
 
-            <div 
+             <fields-group :title="$t('notifications.publiiUpdateAvailable')"
                 v-if="hasPubliiUpdate"
                 class="notification">
-                <h2 class="notification-title">
-                    {{ $t('notifications.publiiUpdateAvailable') }}
-                </h2>
+               
 
                 <div class="notification-item is-publii-notification">
                     <div class="notification-item-content">
                         <img 
-                            src="./../assets/svg/logo.svg" 
+                            src="./../assets/svg/publii-app-icon-512.svg" 
                             alt="Publii Logo" 
                             class="notification-item-icon"
-                            height="64"
-                            width="64" />  
+                            height="52"
+                            width="52" />  
                             
                         <div class="notification-item-details">
-                            <span class="notification-item-version">
-                                {{ $t('notifications.availableVersion') }}: v.{{ notifications.publii.version }} (build: {{ notifications.publii.build[this.$store.state.app.versionInfo.os] }})
+                             <span class="notification-item-name">
+                                Publii
                             </span>
+                            <div class="notification-item-versions">
+                                <span class="notification-item-version">
+                                    {{ $t('notifications.latestVersion') }}: v.{{ notifications.publii.version }} (build: {{ notifications.publii.build[this.$store.state.app.versionInfo.os] }})
+                                </span>
 
-                            <span class="notification-item-current-version">
-                                {{ $t('notifications.currentlyInstalled') }}: v.{{ $store.state.app.versionInfo.version }} (build: {{ $store.state.app.versionInfo.build }})
-                            </span>
+                                <span class="notification-item-current-version">
+                                    {{ $t('notifications.currentVersion') }}: v.{{ $store.state.app.versionInfo.version }} (build: {{ $store.state.app.versionInfo.build }})
+                                </span>
 
-                            <p class="notification-description">
-                                {{ $t('notifications.publiiUpdateAvailableDescription') }}
-                            </p>    
+                                <p-button
+                                    class="button-clean notification-item-version-details"
+                                    :onClick="() => openLink(notifications.publii.links.releaseNotes)">
+                                    {{ $t('notifications.viewDetails') }}
+                                </p-button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="notification-item-actions">
-                        <button 
-                            @click.prevent="openLink(notifications.publii.links.releaseNotes)">
-                            {{ $t('notifications.readMore') }}
-                        </button>
-                        <button
-                            @click.prevent="openLink(notifications.publii.links.download)">
+                        <p-button 
+                            class="button-secondary"
+                            :onClick="() => openLink(notifications.publii.links.download)" 
+                            type="icon"
+                            icon="download">
                             {{ $t('notifications.downloadUpdate') }}
-                        </button>
+                        </p-button>
                     </div>
                 </div>
-            </div>
+            </fields-group>
 
-            <div 
+             <fields-group :title="`${$t('notifications.themeUpdatesAvailable')} (${themeUpdates.length})`"
                 v-if="themeUpdates.length > 0"
                 class="notification">
-                <h2 class="notification-title">
-                    {{ $t('notifications.themeUpdatesAvailable') }} 
-                    <span class="notification-count">({{ themeUpdates.length }})</span>
-                </h2>
+               
                 <ul class="notification-list">
                     <li 
                         v-for="(theme, index) in themeUpdates" 
@@ -134,45 +129,48 @@
                                 :src="$store.state.themesPath + '/' + theme.directory + '/thumbnail.png'" 
                                 alt=""
                                 class="notification-item-icon"
-                                height="64"
-                                width="64" />
+                                height="52"
+                                width="52" />
 
                             <div class="notification-item-details">
                                 <span class="notification-item-name">
                                     {{ theme.name }}
                                 </span>
+                                <div class="notification-item-versions">
+                                    <span class="notification-item-version">
+                                        {{ $t('notifications.latestVersion') }}: v.{{ theme.version }}
+                                    </span>
 
-                                <span class="notification-item-version">
-                                    {{ $t('notifications.availableVersion') }}: v.{{ theme.version }}
-                                </span>
+                                    <span class="notification-item-current-version">
+                                        {{ $t('notifications.currentVersion') }}: v.{{ theme.currentVersion }}
+                                    </span>
 
-                                <span class="notification-item-current-version">
-                                    {{ $t('notifications.currentlyInstalled') }}: v.{{ theme.currentVersion }}
-                                </span>
+                                    <p-button
+                                        class="button-clean notification-item-version-details"
+                                        :onClick="() => openLink(theme.links.releaseNotes)">
+                                        {{ $t('notifications.viewDetails') }}
+                                    </p-button>
+                                </div>
                             </div>
                         </div>
 
                         <div class="notification-item-actions">
-                            <button
-                                @click.prevent="openLink(theme.links.releaseNotes)">
-                                {{ $t('notifications.readMore') }}
-                            </button>
-                            <button
-                                @click.prevent="openLink(theme.links.url)">
+                            <p-button
+                                class="button-secondary"
+                                :onClick="() => openLink(theme.links.url)"
+                                type="icon"
+                                icon="download">
                                 {{ $t('notifications.downloadUpdate') }}
-                            </button>
+                            </p-button>
                         </div>
                     </li>
                 </ul>
-            </div>
+            </fields-group>
 
-            <div 
-                v-if="pluginUpdates.length > 0"
-                class="notification">
-                <h2 class="notification-title">
-                    {{ $t('notifications.pluginUpdatesAvailable') }}
-                    <span class="notification-count">({{ pluginUpdates.length }})</span>
-                </h2>
+            <fields-group :title="`${$t('notifications.pluginUpdatesAvailable')} (${pluginUpdates.length})`"
+              v-if="pluginUpdates.length > 0" 
+              class="notification">
+              
                 <ul class="notification-list">
                     <li 
                         v-for="(plugin, index) in pluginUpdates" 
@@ -183,37 +181,43 @@
                                 :src="$store.state.pluginsPath + '/' + plugin.directory + '/thumbnail.svg'" 
                                 alt=""
                                 class="notification-item-icon"
-                                height="64"
-                                width="64" />
+                                height="52"
+                                width="52" />
 
                             <div class="notification-item-details">
                                 <span class="notification-item-name">
                                     {{ plugin.name }}
                                 </span>
+                                <div class="notification-item-versions">
+                                    <span class="notification-item-version">
+                                        {{ $t('notifications.latestVersion') }}: v.{{ plugin.version }}
+                                    </span>
 
-                                <span class="notification-item-version">
-                                    {{ $t('notifications.availableVersion') }}: v.{{ plugin.version }}
-                                </span>
+                                    <span class="notification-item-current-version">
+                                        {{ $t('notifications.currentVersion') }}: v.{{ plugin.currentVersion }}
+                                    </span>
 
-                                <span class="notification-item-current-version">
-                                    {{ $t('notifications.currentlyInstalled') }}: v.{{ plugin.currentVersion }}
-                                </span>
+                                    <p-button
+                                        class="button-clean notification-item-version-details"
+                                        :onClick="() => openLink(plugin.links.releaseNotes)">
+                                        {{ $t('notifications.viewDetails') }}
+                                    </p-button>
+                                </div>
                             </div>
                         </div>
 
                         <div class="notification-item-actions">
-                            <button
-                                @click.prevent="openLink(plugin.links.releaseNotes)">
-                                {{ $t('notifications.readMore') }}
-                            </button>
-                            <button
-                                @click.prevent="openLink(plugin.links.url)">
+                            <p-button
+                                class="button-secondary"
+                                :onClick="() =>openLink(plugin.links.url)"
+                                type="icon"
+                                icon="download">
                                 {{ $t('notifications.downloadUpdate') }}
-                            </button>
+                            </p-button>
                         </div>
                     </li>
                 </ul>
-            </div>
+            </fields-group>
 
             <empty-state
                 v-if="notificationsStatus !== 'accepted'"
@@ -427,25 +431,7 @@ export default {
         max-width: $wrapper;
     }
 
-    .heading {
-        margin-bottom: 10 * $spacing;
-        width: 100%;
-
-        @include clearfix;
-
-        .title {
-            float: left;
-            margin: 0;
-        }
-
-        .button {
-            float: right;
-            margin-top: -.5rem;
-        }
-    }
-
     &-version {
-       
         margin: -2.5rem 0 4rem 0;
     }
 
@@ -456,13 +442,14 @@ export default {
         }
 
         .notification-item {
-            background: var(--input-bg-light);
-            border: 1px solid var(--gray-2);
-            border-radius: 4px;
             display: flex;
-            gap: 20px;
-            margin-bottom: 2rem;
-            padding: 1rem;
+            gap: 2rem;
+
+            & + .notification-item {
+                border-top: 1px solid var(--border-light-color);
+                margin-top: 1.6rem;
+                padding-top: 1.6rem;
+            }
         }
 
         .notification-list {
@@ -471,37 +458,72 @@ export default {
         }
 
         .notification-item-content {
+            align-items: center;
             display: flex;
             flex: 1;
-            gap: 20px;
+            gap: 2rem;
             width: calc(100% - 220px);
         }
 
         .notification-item-details {
             display: flex;
             flex-direction: column;
+            width: 100%;
         }
 
         .notification-item-name {
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            width: 100%;
+        }
+        .notification-item-versions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            & > * + *::before {
+                color: var(--input-border-color);
+                content: "|";
+                display: inline-block;
+                margin-right: 0.5rem;
+            }
+        }
+
+        .notification-item-current-version {
+            color: var(--text-light-color);
+        }
+
+        .notification-item-version-details {
+             height: auto;
+            line-height: inherit;
+            padding: 0;
+        }
+
+        .notification-description {
+            margin: 0;
+        }
+
+        .notification-item-icon {
+            border-radius: 10px;
         }
 
         .notification-item-actions {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-left: 1rem;
-            width: 200px;
+            max-width: 200px;
 
-            button {
-                width: 100%;
+            .button {
+                text-align: center;
 
-                & + button {
-                    margin-top: 0.5rem;
+                & + .button {
+                    margin-top: 0.75rem;
+                    margin-left: 0;
                 }
             }
         }
+
     }
 }
 </style>

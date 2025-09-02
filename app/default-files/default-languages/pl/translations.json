@@ -444,6 +444,26 @@
         "title": "Skonfiguruj pozycję menu",
         "usedBy": "Używane przez inne menu:"
     },
+    "notifications": {
+        "latestVersion": "Najnowsza wersja",
+        "currentVersion": "Zainstalowana wersja",
+        "checkUpdates": "Sprawdź aktualizacje",
+        "consentStateTitle": "Czy chcesz zezwolić Publii na otrzymywanie powiadomień o aktualizacjach?",
+        "consentStateDescription": "Publii może sprawdzać dostępność aktualizacji i powiadamiać Cię o nich. Możesz wyłączyć tę opcję w dowolnym momencie w ustawieniach.",
+        "downloadUpdate": "Pobierz aktualizację",
+        "giveConsent": "OK, zgadzam się",
+        "goToNotificationsCenter": "Przejdź do centrum powiadomień",
+        "markAsRead": "Oznacz jako przeczytane",
+        "news": "Nowości Publii",
+        "notifications": "Powiadomienia",
+        "noUpdatesTitle": "Brak dostępnych aktualizacji",
+        "noUpdatesDescription": "Używasz najnowszej wersji Publii i rozszerzeń.",
+        "pluginUpdatesAvailable": "Dostępne aktualizacje wtyczek",
+        "publiiUpdateAvailable": "Dostępna aktualizacja Publii",
+        "viewDetails": "Pokaż szczegóły",
+        "rejectConsent": "Nie, dziękuję",
+        "themeUpdatesAvailable": "Dostępne aktualizacje motywów"
+    },
     "page": {
         "addNewPage": "Dodaj nową stronę",
         "addPageTitle": "Dodaj tytuł strony",
