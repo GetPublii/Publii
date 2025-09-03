@@ -36,11 +36,13 @@
                         class="notification-item is-news"
                         :data-type="news.type">
                         <div class="notification-item-content">
-                            <icon
-                                customWidth="52"
-                                customHeight="52"
-                                :name="icons[news.type]"
-                                class="notification-item-icon" />
+                            <div class="notification-icon-wrapper">
+                                <icon
+                                    customWidth="44"
+                                    customHeight="44"
+                                    :name="icons[news.type]"
+                                    class="notification-item-icon" />
+                            </div>
 
                             <div class="notification-item-details">
                                 <span class="notification-title">
@@ -49,19 +51,22 @@
                                 <span class="notification-description">
                                     {{ news.text }}
                                 </span>
+                               
                             </div>
                         </div>
 
                         <div class="notification-item-actions">
-                            <button
-                                v-if="news.link"
-                                @click.prevent="openLink(news.link)">
-                                {{ $t('notifications.viewDetails') }}
-                            </button>
-                            <button
-                                @click.prevent="markAsRead(news.id)">
+                            <p-button 
+                                    class="button-secondary"
+                                    v-if="news.link"
+                                    :onClick="() => openLink(news.link)">
+                                    {{ $t('notifications.readMore') }}
+                                </p-button>
+                            <p-button  
+                                class="button-clean notification-item-version-details"
+                                :onClick="() => markAsRead(news.id)">
                                 {{ $t('notifications.markAsRead') }}
-                            </button>   
+                            </p-button>   
                         </div>
                     </li>
                 </ul>
@@ -266,7 +271,7 @@ export default {
                 ok: 'success',
                 danger: 'warning',
                 warning: 'warning',
-                info: 'bell'
+                info: 'info'
             },
             receivingNotificationsInProgress: false
         };
@@ -437,8 +442,10 @@ export default {
 
     .notification {
         .notification-title {
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            width: 100%;
         }
 
         .notification-item {
@@ -506,6 +513,29 @@ export default {
 
         .notification-item-icon {
             border-radius: 10px;
+        }
+
+        .notification-icon-wrapper {
+            align-items: center;
+            border-radius: 10px;
+            display: flex;
+            flex-shrink: 0;
+            height: 52px;
+            justify-content: center;
+            padding: 1.2rem;
+            width: 52px;
+
+            svg {
+                fill: var(--white);
+            }
+        }
+
+        [data-type="info"] .notification-icon-wrapper {
+            background: var(--color-primary);
+        }
+
+        [data-type="warning"] .notification-icon-wrapper {
+            background: var(--warning);
         }
 
         .notification-item-actions {

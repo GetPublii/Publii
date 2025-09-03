@@ -99,7 +99,7 @@ li {
             min-width: 20px;
             padding: 6px; 
             position: relative;
-            right: -2px;
+            right: -4px;
             top: -1px;
             width: auto;   
             z-index: 2;
