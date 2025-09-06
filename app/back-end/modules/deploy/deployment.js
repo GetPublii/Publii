@@ -1,6 +1,7 @@
 // Necessary packages
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const crypto = require('crypto');
 const normalizePath = require('normalize-path');
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
@@ -152,7 +153,7 @@ class Deployment {
                     fileList.push({
                         path: filePath,
                         type: 'file',
-                        md5: crypto.createHash('md5').update(fs.readFileSync(path.join(this.inputDir, filePath))).digest('hex')
+                        md5: crypto.createHash('md5').update(FileHelper.readFileSync(path.join(this.inputDir, filePath))).digest('hex')
                     });
                 }
 
@@ -189,7 +190,7 @@ class Deployment {
                 let fileSizePrepared = Buffer.from((stats.size).toString().split(''));
                 fileMD5 = crypto.createHash('md5').update(fileSizePrepared).digest('hex');
             } else {
-                fileMD5 = crypto.createHash('md5').update(fs.readFileSync(path.join(this.inputDir, filePath))).digest('hex');
+                fileMD5 = crypto.createHash('md5').update(FileHelper.readFileSync(path.join(this.inputDir, filePath))).digest('hex');
             }
 
             fileList.push({
@@ -225,7 +226,7 @@ class Deployment {
                 let revisionID = false;
 
                 if (fs.existsSync(syncRevisionPath)) {
-                    let syncRevisionContent = fs.readFileSync(syncRevisionPath);
+                    let syncRevisionContent = FileHelper.readFileSync(syncRevisionPath);
                     syncRevisionContent = JSON.parse(syncRevisionContent);
                     revisionID = syncRevisionContent.revision;
                 }
@@ -234,7 +235,7 @@ class Deployment {
                     let isExpectedCopy = revisionID === content.revision;
                     this.compareFilesList(isExpectedCopy);
                 } else {
-                    let filesToCheck = fs.readFileSync(path.join(this.configDir, 'files-remote.json'));
+                    let filesToCheck = FileHelper.readFileSync(path.join(this.configDir, 'files-remote.json'));
                     let checkSum = crypto.createHash('md5').update(filesToCheck).digest('hex');
                     let isExpectedCopy = checkSum === content.revision;
                     this.compareFilesList(isExpectedCopy);
@@ -257,7 +258,7 @@ class Deployment {
         let remoteFiles = false;
 
         if (remoteFileListExists) {
-            remoteFiles = fs.readFileSync(path.join(this.configDir, 'files-remote.json'), 'utf8');
+            remoteFiles = FileHelper.readFileSync(path.join(this.configDir, 'files-remote.json'), 'utf8');
 
             if (remoteFiles) {
                 try {
@@ -292,7 +293,7 @@ class Deployment {
      * Wait for user answer or just continue sync if remote files list exists
      */
     continueSync (remoteFiles) {
-        let localFiles = fs.readFileSync(path.join(this.inputDir, 'files.publii.json'), 'utf8');
+        let localFiles = FileHelper.readFileSync(path.join(this.inputDir, 'files.publii.json'), 'utf8');
         
         if (localFiles) {
             localFiles = JSON.parse(localFiles);

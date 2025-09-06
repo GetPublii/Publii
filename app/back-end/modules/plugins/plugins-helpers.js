@@ -1,5 +1,5 @@
-const fs = require('fs');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 
 class PluginsHelpers {
     // Returns a list of active plugins for given site plugins config file;
@@ -9,7 +9,7 @@ class PluginsHelpers {
         let activePlugins = [];
 
         try {
-            fileContent = fs.readFileSync(sitePluginsConfigPath);
+            fileContent = FileHelper.readFileSync(sitePluginsConfigPath);
             fileContent = fileContent.toString();
             fileContent = JSON.parse(fileContent);
         } catch (e) {
@@ -36,7 +36,7 @@ class PluginsHelpers {
         let pluginConfig;
 
         try {
-            pluginConfig = fs.readFileSync(pluginConfigPath);
+            pluginConfig = FileHelper.readFileSync(pluginConfigPath);
             pluginConfig = pluginConfig.toString();
             pluginConfig = JSON.parse(pluginConfig);
         } catch (e) {

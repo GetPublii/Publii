@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const FileHelper = require('./../../../helpers/file.js');
 const util = require('util');
 const moment = require('moment');
 const normalizePath = require('normalize-path');
@@ -696,7 +697,7 @@ class Sitemap {
             let filePath = path.join(this.baseDirectory, currentPath, subpage, 'index.html');
 
             if (fs.existsSync(filePath)) {
-                let postFileContent = fs.readFileSync(filePath, 'utf8');
+                let postFileContent = FileHelper.readFileSync(filePath, 'utf8');
 
                 if (postFileContent.indexOf('name="robots" content="noindex') === -1) {
                     this.fileList.push(currentPath + '/' + subpage + '/');
@@ -776,7 +777,7 @@ class Sitemap {
      * Save sitemap.xml and sitemap.xsl files
      */
     saveXML () {
-        let xslContent = fs.readFileSync(__dirname + '/../../../../default-files/theme-files/sitemap.xsl');
+        let xslContent = FileHelper.readFileSync(__dirname + '/../../../../default-files/theme-files/sitemap.xsl');
         let xslFilePath = path.join(this.baseDirectory, 'sitemap.xsl');
         let sitemapFilePath = path.join(this.baseDirectory, 'sitemap.xml');
 

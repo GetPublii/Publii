@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const Page = require('./items/page');
 const Post = require('./items/post');
 const Author = require('./items/author');
@@ -394,7 +395,7 @@ class RendererCache {
         let pagesConfigPath = path.join(this.renderer.inputDir, 'config', 'pages.config.json');
 
         if (fs.existsSync(pagesConfigPath)) {
-            let pagesStructure = JSON.parse(fs.readFileSync(pagesConfigPath));
+            let pagesStructure = JSON.parse(FileHelper.readFileSync(pagesConfigPath));
             let pagesStructureForHierarchy = JSON.parse(JSON.stringify(pagesStructure));
             let flatPagesStructure = {};
             let pagesStack = [...pagesStructure];

@@ -1,7 +1,7 @@
-const fs = require('fs-extra');
+const FileHelper = require('./../../../helpers/file.js');
 class Gdpr {
     static popupHtmlOutput (configuration, renderer) {
-        let template = fs.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/template.html', 'utf8');
+        let template = FileHelper.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/template.html', 'utf8');
         let output = Gdpr.parseTemplate(configuration, template, renderer);
         return output;
     }
@@ -128,12 +128,12 @@ class Gdpr {
     }
 
     static popupCssOutput () {
-        let output = fs.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/gdpr.css', 'utf8');
+        let output = FileHelper.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/gdpr.css', 'utf8');
         return output;
     }
 
     static popupJsOutput (configuration) {
-        let scriptCode = fs.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/gdpr.js', 'utf8');
+        let scriptCode = FileHelper.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/gdpr.js', 'utf8');
         let consentModeScripts = '';
 
         if (configuration.gConsentModeEnabled) {
