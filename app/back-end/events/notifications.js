@@ -10,10 +10,20 @@ class NotificationsEvents {
     constructor(appInstance) {
         // Save
         ipcMain.on('app-notifications-retrieve', function(event, downloadNotifications) {
+            let platform;
+            
+            if (process.platform === 'darwin') {
+                platform = process.arch === 'arm64' ? 'mac-arm64' : 'mac-x86';
+            } else if (process.platform === 'win32') {
+                platform = 'win';
+            } else {
+                platform = 'linux';
+            }
+
             let updatesHelper = new UpdatesHelper({
                 event: event,
-                filePath: path.join(appInstance.app.getPath('logs'), 'all.json'),
-                url: 'https://notifications.dkonto.pl/all.json',
+                filePath: path.join(appInstance.app.getPath('logs'), 'updates.json'),
+                url: 'https://notifications.dkonto.pl/updates-' + platform + '.json',
                 forceDownload: downloadNotifications
             });
 

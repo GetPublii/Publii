@@ -5,21 +5,32 @@
         :title="$t('ui.moreItems')">
         
         <!-- Bell icon when updates available AND menu is closed -->
-        <span v-if="!submenuIsOpen && notificationsStatus === 'accepted' && notificationsCount > 0" 
+        <span v-if="insideWebsiteUI && !submenuIsOpen && notificationsStatus === 'accepted' && notificationsCount > 0" 
             class="topbar-app-settings-bell">
             <icon
                 name="notification"
                 customWidth="22"
                 customHeight="22" />
-            <span class="topbar-app-settings-bell-badge">{{ notificationsCount }}</span>
+            <span class="topbar-app-settings-bell-badge">
+                {{ notificationsCount }}
+            </span>
+        </span>
+
+        <span v-else-if="insideWebsiteUI && notificationsStatus === false && !submenuIsOpen" 
+            class="topbar-app-settings-bell">
+            <icon
+                name="notification"
+                customWidth="22"
+                customHeight="22" />
+            <span class="topbar-app-settings-bell-badge">
+                !
+            </span>
         </span>
 
         <!-- Three dots icon when menu is open OR no updates -->
         <span v-else
             class="topbar-app-settings-icon"
             :class="{ 'is-active': submenuIsOpen }">
-            <span v-if="notificationsStatus === false && !submenuIsOpen"
-                class="topbar-app-settings-icon-no-decision"></span>
         </span>
 
         <ul
@@ -42,8 +53,9 @@
                 :title="$t('langs.goToLanguagesManager')"
                 path="/app-languages" />
             <topbar-dropdown-item
-                :hasBadge="notificationsCount > 0 || notificationsStatus === 'rejected'"
-                :badgeValue="notificationsStatus === 'rejected' ? '!' : notificationsCount"
+                :hasBadge="notificationsCount > 0 || notificationsStatus === false || notificationsStatus === 'rejected'"
+                :badgeValue="badgeValue"
+                :badgeClass="notificationsStatus === 'rejected' ? 'is-notice' : 'is-warning'"
                 :label="$t('notifications.notifications')"
                 :title="$t('notifications.goToNotificationsCenter')"
                 path="/notifications-center" />
@@ -96,6 +108,20 @@ export default {
                 'is-hidden': !this.submenuIsOpen,
                 'topbar-app-submenu': true
             };
+        },
+        badgeValue () {
+            if (this.notificationsStatus === false) {
+                return '!';
+            }
+            
+            if (this.notificationsStatus === 'accepted') {
+                return this.notificationsCount > 99 ? '99+' : this.notificationsCount;
+            }
+
+            return this.$t('notifications.disabled');
+        },
+        insideWebsiteUI () {
+            return this.$route.path.indexOf('/site/') === 0;
         }
     },
     mounted: function(e) {

@@ -7,7 +7,7 @@
             {{ label }}
             <span 
                 v-if="hasBadge" 
-                class="badge">
+                :class="badgeCssClass">
                 {{ badgeValue }}
             </span>
         </a>
@@ -18,7 +18,7 @@
             {{ label }}
             <span 
                 v-if="hasBadge" 
-                class="badge">
+                :class="badgeCssClass">
                 {{ badgeValue }}
             </span>
         </router-link>
@@ -31,7 +31,7 @@
             {{ label }}
             <span 
                 v-if="hasBadge" 
-                class="badge">
+                :class="badgeCssClass">
                 {{ badgeValue }}
             </span>
         </a>
@@ -44,12 +44,16 @@ export default {
     props: [
         'hasBadge',
         'badgeValue',
+        'badgeClass',
         'onClick',
         'label',
         'path',
         'title'
     ],
     computed: {
+        badgeCssClass () {
+            return this.badgeClass ? `badge ${this.badgeClass}` : 'badge';
+        },
         isExternal () {
             return this.path.indexOf('http://') === 0 || this.path.indexOf('https://') === 0;
         }
@@ -86,10 +90,7 @@ li {
         .badge {
             align-items: center;
             aspect-ratio: 1/1;
-            background: rgba(var(--warning-rgb), 1);
-            border: 2px solid var(--bg-site);
             border-radius: 50%;
-            color: white;
             display: inline-flex;
             font-size: 1rem;
             font-weight: var(--font-weight-semibold);
@@ -103,6 +104,22 @@ li {
             top: -1px;
             width: auto;   
             z-index: 2;
+
+            &.is-warning {
+                background: rgba(var(--warning-rgb), 1);
+                border: 2px solid var(--bg-site);
+                color: white;
+            }
+
+            &.is-notice {
+                aspect-ratio: unset;
+                background: rgba(var(--info-rgb), 1);
+                border: 2px solid var(--bg-site);
+                border-radius: 5px;
+                color: white;
+                font-size: .8rem;
+                top: 0;
+            }
         }
     }
 }

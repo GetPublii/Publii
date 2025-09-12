@@ -40,7 +40,7 @@ export default {
             let shouldGetNotifications = this.shouldRetrieveNotifications() || forced;
             let lastRetrieveTime = localStorage.getItem('publii-notification-retrieve-timestamp');
 
-            if (forced && lastRetrieveTime && new Date().getTime() > parseInt(lastRetrieveTime, 10) + (60 * 1000)) {
+            if (forced && lastRetrieveTime && new Date().getTime() < parseInt(lastRetrieveTime, 10) + (60 * 1000)) {
                 shouldGetNotifications = false;
             }
 
@@ -52,7 +52,11 @@ export default {
                 }
 
                 this.$bus.$emit('app-received-notifications');
-                localStorage.setItem('publii-notification-retrieve-timestamp', new Date().getTime());
+
+                if (data.downloaded === true) {
+                    localStorage.setItem('publii-notification-retrieve-timestamp', new Date().getTime());
+                }
+                
                 this.updateNotificationsCounters();
             });
         },
@@ -84,10 +88,9 @@ export default {
             let notificationsData = this.$store.state.app.notifications;
 
             // Check if Publii version is newest one (check build number for specific OS)
-            let currentOS = this.$store.state.app.versionInfo.os;
             let currentBuild = this.$store.state.app.versionInfo.build;
             
-            if (notificationsData.publii && parseInt(notificationsData.publii.build[currentOS], 10) > parseInt(currentBuild, 10)) {
+            if (notificationsData.publii && parseInt(notificationsData.publii.build, 10) > parseInt(currentBuild, 10)) {
                 updatesCount++;
             }
 

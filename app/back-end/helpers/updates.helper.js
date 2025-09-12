@@ -19,7 +19,6 @@ class UpdatesHelper {
     }
 
     download () {
-        console.log('Downloading updates data from ' + this.url, ' to ' + this.filePath);
         https.get(this.url, res => {
             let body = '';
 
@@ -29,7 +28,7 @@ class UpdatesHelper {
 
             res.on('end', () => {
                 fs.writeFileSync(this.filePath, body, 'utf8');
-                this.handleResponse(body);
+                this.handleResponse(body, true);
             });
         }).on('error', (err) => {
             this.sendError(err);
@@ -46,13 +45,13 @@ class UpdatesHelper {
     readExistingData () {
         if (fs.existsSync(this.filePath)) {
             let body = FileHelper.readFileSync(this.filePath, 'utf8');
-            this.handleResponse(body);
+            this.handleResponse(body, false);
         } else {
             this.sendError();
         }
     }
 
-    handleResponse (body) {
+    handleResponse (body, downloaded) {
         let response = false;
 
         try {
@@ -64,6 +63,7 @@ class UpdatesHelper {
         if (response) {
             this.event.sender.send('app-notifications-retrieved', {
                 status: true,
+                downloaded: downloaded,
                 notifications: response 
             });
         } else {
