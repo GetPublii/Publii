@@ -6,6 +6,7 @@ const UtilsHelper = require('./../../../helpers/utils');
 const normalizePath = require('normalize-path');
 const DiffCopy = require('./diffCopy.js');
 const PluginsHelpers = require('./../../plugins/plugins-helpers');
+const { minify } = require('terser');
 
 class Files {
     /**
@@ -17,7 +18,7 @@ class Files {
     static copyRootFiles(inputDir, outputDir) {
         let inputPath = path.join(inputDir, 'root-files');
         let outputPath = path.join(outputDir);
-        
+
         fs.copySync(
             path.join(inputPath),
             path.join(outputPath),
@@ -54,7 +55,7 @@ class Files {
             flatten: true
         }).then(files => {
             let dynamicAssetsPath = path.join(assetsPath, 'dynamic');
-            
+
             files.filter(item => {
                 let filename = path.parse(item.path).base;
 
@@ -64,7 +65,7 @@ class Files {
 
                 return themeConfig.files.ignoreAssets.indexOf(filename) === -1
             }).forEach(item => {
-                if(item.mode.dir === false) {
+                if (item.mode.dir === false) {
                     let filePath = normalizePath(item.path);
                     let destinationPath = filePath.replace(
                         normalizePath(assetsPath),
@@ -75,6 +76,10 @@ class Files {
                         filePath,
                         destinationPath
                     );
+
+                    if (path.extname(destinationPath) === '.js') {
+                        this.#minifyJsFile(destinationPath, false);
+                    }
                 }
             });
         });
@@ -113,7 +118,7 @@ class Files {
      * @param outputDir
      * @param themeConfig
      */
-     static copyDynamicAssetsFiles(themeDir, outputDir, themeConfig) {
+    static copyDynamicAssetsFiles(themeDir, outputDir, themeConfig) {
         if (!themeConfig.files.useDynamicAssets) {
             return;
         }
@@ -164,7 +169,7 @@ class Files {
      * @param outputDir
      * @param postIDs
      */
-    static async copyMediaFiles (inputDir, outputDir, postIDs, pageIDs) {
+    static async copyMediaFiles(inputDir, outputDir, postIDs, pageIDs) {
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
         let dirs = ['website', 'files', 'tags', 'authors', 'posts/defaults'];
@@ -199,7 +204,7 @@ class Files {
                 );
             } else {
                 await DiffCopy.copy(
-                    path.join(basePathInput, dirs[i]), 
+                    path.join(basePathInput, dirs[i]),
                     path.join(basePathOutput, dirs[i])
                 );
             }
@@ -222,11 +227,11 @@ class Files {
      * @param inputDir
      * @param outputDir
      */
-     static async copyPluginFiles (inputDir, outputDir, pluginsDir) {
+    static async copyPluginFiles(inputDir, outputDir, pluginsDir) {
         let pluginsList = PluginsHelpers.getActivePluginsList(path.join(inputDir, 'config', 'site.plugins.json'));
         let basePathInput = path.join(inputDir, 'media');
         let basePathOutput = path.join(outputDir, 'media');
-        
+
         // create media dir if not exists
         if (!UtilsHelper.dirExists(path.join(basePathOutput))) {
             fs.mkdirSync(path.join(basePathOutput));
@@ -268,9 +273,35 @@ class Files {
         }
     }
 
-    static async removeEmptyDirectories (outputDir) {
+    static async removeEmptyDirectories(outputDir) {
         let basePathOutput = path.join(outputDir, 'media');
         deleteEmpty(basePathOutput);
+    }
+
+    /**
+     * @param {{ string }} filePath
+     * @param {boolean} [keepOriginalFile=true] - If true, create an additional .min.js file; if false, overwrite the original.
+     * @returns {Promise<void>}
+     */
+    static async #minifyJsFile(filePath, keepOriginalFile = true) {
+        const filename = path.parse(filePath).base;
+
+        if (!filename.endsWith('.js')) {
+            throw new Error(`Expected .js file path, got: ${filePath}`);
+        }
+
+        const code = fs.readFileSync(filePath, 'utf8');
+        const result = await minify(code, { compress: true, mangle: true });
+        if (result.error) {
+            console.error(`Minify error for ${filePath}:`, result.error);
+            return;
+        }
+
+        const outPath = keepOriginalFile
+            ? path.join(path.dirname(filePath), filename.replace(/\.js$/, '.min.js'))
+            : filePath;
+
+        fs.writeFileSync(outPath, result.code);
     }
 }
 
