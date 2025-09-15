@@ -78,7 +78,7 @@ class Files {
                     );
 
                     if (path.extname(destinationPath) === '.js') {
-                        this.#minifyJsFile(destinationPath, false);
+                        this.#minifyJsFile(destinationPath);
                     }
                 }
             });
@@ -280,10 +280,9 @@ class Files {
 
     /**
      * @param {{ string }} filePath
-     * @param {boolean} [keepOriginalFile=true] - If true, create an additional .min.js file; if false, overwrite the original.
      * @returns {Promise<void>}
      */
-    static async #minifyJsFile(filePath, keepOriginalFile = true) {
+    static async #minifyJsFile(filePath) {
         const filename = path.parse(filePath).base;
 
         if (!filename.endsWith('.js')) {
@@ -297,11 +296,7 @@ class Files {
             return;
         }
 
-        const outPath = keepOriginalFile
-            ? path.join(path.dirname(filePath), filename.replace(/\.js$/, '.min.js'))
-            : filePath;
-
-        fs.writeFileSync(outPath, result.code);
+        fs.writeFileSync(filePath, result.code);
     }
 }
 
