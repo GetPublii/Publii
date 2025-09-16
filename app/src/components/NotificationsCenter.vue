@@ -269,12 +269,15 @@
 
             <div 
                 v-if="notificationsStatus === 'accepted'"
-                class="text-center">
-                <a 
-                    href="#"
-                    @click.prevent="rejectConsent">
-                    {{ $t('notifications.clickToRejectConsent') }}
-                </a>
+                class="notifications-consent">
+                <span>
+                    {{ $t('notifications.consentInfo') }}
+                    <a 
+                        href="#"
+                        @click.prevent="rejectConsent">
+                        {{ $t('notifications.consentReject') }}
+                    </a>
+                </span>
             </div>
         </div>
     </section>
@@ -536,6 +539,14 @@ export default {
             margin: 0;
         }
 
+        .notification-item-desc {
+
+            p {
+                color: var(--text-lightest-color);
+                margin: 0;
+            }
+        }
+
         .notification-item-icon {
             border-radius: 10px;
         }
@@ -578,7 +589,14 @@ export default {
                 }
             }
         }
+    }
 
+    &-consent {
+        color: var(--text-lightest-color);
+        font-size: 13px;
+        margin: 4rem auto;
+        max-width: 50%;
+        text-align: center;
     }
 }
 </style>

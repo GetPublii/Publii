@@ -113,12 +113,11 @@ li {
 
             &.is-notice {
                 aspect-ratio: unset;
-                background: rgba(var(--info-rgb), 1);
-                border: 2px solid var(--bg-site);
-                border-radius: 5px;
-                color: white;
-                font-size: .8rem;
-                top: 0;
+                background: var(--gray-6);
+                border-radius: 6px;
+                color: var(--text-primary-color);
+                font-size: 1rem;
+                top: -2px;
             }
         }
     }
