@@ -51,13 +51,19 @@ export default {
                     this.setNotificationsData (data);
                 }
 
+                if (data.status === false) {
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t('ui.appIsUnableToGetNotifications') + data.error,
+                        okLabel: this.$t('ui.ok'),
+                    });
+                }
+
                 this.$bus.$emit('app-received-notifications');
 
                 if (data.downloaded === true) {
                     localStorage.setItem('publii-notification-retrieve-timestamp', new Date().getTime());
+                    this.updateNotificationsCounters();
                 }
-                
-                this.updateNotificationsCounters();
             });
         },
         shouldRetrieveNotifications() {
@@ -86,19 +92,22 @@ export default {
         updateNotificationsCounters () {
             let updatesCount = 0;
             let notificationsData = this.$store.state.app.notifications;
+            let notificationsReadStatus = this.$store.state.app.notificationsReadStatus;
+            notificationsReadStatus = notificationsReadStatus.split(';');
 
             // Check if Publii version is newest one (check build number for specific OS)
             let currentBuild = this.$store.state.app.versionInfo.build;
             
-            if (notificationsData.publii && parseInt(notificationsData.publii.build, 10) > parseInt(currentBuild, 10)) {
+            if (
+                notificationsData.publii && parseInt(notificationsData.publii.build, 10) > parseInt(currentBuild, 10) &&
+                notificationsReadStatus.indexOf('PUBLII-' + notificationsData.publii.version + '-' + notificationsData.publii.build) === -1
+            ) {
                 updatesCount++;
             }
 
             // Check if there are any news which are not read yet
             let currentDate = new Date().getTime();
-            let notificationsReadStatus = this.$store.state.app.notificationsReadStatus;
-            notificationsReadStatus = notificationsReadStatus.split(';');
-
+            
             for (let notification of notificationsData.news || []) {
                 if (
                     notification.id && 
@@ -118,7 +127,7 @@ export default {
                 if (availableThemes[theme.directory]) {
                     let result = this.compareVersions(availableThemes[theme.directory].version, theme.version);
                     
-                    if (result === 1) {
+                    if (result === 1 && notificationsReadStatus.indexOf('THEME-' + theme.directory + '-' + availableThemes[theme.directory].version) === -1) {
                         updatesCount++;
                     }
                 }
@@ -132,7 +141,7 @@ export default {
                 if (availablePlugins[plugin.directory]) {
                     let result = this.compareVersions(availablePlugins[plugin.directory].version, plugin.version);
                     
-                    if (result === 1) {
+                    if (result === 1 && notificationsReadStatus.indexOf('PLUGIN-' + plugin.directory + '-' + availablePlugins[plugin.directory].version) === -1) {
                         updatesCount++;
                     }
                 }

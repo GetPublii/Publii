@@ -1,6 +1,10 @@
 <template>
     <fieldset>
-        <legend :class="{ 'is-danger': type === 'danger' }" v-if="title">
+        <legend
+            v-if="title" 
+            :class="{ 
+                'is-danger': type === 'danger' 
+            }">
             {{ title }}
         </legend>
 

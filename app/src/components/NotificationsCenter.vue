@@ -28,7 +28,6 @@
                 <fields-group :title="$t('notifications.news')"
                     v-if="newsToDisplay.length > 0" 
                     class="notification">
-                
                     <ul class="notification-list">
                         <li 
                             v-for="(news, index) in newsToDisplay" 
@@ -56,26 +55,31 @@
 
                             <div class="notification-item-actions">
                                 <p-button 
-                                        class="button-secondary"
-                                        v-if="news.link"
-                                        :onClick="() => openLink(news.link)">
-                                        {{ $t('notifications.readMore') }}
-                                    </p-button>
-                                <p-button  
-                                    class="button-clean notification-item-version-details"
-                                    :onClick="() => markAsRead(news.id)">
-                                    {{ $t('notifications.markAsRead') }}
-                                </p-button>   
+                                    class="button-secondary"
+                                    v-if="news.link"
+                                    :onClick="() => openLink(news.link)">
+                                    {{ $t('notifications.readMore') }}
+                                </p-button>
                             </div>
                         </li>
                     </ul>
+
+                    <a
+                        href="#"
+                        class="notification-action"
+                        @click.prevent="markAsRead('news')">
+                        {{ $t('notifications.markAsRead') }}
+                    </a>
                 </fields-group>
 
                 <fields-group :title="$t('notifications.publiiUpdateAvailable')"
                     v-if="hasPubliiUpdate"
                     class="notification">
-                
-                    <div class="notification-item is-publii-notification">
+                    <div :class="{ 
+                        'notification-item':true,
+                        'is-publii-notification': true,
+                        'is-read': isRead('PUBLII-' + notifications.publii.version + '-' + notifications.publii.build)
+                    }">
                         <div class="notification-item-content">
                             <img 
                                 src="./../assets/svg/publii-app-icon-512.svg" 
@@ -121,17 +125,28 @@
                             </p-button>
                         </div>
                     </div>
+
+                    <a 
+                        v-if="unreadPubliiNotification"
+                        href="#"
+                        class="notification-action"
+                        @click.prevent="markAsRead('publii')">
+                        {{ $t('notifications.markAsRead') }}
+                    </a>
                 </fields-group>
 
-                <fields-group :title="`${$t('notifications.themeUpdatesAvailable')} (${themeUpdates.length})`"
+                <fields-group :title="$t('notifications.themeUpdatesAvailable')"
                     v-if="themeUpdates.length > 0"
                     class="notification">
-                
                     <ul class="notification-list">
                         <li 
                             v-for="(theme, index) in themeUpdates" 
                             :key="index" 
-                            class="notification-item is-theme-update">
+                            :class="{
+                                'notification-item': true,
+                                'is-theme-update': true,
+                                'is-read': isRead('THEME-' + theme.directory + '-' + theme.version)
+                            }">
                             <div class="notification-item-content">
                                 <img 
                                     :src="$store.state.themesPath + '/' + theme.directory + '/thumbnail.png'" 
@@ -178,17 +193,29 @@
                             </div>
                         </li>
                     </ul>
+
+                    <a 
+                        v-if="unreadThemeUpdates"
+                        href="#"
+                        class="notification-action"
+                        @click.prevent="markAsRead('themes')">
+                        {{ $t('notifications.markAsRead') }}
+                    </a>
                 </fields-group>
 
                 <fields-group 
-                    :title="`${$t('notifications.pluginUpdatesAvailable')} (${pluginUpdates.length})`"
+                    :title="$t('notifications.pluginUpdatesAvailable')"
                     v-if="pluginUpdates.length > 0" 
                     class="notification">
                     <ul class="notification-list">
                         <li 
                             v-for="(plugin, index) in pluginUpdates" 
                             :key="index" 
-                            class="notification-item is-plugin-update">
+                            :class="{
+                                'notification-item': true,
+                                'is-plugin-update': true,
+                                'is-read': isRead('PLUGIN-' + plugin.directory + '-' + plugin.version)
+                            }">
                             <div class="notification-item-content">
                                 <img 
                                     :src="$store.state.pluginsPath + '/' + plugin.directory + '/thumbnail.svg'" 
@@ -235,6 +262,14 @@
                             </div>
                         </li>
                     </ul>
+
+                    <a 
+                        v-if="unreadPluginUpdates"
+                        href="#"
+                        class="notification-action"
+                        @click.prevent="markAsRead('plugins')">
+                        {{ $t('notifications.markAsRead') }}
+                    </a>
                 </fields-group>
             </template>
 
@@ -259,7 +294,7 @@
             </empty-state>
 
             <empty-state
-                v-if="notificationsStatus === 'accepted' && notificationsCount === 0"
+                v-if="notificationsStatus === 'accepted' && newsToDisplay.length === 0 && pluginUpdates.length === 0 && themeUpdates.length === 0 && !hasPubliiUpdate"
                 imageName="backups.svg"
                 imageWidth="344"
                 imageHeight="286"
@@ -321,13 +356,11 @@ export default {
         newsToDisplay () {
             let newsToDisplay = [];
             let currentDate = new Date().getTime();
-            let notificationsReadStatus = this.$store.state.app.notificationsReadStatus;
-            notificationsReadStatus = notificationsReadStatus.split(';');
 
             for (let notification of this.notifications.news || []) {
                 if (
                     notification.id && 
-                    notificationsReadStatus.indexOf(notification.id) === -1 &&
+                    this.readedNotifications.indexOf(notification.id) === -1 &&
                     currentDate >= new Date(notification.validFrom).getTime() &&
                     currentDate <= new Date(notification.validTo).getTime()
                 ) {
@@ -382,6 +415,30 @@ export default {
             }
 
             return pluginUpdates;
+        },
+        unreadPluginUpdates () {
+            for (let update of this.pluginUpdates) {
+                if (this.readedNotifications.indexOf('PLUGIN-' + update.directory + '-' + update.version) === -1) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        unreadThemeUpdates () {
+            for (let update of this.themeUpdates) {
+                if (this.readedNotifications.indexOf('THEME-' + update.directory + '-' + update.version) === -1) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        unreadPubliiNotification () {
+            return this.readedNotifications.indexOf('PUBLII-' + this.notifications.publii.version + '-' + this.notifications.publii.build) === -1;
+        },
+        readedNotifications () {
+            return this.$store.state.app.notificationsReadStatus.split(';');
         }
     },
     mounted () {
@@ -431,17 +488,47 @@ export default {
         openLink (url) {
             mainProcessAPI.shellOpenExternal(url);
         },
-        markAsRead (notificationId) {
+        markAsRead (typeToMark) {
             let notificationsReadStatus = this.$store.state.app.notificationsReadStatus;
             notificationsReadStatus = notificationsReadStatus.split(';');
 
-            if (notificationsReadStatus.indexOf(notificationId) === -1) {
-                notificationsReadStatus.push(notificationId);
-                notificationsReadStatus = notificationsReadStatus.join(';').replace(/[^a-z0-9\-_;]/gmi, '');
-                this.$store.commit('setNotificationsReadStatus', notificationsReadStatus);
-                localStorage.setItem('publii-notifications-readed', notificationsReadStatus);
-                this.$bus.$emit('app-update-notifications-counters');
+            if (typeToMark === 'publii') {
+                let id = 'PUBLII-' + this.notifications.publii.version + '-' + this.notifications.publii.build;
+
+                if (notificationsReadStatus.indexOf(id) === -1) {
+                    notificationsReadStatus.push(id);
+                }
+            } else if (typeToMark === 'news') {
+                for (let news of this.newsToDisplay) {
+                    if (notificationsReadStatus.indexOf(news.id) === -1) {
+                        notificationsReadStatus.push(news.id);
+                    }
+                }
+            } else if (typeToMark === 'plugins') {
+                for (let plugin of this.pluginUpdates) {
+                    let id = 'PLUGIN-' + plugin.directory + '-' + plugin.version;
+
+                    if (notificationsReadStatus.indexOf(id) === -1) {
+                        notificationsReadStatus.push(id);
+                    }
+                }
+            } else if (typeToMark === 'themes') {
+                for (let theme of this.themeUpdates) {
+                    let id = 'THEME-' + theme.directory + '-' + theme.version;
+                    
+                    if (notificationsReadStatus.indexOf(id) === -1) {
+                        notificationsReadStatus.push(id);
+                    }
+                }
             }
+
+            notificationsReadStatus = notificationsReadStatus.join(';').replace(/[^a-z0-9\-_;\.]/gmi, '');
+            this.$store.commit('setNotificationsReadStatus', notificationsReadStatus);
+            localStorage.setItem('publii-notifications-readed', notificationsReadStatus);
+            this.$bus.$emit('app-update-notifications-counters');
+        },
+        isRead (notificationID) {
+            return this.readedNotifications.indexOf(notificationID) > -1;
         }
     },
     beforeDestroy () {
@@ -476,6 +563,12 @@ export default {
             width: 100%;
         }
 
+        .notification-action {
+            position: absolute;
+            right: 3rem;
+            top: 3rem;
+        }
+
         .notification-item {
             display: flex;
             gap: 2rem;
@@ -484,6 +577,10 @@ export default {
                 border-top: 1px solid var(--border-light-color);
                 margin-top: 1.6rem;
                 padding-top: 1.6rem;
+            }
+
+            &.is-read {
+                opacity: .75;
             }
         }
 

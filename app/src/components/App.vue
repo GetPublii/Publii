@@ -69,7 +69,7 @@ export default {
     },
     created () {
         let notificationsReadStatus = localStorage.getItem('publii-notifications-readed') || '';
-        notificationsReadStatus = notificationsReadStatus.replace(/[^a-z0-9\-_;]/gmi, '');
+        notificationsReadStatus = notificationsReadStatus.replace(/[^a-z0-9\-_;\.]/gmi, '');
         this.$store.commit('setNotificationsReadStatus', notificationsReadStatus);
     },
     async mounted () {

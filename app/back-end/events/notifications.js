@@ -23,7 +23,7 @@ class NotificationsEvents {
             let updatesHelper = new UpdatesHelper({
                 event: event,
                 filePath: path.join(appInstance.app.getPath('logs'), 'updates.json'),
-                url: 'https://notifications.dkonto.pl/updates-' + platform + '.json',
+                url: 'https://notifications.getpublii.com/updates-' + platform + '.json',
                 forceDownload: downloadNotifications
             });
 
