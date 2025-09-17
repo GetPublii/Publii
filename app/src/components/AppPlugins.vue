@@ -88,6 +88,7 @@ export default {
                 messageConfig.type = 'warning';
             }
 
+            this.$bus.$emit('app-update-notifications-counters');
             this.$bus.$emit('message-display', messageConfig);
         }
     }

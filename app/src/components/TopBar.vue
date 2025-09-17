@@ -49,6 +49,7 @@ export default {
             mainProcessAPI.receiveOnce('app-notifications-retrieved', data => {
                 if (data.status === true) {
                     this.setNotificationsData (data);
+                    this.updateNotificationsCounters();
                 }
 
                 if (data.status === false) {
@@ -62,7 +63,6 @@ export default {
 
                 if (data.downloaded === true) {
                     localStorage.setItem('publii-notification-retrieve-timestamp', new Date().getTime());
-                    this.updateNotificationsCounters();
                 }
             });
         },
@@ -71,7 +71,7 @@ export default {
             let lastRetrieveTime = localStorage.getItem('publii-notification-retrieve-timestamp');
 
             if (lastRetrieveTime !== null) {
-                if (currentTime > parseInt(lastRetrieveTime, 10) + (8 * 60 * 60 * 1000)) {
+                if (currentTime > parseInt(lastRetrieveTime, 10) + (12 * 60 * 60 * 1000)) {
                     return true;
                 }
             } else {
@@ -87,7 +87,7 @@ export default {
             setTimeout(() => {
                 this.getNotifications();
                 this.scheduleNotificationsCheck();
-            }, (8 * 60 * 60 * 1000) + 10000); // 8 hours + 10 seconds
+            }, (12 * 60 * 60 * 1000) + 10000); // 12 hours + 10 seconds
         },
         updateNotificationsCounters () {
             let updatesCount = 0;
