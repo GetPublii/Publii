@@ -89,9 +89,9 @@
                                 width="52" />  
                                 
                             <div class="notification-item-details">
-                                <span class="notification-item-name">
-                                    Publii
-                                </span>
+                               <div class="notification-item-name" :data-new-badge="$t('notifications.badgeNew')">
+                                  <span>Publii</span>
+                                </div>
                                 <div class="notification-item-versions">
                                     <span class="notification-item-version">
                                         {{ $t('notifications.latestVersion') }}: v.{{ notifications.publii.version }} (build: {{ notifications.publii.build }})
@@ -127,9 +127,9 @@
                     </div>
 
                     <a 
-                        v-if="unreadPubliiNotification"
                         href="#"
-                        class="notification-action"
+                         class="notification-action"
+                         :class="{ 'is-disabled': !unreadPubliiNotification }"
                         @click.prevent="markAsRead('publii')">
                         {{ $t('notifications.markAsRead') }}
                     </a>
@@ -156,9 +156,9 @@
                                     width="52" />
 
                                 <div class="notification-item-details">
-                                    <span class="notification-item-name">
-                                        {{ theme.name }}
-                                    </span>
+                                    <div class="notification-item-name" :data-new-badge="$t('notifications.badgeNew')">
+                                       <span>{{ theme.name }}</span>
+                                    </div>
                                     <div class="notification-item-versions">
                                         <span class="notification-item-version">
                                             {{ $t('notifications.latestVersion') }}: v.{{ theme.version }}
@@ -195,9 +195,9 @@
                     </ul>
 
                     <a 
-                        v-if="unreadThemeUpdates"
                         href="#"
-                        class="notification-action"
+                        class="notification-action" 
+                        :class="{ 'is-disabled': !unreadThemeUpdates }"
                         @click.prevent="markAsRead('themes')">
                         {{ $t('notifications.markAsRead') }}
                     </a>
@@ -225,9 +225,9 @@
                                     width="52" />
 
                                 <div class="notification-item-details">
-                                    <span class="notification-item-name">
-                                        {{ plugin.name }}
-                                    </span>
+                                    <div class="notification-item-name" :data-new-badge="$t('notifications.badgeNew')">
+                                       <span>{{ plugin.name }}</span>
+                                    </div>
                                     <div class="notification-item-versions">
                                         <span class="notification-item-version">
                                             {{ $t('notifications.latestVersion') }}: v.{{ plugin.version }}
@@ -264,9 +264,9 @@
                     </ul>
 
                     <a 
-                        v-if="unreadPluginUpdates"
                         href="#"
-                        class="notification-action"
+                        class="notification-action" 
+                        :class="{ 'is-disabled': !unreadPluginUpdates }"
                         @click.prevent="markAsRead('plugins')">
                         {{ $t('notifications.markAsRead') }}
                     </a>
@@ -545,9 +545,21 @@ export default {
         }
 
         .notification-action {
+            color: var(--text-light-color);
+            font-size: 1.1rem;
             position: absolute;
             right: 3rem;
-            top: 3rem;
+            top: 3.2rem;
+            text-transform: uppercase;
+
+            &:hover {
+                color: var(--link-primary-color-hover);
+            }
+
+            &.is-disabled {
+                pointer-events: none;
+                opacity: 0.5;
+            }
         }
 
         .notification-item {
@@ -560,8 +572,23 @@ export default {
                 padding-top: 1.6rem;
             }
 
-            &.is-read {
-                opacity: .75;
+            &:not(.is-read) {
+                .notification-item-name {
+                    &::after {
+                        content: attr(data-new-badge); 
+                        display: inline-flex;
+                        margin-left: .75rem;
+                        padding: 1px 5px;
+                        border-radius: 4px;
+                        background: var(--success);
+                        color: var(--white);
+                        font-size: 1rem;
+                        font-weight: var(--font-weight-bold);
+                        position: relative;
+                        top: -8px;
+                        text-transform: uppercase;
+                    }
+                }
             }
         }
 
@@ -586,7 +613,7 @@ export default {
 
         .notification-item-name {
             font-size: 1.5rem;
-            font-weight: bold;
+            font-weight: var(--font-weight-bold);
             margin-bottom: 0.25rem;
             width: 100%;
         }

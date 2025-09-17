@@ -445,6 +445,7 @@
         "usedBy": "Używane przez inne menu:"
     },
     "notifications": {
+        "badgeNew": "Nowe",
         "latestVersion": "Najnowsza wersja",
         "currentVersion": "Zainstalowana wersja",
         "checkUpdates": "Sprawdź aktualizacje",
