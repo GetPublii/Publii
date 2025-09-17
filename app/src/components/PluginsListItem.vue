@@ -34,12 +34,19 @@
                         properties="not-clickable"
                         name="trash" />
             </a>
+
+            <span 
+                v-if="hasUpdateAvailable"
+                class="theme-new-version-available">
+                {{ $t('theme.newVersionAvailable') }}: {{ updateVersion }}
+            </span>
         </figcaption>
     </figure>
 </template>
 
 <script>
-import Vue from 'vue';
+import { mapGetters } from 'vuex';
+import VersionComparator from '../helpers/version-comparator';
 import compare from 'node-version-compare';
 
 export default {
@@ -48,6 +55,9 @@ export default {
         'pluginData'
     ],
     computed: {
+        ...mapGetters([
+            'notifications'
+        ]),
         isIncompatible () {
             if (compare(this.pluginData.minimumPubliiVersion, this.$store.state.app.versionInfo.version) === 1) {
                 return true;
@@ -66,6 +76,24 @@ export default {
         },
         version () {
             return this.pluginData.version;
+        },
+        updateVersion () {
+            let availablePlugin = this.notifications.plugins[this.directory];
+
+            if (!availablePlugin) {
+                return '';
+            }
+
+            return availablePlugin.version;
+        },
+        hasUpdateAvailable () {
+            let availablePlugin = this.notifications.plugins[this.directory];
+
+            if (!availablePlugin) {
+                return false;
+            }
+
+            return VersionComparator(availablePlugin.version, this.version) === 1;
         }
     },
     methods: {

@@ -22,28 +22,58 @@
                         properties="not-clickable"
                         name="trash" />
             </a>
+
+            <span 
+                v-if="hasUpdateAvailable"
+                class="theme-new-version-available">
+                {{ $t('theme.newVersionAvailable') }}: {{ updateVersion }}
+            </span>
         </figcaption>
     </figure>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import VersionComparator from '../helpers/version-comparator';
+
 export default {
     name: 'themes-list-item',
     props: [
         'themeData'
     ],
     computed: {
-        thumbnail: function() {
+        ...mapGetters([
+            'notifications'
+        ]),
+        thumbnail () {
             return this.themeData.thumbnail;
         },
-        name: function() {
+        name () {
             return this.themeData.name;
         },
-        directory: function() {
+        directory () {
             return this.themeData.directory;
         },
-        version: function() {
+        version () {
             return this.themeData.version;
+        },
+        updateVersion () {
+            let availableTheme = this.notifications.themes[this.directory];
+
+            if (!availableTheme) {
+                return '';
+            }
+
+            return availableTheme.version;
+        },
+        hasUpdateAvailable () {
+            let availableTheme = this.notifications.themes[this.directory];
+
+            if (!availableTheme) {
+                return false;
+            }
+
+            return VersionComparator(availableTheme.version, this.version) === 1;
         }
     },
     methods: {

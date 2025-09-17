@@ -319,6 +319,7 @@
 </template>
 
 <script>
+import VersionComparator from '../helpers/version-comparator';
 import { mapGetters } from 'vuex';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -377,7 +378,7 @@ export default {
 
             for (let theme of installedThemes) {
                 if (availableThemes[theme.directory]) {
-                    let result = this.compareVersions(availableThemes[theme.directory].version, theme.version);
+                    let result = VersionComparator(availableThemes[theme.directory].version, theme.version);
                     
                     if (result === 1) {
                         let themeData = {
@@ -400,7 +401,7 @@ export default {
 
             for (let plugin of installedPlugins) {    
                 if (availablePlugins[plugin.directory]) {
-                    let result = this.compareVersions(availablePlugins[plugin.directory].version, plugin.version);
+                    let result = VersionComparator(availablePlugins[plugin.directory].version, plugin.version);
                     
                     if (result === 1) {
                         let pluginData = {
@@ -464,26 +465,6 @@ export default {
         },
         async receivedNotifications () {
             this.receivingNotificationsInProgress = false;
-        },
-        compareVersions(v1, v2) {
-            let parts1 = v1.split('.').map(n => parseInt(n, 10));
-            let parts2 = v2.split('.').map(n => parseInt(n, 10));
-            let partsToCheck = Math.max(parts1.length, parts2.length);
-
-            for (let i = 0; i < partsToCheck; i++) {
-                let num1 = parts1[i] || 0;
-                let num2 = parts2[i] || 0;
-
-                if (num1 > num2) {
-                    return 1;
-                }
-                
-                if (num1 < num2) {
-                    return -1;
-                }
-            }
-
-            return 0;
         },
         openLink (url) {
             mainProcessAPI.shellOpenExternal(url);
