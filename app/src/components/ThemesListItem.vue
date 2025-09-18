@@ -67,6 +67,10 @@ export default {
             return availableTheme.version;
         },
         hasUpdateAvailable () {
+            if (!this.notifications || !this.notifications.themes) {
+                return false;
+            }
+
             let availableTheme = this.notifications.themes[this.directory];
 
             if (!availableTheme) {

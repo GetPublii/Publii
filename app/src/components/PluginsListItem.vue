@@ -37,8 +37,8 @@
 
             <span 
                 v-if="hasUpdateAvailable"
-                class="theme-new-version-available">
-                {{ $t('theme.newVersionAvailable') }}: {{ updateVersion }}
+                class="plugin-new-version-available">
+                {{ $t('plugins.newVersionAvailable') }}: {{ updateVersion }}
             </span>
         </figcaption>
     </figure>
@@ -87,6 +87,10 @@ export default {
             return availablePlugin.version;
         },
         hasUpdateAvailable () {
+            if (!this.notifications || !this.notifications.plugins) {
+                return false;
+            }
+
             let availablePlugin = this.notifications.plugins[this.directory];
 
             if (!availablePlugin) {
