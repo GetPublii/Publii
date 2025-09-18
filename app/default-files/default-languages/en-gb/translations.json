@@ -452,11 +452,11 @@
         "checkUpdates": "Check for updates",
         "consentInfo": "You are currently receiving update notifications. If you don’t want to receive them, you can",
         "consentReject": "click here to reject your consent.",
-        "consentStateTitle": "Do you want to allow Publii to get updates notifications?",
-        "consentStateDescription": "Publii can check for updates and notify you about them. You can disable this option at any time in the settings.",
+        "consentStateTitle": "Enable update notifications",
+        "consentStateDescription": "Publii can automatically check for new updates and let you know when they are available. You can change this option anytime in the settings.",
         "disabled": "Disabled",
         "downloadUpdate": "Download",
-        "giveConsent": "Ok, I agree",
+        "giveConsent": "Enable notifications",
         "goToNotificationsCenter": "Go to Notifications Center",
         "markAsRead": "Mark as read",
         "news": "News",
@@ -467,7 +467,7 @@
         "publiiUpdateAvailable": "Publii update is available",
         "viewDetails": "View details",
         "readMore": "Read more",
-        "rejectConsent": "No, thanks",
+        "rejectConsent": "Not now",
         "themeUpdatesAvailable": "Theme updates available"
     },
     "page": {

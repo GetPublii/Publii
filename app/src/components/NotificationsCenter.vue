@@ -288,6 +288,7 @@
 
                 <p-button
                     slot="button"
+                    type="outline"
                     :onClick="rejectConsent">
                     {{ $t('notifications.rejectConsent') }}
                 </p-button>

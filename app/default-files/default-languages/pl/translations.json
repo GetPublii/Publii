@@ -451,11 +451,11 @@
         "checkUpdates": "Sprawdź aktualizacje",
         "consentInfo": "Obecnie otrzymujesz powiadomienia o aktualizacjach. Jeśli nie chcesz ich otrzymywać",
         "consentReject": "kliknąć tutaj, aby wycofać swoją zgodę.",
-        "consentStateTitle": "Czy chcesz zezwolić Publii na otrzymywanie powiadomień o aktualizacjach?",
-        "consentStateDescription": "Publii może sprawdzać dostępność aktualizacji i powiadamiać Cię o nich. Możesz wyłączyć tę opcję w dowolnym momencie w ustawieniach.",
+        "consentStateTitle": "Włącz powiadomienia o aktualizacjach",
+        "consentStateDescription": "Publii może automatycznie sprawdzać dostępność nowych aktualizacji i powiadomi Cię, gdy będą dostępne. W każdej chwili możesz zmienić tę opcję w ustawieniach.",
         "disabled": "Wyłączone",
         "downloadUpdate": "Pobierz",
-        "giveConsent": "OK, zgadzam się",
+        "giveConsent": "Włącz powiadomienia",
         "goToNotificationsCenter": "Przejdź do centrum powiadomień",
         "markAsRead": "Oznacz jako przeczytane",
         "news": "Nowości",
@@ -466,7 +466,7 @@
         "publiiUpdateAvailable": "Dostępna aktualizacja Publii",
         "viewDetails": "Pokaż szczegóły",
         "readMore": "Czytaj więcej",
-        "rejectConsent": "Nie, dziękuję",
+        "rejectConsent": "Nie teraz",
         "themeUpdatesAvailable": "Dostępne aktualizacje motywów"
     },
     "page": {
