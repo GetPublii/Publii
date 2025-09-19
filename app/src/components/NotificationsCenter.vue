@@ -310,7 +310,7 @@
                     {{ $t('notifications.consentInfo') }}
                     <a 
                         href="#"
-                        @click.prevent="rejectConsent">
+                        @click.prevent="rejectConsentConfirm">
                         {{ $t('notifications.consentReject') }}
                     </a>
                 </span>
@@ -455,6 +455,15 @@ export default {
             this.$store.commit('setAppNotificationsStatus', 'accepted');
             await mainProcessAPI.send('app-set-notifications-center-state', 'accepted');
             this.$bus.$emit('app-get-forced-notifications');
+        },
+        rejectConsentConfirm () {
+            this.$bus.$emit('confirm-display', {
+                hasInput: false,
+                message: this.$t('notifications.rejectConsentConfirm'),
+                okClick: this.rejectConsent,
+                okLabel: this.$t('ui.iUnderstand'),
+                cancelLabel: this.$t('ui.cancel')
+            });
         },
         async rejectConsent () {
             this.$store.commit('setAppNotificationsStatus', 'rejected');

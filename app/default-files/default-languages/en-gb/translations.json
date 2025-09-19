@@ -465,6 +465,7 @@
         "noUpdatesDescription": "You are using the latest version of Publii and extensions.",
         "pluginUpdatesAvailable": "Plugin updates available",
         "publiiUpdateAvailable": "Publii update is available",
+        "rejectConsentConfirm": "By withdrawing your consent to receive notifications, you will no longer receive information about new versions of Publii, Publii extensions (themes and plugins), or other important additional notifications.",
         "viewDetails": "View details",
         "readMore": "Read more",
         "rejectConsent": "Not now",
