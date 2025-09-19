@@ -453,7 +453,7 @@
         "consentInfo": "You are currently receiving update notifications. If you don’t want to receive them, you can",
         "consentReject": "click here to reject your consent.",
         "consentStateTitle": "Enable update notifications",
-        "consentStateDescription": "Publii can automatically check for new updates and let you know when they are available. You can change this option anytime in the settings.",
+        "consentStateDescription": "Publii can automatically check for new updates and let you know when they are available. For this, a simple connection to the Publii server is made, which includes your device's IP address. This information is used only to provide update notifications and is not stored. You can disable this option anytime in the app settings.",
         "disabled": "Disabled",
         "downloadUpdate": "Download",
         "giveConsent": "Enable notifications",

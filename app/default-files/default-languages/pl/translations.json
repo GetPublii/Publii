@@ -452,7 +452,7 @@
         "consentInfo": "Obecnie otrzymujesz powiadomienia o aktualizacjach. Jeśli nie chcesz ich otrzymywać",
         "consentReject": "kliknąć tutaj, aby wycofać swoją zgodę.",
         "consentStateTitle": "Włącz powiadomienia o aktualizacjach",
-        "consentStateDescription": "Publii może automatycznie sprawdzać dostępność nowych aktualizacji i powiadomi Cię, gdy będą dostępne. W każdej chwili możesz zmienić tę opcję w ustawieniach.",
+        "consentStateDescription": "Publii może automatycznie sprawdzać dostępność nowych aktualizacji i powiadomi Cię, gdy będą dostępne. W tym celu nawiązywane jest połączenie z serwerem Publii, które obejmuje adres IP Twojego urządzenia. Informacje te są wykorzystywane wyłącznie do dostarczania powiadomień o aktualizacjach i nie są przechowywane. W każdej chwili możesz wyłączyć tę opcję w ustawieniach aplikacji.",
         "disabled": "Wyłączone",
         "downloadUpdate": "Pobierz",
         "giveConsent": "Włącz powiadomienia",
