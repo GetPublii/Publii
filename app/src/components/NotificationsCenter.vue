@@ -275,7 +275,7 @@
 
             <empty-state
                 v-if="notificationsStatus !== 'accepted'"
-                imageName="backups.svg"
+                imageName="notifications-center.svg"
                 imageWidth="344"
                 imageHeight="286"
                 :title="$t('notifications.consentStateTitle')"
@@ -296,7 +296,7 @@
 
             <empty-state
                 v-if="notificationsStatus === 'accepted' && newsToDisplay.length === 0 && pluginUpdates.length === 0 && themeUpdates.length === 0 && !hasPubliiUpdate"
-                imageName="backups.svg"
+                imageName="notifications-center.svg"
                 imageWidth="344"
                 imageHeight="286"
                 :title="$t('notifications.noUpdatesTitle')"
