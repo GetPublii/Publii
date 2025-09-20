@@ -380,6 +380,7 @@
         "linkInvalidMsg": "Przepraszamy! Ten link wydaje się być nieprawidłowy.",
         "linkRelAttribute": "Atrybut \"rel\" linka",
         "linkTitleAttribute": "Atrybut \"title\" linka",
+        "linkClassAttribute": "Atrybut \"class\" linka",
         "openInNewTab": "Otwórz w nowej zakładce",
         "previewLinkInBrowser": "Wyświetl podgląd tego linku w przeglądarce",
         "previewOnlyExternalLinksMsg": "W edytorze wpisów możesz wyświetlić podgląd tylko linków zewnętrznych",

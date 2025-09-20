@@ -76,7 +76,7 @@ export default {
                     downloadAttr = ' download="download" '
                 }
 
-                let linkHTML = `<a href="${response.url}"${response.title}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
+                let linkHTML = `<a href="${response.url}"${response.title}${response.cssClass}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
                 tinymce.activeEditor.selection.setContent(linkHTML);
             } else {
                 let sel = this.win.getSelection();

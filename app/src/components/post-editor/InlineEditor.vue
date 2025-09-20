@@ -92,7 +92,7 @@ export default {
                     relAttr = ' rel="' + relAttr.join(' ') + '"';
                 }
 
-                let linkHTMLStart = `<a href="${response.url}"${response.title}${response.target}${relAttr}>`;
+                let linkHTMLStart = `<a href="${response.url}"${response.title}${response.cssClass}${response.target}${relAttr}>`;
                 let linkHTMLContent = response.text;
                 let linkHTMLEnd = `</a>`;
 
