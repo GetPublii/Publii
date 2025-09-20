@@ -38,7 +38,7 @@
             <span 
                 v-if="hasUpdateAvailable"
                 class="plugin-new-version-available">
-                {{ $t('plugins.newVersionAvailable') }}: {{ updateVersion }}
+                {{ $t('plugins.newVersionAvailable') }}: <strong>{{ updateVersion }}</strong>   
             </span>
         </figcaption>
     </figure>
@@ -196,7 +196,6 @@ export default {
         display: flex;
         justify-content: space-between;
         padding: 0 2rem;
-        position: relative;
         text-align: left;
 
         & > h3 {
@@ -235,6 +234,20 @@ export default {
            text-decoration-color: var(--warning);
            text-decoration-line: line-through;
        }
+    }
+
+    &-new-version-available {
+        background: var(--highlighted);
+        left: 1rem;
+        padding: 2rem;        
+        position: absolute;
+        right: 0;
+        top: 1rem;
+        width: calc(100% - 2rem);
+
+        strong {
+            color: var(--headings-color);
+        }
     }
 }
 </style>

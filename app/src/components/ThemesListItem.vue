@@ -26,7 +26,7 @@
             <span 
                 v-if="hasUpdateAvailable"
                 class="theme-new-version-available">
-                {{ $t('theme.newVersionAvailable') }}: {{ updateVersion }}
+                {{ $t('theme.newVersionAvailable') }}: <strong>{{ updateVersion }}</strong>
             </span>
         </figcaption>
     </figure>
@@ -140,7 +140,7 @@ export default {
         justify-content: center;
         display: inline-flex;
         position: absolute;
-        right: 1.4rem;
+        right: 2rem;
         text-align: center;
         width: 3rem;
 
@@ -165,7 +165,6 @@ export default {
         display: flex;
         justify-content: space-between;
         padding: 0 2rem;
-        position: relative;
         text-align: left;
 
         & > h3 {
@@ -182,6 +181,20 @@ export default {
         font-size: 1.2rem;
         font-weight: 400;
         margin: 0 4rem 0 auto;
+    }
+
+    &-new-version-available {
+        background: var(--highlighted);
+        left: 1rem;
+        padding: 2rem;        
+        position: absolute;
+        right: 0;
+        top: 1rem;
+        width: calc(100% - 2rem);
+
+        strong {
+            color: var(--headings-color);
+        }
     }
 }
 </style>
