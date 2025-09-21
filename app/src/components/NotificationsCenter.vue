@@ -102,6 +102,7 @@
                                     </span>
 
                                     <p-button
+                                        v-if="notifications.publii.links.releaseNotes"
                                         class="button-clean notification-item-version-details"
                                         :onClick="() => openLink(notifications.publii.links.releaseNotes)">
                                         {{ $t('notifications.viewDetails') }}
@@ -169,6 +170,7 @@
                                         </span>
 
                                         <p-button
+                                            v-if="theme.links.releaseNotes"
                                             class="button-clean notification-item-version-details"
                                             :onClick="() => openLink(theme.links.releaseNotes)">
                                             {{ $t('notifications.viewDetails') }}
@@ -185,7 +187,7 @@
                             <div class="notification-item-actions">
                                 <p-button
                                     class="button-secondary"
-                                    :onClick="() => openLink(theme.links.url)"
+                                    :onClick="() => openLink(theme.links.download)"
                                     type="icon"
                                     icon="download">
                                     {{ $t('notifications.downloadUpdate') }}
@@ -238,6 +240,7 @@
                                         </span>
 
                                         <p-button
+                                            v-if="plugin.links.releaseNotes"
                                             class="button-clean notification-item-version-details"
                                             :onClick="() => openLink(plugin.links.releaseNotes)">
                                             {{ $t('notifications.viewDetails') }}
@@ -254,7 +257,7 @@
                             <div class="notification-item-actions">
                                 <p-button
                                     class="button-secondary"
-                                    :onClick="() =>openLink(plugin.links.url)"
+                                    :onClick="() =>openLink(plugin.links.download)"
                                     type="icon"
                                     icon="download">
                                     {{ $t('notifications.downloadUpdate') }}
