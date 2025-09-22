@@ -375,7 +375,8 @@ class RendererContext {
                 postsOrdering: postsOrdering,
                 lastUpdate: Date.now(),
                 contentStructure: this.renderer.contentStructure,
-                language: this.siteConfig.language
+                language: this.siteConfig.language,
+                description: this.siteConfig.description
             },
             renderer: {
                 previewMode: this.renderer.previewMode,
