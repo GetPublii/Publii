@@ -215,14 +215,14 @@ export default {
                 display: flex;
                 font-size: 1rem;
                 font-weight: var(--font-weight-semibold);
-                height: 19px;
+                height: 20px;
                 justify-content: center;
-                min-height: 19px;
-                min-width: 19px;
+                min-height: 20px;
+                min-width: 20px;
                 padding: 0 4px; 
                 position: absolute;
                 right: 0;
-                top: 6px;
+                top: 5px;
                 width: auto;   
             }
         }
