@@ -94,14 +94,14 @@ li {
             display: inline-flex;
             font-size: 1rem;
             font-weight: var(--font-weight-semibold);
-            height: 20px;
+            height: 21px;
             justify-content: center;
-            min-height: 20px;
-            min-width: 20px;
+            min-height: 21px;
+            min-width: 21px;
             padding: 6px; 
             position: relative;
             right: -4px;
-            top: -1px;
+            top: -2px;
             width: auto;   
             z-index: 2;
 
