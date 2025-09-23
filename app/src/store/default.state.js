@@ -3,11 +3,13 @@ export default {
     app: {
         config: {},
         customConfig: {},
-        notification: false,
+        notifications: {},
+        notificationsCount: 0,
+        notificationsReadStatus: '',
         versionInfo: {
             number: 0,
             build: 0,
-            status: ''
+            os: ''
         },
         editorOpened: false,
         editorType: 'blockeditor',

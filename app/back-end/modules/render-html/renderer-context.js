@@ -1,6 +1,6 @@
 // Necessary packages
-const fs = require('fs');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const slug = require('./../../helpers/slug');
 const ContentHelper = require('./helpers/content');
 const URLHelper = require('./helpers/url');
@@ -60,7 +60,7 @@ class RendererContext {
 
         // Menu config
         let menuConfigPath = path.join(this.inputDir, 'config', 'menu.config.json');
-        let menuConfigContent = fs.readFileSync(menuConfigPath);
+        let menuConfigContent = FileHelper.readFileSync(menuConfigPath);
         let menuData = JSON.parse(menuConfigContent);
         let menus = {
             assigned: {},
@@ -375,7 +375,8 @@ class RendererContext {
                 postsOrdering: postsOrdering,
                 lastUpdate: Date.now(),
                 contentStructure: this.renderer.contentStructure,
-                language: this.siteConfig.language
+                language: this.siteConfig.language,
+                description: this.siteConfig.description
             },
             renderer: {
                 previewMode: this.renderer.previewMode,
@@ -780,12 +781,8 @@ class RendererContext {
             if (this.siteConfig.advanced.usePageAsFrontpage && itemContext.page && this.siteConfig.advanced.pageAsFrontpage === itemContext.page.id) {
                 return this.siteConfig.domain + '/';    
             }
-
-            if (!this.siteConfig.advanced.urls.cleanUrls) { 
-                return this.siteConfig.domain + '/' + itemSlug + '.html';
-            } else {           
-                return this.siteConfig.domain + '/' + itemSlug + '/';
-            }
+         
+            return this.renderer.cachedItems.pages[itemContext.page.id].url;
         }
     }
 
@@ -824,7 +821,7 @@ class RendererContext {
             }
         }
 
-        if (this.previewMode) {
+        if (this.renderer.previewMode) {
             tagsUrl += 'index.html';
         }
 

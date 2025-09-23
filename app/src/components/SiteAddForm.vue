@@ -320,7 +320,7 @@ export default {
             if (typeof e === 'string') {
                 this.backupFile = e;
             } else {
-                this.backupFile = await mainProcessAPI.normalizePath(e.dataTransfer.files[0].path);
+                this.backupFile = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]));
             }
 
             this.restoreInProgress = true;
@@ -343,7 +343,7 @@ export default {
                 return;
             }
 
-            let sourcePath = await mainProcessAPI.normalizePath(e.target.files[0].path);
+            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.target.files[0]));
             await this.uploadBackup(sourcePath);
         },
         removeBackupFile () {

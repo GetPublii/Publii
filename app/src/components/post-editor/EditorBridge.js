@@ -269,12 +269,12 @@ class EditorBridge {
                     return;
                 }
 
-                setTimeout(() => {
+                setTimeout(async () => {
                     if(this.callbackForTinyMCE) {
                         let filePath = false;
 
                         if($('#post-editor-fake-image-uploader')[0].files) {
-                            filePath = $('#post-editor-fake-image-uploader')[0].files[0].path;
+                            filePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile($('#post-editor-fake-image-uploader')[0].files[0]));
                         }
 
                         if(!filePath) {
@@ -618,7 +618,7 @@ class EditorBridge {
         }
     }
 
-    editorFileSelect (e) {
+    async editorFileSelect (e) {
         e.originalEvent.stopPropagation();
         e.originalEvent.preventDefault();
 
@@ -629,7 +629,7 @@ class EditorBridge {
             return;
         }
 
-        if(!files[0] || !files[0].path) {
+        if(!files[0]) {
             $('.tox-tinymce').removeClass('is-hovered');
             $('.tox-tinymce').removeClass('is-loading-image');
             $('.tinymce-overlay').text('Drag your image here');
@@ -644,7 +644,7 @@ class EditorBridge {
         mainProcessAPI.send('app-image-upload', {
             "id": this.itemID,
             "site": siteName,
-            "path": files[0].path
+            "path": await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[0]))
         });
 
         this.contentImageUploading = true;

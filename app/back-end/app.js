@@ -24,6 +24,7 @@ const Plugins = require('./plugins.js');
 const DBUtils = require('./helpers/db.utils.js');
 const Site = require('./site.js');
 const Utils = require('./helpers/utils.js');
+const FileHelper = require('./helpers/file.js');
 // List of the Event classes
 const EventClasses = require('./events/_modules.js');
 // Migration classes
@@ -52,7 +53,8 @@ class App {
         this.initPath = path.join(this.appDir, 'config', 'window-config.json');
         this.appConfigPath = path.join(this.appDir, 'config', 'app-config.json');
         this.tinymceOverridedConfigPath = path.join(this.appDir, 'config', 'tinymce.override.json');
-        this.versionData = JSON.parse(fs.readFileSync(__dirname + '/builddata.json', 'utf8'));
+        this.versionData = JSON.parse(FileHelper.readFileSync(__dirname + '/builddata.json', 'utf8'));
+        this.versionData.os = os.platform() === 'darwin' ? 'mac' : os.platform() === 'linux' ? 'linux' : 'win';
         this.windowBounds = null;
         this.appConfig = null;
         this.tinymceOverridedConfig = {};
@@ -165,8 +167,8 @@ class App {
 
                 // Check if both config.json files exists
                 if (fs.existsSync(appThemeConfig) && fs.existsSync(userThemeConfig)) {
-                    let appThemeData = JSON.parse(fs.readFileSync(appThemeConfig, 'utf8'));
-                    let userThemeData = JSON.parse(fs.readFileSync(userThemeConfig, 'utf8'));
+                    let appThemeData = JSON.parse(FileHelper.readFileSync(appThemeConfig, 'utf8'));
+                    let userThemeData = JSON.parse(FileHelper.readFileSync(userThemeConfig, 'utf8'));
 
                     // If app theme is newer version than the existing one
                     if(compare(appThemeData.version, userThemeData.version) === 1) {
@@ -231,7 +233,7 @@ class App {
         let themeDir = path.join(siteDir, 'input', 'themes', themes.currentTheme(true));
         let themeOverridesDir = path.join(siteDir, 'input', 'themes', themes.currentTheme(true) + '-override');
         let themeConfig = Themes.loadThemeConfig(themeConfigPath, themeDir);
-        let menuStructure = fs.readFileSync(menuConfigPath, 'utf8');
+        let menuStructure = FileHelper.readFileSync(menuConfigPath, 'utf8');
         let parsedMenuStructure = {};
 
         try {
@@ -283,8 +285,14 @@ class App {
 
         // Load the config
         let defaultSiteConfig = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig));
-        let siteConfig = fs.readFileSync(configFilePath);
-        siteConfig = JSON.parse(siteConfig);
+        let siteConfig = FileHelper.readFileSync(configFilePath);
+
+        try {
+            siteConfig = JSON.parse(siteConfig);
+        } catch (e) {
+            dialog.showErrorBox('Publii cannot read site config', 'There is an issue with file: ' + configFilePath + "\n\nError details: " + e.message);
+            return;
+        }
 
         if (siteConfig.name !== siteName) {
             siteConfig.name = siteName;
@@ -437,7 +445,7 @@ class App {
     loadConfig () {
         // Try to get window bounds
         try {
-            this.windowBounds = JSON.parse(fs.readFileSync(this.initPath, 'utf8'));
+            this.windowBounds = JSON.parse(FileHelper.readFileSync(this.initPath, 'utf8'));
         } catch (e) {
             console.log('The window-config.json file will be created');
         }
@@ -490,7 +498,7 @@ class App {
 
         // Try to get application config
         try {
-            this.appConfig = JSON.parse(fs.readFileSync(this.appConfigPath, 'utf8'));
+            this.appConfig = JSON.parse(FileHelper.readFileSync(this.appConfigPath, 'utf8'));
             this.appConfig = Utils.mergeObjects(JSON.parse(JSON.stringify(defaultAstAppConfig)), this.appConfig);
         } catch (e) {
             if (this.hasPermissionsErrors(e)) {
@@ -518,7 +526,7 @@ class App {
     loadAdditionalConfig () {
         // Try to get TinyMCE overrided config
         try {
-            this.tinymceOverridedConfig = JSON.parse(fs.readFileSync(this.tinymceOverridedConfigPath, 'utf8'));
+            this.tinymceOverridedConfig = JSON.parse(FileHelper.readFileSync(this.tinymceOverridedConfigPath, 'utf8'));
         } catch (e) {}
 
         if (this.appConfig.sitesLocation) {

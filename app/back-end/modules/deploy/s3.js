@@ -238,8 +238,10 @@ class S3 {
             }
 
             let fileACL = this.deployment.siteConfig.deployment.s3.acl || 'public-read';
+            let htmlCacheControl = this.deployment.siteConfig.deployment.s3.htmlCacheControl || 'no-cache, no-store';
+            let otherCacheControl = this.deployment.siteConfig.deployment.s3.otherCacheControl || 'public, max-age=2592000';
             let fileExtension = path.extname(fileName).substring(1);
-            let cacheControl = fileExtension === 'html' ? 'no-cache, no-store' : 'public, max-age=2592000';
+            let cacheControl = fileExtension === 'html' ? htmlCacheControl : otherCacheControl;
             let params = {
                 ACL: fileACL,
                 Body: fileContent,

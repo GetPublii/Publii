@@ -210,16 +210,16 @@ export default {
     dragLeave (e) {
       this.isHovered = false;
     },
-    drop (e) {
+    async drop (e) {
       let files = e.dataTransfer.files;
 
-      if (!files[0] || !files[0].path) {
+      if (!files[0]) {
         this.imageUploadInProgress = false;
       } else {
         this.imagesQueue = [];
 
         for (let i = 0; i < files.length; i++) {
-        this.imagesQueue.push(files[i].path);
+            this.imagesQueue.push(await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[i])));
         }
 
         this.imageUploadInProgress = true;

@@ -27,7 +27,9 @@ const AstAppConfig = {
     editorFontFamily: 'sans-serif',
     experimentalFeatureAppAutoBeautifySourceCode: false,
     experimentalFeatureAppFtpAlt: false,
-    uiZoomLevel: 1.0
+    experimentalFileManagerInSidebar: false,
+    uiZoomLevel: 1.0,
+    notificationsStatus: false
 };
 
 module.exports = AstAppConfig;

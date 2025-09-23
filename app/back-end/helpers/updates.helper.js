@@ -1,13 +1,12 @@
 const fs = require('fs');
+const FileHelper = require('./file.js');
 const https = require('https');
 
 class UpdatesHelper {
     constructor (config) {
         this.event = config.event;
         this.filePath = config.filePath;
-        this.namespace = config.namespace;
         this.url = config.url;
-        this.contentField = config.contentField;
         this.forceDownload = config.forceDownload;
     }
 
@@ -29,29 +28,30 @@ class UpdatesHelper {
 
             res.on('end', () => {
                 fs.writeFileSync(this.filePath, body, 'utf8');
-                this.handleResponse(body);
+                this.handleResponse(body, true);
             });
-        }).on('error', () => {
-            this.sendError();
+        }).on('error', (err) => {
+            this.sendError(err);
         });
     }
 
-    sendError () {
-        this.event.sender.send('app-' + this.namespace + '-retrieved', { 
-            status: false 
+    sendError (err) {
+        this.event.sender.send('app-notifications-retrieved', { 
+            status: false,
+            error: err.message || 'An unknown error occurred while retrieving notifications.'
         });
     }
 
     readExistingData () {
         if (fs.existsSync(this.filePath)) {
-            let body = fs.readFileSync(this.filePath, 'utf8');
-            this.handleResponse(body);
+            let body = FileHelper.readFileSync(this.filePath, 'utf8');
+            this.handleResponse(body, false);
         } else {
             this.sendError();
         }
     }
 
-    handleResponse (body) {
+    handleResponse (body, downloaded) {
         let response = false;
 
         try {
@@ -60,28 +60,14 @@ class UpdatesHelper {
             response = false;
         }
 
-        if (response && response[0]) {
-            response = response[0];
-        } else {
-            this.sendError();
-        }
-
-        if (response && response.timestamp && response[this.contentField]) {
-            if (response.validTo && parseInt(response.validTo, 10) < new Date().getTime()) {
-                this.sendError(); 
-                return;
-            }
-
-            this.event.sender.send('app-' + this.namespace + '-retrieved', {
+        if (response) {
+            this.event.sender.send('app-notifications-retrieved', {
                 status: true,
-                notification: {
-                    timestamp: response.timestamp,
-                    content: response[this.contentField],
-                    publiiMaxVersion: response.publiiMaxVersion
-                }
+                downloaded: downloaded,
+                notifications: response 
             });
         } else {
-            this.sendError();
+            this.sendError(response);
         }
     }
 }

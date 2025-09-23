@@ -1,9 +1,37 @@
 <template>
-    <div
+      <div
         @click="toggleSubmenu"
         class="topbar-app-settings"
         :title="$t('ui.moreItems')">
-        <span class="topbar-app-settings-icon"></span>
+        
+        <!-- Bell icon when updates available AND menu is closed -->
+        <span v-if="insideWebsiteUI && !submenuIsOpen && notificationsStatus === 'accepted' && notificationsCount > 0" 
+            class="topbar-app-settings-bell">
+            <icon
+                name="notification"
+                customWidth="22"
+                customHeight="22" />
+            <span class="topbar-app-settings-bell-badge">
+                {{ notificationsCount }}
+            </span>
+        </span>
+
+        <span v-else-if="insideWebsiteUI && notificationsStatus === false && !submenuIsOpen" 
+            class="topbar-app-settings-bell">
+            <icon
+                name="notification"
+                customWidth="22"
+                customHeight="22" />
+            <span class="topbar-app-settings-bell-badge">
+                !
+            </span>
+        </span>
+
+        <!-- Three dots icon when menu is open OR no updates -->
+        <span v-else
+            class="topbar-app-settings-icon"
+            :class="{ 'is-active': submenuIsOpen }">
+        </span>
 
         <ul
             ref="submenu"
@@ -24,6 +52,13 @@
                 :label="$t('langs.languages')"
                 :title="$t('langs.goToLanguagesManager')"
                 path="/app-languages" />
+            <topbar-dropdown-item
+                :hasBadge="notificationsCount > 0 || notificationsStatus === false || notificationsStatus === 'rejected'"
+                :badgeValue="badgeValue"
+                :badgeClass="notificationsStatus === 'rejected' ? 'is-notice' : 'is-warning'"
+                :label="$t('notifications.notifications')"
+                :title="$t('notifications.goToNotificationsCenter')"
+                path="/notifications-center" />
             <topbar-dropdown-item 
                 class="topbar-app-submenu-separator"
                 :label="$t('ui.help')"
@@ -50,6 +85,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {
@@ -63,11 +99,29 @@ export default {
         };
     },
     computed: {
+        ...mapGetters([
+            'notificationsStatus', 
+            'notificationsCount'
+        ]),
         cssClasses: function() {
             return {
                 'is-hidden': !this.submenuIsOpen,
                 'topbar-app-submenu': true
             };
+        },
+        badgeValue () {
+            if (this.notificationsStatus === false) {
+                return '!';
+            }
+            
+            if (this.notificationsStatus === 'accepted') {
+                return this.notificationsCount > 99 ? '99+' : this.notificationsCount;
+            }
+
+            return this.$t('notifications.disabled');
+        },
+        insideWebsiteUI () {
+            return this.$route.path.indexOf('/site/') === 0;
         }
     },
     mounted: function(e) {
@@ -119,7 +173,6 @@ export default {
             right: -1px;
             top: 50%;
             width: 3px;
-            transition: var(--transition);
 
             &:after,
             &:before {
@@ -137,6 +190,43 @@ export default {
                 top: 6px;
             }
         }
+
+        &-bell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 100%;
+            width: 35px;
+            margin-left: -1.7rem;
+ 
+
+            svg {
+                color: var(--icon-secondary-color);
+            }
+
+           &-badge {
+                align-items: center;
+                aspect-ratio: 1/1;
+                background: rgba(var(--warning-rgb), 1);
+                border: 2px solid var(--bg-site);
+                border-radius: 50%;
+                color: white;
+                display: flex;
+                font-size: 1rem;
+                font-weight: var(--font-weight-semibold);
+                height: 20px;
+                justify-content: center;
+                min-height: 20px;
+                min-width: 20px;
+                padding: 0 4px; 
+                position: absolute;
+                right: 0;
+                top: 5px;
+                width: auto;   
+            }
+        }
+
     }
 
     &-app-settings {

@@ -8,6 +8,7 @@ const slug = require('./helpers/slug');
 const ImageHelper = require('./helpers/image.helper.js');
 const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
+const FileHelper = require('./helpers/file.js');
 
 /**
  * Author Model - used for operations connected with author management
@@ -93,11 +94,9 @@ class Author extends Model {
         }
 
         if (this.id !== 0) {
-            this.checkAndCleanImages();
             return this.updateAuthor();
         }
 
-        this.checkAndCleanImages();
         return this.addAuthor();
     }
 
@@ -136,6 +135,8 @@ class Author extends Model {
             }
         }
 
+        this.checkAndCleanImages();
+
         return {
             status: true,
             message: 'author-added',
@@ -168,6 +169,8 @@ class Author extends Model {
             additionalData: JSON.stringify(this.additionalData),
             id: this.id
         });
+
+        this.checkAndCleanImages();
 
         return {
             status: true,
@@ -366,7 +369,7 @@ class Author extends Model {
         let themeConfigPath = path.join(this.application.sitesDir, this.site, 'input', 'config', 'theme.config.json');
 
         if (fs.existsSync(themeConfigPath)) {
-            let themeConfigString = fs.readFileSync(themeConfigPath, 'utf8');
+            let themeConfigString = FileHelper.readFileSync(themeConfigPath, 'utf8');
             themesHelper.checkAndCleanImages(themeConfigString);
         }
     }

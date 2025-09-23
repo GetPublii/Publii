@@ -83,7 +83,7 @@ export default {
                 lifeTime: 3
             };
 
-            if(data.status === 'added') {
+            if (data.status === 'added') {
                 messageConfig.message = this.$t('theme.addThemeSuccessMessage');
             } else if(data.status === 'updated') {
                 messageConfig.message = this.$t('theme.updateThemeSuccessMessage');
@@ -92,6 +92,7 @@ export default {
                 messageConfig.type = 'warning';
             }
 
+            this.$bus.$emit('app-update-notifications-counters');
             this.$bus.$emit('message-display', messageConfig);
         }
     }

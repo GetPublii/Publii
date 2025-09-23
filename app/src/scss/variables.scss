@@ -34,7 +34,7 @@ $maxScreen: 100rem;
 
 // Baseline
 $line-height: 1.5;
-$baseline: math.div(1.6, 7); 
+$baseline: calc(1.6/7); 
 
 // Font size map
 $h1: ms(5);

@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, webUtils } = require('electron');
 
 contextBridge.exposeInMainWorld('mainProcessAPI', {
     shellShowItemInFolder: (url) => ipcRenderer.invoke('publii-shell-show-item-in-folder', url),
@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
     existsSync: (pathToCheck) => ipcRenderer.invoke('publii-native-exists-sync', pathToCheck),
     normalizePath: (pathToNormalize) => ipcRenderer.invoke('publii-native-normalize-path', pathToNormalize),
     createMD5: (value) => ipcRenderer.invoke('publii-native-md5', value),
+    getPathForFile: (value) => webUtils.getPathForFile(value),
     getEnv: () => ({
         name: process.env.NODE_ENV,
         nodeVersion: process.versions.node,
@@ -99,7 +100,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-get-plugin-config',
             'app-site-save-plugin-config',
             'app-close',
-            'app-set-ui-zoom-level'
+            'app-set-ui-zoom-level',
+            'app-set-notifications-center-state',
+            'app-get-notifications-file'
         ];
 
         if (validChannels.includes(channel)) {

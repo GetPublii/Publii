@@ -121,6 +121,7 @@ html[data-theme="default"] {
         
     --text-primary-color: var(--neutral-75);
     --text-light-color: var(--neutral-50); 
+    --text-lightest-color: var(--neutral-45); 
     --headings-color: var(--color-90);  
     --label-color: var(--color-90);
         
@@ -305,6 +306,7 @@ html[data-theme="dark"] {
         
     --text-primary-color: var(--neutral-20); 
     --text-light-color: var(--neutral-25); 
+    --text-lightest-color: var(--neutral-35); 
     --headings-color: var(--neutral-5);
     --label-color: var(--neutral-15);
         

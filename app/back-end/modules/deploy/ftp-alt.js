@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const ftp = require('basic-ftp');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
@@ -115,7 +116,7 @@ class FTPAlt {
                 normalizePath(path.join(this.deployment.configDir, 'remote-files.json')), 
                 normalizePath(path.join(this.deployment.outputDir, 'files.publii.json'))
             );
-            let fileToCompare = fs.readFileSync(normalizePath(path.join(this.deployment.configDir, 'remote-files.json')));
+            let fileToCompare = FileHelper.readFileSync(normalizePath(path.join(this.deployment.configDir, 'remote-files.json')));
             this.deployment.checkLocalListWithRemoteList(fileToCompare);
             console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
             process.send({

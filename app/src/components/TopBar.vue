@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import VersionComparator from '../helpers/version-comparator';
 import TopBarAppBar from './TopBarAppBar';
 import TopBarDropDown from './TopBarDropDown';
 
@@ -17,6 +18,143 @@ export default {
     components: {
         'topbar-appbar': TopBarAppBar,
         'topbar-dropdown': TopBarDropDown
+    },
+    created: function() {
+        this.getNotifications();
+        this.scheduleNotificationsCheck();
+    },
+    mounted () {
+        this.$bus.$on('app-get-notifications', this.getNotifications);
+        this.$bus.$on('app-get-forced-notifications', this.forceGetNotifications);
+        this.$bus.$on('app-update-notifications-counters', this.updateNotificationsCounters);
+    },
+    methods: {
+        forceGetNotifications () {
+            this.getNotifications(true);
+        },
+        getNotifications(forced = false) {
+            if (this.$store.state.app.config.notificationsStatus !== 'accepted') {
+                return;
+            }
+
+            this.$bus.$emit('app-receiving-notifications');
+            let shouldGetNotifications = this.shouldRetrieveNotifications() || forced;
+            let lastRetrieveTime = localStorage.getItem('publii-notification-retrieve-timestamp');
+
+            if (forced && lastRetrieveTime && new Date().getTime() < parseInt(lastRetrieveTime, 10) + (60 * 1000)) {
+                shouldGetNotifications = false;
+            }
+
+            mainProcessAPI.send('app-notifications-retrieve', shouldGetNotifications);
+
+            mainProcessAPI.receiveOnce('app-notifications-retrieved', data => {
+                if (data.status === true) {
+                    this.setNotificationsData (data);
+                    this.updateNotificationsCounters();
+                }
+
+                if (data.status === false) {
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t('ui.appIsUnableToGetNotifications') + data.error,
+                        okLabel: this.$t('ui.ok'),
+                    });
+                }
+
+                this.$bus.$emit('app-received-notifications');
+
+                if (data.downloaded === true) {
+                    localStorage.setItem('publii-notification-retrieve-timestamp', new Date().getTime());
+                }
+            });
+        },
+        shouldRetrieveNotifications() {
+            let currentTime = new Date().getTime();
+            let lastRetrieveTime = localStorage.getItem('publii-notification-retrieve-timestamp');
+
+            if (lastRetrieveTime !== null) {
+                if (currentTime > parseInt(lastRetrieveTime, 10) + (12 * 60 * 60 * 1000)) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+
+            return false;
+        },
+        setNotificationsData (data) {
+            this.$store.commit('setNotifications', data.notifications);
+        },
+        scheduleNotificationsCheck () {
+            setTimeout(() => {
+                this.getNotifications();
+                this.scheduleNotificationsCheck();
+            }, (12 * 60 * 60 * 1000) + 10000); // 12 hours + 10 seconds
+        },
+        updateNotificationsCounters () {
+            let updatesCount = 0;
+            let notificationsData = this.$store.state.app.notifications;
+            let notificationsReadStatus = this.$store.state.app.notificationsReadStatus;
+            notificationsReadStatus = notificationsReadStatus.split(';');
+
+            // Check if Publii version is newest one (check build number for specific OS)
+            let currentBuild = this.$store.state.app.versionInfo.build;
+            
+            if (
+                notificationsData.publii && parseInt(notificationsData.publii.build, 10) > parseInt(currentBuild, 10) &&
+                notificationsReadStatus.indexOf('PUBLII-' + notificationsData.publii.version + '-' + notificationsData.publii.build) === -1
+            ) {
+                updatesCount++;
+            }
+
+            // Check if there are any news which are not read yet
+            let currentDate = new Date().getTime();
+            
+            for (let notification of notificationsData.news || []) {
+                if (
+                    notification.id && 
+                    notificationsReadStatus.indexOf(notification.id) === -1 &&
+                    currentDate >= new Date(notification.validFrom).getTime() &&
+                    currentDate <= new Date(notification.validTo).getTime()
+                ) {
+                    updatesCount++;
+                }
+            }
+
+            // Check if there are any updates for themes
+            let installedThemes = this.$store.state.themes;
+            let availableThemes = notificationsData.themes || {};
+
+            for (let theme of installedThemes) {
+                if (availableThemes[theme.directory]) {
+                    let result = VersionComparator(availableThemes[theme.directory].version, theme.version);
+                    
+                    if (result === 1 && notificationsReadStatus.indexOf('THEME-' + theme.directory + '-' + availableThemes[theme.directory].version) === -1) {
+                        updatesCount++;
+                    }
+                }
+            }
+
+            // Check if there are any updates for plugins
+            let installedPlugins = this.$store.state.plugins;
+            let availablePlugins = notificationsData.plugins || {};
+
+            for (let plugin of installedPlugins) {    
+                if (availablePlugins[plugin.directory]) {
+                    let result = VersionComparator(availablePlugins[plugin.directory].version, plugin.version);
+                    
+                    if (result === 1 && notificationsReadStatus.indexOf('PLUGIN-' + plugin.directory + '-' + availablePlugins[plugin.directory].version) === -1) {
+                        updatesCount++;
+                    }
+                }
+            }
+
+            this.$store.commit('setNotificationsCount', updatesCount);
+        }
+    },
+    beforeDestroy () {
+        this.$bus.$off('app-get-notifciations', this.getNotifications);
+        this.$bus.$off('app-get-forced-notifications', this.forceGetNotifications);
+        this.$bus.$off('app-update-notifications-counters', this.updateNotificationsCounters);
     }
 }
 </script>

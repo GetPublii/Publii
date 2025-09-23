@@ -22,28 +22,62 @@
                         properties="not-clickable"
                         name="trash" />
             </a>
+
+            <span 
+                v-if="hasUpdateAvailable"
+                class="theme-new-version-available">
+                {{ $t('theme.newVersionAvailable') }}: <strong>{{ updateVersion }}</strong>
+            </span>
         </figcaption>
     </figure>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import VersionComparator from '../helpers/version-comparator';
+
 export default {
     name: 'themes-list-item',
     props: [
         'themeData'
     ],
     computed: {
-        thumbnail: function() {
+        ...mapGetters([
+            'notifications'
+        ]),
+        thumbnail () {
             return this.themeData.thumbnail;
         },
-        name: function() {
+        name () {
             return this.themeData.name;
         },
-        directory: function() {
+        directory () {
             return this.themeData.directory;
         },
-        version: function() {
+        version () {
             return this.themeData.version;
+        },
+        updateVersion () {
+            let availableTheme = this.notifications.themes[this.directory];
+
+            if (!availableTheme) {
+                return '';
+            }
+
+            return availableTheme.version;
+        },
+        hasUpdateAvailable () {
+            if (!this.notifications || !this.notifications.themes) {
+                return false;
+            }
+
+            let availableTheme = this.notifications.themes[this.directory];
+
+            if (!availableTheme) {
+                return false;
+            }
+
+            return VersionComparator(availableTheme.version, this.version) === 1;
         }
     },
     methods: {
@@ -106,7 +140,7 @@ export default {
         justify-content: center;
         display: inline-flex;
         position: absolute;
-        right: 1.4rem;
+        right: 2rem;
         text-align: center;
         width: 3rem;
 
@@ -131,7 +165,6 @@ export default {
         display: flex;
         justify-content: space-between;
         padding: 0 2rem;
-        position: relative;
         text-align: left;
 
         & > h3 {
@@ -148,6 +181,20 @@ export default {
         font-size: 1.2rem;
         font-weight: 400;
         margin: 0 4rem 0 auto;
+    }
+
+    &-new-version-available {
+        background: var(--highlighted);
+        left: 1rem;
+        padding: 2rem;        
+        position: absolute;
+        right: 0;
+        top: 1rem;
+        width: calc(100% - 2rem);
+
+        strong {
+            color: var(--headings-color);
+        }
     }
 }
 </style>

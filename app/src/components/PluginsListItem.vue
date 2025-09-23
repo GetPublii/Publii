@@ -34,12 +34,19 @@
                         properties="not-clickable"
                         name="trash" />
             </a>
+
+            <span 
+                v-if="hasUpdateAvailable"
+                class="plugin-new-version-available">
+                {{ $t('plugins.newVersionAvailable') }}: <strong>{{ updateVersion }}</strong>   
+            </span>
         </figcaption>
     </figure>
 </template>
 
 <script>
-import Vue from 'vue';
+import { mapGetters } from 'vuex';
+import VersionComparator from '../helpers/version-comparator';
 import compare from 'node-version-compare';
 
 export default {
@@ -48,6 +55,9 @@ export default {
         'pluginData'
     ],
     computed: {
+        ...mapGetters([
+            'notifications'
+        ]),
         isIncompatible () {
             if (compare(this.pluginData.minimumPubliiVersion, this.$store.state.app.versionInfo.version) === 1) {
                 return true;
@@ -66,6 +76,28 @@ export default {
         },
         version () {
             return this.pluginData.version;
+        },
+        updateVersion () {
+            let availablePlugin = this.notifications.plugins[this.directory];
+
+            if (!availablePlugin) {
+                return '';
+            }
+
+            return availablePlugin.version;
+        },
+        hasUpdateAvailable () {
+            if (!this.notifications || !this.notifications.plugins) {
+                return false;
+            }
+
+            let availablePlugin = this.notifications.plugins[this.directory];
+
+            if (!availablePlugin) {
+                return false;
+            }
+
+            return VersionComparator(availablePlugin.version, this.version) === 1;
         }
     },
     methods: {
@@ -164,7 +196,6 @@ export default {
         display: flex;
         justify-content: space-between;
         padding: 0 2rem;
-        position: relative;
         text-align: left;
 
         & > h3 {
@@ -203,6 +234,20 @@ export default {
            text-decoration-color: var(--warning);
            text-decoration-line: line-through;
        }
+    }
+
+    &-new-version-available {
+        background: var(--highlighted);
+        left: 1rem;
+        padding: 2rem;        
+        position: absolute;
+        right: 0;
+        top: 1rem;
+        width: calc(100% - 2rem);
+
+        strong {
+            color: var(--headings-color);
+        }
     }
 }
 </style>

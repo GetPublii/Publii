@@ -206,18 +206,18 @@ export default {
     dragLeave (e) {
       this.isHovered = false;
     },
-    drop (e) {
+    async drop (e) {
       let files = e.dataTransfer.files;
       let siteName = window.app.getSiteName();
       this.imageUploadInProgress = true;
 
-      if (!files[0] || !files[0].path) {
+      if (!files[0]) {
         this.imageUploadInProgress = false;
       } else {
         mainProcessAPI.send('app-image-upload', {
           id: this.editor.config.postID,
           site: siteName,
-          path: files[0].path,
+          path: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[0])),
           imageType: 'contentImages'
         });
 
@@ -245,7 +245,7 @@ export default {
           return;
         }
 
-        setTimeout(() => {
+        setTimeout(async () => {
           if (!this.fileSelectionCallback) {
             return;
           }
@@ -253,7 +253,7 @@ export default {
           let filePath = false;
 
           if (imageUploader.files) {
-            filePath = imageUploader.files[0].path;
+            filePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(imageUploader.files[0]));
           }
 
           if (!filePath) {

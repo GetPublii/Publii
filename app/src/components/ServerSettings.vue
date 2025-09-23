@@ -1067,6 +1067,30 @@
 
                 <field
                     v-if="deploymentMethodSelected === 's3'"
+                    id="s3-html-cache-control"
+                    :label="$t('sync.htmlCacheControl')">
+                    <text-input
+                        slot="field"
+                        id="s3-html-cache-control"
+                        key="s3-html-cache-control"
+                        :spellcheck="false"
+                        v-model="deploymentSettings.s3.htmlCacheControl" />
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 's3'"
+                    id="s3-other-cache-control"
+                    :label="$t('sync.otherCacheControl')">
+                    <text-input
+                        slot="field"
+                        id="s3-other-cache-control"
+                        key="s3-other-cache-control"
+                        :spellcheck="false"
+                        v-model="deploymentSettings.s3.otherCacheControl" />
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 's3'"
                     id="s3-acl"
                     :label="$t('sync.acl')">
                     <dropdown

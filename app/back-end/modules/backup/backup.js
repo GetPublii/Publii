@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('./../../helpers/file.js');
 const Utils = require('./../../helpers/utils.js');
 const moment = require('moment');
 const archiver = require('archiver');
@@ -368,7 +369,7 @@ class Backup {
      *
      */
     static checkSiteName(siteName, configFilePath) {
-        let configContent = fs.readFileSync(configFilePath);
+        let configContent = FileHelper.readFileSync(configFilePath);
 
         try {
             configContent = JSON.parse(configContent);

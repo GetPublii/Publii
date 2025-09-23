@@ -37,6 +37,7 @@
           {{ $t('file.file') }}
         </div>
       </div>
+
       <vue-select
         v-if="linkType === 'post'"
         slot="field"
@@ -47,6 +48,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('post.selectPostPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'page'"
         slot="field"
@@ -57,6 +59,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('page.selectPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'tag'"
         slot="field"
@@ -67,6 +70,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('tag.selectTagPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'author'"
         slot="field"
@@ -77,6 +81,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('author.selectAuthorPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'file'"
         slot="field"
@@ -86,6 +91,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('file.selectFileFromFileManager')"></vue-select>
+
       <input
         v-if="linkType === 'external'"
         type="text"
@@ -94,23 +100,59 @@
         :spellcheck="false"
         placeholder="https://example.com"
         @keyup.enter="save()" />
-      <div class="block-link-popup-link-switcher">
-        <switcher
-          v-model="link.targetBlank" />
-          {{ $t('link.openInNewTab') }}
-      </div>
 
-      <div
-        v-if="linkType === 'file'"
-        class="block-link-popup-link-switcher">
-        <switcher v-model="link.download" /> {{ $t('link.addDownloadAttr') }}
-      </div>
+      <field 
+        :label="$t('link.linkTitleAttribute')">
+          <input
+            slot="field"
+            type="text"
+            class="block-link-popup-link-title"
+            v-model="link.title"
+            :spellcheck="false" />
+      </field>
 
-      <div class="block-link-popup-link-switcher">
-        <switcher v-model="link.noFollow" /> {{ $t('link.addNofollow') }}
-        <switcher v-model="link.sponsored"/> rel="sponsored"
-        <switcher v-model="link.ugc" /> rel="ugc"
-      </div>
+      <field 
+        :label="$t('link.linkClassAttribute')">
+          <input
+            slot="field"
+            type="text"
+            class="block-link-popup-link-css-class"
+            v-model="link.cssClass"
+            :spellcheck="false" />
+      </field>
+
+      <field 
+        :label="$t('link.openInNewWindow')">
+        <switcher 
+          slot="field"
+          v-model="link.targetBlank" /> 
+      </field>
+
+      <field
+        v-if="linkType === 'file'" 
+        :label="$t('link.downloadAttribute')">
+        <switcher 
+          slot="field" 
+          v-model="link.download" /> 
+      </field>
+
+      <field 
+        :label="$t('link.linkRelAttribute')">
+        <switcher 
+           slot="field" 
+           label="nofollow"
+           v-model="link.noFollow" /> 
+           
+        <switcher 
+           slot="field" 
+           label="sponsored"
+           v-model="link.sponsored"/> 
+
+        <switcher 
+           slot="field" 
+           label="ugc"
+           v-model="link.ugc" /> 
+      </field>
 
       <div class="block-link-popup-buttons">
         <button @click.stop="save()">
@@ -150,6 +192,8 @@ export default {
       linkSelectedFile: '',
       link: {
         url: '',
+        title: '',
+        cssClass: '',
         noFollow: false,
         targetBlank: false,
         sponsored: false,
@@ -180,12 +224,15 @@ export default {
       this.linkSelectedFile = '';
       this.link = {
         url: '',
+        title: '',
+        cssClass: '',
         noFollow: false,
         targetBlank: false,
         sponsored: false,
         ugc: false,
         download: false
       };
+      link.cssClass = link.cssClass.replace('is-highlighted', '');
       this.link = Object.assign(this.link, JSON.parse(JSON.stringify(link)));
       this.parseLink();
     },

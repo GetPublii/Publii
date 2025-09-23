@@ -255,7 +255,7 @@ export default {
         right: $app-sidebar-margin;
 
         &-icon {
-            fill: var(--white);
+            stroke: var(--white);
         }
 
         &-date {
@@ -291,6 +291,7 @@ export default {
             border-radius: var(--border-radius);
             color: var(--sidebar-sync-btn-color);
             display: flex;
+            gap: .6rem;
             font-size: $app-font-base;
             font-weight: var(--font-weight-semibold);
             justify-content: center;
@@ -304,12 +305,12 @@ export default {
                 width: 3rem;
 
                 path {
-                    fill: var(--white);
+                    stroke: var(--white);
                     transition: var(--transition);
                 }
 
                 polygon {
-                    fill: var(--color-primary);
+                    stroke: var(--color-primary);
                     transition: var(--transition);
                 }
             }
@@ -318,11 +319,11 @@ export default {
             &:focus .sidebar-sync-icon,
             &:hover .sidebar-sync-icon {
                 path {
-                    fill: var(--white);
+                    stroke: var(--white);
                 }
 
                 polygon {
-                    fill: $color-helper-6;
+                    stroke: $color-helper-6;
                 }
             }
 
@@ -341,7 +342,7 @@ export default {
                 width: 2.4rem;
 
                 path {
-                    fill: var(--white);
+                    stroke: var(--white);
                 }
             }
 
@@ -352,14 +353,13 @@ export default {
                 color: var(--white);
 
                 .sidebar-sync-icon {
-                    fill: $color-helper-6;
+                    stroke: $color-helper-6;
                 }
             }
 
             &-icon {
                 display: block;
                 height: 100%;
-                margin-right: 1.2rem;
                 width: auto;
             }
         }

@@ -142,6 +142,15 @@
                                     :imageType="imageType"
                                     :pluginDir="pluginDir"
                                     :addMediaFolderPath="false" />
+
+                                <small-image-upload
+                                    v-if="itemConfig[subindex].type === 'smallupload'"
+                                    v-model="content[index][itemConfig[subindex].name]"
+                                    :anchor="itemConfig[subindex].anchor"
+                                    :imageType="imageType"
+                                    :pluginDir="$route.params.pluginname"
+                                    slot="field"
+                                    :customCssClasses="itemConfig[subindex].customCssClasses"></small-image-upload>
                             </template>
                             <template v-else>
                                 <image-upload
@@ -150,6 +159,14 @@
                                     v-model="content[index][itemConfig[subindex].name]"
                                     :imageType="imageType"
                                     :addMediaFolderPath="true" />   
+
+                                <small-image-upload
+                                    v-if="itemConfig[subindex].type === 'smallupload'"
+                                    v-model="content[index][itemConfig[subindex].name]"
+                                    :anchor="itemConfig[subindex].anchor"
+                                    :imageType="imageType"
+                                    slot="field"
+                                    :customCssClasses="itemConfig[subindex].customCssClasses"></small-image-upload>
                             </template>
 
                             <vue-select

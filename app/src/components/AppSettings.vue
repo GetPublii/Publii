@@ -88,6 +88,16 @@
                 </field>
 
                 <field
+                    id="notifications-center-enabled"
+                    :label="$t('settings.notificationsCenterEnabled')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="notifications-center-enabled"
+                        v-model="notificationsStatus" />
+                </field>
+
+                <field
                     id="always-save-search-state"
                     :label="$t('settings.alwaysSaveSearchState')"
                     :labelSeparated="false">
@@ -375,6 +385,15 @@
                         {{ $t('settings.experimentalFeatureAppFtpAltDesc') }}
                     </small>
                 </field>
+                <field
+                    id="experimental-feature-app-file-manager-in-sidebar"
+                    :label="$t('settings.experimentalFileManagerInSidebar')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="experimental-feature-app-file-manager-in-sidebar"
+                        v-model="experimentalFileManagerInSidebar" />
+                </field>
             </fields-group>
 
             <p-footer>
@@ -390,6 +409,7 @@
 </template>
 
 <script>
+import { experimentalFileManagerInSidebar } from '../../config/AST.app.config.js';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 import Vue from 'vue';
@@ -409,6 +429,7 @@ export default {
             uiZoomLevel: 1.0,
             openDevToolsInMainWindow: false,
             wideScrollbars: false,
+            notificationsStatus: false,
             closeEditorOnSave: true,
             showModificationDate: true,
             showModificationDateAsColumn: false,
@@ -432,6 +453,7 @@ export default {
             editorFontFamily: 'serif',
             experimentalFeatureAppAutoBeautifySourceCode: false,
             experimentalFeatureAppFtpAlt: false,
+            experimentalFileManagerInSidebar: false,
             changeSitesLocationWithoutCopying: false,
             sitesLocationExists: false,
             backupsLocationExists: false,
@@ -558,6 +580,7 @@ export default {
         this.locations.preview = this.$store.state.app.config.previewLocation;
         this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
+        this.notificationsStatus = this.$store.state.app.config.notificationsStatus === 'accepted';
         this.openDevToolsInMainWindow = this.$store.state.app.config.openDevToolsInMain;
         this.imageResizeEnginesSelected = this.$store.state.app.config.resizeEngine;
         this.timeFormatsSelected = (this.$store.state.app.config.timeFormat).toString();
@@ -576,6 +599,7 @@ export default {
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
         this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
         this.experimentalFeatureAppFtpAlt = this.$store.state.app.config.experimentalFeatureAppFtpAlt;
+        this.experimentalFileManagerInSidebar = this.$store.state.app.config.experimentalFileManagerInSidebar;
         this.uiZoomLevel = this.$store.state.app.config.uiZoomLevel;
         this.theme = this.getAppTheme();
 
@@ -630,6 +654,7 @@ export default {
                 backupsLocation: this.locations.backups.trim(),
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
+                notificationsStatus: this.notificationsStatus ? 'accepted' : 'rejected',
                 closeEditorOnSave: this.closeEditorOnSave,
                 showModificationDate: this.showModificationDate,
                 showModificationDateAsColumn: this.showModificationDateAsColumn,
@@ -645,6 +670,7 @@ export default {
                 editorFontSize: this.editorFontSize,
                 experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode,
                 experimentalFeatureAppFtpAlt: this.experimentalFeatureAppFtpAlt,
+                experimentalFileManagerInSidebar: this.experimentalFileManagerInSidebar,
                 changeSitesLocationWithoutCopying: this.changeSitesLocationWithoutCopying
             };
 

@@ -139,6 +139,17 @@
 
                 <field
                     v-if="!markdown"
+                    :label="$t('link.linkClassAttribute')">
+                    <input
+                        slot="field"
+                        type="text"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                        v-model="cssClass"
+                        class="link-popup-field-class" />
+                </field>
+
+                <field
+                    v-if="!markdown"
                     :label="$t('link.linkRelAttribute')">
                     <switcher
                         slot="field"
@@ -204,6 +215,7 @@ export default {
             target: '',
             label: '',
             title: '',
+            cssClass: '',
             downloadAttr: false,
             rel: {
                 nofollow: false,
@@ -309,6 +321,7 @@ export default {
             this.downloadAttr = false;
             this.label = '';
             this.title = '';
+            this.cssClass = '';
             this.rel = {
                 nofollow: false,
                 sponsored: false,
@@ -329,6 +342,7 @@ export default {
         parseHTMLContent (content) {
             let linkContent = content.match(/>(.*?)<\/a>/);
             let titleContent = content.match(/title="(.*?)"/);
+            let classContent = content.match(/class="(.*?)"/);
             let targetContent = content.match(/target="(.*?)"/);
             let urlContent = content.match(/href="(.*?)"/);
             let relContent = content.match(/rel="(.*?)"/);
@@ -344,6 +358,10 @@ export default {
 
             if (titleContent && titleContent[1]) {
                 this.title = titleContent[1];
+            }
+
+            if (classContent && classContent[1]) {
+                this.cssClass = classContent[1];
             }
 
             if (targetContent && targetContent[1]) {
@@ -414,6 +432,7 @@ export default {
             let response = {
                 url: '',
                 title: '',
+                cssClass: '',
                 target: '',
                 text: this.label,
                 rel: this.rel,
@@ -442,6 +461,10 @@ export default {
                 response.title = ' title="' + this.title + '"';
             }
 
+            if (this.cssClass.trim() !== '') {
+                response.cssClass = ' class="' + this.cssClass + '"'
+            }
+
             this.cleanPopup();
             this.isVisible = false;
             this.$bus.$emit('link-popup-updated', response);
@@ -465,6 +488,7 @@ export default {
         },
         addLinkHTML (response) {
             if ($('#link-toolbar').css('display') !== 'none' || $('#inline-toolbar').css('display') !== 'none') {
+                console.log('STOP1');
                 return;
             }
 
@@ -497,7 +521,7 @@ export default {
                     downloadAttr = ' download="download" '
                 }
 
-                let linkHTMLStart = `<a href="${response.url}"${response.title}${response.target}${relAttr}>`;
+                let linkHTMLStart = `<a href="${response.url}"${response.title}${response.cssClass}${response.target}${relAttr}${downloadAttr}>`;
                 let linkHTMLContent = response.text;
                 let linkHTMLEnd = `</a>`;
 

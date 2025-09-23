@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const FileHelper = require('../helpers/file.js');
 const ipcMain = require('electron').ipcMain;
 const Themes = require('../themes.js');
 const Languages = require('../languages.js');
@@ -97,7 +98,7 @@ class AppEvents {
          * Save app color theme config
          */
         ipcMain.on('app-save-color-theme', function (event, theme) {
-            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
+            let appConfig = FileHelper.readFileSync(appInstance.appConfigPath, 'utf8');
 
             try {
                 appConfig = JSON.parse(appConfig);
@@ -440,7 +441,7 @@ class AppEvents {
             }
 
             let filePath = path.join(appInstance.app.getPath('logs'), filename);
-            let fileContent = fs.readFileSync(filePath, 'utf8');
+            let fileContent = FileHelper.readFileSync(filePath, 'utf8');
 
             event.sender.send('app-log-file-loaded', {
                 fileContent: fileContent
@@ -458,7 +459,7 @@ class AppEvents {
                 return;
             }
 
-            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
+            let appConfig = FileHelper.readFileSync(appInstance.appConfigPath, 'utf8');
 
             try {
                 appConfig = JSON.parse(appConfig);
@@ -469,6 +470,21 @@ class AppEvents {
             }
 
             appInstance.mainWindow.webContents.setZoomFactor(zoomLevel);
+        });
+
+        /**
+         * Set notifications center state
+         */
+        ipcMain.on('app-set-notifications-center-state', function(event, state) {
+            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
+
+            try {
+                appConfig = JSON.parse(appConfig);
+                appConfig.notificationsStatus = state;
+                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+            } catch (e) {
+                console.log('(!) App was unable to save the notifications center state');
+            }
         });
     }
 }
