@@ -94,35 +94,54 @@
         :spellcheck="false"
         placeholder="https://example.com"
         @keyup.enter="save()" />
-      <input
-        type="text"
-        class="block-link-popup-link-title"
-        v-model="link.title"
-        :spellcheck="false"
-        placeholder="Title" />
-      <input
-        type="text"
-        class="block-link-popup-link-css-class"
-        v-model="link.cssClass"
-        :spellcheck="false"
-        placeholder="CSS class" />
-      <div class="block-link-popup-link-switcher">
-        <switcher
-          v-model="link.targetBlank" />
-          {{ $t('link.openInNewTab') }}
-      </div>
+      <field 
+        :label="$t('link.linkTitleAttribute')">
+          <input
+            slot="field"
+            type="text"
+            class="block-link-popup-link-title"
+            v-model="link.title"
+            :spellcheck="false" />
+      </field>
+      <field 
+        :label="$t('link.linkClassAttribute')">
+          <input
+            slot="field"
+            type="text"
+            class="block-link-popup-link-css-class"
+            v-model="link.cssClass"
+            :spellcheck="false" />
+      </field>
+      <field 
+        :label="$t('link.linkTarget')">
+        <switcher 
+          slot="field" 
+          :label="$t('link.openInNewTab')"
+          v-model="link.targetBlank" /> 
+      </field>
+      <field
+        v-if="linkType === 'file'" 
+        :label="$t('link.downloadAttribute')">
+        <switcher 
+          slot="field" 
+          v-model="link.download" /> 
+      </field>
 
-      <div
-        v-if="linkType === 'file'"
-        class="block-link-popup-link-switcher">
-        <switcher v-model="link.download" /> {{ $t('link.addDownloadAttr') }}
-      </div>
-
-      <div class="block-link-popup-link-switcher">
-        <switcher v-model="link.noFollow" /> {{ $t('link.addNofollow') }}
-        <switcher v-model="link.sponsored"/> rel="sponsored"
-        <switcher v-model="link.ugc" /> rel="ugc"
-      </div>
+      <field 
+        :label="$t('link.linkRelAttribute')">
+        <switcher 
+           slot="field" 
+           label="nofollow"
+           v-model="link.noFollow" /> 
+        <switcher 
+           slot="field" 
+           label="sponsored"
+           v-model="link.sponsored"/> 
+        <switcher 
+           slot="field" 
+           label="ugc"
+           v-model="link.ugc" /> 
+      </field>
 
       <div class="block-link-popup-buttons">
         <button @click.stop="save()">
