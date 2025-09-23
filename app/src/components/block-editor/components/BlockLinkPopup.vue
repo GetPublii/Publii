@@ -122,10 +122,9 @@
       </field>
 
       <field 
-        :label="$t('link.linkTarget')">
+        :label="$t('link.openInNewWindow')">
         <switcher 
-          slot="field" 
-          :label="$t('link.openInNewTab')"
+          slot="field"
           v-model="link.targetBlank" /> 
       </field>
 
