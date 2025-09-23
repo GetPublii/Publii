@@ -543,10 +543,12 @@ export default {
     &-wrapper {
         margin: 0 auto;
         max-width: $wrapper;
+        min-height: calc(100vh - 8rem - var(--topbar-height));
+        position: relative;
     }
 
     &-version {
-        margin: -2.5rem 0 4rem 0;
+        margin: -2.5rem 0 4rem;
     }
 
     .notification {
@@ -714,7 +716,9 @@ export default {
         font-size: 13px;
         margin: 4rem auto;
         max-width: 50%;
+        position: sticky;
         text-align: center;
+        top: 100%;
     }
 }
 </style>
