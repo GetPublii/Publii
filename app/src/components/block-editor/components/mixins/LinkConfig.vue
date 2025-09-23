@@ -43,6 +43,8 @@ export default {
       } else {
         let linkConfig = {
           url: '',
+          title: '',
+          cssClass: '',
           noFollow: false,
           targetBlank: false,
           sponsored: false,
@@ -59,6 +61,8 @@ export default {
       }
 
       this.config.link.url = linkConfig.url;
+      this.config.link.title = linkConfig.title;
+      this.config.link.cssClass = linkConfig.cssClass;
       this.config.link.noFollow = linkConfig.noFollow;
       this.config.link.targetBlank = linkConfig.targetBlank;
       this.config.link.sponsored = linkConfig.sponsored;
@@ -69,6 +73,8 @@ export default {
     removeLink () {
       this.config.link = {
         url: '',
+        title: '',
+        cssClass: '',
         noFollow: false,
         targetBlank: false,
         sponsored: false,
@@ -90,6 +96,8 @@ export default {
 
         this.config.link = {
           url: linkInSelection.getAttribute('href'),
+          title: linkInSelection.getAttribute('title') ? linkInSelection.getAttribute('title') : '',
+          cssClass: linkInSelection.getAttribute('class') ? linkInSelection.getAttribute('class') : '',
           targetBlank: linkInSelection.getAttribute('target') === '_blank',
           noFollow: linkInSelection.getAttribute('rel') && linkInSelection.getAttribute('rel').indexOf('nofollow noopener') > -1,
           sponsored: linkInSelection.getAttribute('rel') && linkInSelection.getAttribute('rel').indexOf('sponsored') > -1,
@@ -107,6 +115,8 @@ export default {
 
         this.config.link = {
           url: '',
+          title: '',
+          cssClass: '',
           noFollow: false,
           targetBlank: false,
           sponsored: false,
@@ -168,6 +178,14 @@ export default {
       linkElement.setAttribute('href', this.config.link.url);
       linkElement.setAttribute('data-temp-id', temporaryID);
 
+      if (this.config.link.title) {
+        linkElement.setAttribute('title', this.config.link.title);
+      }
+
+      if (this.config.link.cssClass) {
+        linkElement.setAttribute('class', this.config.link.cssClass);
+      }
+
       if (this.config.link.targetBlank) {
         linkElement.setAttribute('target', '_blank');
       }
@@ -216,6 +234,8 @@ export default {
 
       if (this.config.link.targetBlank) {
         selectedLink.setAttribute('target', '_blank');
+      } else {
+        selectedLink.removeAttribute('target');
       }
 
       if (this.config.link.noFollow) {
@@ -232,10 +252,26 @@ export default {
 
       if (relAttr.length) {
         selectedLink.setAttribute('rel', relAttr.join(' '));
+      } else {
+        selectedLink.removeAttribute('rel');
       }
 
       if (this.config.link.download) {
         selectedLink.setAttribute('download', 'download');
+      } else {
+        selectedLink.removeAttribute('download');
+      }
+
+      if (this.config.link.title) {
+        selectedLink.setAttribute('title', this.config.link.title);
+      } else {
+        selectedLink.removeAttribute('title');
+      }
+
+      if (this.config.link.cssClass) {
+        selectedLink.setAttribute('class', this.config.link.cssClass);
+      } else {
+        selectedLink.removeAttribute('class');
       }
 
       setTimeout(() => {

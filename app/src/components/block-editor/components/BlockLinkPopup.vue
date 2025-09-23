@@ -94,6 +94,18 @@
         :spellcheck="false"
         placeholder="https://example.com"
         @keyup.enter="save()" />
+      <input
+        type="text"
+        class="block-link-popup-link-title"
+        v-model="link.title"
+        :spellcheck="false"
+        placeholder="Title" />
+      <input
+        type="text"
+        class="block-link-popup-link-css-class"
+        v-model="link.cssClass"
+        :spellcheck="false"
+        placeholder="CSS class" />
       <div class="block-link-popup-link-switcher">
         <switcher
           v-model="link.targetBlank" />
@@ -150,6 +162,8 @@ export default {
       linkSelectedFile: '',
       link: {
         url: '',
+        title: '',
+        cssClass: '',
         noFollow: false,
         targetBlank: false,
         sponsored: false,
@@ -180,12 +194,15 @@ export default {
       this.linkSelectedFile = '';
       this.link = {
         url: '',
+        title: '',
+        cssClass: '',
         noFollow: false,
         targetBlank: false,
         sponsored: false,
         ugc: false,
         download: false
       };
+      link.cssClass = link.cssClass.replace('is-highlighted', '');
       this.link = Object.assign(this.link, JSON.parse(JSON.stringify(link)));
       this.parseLink();
     },
