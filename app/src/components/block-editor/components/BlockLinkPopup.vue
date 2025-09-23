@@ -37,6 +37,7 @@
           {{ $t('file.file') }}
         </div>
       </div>
+
       <vue-select
         v-if="linkType === 'post'"
         slot="field"
@@ -47,6 +48,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('post.selectPostPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'page'"
         slot="field"
@@ -57,6 +59,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('page.selectPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'tag'"
         slot="field"
@@ -67,6 +70,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('tag.selectTagPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'author'"
         slot="field"
@@ -77,6 +81,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('author.selectAuthorPage')"></vue-select>
+
       <vue-select
         v-if="linkType === 'file'"
         slot="field"
@@ -86,6 +91,7 @@
         :close-on-select="true"
         :show-labels="false"
         :placeholder="$t('file.selectFileFromFileManager')"></vue-select>
+
       <input
         v-if="linkType === 'external'"
         type="text"
@@ -94,6 +100,7 @@
         :spellcheck="false"
         placeholder="https://example.com"
         @keyup.enter="save()" />
+
       <field 
         :label="$t('link.linkTitleAttribute')">
           <input
@@ -103,6 +110,7 @@
             v-model="link.title"
             :spellcheck="false" />
       </field>
+
       <field 
         :label="$t('link.linkClassAttribute')">
           <input
@@ -112,6 +120,7 @@
             v-model="link.cssClass"
             :spellcheck="false" />
       </field>
+
       <field 
         :label="$t('link.linkTarget')">
         <switcher 
@@ -119,6 +128,7 @@
           :label="$t('link.openInNewTab')"
           v-model="link.targetBlank" /> 
       </field>
+
       <field
         v-if="linkType === 'file'" 
         :label="$t('link.downloadAttribute')">
@@ -133,10 +143,12 @@
            slot="field" 
            label="nofollow"
            v-model="link.noFollow" /> 
+           
         <switcher 
            slot="field" 
            label="sponsored"
            v-model="link.sponsored"/> 
+
         <switcher 
            slot="field" 
            label="ugc"

@@ -1,7 +1,13 @@
 <template>
-  <span
-    :class="cssClasses"
-    @click="toggle"></span>
+  <span :class="{ 
+    'switcher-wrapper': true,
+    'has-label': !!label
+  }">
+    <span
+      :class="cssClasses"
+      @click="toggle"></span>
+    {{ label }}
+  </span>
 </template>
 
 <script>
@@ -22,6 +28,10 @@ export default {
     onToggle: {
       default: () => false,
       type: Function
+    },
+    label: {
+        default: '',
+        type: String
     },
     disabled: {
       default: false,
@@ -86,6 +96,14 @@ export default {
   transition: all .28s ease;
   width: 32px;
   z-index: 1;
+
+  &-wrapper {
+    display: inline-flex;
+
+    &.has-label {
+      padding-right: 1rem;
+    }
+  }
 
   &.lower-zindex {
     z-index: 0;
