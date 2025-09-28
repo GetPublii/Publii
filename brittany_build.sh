@@ -11,6 +11,12 @@ rm -vf package-lock.json app/package-lock.json
 npm install
 (cd app; npm install)
 
+echo "Running npm run prod"
+npm run prod
+
+echo "Running npm run prepare-editor"
+npm run prepare-editor
+
 echo "Running packager"
 rm -rf dist
 npm run packager:mac-m
