@@ -191,7 +191,7 @@ export default {
       }, 0);
     },
     save () {
-      this.content = this.$refs['block'].innerHTML;
+      this.content = this.$refs['block'] ? this.$refs['block'].innerHTML : '';
 
       this.$bus.$emit('block-editor-save-block', {
         id: this.id,

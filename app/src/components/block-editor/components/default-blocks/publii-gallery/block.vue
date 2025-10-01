@@ -236,7 +236,7 @@ export default {
           return;
         }
 
-        setTimeout(() => {
+        setTimeout(async () => {
           if (!this.fileSelectionCallback) {
             return;
           }
@@ -245,7 +245,7 @@ export default {
             this.imagesQueue = [];
 
             for (let i = 0; i < this.imageUploader.files.length; i++) {
-              this.imagesQueue.push(this.imageUploader.files[i].path);
+              this.imagesQueue.push(await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(this.imageUploader.files[i])));
             }
           } else {
             return;
