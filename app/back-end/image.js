@@ -434,7 +434,7 @@ class Image extends Model {
                             }
 
                             sharp(originalPath)
-                                .rotate()
+                                .autoOrient()
                                 .withMetadata()
                                 .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .webp(webpConfig)
@@ -509,7 +509,7 @@ class Image extends Model {
                             }
 
                             sharp(originalPath)
-                                .rotate()
+                                .autoOrient()
                                 .withMetadata()
                                 .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
                                 .webp(webpConfig)
