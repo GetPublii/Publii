@@ -164,6 +164,14 @@ class URLHelper {
      * @returns {*}
      */
     static fixProtocols(input) {
+        if (input.substr(0, 8) === './http:/') {
+            input = input.replace('./http:/', 'http:/');
+        }
+
+        if (input.substr(0, 9) === './https:/') {
+            input = input.replace('./https:/', 'https:/');
+        }
+
         if(input.substr(0,6) === 'http:/' && input.substr(0,7) !== 'http://') {
             input = input.replace('http:/', 'http://');
         }
@@ -178,6 +186,10 @@ class URLHelper {
 
         if(input.substr(0,9) === 'https:///') {
             input = input.replace('https:///', 'https://');
+        }
+
+        if (input.substr(0, 8) === './file:/') {
+            input = input.replace('./file:/', 'file:/');
         }
 
         if(input.substr(0,6) === 'file:/' && input.substr(0,7) !== 'file://') {
