@@ -11,7 +11,7 @@ class UpdatesHelper {
     }
 
     retrieve () {
-        if (this.forceDownload) {
+        if (this.forceDownload || !fs.existsSync(this.filePath)) {
             this.download();
         } else {
             this.readExistingData();
@@ -46,8 +46,6 @@ class UpdatesHelper {
         if (fs.existsSync(this.filePath)) {
             let body = FileHelper.readFileSync(this.filePath, 'utf8');
             this.handleResponse(body, false);
-        } else {
-            this.sendError();
         }
     }
 
