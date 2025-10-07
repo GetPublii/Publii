@@ -1,15 +1,15 @@
 /**
  * Helper for detecting contexts - opposite to #is helper
  *
- * {{#notIs 'index'}}
+ * {{#isNot 'index'}}
  *
- * {{#notIs 'tag,post'}}
+ * {{#isNot 'tag,post'}}
  *
  * Available phrases: index, blogindex, tag, post, page, author, 404, search, pagination, index-pagination, tag-pagination, author-pagination
  *
  * @returns {callback}
  */
-function notIs(conditional, options) {
+function isNot (conditional, options) {
     let contextIsCorrect = false;
     let contextsToCheck = conditional.split(',');
     contextsToCheck = contextsToCheck.map(context => context.trim());
@@ -28,4 +28,4 @@ function notIs(conditional, options) {
     }
 }
 
-module.exports = notIs;
+module.exports = isNot;
