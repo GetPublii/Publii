@@ -7,6 +7,7 @@ module.exports = {
     fontHelper: require('./font.js').fontHelper,
     dateHelper: require('./date.js'),
     is: require('./is.js'),
+    notIs: require('./not-is.js'),
     isCurrentPage: require('./is-current-page.js'),
     encodeUrl: require('./encode-url.js'),
     encodeUrlFragment: require('./encode-url-fragment.js'),
