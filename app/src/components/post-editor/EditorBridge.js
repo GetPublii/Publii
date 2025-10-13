@@ -14,7 +14,7 @@ class EditorBridge {
         this.init();
     }
 
-    updateItemID (newItemID) {
+    updateItemID(newItemID) {
         this.itemID = newItemID;
         let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
         this.tinymceEditor.setContent(contentToUpdate);
@@ -42,13 +42,13 @@ class EditorBridge {
         }
 
         // Remove style selector when there is no custom styles from the theme
-        if(customFormats.length === 0) {
+        if (customFormats.length === 0) {
             editorConfig.toolbar2 = editorConfig.toolbar2.replace('styleselect', '');
         }
 
         editorConfig = Utils.deepMerge(editorConfig, window.app.tinymceCustomConfig());
 
-        if(this.customThemeEditorConfig) {
+        if (this.customThemeEditorConfig) {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
         }
 
@@ -60,7 +60,7 @@ class EditorBridge {
         tinymce.init(editorConfig);
     }
 
-    focus () {
+    focus() {
         this.tinymceEditor.focus();
     }
 
@@ -82,32 +82,244 @@ class EditorBridge {
                 iframe.contentWindow.document.documentElement.classList.add('use-wide-scrollbars');
             }
 
-            iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
+            iframe.contentWindow.window.document.body.addEventListener("keydown", function (e) {
                 let selectedNode = $(editor.selection.getNode());
                 let selectedNodeHeight = selectedNode.outerHeight();
 
-                if(selectedNodeHeight > iframe.contentWindow.window.outerHeight * .75) {
+                if (selectedNodeHeight > iframe.contentWindow.window.outerHeight * .75) {
                     selectedNodeHeight = 0;
                 }
 
                 let cursorPos = selectedNode.position().top + selectedNodeHeight;
                 let iframeContentHeight = iframe.contentWindow.window.document.body.scrollHeight;
 
-                if(cursorPos > iframeContentHeight - 150) {
+                if (cursorPos > iframeContentHeight - 150) {
                     iframe.contentWindow.scrollTo(0, iframeContentHeight);
                 }
             }, false);
 
-            iframe.contentWindow.window.document.body.addEventListener("dblclick", function(e) {
+            // Handle Enter key in figcaption to exit figure
+            iframe.contentWindow.window.document.body.addEventListener("keydown", function (e) {
+                if (e.keyCode === 13) { // Enter key
+                    const node = editor.selection.getNode();
+
+                    if (node.tagName === 'FIGCAPTION' || node.parentNode.tagName === 'FIGCAPTION') {
+                        const figcaption = node.tagName === 'FIGCAPTION' ? node : node.parentNode;
+                        const figure = figcaption.closest('figure');
+
+                        if (figure) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            // Create new paragraph after figure
+                            editor.selection.select(figure);
+                            editor.selection.collapse(false);
+                            editor.execCommand('mceInsertContent', false, '<p><br data-mce-bogus="1"></p>');
+
+                            return false;
+                        }
+                    }
+                }
+            }, true);
+
+            iframe.contentWindow.window.document.body.addEventListener("dblclick", function (e) {
                 if (e.target.tagName === 'IMG') {
+                    const figure = e.target.closest('figure');
+                    if (figure) {
+                        // Handle contenteditable
+                        if (figure.getAttribute('contenteditable') === 'false') {
+                            figure.removeAttribute('contenteditable');
+                            setTimeout(() => figure.setAttribute('contenteditable', 'false'), 100);
+                        }
+
+                        // Copy classes from figure to img BEFORE opening dialog
+                        const figcaption = figure.querySelector('figcaption');
+                        if (figcaption) {
+                            const figureClasses = Array.from(figure.classList).filter(cls => cls.startsWith('post__image'));
+                            figureClasses.forEach(cls => {
+                                if (!e.target.classList.contains(cls)) {
+                                    e.target.classList.add(cls);
+                                }
+                            });
+                        }
+                    }
                     tinymce.activeEditor.execCommand('mceImage');
                 }
             }, false);
+
+            // When image is being edited, sync classes from figure to img
+            editor.on('BeforeExecCommand', function (e) {
+                if (e.command === 'mceImage') {
+                    const selectedNode = editor.selection.getNode();
+                    if (selectedNode.tagName === 'IMG') {
+                        const figure = selectedNode.closest('figure');
+                        if (figure) {
+                            // Copy ALL classes from figure to img (including alignment)
+                            const figureClasses = Array.from(figure.classList).filter(cls => cls.startsWith('post__image'));
+                            figureClasses.forEach(cls => {
+                                if (!selectedNode.classList.contains(cls)) {
+                                    selectedNode.classList.add(cls);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+
+            // Sync classes from img to figure after dialog closes
+            editor.on('ExecCommand', function (e) {
+                if (e.command === 'mceImage') {
+                    // Wait for TinyMCE to update the DOM
+                    editor.once('NodeChange', function () {
+                        // Use multiple checks to ensure DOM is ready
+                        let attemptCount = 0;
+                        const maxAttempts = 5;
+
+                        const syncClasses = () => {
+                            attemptCount++;
+
+                            try {
+                                const figures = iframe.contentWindow.window.document.querySelectorAll('figure');
+                                let needsRetry = false;
+
+                                figures.forEach(figure => {
+                                    const img = figure.querySelector('img');
+                                    const figcaption = figure.querySelector('figcaption');
+
+                                    // Check if img has classes but figcaption doesn't exist yet
+                                    if (img && !figcaption) {
+                                        const hasClasses = Array.from(img.classList).some(cls => cls.startsWith('post__image'));
+                                        if (hasClasses && attemptCount < maxAttempts) {
+                                            needsRetry = true;
+                                        }
+                                    }
+
+                                    if (img && figcaption) {
+                                        // Caption EXISTS - move ALL classes from img to figure
+                                        const imgClasses = Array.from(img.classList).filter(cls => cls.startsWith('post__image'));
+
+                                        if (imgClasses.length > 0) {
+                                            // Remove ALL old post__image classes from both elements
+                                            Array.from(figure.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
+                                                figure.classList.remove(cls);
+                                            });
+
+                                            Array.from(img.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
+                                                img.classList.remove(cls);
+                                            });
+
+                                            // Add only the NEW classes to figure
+                                            imgClasses.forEach(cls => figure.classList.add(cls));
+
+                                            // Remove empty class attribute from img
+                                            if (!img.className || img.className.trim() === '') {
+                                                img.removeAttribute('class');
+                                            }
+                                        }
+                                    } else if (img) {
+                                        // NO caption - classes should stay on img
+                                        Array.from(figure.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
+                                            figure.classList.remove(cls);
+                                        });
+
+                                        if (!figure.className || figure.className.trim() === '') {
+                                            figure.removeAttribute('class');
+                                        }
+                                    }
+                                });
+
+                                // Retry if figcaption not ready yet
+                                if (needsRetry) {
+                                    setTimeout(syncClasses, 50);
+                                    return;
+                                }
+
+                                // Clean up empty paragraphs after images
+                                const allParagraphs = iframe.contentWindow.window.document.querySelectorAll('p');
+                                allParagraphs.forEach(p => {
+                                    const prevElement = p.previousElementSibling;
+                                    if (prevElement && prevElement.tagName === 'P' && prevElement.querySelector('img')) {
+                                        const textContent = p.textContent.trim();
+                                        const innerHTML = p.innerHTML.trim();
+                                        if (!textContent || innerHTML === '&nbsp;' || innerHTML === '') {
+                                            p.remove();
+                                        }
+                                    }
+                                });
+                            } catch (error) {
+                                console.warn('Error during image class sync:', error);
+                            }
+                        };
+
+                        // Start with small delay
+                        setTimeout(syncClasses, 50);
+                    });
+                }
+            });
+
+            // Handle dialog close (including Cancel button)
+            editor.on('CloseWindow', function (e) {
+                setTimeout(() => {
+                    try {
+                        const figures = iframe.contentWindow.window.document.querySelectorAll('figure');
+
+                        figures.forEach(figure => {
+                            const img = figure.querySelector('img');
+                            const figcaption = figure.querySelector('figcaption');
+
+                            if (img && figcaption) {
+                                // Transfer classes from img to figure before cleanup
+                                const imgClasses = Array.from(img.classList).filter(cls => cls.startsWith('post__image'));
+
+                                if (imgClasses.length > 0) {
+                                    // Remove old classes from figure
+                                    Array.from(figure.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
+                                        figure.classList.remove(cls);
+                                    });
+
+                                    // Add img classes to figure
+                                    imgClasses.forEach(cls => figure.classList.add(cls));
+                                }
+
+                                // Remove classes from img
+                                Array.from(img.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
+                                    img.classList.remove(cls);
+                                });
+
+                                if (!img.className || img.className.trim() === '') {
+                                    img.removeAttribute('class');
+                                }
+                            }
+                        });
+                    } catch (error) {
+                        console.warn('Error during dialog close cleanup:', error);
+                    }
+                }, 100);
+            });
 
             // Support for dark mode
             let htmlElement = iframe.contentWindow.window.document.querySelector('html');
             htmlElement.setAttribute('data-theme', await window.app.getCurrentAppTheme());
             htmlElement.setAttribute('style', window.app.overridedCssVariables());
+
+            // Add CSS to prevent visual jump when classes are duplicated
+            const style = iframe.contentWindow.window.document.createElement('style');
+            style.textContent = `
+                /* Prevent visual "jump" when classes are duplicated on img inside figure */
+                figure[class*="post__image"] img[class*="post__image"] {
+                    width: 100% !important;
+                    max-width: none !important;
+                    float: none !important;
+                    margin: 0 !important;
+                    display: block !important;
+                }
+                    /* Fix misleading cursor on figure with image */
+                .mce-content-body figure[contentEditable=false][data-mce-selected],
+                .mce-content-body figure[contentEditable=false][data-mce-selected] img {
+                    cursor: pointer !important;
+                }
+            `;
+            iframe.contentWindow.window.document.head.appendChild(style);
 
             // Add inline editors
             this.addInlineEditor(customFormats);
@@ -118,13 +330,13 @@ class EditorBridge {
             });
 
             this.tinymceEditor.on('keyup', e => {
-                if(e.keyCode !== 13 && e.keyCode !== 40) {
+                if (e.keyCode !== 13 && e.keyCode !== 40) {
                     return;
                 }
 
                 let node = this.tinymceEditor.selection.getNode();
 
-                if(
+                if (
                     e.keyCode === 40 &&
                     node.tagName === 'PRE' &&
                     node.nextSibling === null
@@ -133,7 +345,7 @@ class EditorBridge {
                     return;
                 }
 
-                if(
+                if (
                     e.keyCode === 13 &&
                     node.tagName === 'P' &&
                     node.getAttribute('class')
@@ -142,7 +354,7 @@ class EditorBridge {
                     return;
                 }
 
-                if(
+                if (
                     e.keyCode === 13 &&
                     node.tagName === 'P' &&
                     node.parentNode.tagName === 'BLOCKQUOTE' &&
@@ -157,7 +369,7 @@ class EditorBridge {
                     // get the element's parent node
                     let parent = node.parentNode;
 
-                    if(parent.nextSibling) {
+                    if (parent.nextSibling) {
                         parent.parentNode.insertBefore(node, parent.nextSibling);
                         parent.removeChild(parent.lastChild);
                     } else {
@@ -175,16 +387,16 @@ class EditorBridge {
                 let clickedElement = e.path ? e.path[0] : e.srcElement;
                 let showPopup = false;
 
-                if(localStorage.getItem('publii-writers-panel') === null) {
+                if (localStorage.getItem('publii-writers-panel') === null) {
                     localStorage.setItem('publii-writers-panel', 'opened');
                     window.app.writersPanelOpen();
                 }
 
-                if(clickedElement.tagName === 'FIGCAPTION') {
+                if (clickedElement.tagName === 'FIGCAPTION') {
                     return;
                 }
 
-                if(clickedElement.tagName === 'SCRIPT') {
+                if (clickedElement.tagName === 'SCRIPT') {
                     let content = this.tinymceEditor.getContent({
                         source_view: true
                     });
@@ -193,17 +405,17 @@ class EditorBridge {
                     return;
                 }
 
-                if(clickedElement.tagName === 'FIGURE') {
+                if (clickedElement.tagName === 'FIGURE') {
                     showPopup = true;
-                } else if(e.path && e.path[1] && e.path[1].tagName === 'FIGURE') {
+                } else if (e.path && e.path[1] && e.path[1].tagName === 'FIGURE') {
                     clickedElement = e.path[1];
                     showPopup = true;
-                } else if(e.srcElement && e.srcElement.parentNode && e.srcElement.parentNode === 'FIGURE') {
+                } else if (e.srcElement && e.srcElement.parentNode && e.srcElement.parentNode === 'FIGURE') {
                     clickedElement = e.srcElement.parentNode;
                     showPopup = true;
                 }
 
-                if(clickedElement.tagName === 'A' || clickedElement.parentNode.tagName === 'A') {
+                if (clickedElement.tagName === 'A' || clickedElement.parentNode.tagName === 'A') {
                     let selection = iframe.contentWindow.window.getSelection();
                     selection.removeAllRanges();
                     let range = iframe.contentWindow.window.document.createRange();
@@ -229,7 +441,7 @@ class EditorBridge {
                     });
                 }
 
-                if(
+                if (
                     clickedElement.tagName === 'DIV' &&
                     clickedElement.getAttribute('class') &&
                     clickedElement.getAttribute('class').indexOf('gallery') !== -1
@@ -270,14 +482,14 @@ class EditorBridge {
                 }
 
                 setTimeout(async () => {
-                    if(this.callbackForTinyMCE) {
+                    if (this.callbackForTinyMCE) {
                         let filePath = false;
 
-                        if($('#post-editor-fake-image-uploader')[0].files) {
+                        if ($('#post-editor-fake-image-uploader')[0].files) {
                             filePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile($('#post-editor-fake-image-uploader')[0].files[0]));
                         }
 
-                        if(!filePath) {
+                        if (!filePath) {
                             return;
                         }
 
@@ -308,7 +520,7 @@ class EditorBridge {
 
             // Writers Panel
             let updateWritersPanel = function () {
-                 window.app.writersPanelRefresh();
+                window.app.writersPanelRefresh();
             };
             let throttledUpdate = Utils.debouncedFunction(updateWritersPanel, 1000);
             editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
@@ -321,6 +533,21 @@ class EditorBridge {
             iframe.contentWindow.window.document.addEventListener('scroll', () => {
                 self.hideToolbarsOnCopyOrScroll();
             });
+
+            // Clean up content before saving
+            editor.on('GetContent', function (e) {
+                if (e.format === 'html') {
+                    // Remove contenteditable from output
+                    e.content = e.content.replace(/\s*contenteditable="(true|false)"/gi, '');
+
+                    // Remove empty paragraphs after figures
+                    e.content = e.content.replace(/<\/figure>\s*<p>\s*(&nbsp;|\u00a0)?\s*<\/p>/gi, '</figure>');
+
+                    // Clean up double figures
+                    e.content = e.content.replace(/<figure[^>]*>\s*<figure[^>]*>/gi, '<figure class="post__image">');
+                    e.content = e.content.replace(/<\/figure>\s*<\/figure>/gi, '</figure>');
+                }
+            });
         });
 
         editor.ui.registry.addButton('gallery', {
@@ -332,7 +559,7 @@ class EditorBridge {
         });
     }
 
-    extensionsPath () {
+    extensionsPath() {
         return [
             'file:///',
             window.app.getSiteDir(),
@@ -342,16 +569,16 @@ class EditorBridge {
         ].join('');
     }
 
-    galleryPopupUpdated (response) {
+    galleryPopupUpdated(response) {
         this.hideToolbarsOnCopyOrScroll();
 
-        if(response) {
+        if (response) {
             response.gallery.innerHTML = response.html;
             response.gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
         }
     }
 
-    getTinyMCECSSFiles () {
+    getTinyMCECSSFiles() {
         let pathToEditorCSS = this.extensionsPath() + 'assets/css/editor.css';
         let customEditorCSS = pathToEditorCSS;
 
@@ -361,7 +588,7 @@ class EditorBridge {
         ].join(',');
     }
 
-    getCustomThemeEditorConfig () {
+    getCustomThemeEditorConfig() {
         // Add custom editor config
         let customEditorConfig = false;
 
@@ -372,7 +599,7 @@ class EditorBridge {
                 url: configOverridePath,
                 dataType: 'json',
                 async: false,
-                success: function(json) {
+                success: function (json) {
                     customEditorConfig = json;
                 }
             });
@@ -387,7 +614,7 @@ class EditorBridge {
         let inlineElements = [
             'a', 'b', 'abbr', 'acronym', 'cite', 'dfn', 'kbd',
             'samp', 'time', 'var', 'bdo', 'br', 'big', 'code',
-            'i', 'em', 'small','strong','span', 'tt', 'img',
+            'i', 'em', 'small', 'strong', 'span', 'tt', 'img',
             'map', 'object', 'q', 'script', 'sub', 'sup', 'button',
             'input', 'label', 'select', 'textarea'
         ];
@@ -403,17 +630,17 @@ class EditorBridge {
             customElements = window.app.getThemeCustomElements();
         }
 
-        if(customElements && customElements.length) {
-            for(let i = 0; i < customElements.length; i++) {
-                if(!customElements[i]) {
+        if (customElements && customElements.length) {
+            for (let i = 0; i < customElements.length; i++) {
+                if (!customElements[i]) {
                     continue;
                 }
 
-                if(!customElements[i].tag && !customElements[i].selector) {
+                if (!customElements[i].tag && !customElements[i].selector) {
                     continue;
                 }
 
-                if(customElements[i].postEditor === false) {
+                if (customElements[i].postEditor === false) {
                     continue;
                 }
 
@@ -422,7 +649,7 @@ class EditorBridge {
                     classes: customElements[i].cssClasses
                 };
 
-                if(customElements[i].selector) {
+                if (customElements[i].selector) {
                     style.selector = customElements[i].selector;
                 } else {
                     if (inlineElements.indexOf(customElements[i].tag)) {
@@ -513,7 +740,7 @@ class EditorBridge {
         });
     }
 
-    checkInlineTrigger (target) {
+    checkInlineTrigger(target) {
         let excludedTags = ['FIGURE', 'FIGCAPTION', 'IMG', 'PRE'];
 
         if (excludedTags.indexOf(target.tagName) > -1) {
@@ -524,7 +751,7 @@ class EditorBridge {
             return false;
         }
 
-        for ( ; target && target !== document; target = target.parentNode) {
+        for (; target && target !== document; target = target.parentNode) {
             if (target.matches && target.matches('.post__toc')) {
                 return false;
             }
@@ -537,8 +764,8 @@ class EditorBridge {
         return true;
     }
 
-    checkInlineLinkTrigger (target) {
-        for ( ; target && target !== document; target = target.parentNode) {
+    checkInlineLinkTrigger(target) {
+        for (; target && target !== document; target = target.parentNode) {
             if (target.matches && target.matches('.post__toc')) {
                 return false;
             }
@@ -563,14 +790,14 @@ class EditorBridge {
         let tinymceOverlay = $('.tinymce-overlay');
 
         postEditor.on('dragover', () => {
-            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
+            if (!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }
         });
 
         tinymceOverlay.on('dragover', e => {
-            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
+            if (!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }
@@ -580,14 +807,14 @@ class EditorBridge {
             hoverState = false;
 
             setTimeout(() => {
-                if(!hoverState) {
+                if (!hoverState) {
                     editorArea.removeClass('is-hovered');
                 }
             }, 250);
         });
 
         document.getElementById('post-editor_ifr').contentWindow.addEventListener("dragover", e => {
-            if(!this.postEditorInnerDragging) {
+            if (!this.postEditorInnerDragging) {
                 e.preventDefault();
                 e.stopPropagation();
                 editorArea.addClass('is-hovered');
@@ -610,26 +837,26 @@ class EditorBridge {
         editorArea.on('drop', this.editorFileSelect.bind(this));
     }
 
-    fileDragOver (e) {
-        if(!this.postEditorInnerDragging) {
+    fileDragOver(e) {
+        if (!this.postEditorInnerDragging) {
             e.originalEvent.stopPropagation();
             e.originalEvent.preventDefault();
             e.originalEvent.dataTransfer.dropEffect = 'copy';
         }
     }
 
-    async editorFileSelect (e) {
+    async editorFileSelect(e) {
         e.originalEvent.stopPropagation();
         e.originalEvent.preventDefault();
 
         let files = e.originalEvent.dataTransfer.files;
         let siteName = window.app.getSiteName();
 
-        if(this.postEditorInnerDragging) {
+        if (this.postEditorInnerDragging) {
             return;
         }
 
-        if(!files[0]) {
+        if (!files[0]) {
             $('.tox-tinymce').removeClass('is-hovered');
             $('.tox-tinymce').removeClass('is-loading-image');
             $('.tinymce-overlay').text('Drag your image here');
@@ -650,7 +877,7 @@ class EditorBridge {
         this.contentImageUploading = true;
 
         mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
-            if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
+            if (data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
                 tinymce.activeEditor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
             } else {
                 tinymce.activeEditor.insertContent('<p><img alt="" src="' + data.url + '" class="post__image" /></p>');
@@ -664,7 +891,7 @@ class EditorBridge {
         });
     }
 
-    reloadEditor () {
+    reloadEditor() {
         this.tinymceEditor.once('keyup', e => {
             window.app.reportPossibleDataLoss();
         });
