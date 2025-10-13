@@ -31,19 +31,16 @@
         <a
             v-if="hasSyncDate && websiteUrl"
             :href="websiteUrl"
+            :title="$t('sync.visitYourWebsite')"
             target="_blank"
-            class="sidebar-sync-date">
-
+            class="sidebar-sync-date"
+            rel="noreferrer noopener">
                 <template v-if="!hasManualDeploy">
                     {{ $t('sync.lastSync') }}: <span>{{ syncDate }}</span>
                 </template>
                 <template v-if="hasManualDeploy">
                     {{ $t('sync.lastRendered') }}: <span>{{ syncDate }}</span>
-                    <icon
-                        size="xs"
-                        name="external-link"/>
                 </template>
-
         </a>
     </div>
 </template>
