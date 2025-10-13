@@ -782,6 +782,15 @@ class RendererContext {
                 return this.siteConfig.domain + '/';    
             }
          
+            if (
+                !this.renderer.cachedItems || 
+                !this.renderer.cachedItems.pages || 
+                !this.renderer.cachedItems.pages[itemContext.page.id] ||
+                !this.renderer.cachedItems.pages[itemContext.page.id].url
+            ) {
+                return this.siteConfig.domain + '/' + itemSlug + '/';
+            }
+
             return this.renderer.cachedItems.pages[itemContext.page.id].url;
         }
     }
