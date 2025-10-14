@@ -147,20 +147,47 @@ class EditorBridge {
                 }
             }, false);
 
-            // When image is being edited, sync classes from figure to img
+
+            // Store custom classes before opening image dialog
+            let customImageClasses = new Map();
+
             editor.on('BeforeExecCommand', function (e) {
                 if (e.command === 'mceImage') {
                     const selectedNode = editor.selection.getNode();
                     if (selectedNode.tagName === 'IMG') {
                         const figure = selectedNode.closest('figure');
+
+                        // Get all classes from img
+                        const allClasses = Array.from(selectedNode.classList);
+
+                        // Separate post__image classes from custom classes
+                        const postImageClasses = allClasses.filter(cls => cls.startsWith('post__image'));
+                        const customClasses = allClasses.filter(cls => !cls.startsWith('post__image'));
+
+                        // Store custom classes if any exist
+                        if (customClasses.length > 0) {
+                            customImageClasses.set(selectedNode, customClasses);
+
+                            // Temporarily remove custom classes from img
+                            customClasses.forEach(cls => selectedNode.classList.remove(cls));
+                        }
+
                         if (figure) {
-                            // Copy ALL classes from figure to img (including alignment)
+                            // Copy post__image classes from figure to img
                             const figureClasses = Array.from(figure.classList).filter(cls => cls.startsWith('post__image'));
                             figureClasses.forEach(cls => {
                                 if (!selectedNode.classList.contains(cls)) {
                                     selectedNode.classList.add(cls);
                                 }
                             });
+
+                            // Also store custom classes from figure
+                            const figureCustomClasses = Array.from(figure.classList).filter(cls => !cls.startsWith('post__image'));
+                            if (figureCustomClasses.length > 0) {
+                                const existingCustom = customImageClasses.get(selectedNode) || [];
+                                const mergedCustom = [...new Set([...existingCustom, ...figureCustomClasses])];
+                                customImageClasses.set(selectedNode, mergedCustom);
+                            }
                         }
                     }
                 }
@@ -169,9 +196,7 @@ class EditorBridge {
             // Sync classes from img to figure after dialog closes
             editor.on('ExecCommand', function (e) {
                 if (e.command === 'mceImage') {
-                    // Wait for TinyMCE to update the DOM
                     editor.once('NodeChange', function () {
-                        // Use multiple checks to ensure DOM is ready
                         let attemptCount = 0;
                         const maxAttempts = 5;
 
@@ -186,7 +211,14 @@ class EditorBridge {
                                     const img = figure.querySelector('img');
                                     const figcaption = figure.querySelector('figcaption');
 
-                                    // Check if img has classes but figcaption doesn't exist yet
+                                    const layoutClasses = [
+                                        'post__image--full',
+                                        'post__image--wide',
+                                        'post__image--center',
+                                        'post__image--left',
+                                        'post__image--right'
+                                    ];
+
                                     if (img && !figcaption) {
                                         const hasClasses = Array.from(img.classList).some(cls => cls.startsWith('post__image'));
                                         if (hasClasses && attemptCount < maxAttempts) {
@@ -195,32 +227,37 @@ class EditorBridge {
                                     }
 
                                     if (img && figcaption) {
-                                        // Caption EXISTS - move ALL classes from img to figure
-                                        const imgClasses = Array.from(img.classList).filter(cls => cls.startsWith('post__image'));
+                                        // --- FIX: clean all layout classes before merging ---
+                                        const imgClasses = Array.from(img.classList);
+                                        const figureClasses = Array.from(figure.classList);
 
-                                        if (imgClasses.length > 0) {
-                                            // Remove ALL old post__image classes from both elements
-                                            Array.from(figure.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
-                                                figure.classList.remove(cls);
-                                            });
+                                        // Detect new layout class chosen in dialog
+                                        const newLayoutClass = imgClasses.find(cls => layoutClasses.includes(cls));
 
-                                            Array.from(img.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
-                                                img.classList.remove(cls);
-                                            });
-
-                                            // Add only the NEW classes to figure
-                                            imgClasses.forEach(cls => figure.classList.add(cls));
-
-                                            // Remove empty class attribute from img
-                                            if (!img.className || img.className.trim() === '') {
-                                                img.removeAttribute('class');
-                                            }
-                                        }
-                                    } else if (img) {
-                                        // NO caption - classes should stay on img
-                                        Array.from(figure.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
+                                        // Always remove old layout classes first
+                                        layoutClasses.forEach(cls => {
+                                            img.classList.remove(cls);
                                             figure.classList.remove(cls);
                                         });
+
+                                        // Add the new one (if any)
+                                        if (newLayoutClass) {
+                                            figure.classList.add(newLayoutClass);
+                                        }
+
+                                        // Merge remaining non-layout classes
+                                        const merged = new Set([
+                                            ...figure.classList,
+                                            ...img.classList
+                                        ]);
+
+                                        // Apply merged clean class list
+                                        figure.className = Array.from(merged).join(' ');
+                                        img.removeAttribute('class'); // leave <img> clean — only figure keeps layout
+                                    } else if (img) {
+                                        Array.from(figure.classList)
+                                            .filter(cls => cls.startsWith('post__image'))
+                                            .forEach(cls => figure.classList.remove(cls));
 
                                         if (!figure.className || figure.className.trim() === '') {
                                             figure.removeAttribute('class');
@@ -228,7 +265,6 @@ class EditorBridge {
                                     }
                                 });
 
-                                // Retry if figcaption not ready yet
                                 if (needsRetry) {
                                     setTimeout(syncClasses, 50);
                                     return;
@@ -251,7 +287,6 @@ class EditorBridge {
                             }
                         };
 
-                        // Start with small delay
                         setTimeout(syncClasses, 50);
                     });
                 }
@@ -267,28 +302,64 @@ class EditorBridge {
                             const img = figure.querySelector('img');
                             const figcaption = figure.querySelector('figcaption');
 
+                            const layoutClasses = [
+                                'post__image--full',
+                                'post__image--wide',
+                                'post__image--center',
+                                'post__image--left',
+                                'post__image--right'
+                            ];
+
                             if (img && figcaption) {
-                                // Transfer classes from img to figure before cleanup
-                                const imgClasses = Array.from(img.classList).filter(cls => cls.startsWith('post__image'));
+                                const imgClasses = Array.from(img.classList);
+                                const figureClasses = Array.from(figure.classList);
+                                const storedCustomClasses = customImageClasses.get(img) || [];
 
-                                if (imgClasses.length > 0) {
-                                    // Remove old classes from figure
-                                    Array.from(figure.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
-                                        figure.classList.remove(cls);
-                                    });
+                                const newLayoutClass = imgClasses.find(cls => layoutClasses.includes(cls));
 
-                                    // Add img classes to figure
-                                    imgClasses.forEach(cls => figure.classList.add(cls));
-                                }
-
-                                // Remove classes from img
-                                Array.from(img.classList).filter(cls => cls.startsWith('post__image')).forEach(cls => {
+                                // --- FIX: clean old layout classes on both elements ---
+                                layoutClasses.forEach(cls => {
                                     img.classList.remove(cls);
+                                    figure.classList.remove(cls);
                                 });
 
-                                if (!img.className || img.className.trim() === '') {
-                                    img.removeAttribute('class');
+                                if (newLayoutClass) {
+                                    figure.classList.add(newLayoutClass);
                                 }
+
+                                // Merge remaining classes (figure + img + custom)
+                                const merged = new Set([
+                                    ...figureClasses,
+                                    ...imgClasses,
+                                    ...storedCustomClasses
+                                ]);
+
+                                figure.className = Array.from(merged).join(' ');
+                                img.removeAttribute('class'); // keep layout only on figure
+                                customImageClasses.delete(img);
+                            } else if (img) {
+                                if (customImageClasses.has(img)) {
+                                    const customClasses = customImageClasses.get(img);
+                                    customClasses.forEach(cls => {
+                                        if (!img.classList.contains(cls)) {
+                                            img.classList.add(cls);
+                                        }
+                                    });
+                                    customImageClasses.delete(img);
+                                }
+                            }
+                        });
+
+                        const allImages = iframe.contentWindow.window.document.querySelectorAll('img');
+                        allImages.forEach(img => {
+                            if (customImageClasses.has(img)) {
+                                const customClasses = customImageClasses.get(img);
+                                customClasses.forEach(cls => {
+                                    if (!img.classList.contains(cls)) {
+                                        img.classList.add(cls);
+                                    }
+                                });
+                                customImageClasses.delete(img);
                             }
                         });
                     } catch (error) {
@@ -296,6 +367,7 @@ class EditorBridge {
                     }
                 }, 100);
             });
+
 
             // Support for dark mode
             let htmlElement = iframe.contentWindow.window.document.querySelector('html');
