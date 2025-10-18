@@ -345,7 +345,7 @@ export default {
 .publii-textarea {
     background-color: var(--input-bg);
     border: none;
-    border-radius: 3px;
+    border-radius: var(--border-radius);
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
     display: block;

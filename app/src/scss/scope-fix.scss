@@ -35,7 +35,7 @@
 .multiselect__tag {
     background: var(--input-border-color);
     border: none;
-    border-radius: 3px;
+    border-radius: var(--border-radius);
     color: var(--text-primary-color);
     display: inline-block;
     font-size: 1.4rem;
@@ -130,7 +130,7 @@
 .field {
     .mce-tinymce {
         border: 1px solid var(--input-border-color);
-        border-radius: 3px;
+        border-radius: var(--border-radius);
     }
 
     .mce-toolbar-grp {

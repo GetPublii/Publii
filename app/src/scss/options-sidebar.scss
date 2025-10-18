@@ -119,7 +119,7 @@
             }
 
             .button {
-                border-radius: 3px;
+                border-radius: var(--border-radius);
                 bottom: 0;
                 height: calc(100% - 4px);
                 margin: 2px;
