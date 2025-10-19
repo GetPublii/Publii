@@ -35,7 +35,7 @@
         <updated>{{date modifiedAt "YYYY-MM-DDTHH:mm:ssZ"}}</updated>
         {{/checkIf}}
         {{#if excerpt}}
-            <summary>
+            <summary type="html">
                 <![CDATA[
                     {{#if thumbnail}}
                         <img src="{{thumbnail.url}}" alt="{{thumbnail.alt}}" />
