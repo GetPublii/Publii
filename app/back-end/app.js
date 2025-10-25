@@ -609,7 +609,11 @@ class App {
         this.mainWindow.removeMenu();
 
         // Register search shortcut listener
-        this.mainWindow.webContents.on('before-input-event', (e, input) => {
+        this.mainWindow.webContents.on('before-input-event', (event, input) => {
+            if (input.type === 'mouseDown' && (input.button === 'back' || input.button === 'forward')) {
+                event.preventDefault();
+            }
+
             if (input.key === 'f' && (input.meta || input.control)) {
                 this.mainWindow.webContents.send('app-show-search-form');
             } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
