@@ -972,3 +972,17 @@ pre[class*="language-"] > code {
 .token.entity {
     cursor: help;
 }
+
+/* Prevent visual "jump" when classes are duplicated on img inside figure */
+figure[class*="post__image"] img[class*="post__image"] {
+    width: 100% !important;
+    max-width: none !important;
+    float: none !important;
+    margin: 0 !important;
+    display: block !important;
+}
+/* Fix misleading cursor on figure with image */
+.mce-content-body figure[contentEditable=false][data-mce-selected],
+.mce-content-body figure[contentEditable=false][data-mce-selected] img {
+    cursor: pointer !important;
+}

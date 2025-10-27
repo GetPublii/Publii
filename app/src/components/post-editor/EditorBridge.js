@@ -14,7 +14,7 @@ class EditorBridge {
         this.init();
     }
 
-    updateItemID(newItemID) {
+    updateItemID (newItemID) {
         this.itemID = newItemID;
         let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
         this.tinymceEditor.setContent(contentToUpdate);
@@ -42,13 +42,13 @@ class EditorBridge {
         }
 
         // Remove style selector when there is no custom styles from the theme
-        if (customFormats.length === 0) {
+        if(customFormats.length === 0) {
             editorConfig.toolbar2 = editorConfig.toolbar2.replace('styleselect', '');
         }
 
         editorConfig = Utils.deepMerge(editorConfig, window.app.tinymceCustomConfig());
 
-        if (this.customThemeEditorConfig) {
+        if(this.customThemeEditorConfig) {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
         }
 
@@ -60,7 +60,7 @@ class EditorBridge {
         tinymce.init(editorConfig);
     }
 
-    focus() {
+    focus () {
         this.tinymceEditor.focus();
     }
 
@@ -74,45 +74,56 @@ class EditorBridge {
             $('.tox-tinymce').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
 
-            // Scroll the editor to bottom in order to avoid issues with the text under gradient
+            // Scroll the editor to bottom in order to avoid issues
+            // with the text under gradient
             let iframe = document.getElementById('post-editor_ifr');
 
             if (document.getElementById('app').classList.contains('use-wide-scrollbars')) {
                 iframe.contentWindow.document.documentElement.classList.add('use-wide-scrollbars');
             }
 
-            iframe.contentWindow.window.document.body.addEventListener("keydown", function (e) {
+            iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
                 let selectedNode = $(editor.selection.getNode());
                 let selectedNodeHeight = selectedNode.outerHeight();
 
-                if (selectedNodeHeight > iframe.contentWindow.window.outerHeight * .75) {
+                if(selectedNodeHeight > iframe.contentWindow.window.outerHeight * .75) {
                     selectedNodeHeight = 0;
                 }
 
                 let cursorPos = selectedNode.position().top + selectedNodeHeight;
                 let iframeContentHeight = iframe.contentWindow.window.document.body.scrollHeight;
 
-                if (cursorPos > iframeContentHeight - 150) {
+                if(cursorPos > iframeContentHeight - 150) {
                     iframe.contentWindow.scrollTo(0, iframeContentHeight);
                 }
             }, false);
 
             // Handle Enter key in figcaption to exit figure
             iframe.contentWindow.window.document.body.addEventListener("keydown", function (e) {
-                if (e.keyCode === 13) { // Enter
-                    const node = editor.selection.getNode();
+                if (e.keyCode === 13 && !e.shiftKey) { // on enter, but when shift is not pressed
+                    let node = editor.selection.getNode();
 
                     if (node.tagName === 'FIGCAPTION' || node.parentNode.tagName === 'FIGCAPTION') {
-                        const figcaption = node.tagName === 'FIGCAPTION' ? node : node.parentNode;
-                        const figure = figcaption.closest('figure');
+                        let figcaption = node.tagName === 'FIGCAPTION' ? node : node.parentNode;
+                        let figure = figcaption.closest('figure');
 
                         if (figure) {
                             e.preventDefault();
                             e.stopPropagation();
 
-                            editor.selection.select(figure);
-                            editor.selection.collapse(false);
-                            editor.execCommand('mceInsertContent', false, '<p><br data-mce-bogus="1"></p>');
+                            // check if next element is paragraph - then focus on in, instead of creating a new paragraph
+                            let next = figure.nextElementSibling;
+                            
+                            if (next && next.tagName === 'P') {
+                                let range = editor.dom.createRng();
+                                range.setStart(next, 0);
+                                range.collapse(true);
+                                editor.selection.setRng(range);
+                            } else {
+                                editor.selection.select(figure); 
+                                editor.selection.collapse(false);
+                                editor.execCommand('mceInsertContent', false, '<p></p>');
+                            }
 
                             return false;
                         }
@@ -147,14 +158,6 @@ class EditorBridge {
 
             // ---------------------- Image dialog handling (scoped) ----------------------
 
-            const LAYOUT_CLASSES = [
-                'post__image--full',
-                'post__image--wide',
-                'post__image--center',
-                'post__image--left',
-                'post__image--right'
-            ];
-
             // State keyed by a stable token assigned on open
             const preDialogCustomImgOnly = new Map(); // token -> string[] (custom classes originally on IMG)
             const preDialogImgLayout = new Map(); // token -> { removed: string[], injected: string|null }
@@ -162,8 +165,6 @@ class EditorBridge {
 
             let activeToken = null;
             let dialogWasConfirmed = false;
-
-            const makeToken = () => 'publii-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
 
             const findNodesByToken = (doc, token) => {
                 const figure = doc.querySelector(`figure[data-publii-token="${token}"]`);
@@ -174,31 +175,47 @@ class EditorBridge {
             const getLayoutFrom = (el) => {
                 if (!el) return null;
                 const cls = Array.from(el.classList);
-                return cls.find(c => LAYOUT_CLASSES.includes(c)) || null;
+                return cls.find(c => c.startsWith('post__image')) || null;
             };
 
             const stripLayouts = (el) => {
-                if (!el) return;
-                LAYOUT_CLASSES.forEach(c => el.classList.remove(c));
+                if (!el) {
+                    return;
+                }
+            
+                Array.from(el.classList).forEach(c => {
+                    if (c.startsWith('post__image')) {
+                        el.classList.remove(c);
+                    }
+                });
             };
 
             editor.on('BeforeExecCommand', function (e) {
-                if (e.command !== 'mceImage') return;
+                if (e.command !== 'mceImage') {
+                    return;
+                }
 
-                const selNode = editor.selection.getNode();
-                if (!selNode || selNode.tagName !== 'IMG') return;
+                let selNode = editor.selection.getNode();
 
-                const img = selNode;
-                const figure = img.closest('figure');
+                if (!selNode || selNode.tagName !== 'IMG') {
+                    return;
+                }
+
+                let img = selNode;
+                let figure = img.closest('figure');
 
                 // Assign token ONLY to existing figure (never to IMG)
-                activeToken = makeToken();
-                if (figure) figure.setAttribute('data-publii-token', activeToken);
+                activeToken = 'publii-' + crypto.randomUUID();
+                
+                if (figure) {
+                    figure.setAttribute('data-publii-token', activeToken);
+                }
+                
                 dialogWasConfirmed = false;
 
                 // Snapshot current IMG classes (keep original layout info always)
                 const imgClasses = Array.from(img.classList);
-                const imgLayoutNow = imgClasses.filter(c => LAYOUT_CLASSES.includes(c));
+                const imgLayoutNow = imgClasses.filter(c => c.startsWith('post__image'));
                 const imgCustomNow = imgClasses.filter(c => !c.startsWith('post__image'));
 
                 // Store custom IMG classes and temporarily remove them for cleaner dialog UI
@@ -311,7 +328,7 @@ class EditorBridge {
                                 const figClsNow = Array.from(figure.classList);
 
                                 // Chosen layout from dialog (may be null when user only toggled caption)
-                                let newLayout = imgClsNow.find(c => LAYOUT_CLASSES.includes(c)) || null;
+                                let newLayout = imgClsNow.find(c => c.startsWith('post__image')) || null;
 
                                 // Fallback to original IMG layout when user didn't change layout
                                 if (!newLayout && snap.removed && snap.removed.length) {
@@ -323,8 +340,8 @@ class EditorBridge {
                                 stripLayouts(figure);
 
                                 // Merge non-layout classes for FIGURE
-                                const nonLayoutImg = imgClsNow.filter(c => !LAYOUT_CLASSES.includes(c));
-                                const nonLayoutFigure = figClsNow.filter(c => !LAYOUT_CLASSES.includes(c));
+                                const nonLayoutImg = imgClsNow.filter(c => !c.startsWith('post__image'));
+                                const nonLayoutFigure = figClsNow.filter(c => !c.startsWith('post__image'));
 
                                 // Include stored custom classes captured before dialog
                                 const merged = new Set([
@@ -412,25 +429,6 @@ class EditorBridge {
             htmlElement.setAttribute('data-theme', await window.app.getCurrentAppTheme());
             htmlElement.setAttribute('style', window.app.overridedCssVariables());
 
-            // Add CSS to prevent visual jump when classes are duplicated
-            const style = iframe.contentWindow.window.document.createElement('style');
-            style.textContent = `
-                /* Prevent visual "jump" when classes are duplicated on img inside figure */
-                figure[class*="post__image"] img[class*="post__image"] {
-                    width: 100% !important;
-                    max-width: none !important;
-                    float: none !important;
-                    margin: 0 !important;
-                    display: block !important;
-                }
-                /* Fix misleading cursor on figure with image */
-                .mce-content-body figure[contentEditable=false][data-mce-selected],
-                .mce-content-body figure[contentEditable=false][data-mce-selected] img {
-                    cursor: pointer !important;
-                }
-            `;
-            iframe.contentWindow.window.document.head.appendChild(style);
-
             // Add inline editors
             this.addInlineEditor(customFormats);
             this.addLinkEditor(iframe);
@@ -440,13 +438,13 @@ class EditorBridge {
             });
 
             this.tinymceEditor.on('keyup', e => {
-                if (e.keyCode !== 13 && e.keyCode !== 40) {
+                if(e.keyCode !== 13 && e.keyCode !== 40) {
                     return;
                 }
 
                 let node = this.tinymceEditor.selection.getNode();
 
-                if (
+                if(
                     e.keyCode === 40 &&
                     node.tagName === 'PRE' &&
                     node.nextSibling === null
@@ -455,7 +453,7 @@ class EditorBridge {
                     return;
                 }
 
-                if (
+                if(
                     e.keyCode === 13 &&
                     node.tagName === 'P' &&
                     node.getAttribute('class')
@@ -464,7 +462,7 @@ class EditorBridge {
                     return;
                 }
 
-                if (
+                if(
                     e.keyCode === 13 &&
                     node.tagName === 'P' &&
                     node.parentNode.tagName === 'BLOCKQUOTE' &&
@@ -479,7 +477,7 @@ class EditorBridge {
                     // get the element's parent node
                     let parent = node.parentNode;
 
-                    if (parent.nextSibling) {
+                    if(parent.nextSibling) {
                         parent.parentNode.insertBefore(node, parent.nextSibling);
                         parent.removeChild(parent.lastChild);
                     } else {
@@ -497,16 +495,16 @@ class EditorBridge {
                 let clickedElement = e.path ? e.path[0] : e.srcElement;
                 let showPopup = false;
 
-                if (localStorage.getItem('publii-writers-panel') === null) {
+                if(localStorage.getItem('publii-writers-panel') === null) {
                     localStorage.setItem('publii-writers-panel', 'opened');
                     window.app.writersPanelOpen();
                 }
 
-                if (clickedElement.tagName === 'FIGCAPTION') {
+                if(clickedElement.tagName === 'FIGCAPTION') {
                     return;
                 }
 
-                if (clickedElement.tagName === 'SCRIPT') {
+                if(clickedElement.tagName === 'SCRIPT') {
                     let content = this.tinymceEditor.getContent({
                         source_view: true
                     });
@@ -515,17 +513,17 @@ class EditorBridge {
                     return;
                 }
 
-                if (clickedElement.tagName === 'FIGURE') {
+                if(clickedElement.tagName === 'FIGURE') {
                     showPopup = true;
-                } else if (e.path && e.path[1] && e.path[1].tagName === 'FIGURE') {
+                } else if(e.path && e.path[1] && e.path[1].tagName === 'FIGURE') {
                     clickedElement = e.path[1];
                     showPopup = true;
-                } else if (e.srcElement && e.srcElement.parentNode && e.srcElement.parentNode === 'FIGURE') {
+                } else if(e.srcElement && e.srcElement.parentNode && e.srcElement.parentNode === 'FIGURE') {
                     clickedElement = e.srcElement.parentNode;
                     showPopup = true;
                 }
 
-                if (clickedElement.tagName === 'A' || clickedElement.parentNode.tagName === 'A') {
+                if(clickedElement.tagName === 'A' || clickedElement.parentNode.tagName === 'A') {
                     let selection = iframe.contentWindow.window.getSelection();
                     selection.removeAllRanges();
                     let range = iframe.contentWindow.window.document.createRange();
@@ -551,7 +549,7 @@ class EditorBridge {
                     });
                 }
 
-                if (
+                if(
                     clickedElement.tagName === 'DIV' &&
                     clickedElement.getAttribute('class') &&
                     clickedElement.getAttribute('class').indexOf('gallery') !== -1
@@ -592,14 +590,14 @@ class EditorBridge {
                 }
 
                 setTimeout(async () => {
-                    if (this.callbackForTinyMCE) {
+                    if(this.callbackForTinyMCE) {
                         let filePath = false;
 
-                        if ($('#post-editor-fake-image-uploader')[0].files) {
+                        if($('#post-editor-fake-image-uploader')[0].files) {
                             filePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile($('#post-editor-fake-image-uploader')[0].files[0]));
                         }
 
-                        if (!filePath) {
+                        if(!filePath) {
                             return;
                         }
 
@@ -630,7 +628,7 @@ class EditorBridge {
 
             // Writers Panel
             let updateWritersPanel = function () {
-                window.app.writersPanelRefresh();
+                 window.app.writersPanelRefresh();
             };
             let throttledUpdate = Utils.debouncedFunction(updateWritersPanel, 1000);
             editor.on('setcontent beforeaddundo undo redo keyup', throttledUpdate);
@@ -669,7 +667,7 @@ class EditorBridge {
         });
     }
 
-    extensionsPath() {
+    extensionsPath () {
         return [
             'file:///',
             window.app.getSiteDir(),
@@ -679,16 +677,16 @@ class EditorBridge {
         ].join('');
     }
 
-    galleryPopupUpdated(response) {
+    galleryPopupUpdated (response) {
         this.hideToolbarsOnCopyOrScroll();
 
-        if (response) {
+        if(response) {
             response.gallery.innerHTML = response.html;
             response.gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
         }
     }
 
-    getTinyMCECSSFiles() {
+    getTinyMCECSSFiles () {
         let pathToEditorCSS = this.extensionsPath() + 'assets/css/editor.css';
         let customEditorCSS = pathToEditorCSS;
 
@@ -698,7 +696,7 @@ class EditorBridge {
         ].join(',');
     }
 
-    getCustomThemeEditorConfig() {
+    getCustomThemeEditorConfig () {
         // Add custom editor config
         let customEditorConfig = false;
 
@@ -709,7 +707,7 @@ class EditorBridge {
                 url: configOverridePath,
                 dataType: 'json',
                 async: false,
-                success: function (json) {
+                success: function(json) {
                     customEditorConfig = json;
                 }
             });
@@ -724,7 +722,7 @@ class EditorBridge {
         let inlineElements = [
             'a', 'b', 'abbr', 'acronym', 'cite', 'dfn', 'kbd',
             'samp', 'time', 'var', 'bdo', 'br', 'big', 'code',
-            'i', 'em', 'small', 'strong', 'span', 'tt', 'img',
+            'i', 'em', 'small','strong','span', 'tt', 'img',
             'map', 'object', 'q', 'script', 'sub', 'sup', 'button',
             'input', 'label', 'select', 'textarea'
         ];
@@ -740,17 +738,17 @@ class EditorBridge {
             customElements = window.app.getThemeCustomElements();
         }
 
-        if (customElements && customElements.length) {
-            for (let i = 0; i < customElements.length; i++) {
-                if (!customElements[i]) {
+        if(customElements && customElements.length) {
+            for(let i = 0; i < customElements.length; i++) {
+                if(!customElements[i]) {
                     continue;
                 }
 
-                if (!customElements[i].tag && !customElements[i].selector) {
+                if(!customElements[i].tag && !customElements[i].selector) {
                     continue;
                 }
 
-                if (customElements[i].postEditor === false) {
+                if(customElements[i].postEditor === false) {
                     continue;
                 }
 
@@ -759,7 +757,7 @@ class EditorBridge {
                     classes: customElements[i].cssClasses
                 };
 
-                if (customElements[i].selector) {
+                if(customElements[i].selector) {
                     style.selector = customElements[i].selector;
                 } else {
                     if (inlineElements.indexOf(customElements[i].tag)) {
@@ -849,7 +847,7 @@ class EditorBridge {
         });
     }
 
-    checkInlineTrigger(target) {
+    checkInlineTrigger (target) {
         let excludedTags = ['FIGURE', 'FIGCAPTION', 'IMG', 'PRE'];
 
         if (excludedTags.indexOf(target.tagName) > -1) {
@@ -860,7 +858,7 @@ class EditorBridge {
             return false;
         }
 
-        for (; target && target !== document; target = target.parentNode) {
+        for ( ; target && target !== document; target = target.parentNode) {
             if (target.matches && target.matches('.post__toc')) {
                 return false;
             }
@@ -873,8 +871,8 @@ class EditorBridge {
         return true;
     }
 
-    checkInlineLinkTrigger(target) {
-        for (; target && target !== document; target = target.parentNode) {
+    checkInlineLinkTrigger (target) {
+        for ( ; target && target !== document; target = target.parentNode) {
             if (target.matches && target.matches('.post__toc')) {
                 return false;
             }
@@ -899,14 +897,14 @@ class EditorBridge {
         let tinymceOverlay = $('.tinymce-overlay');
 
         postEditor.on('dragover', () => {
-            if (!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
+            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }
         });
 
         tinymceOverlay.on('dragover', e => {
-            if (!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
+            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
                 hoverState = true;
                 editorArea.addClass('is-hovered');
             }
@@ -916,14 +914,14 @@ class EditorBridge {
             hoverState = false;
 
             setTimeout(() => {
-                if (!hoverState) {
+                if(!hoverState) {
                     editorArea.removeClass('is-hovered');
                 }
             }, 250);
         });
 
         document.getElementById('post-editor_ifr').contentWindow.addEventListener("dragover", e => {
-            if (!this.postEditorInnerDragging) {
+            if(!this.postEditorInnerDragging) {
                 e.preventDefault();
                 e.stopPropagation();
                 editorArea.addClass('is-hovered');
@@ -946,26 +944,26 @@ class EditorBridge {
         editorArea.on('drop', this.editorFileSelect.bind(this));
     }
 
-    fileDragOver(e) {
-        if (!this.postEditorInnerDragging) {
+    fileDragOver (e) {
+        if(!this.postEditorInnerDragging) {
             e.originalEvent.stopPropagation();
             e.originalEvent.preventDefault();
             e.originalEvent.dataTransfer.dropEffect = 'copy';
         }
     }
 
-    async editorFileSelect(e) {
+    async editorFileSelect (e) {
         e.originalEvent.stopPropagation();
         e.originalEvent.preventDefault();
 
         let files = e.originalEvent.dataTransfer.files;
         let siteName = window.app.getSiteName();
 
-        if (this.postEditorInnerDragging) {
+        if(this.postEditorInnerDragging) {
             return;
         }
 
-        if (!files[0]) {
+        if(!files[0]) {
             $('.tox-tinymce').removeClass('is-hovered');
             $('.tox-tinymce').removeClass('is-loading-image');
             $('.tinymce-overlay').text('Drag your image here');
@@ -986,7 +984,7 @@ class EditorBridge {
         this.contentImageUploading = true;
 
         mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
-            if (data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
+            if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
                 tinymce.activeEditor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
             } else {
                 tinymce.activeEditor.insertContent('<p><img alt="" src="' + data.url + '" class="post__image" /></p>');
@@ -1000,7 +998,7 @@ class EditorBridge {
         });
     }
 
-    reloadEditor() {
+    reloadEditor () {
         this.tinymceEditor.once('keyup', e => {
             window.app.reportPossibleDataLoss();
         });
