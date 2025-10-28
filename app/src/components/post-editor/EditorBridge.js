@@ -158,6 +158,14 @@ class EditorBridge {
 
             // ---------------------- Image dialog handling (scoped) ----------------------
 
+            const LAYOUT_CLASSES = [
+                'post__image--full',
+                'post__image--wide',
+                'post__image--center',
+                'post__image--left',
+                'post__image--right'
+            ];
+
             // State keyed by a stable token assigned on open
             const preDialogCustomImgOnly = new Map(); // token -> string[] (custom classes originally on IMG)
             const preDialogImgLayout = new Map(); // token -> { removed: string[], injected: string|null }
@@ -165,6 +173,8 @@ class EditorBridge {
 
             let activeToken = null;
             let dialogWasConfirmed = false;
+
+            const makeToken = () => 'publii-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
 
             const findNodesByToken = (doc, token) => {
                 const figure = doc.querySelector(`figure[data-publii-token="${token}"]`);
@@ -175,47 +185,31 @@ class EditorBridge {
             const getLayoutFrom = (el) => {
                 if (!el) return null;
                 const cls = Array.from(el.classList);
-                return cls.find(c => c.startsWith('post__image')) || null;
+                return cls.find(c => LAYOUT_CLASSES.includes(c)) || null;
             };
 
             const stripLayouts = (el) => {
-                if (!el) {
-                    return;
-                }
-            
-                Array.from(el.classList).forEach(c => {
-                    if (c.startsWith('post__image')) {
-                        el.classList.remove(c);
-                    }
-                });
+                if (!el) return;
+                LAYOUT_CLASSES.forEach(c => el.classList.remove(c));
             };
 
             editor.on('BeforeExecCommand', function (e) {
-                if (e.command !== 'mceImage') {
-                    return;
-                }
+                if (e.command !== 'mceImage') return;
 
-                let selNode = editor.selection.getNode();
+                const selNode = editor.selection.getNode();
+                if (!selNode || selNode.tagName !== 'IMG') return;
 
-                if (!selNode || selNode.tagName !== 'IMG') {
-                    return;
-                }
-
-                let img = selNode;
-                let figure = img.closest('figure');
+                const img = selNode;
+                const figure = img.closest('figure');
 
                 // Assign token ONLY to existing figure (never to IMG)
-                activeToken = 'publii-' + crypto.randomUUID();
-                
-                if (figure) {
-                    figure.setAttribute('data-publii-token', activeToken);
-                }
-                
+                activeToken = makeToken();
+                if (figure) figure.setAttribute('data-publii-token', activeToken);
                 dialogWasConfirmed = false;
 
                 // Snapshot current IMG classes (keep original layout info always)
                 const imgClasses = Array.from(img.classList);
-                const imgLayoutNow = imgClasses.filter(c => c.startsWith('post__image'));
+                const imgLayoutNow = imgClasses.filter(c => LAYOUT_CLASSES.includes(c));
                 const imgCustomNow = imgClasses.filter(c => !c.startsWith('post__image'));
 
                 // Store custom IMG classes and temporarily remove them for cleaner dialog UI
@@ -328,7 +322,7 @@ class EditorBridge {
                                 const figClsNow = Array.from(figure.classList);
 
                                 // Chosen layout from dialog (may be null when user only toggled caption)
-                                let newLayout = imgClsNow.find(c => c.startsWith('post__image')) || null;
+                                let newLayout = imgClsNow.find(c => LAYOUT_CLASSES.includes(c)) || null;
 
                                 // Fallback to original IMG layout when user didn't change layout
                                 if (!newLayout && snap.removed && snap.removed.length) {
@@ -340,8 +334,8 @@ class EditorBridge {
                                 stripLayouts(figure);
 
                                 // Merge non-layout classes for FIGURE
-                                const nonLayoutImg = imgClsNow.filter(c => !c.startsWith('post__image'));
-                                const nonLayoutFigure = figClsNow.filter(c => !c.startsWith('post__image'));
+                                const nonLayoutImg = imgClsNow.filter(c => !LAYOUT_CLASSES.includes(c));
+                                const nonLayoutFigure = figClsNow.filter(c => !LAYOUT_CLASSES.includes(c));
 
                                 // Include stored custom classes captured before dialog
                                 const merged = new Set([
