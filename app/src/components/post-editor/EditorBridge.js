@@ -296,6 +296,19 @@ class EditorBridge {
                         const origCustomImg = preDialogCustomImgOnly.get(activeToken) || [];
                         const storedCustom = customImageClasses.get(activeToken) || [];
 
+                        // FIX: treat first insert as confirmed if figure exists and IMG holds layout/post__image
+                        if (!dialogWasConfirmed && hasFigure && img) {
+                        // if IMG has layout/post__image but FIGURE doesn't → user intended to save
+                        const imgHasLayout = LAYOUT_CLASSES.some(c => img.classList.contains(c));
+                        const figHasLayout = LAYOUT_CLASSES.some(c => figure.classList.contains(c));
+                        const imgHasPost   = img.classList.contains('post__image');
+                        const figHasPost   = figure.classList.contains('post__image');
+
+                        if ((imgHasLayout && !figHasLayout) || (imgHasPost && !figHasPost)) {
+                            dialogWasConfirmed = true;
+                        }
+                        }
+
                         // ---- CANCEL ----
                         if (!dialogWasConfirmed) {
                             if (img) {
@@ -317,16 +330,20 @@ class EditorBridge {
                         } else {
                             // ---- SAVE ----
                             if (hasFigure && img) {
-                                // Classes AFTER dialog
+                                // Classes after dialog
                                 const imgClsNow = Array.from(img.classList);
                                 const figClsNow = Array.from(figure.classList);
 
-                                // Chosen layout from dialog (may be null when user only toggled caption)
+                                // Layout chosen in dialog; null means "None"
                                 let newLayout = imgClsNow.find(c => LAYOUT_CLASSES.includes(c)) || null;
 
-                                // Fallback to original IMG layout when user didn't change layout
-                                if (!newLayout && snap.removed && snap.removed.length) {
-                                    newLayout = snap.removed[0]; // preserve prior (e.g., --wide)
+                                // Detect explicit "None" when we had injected a layout into IMG
+                                // (BeforeExecCommand sets snap.injected for figure edits)
+                                const userSelectedNone = (newLayout === null) && (snap && snap.injected);
+
+                                // Fallback only if no explicit "None" and we previously removed layout from IMG
+                                if (!newLayout && !userSelectedNone && snap && snap.removed && snap.removed.length) {
+                                newLayout = snap.removed[0]; // restore previous layout (e.g., --wide)
                                 }
 
                                 // Strip all layout classes first
