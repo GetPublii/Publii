@@ -1062,7 +1062,7 @@ class Renderer {
             let fileSlug = postTemplate[i];
 
             // When we meet default template - skip the compilation process
-            if (fileSlug === '') {
+            if (fileSlug === '' || !this.themeConfig.postTemplates[fileSlug]) {
                 continue;
             }
 
@@ -1130,7 +1130,7 @@ class Renderer {
             let fileSlug = pageTemplate[i];
 
             // When we meet default template - skip the compilation process
-            if (fileSlug === '') {
+            if (fileSlug === '' || !this.themeConfig.pageTemplates[fileSlug]) {
                 continue;
             }
 
