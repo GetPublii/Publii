@@ -1,7 +1,7 @@
 // Necessary packages
 const fs = require('fs');
 const path = require('path');
-const sizeOf = require('image-size');
+const sizeOf = require('./../../../helpers/rotation-aware-sizeof.js');
 const sqlString = require('sqlstring');
 const normalizePath = require('normalize-path');
 const slug = require('./../../../helpers/slug');

@@ -12,6 +12,7 @@
   "main": "app/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --mode=development --progress --watch",
+    "dev-prep": "cross-env NODE_ENV=development webpack --mode=development --progress",
     "prod": "cross-env NODE_ENV=production webpack --mode=production --progress",
     "build": "node ./build/scripts/update-build-number.js && cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
     "build2": "cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
