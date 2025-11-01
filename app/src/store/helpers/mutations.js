@@ -186,8 +186,6 @@ export default {
             }
         });
 
-        console.log(state.currentSite);
-
         /*
         if (window.spellCheckHandler) {
             window.spellCheckHandler.switchLanguage(state.currentSite.config.language);

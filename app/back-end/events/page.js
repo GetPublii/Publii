@@ -103,13 +103,13 @@ class PageEvents {
         });
 
         // Update pages hierarchy during post conversion
-        ipcMain.on('app-pages-hierarchy-update', (event, postIDs) => {
-            let pagesFile = path.join(this.app.sitesDir, pagesData.siteName, 'input', 'config', 'pages.config.json');
+        ipcMain.on('app-pages-hierarchy-update', (event, conversionData) => {
+            let pagesFile = path.join(this.app.sitesDir, conversionData.siteName, 'input', 'config', 'pages.config.json');
             let pagesHierarchy = JSON.parse(FileHelper.readFileSync(pagesFile, { encoding: 'utf8' }));
 
-            for (let i = 0; i < postIDs.length; i++) {
+            for (let i = 0; i < conversionData.postIDs.length; i++) {
                 pagesHierarchy.push({
-                    id: postIDs[i],
+                    id: conversionData.postIDs[i],
                     subpages: []
                 });
             }

@@ -102,7 +102,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-close',
             'app-set-ui-zoom-level',
             'app-set-notifications-center-state',
-            'app-get-notifications-file'
+            'app-get-notifications-file',
+            'app-pages-hierarchy-update'
         ];
 
         if (validChannels.includes(channel)) {
