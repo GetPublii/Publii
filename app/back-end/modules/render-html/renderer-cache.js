@@ -124,7 +124,8 @@ class RendererCache {
             WHERE
                 p.status LIKE '%published%' AND
                 p.status NOT LIKE '%hidden%' AND
-                p.status NOT LIKE '%trashed%'
+                p.status NOT LIKE '%trashed%' AND
+                p.status NOT LIKE '%is-page%' 
                 ${includeFeaturedPosts}
             GROUP BY
                 pt.tag_id;
@@ -238,7 +239,7 @@ class RendererCache {
                 p.status LIKE '%published%' AND
                 p.status NOT LIKE '%hidden%' AND
                 p.status NOT LIKE '%trashed%' AND
-                p.status NOT LIKE '%is-page%'
+                p.status NOT LIKE '%is-page%' 
                 ${includeFeaturedPosts}
             GROUP BY
                 a.id

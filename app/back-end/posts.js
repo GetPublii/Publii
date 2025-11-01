@@ -50,7 +50,13 @@ class Posts extends Model {
                 post_id AS postID, 
                 tag_id AS tagID
             FROM 
-                posts_tags 
+                posts_tags AS pt
+            LEFT JOIN
+                posts AS p
+            ON
+                pt.post_id = p.id
+            WHERE
+                p.status NOT LIKE '%is-page%'
             ORDER BY 
                 post_id DESC`;
 
