@@ -114,6 +114,7 @@ export default {
         'pascal',
         'perl',
         'php',
+        'powershell',
         'pug',
         'python',
         'r',
