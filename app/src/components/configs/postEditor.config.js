@@ -79,6 +79,7 @@ export default {
         { text: 'Pascal', value: 'pascal' },
         { text: 'Perl', value: 'perl' },
         { text: 'PHP', value: 'php' },
+        { text: 'PowerShell', value: 'powershell' },
         { text: 'Pug', value: 'pug' },
         { text: 'Python', value: 'python' },
         { text: 'R', value: 'r' },
