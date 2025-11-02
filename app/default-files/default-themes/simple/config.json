@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "3.1.4.0",
+    "version": "3.2.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -105,7 +105,7 @@
             "note": "Defines the width of content for posts and pages. Ensure that this value is smaller than or equal to the Page width for proper content display. Set to 100% for full-screen width.",
             "value": "42rem",
             "type": "text"
-        }, 
+        },
         {
             "name": "borderRadius",
             "label": "Corner Roundness",
@@ -116,7 +116,7 @@
             "min": 0,
             "max": 100,
             "step": 1
-        },     
+        },
         {
             "name": "baseline",
             "label": "Baseline",
@@ -149,7 +149,6 @@
                 }
             ]
         },
- 
         {
             "name": "textHero",
             "label": "Text",
@@ -187,7 +186,7 @@
             "placeholder": "Add text caption to the hero image",
             "value": "",
             "type": "text"
-        },   
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -203,7 +202,6 @@
             "value": "3",
             "type": "number"
         },
-
         {
             "name": "separator",
             "type": "separator",
@@ -211,8 +209,7 @@
             "group": "Post list",
             "note": "This section lets you choose what shows up in your feed on the homepage, tags, and author pages. You can pick and choose which details to show, like author avatars, post dates, and other things.",
             "size": "no-line"
-        },    
-
+        },
         {
             "name": "alignFeed",
             "label": "Content alignment",
@@ -229,7 +226,7 @@
                     "value": "center"
                 }
             ]
-        },          
+        },
         {
             "name": "separator",
             "type": "separator",
@@ -312,8 +309,6 @@
             "value": true,
             "type": "checkbox"
         },
-  
-        
         {
             "name": "navbarHeight",
             "group": "Navbar",
@@ -429,7 +424,6 @@
             "value": "#FFC074",
             "type": "colorpicker"
         },
-       
         {
             "name": "separator",
             "type": "separator",
@@ -471,8 +465,23 @@
                     "group": "Serif"
                 },
                 {
+                    "label": "Bodoni Moda",
+                    "value": "bodonimoda",
+                    "group": "Serif"
+                },
+                {
                     "label": "Brygada 1918",
                     "value": "brygada1918",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Cinzel",
+                    "value": "cinzel",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Danfo",
+                    "value": "danfo",
                     "group": "Serif"
                 },
                 {
@@ -491,8 +500,18 @@
                     "group": "Serif"
                 },
                 {
+                    "label": "Grenze Gotisch",
+                    "value": "grenzegotisch",
+                    "group": "Serif"
+                },
+                {
                     "label": "Imbue",
                     "value": "imbue",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Kalnia",
+                    "value": "kalnia",
                     "group": "Serif"
                 },
                 {
@@ -526,6 +545,11 @@
                     "group": "Serif"
                 },
                 {
+                    "label": "Red Rose",
+                    "value": "redrose",
+                    "group": "Serif"
+                },
+                {
                     "label": "Roboto Slab",
                     "value": "robotoslab",
                     "group": "Serif"
@@ -539,6 +563,11 @@
                     "label": "Yrsa",
                     "value": "yrsa",
                     "group": "Serif"
+                },
+                {
+                    "label": "Albert Sans",
+                    "value": "albertsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Advent Pro",
@@ -576,8 +605,28 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Comme",
+                    "value": "comme",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "DM Sans",
+                    "value": "dmsans",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Dosis",
                     "value": "dosis",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Doto",
+                    "value": "doto",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Dyna Puff",
+                    "value": "dynapuff",
                     "group": "Sans Serif"
                 },
                 {
@@ -586,8 +635,33 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Familjen Grotesk",
+                    "value": "familjengrotesk",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Figtree",
                     "value": "figtree",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Finlandica",
+                    "value": "finlandica",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Fredoka",
+                    "value": "fredoka",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Funnel Display",
+                    "value": "funneldisplay",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Gantari",
+                    "value": "gantari",
                     "group": "Sans Serif"
                 },
                 {
@@ -596,8 +670,23 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Handjet",
+                    "value": "handjet",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Heebo",
                     "value": "heebo",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Host Grotesk",
+                    "value": "hostgrotesk",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Inclusive Sans",
+                    "value": "inclusivesans",
                     "group": "Sans Serif"
                 },
                 {
@@ -616,8 +705,23 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Kumbh Sans",
+                    "value": "kumbhsans",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "League Spartan",
+                    "value": "leaguespartan",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Lexend",
                     "value": "lexend",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Lexend Deca",
+                    "value": "lexenddeca",
                     "group": "Sans Serif"
                 },
                 {
@@ -646,6 +750,11 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Mulish",
+                    "value": "mulish",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Nunito",
                     "value": "nunito",
                     "group": "Sans Serif"
@@ -661,8 +770,28 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Outfit",
+                    "value": "outfit",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Oxanium",
+                    "value": "oxanium",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Parkinsans",
+                    "value": "parkinsans",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Plus Jakarta Sans",
                     "value": "plusjakartasans",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Pontano Sans",
+                    "value": "pontanosans",
                     "group": "Sans Serif"
                 },
                 {
@@ -676,6 +805,11 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Radio Canada Big",
+                    "value": "radiocanadabig",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Raleway",
                     "value": "raleway",
                     "group": "Sans Serif"
@@ -683,6 +817,16 @@
                 {
                     "label": "Red Hat Display",
                     "value": "redhatdisplay",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Red Hat Text",
+                    "value": "redhattext",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "REM",
+                    "value": "rem",
                     "group": "Sans Serif"
                 },
                 {
@@ -706,13 +850,53 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Sora",
+                    "value": "sora",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Spartan",
                     "value": "spartan",
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Stick No Bills",
+                    "value": "sticknobills",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Teachers",
+                    "value": "teachers",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Tektur",
+                    "value": "tektur",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Tourney",
+                    "value": "tourney",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Urbanist",
                     "value": "urbanist",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Varta",
+                    "value": "varta",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Wix Madefor Text",
+                    "value": "wixmadefortext",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Workbench",
+                    "value": "workbench",
                     "group": "Sans Serif"
                 },
                 {
@@ -726,9 +910,14 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Big Shoulders Display",
-                    "value": "bigshouldersdisplay",
-                    "group": "Cursive"
+                    "label": "Zalando Sans",
+                    "value": "zalandosans",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Zalando Sans Expanded",
+                    "value": "zalandosansexpanded",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Comfortaa",
@@ -751,6 +940,31 @@
                     "group": "Cursive"
                 },
                 {
+                    "label": "Playwrite US Modern",
+                    "value": "playwriteusmodern",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Playwrite US Traditional",
+                    "value": "playwriteustrad",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Bitcount",
+                    "value": "bitcount",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Geist Mono",
+                    "value": "geistmono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Google Sans Code",
+                    "value": "googlesanscode",
+                    "group": "Monospace"
+                },
+                {
                     "label": "JetBrains Mono",
                     "value": "jetbrainsmono",
                     "group": "Monospace"
@@ -764,6 +978,16 @@
                     "label": "Source Code Pro",
                     "value": "sourcecodepro",
                     "group": "Monospace"
+                },
+                {
+                    "label": "SUSE Mono",
+                    "value": "susemono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Victor Mono",
+                    "value": "victormono",
+                    "group": "Monospace"
                 }
             ]
         },
@@ -771,7 +995,7 @@
             "name": "disableFontBodyItalic",
             "label": "Disable italic style",
             "group": "Fonts",
-            "note": "This option allows you to disable the loading of the dedicated italic version for the body font. The italic font is automatically loaded when selecting a body font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading the dedicated italic version by enabling this option.",            
+            "note": "This option allows you to disable the loading of the dedicated italic version for the body font. The italic font is automatically loaded when selecting a body font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading the dedicated italic version by enabling this option.",
             "type": "checkbox",
             "value": false,
             "dependencies": [
@@ -814,8 +1038,23 @@
                     "group": "Serif"
                 },
                 {
+                    "label": "Bodoni Moda",
+                    "value": "bodonimoda",
+                    "group": "Serif"
+                },
+                {
                     "label": "Brygada 1918",
                     "value": "brygada1918",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Cinzel",
+                    "value": "cinzel",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Danfo",
+                    "value": "danfo",
                     "group": "Serif"
                 },
                 {
@@ -834,8 +1073,18 @@
                     "group": "Serif"
                 },
                 {
+                    "label": "Grenze Gotisch",
+                    "value": "grenzegotisch",
+                    "group": "Serif"
+                },
+                {
                     "label": "Imbue",
                     "value": "imbue",
+                    "group": "Serif"
+                },
+                {
+                    "label": "Kalnia",
+                    "value": "kalnia",
                     "group": "Serif"
                 },
                 {
@@ -869,6 +1118,11 @@
                     "group": "Serif"
                 },
                 {
+                    "label": "Red Rose",
+                    "value": "redrose",
+                    "group": "Serif"
+                },
+                {
                     "label": "Roboto Slab",
                     "value": "robotoslab",
                     "group": "Serif"
@@ -882,6 +1136,11 @@
                     "label": "Yrsa",
                     "value": "yrsa",
                     "group": "Serif"
+                },
+                {
+                    "label": "Albert Sans",
+                    "value": "albertsans",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Advent Pro",
@@ -919,8 +1178,28 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Comme",
+                    "value": "comme",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "DM Sans",
+                    "value": "dmsans",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Dosis",
                     "value": "dosis",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Doto",
+                    "value": "doto",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Dyna Puff",
+                    "value": "dynapuff",
                     "group": "Sans Serif"
                 },
                 {
@@ -929,8 +1208,33 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Familjen Grotesk",
+                    "value": "familjengrotesk",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Figtree",
                     "value": "figtree",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Finlandica",
+                    "value": "finlandica",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Fredoka",
+                    "value": "fredoka",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Funnel Display",
+                    "value": "funneldisplay",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Gantari",
+                    "value": "gantari",
                     "group": "Sans Serif"
                 },
                 {
@@ -939,8 +1243,23 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Handjet",
+                    "value": "handjet",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Heebo",
                     "value": "heebo",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Host Grotesk",
+                    "value": "hostgrotesk",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Inclusive Sans",
+                    "value": "inclusivesans",
                     "group": "Sans Serif"
                 },
                 {
@@ -959,8 +1278,23 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Kumbh Sans",
+                    "value": "kumbhsans",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "League Spartan",
+                    "value": "leaguespartan",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Lexend",
                     "value": "lexend",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Lexend Deca",
+                    "value": "lexenddeca",
                     "group": "Sans Serif"
                 },
                 {
@@ -989,6 +1323,11 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Mulish",
+                    "value": "mulish",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Nunito",
                     "value": "nunito",
                     "group": "Sans Serif"
@@ -1004,8 +1343,28 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Outfit",
+                    "value": "outfit",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Oxanium",
+                    "value": "oxanium",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Parkinsans",
+                    "value": "parkinsans",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Plus Jakarta Sans",
                     "value": "plusjakartasans",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Pontano Sans",
+                    "value": "pontanosans",
                     "group": "Sans Serif"
                 },
                 {
@@ -1019,6 +1378,11 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Radio Canada Big",
+                    "value": "radiocanadabig",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Raleway",
                     "value": "raleway",
                     "group": "Sans Serif"
@@ -1026,6 +1390,16 @@
                 {
                     "label": "Red Hat Display",
                     "value": "redhatdisplay",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Red Hat Text",
+                    "value": "redhattext",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "REM",
+                    "value": "rem",
                     "group": "Sans Serif"
                 },
                 {
@@ -1049,13 +1423,53 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Sora",
+                    "value": "sora",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Spartan",
                     "value": "spartan",
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Stick No Bills",
+                    "value": "sticknobills",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Teachers",
+                    "value": "teachers",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Tektur",
+                    "value": "tektur",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Tourney",
+                    "value": "tourney",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Urbanist",
                     "value": "urbanist",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Varta",
+                    "value": "varta",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Wix Madefor Text",
+                    "value": "wixmadefortext",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Workbench",
+                    "value": "workbench",
                     "group": "Sans Serif"
                 },
                 {
@@ -1069,9 +1483,14 @@
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Big Shoulders Display",
-                    "value": "bigshouldersdisplay",
-                    "group": "Cursive"
+                    "label": "Zalando Sans",
+                    "value": "zalandosans",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Zalando Sans Expanded",
+                    "value": "zalandosansexpanded",
+                    "group": "Sans Serif"
                 },
                 {
                     "label": "Comfortaa",
@@ -1094,6 +1513,31 @@
                     "group": "Cursive"
                 },
                 {
+                    "label": "Playwrite US Modern",
+                    "value": "playwriteusmodern",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Playwrite US Traditional",
+                    "value": "playwriteustrad",
+                    "group": "Cursive"
+                },
+                {
+                    "label": "Bitcount",
+                    "value": "bitcount",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Geist Mono",
+                    "value": "geistmono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Google Sans Code",
+                    "value": "googlesanscode",
+                    "group": "Monospace"
+                },
+                {
                     "label": "JetBrains Mono",
                     "value": "jetbrainsmono",
                     "group": "Monospace"
@@ -1107,6 +1551,16 @@
                     "label": "Source Code Pro",
                     "value": "sourcecodepro",
                     "group": "Monospace"
+                },
+                {
+                    "label": "SUSE Mono",
+                    "value": "susemono",
+                    "group": "Monospace"
+                },
+                {
+                    "label": "Victor Mono",
+                    "value": "victormono",
+                    "group": "Monospace"
                 }
             ]
         },
@@ -1114,7 +1568,7 @@
             "name": "disableFontHeadingsItalic",
             "label": "Disable italic style",
             "group": "Fonts",
-            "note": "This option allows you to disable loading of the dedicated italic version for the headings font. The italic font is automatically loaded when selecting a headings font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading of the dedicated italic version by enabling this option.",            
+            "note": "This option allows you to disable loading of the dedicated italic version for the headings font. The italic font is automatically loaded when selecting a headings font that supports it, like Lora, for optimal appearance. However, for performance reasons, you can choose to prevent loading of the dedicated italic version by enabling this option.",
             "type": "checkbox",
             "value": false,
             "dependencies": [
@@ -1334,7 +1788,7 @@
             "name": "separator",
             "type": "separator",
             "label": "",
-            "group": "Share Buttons",    
+            "group": "Share Buttons",
             "note": "This section allows you to choose your preferred share buttons for various platforms. If you wish to add more, you can install the <a href='https://marketplace.getpublii.com/plugins/social-sharing/' target='_blank'>Social Sharing plugin</a> available on the Publii Marketplace.",
             "size": "no-line"
         },
@@ -1400,7 +1854,6 @@
             "value": false,
             "type": "checkbox"
         },
-
         {
             "name": "separator",
             "type": "separator",
@@ -2144,7 +2597,7 @@
             "contentImages": {
                 "sizes": "(max-width: 1920px) 100vw, 1920px",
                 "dimensions": {
-                     "xs": {
+                    "xs": {
                         "width": 640,
                         "height": "auto"
                     },
@@ -2171,7 +2624,7 @@
                 }
             },
             "featuredImages": {
-               "sizes": {
+                "sizes": {
                     "hero": "88vw",
                     "feed": "(min-width: 600px) calc(4.38vw + 143px), 87.86vw"
                 },
