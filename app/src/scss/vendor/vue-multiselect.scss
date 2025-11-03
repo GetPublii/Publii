@@ -5,7 +5,7 @@
     &__tags {
         background: var(--input-bg);
         border-color: var(--input-border-color);
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         color: var(--text-primary-color);
     }
 

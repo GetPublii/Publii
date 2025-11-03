@@ -42,11 +42,17 @@ export default {
     computed: {
         postPages () {
             return [''].concat(this.$store.state.currentSite.posts.filter(post => {
+                let postStatuses = post.status.split(',');
+
+                if (postStatuses.indexOf('trashed') > -1) {
+                    return false;
+                }
+
                 if (this.allowedPostStatus[0] === 'any') {
                     return true;
                 }
 
-                return this.allowedPostStatus.indexOf(post.status) > -1;
+                return this.allowedPostStatus.some(status => postStatuses.includes(status));
             }).sort((a, b) => {
                 return a.title.localeCompare(b.title);
             }).map(post => post.id));

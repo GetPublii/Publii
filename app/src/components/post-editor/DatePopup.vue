@@ -136,7 +136,7 @@ export default {
     input[type="date"],
     input[type="time"] {
         background: none;
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         border: none;
         box-shadow: inset 0 0 0 1px var(--input-border-color);
         color: var(--text-primary-color); 

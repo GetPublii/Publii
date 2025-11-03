@@ -428,6 +428,9 @@ class Post extends Model {
 
         if (status === 'is-page') {
             currentStatus = currentStatus.filter(status => ['excluded_homepage', 'featured', 'hidden'].indexOf(status) === -1 && status.trim() !== '');
+            // Remove post tags xrefs when changing status to page
+            let removeQuery = this.db.prepare(`DELETE FROM posts_tags WHERE post_id = @id`);
+            removeQuery.run({ id: this.id });
         } else {
             currentStatus = currentStatus.filter(status => status.trim() !== '');
         }

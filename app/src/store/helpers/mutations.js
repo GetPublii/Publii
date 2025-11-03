@@ -253,6 +253,19 @@ export default {
         state.currentSite.pages = state.currentSite.pages.concat(state.currentSite.posts.filter(post => config.postIDs.indexOf(post.id) !== -1));
         // remove posts with the given IDs 
         state.currentSite.posts = state.currentSite.posts.filter(post => config.postIDs.indexOf(post.id) === -1);
+        // remove tag references
+        state.currentSite.postsTags = state.currentSite.postsTags.filter(postTags => config.postIDs.indexOf(postTags.postID) === -1);
+        // move authors references
+        state.currentSite.postsAuthors.forEach(postAuthor => {
+            if (config.postIDs.indexOf(postAuthor.postID) > -1) {
+                state.currentSite.pagesAuthors.push({
+                    authorID: postAuthor.authorID,
+                    authorName: postAuthor.authorName,
+                    pageID: postAuthor.postID
+                });
+            }
+        });
+        state.currentSite.postsAuthors = state.currentSite.postsAuthors.filter(postAuthor => config.postIDs.indexOf(postAuthor.postID) === -1);
         // add status is-page to the pages with given IDs
         state.currentSite.pages = state.currentSite.pages.map(function(page) {
             if(config.postIDs.indexOf(page.id) !== -1) {

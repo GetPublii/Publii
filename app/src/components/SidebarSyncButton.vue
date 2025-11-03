@@ -31,22 +31,16 @@
         <a
             v-if="hasSyncDate && websiteUrl"
             :href="websiteUrl"
+            :title="$t('sync.visitYourWebsite')"
             target="_blank"
-            class="sidebar-sync-date">
-
+            class="sidebar-sync-date"
+            rel="noreferrer noopener">
                 <template v-if="!hasManualDeploy">
                     {{ $t('sync.lastSync') }}: <span>{{ syncDate }}</span>
-                    <icon
-                        size="xs"
-                        name="external-link"/>
                 </template>
                 <template v-if="hasManualDeploy">
                     {{ $t('sync.lastRendered') }}: <span>{{ syncDate }}</span>
-                    <icon
-                        size="xs"
-                        name="external-link"/>
                 </template>
-
         </a>
     </div>
 </template>
@@ -262,12 +256,11 @@ export default {
             color: var(--sidebar-link-color);
             display: block;
             font-size: 1.2rem;
-            height: 16px; // svg icon height
+            height: 16px; 
             letter-spacing: -.025em;
             margin-top: 1.2rem;
             opacity: var(--sidebar-link-opacity);
             text-align: center;
-            white-space: nowrap;
 
             &:hover {
                 color: var(--sidebar-link-color-hover);
@@ -276,12 +269,6 @@ export default {
 
             &:focus {
                 color: var(--sidebar-link-color);
-            }
-
-            & > svg {
-                left: 3px;
-                position: relative;
-                top: 2px;
             }
         }
 

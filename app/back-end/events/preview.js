@@ -85,17 +85,13 @@ class PreviewEvents {
                         errorTitle = {
                             translation: 'core.rendering.renderingProcessFailed'
                         };
-                        errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
-                    }
-
-                    if (typeof errorDesc === 'object') {
-                        errorDesc = errorDesc.translation;
+                        errorDesc = stripTags((data.result[0].message + "\n\n" + data.result[0].desc).toString());
                     }
 
                     event.sender.send('app-preview-render-error', {
                         message: [{
                             message: errorTitle,
-                            desc: stripTags((errorDesc).toString())
+                            desc: errorDesc
                         }]
                     });
                 }
@@ -134,7 +130,7 @@ class PreviewEvents {
                         errorTitle = {
                             translation: 'core.rendering.renderingProcessFailed'
                         };
-                        errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
+                        errorDesc = stripTags((data.result[0].message + "\n\n" + data.result[0].desc).toString());
                     }
 
                     event.sender.send('app-preview-render-error', {

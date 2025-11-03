@@ -84,7 +84,7 @@ export default {
     padding: 0 4rem 0 1.8rem;
 }
 
-.posts-dropdown .multiselect__input {
+.pages-dropdown .multiselect__input {
     max-width: 100%;
 }
 </style>

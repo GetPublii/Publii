@@ -63,7 +63,7 @@
             & > div {
                 box-shadow: 0 0 3px rgba(black, .2);
                 background: var(--color-primary);
-                border-radius: 3px;
+                border-radius: var(--border-radius);
                 color: var(--white);
                 font-size: $app-font-base;
                 font-weight: var(--font-weight-semibold);
@@ -142,7 +142,7 @@
         .tox-split-button,
         .tox-tbtn--select {
             background: none;
-            border-radius: 2px;
+            border-radius: var(--border-radius);
             border: 1px solid var(--border-light-color);
             color: var(--text-primary-color);
             height: 38px;
@@ -282,7 +282,7 @@
             &::before {
                content: "";
                background: var(--gray-6); 
-               border-radius: 3px;
+               border-radius: var(--border-radius);
                display: block;
                left: 50%;
                opacity: 0;
@@ -318,7 +318,7 @@
             border: none;
             border-radius: 0 !important;
             border-left: 1px solid var(--input-border-color);
-            border-radius: 3px;
+            border-radius: var(--border-radius);
             box-shadow: none;
             box-sizing: content-box;
             color: var(--icon-primary-color);
@@ -365,7 +365,7 @@ body {
         
         &-tinymce {
             border-color: var(--input-border-color);
-            border-radius: 3px;
+            border-radius: var(--border-radius);
         }
         
         .tox-toolbar, 
@@ -531,7 +531,7 @@ body {
         .tox-toolbar-textfield {
             background-color: var(--input-bg);
             border: none;
-            border-radius: 3px;
+            border-radius: var(--border-radius);
             box-shadow: inset 0 0 0 1px var(--input-border-color);
             color: var(--text-primary-color);
             font: 400 #{$app-font-base}/1.5 var(--font-base);
@@ -616,6 +616,7 @@ body {
         .tox-menu {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-light-color);
+            border-radius: var(--border-radius);
             margin-bottom: 3.2rem;
         }
         
@@ -624,6 +625,7 @@ body {
             &--toolbar {
                 .tox-collection__item {
                      color: var(--icon-primary-color); 
+                     border-radius: var(--border-radius);
                     
                     &--enabled {
                         background-color: var(--gray-1);
@@ -983,7 +985,7 @@ body[data-os="win"] {
     .tox-textbox {
         background-color: var(--white);
         border: none;
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         box-shadow: inset 0 0 0 1px $color-8;
         box-sizing: border-box;
         color: var(--text-primary-color);
@@ -1013,13 +1015,13 @@ body[data-os="win"] {
     }
 
     .tox-listbox {
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         height: 48px !important;
         width: 360px !important;
 
         button {
             background: var(--white) !important;
-            border-radius: 3px;
+            border-radius: var(--border-radius);
             height: 48px !important;
             line-height: 46px !important;
             padding: 0 1.8rem !important;

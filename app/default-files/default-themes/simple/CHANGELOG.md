@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.2.0.0] - 2025-11-04
+### Added
+- Added new variable fonts
+### Improved
+- Improved videos/iframe handling
+
+## [3.1.4.0] - 2025-10-15
+### Improved
+- Adjust textarea gap and author date margin for improved layout
+
+## [3.1.3.0] - 2025-04-26
+### Added
+- Added support for post prefix page. A dedicated posts.hbs template is now used when a post prefix path (e.g., /blog/) is defined, instead of falling back to the homepage index.hbs. This improves consistency and provides a clearer separation between homepage and post prefix listings.
+
 ## [3.1.2.0] - 2025-02-08
 ### Improved
 - Enhanced post image styling (margins) and add blog index body class

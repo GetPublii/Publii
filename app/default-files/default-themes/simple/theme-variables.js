@@ -3,15 +3,15 @@
  */
 
 var generateThemeVariables = function (params) {
-  let fontParams = {
-    'system-ui': {
+let fontParams = {
+      'system-ui': {
       name: 'SystemUI',
       family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
       hasItalic: false
     },
-    'adventpro': {
-      name: 'Advent Pro',
-      family: '\'Advent Pro\', sans-serif',
+    'albertsans': {
+      name: 'Albert Sans',
+      family: '\'Albert Sans\', sans-serif',
       weight: '100 900',
       hasItalic: true
     },
@@ -51,6 +51,12 @@ var generateThemeVariables = function (params) {
       weight: '200 800',
       hasItalic: false
     },
+    'adventpro': {
+      name: 'Advent Pro',
+      family: '\'Advent Pro\', sans-serif',
+      weight: '100 900',
+      hasItalic: true
+    },
     'besley': {
       name: 'Besley',
       family: '\'Besley\', serif',
@@ -61,6 +67,18 @@ var generateThemeVariables = function (params) {
       name: 'Bitter',
       family: '\'Bitter\', serif',
       weight: '100 900',
+      hasItalic: true
+    },
+    'bitcount': {
+      name: 'Bitcount',
+      family: '\'Bitcount\', system-ui',
+      weight: '100 900',
+      hasItalic: false
+    },
+    'bodonimoda': {
+      name: 'Bodoni Moda',
+      family: '\'Bodoni Moda\', serif',
+      weight: '400 900',
       hasItalic: true
     },
     'brygada1918': {
@@ -81,15 +99,45 @@ var generateThemeVariables = function (params) {
       weight: '200 1000',
       hasItalic: false
     },
+    'cinzel': {
+      name: 'Cinzel',
+      family: '\'Cinzel\', serif',
+      weight: '400 900',
+      hasItalic: false
+    },
     'comfortaa': {
       name: 'Comfortaa',
       family: '\'Comfortaa\', cursive',
       weight: '300 700',
       hasItalic: false
     },
+    'comme': {
+      name: 'Comme',
+      family: '\'Comme\', sans-serif',
+      weight: '100 900',
+      hasItalic: false
+    },
     'dancingscript': {
       name: 'Dancing Script',
       family: '\'Dancing Script\', cursive',
+      weight: '400 700',
+      hasItalic: false
+    },
+    'danfo': {
+      name: 'Danfo',
+      family: '\'Danfo\', serif',
+      weight: '400 400',
+      hasItalic: false
+    },
+    'dmsans': {
+      name: 'DM Sans',
+      family: '\'DM Sans\', sans-serif',
+      weight: '100 1000',
+      hasItalic: true
+    },
+    'domine': {
+      name: 'Domine',
+      family: '\'Domine\', serif',
       weight: '400 700',
       hasItalic: false
     },
@@ -99,9 +147,15 @@ var generateThemeVariables = function (params) {
       weight: '200 800',
       hasItalic: false
     },
-    'domine': {
-      name: 'Domine',
-      family: '\'Domine\', serif',
+    'doto': {
+      name: 'Doto',
+      family: '\'Doto\', sans-serif',
+      weight: '100 900',
+      hasItalic: false
+    },
+    'dynapuff': {
+      name: 'DynaPuff',
+      family: '\'DynaPuff\', system-ui',
       weight: '400 700',
       hasItalic: false
     },
@@ -109,6 +163,12 @@ var generateThemeVariables = function (params) {
       name: 'Exo',
       family: '\'Exo\', sans-serif',
       weight: '100 900',
+      hasItalic: true
+    },
+    'familjengrotesk': {
+      name: 'Familjen Grotesk',
+      family: '\'Familjen Grotesk\', sans-serif',
+      weight: '400 700',
       hasItalic: true
     },
     'faustina': {
@@ -123,10 +183,40 @@ var generateThemeVariables = function (params) {
       weight: '300 900',
       hasItalic: true
     },
+    'finlandica': {
+      name: 'Finlandica',
+      family: '\'Finlandica\', sans-serif',
+      weight: '400 700',
+      hasItalic: true
+    },
     'frankruhllibre': {
       name: 'Frank Ruhl Libre',
       family: '\'Frank Ruhl Libre\', serif',
       weight: '300 900',
+      hasItalic: false
+    },
+    'fredoka': {
+      name: 'Fredoka',
+      family: '\'Fredoka\', sans-serif',
+      weight: '300 700',
+      hasItalic: false
+    },
+    'funneldisplay': {
+      name: 'Funnel Display',
+      family: '\'Funnel Display\', sans-serif',
+      weight: '300 800',
+      hasItalic: false
+    },
+    'gantari': {
+      name: 'Gantari',
+      family: '\'Gantari\', sans-serif',
+      weight: '100 900',
+      hasItalic: true
+    },
+    'geistmono': {
+      name: 'Geist Mono',
+      family: '\'Geist Mono\', monospace',
+      weight: '100 900',
       hasItalic: false
     },
     'glory': {
@@ -141,17 +231,47 @@ var generateThemeVariables = function (params) {
       weight: '100 900',
       hasItalic: false
     },
+    'googlesanscode': {
+      name: 'Google Sans Code',
+      family: '\'Google Sans Code\', monospace',
+      weight: '300 800',
+      hasItalic: true
+    },
+    'grenzegotisch': {
+      name: 'Grenze Gotisch',
+      family: '\'Grenze Gotisch\', serif',
+      weight: '100 900',
+      hasItalic: false
+    },
+    'handjet': {
+      name: 'Handjet',
+      family: '\'Handjet\', sans-serif',
+      weight: '100 900',
+      hasItalic: false
+    },
     'heebo': {
       name: 'Heebo',
       family: '\'Heebo\', sans-serif',
       weight: '100 900',
       hasItalic: false
     },
+    'hostgrotesk': {
+      name: 'Host Grotesk',
+      family: '\'Host Grotesk\', sans-serif',
+      weight: '300 800',
+      hasItalic: true
+    },
     'imbue': {
       name: 'Imbue',
       family: '\'Imbue\', serif',
       weight: '100 900',
       hasItalic: false
+    },
+    'inclusivesans': {
+      name: 'Inclusive Sans',
+      family: '\'Inclusive Sans\', sans-serif',
+      weight: '300 700',
+      hasItalic: true
     },
     'instrumentsans': {
       name: 'Instrument Sans',
@@ -171,6 +291,12 @@ var generateThemeVariables = function (params) {
       weight: '300 700',
       hasItalic: false
     },
+    'kalnia': {
+      name: 'Kalnia',
+      family: '\'Kalnia\', serif',
+      weight: '100 700',
+      hasItalic: false
+    },
     'karla': {
       name: 'Karla',
       family: '\'Karla\', sans-serif',
@@ -183,11 +309,23 @@ var generateThemeVariables = function (params) {
       weight: '300 700',
       hasItalic: false
     },
+    'kumbhsans': {
+      name: 'Kumbh Sans',
+      family: '\'Kumbh Sans\', sans-serif',
+      weight: '100 900',
+      hasItalic: false
+    },
     'labrada': {
       name: 'Labrada',
       family: '\'Labrada\', serif',
       weight: '100 900',
       hasItalic: true
+    },
+    'leaguespartan': {
+      name: 'League Spartan',
+      family: '\'League Spartan\', sans-serif',
+      weight: '100 900',
+      hasItalic: false
     },
     'lemonada': {
       name: 'Lemonada',
@@ -198,6 +336,12 @@ var generateThemeVariables = function (params) {
     'lexend': {
       name: 'Lexend',
       family: '\'Lexend\', sans-serif',
+      weight: '100 900',
+      hasItalic: false
+    },
+    'lexenddeca': {
+      name: 'Lexend Deca',
+      family: '\'Lexend Deca\', sans-serif',
       weight: '100 900',
       hasItalic: false
     },
@@ -243,6 +387,12 @@ var generateThemeVariables = function (params) {
       weight: '100 900',
       hasItalic: true
     },
+    'mulish': {
+      name: 'Mulish',
+      family: '\'Mulish\', sans-serif',
+      weight: '200 1000',
+      hasItalic: true
+    },
     'nunito': {
       name: 'Nunito',
       family: '\'Nunito\', sans-serif',
@@ -261,6 +411,24 @@ var generateThemeVariables = function (params) {
       weight: '200 700',
       hasItalic: false
     },
+    'outfit': {
+      name: 'Outfit',
+      family: '\'Outfit\', sans-serif',
+      weight: '100 900',
+      hasItalic: false
+    },
+    'oxanium': {
+      name: 'Oxanium',
+      family: '\'Oxanium\', sans-serif',
+      weight: '200 800',
+      hasItalic: false
+    },
+    'parkinsans': {
+      name: 'Parkinsans',
+      family: '\'Parkinsans\', sans-serif',
+      weight: '300 800',
+      hasItalic: false
+    },
     'petrona': {
       name: 'Petrona',
       family: '\'Petrona\', serif',
@@ -273,11 +441,29 @@ var generateThemeVariables = function (params) {
       weight: '400 900',
       hasItalic: true
     },
+    'playwriteusmodern': {
+      name: 'Playwrite US Modern',
+      family: '\'Playwrite US Modern\', cursive',
+      weight: '100 400',
+      hasItalic: false
+    },
+    'playwriteustrad': {
+      name: 'Playwrite US Traditional',
+      family: '\'Playwrite US Trad\', cursive',
+      weight: '100 400',
+      hasItalic: false
+    },
     'plusjakartasans': {
       name: 'Plus Jakarta Sans',
       family: '\'Plus Jakarta Sans\', sans-serif',
       weight: '200 800',
       hasItalic: true
+    },
+    'pontanosans': {
+      name: 'Pontano Sans',
+      family: '\'Pontano Sans\', sans-serif',
+      weight: '300 700',
+      hasItalic: false
     },
     'publicsans': {
       name: 'Public Sans',
@@ -290,6 +476,12 @@ var generateThemeVariables = function (params) {
       family: '\'Quicksand\', sans-serif',
       weight: '300 700',
       hasItalic: false
+    },
+    'radiocanadabig': {
+      name: 'Radio Canada Big',
+      family: '\'Radio Canada Big\', sans-serif',
+      weight: '400 700',
+      hasItalic: true
     },
     'raleway': {
       name: 'Raleway',
@@ -307,6 +499,24 @@ var generateThemeVariables = function (params) {
       name: 'Red Hat Mono',
       family: '\'Red Hat Mono\', monospace',
       weight: '300 700',
+      hasItalic: true
+    },
+    'redhattext': {
+      name: 'Red Hat Text',
+      family: '\'Red Hat Text\', sans-serif',
+      weight: '300 700',
+      hasItalic: true
+    },
+    'redrose': {
+      name: 'Red Rose',
+      family: '\'Red Rose\', serif',
+      weight: '300 700',
+      hasItalic: false
+    },
+    'rem': {
+      name: 'REM',
+      family: '\'REM\', sans-serif',
+      weight: '100 900',
       hasItalic: true
     },
     'robotoflex': {
@@ -345,6 +555,12 @@ var generateThemeVariables = function (params) {
       weight: '100 900',
       hasItalic: false
     },
+    'sora': {
+      name: 'Sora',
+      family: '\'Sora\', sans-serif',
+      weight: '100 800',
+      hasItalic: false
+    },
     'sourcecodepro': {
       name: 'Source Code Pro',
       family: '\'Source Code Pro\', monospace',
@@ -357,11 +573,65 @@ var generateThemeVariables = function (params) {
       weight: '100 900',
       hasItalic: false
     },
+    'sticknobills': {
+      name: 'Stick No Bills',
+      family: '\'Stick No Bills\', sans-serif',
+      weight: '200 800',
+      hasItalic: false
+    },
+    'susemono': {
+      name: 'SUSE Mono',
+      family: '\'SUSE Mono\', sans-serif',
+      weight: '100 800',
+      hasItalic: true
+    },
+    'teachers': {
+      name: 'Teachers',
+      family: '\'Teachers\', sans-serif',
+      weight: '400 800',
+      hasItalic: true
+    },
+    'tektur': {
+      name: 'Tektur',
+      family: '\'Tektur\', sans-serif',
+      weight: '400 900',
+      hasItalic: false
+    },
+    'tourney': {
+      name: 'Tourney',
+      family: '\'Tourney\', sans-serif',
+      weight: '100 900',
+      hasItalic: true
+    },
     'urbanist': {
       name: 'Urbanist',
       family: '\'Urbanist\', sans-serif',
       weight: '100 900',
       hasItalic: true
+    },
+    'varta': {
+      name: 'Varta',
+      family: '\'Varta\', sans-serif',
+      weight: '300 700',
+      hasItalic: false
+    },
+    'victormono': {
+      name: 'Victor Mono',
+      family: '\'Victor Mono\', monospace',
+      weight: '100 700',
+      hasItalic: true
+    },
+    'wixmadefortext': {
+      name: 'Wix Madefor Text',
+      family: '\'Wix Madefor Text\', sans-serif',
+      weight: '400 800',
+      hasItalic: true
+    },
+    'workbench': {
+      name: 'Workbench',
+      family: '\'Workbench\', sans-serif',
+      weight: '400 400',
+      hasItalic: false
     },
     'worksans': {
       name: 'Work Sans',
@@ -379,6 +649,18 @@ var generateThemeVariables = function (params) {
       name: 'Yrsa',
       family: '\'Yrsa\', serif',
       weight: '300 700',
+      hasItalic: true
+    },
+    'zalandosans': {
+      name: 'Zalando Sans',
+      family: '\'Zalando Sans\', sans-serif',
+      weight: '200 900',
+      hasItalic: true
+    },
+    'zalandosansexpanded': {
+      name: 'Zalando Sans Expanded',
+      family: '\'Zalando Sans Expanded\', sans-serif',
+      weight: '200 900',
       hasItalic: true
     }
   };

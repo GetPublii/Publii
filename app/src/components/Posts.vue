@@ -777,7 +777,10 @@ export default {
                 "inverse": false
             });
 
-            mainProcessAPI.send('app-pages-hierarchy-update', itemsToChange);
+            mainProcessAPI.send('app-pages-hierarchy-update', {
+                postIDs: itemsToChange,
+                siteName: this.$store.state.currentSite.config.name
+            });
 
             mainProcessAPI.receiveOnce('app-post-status-changed', () => {
                 this.selectedItems = [];

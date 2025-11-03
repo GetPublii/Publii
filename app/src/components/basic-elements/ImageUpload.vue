@@ -320,7 +320,7 @@ export default {
         background-position: center;
         background-repeat: no-repeat;
         border: 2px dashed var(--input-border-color);
-        border-radius: 3px;
+        border-radius: var(--border-radius);
         color: var(--gray-3);
         display: block;
         font-size: $app-font-base;

@@ -95,6 +95,7 @@ import 'prismjs/components/prism-objectivec.min.js';
 import 'prismjs/components/prism-pascal.min.js';
 import 'prismjs/components/prism-perl.min.js';
 import 'prismjs/components/prism-php.min.js';
+import 'prismjs/components/prism-powershell.min.js';
 import 'prismjs/components/prism-pug.min.js';
 import 'prismjs/components/prism-python.min.js';
 import 'prismjs/components/prism-r.min.js';

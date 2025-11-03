@@ -202,7 +202,6 @@ export default {
     input {
         background-color: var(--input-bg);
         border: none;
-        border-radius: 3px;
         box-shadow: inset 0 0 0 1px var(--input-border-color);
         color: var(--text-primary-color);
         display: inline-block;
