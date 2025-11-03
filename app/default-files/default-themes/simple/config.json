@@ -565,13 +565,13 @@
                     "group": "Serif"
                 },
                 {
-                    "label": "Albert Sans",
-                    "value": "albertsans",
+                    "label": "Advent Pro",
+                    "value": "adventpro",
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Advent Pro",
-                    "value": "adventpro",
+                    "label": "Albert Sans",
+                    "value": "albertsans",
                     "group": "Sans Serif"
                 },
                 {
@@ -1001,7 +1001,7 @@
             "dependencies": [
                 {
                     "field": "fontBody",
-                    "value": "adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,brygada1918,cabin,exo,faustina,figtree,glory,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,raleway,redhatdisplay,redhatmono,rokkitt,rubik,sourcecodepro,urbanist,worksans,yrsa"
+                    "value": "albertsans,adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,bodonimoda,brygada1918,cabin,dmsans,exo,familjengrotesk,faustina,figtree,finlandica,gantari,glory,googlesanscode,hostgrotesk,inclusivesans,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,mulish,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,radiocanadabig,raleway,redhatdisplay,redhatmono,redhattext,rem,rokkitt,rubik,sourcecodepro,susemono,teachers,tourney,urbanist,victormono,wixmadefortext,worksans,zalandosans,zalandosansexpanded,yrsa"
                 }
             ]
         },
@@ -1138,13 +1138,13 @@
                     "group": "Serif"
                 },
                 {
-                    "label": "Albert Sans",
-                    "value": "albertsans",
+                    "label": "Advent Pro",
+                    "value": "adventpro",
                     "group": "Sans Serif"
                 },
                 {
-                    "label": "Advent Pro",
-                    "value": "adventpro",
+                    "label": "Albert Sans",
+                    "value": "albertsans",
                     "group": "Sans Serif"
                 },
                 {
@@ -1574,7 +1574,7 @@
             "dependencies": [
                 {
                     "field": "fontHeadings",
-                    "value": "adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,brygada1918,cabin,exo,faustina,figtree,glory,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,raleway,redhatdisplay,redhatmono,rokkitt,rubik,sourcecodepro,urbanist,worksans,yrsa"
+                    "value": "albertsans,adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,bodonimoda,brygada1918,cabin,dmsans,exo,familjengrotesk,faustina,figtree,finlandica,gantari,glory,googlesanscode,hostgrotesk,inclusivesans,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,mulish,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,radiocanadabig,raleway,redhatdisplay,redhatmono,redhattext,rem,rokkitt,rubik,sourcecodepro,susemono,teachers,tourney,urbanist,victormono,wixmadefortext,worksans,zalandosans,zalandosansexpanded,yrsa"
                 }
             ]
         },
