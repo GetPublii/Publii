@@ -95,7 +95,8 @@ export default {
         { text: 'TypeScript', value: 'typescript' },
         { text: 'VB.NET', value: 'vbnet' },
         { text: 'Visual Basic', value: 'visual-basic' },
-        { text: 'YAML', value: 'yaml' }
+        { text: 'YAML', value: 'yaml' },
+        { text: 'XML', value: 'markup' }
     ],
     element_format : 'html',
     fix_list_elements : true,

@@ -130,7 +130,8 @@ export default {
         'typescript',
         'vbnet',
         'visual-basic',
-        'yaml'
+        'yaml',
+        'xml'
       ]
     }
   },

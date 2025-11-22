@@ -112,6 +112,7 @@ import 'prismjs/components/prism-typescript.min.js';
 import 'prismjs/components/prism-vbnet.min.js';
 import 'prismjs/components/prism-visual-basic.min.js';
 import 'prismjs/components/prism-yaml.min.js';
+import 'prismjs/components/prism-xml-doc.min.js';
 
 window.app = null;
 
