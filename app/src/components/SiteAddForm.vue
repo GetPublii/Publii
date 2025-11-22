@@ -105,7 +105,7 @@
             </div>
         </div>
 
-        <overlay v-if="overlayIsVisible">
+        <overlay v-if="!overlayIsVisible">
             <div>
                 <div class="loader"><span></span></div>
                 {{ $t('site.creationInProgress') }}
@@ -696,17 +696,16 @@ export default {
                 content:"";
                 display: inline-block;
                 height: 3rem;      
-                left: 50%;
+                left: calc(50% - 1.5rem);
                 position: absolute;      
-                top: 50%;      
+                top: calc(50% - 1.5rem);      
                 vertical-align: middle;
                 width: 3rem;
-                transform: translate(-50%, -50%);
 
                 @at-root {
                     @keyframes spin {
                         100% {
-                            transform: translate(-50%, -50%) rotate(360deg);
+                            transform: rotate(360deg);
                         }
                     }
                 }
