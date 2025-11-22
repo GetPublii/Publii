@@ -58,9 +58,7 @@
                     :name="messageInOptions.type"
                     customWidth="28"
                     customHeight="28" />
-                <div>
-                    {{ messageInOptions.text }}
-                </div>
+                <div v-pure-html="messageInOptions.text"></div>
             </div>
 
             <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
