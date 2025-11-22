@@ -290,6 +290,26 @@ class SiteEvents {
                         config.settings.deployment.netlify.id = netlifyIdData.toSave;
                         config.settings.deployment.netlify.token = netlifyTokenData.toSave;
                     }
+
+                    if (
+                        config.settings.deployment.cloudflareWorkers &&
+                        config.settings.deployment.cloudflareWorkers.accountId !== '' && 
+                        config.settings.deployment.cloudflareWorkers.apiToken !== '' &&
+                        config.settings.deployment.cloudflareWorkers.accountId !== 'publii-cf-account-id ' + siteID
+                    ) {
+                        let cfAccountIdData = await self.loadPassword(
+                            config.settings,
+                            'publii-cf-account-id',
+                            config.settings.deployment.cloudflareWorkers.accountId
+                        );
+                        let cfApiTokenData = await self.loadPassword(
+                            config.settings,
+                            'publii-cf-api-token',
+                            config.settings.deployment.cloudflareWorkers.apiToken
+                        );
+                        config.settings.deployment.cloudflareWorkers.accountId = cfAccountIdData.toSave;
+                        config.settings.deployment.cloudflareWorkers.apiToken = cfApiTokenData.toSave;
+                    }
                 } catch (error) {
                     event.sender.send('app-site-config-saved', {
                         status: false,
