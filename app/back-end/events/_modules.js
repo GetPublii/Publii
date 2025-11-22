@@ -3,6 +3,7 @@
  */
 module.exports = {
     AppEvents: require('./app.js'),
+    ContentEvents: require('./content.js'),
     CreditsEvents: require('./credits'),
     ImageUploaderEvents: require('./image-uploader.js'),
     PageEvents: require('./page.js'),

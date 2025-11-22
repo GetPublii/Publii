@@ -276,7 +276,12 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getWysiwygTranslation: () => this.$store.state.wysiwygTranslation,
                 translate: (phraseKey) => this.$t(phraseKey),
                 overridedCssVariables: () => this.overridedCssVariables,
-                showMessage: (messageConfig) => this.showMessage(messageConfig)
+                showMessage: (messageConfig) => this.showMessage(messageConfig),
+                getCurrentSitePosts: () => window.structuredClone(this.$store.state.currentSite.posts),
+                getCurrentSitePages: () => window.structuredClone(this.$store.state.currentSite.pages),
+                getCurrentSiteTags: () => window.structuredClone(this.$store.state.currentSite.tags),
+                getCurrentSiteAuthors: () => window.structuredClone(this.$store.state.currentSite.authors),
+                setContentElementField: (itemType, itemID, fieldsToUpdate, callback) => this.setContentElementField(itemType, itemID, fieldsToUpdate, callback)
             };
 
             // Find issues with loading languages
@@ -451,6 +456,39 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     message: message.text || '',
                     type: message.type || 'warning',
                     lifeTime: message.lifeTime || 3
+                });
+            },
+            async setContentElementField (itemType, itemID, fieldsToUpdate, callback) {
+                let tableName = 'posts';
+
+                if (itemType === 'tag') {
+                    tableName = 'tags';
+                } else if (itemType === 'author') {
+                    tableName = 'authors';
+                }
+
+                await mainProcessAPI.send('app-content-fields-update', {
+                    site: this.$store.state.currentSite.config.name,
+                    table: tableName,
+                    itemID,
+                    fieldsToUpdate
+                });
+
+                mainProcessAPI.receiveOnce('app-content-fields-updated', (result) => {
+                    if (result.status === 'success') {
+                        fieldsToUpdate.forEach(fieldObj => {
+                            this.$store.commit('updateCurrentSiteItem', {
+                                itemType: itemType,
+                                itemID: itemID,
+                                field: fieldObj.field,
+                                value: fieldObj.value,
+                                type: fieldObj.type,
+                                subfield: fieldObj.subfield
+                            });
+                        });
+                    }
+
+                    callback(result);
                 });
             }
         },

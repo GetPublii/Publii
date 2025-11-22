@@ -103,7 +103,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-set-ui-zoom-level',
             'app-set-notifications-center-state',
             'app-get-notifications-file',
-            'app-pages-hierarchy-update'
+            'app-pages-hierarchy-update',
+            'app-content-fields-update'
         ];
 
         if (validChannels.includes(channel)) {
@@ -217,7 +218,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-plugins-state-loaded',
             'app-site-plugin-activated',
             'app-site-plugin-deactivated',
-            'app-site-get-plugin-config-retrieved'
+            'app-site-get-plugin-config-retrieved',
+            'app-content-fields-updated'
         ];
 
         if (validChannels.includes(channel)) {
