@@ -1513,7 +1513,6 @@ export default {
                 });
 
                 this.testInProgress = false;
-                this.save();
             });
 
             mainProcessAPI.receiveOnce('app-deploy-test-write-error', (data) => {
