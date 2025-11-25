@@ -5,11 +5,9 @@ const slug = require('./../../helpers/slug');
 const ContentHelper = require('./helpers/content');
 const URLHelper = require('./helpers/url');
 const normalizePath = require('normalize-path');
-const Plugins = require('./../../plugins.js');
 const RendererCache = require('./renderer-cache');
 const RendererHelpers = require('./helpers/helpers.js');
 const sizeOf = require('image-size');
-const UtilsHelper = require('./../../helpers/utils');
 
 /*
  * Class used create global context variables
@@ -25,7 +23,7 @@ class RendererContext {
         this.postsOrdering = 'created_at DESC';
         this.featuredPostsOrdering = 'created_at DESC';
         this.hiddenPostsOrdering = 'created_at DESC';
-        this.pluginsConfig = this.getPluginsConfig(rendererInstance, rendererInstance);
+        this.pluginsConfig = rendererInstance.pluginsConfig;
 
         if(
             typeof this.siteConfig.advanced.postsListingOrder === 'string' &&
@@ -835,28 +833,6 @@ class RendererContext {
         }
 
         return tagsUrl;
-    }
-
-    getPluginsConfig (rendererInstance) {
-        let pluginsHelper = new Plugins(rendererInstance.appDir, rendererInstance.sitesDir);
-        let pluginsConfig = pluginsHelper.loadSitePluginsConfig(this.siteConfig.name);
-        let pluginNames = Object.keys(pluginsConfig);
-        let siteName = this.siteConfig.name;
-        let config = {};
-
-        for (let i = 0; i < pluginNames.length; i++) {
-            let pluginName = pluginNames[i];
-            
-            config[pluginName] = {
-                state: pluginsConfig[pluginName]
-            };
-
-            if (pluginsConfig[pluginName]) {
-                config[pluginName].config = rendererInstance.loadPluginConfig(pluginName, siteName)
-            };
-        }
-
-        return config;
     }
 }
 

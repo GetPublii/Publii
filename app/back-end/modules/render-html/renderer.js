@@ -16,6 +16,7 @@ const FilesHelper = require('./helpers/files.js');
 const ViewSettingsHelper = require('./helpers/view-settings.js');
 const Themes = require('../../themes.js');
 const TemplateHelper = require('./helpers/template.js');
+const Plugins = require('./../../plugins.js');
 const RendererContext = require('./renderer-context.js');
 const RendererContextPage = require('./contexts/page.js');
 const RendererContextPost = require('./contexts/post.js');
@@ -38,7 +39,6 @@ const Git = require('./../deploy/git.js');
 
 // Default config
 const defaultAstCurrentSiteConfig = require('./../../../config/AST.currentSite.config');
-const { advanced } = require('./../../../config/AST.currentSite.config');
 
 /*
  * Class used to generate HTML output
@@ -99,6 +99,7 @@ class Renderer {
         this.postData = postData;
         this.pluginsDir = path.join(this.appDir, 'plugins');
         this.loadPlugins();
+        this.pluginsConfig = this.getPluginsConfig();
     }
 
     /*
@@ -2382,6 +2383,28 @@ class Renderer {
         }
 
         return output;
+    }
+
+    getPluginsConfig () {
+        let pluginsHelper = new Plugins(this.appDir, this.sitesDir);
+        let pluginsConfig = pluginsHelper.loadSitePluginsConfig(this.siteConfig.name);
+        let pluginNames = Object.keys(pluginsConfig);
+        let siteName = this.siteConfig.name;
+        let config = {};
+
+        for (let i = 0; i < pluginNames.length; i++) {
+            let pluginName = pluginNames[i];
+            
+            config[pluginName] = {
+                state: pluginsConfig[pluginName]
+            };
+
+            if (pluginsConfig[pluginName]) {
+                config[pluginName].config = this.loadPluginConfig(pluginName, siteName)
+            };
+        }
+
+        return config;
     }
 
     /**
