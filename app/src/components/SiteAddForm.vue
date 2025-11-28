@@ -105,7 +105,7 @@
             </div>
         </div>
 
-        <overlay v-if="!overlayIsVisible">
+        <overlay v-if="overlayIsVisible">
             <div>
                 <div class="loader"><span></span></div>
                 {{ $t('site.creationInProgress') }}
