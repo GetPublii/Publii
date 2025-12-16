@@ -68,7 +68,18 @@
                 v-if="type === 'tag'"
                 :class="{ 'is-invalid': errors.indexOf('tagPage') > -1 }"
                 key="menu-item-editor-field-tag">
-                <span>{{ $t('tag.tagPage') }}</span>
+                <span>
+                    {{ $t('tag.tagPage') }}
+                </span>
+
+                <a 
+                    v-if="tagPage"
+                    href="#"
+                    @click="setLabel('tag', tagPage)"
+                    class="is-label-action">
+                    use tag name as label
+                </a>
+
                 <v-select
                     ref="tagPagesSelect"
                     :options="tagPages"
@@ -85,7 +96,18 @@
                 v-if="type === 'author'"
                 :class="{ 'is-invalid': errors.indexOf('authorPage') > -1 }"
                 key="menu-item-editor-field-author">
-                <span>{{ $t('author.authorPage') }}</span>
+                <span>
+                    {{ $t('author.authorPage') }}
+                </span>
+
+                <a 
+                    v-if="authorPage"
+                    href="#"
+                    @click="setLabel('author', authorPage)"
+                    class="is-label-action">
+                    use author name as label
+                </a>
+
                 <v-select
                     ref="authorPagesSelect"
                     :options="authorPages"
@@ -102,7 +124,18 @@
                 v-if="type === 'post'"
                 :class="{ 'is-invalid': errors.indexOf('postPage') > -1 }"
                 key="menu-item-editor-field-post">
-                <span>{{ $t('post.postPage') }}</span>
+                <span>
+                    {{ $t('post.postPage') }}
+                </span>
+
+                <a 
+                    v-if="postPage"
+                    href="#"
+                    @click="setLabel('post', postPage)"
+                    class="is-label-action">
+                    use post title as label
+                </a>
+
                 <v-select
                     ref="postPagesSelect"
                     :options="postPages"
@@ -119,7 +152,18 @@
                 v-if="type === 'page'"
                 :class="{ 'is-invalid': errors.indexOf('pagePage') > -1 }"
                 key="menu-item-editor-field-post">
-                <span>{{ $t('page.page') }}</span>
+                <span>
+                    {{ $t('page.page') }}
+                </span>
+
+                <a 
+                    v-if="pagePage"
+                    href="#"
+                    @click="setLabel('page', pagePage)"
+                    class="is-label-action">
+                    use page title as label
+                </a>
+
                 <v-select
                     ref="pagePagesSelect"
                     :options="pagePages"
@@ -193,6 +237,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'menu-item-editor',
     data () {
@@ -478,6 +524,17 @@ export default {
             this.authorPage = this.type === 'author' ? value : '';
             this.pagePage = this.type === 'page' ? parseInt(value, 10) : '';
             this.postPage = this.type === 'post' ? parseInt(value, 10) : '';
+        },
+        setLabel (itemType, itemID) {
+            if (itemType === 'tag') {
+                Vue.set(this, 'label', this.customTagLabels(itemID));
+            } else if (itemType === 'author') {
+                Vue.set(this, 'label', this.customAuthorsLabels(itemID));
+            } else if (itemType === 'post') {
+                Vue.set(this, 'label', this.customPostLabels(itemID));
+            } else if (itemType === 'page') {
+                Vue.set(this, 'label', this.customPageLabels(itemID));
+            }
         }
     },
     beforeDestroy () {
@@ -491,7 +548,6 @@ export default {
 @import '../scss/options-sidebar.scss';
 
 .options-sidebar {
-
     h2 {
         margin-bottom: 1.2rem;
     }
@@ -499,6 +555,10 @@ export default {
     &-buttons {
         border: none;
         padding-top: 1.8rem;
+    }
+
+    .is-label-action {
+        float: right;
     }
 }
 </style>
