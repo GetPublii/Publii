@@ -396,6 +396,18 @@ export default {
                 }
             }
 
+            themeUpdates.sort((themeA, themeB) => {
+                let isUnread = (theme) => this.readedNotifications.indexOf('THEME-' + theme.directory + '-' + theme.version) === -1;
+                let unreadA = isUnread(themeA);
+                let unreadB = isUnread(themeB);
+
+                if (unreadA !== unreadB) {
+                    return unreadA ? -1 : 1;
+                }
+
+                return themeA.directory.localeCompare(themeB.directory);
+            });
+
             return themeUpdates
         },
         pluginUpdates () {
@@ -418,6 +430,18 @@ export default {
                     }
                 }
             }
+
+            pluginUpdates.sort((pluginA, pluginB) => {
+                let isUnread = (plugin) => this.readedNotifications.indexOf('PLUGIN-' + plugin.directory + '-' + plugin.version) === -1;
+                let unreadA = isUnread(pluginA);
+                let unreadB = isUnread(pluginB);
+
+                if (unreadA !== unreadB) {
+                    return unreadA ? -1 : 1;
+                }
+
+                return pluginA.directory.localeCompare(pluginB.directory);
+            });
 
             return pluginUpdates;
         },
