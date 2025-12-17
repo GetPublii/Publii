@@ -440,10 +440,10 @@
         "unassigned": "Unassigned",
         "unselectItem": "Unselect",
         "updateLabel": {
-            "author": "Use author name as label",
-            "page": "Use page title as label",
-            "post": "Use post title as label",
-            "tag": "Use tag name as label"
+            "author": "Use author name",
+            "page": "Use page title",
+            "post": "Use post title",
+            "tag": "Use tag name"
         }
     },
     "menuPositionPopup": {

@@ -439,10 +439,10 @@
         "unassigned": "Nieprzypisane",
         "unselectItem": "Odznacz",
         "updateLabel": {
-            "author": "Użyj nazwy autora jako etykiety",
-            "page": "Użyj tytułu strony jako etykiety",
-            "post": "Użyj tytułu wpisu jako etykiety",
-            "tag": "Użyj nazwy tagu jako etykiety"
+            "author": "Użyj nazwy autora",
+            "page": "Użyj tytułu strony",
+            "post": "Użyj tytułu wpisu",
+            "tag": "Użyj nazwy tagu"
         }
     },
     "menuPositionPopup": {

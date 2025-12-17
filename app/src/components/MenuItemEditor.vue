@@ -20,19 +20,23 @@
                 key="menu-item-editor-field-label">
                 <span>{{ $t('menu.label') }}</span>
 
+                 <span
+                    v-if="(type === 'tag' && tagPage) || (type === 'author' && authorPage) || (type === 'post' && postPage) || (type === 'page' && pagePage)" 
+                    @click.prevent.stop="setLabel(type)" 
+                    class="options-sidebar-icon-button-suggestion"
+                    :title="$t('menu.updateLabel.' + type)">
+                    <icon
+                        class="options-sidebar-icon"
+                        size="s"
+                        name="pen-ai-suggestion"/>
+                </span>
+
                 <input
                     v-model="label"
                     :spellcheck="$store.state.currentSite.config.spellchecking"
                     key="menu-item-editor-field-label-value"
                     @keyup="cleanError('label')"
                     type="text">
-
-                <span
-                    v-if="(type === 'tag' && tagPage) || (type === 'author' && authorPage) || (type === 'post' && postPage) || (type === 'page' && pagePage)" 
-                    @click.prevent.stop="setLabel(type)"
-                    :title="$t('menu.updateLabel.' + type)">
-                    UPDATE
-                </span>
             </label>
 
             <label

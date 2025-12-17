@@ -195,6 +195,20 @@
         position: relative;
         transition: var(--transition);
         width: 2.4rem;
+
+        &-button-suggestion {
+            color: var(--icon-secondary-color);
+            cursor: pointer;
+            float: right;
+
+            &:hover {
+                color: var(--link-primary-color);
+            }
+
+            svg {
+                margin-right: .5rem !important;
+            }
+        }
     }
 
     &-preview-button {
