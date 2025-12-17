@@ -437,7 +437,13 @@
         "textSeparator": "Separator tekstu",
         "type": "Rodzaj",
         "unassigned": "Nieprzypisane",
-        "unselectItem": "Odznacz"
+        "unselectItem": "Odznacz",
+        "updateLabel": {
+            "author": "Użyj nazwy autora jako etykiety",
+            "page": "Użyj tytułu strony jako etykiety",
+            "post": "Użyj tytułu wpisu jako etykiety",
+            "tag": "Użyj nazwy tagu jako etykiety"
+        }
     },
     "menuPositionPopup": {
         "invalidValue": "Nieprawidłowa wartość: wprowadzona wartość nie może być równa 0 i przekraczać domyślnego maksymalnego limitu motywu. Użycie -1 oznacza brak ograniczeń.",

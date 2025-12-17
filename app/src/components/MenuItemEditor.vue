@@ -19,11 +19,20 @@
                 :class="{ 'is-invalid': errors.indexOf('label') > -1 }"
                 key="menu-item-editor-field-label">
                 <span>{{ $t('menu.label') }}</span>
+
                 <input
                     v-model="label"
                     :spellcheck="$store.state.currentSite.config.spellchecking"
+                    key="menu-item-editor-field-label-value"
                     @keyup="cleanError('label')"
                     type="text">
+
+                <span
+                    v-if="(type === 'tag' && tagPage) || (type === 'author' && authorPage) || (type === 'post' && postPage) || (type === 'page' && pagePage)" 
+                    @click.prevent.stop="setLabel(type)"
+                    :title="$t('menu.updateLabel.' + type)">
+                    UPDATE
+                </span>
             </label>
 
             <label
@@ -72,14 +81,6 @@
                     {{ $t('tag.tagPage') }}
                 </span>
 
-                <a 
-                    v-if="tagPage"
-                    href="#"
-                    @click="setLabel('tag', tagPage)"
-                    class="is-label-action">
-                    use tag name as label
-                </a>
-
                 <v-select
                     ref="tagPagesSelect"
                     :options="tagPages"
@@ -99,14 +100,6 @@
                 <span>
                     {{ $t('author.authorPage') }}
                 </span>
-
-                <a 
-                    v-if="authorPage"
-                    href="#"
-                    @click="setLabel('author', authorPage)"
-                    class="is-label-action">
-                    use author name as label
-                </a>
 
                 <v-select
                     ref="authorPagesSelect"
@@ -128,14 +121,6 @@
                     {{ $t('post.postPage') }}
                 </span>
 
-                <a 
-                    v-if="postPage"
-                    href="#"
-                    @click="setLabel('post', postPage)"
-                    class="is-label-action">
-                    use post title as label
-                </a>
-
                 <v-select
                     ref="postPagesSelect"
                     :options="postPages"
@@ -155,14 +140,6 @@
                 <span>
                     {{ $t('page.page') }}
                 </span>
-
-                <a 
-                    v-if="pagePage"
-                    href="#"
-                    @click="setLabel('page', pagePage)"
-                    class="is-label-action">
-                    use page title as label
-                </a>
 
                 <v-select
                     ref="pagePagesSelect"
@@ -525,15 +502,15 @@ export default {
             this.pagePage = this.type === 'page' ? parseInt(value, 10) : '';
             this.postPage = this.type === 'post' ? parseInt(value, 10) : '';
         },
-        setLabel (itemType, itemID) {
+        setLabel (itemType) {
             if (itemType === 'tag') {
-                Vue.set(this, 'label', this.customTagLabels(itemID));
+                this.label = this.customTagLabels(this.tagPage);
             } else if (itemType === 'author') {
-                Vue.set(this, 'label', this.customAuthorsLabels(itemID));
+                this.label = this.customAuthorsLabels(this.authorPage);
             } else if (itemType === 'post') {
-                Vue.set(this, 'label', this.customPostLabels(itemID));
+                this.label = this.customPostLabels(this.postPage);
             } else if (itemType === 'page') {
-                Vue.set(this, 'label', this.customPageLabels(itemID));
+                this.label = this.customPageLabels(this.pagePage);
             }
         }
     },
@@ -555,10 +532,6 @@ export default {
     &-buttons {
         border: none;
         padding-top: 1.8rem;
-    }
-
-    .is-label-action {
-        float: right;
     }
 }
 </style>

@@ -438,7 +438,13 @@
         "textSeparator": "Text separator",
         "type": "Type",
         "unassigned": "Unassigned",
-        "unselectItem": "Unselect"
+        "unselectItem": "Unselect",
+        "updateLabel": {
+            "author": "Use author name as label",
+            "page": "Use page title as label",
+            "post": "Use post title as label",
+            "tag": "Use tag name as label"
+        }
     },
     "menuPositionPopup": {
         "invalidValue": "Invalid value: the entered value cannot be 0 and exceed the theme's default maximum limit. Use -1 for no restrictions.",
