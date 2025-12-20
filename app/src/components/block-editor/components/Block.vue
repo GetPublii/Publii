@@ -265,7 +265,7 @@ export default {
     findPreviousBlockID () {
       let currentBlockIndex = this.editor.content.findIndex(el => el.id === this.id);
 
-      if (!currentBlockIndex) {
+      if (currentBlockIndex < 1) {
         return false;
       }
 
