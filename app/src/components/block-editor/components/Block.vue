@@ -275,7 +275,7 @@ export default {
     },
     clearTextSelection (blockID) {
       if (this.id === blockID) {
-        window.getSelection().empty();
+        window.getSelection().removeAllRanges();
         this.textIsHighlighted = false;
       }
     },
