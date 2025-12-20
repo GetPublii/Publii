@@ -106,6 +106,11 @@ export default {
 .popup {
     max-width: 60rem;
     min-width: 40rem;
+
+    p {
+        max-height: 400px;
+        overflow: auto;
+    }
 }
 
 .buttons {
