@@ -1476,6 +1476,11 @@ class Renderer {
             let postsPerPage = parseInt(this.themeConfig.config.tagsPostsPerPage, 10);
             let tagSlug = URLHelper.createSlug(tagSlugs[i]);
 
+            if (typeof tagSlugs[i] === 'undefined' || tagSlugs[i] === null) {
+                console.log(`[i] Skipped tag with ID = ${tagIDs[i]} due lack of slug`);
+                continue;
+            }            
+
             if (isNaN(postsPerPage)) {
                 postsPerPage = 5;
             }
