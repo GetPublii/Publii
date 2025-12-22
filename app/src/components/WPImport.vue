@@ -128,7 +128,7 @@
                                 slot="field"
                                 id="use-autop"
                                 ref="use-autop"
-                                :checked="true" />
+                                :checked="false" />
                         </field>
                     </div>
                 </div>
