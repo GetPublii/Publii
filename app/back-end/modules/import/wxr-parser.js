@@ -379,7 +379,9 @@ class WxrParser {
     importPostsData() {
         let posts = this.parsedContent.rss.channel['item'];
         let newPost;
-        posts = posts ? posts.filter(item => this.postTypes.indexOf(item['wp:post_type']) !== -1 && item['wp:post_type'] !== 'page') : false;
+
+        posts = Array.isArray(posts) ? posts : [posts];
+        posts = posts && posts.length ? posts.filter(item => this.postTypes.indexOf(item['wp:post_type']) !== -1 && item['wp:post_type'] !== 'page') : false;
 
         if(!posts) {
             return;
@@ -505,7 +507,8 @@ class WxrParser {
 
         let pages = this.parsedContent.rss.channel['item'];
         let newPage;
-        pages = pages ? pages.filter(item => item['wp:post_type'] === 'page') : false;
+        pages = Array.isArray(pages) ? pages : [pages];
+        pages = pages && pages.length ? pages.filter(item => item['wp:post_type'] === 'page') : false;
 
         if(!pages) {
             console.log('(!) No pages to import');
@@ -610,10 +613,14 @@ class WxrParser {
      */
     getImageURLs() {
         let items = this.parsedContent.rss.channel['item'];
-        items = items.filter(item => item['wp:post_type'] === 'attachment');
+        items = Array.isArray(items) ? items : [items];
 
-        for(let item of items) {
-            this.temp.images[item['wp:post_id']] = item['wp:attachment_url'];
+        if (items && items.length) {
+            items = items.filter(item => item['wp:post_type'] === 'attachment');
+
+            for (let item of items) {
+                this.temp.images[item['wp:post_id']] = item['wp:attachment_url'];
+            }
         }
     }
 
