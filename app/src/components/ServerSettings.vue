@@ -144,6 +144,18 @@
                 </div>
 
                 <div
+                    @click="deploymentMethodSelected = 'cloudflare-workers'"
+                    :title="$t('sync.cloudflareWorkers')"
+                    class="server-settings-grid-item">
+                    <icon
+                      customWidth="48"
+                      customHeight="48"
+                      name="cloudflare"
+                      iconset="svg-map-server"/>
+                      <span>{{ $t('sync.cloudflareWorkers') }}</span>
+                </div>
+
+                <div
                     @click="deploymentMethodSelected = 'manual'"
                     :title="$t('sync.manualDeployment')"
                     class="server-settings-grid-item">
@@ -178,9 +190,9 @@
                 <div class="msg msg-icon msg-info">
                     <icon name="info" customWidth="28" customHeight="28" />
                     <p>
-                        <span v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages'" v-pure-html="$t('sync.deploymentMethodFilesPubliiMsg')"></span>
+                        <span v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages' && deploymentMethodSelected !== 'cloudflare-workers'" v-pure-html="$t('sync.deploymentMethodFilesPubliiMsg')"></span>
                         
-                        <br v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages'">
+                        <br v-if="deploymentMethodSelected !== 'git' && deploymentMethodSelected !== 'netlify' && deploymentMethodSelected !== 'github-pages' && deploymentMethodSelected !== 'cloudflare-workers'">
 
                         <span
                             v-if="deploymentMethodSelected === 'netlify'"
@@ -210,6 +222,11 @@
                         <span
                             v-if="deploymentMethodSelected === 'google-cloud'"
                             v-pure-html="$t('sync.deploymentMethodGoogleCloudMsg')">
+                        </span>
+
+                        <span
+                            v-if="deploymentMethodSelected === 'cloudflare-workers'"
+                            v-pure-html="$t('sync.deploymentMethodCloudflareWorkersMsg')">
                         </span>
 
                         <span v-pure-html="$t('settings.readAboutOurRecommendedServerSettings')"></span>
@@ -1158,6 +1175,72 @@
                 </field>
 
                 <field
+                    v-if="deploymentMethodSelected === 'cloudflare-workers'"
+                    id="cf-account-id"
+                    :label="$t('sync.accountID')">
+                    <text-input
+                        slot="field"
+                        id="cf-account-id"
+                        key="cf-account-id"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('cf-account-id') > -1 }"
+                        @keyup.native="cleanError('cf-account-id')"
+                        v-model="deploymentSettings.cloudflareWorkers.accountId" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('cf-account-id') > -1"
+                        class="note">
+                        {{ $t('sync.accountIDFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'cloudflare-workers'"
+                    id="cf-api-token"
+                    :label="$t('sync.apiToken')">
+                    <text-input
+                        slot="field"
+                        id="cf-api-token"
+                        type="password"
+                        key="cf-api-token"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('cf-api-token') > -1 }"
+                        @keyup.native="cleanError('cf-api-token')"
+                        v-model="deploymentSettings.cloudflareWorkers.apiToken" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('cf-api-token') > -1"
+                        class="note">
+                        {{ $t('sync.apiTokenFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'cloudflare-workers'"
+                    id="cf-script-name"
+                    :label="$t('sync.scriptName')">
+                    <text-input
+                        slot="field"
+                        id="cf-script-name"
+                        key="cf-script-name"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('cf-script-name') > -1 }"
+                        @keyup.native="cleanError('cf-script-name')"
+                        v-model="deploymentSettings.cloudflareWorkers.scriptName" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('cf-script-name') > -1"
+                        class="note">
+                        {{ $t('sync.scriptNameFieldCantBeEmpty') }}
+                    </small>
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.scriptNameNote') }}
+                    </small>
+                </field>
+
+                <field
                     v-if="deploymentMethodSelected === 'manual'"
                     id="manual-output"
                     :label="$t('sync.outputType')">
@@ -1256,6 +1339,7 @@ export default {
                 'netlify': this.$t('sync.netlify'),
                 's3': this.$t('sync.s3CompatibleStorage'),
                 'google-cloud': this.$t('sync.googleCloud'),
+                'cloudflare-workers': this.$t('sync.cloudflareWorkers'),
                 'ftp': this.$t('sync.ftp'),
                 'sftp': this.$t('sync.sftpWithPassword'),
                 'sftp+key': this.$t('sync.sftpWithKey'),
@@ -1352,6 +1436,7 @@ export default {
                 case 'gitlab-pages':
                 case 'netlify':
                 case 'google-cloud':
+                case 'cloudflare-workers':
                 case 'manual':
                     this.deploymentSettings.port = ''; break;
                 case 'ftp':
@@ -1572,6 +1657,9 @@ export default {
                 case 'google-cloud':
                     this.validateGoogleCloud();
                     break;
+                case 'cloudflare-workers':
+                    this.validateCloudflareWorkers();
+                    break;
                 case 'manual':
                     this.validateManual();
                     break;
@@ -1647,6 +1735,10 @@ export default {
         },
         validateGoogleCloud () {
             let fields = ['google_key', 'google_bucket'];
+            return this.validateFields(fields);
+        },
+        validateCloudflareWorkers () {
+            let fields = ['cloudflareWorkers_accountId', 'cloudflareWorkers_apiToken', 'cloudflareWorkers_scriptName'];
             return this.validateFields(fields);
         },
         validateManual () {
@@ -1726,6 +1818,11 @@ export default {
                 deploymentSettings.gitlab.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-gl-token', deploymentSettings.gitlab.token);
             }
 
+            if (deploymentSettings.cloudflareWorkers) {
+                deploymentSettings.cloudflareWorkers.accountId = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-cf-account-id', deploymentSettings.cloudflareWorkers.accountId);
+                deploymentSettings.cloudflareWorkers.apiToken = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-cf-api-token', deploymentSettings.cloudflareWorkers.apiToken);
+            }
+
             return deploymentSettings;
         },
         setHiddenPasswords (deploymentSettings) {
@@ -1761,6 +1858,11 @@ export default {
 
             if (deploymentSettings.gitlab) {
                 deploymentSettings.gitlab.token = 'publii-gl-token ' + passwordKey;
+            }
+
+            if (deploymentSettings.cloudflareWorkers) {
+                deploymentSettings.cloudflareWorkers.accountId = 'publii-cf-account-id ' + passwordKey;
+                deploymentSettings.cloudflareWorkers.apiToken = 'publii-cf-api-token ' + passwordKey;
             }
 
             return deploymentSettings;
