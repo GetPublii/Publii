@@ -130,17 +130,36 @@ function jsonLDHelper(rendererInstance, Handlebars) {
             }
 
             if (itemData.author && itemData.author.name) {
-                let authorUrl = context.data.website.baseUrl + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
-
-                if (context.data.config.site.urls.postsPrefix && context.data.config.site.urls.authorsPrefixAfterPostsPrefix) {
-                    authorUrl = context.data.website.baseUrl + context.data.config.site.urls.postsPrefix + '/' + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
-                }
-                
                 jsonLDObject['author'] = {
                     "@type": "Person",
-                    "name": itemData.author.name,
-                    "url": authorUrl
+                    "name": itemData.author.name
                 };
+
+                let authorPagesEnabled = true;
+                let renderAuthorPages = rendererInstance.themeConfig.renderer && rendererInstance.themeConfig.renderer['createAuthorPages'];
+
+                if (rendererInstance.themeConfig.customConfig && typeof rendererInstance.themeConfig.customConfig['createAuthorPages'] !== 'undefined') {
+                    renderAuthorPages = rendererInstance.themeConfig.customConfig['createAuthorPages'];
+                }
+
+                if (
+                    (
+                        rendererInstance.themeConfig.supportedFeatures && 
+                        rendererInstance.themeConfig.supportedFeatures.authorPages === false
+                    ) || renderAuthorPages === false
+                ) {
+                    authorPagesEnabled = false;
+                }
+
+                if (authorPagesEnabled) {
+                    let authorUrl = context.data.website.baseUrl + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
+
+                    if (context.data.config.site.urls.postsPrefix && context.data.config.site.urls.authorsPrefixAfterPostsPrefix) {
+                        authorUrl = context.data.website.baseUrl + context.data.config.site.urls.postsPrefix + '/' + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
+                    }
+                    
+                    jsonLDObject['author']['url'] = authorUrl;
+                }
             }
 
             jsonLDObject['publisher'] = {
