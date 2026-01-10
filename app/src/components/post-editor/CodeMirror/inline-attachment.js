@@ -124,13 +124,13 @@
   };
 
 
-  inlineAttachment.prototype.uploadFile = function(file) {
+  inlineAttachment.prototype.uploadFile = async function(file) {
     let postID = parseInt(document.querySelector('.post-editor-markdown').getAttribute('data-post-id'), 10);
 
     mainProcessAPI.send('app-image-upload', {
         'id': postID,
         'site': window.app.getSiteName(),
-        'path': file.path
+        'path': await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(file))
     });
 
     mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {            
