@@ -110,6 +110,8 @@ export default {
     p {
         max-height: 400px;
         overflow: auto;
+        -webkit-user-select: text;
+        user-select: text;
     }
 }
 
