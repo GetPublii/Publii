@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.2.1.0] - 2026-01-06
+### Fixed
+- Fixed an issue where the search popup would not open if the input element was missing
+
 ## [3.2.0.0] - 2025-11-04
 ### Added
 - Added new variable fonts
