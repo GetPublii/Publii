@@ -12,7 +12,7 @@ const normalizePath = require('normalize-path');
 const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
-const Jimp = require('jimp');
+const { Jimp } = require('jimp');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 let sharp = require('sharp');
@@ -365,47 +365,41 @@ class Image extends Model {
 
             if (finalHeight === 'auto') {
                 finalHeight = null;
-
-                if (this.shouldUseJimp()) {
-                    finalHeight = Jimp.AUTO;
-                }
             }
             
             if (finalWidth === 'auto') {
                 finalWidth = null;
-
-                if (this.shouldUseJimp()) {
-                    finalWidth = Jimp.AUTO;
-                }
             }
 
             if (cropImage) {
                 if (this.shouldUseJimp()) {
-                    result = new Promise ((resolve, reject) => {
-                        Jimp.read(originalPath, function (err, image) {
-                            if (err) {
-                                reject(err);
-                            }
-
+                    result = new Promise (async (resolve, reject) => {
+                        try {
+                            let image = await Jimp.read(originalPath);
                             console.log('JIMP COVER', finalWidth, ' x ', finalHeight);
 
-                            if (finalWidth === Jimp.AUTO || finalHeight === Jimp.AUTO) {
-                                image.resize(finalWidth, finalHeight)
-                                     .quality(imagesQuality)
-                                     .write(destinationPath, function() {
-                                         resolve(destinationPath);
-                                     });
+                            if (finalWidth === null || finalHeight === null) {
+                                let resizeOptions = {};
+                                if (finalWidth !== null) {
+                                    resizeOptions.w = finalWidth;
+                                }
+
+                                if (finalHeight !== null) {
+                                    resizeOptions.h = finalHeight;
+                                }
+
+                                image.resize(resizeOptions);
+                                await image.write(destinationPath, { quality: imagesQuality });
+                                resolve(destinationPath);
                             } else {
-                                image.cover(finalWidth, finalHeight)
-                                     .quality(imagesQuality)
-                                     .write(destinationPath, function() {
-                                         resolve(destinationPath);
-                                     });
+                                image.cover({ w: finalWidth, h: finalHeight });
+                                await image.write(destinationPath, { quality: imagesQuality });
+                                resolve(destinationPath);
                             }
-                        }).catch(err => {
+                        } catch (err) {
                             console.log(err);
                             reject(err);
-                        });
+                        }
                     });
                 } else {
                     result = new Promise ((resolve, reject) => {
@@ -466,22 +460,26 @@ class Image extends Model {
                 }
             } else {
                 if (this.shouldUseJimp()) {
-                    result = new Promise ((resolve, reject) => {
-                        Jimp.read(originalPath, function (err, image) {
-                            if (err) {
-                                reject(err);
+                    result = new Promise (async (resolve, reject) => {
+                        try {
+                            const image = await Jimp.read(originalPath);
+                            console.log('JIMP RESIZE/SCALE TO FIT', finalWidth, ' x ', finalHeight);
+
+                            if (finalWidth && finalHeight) {
+                                image.scaleToFit({ w: finalWidth, h: finalHeight });
+                            } else if (finalWidth) {
+                                image.resize({ w: finalWidth });
+                            } else if (finalHeight) {
+                                image.resize({ h: finalHeight });
                             }
 
-                            console.log('JIMP SCALE TO FIT', finalWidth, ' x ', finalHeight);
-                            image.scaleToFit(finalWidth, finalHeight)
-                                 .quality(imagesQuality)
-                                 .write(destinationPath, function() {
-                                     resolve(destinationPath)
-                                 });
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                        reject(err);
+                            await image.write(destinationPath, { quality: imagesQuality });
+                            
+                            resolve(destinationPath);
+                        } catch (err) {
+                            console.error(err);
+                            reject(err);
+                        }
                     });
                 } else {
                     result = new Promise ((resolve, reject) => {
