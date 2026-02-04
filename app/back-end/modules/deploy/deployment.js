@@ -16,6 +16,7 @@ const GitlabPages = require('./gitlab-pages.js');
 const Netlify = require('./netlify.js');
 const GoogleCloud = require('./google-cloud.js');
 const ManualDeployment = require('./manual.js');
+const Dokku = require('./dokku.js');
 
 /**
  *
@@ -73,6 +74,7 @@ class Deployment {
             case 'git':             connection = new Git();                         break;
             case 'github-pages':    connection = new GithubPages(deploymentConfig); break;
             case 'gitlab-pages':    connection = new GitlabPages();                 break;
+            case 'dokku':           connection = new Dokku();                       break;
             default:   
                 if (this.useAltFtp) {  
                     connection = new FTPAlt();    
@@ -101,6 +103,7 @@ class Deployment {
             case 'netlify':         this.client = new Netlify(this);            break;
             case 'google-cloud':    this.client = new GoogleCloud(this);        break;
             case 'manual':          this.client = new ManualDeployment(this);   break;
+            case 'dokku':           this.client = new Dokku(this);              break;
             default:                
                 if (this.useAltFtp) {     
                     this.client = new FTPAlt(this); 
