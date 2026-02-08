@@ -25,7 +25,10 @@
             <div 
                 v-for="(row, index) of content"
                 :key="'publii-repeater-row-' + index"
-                class="publii-repeater-item">
+                :class="{
+                    'publii-repeater-item': true,
+                    'publii-repeater-item-with-labels': (!hideLabels || (hideLabels && index === 0))
+                }">
                 <span 
                     v-if="content.length > 1"
                     class="move">
@@ -485,7 +488,8 @@ export default {
         display: flex;
         flex-wrap: wrap;
         position: relative;
-        width: calc(100% - 68px);
+        width: calc(100% - 20px - 68px);
+        margin-left: 20px;
 
         &-ui {
             display: flex;
@@ -547,14 +551,15 @@ export default {
         }
 
         &-field {
+            width: 100%;
+
             label {
+                color: var(--label-color);
                 padding-right: 10px;
 
                 & > span {
                     display: block;
-                    font-size: 1.4rem;
-                    font-weight: bold;
-                    margin: 0 0 1rem 0;
+                    line-height: 2.6;
                 }
 
                 & > * {
@@ -650,12 +655,12 @@ export default {
             }
         }
 
-        &:first-child {
+        &-with-labels {
             .move {
-                top: 3.24rem
+                top: 2.6em
             }
             .publii-repeater-item-ui {
-                top: 3.24rem
+                top: 2.6em
             }
         }
     }
