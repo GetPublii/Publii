@@ -14,8 +14,8 @@ class Model {
      */
     constructor(appInstance, data) {
         this.application = appInstance;
-        this.db = this.application.db;
         this.site = data.site;
+        this.db = this.application.getDbForSite(this.site) || this.application.db;
         this.appDir = this.application.appDir;
         this.siteDir = path.join(this.application.sitesDir, this.site);
         this.dbPath = path.join(this.siteDir, 'input', 'db.sqlite');

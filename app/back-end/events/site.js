@@ -20,15 +20,15 @@ const URLHelper = require('../modules/render-html/helpers/url.js');
 class SiteEvents {
     constructor(appInstance) {
         let self = this;
-        this.regenerateProcess = false;
+        this.regenerateProcesses = new Map(); // webContentsId -> process
 
         /*
          * Reload site config and data
          */
         ipcMain.on('app-site-reload', (event, config) => {
-            let result = appInstance.reloadSite(config.siteName);
+            let result = appInstance.reloadSite(config.siteName, event.sender.id);
             let language = this.getSiteLanguage(appInstance, config.siteName);
-            this.setSpellcheckerLanguage (appInstance, language);
+            this.setSpellcheckerLanguage(event.sender, language);
             event.sender.send('app-site-reloaded', result);
         });
 
@@ -73,13 +73,7 @@ class SiteEvents {
                     !fs.existsSync(path.join(appInstance.sitesDir, config.settings.name)) &&
                     slug(config.settings.displayName) === config.settings.name
                 ) {
-                    if (appInstance.db) {
-                        try {
-                            appInstance.db.close();
-                        } catch (e) {
-                            console.log('[SITE NAME CHANGE] DB already closed');
-                        }
-                    }
+                    appInstance.closeDbForSite(config.site);
 
                     // If yes - rename the dir
                     delete appInstance.sites[siteName];
@@ -90,7 +84,11 @@ class SiteEvents {
                     );
 
                     let dbPath = path.join(appInstance.sitesDir, config.settings.name, 'input', 'db.sqlite');
-                    appInstance.db = new DBUtils(new Database(dbPath));
+                    appInstance.setDbForSite(config.settings.name, new DBUtils(new Database(dbPath)));
+
+                    if (appInstance.windowManager) {
+                        appInstance.windowManager.renameSiteLock(config.site, config.settings.name, event.sender.id);
+                    }
 
                     // Rename also the backups directory
                     let backupsDir = appInstance.appConfig.backupsLocation;
@@ -359,10 +357,21 @@ class SiteEvents {
         /*
          * Switch website
          */
+        ipcMain.on('app-focus-window-with-site', (event, siteName) => {
+            if (appInstance.windowManager) {
+                appInstance.windowManager.focusWindowBySite(siteName);
+            }
+        });
+
         ipcMain.on('app-site-switch', (event, config) => {
-            let result = appInstance.switchSite(config.site);
+            if (appInstance.windowManager && appInstance.windowManager.isSiteLockedByOther(config.site, event.sender.id)) {
+                event.sender.send('app-site-switched', { status: false, error: 'site-already-open' });
+                return;
+            }
+
+            let result = appInstance.switchSite(config.site, event.sender.id);
             let language = this.getSiteLanguage(appInstance, config.site);
-            this.setSpellcheckerLanguage (appInstance, language);
+            this.setSpellcheckerLanguage(event.sender, language);
             event.sender.send('app-site-switched', result);
         });
 
@@ -370,7 +379,7 @@ class SiteEvents {
          * Refresh website data
          */
         ipcMain.on('app-site-refresh', function (event, config) {
-            let result = appInstance.switchSite(config.site);
+            let result = appInstance.switchSite(config.site, event.sender.id);
             event.sender.send('app-site-refreshed', result);
         });
 
@@ -439,15 +448,20 @@ class SiteEvents {
             let siteDir = path.join(appInstance.sitesDir, config.name);
             let dbPath = path.join(siteDir, 'input', 'db.sqlite');
 
-            if (appInstance.db) {
-                try {
-                    appInstance.db.close();
-                } catch (e) {
-                    console.log('[SITE CREATION] DB already closed');
+            // Close previous site DB for this window if any
+            if (appInstance.windowManager) {
+                const prevSite = appInstance.windowManager.getSiteForWindow(event.sender.id);
+
+                if (prevSite) {
+                    appInstance.closeDbForSite(prevSite);
                 }
             }
 
-            appInstance.db = new DBUtils(new Database(dbPath));
+            appInstance.setDbForSite(config.name, new DBUtils(new Database(dbPath)));
+
+            if (appInstance.windowManager) {
+                appInstance.windowManager.setWindowSite(event.sender.id, config.name);
+            }
 
             result = {
                 siteConfig: appInstance.sites[config.name],
@@ -463,16 +477,16 @@ class SiteEvents {
          */
         ipcMain.on('app-site-regenerate-thumbnails', function(event, config) {
             let site = new Site(appInstance, config, true);
-            self.regenerateProcess = site.regenerateThumbnails(event.sender);
+            let regenerateProcess = site.regenerateThumbnails(event.sender);
+            self.regenerateProcesses.set(event.sender.id, regenerateProcess);
         });
 
-        ipcMain.on('app-site-abort-regenerate-thumbnails', function(event, config) {
-            if (self.regenerateProcess) {
-                self.regenerateProcess.send({
-                    type: 'abort'
-                });
-                
-                self.regenerateProcess = false;
+        ipcMain.on('app-site-abort-regenerate-thumbnails', function(event) {
+            let regenerateProcess = self.regenerateProcesses.get(event.sender.id);
+
+            if (regenerateProcess) {
+                regenerateProcess.send({ type: 'abort' });
+                self.regenerateProcesses.delete(event.sender.id);
             }
         });
 
@@ -624,12 +638,12 @@ class SiteEvents {
         return 'null';
     }
 
-    setSpellcheckerLanguage (appInstance, language) {
+    setSpellcheckerLanguage (webContents, language) {
         if (process.platform === 'darwin') {
             return;
         }
 
-        let availableLanguages = appInstance.mainWindow.webContents.session.availableSpellCheckerLanguages;
+        let availableLanguages = webContents.session.availableSpellCheckerLanguages;
         language = language.toLocaleLowerCase();
         language = language.split('-');
 
@@ -640,7 +654,7 @@ class SiteEvents {
         }
 
         if (availableLanguages.indexOf(language) > -1) {
-            appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            webContents.session.setSpellCheckerLanguages([language]);
             console.log('Set spellchecker to:', language);
             return;
         }
@@ -649,7 +663,7 @@ class SiteEvents {
         language = language[0];
 
         if (availableLanguages.indexOf(language) > -1) {
-            appInstance.mainWindow.webContents.session.setSpellCheckerLanguages([language]);
+            webContents.session.setSpellCheckerLanguages([language]);
             console.log('Set spellchecker to:', language);
             return;
         }

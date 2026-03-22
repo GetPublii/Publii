@@ -104,7 +104,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-set-notifications-center-state',
             'app-get-notifications-file',
             'app-pages-hierarchy-update',
-            'app-content-fields-update'
+            'app-content-fields-update',
+            'app-focus-window-with-site'
         ];
 
         if (validChannels.includes(channel)) {
@@ -258,7 +259,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-plugins-api:read-language-file',
             'app-plugins-api:read-theme-file',
             'app-plugins-api:delete-config-file',
-            'app-plugins-api:delete-language-file'
+            'app-plugins-api:delete-language-file',
+            'app-open-new-window'
         ];
 
         if (validCommands.includes(command)) {

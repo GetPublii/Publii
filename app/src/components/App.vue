@@ -79,8 +79,15 @@ export default {
         this.setState();
         this.integrateTopBar();
 
-        // Display initial screen after 2sec
-        if(this.$store.state.app.config.licenseAccepted) {
+        if (this.initialData.isNewWindow) {
+            // Secondary window: skip splash screen
+            this.$router.push('/site/!/posts');
+            // If there are existing sites, show the sites picker immediately
+            if (this.siteNames.length > 0) {
+                this.$nextTick(() => this.$bus.$emit('sites-popup-show'));
+            }
+        } else if (this.$store.state.app.config.licenseAccepted) {
+            // Primary window: normal 2-second splash screen
             setTimeout(() => this.showInitialScreen(), 2000);
         }
 

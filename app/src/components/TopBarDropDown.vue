@@ -37,6 +37,11 @@
             ref="submenu"
             :class="cssClasses">
             <topbar-dropdown-item
+                :label="$t('ui.openNewWindow')"
+                :title="$t('ui.openNewWindowTitle')"
+                :onClick="openNewWindow"
+                class="topbar-app-submenu-separator" />
+            <topbar-dropdown-item
                 :label="$t('settings.appSettings')"
                 :title="$t('ui.appConfiguration')"
                 path="/app-settings" />
@@ -128,6 +133,10 @@ export default {
         this.$bus.$on('document-body-clicked', this.hideSubmenu);
     },
     methods: {
+        openNewWindow () {
+            mainProcessAPI.invoke('app-open-new-window');
+            this.submenuIsOpen = false;
+        },
         hideSubmenu () {
             this.submenuIsOpen = false;
         },
