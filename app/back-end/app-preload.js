@@ -243,7 +243,6 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-main-process-select-files',
             'publii-get-spellchecker-language',
             'app-main-get-spellchecker-languages',
-            'app-main-set-spellchecker-language-for-webview',
             'app-main-process-load-password',
             'app-window:minimize',
             'app-window:maximize',

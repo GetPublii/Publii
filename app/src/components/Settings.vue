@@ -2353,7 +2353,7 @@ export default {
         orderByOptions () {
             return {
                 'created_at': this.$t('settings.postCreationDate'),
-                'title': this.$t('settings.postTile'),
+                'title': this.$t('settings.postTitle'),
                 'modified_at': this.$t('settings.postModificationDate'),
                 'id': this.$t('settings.postID')
             };

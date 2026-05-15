@@ -7,6 +7,7 @@ const path = require('path');
 const FileHelper = require('./helpers/file.js');
 const UtilsHelper = require('./helpers/utils.js');
 const pluginConfigValidator = require('./helpers/validators/plugin-config.js');
+const PathValidator = require('./helpers/path-validator.js');
 
 class Plugins {
     constructor(appDir, sitesDir) {
@@ -97,10 +98,13 @@ class Plugins {
      * Load plugins config for specific site
      */
     loadSitePluginsConfig (siteName) {
-        let sitePath = path.join(this.sitesDir, siteName, 'input', 'config'); 
-        let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
+        if (!PathValidator.isValidDirSegment(siteName)) {
+            return {};
+        }
 
-        if (!fs.existsSync(sitePluginsConfigPath)) {
+        let sitePluginsConfigPath = PathValidator.resolveValidPath(this.sitesDir, siteName, 'input', 'config', 'site.plugins.json');
+
+        if (!sitePluginsConfigPath || !fs.existsSync(sitePluginsConfigPath)) {
             return {};
         }
 
@@ -152,11 +156,18 @@ class Plugins {
     }
 
     /**
-     * Save plugins config 
+     * Save plugins config
      */
     saveSitePluginsConfig (siteName, config) {
-        let sitePath = path.join(this.sitesDir, siteName, 'input', 'config'); 
-        let sitePluginsConfigPath = path.join(sitePath, 'site.plugins.json');
+        if (!PathValidator.isValidDirSegment(siteName)) {
+            return false;
+        }
+
+        let sitePluginsConfigPath = PathValidator.resolveValidPath(this.sitesDir, siteName, 'input', 'config', 'site.plugins.json');
+
+        if (!sitePluginsConfigPath) {
+            return false;
+        }
 
         try {
             fs.writeFileSync(sitePluginsConfigPath, JSON.stringify(config, null, 4));
@@ -189,12 +200,32 @@ class Plugins {
      * Remove specific plugin from the app directory
      */
     removePlugin (directory) {
-        fs.removeSync(path.join(this.pluginsPath, directory));
+        if (!PathValidator.isValidDirSegment(directory)) {
+            return;
+        }
+
+        let target = PathValidator.resolveValidPath(this.pluginsPath, directory);
+
+        if (!target) {
+            return;
+        }
+
+        fs.removeSync(target);
     }
 
     getPluginConfig (siteName, pluginName) {
-        let pluginPath = path.join(this.appDir, 'plugins', pluginName, 'plugin.json');
-        let pluginConfigPath = path.join(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+        if (!PathValidator.isValidDirSegment(siteName) ||
+            !PathValidator.isValidDirSegment(pluginName)) {
+            return 0;
+        }
+
+        let pluginPath = PathValidator.resolveValidPath(this.appDir, 'plugins', pluginName, 'plugin.json');
+        let pluginConfigPath = PathValidator.resolveValidPath(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+
+        if (!pluginPath || !pluginConfigPath) {
+            return 0;
+        }
+
         let output = {
             pluginData: null,
             pluginConfig: null
@@ -225,7 +256,16 @@ class Plugins {
     }
 
     savePluginConfig (siteName, pluginName, newConfig) {
-        let pluginConfigPath = path.join(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+        if (!PathValidator.isValidDirSegment(siteName) ||
+            !PathValidator.isValidDirSegment(pluginName)) {
+            return false;
+        }
+
+        let pluginConfigPath = PathValidator.resolveValidPath(this.sitesDir, siteName, 'input', 'config', 'plugins', pluginName + '.json');
+
+        if (!pluginConfigPath) {
+            return false;
+        }
 
         try {
             fs.writeFileSync(pluginConfigPath, JSON.stringify(newConfig, null, 4));
@@ -295,10 +335,15 @@ class Plugins {
     }
 
     checkAndCleanImages (siteName, pluginName, newConfig) {
+        if (!PathValidator.isValidDirSegment(siteName) ||
+            !PathValidator.isValidDirSegment(pluginName)) {
+            return;
+        }
+
         let configString = JSON.stringify(newConfig);
-        let pluginImagesPath = path.join(this.sitesDir, siteName, 'input', 'media', 'plugins', pluginName);
-        
-        if (!fs.existsSync(pluginImagesPath)) {
+        let pluginImagesPath = PathValidator.resolveValidPath(this.sitesDir, siteName, 'input', 'media', 'plugins', pluginName);
+
+        if (!pluginImagesPath || !fs.existsSync(pluginImagesPath)) {
             return;
         }
         

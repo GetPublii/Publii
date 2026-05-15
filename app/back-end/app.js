@@ -723,11 +723,13 @@ class App {
                 vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked')),
                 isNewWindow: isNewWindow
             };
-
+            
             win.webContents.send('app-data-loaded', appData);
-
+            
+            // Open Dev Tools
             if (this.appConfig.openDevToolsInMain) {
-                win.webContents.openDevTools();
+                let devToolsMode = this.appConfig.devToolsMode || 'detach';
+                win.webContents.openDevTools({ mode: devToolsMode });
             }
 
             this._setZoomLevel(win);

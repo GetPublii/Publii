@@ -6,6 +6,9 @@ const ipcMain = electron.ipcMain;
 const childProcess = require('child_process');
 const UtilsHelper = require('../helpers/utils.js');
 const stripTags = require('striptags');
+const PathValidator = require('../helpers/path-validator.js');
+
+const { isValidDirSegment } = PathValidator;
 
 class PreviewEvents {
     /**
@@ -18,6 +21,13 @@ class PreviewEvents {
         this.app = appInstance;
 
         ipcMain.on('app-preview-render', function (event, siteData) {
+            if (!siteData ||
+                !isValidDirSegment(siteData.site) ||
+                !Object.prototype.hasOwnProperty.call(appInstance.sites, siteData.site)) {
+                event.sender.send('app-preview-rendered', { status: false });
+                return;
+            }
+
             if (siteData.site && siteData.theme) {
                 let itemID = false;
                 let mode = false;

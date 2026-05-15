@@ -637,11 +637,19 @@ class Sitemap {
             // Detect if noindex does not exist in the post file
             if (postFileContent.indexOf('name="robots" content="noindex') === -1) {
                 let fileNameWithoutExt = file.replace('.html', '');
+                let fileKey = fileNameWithoutExt;
 
-                if (this.postData[fileNameWithoutExt]) {
+                if (
+                    this.siteConfig.advanced.urls.postsPrefix && 
+                    fileKey.indexOf(this.siteConfig.advanced.urls.postsPrefix + path.sep) === 0
+                ) {
+                    fileKey = fileKey.substring(this.siteConfig.advanced.urls.postsPrefix.length + 1);
+                }
+
+                if (this.postData[fileKey]) {
                     this.fileList.push({
-                        images: this.postData[fileNameWithoutExt].images,
-                        lastMod: this.postData[fileNameWithoutExt].lastMod,
+                        images: this.postData[fileKey].images,
+                        lastMod: this.postData[fileKey].lastMod,
                         url: file
                     });
                 } else {
@@ -663,10 +671,19 @@ class Sitemap {
                 if (file === 'index.html') {
                     this.fileList.push('');
                 } else {
-                    if (this.postData[file]) {
+                    let fileKey = file;
+
+                    if (
+                        this.siteConfig.advanced.urls.postsPrefix && 
+                        fileKey.indexOf(this.siteConfig.advanced.urls.postsPrefix + path.sep) === 0
+                    ) {
+                        fileKey = fileKey.substring(this.siteConfig.advanced.urls.postsPrefix.length + 1);
+                    }
+
+                    if (this.postData[fileKey]) {
                         this.fileList.push({
-                            images: this.postData[file].images,
-                            lastMod: this.postData[file].lastMod,
+                            images: this.postData[fileKey].images,
+                            lastMod: this.postData[fileKey].lastMod,
                             url: file + '/'
                         });
                     } else {

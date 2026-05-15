@@ -5,6 +5,7 @@ const AstAppConfig = {
     licenseAccepted: false,
     openDevToolsInMain: false,
     openDevToolsInPreview: false,
+    devToolsMode: 'detach',
     resizeEngine: "sharp",
     sitesLocation: "",
     startScreen: "",

@@ -6,7 +6,10 @@ const Themes = require('../themes.js');
 const Languages = require('../languages.js');
 const Plugins = require('../plugins.js');
 const AppFiles = require('../helpers/app-files.js');
+const PathValidator = require('../helpers/path-validator.js');
 const AdmZip = require("adm-zip");
+
+const { isValidDirSegment } = PathValidator;
 
 /*
  * Events for the IPC communication regarding app
@@ -106,60 +109,75 @@ class AppEvents {
          * Delete theme
          */
         ipcMain.on('app-theme-delete', function(event, config) {
-            let themesLoader = new Themes(appInstance);
-
-            if(config.directory !== '') {
-                themesLoader.removeTheme(config.directory);
-
-                appInstance.themes = appInstance.themes.filter(function (theme) {
-                    return theme.name !== config.name;
-                });
-
+            if (!config || !isValidDirSegment(config.directory)) {
                 event.sender.send('app-theme-deleted', {
-                    status: true,
+                    status: false,
                     themes: appInstance.themes
                 });
+                return;
             }
+
+            let themesLoader = new Themes(appInstance);
+            themesLoader.removeTheme(config.directory);
+
+            appInstance.themes = appInstance.themes.filter(function (theme) {
+                return theme.name !== config.name;
+            });
+
+            event.sender.send('app-theme-deleted', {
+                status: true,
+                themes: appInstance.themes
+            });
         });
 
         /*
          * Delete language
          */
         ipcMain.on('app-language-delete', function(event, config) {
-            let languagesLoader = new Languages(appInstance);
-
-            if(config.directory !== '') {
-                languagesLoader.removeLanguage(config.directory);
-
-                appInstance.languages = appInstance.languages.filter(function (language) {
-                    return language.name !== config.name;
-                });
-
+            if (!config || !isValidDirSegment(config.directory)) {
                 event.sender.send('app-language-deleted', {
-                    status: true,
+                    status: false,
                     languages: appInstance.languages
                 });
+                return;
             }
+
+            let languagesLoader = new Languages(appInstance);
+            languagesLoader.removeLanguage(config.directory);
+
+            appInstance.languages = appInstance.languages.filter(function (language) {
+                return language.name !== config.name;
+            });
+
+            event.sender.send('app-language-deleted', {
+                status: true,
+                languages: appInstance.languages
+            });
         });
 
         /*
          * Delete plugin
          */
         ipcMain.on('app-plugin-delete', function(event, config) {
-            let pluginsLoader = new Plugins(appInstance.appDir, appInstance.sitesDir);
-
-            if(config.directory !== '') {
-                pluginsLoader.removePlugin(config.directory);
-
-                appInstance.plugins = appInstance.plugins.filter(function (plugin) {
-                    return plugin.name !== config.name;
-                });
-
+            if (!config || !isValidDirSegment(config.directory)) {
                 event.sender.send('app-plugin-deleted', {
-                    status: true,
+                    status: false,
                     plugins: appInstance.plugins
                 });
+                return;
             }
+
+            let pluginsLoader = new Plugins(appInstance.appDir, appInstance.sitesDir);
+            pluginsLoader.removePlugin(config.directory);
+
+            appInstance.plugins = appInstance.plugins.filter(function (plugin) {
+                return plugin.name !== config.name;
+            });
+
+            event.sender.send('app-plugin-deleted', {
+                status: true,
+                plugins: appInstance.plugins
+            });
         });
 
         /*
@@ -431,9 +449,10 @@ class AppEvents {
                 event.sender.send('app-log-file-loaded', {
                     fileContent: 'File not found!'
                 });
+                return;
             }
 
-            let filePath = path.join(appInstance.app.getPath('logs'), filename);
+            let filePath = path.join(logPath, filename);
             let fileContent = FileHelper.readFileSync(filePath, 'utf8');
 
             event.sender.send('app-log-file-loaded', {

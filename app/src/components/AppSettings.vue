@@ -322,7 +322,7 @@
                     :label="$t('settings.openDevtoolsInMainW')"
                     :labelSeparated="false">
                     <switcher
-                        slot="field" 
+                        slot="field"
                         id="open-devtools-in-main"
                         v-model="openDevToolsInMainWindow" />
                         <span
@@ -330,6 +330,21 @@
                         class="note">
                         {{ $t('settings.requiresRestartingApp') }}
                     </span>
+                </field>
+
+                <field
+                    id="devtools-mode"
+                    :label="$t('settings.devtoolsMode')">
+                    <dropdown
+                        slot="field"
+                        id="devtools-mode"
+                        :items="devToolsModes"
+                        v-model="devToolsMode"></dropdown>
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.requiresRestartingApp') }}
+                    </small>
                 </field>
 
                 <field
@@ -428,6 +443,7 @@ export default {
             imageResizeEnginesSelected: 'sharp',
             uiZoomLevel: 1.0,
             openDevToolsInMainWindow: false,
+            devToolsMode: 'detach',
             wideScrollbars: false,
             notificationsStatus: false,
             closeEditorOnSave: true,
@@ -486,6 +502,15 @@ export default {
             return {
                 'sharp': 'Sharp',
                 'jimp': 'Jimp'
+            };
+        },
+        devToolsModes () {
+            return {
+                'detach': this.$t('settings.devtoolsModeDetach'),
+                'undocked': this.$t('settings.devtoolsModeUndocked'),
+                'right': this.$t('settings.devtoolsModeRight'),
+                'bottom': this.$t('settings.devtoolsModeBottom'),
+                'left': this.$t('settings.devtoolsModeLeft')
             };
         },
         orderingPostItems () {
@@ -582,6 +607,7 @@ export default {
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
         this.notificationsStatus = this.$store.state.app.config.notificationsStatus === 'accepted';
         this.openDevToolsInMainWindow = this.$store.state.app.config.openDevToolsInMain;
+        this.devToolsMode = this.$store.state.app.config.devToolsMode || 'detach';
         this.imageResizeEnginesSelected = this.$store.state.app.config.resizeEngine;
         this.timeFormatsSelected = (this.$store.state.app.config.timeFormat).toString();
         this.screensSelected = this.$store.state.app.config.startScreen;
@@ -647,6 +673,7 @@ export default {
                 licenseAccepted: true,
                 startScreen: this.screensSelected,
                 openDevToolsInMain: this.openDevToolsInMainWindow,
+                devToolsMode: this.devToolsMode,
                 timeFormat: this.timeFormatsSelected,
                 resizeEngine: this.imageResizeEnginesSelected,
                 uiZoomLevel: this.uiZoomLevel,

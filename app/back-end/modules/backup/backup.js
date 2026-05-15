@@ -6,10 +6,13 @@ const fs = require('fs-extra');
 const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const Utils = require('./../../helpers/utils.js');
+const PathValidator = require('./../../helpers/path-validator.js');
 const moment = require('moment');
 const archiver = require('archiver');
 const tar = require('tar-fs');
 const { shell } = require('electron');
+
+const { isValidDirSegment, isValidFileName, resolveValidPath } = PathValidator;
 
 class Backup {
     /**
@@ -20,7 +23,15 @@ class Backup {
      * @returns {*}
      */
     static loadList(siteName, backupsDir) {
-        let backupsPath = path.join(backupsDir, siteName);
+        if (!isValidDirSegment(siteName)) {
+            return false;
+        }
+
+        let backupsPath = resolveValidPath(backupsDir, siteName);
+
+        if (!backupsPath) {
+            return false;
+        }
 
         if(!Utils.dirExists(backupsPath)) {
             if(Utils.dirExists(backupsDir)) {
@@ -76,8 +87,24 @@ class Backup {
      * @param sourceDir
      */
     static async create(siteName, backupFilename, backupsDir, sourceDir) {
+        if (!isValidDirSegment(siteName) || typeof backupFilename !== 'string') {
+            return {
+                type: 'app-backup-create-error',
+                status: false,
+                error: 'core.backup.locationDoesNotExists'
+            };
+        }
+
         let sourcePath = path.join(sourceDir);
-        let backupsPath = path.join(backupsDir, siteName);
+        let backupsPath = resolveValidPath(backupsDir, siteName);
+
+        if (!backupsPath) {
+            return {
+                type: 'app-backup-create-error',
+                status: false,
+                error: 'core.backup.locationDoesNotExists'
+            };
+        }
 
         if(!Utils.dirExists(backupsPath)) {
             if(Utils.dirExists(backupsDir)) {
@@ -93,7 +120,24 @@ class Backup {
 
         if (Utils.dirExists(backupsPath)) {
             backupFilename = backupFilename.replace(/[^a-z0-9\-\_]/gmi, '');
-            let backupFile = path.join(backupsPath, backupFilename + '.tar');
+
+            if (backupFilename.length === 0) {
+                return {
+                    type: 'app-backup-create-error',
+                    status: false,
+                    error: 'core.backup.locationDoesNotExists'
+                };
+            }
+
+            let backupFile = resolveValidPath(backupsPath, backupFilename + '.tar');
+
+            if (!backupFile) {
+                return {
+                    type: 'app-backup-create-error',
+                    status: false,
+                    error: 'core.backup.locationDoesNotExists'
+                };
+            }
             let createOperation = new Promise(function (resolve, reject) {
                 let output = fs.createWriteStream(backupFile);
                 let archive = archiver('tar');
@@ -147,10 +191,33 @@ class Backup {
      * @returns {{status: boolean, backups: *}}
      */
     static async remove(siteName, backupsNames, backupsDir) {
-        for(let backupName of backupsNames) {
-            let backupFilePath = path.join(backupsDir, siteName, backupName);
+        if (!isValidDirSegment(siteName) || !Array.isArray(backupsNames)) {
+            return {
+                status: false,
+                backups: Backup.loadList(siteName, backupsDir)
+            };
+        }
 
-            if (!Utils.fileExists(backupFilePath)) {
+        let siteBackupsDir = resolveValidPath(backupsDir, siteName);
+
+        if (!siteBackupsDir) {
+            return {
+                status: false,
+                backups: false
+            };
+        }
+
+        for(let backupName of backupsNames) {
+            if (!isValidFileName(backupName)) {
+                return {
+                    status: false,
+                    backups: Backup.loadList(siteName, backupsDir)
+                };
+            }
+
+            let backupFilePath = resolveValidPath(siteBackupsDir, backupName);
+
+            if (!backupFilePath || !Utils.fileExists(backupFilePath)) {
                 return {
                     status: false,
                     backups: Backup.loadList(siteName, backupsDir)
@@ -184,8 +251,33 @@ class Backup {
      * @returns {{status: boolean, backups: *}}
      */
     static rename(siteName, oldBackupName, newBackupName, backupsDir) {
-        let oldBackupFilePath = path.join(backupsDir, siteName, oldBackupName + '.tar');
-        let newBackupFilePath = path.join(backupsDir, siteName, newBackupName + '.tar');
+        if (!isValidDirSegment(siteName) ||
+            !isValidFileName(oldBackupName) ||
+            !isValidFileName(newBackupName)) {
+            return {
+                status: false,
+                backups: Backup.loadList(siteName, backupsDir)
+            };
+        }
+
+        let siteBackupsDir = resolveValidPath(backupsDir, siteName);
+
+        if (!siteBackupsDir) {
+            return {
+                status: false,
+                backups: false
+            };
+        }
+
+        let oldBackupFilePath = resolveValidPath(siteBackupsDir, oldBackupName + '.tar');
+        let newBackupFilePath = resolveValidPath(siteBackupsDir, newBackupName + '.tar');
+
+        if (!oldBackupFilePath || !newBackupFilePath) {
+            return {
+                status: false,
+                backups: Backup.loadList(siteName, backupsDir)
+            };
+        }
 
         if (!Utils.fileExists(oldBackupFilePath) || Utils.fileExists(newBackupFilePath)) {
             return {
@@ -219,8 +311,25 @@ class Backup {
      * @param tempDir
      */
     static async restore(siteName, backupName, backupsDir, destinationDir, tempDir, appInstance) {
-        let backupFilePath = path.join(backupsDir, siteName, backupName);
-        let destinationPath = path.join(destinationDir, siteName);
+        if (!isValidDirSegment(siteName) || !isValidFileName(backupName)) {
+            return {
+                type: 'app-backup-restore-error',
+                status: false,
+                error: 'core.backup.fileDoesNotExists'
+            };
+        }
+
+        let siteBackupsDir = resolveValidPath(backupsDir, siteName);
+        let backupFilePath = siteBackupsDir ? resolveValidPath(siteBackupsDir, backupName) : null;
+        let destinationPath = resolveValidPath(destinationDir, siteName);
+
+        if (!backupFilePath || !destinationPath) {
+            return {
+                type: 'app-backup-restore-error',
+                status: false,
+                error: 'core.backup.fileDoesNotExists'
+            };
+        }
 
         if (!Utils.fileExists(backupFilePath)) {
             return {
@@ -253,6 +362,8 @@ class Backup {
         // Empty the temp directory before extracting the backups content
         fs.emptyDirSync(tempDir);
 
+        let safeTempBase = path.resolve(tempDir);
+
         let restoreOperation = new Promise(function (resolve, reject) {
             fs.createReadStream(backupFilePath)
                 .on('error', function(err) {
@@ -263,6 +374,24 @@ class Backup {
                     });
                 })
                 .pipe(tar.extract(tempDir, {
+                    ignore: function (resolvedEntryPath, header) {
+                        let entryName = header && header.name ? header.name : '';
+
+                        if (path.isAbsolute(entryName)) {
+                            return true;
+                        }
+
+                        if (entryName.split(/[/\\]+/).some(s => s === '..')) {
+                            return true;
+                        }
+
+                        if (resolvedEntryPath !== safeTempBase &&
+                            !resolvedEntryPath.startsWith(safeTempBase + path.sep)) {
+                            return true;
+                        }
+
+                        return false;
+                    },
                     finish: () => {
                     // Verify the backup
                     let backupTest = Backup.verify(tempDir, siteName);
@@ -344,12 +473,6 @@ class Backup {
 
         // If errors were founded
         if(foundedErrors) {
-            parentPort.postMessage({
-                type: 'app-backup-restore-error',
-                status: false,
-                error: 'core.backup.fileIsCorrupted'
-            });
-
             return false;
         }
 

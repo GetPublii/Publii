@@ -3,6 +3,9 @@ const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Image = require('../image.js');
 const childProcess = require('child_process');
+const PathValidator = require('../helpers/path-validator.js');
+
+const { isValidDirSegment, resolveValidPath } = PathValidator;
 
 /*
  * Events for the IPC communication regarding post images
@@ -37,18 +40,38 @@ class ImageUploaderEvents {
 
         // Remove
         ipcMain.on('app-image-upload-remove', function (event, filePath, siteName) {
-            let sitePath = path.join(appInstance.sitesDir, siteName);
-
-            if (filePath.indexOf('media/plugins/') === 0) {
-                filePath = path.join(sitePath, 'input', filePath);
-            }
-
-            if (filePath.indexOf(sitePath) !== 0) {
+            if (typeof filePath !== 'string' ||
+                filePath.length === 0 ||
+                filePath.indexOf('\0') !== -1 ||
+                !isValidDirSegment(siteName)) {
                 return;
             }
 
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
+            let sitePath = resolveValidPath(appInstance.sitesDir, siteName);
+
+            if (!sitePath) {
+                return;
+            }
+
+            let resolvedFilePath;
+
+            if (filePath.indexOf('media/plugins/') === 0) {
+                resolvedFilePath = resolveValidPath(sitePath, 'input', filePath);
+            } else {
+                resolvedFilePath = path.resolve(filePath);
+
+                if (resolvedFilePath !== sitePath &&
+                    !resolvedFilePath.startsWith(sitePath + path.sep)) {
+                    return;
+                }
+            }
+
+            if (!resolvedFilePath) {
+                return;
+            }
+
+            if (fs.existsSync(resolvedFilePath) && fs.statSync(resolvedFilePath).isFile()) {
+                fs.unlinkSync(resolvedFilePath);
             }
         });
     }

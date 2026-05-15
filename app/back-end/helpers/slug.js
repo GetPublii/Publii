@@ -74,6 +74,10 @@ function createSlug(textToSlugify, filenameMode = false, saveLowerChars = false)
         slug.defaults.mode = 'rfc3986-non-unicode';
     }
 
+    if (textToSlugify === '.' || textToSlugify === '..') {
+        return '';
+    }
+
     return textToSlugify;
 }
 

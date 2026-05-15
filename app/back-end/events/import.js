@@ -3,6 +3,9 @@ const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Import = require('../modules/import/import.js');
 const childProcess = require('child_process');
+const PathValidator = require('../helpers/path-validator.js');
+
+const { isValidDirSegment } = PathValidator;
 
 /*
  * Events for the IPC communication regarding imports
@@ -22,12 +25,69 @@ class ImportEvents {
          * Import WXR file
          */
         ipcMain.on('app-wxr-check', function(event, config) {
+            if (!self.validateImportInput(config)) {
+                event.sender.send('app-wxr-checked', {
+                    status: 'error',
+                    message: 'Invalid import parameters'
+                });
+                return;
+            }
+
             self.checkFile(config.siteName, config.filePath, event.sender);
         });
 
         ipcMain.on('app-wxr-import', function(event, config) {
+            if (!self.validateImportInput(config)) {
+                event.sender.send('app-wxr-imported', {
+                    type: 'result',
+                    status: 'error',
+                    message: 'Invalid import parameters'
+                });
+                return;
+            }
+
             self.importFile(appInstance, config, event.sender);
         });
+    }
+
+    /**
+     * Validates siteName and filePath supplied from the renderer.
+     */
+    validateImportInput(config) {
+        if (!config || typeof config !== 'object') {
+            return false;
+        }
+
+        if (!isValidDirSegment(config.siteName)) {
+            return false;
+        }
+
+        let sitePath = path.join(this.app.sitesDir, config.siteName);
+
+        try {
+            if (!fs.existsSync(sitePath) || !fs.statSync(sitePath).isDirectory()) {
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
+
+        if (typeof config.filePath !== 'string' ||
+            config.filePath.length === 0 ||
+            config.filePath.indexOf('\0') !== -1 ||
+            !path.isAbsolute(config.filePath)) {
+            return false;
+        }
+
+        try {
+            if (!fs.existsSync(config.filePath) || !fs.statSync(config.filePath).isFile()) {
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

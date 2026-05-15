@@ -2,10 +2,13 @@ const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
+const PathValidator = require('../helpers/path-validator.js');
 
 /*
  * Events for the IPC communication regarding file manager
  */
+
+const { isValidDirSegment, isValidDirPath, isValidFileName, resolveValidPath } = PathValidator;
 
 class FileManagerEvents {
     /**
@@ -60,12 +63,25 @@ class FileManagerEvents {
      * @param sender
      */
     listFiles(config, sender) {
-        let siteName = config.siteName;
-        let dirPath = config.dirPath;
-        let basePath = path.join(this.app.sitesDir, siteName, 'input', dirPath);
+        if (!config || typeof config !== 'object' ||
+            !isValidDirSegment(config.siteName) ||
+            !isValidDirPath(config.dirPath)) {
+            sender.send('app-file-manager-listed', []);
+            return;
+        }
+
+        let siteBase = path.join(this.app.sitesDir, config.siteName, 'input');
+        let basePath = config.dirPath.length === 0
+            ? resolveValidPath(siteBase)
+            : resolveValidPath(siteBase, config.dirPath);
+
+        if (!basePath || !fs.existsSync(basePath)) {
+            sender.send('app-file-manager-listed', []);
+            return;
+        }
+
         let files = fs.readdirSync(basePath);
         let output = [];
-        let iterator = 0;
 
         for(let file of files) {
             if(file === '.DS_Store' || file === 'Thumbs.db') {
@@ -239,18 +255,37 @@ class FileManagerEvents {
      * @param sender
      */
     uploadFile(config, sender) {
-        let siteName = config.siteName;
-        let dirPath = config.dirPath;
-        let fileToMove = config.fileToMove;
-        let fileName = path.parse(fileToMove).base;
-        let destinationPath = path.join(this.app.sitesDir, siteName, 'input', dirPath);
-        let fullPath = path.join(destinationPath, fileName);
+        if (!config || typeof config !== 'object' ||
+            !isValidDirSegment(config.siteName) ||
+            !isValidDirPath(config.dirPath) ||
+            typeof config.fileToMove !== 'string') {
+            sender.send('app-file-manager-uploaded', false);
+            return;
+        }
+
+        let fileName = path.parse(config.fileToMove).base;
+
+        if (!isValidFileName(fileName)) {
+            sender.send('app-file-manager-uploaded', false);
+            return;
+        }
+
+        let siteBase = path.join(this.app.sitesDir, config.siteName, 'input');
+        let fullPath = config.dirPath.length === 0
+            ? resolveValidPath(siteBase, fileName)
+            : resolveValidPath(siteBase, config.dirPath, fileName);
+
+        if (!fullPath) {
+            sender.send('app-file-manager-uploaded', false);
+            return;
+        }
 
         if(fs.existsSync(fullPath)) {
             sender.send('app-file-manager-uploaded', false);
+            return;
         }
 
-        fs.copySync(fileToMove, fullPath);
+        fs.copySync(config.fileToMove, fullPath);
         sender.send('app-file-manager-uploaded', true);
     }
 
@@ -261,10 +296,23 @@ class FileManagerEvents {
      * @param sender
      */
     createFile(config, sender) {
-        let siteName = config.siteName;
-        let dirPath = config.dirPath;
-        let fileToSave = config.fileToSave;
-        let filePath = path.join(this.app.sitesDir, siteName, 'input', dirPath, fileToSave);
+        if (!config || typeof config !== 'object' ||
+            !isValidDirSegment(config.siteName) ||
+            !isValidDirPath(config.dirPath) ||
+            !isValidFileName(config.fileToSave)) {
+            sender.send('app-file-manager-created', false);
+            return;
+        }
+
+        let siteBase = path.join(this.app.sitesDir, config.siteName, 'input');
+        let filePath = config.dirPath.length === 0
+            ? resolveValidPath(siteBase, config.fileToSave)
+            : resolveValidPath(siteBase, config.dirPath, config.fileToSave);
+
+        if (!filePath) {
+            sender.send('app-file-manager-created', false);
+            return;
+        }
 
         if(fs.existsSync(filePath)) {
             sender.send('app-file-manager-created', false);
@@ -282,12 +330,28 @@ class FileManagerEvents {
      * @param sender
      */
     deleteFiles(config, sender) {
-        let siteName = config.siteName;
-        let dirPath = config.dirPath;
-        let filesToDelete = config.filesToDelete;
+        if (!config || typeof config !== 'object' ||
+            !isValidDirSegment(config.siteName) ||
+            !isValidDirPath(config.dirPath) ||
+            !Array.isArray(config.filesToDelete)) {
+            sender.send('app-file-manager-deleted', false);
+            return;
+        }
 
-        for(let file of filesToDelete) {
-            let fullPath = path.join(this.app.sitesDir, siteName, 'input', dirPath, file);
+        let siteBase = path.join(this.app.sitesDir, config.siteName, 'input');
+
+        for(let file of config.filesToDelete) {
+            if (!isValidFileName(file)) {
+                continue;
+            }
+
+            let fullPath = config.dirPath.length === 0
+                ? resolveValidPath(siteBase, file)
+                : resolveValidPath(siteBase, config.dirPath, file);
+
+            if (!fullPath) {
+                continue;
+            }
 
             if(fs.existsSync(fullPath)) {
                 fs.unlinkSync(fullPath);
@@ -304,13 +368,25 @@ class FileManagerEvents {
      * @param sender
      */
     checkFilename(config, sender) {
-        let siteName = config.siteName;
-        let dirPath = config.dirPath;
-        let filenameToCheck = config.filenameToCheck;
-        let fullPath = path.join(this.app.sitesDir, siteName, 'input', dirPath, filenameToCheck);
-        let result = fs.existsSync(fullPath);
+        if (!config || typeof config !== 'object' ||
+            !isValidDirSegment(config.siteName) ||
+            !isValidDirPath(config.dirPath) ||
+            !isValidFileName(config.filenameToCheck)) {
+            sender.send('app-file-manager-checked-name', false);
+            return;
+        }
 
-        sender.send('app-file-manager-checked-name', result);
+        let siteBase = path.join(this.app.sitesDir, config.siteName, 'input');
+        let fullPath = config.dirPath.length === 0
+            ? resolveValidPath(siteBase, config.filenameToCheck)
+            : resolveValidPath(siteBase, config.dirPath, config.filenameToCheck);
+
+        if (!fullPath) {
+            sender.send('app-file-manager-checked-name', false);
+            return;
+        }
+
+        sender.send('app-file-manager-checked-name', fs.existsSync(fullPath));
     }
 }
 

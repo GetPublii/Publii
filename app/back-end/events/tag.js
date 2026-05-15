@@ -1,5 +1,8 @@
 const ipcMain = require('electron').ipcMain;
 const Tag = require('../tag.js');
+const PathValidator = require('../helpers/path-validator.js');
+
+const { isValidDirSegment } = PathValidator;
 
 /*
  * Events for the IPC communication regarding single tags
@@ -9,6 +12,11 @@ class TagEvents {
     constructor(appInstance) {
         // Save
         ipcMain.on('app-tag-save', function (event, tagData) {
+            if (!tagData || !isValidDirSegment(tagData.site)) {
+                event.sender.send('app-tag-saved', false);
+                return;
+            }
+
             let tag = new Tag(appInstance, tagData);
             let result = tag.save();
             event.sender.send('app-tag-saved', result);
@@ -16,6 +24,11 @@ class TagEvents {
 
         // Delete
         ipcMain.on('app-tag-delete', function (event, tagData) {
+            if (!tagData || !isValidDirSegment(tagData.site) || !Array.isArray(tagData.ids)) {
+                event.sender.send('app-tag-deleted', false);
+                return;
+            }
+
             let result = false;
 
             for(let i = 0; i < tagData.ids.length; i++) {
@@ -32,6 +45,11 @@ class TagEvents {
 
         // Status change
         ipcMain.on('app-tags-status-change', function (event, tagData) {
+            if (!tagData || !isValidDirSegment(tagData.site) || !Array.isArray(tagData.ids)) {
+                event.sender.send('app-tags-status-changed', false);
+                return;
+            }
+
             let result = false;
 
             for(let i = 0; i < tagData.ids.length; i++) {
@@ -48,6 +66,11 @@ class TagEvents {
 
         // Cancelled edition
         ipcMain.on('app-tag-cancel', function(event, tagData) {
+            if (!tagData || !isValidDirSegment(tagData.site)) {
+                event.sender.send('app-tag-cancelled', false);
+                return;
+            }
+
             let tag = new Tag(appInstance, tagData);
             let result = tag.checkAndCleanImages(true);
             event.sender.send('app-tag-cancelled', result);

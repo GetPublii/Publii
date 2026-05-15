@@ -273,7 +273,23 @@ class GithubPages {
             let finalTree = await this.getNewTreeBasedOnDiffs(trees.remoteTree, trees.localTree);
             finalTree = await this.createBlobs(finalTree, false);
             finalTree = await this.updateBlobsList(finalTree);
-            let sha = await this.createTree(finalTree);
+
+            let deltaTree = this.buildDeltaTree(finalTree, trees.remoteTree);
+            let sha;
+
+            try {
+                sha = await this.createTreeInChunks(deltaTree, treeSHA);
+            } catch (deltaErr) {
+                console.log(`[${ new Date().toUTCString() }] (i) DELTA TREE UPLOAD FAILED, FALLING BACK TO FULL TREE: ${JSON.stringify(deltaErr)}`);
+                let fullTree = finalTree.map(file => ({
+                    path: file.path,
+                    mode: file.mode,
+                    type: file.type,
+                    sha: file.sha
+                }));
+                sha = await this.createTreeInChunks(fullTree);
+            }
+
             sha = await this.createCommit(sha, commitSHA);
             let result = await this.createReference(sha);
 
@@ -469,6 +485,38 @@ class GithubPages {
         return localTree;
     }
 
+    buildDeltaTree(localTree, remoteTree) {
+        let delta = [];
+        let localPaths = new Set();
+
+        for (let localFile of localTree) {
+            localPaths.add(localFile.path);
+            let remoteFile = this.findRemoteFile(localFile.path, remoteTree);
+
+            if (!remoteFile || remoteFile.sha !== localFile.sha) {
+                delta.push({
+                    path: localFile.path,
+                    mode: localFile.mode,
+                    type: localFile.type,
+                    sha: localFile.sha
+                });
+            }
+        }
+
+        for (let remoteFile of remoteTree) {
+            if (remoteFile.type === 'blob' && !localPaths.has(remoteFile.path)) {
+                delta.push({
+                    path: remoteFile.path,
+                    mode: remoteFile.mode,
+                    type: 'blob',
+                    sha: null
+                });
+            }
+        }
+
+        return delta;
+    }
+
     findRemoteFile(filePath, remoteTree) {
         for(let remoteFile of remoteTree) {
             if(remoteFile.path === filePath) {
@@ -623,7 +671,36 @@ class GithubPages {
         return files;
     }
 
-    createTree(tree) {
+    async createTreeInChunks(tree, baseTreeSHA = null) {
+        if (!tree || !tree.length) {
+            return [];
+        }
+
+        const CHUNK_SIZE = 200;
+
+        let logPath = path.join(this.deployment.appDir, 'github-tree.txt');
+        fs.writeFileSync(logPath, JSON.stringify(tree, null, 4));
+
+        if (tree.length <= CHUNK_SIZE) {
+            return this.createTree(tree, baseTreeSHA);
+        }
+
+        let totalChunks = Math.ceil(tree.length / CHUNK_SIZE);
+        console.log(`[${ new Date().toUTCString() }] CHUNKING TREE: ${tree.length} entries into ${totalChunks} chunks of max ${CHUNK_SIZE}`);
+
+        let currentBase = baseTreeSHA;
+
+        for (let i = 0; i < tree.length; i += CHUNK_SIZE) {
+            let chunk = tree.slice(i, i + CHUNK_SIZE);
+            let chunkIndex = Math.floor(i / CHUNK_SIZE) + 1;
+            console.log(`[${ new Date().toUTCString() }] CREATING TREE CHUNK ${chunkIndex}/${totalChunks} (${chunk.length} entries)`);
+            currentBase = await this.createTree(chunk, currentBase);
+        }
+
+        return currentBase;
+    }
+
+    createTree(tree, baseTreeSHA = null) {
         if(!tree || !tree.length) {
             return [];
         }
@@ -648,15 +725,18 @@ class GithubPages {
             }
         });
 
-        let logPath = path.join(this.deployment.appDir, 'github-tree.txt');
-        fs.writeFileSync(logPath, JSON.stringify(tree, null, 4));
+        let requestData = {
+            owner: this.user,
+            repo: this.repository,
+            tree: tree
+        };
+
+        if (baseTreeSHA) {
+            requestData.base_tree = baseTreeSHA;
+        }
 
         return this.apiRequest(
-            {
-                owner: this.user,
-                repo: this.repository,
-                tree: tree
-            },
+            requestData,
             (api) => api.rest.git.createTree,
             (result) => result.data.sha
         );

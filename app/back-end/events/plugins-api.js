@@ -2,22 +2,31 @@ const ipcMain = require('electron').ipcMain;
 const fs = require('fs');
 const path = require('path');
 const FileHelper = require('../helpers/file.js');
+const PathValidator = require('../helpers/path-validator.js');
 
 /*
  * Events for the IPC communication regarding plugins
  */
 
+const { isValidDirSegment, isValidFileName, resolveValidPath } = PathValidator;
+
 class PluginsApiEvents {
     constructor (appInstance) {
         // Read file in site
         ipcMain.handle('app-plugins-api:read-config-file', function (event, data) {
-            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
-            let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
-            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName, fileName);
+            if (
+                !isValidDirSegment(data.siteName) ||
+                !isValidDirSegment(data.pluginName) ||
+                !isValidFileName(data.fileName)
+            ) {
+                return false;
+            }
 
-            if (!fs.existsSync(filePath)) {
-                return false;  
+            let baseDir = path.join(appInstance.sitesDir, data.siteName, 'input', 'config', 'plugins', data.pluginName);
+            let filePath = resolveValidPath(baseDir, data.fileName);
+
+            if (!filePath || !fs.existsSync(filePath)) {
+                return false;
             }
 
             let fileContent = FileHelper.readFileSync(filePath);
@@ -27,11 +36,17 @@ class PluginsApiEvents {
 
         // Read file in the languages
         ipcMain.handle('app-plugins-api:read-language-file', function (event, data) {
-            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
-            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
+            if (
+                !isValidDirSegment(data.siteName) ||
+                !isValidFileName(data.fileName)
+            ) {
+                return false;
+            }
 
-            if (!fs.existsSync(filePath)) { 
+            let baseDir = path.join(appInstance.sitesDir, data.siteName, 'input', 'languages');
+            let filePath = resolveValidPath(baseDir, data.fileName);
+
+            if (!filePath || !fs.existsSync(filePath)) {
                 return false;
             }
 
@@ -42,13 +57,19 @@ class PluginsApiEvents {
 
         // Read file in the themes
         ipcMain.handle('app-plugins-api:read-theme-file', function (event, data) {
-            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let themeName = data.themeName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
-            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'themes', themeName, fileName);
+            if (
+                !isValidDirSegment(data.siteName) ||
+                !isValidDirSegment(data.themeName) ||
+                !isValidFileName(data.fileName)
+            ) {
+                return false;
+            }
 
-            if (!fs.existsSync(filePath)) {
-                return false;  
+            let baseDir = path.join(appInstance.sitesDir, data.siteName, 'input', 'themes', data.themeName);
+            let filePath = resolveValidPath(baseDir, data.fileName);
+
+            if (!filePath || !fs.existsSync(filePath)) {
+                return false;
             }
 
             let fileContent = FileHelper.readFileSync(filePath);
@@ -58,13 +79,23 @@ class PluginsApiEvents {
 
         // Save file in site
         ipcMain.handle('app-plugins-api:save-config-file', function (event, data) {
-            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
-            let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
-            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName, fileName);
-           
-            if (!fs.existsSync(path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName))) {
-                fs.mkdirSync(path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName), { recursive: true });
+            if (
+                !isValidDirSegment(data.siteName) ||
+                !isValidDirSegment(data.pluginName) ||
+                !isValidFileName(data.fileName)
+            ) {
+                return { status: 'FILE_NOT_SAVED' };
+            }
+
+            let pluginDir = path.join(appInstance.sitesDir, data.siteName, 'input', 'config', 'plugins', data.pluginName);
+            let filePath = resolveValidPath(pluginDir, data.fileName);
+
+            if (!filePath) {
+                return { status: 'FILE_NOT_SAVED' };
+            }
+
+            if (!fs.existsSync(pluginDir)) {
+                fs.mkdirSync(pluginDir, { recursive: true });
             }
 
             try {
@@ -77,10 +108,24 @@ class PluginsApiEvents {
 
         // Save file in languages
         ipcMain.handle('app-plugins-api:save-language-file', function (event, data) {
-            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
-            let dirPath = path.join(appInstance.sitesDir, siteName, 'input', 'languages');
-            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
+            if (
+                !isValidDirSegment(data.siteName) ||
+                !isValidFileName(data.fileName)
+            ) {
+                return { status: 'FILE_NOT_SAVED' };
+            }
+
+            // Language files are JSON by convention.
+            if (path.extname(data.fileName).toLowerCase() !== '.json') {
+                return { status: 'FILE_NOT_SAVED' };
+            }
+
+            let dirPath = path.join(appInstance.sitesDir, data.siteName, 'input', 'languages');
+            let filePath = resolveValidPath(dirPath, data.fileName);
+
+            if (!filePath) {
+                return { status: 'FILE_NOT_SAVED' };
+            }
 
             if (!fs.existsSync(dirPath)) {
                 fs.mkdirSync(dirPath, { recursive: true });
@@ -96,12 +141,18 @@ class PluginsApiEvents {
 
         // Delete file in site
         ipcMain.handle('app-plugins-api:delete-config-file', function (event, data) {
-            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
-            let pluginName = data.pluginName.replace(/[\/\\]/gmi, '');
-            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'plugins', pluginName, fileName);
-           
-            if (!fs.existsSync(filePath)) {  
+            if (
+                !isValidDirSegment(data.siteName) ||
+                !isValidDirSegment(data.pluginName) ||
+                !isValidFileName(data.fileName)
+            ) {
+                return { status: 'FILE_NOT_REMOVED' };
+            }
+
+            let baseDir = path.join(appInstance.sitesDir, data.siteName, 'input', 'config', 'plugins', data.pluginName);
+            let filePath = resolveValidPath(baseDir, data.fileName);
+
+            if (!filePath || !fs.existsSync(filePath)) {
                 return { status: 'FILE_TO_REMOVE_NOT_EXISTS' };
             }
 
@@ -113,13 +164,19 @@ class PluginsApiEvents {
             }
         });
 
-        // Delete file in site
+        // Delete file in languages
         ipcMain.handle('app-plugins-api:delete-language-file', function (event, data) {
-            let fileName = data.fileName.replace(/a-zA-Z0-9\-\_\.\*\@\+/gmi, '');
-            let siteName = data.siteName.replace(/[\/\\]/gmi, '');
-            let filePath = path.join(appInstance.sitesDir, siteName, 'input', 'languages', fileName);
-           
-            if (!fs.existsSync(filePath)) {  
+            if (
+                !isValidDirSegment(data.siteName) ||
+                !isValidFileName(data.fileName)
+            ) {
+                return { status: 'FILE_NOT_REMOVED' };
+            }
+
+            let baseDir = path.join(appInstance.sitesDir, data.siteName, 'input', 'languages');
+            let filePath = resolveValidPath(baseDir, data.fileName);
+
+            if (!filePath || !fs.existsSync(filePath)) {
                 return { status: 'FILE_TO_REMOVE_NOT_EXISTS' };
             }
 

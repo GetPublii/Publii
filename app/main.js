@@ -14,6 +14,7 @@ const createSlug = require('./back-end/helpers/slug.js');
 const passwordSafeStorage = require('keytar');
 const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
 const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 const normalizePath = require('normalize-path');
 
@@ -44,14 +45,110 @@ electronApp.on('ready', function () {
     });
 
     ipcMain.handle('publii-shell-show-item-in-folder', (event, url) => electron.shell.showItemInFolder(url));
-    ipcMain.handle('publii-shell-open-path', (event, filePath) => electron.shell.openPath(filePath));
-    ipcMain.handle('publii-shell-open-external', (event, url) => electron.shell.openExternal(url));
+
+    const blockedExtensions = new Set([
+        // Windows
+        '.exe', '.bat', '.cmd', '.com', '.msi', '.msp', '.scr', '.lnk', '.reg',
+        '.ps1', '.psm1', '.psd1', '.ps1xml', '.psc1',
+        '.vbs', '.vbe', '.wsf', '.wsh', '.js', '.jse', '.hta', '.cpl',
+        // macOS
+        '.app', '.command', '.scpt', '.tool',
+        // Unix
+        '.sh', '.bash', '.zsh', '.fish', '.csh', '.tcsh', '.ksh',
+        // Other
+        '.jar', '.py', '.pyc', '.pyw', '.rb', '.pl', '.php'
+    ]);
+
+    const allowedSubdirs = ['root-files', 'media'];
+
+    ipcMain.handle('publii-shell-open-path', (event, filePath) => {
+        if (typeof filePath !== 'string' || !filePath) {
+            return '';
+        }
+
+        let sitesDir = appInstance && appInstance.sitesDir;
+
+        if (!sitesDir) {
+            return '';
+        }
+
+        let resolvedSitesDir = path.resolve(sitesDir);
+        let resolvedTarget = path.resolve(filePath);
+        let relative = path.relative(resolvedSitesDir, resolvedTarget);
+
+        if (relative.startsWith('..') || path.isAbsolute(relative) || relative === '') {
+            return '';
+        }
+
+        let segments = relative.split(path.sep);
+
+        if (segments.length < 4 ||
+            segments[1] !== 'input' ||
+            allowedSubdirs.indexOf(segments[2]) === -1) {
+            return '';
+        }
+
+        let ext = path.extname(resolvedTarget).toLowerCase();
+
+        if (blockedExtensions.has(ext)) {
+            return '';
+        }
+
+        return electron.shell.openPath(resolvedTarget);
+    });
+
+    const ALLOWED_EXTERNAL_PROTOCOLS = new Set([
+        'http:',
+        'https:',
+        'mailto:',
+        'file:',
+        'dat:',
+        'ipfs:',
+        'dweb:'
+    ]);
+
+    ipcMain.handle('publii-shell-open-external', (event, url) => {
+        if (typeof url !== 'string' || !url) {
+            return;
+        }
+
+        let parsed;
+
+        try {
+            parsed = new URL(url);
+        } catch (e) {
+            return;
+        }
+
+        if (!ALLOWED_EXTERNAL_PROTOCOLS.has(parsed.protocol)) {
+            return;
+        }
+
+        if (parsed.protocol === 'file:') {
+            if (parsed.host) {
+                return;
+            }
+
+            let decodedPath;
+
+            try {
+                decodedPath = decodeURIComponent(parsed.pathname);
+            } catch (e) {
+                return;
+            }
+
+            if (path.extname(decodedPath).toLowerCase() !== '.html') {
+                return;
+            }
+        }
+
+        return electron.shell.openExternal(parsed.href);
+    });
+
     ipcMain.handle('publii-native-exists-sync', (event, pathToCheck) => fs.existsSync(pathToCheck));
     ipcMain.handle('publii-native-md5', (event, value) => crypto.createHash('md5').update(value).digest('hex'));
     ipcMain.handle('publii-native-normalize-path', (event, pathToNormalize) => normalizePath(pathToNormalize));
     ipcMain.handle('publii-get-spellchecker-language', (event) => global.spellCheckerLanguage);
-    ipcMain.handle('app-main-set-spellchecker-language-for-webview', (event, webContentsID, languages) => webContents.fromId(webContentsID).session.setSpellCheckerLanguages(languages));
-    
     ipcMain.handle('app-main-webview-search-find-in-page', (event, searchPhrase, searchConfig = null) => {
         if (searchConfig) {
             event.sender.findInPage(searchPhrase, searchConfig);
@@ -115,29 +212,50 @@ electronApp.on('ready', function () {
     });
 
     // Load password from Keytar
+    let availablePasswordTypes = new Set([
+        'publii',
+        'publii-git-password',
+        'publii-passphrase',
+        'publii-s3-id',
+        'publii-s3-key',
+        'publii-gh-token',
+        'publii-gl-token',
+        'publii-netlify-id',
+        'publii-netlify-token'
+    ]);
+
     ipcMain.handle('app-main-process-load-password', async (event, type, passwordKey) => {
-        if (passwordKey && passwordKey.indexOf(type) === 0) {
-            let passwordData = passwordKey.split(' ');
-            let service = passwordData[0];
-            let account = passwordData[1];
-            let retrievedPassword = '';
-
-            if (passwordSafeStorage) {
-                try {
-                    retrievedPassword = await passwordSafeStorage.getPassword(service, account);
-                } catch (e) {
-                    console.log('(!) Cannot retrieve password via keytar');
-                }
-            }
-
-            if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
-                retrievedPassword = '';
-            }
-
-            return retrievedPassword;
+        if (!availablePasswordTypes.has(type)) {
+            return '';
         }
 
-        return '';
+        let prefix = type + ' ';
+
+        if (typeof passwordKey !== 'string' || !passwordKey.startsWith(prefix)) {
+            return '';
+        }
+
+        let account = passwordKey.slice(prefix.length);
+
+        if (!account || !/^[A-Za-z0-9_-]+$/.test(account)) {
+            return '';
+        }
+
+        let retrievedPassword = '';
+
+        if (passwordSafeStorage) {
+            try {
+                retrievedPassword = await passwordSafeStorage.getPassword(type, account);
+            } catch (e) {
+                console.log('(!) Cannot retrieve password via keytar');
+            }
+        }
+
+        if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
+            retrievedPassword = '';
+        }
+
+        return retrievedPassword;
     });
 
     // Export OS version
@@ -202,9 +320,23 @@ electronApp.on('ready', function () {
             submenu: [{
                 label: "About Application",
                 selector: "orderFrontStandardAboutPanel:"
-            }, {
+            }, 
+            {
                 type: "separator"
-            }, {
+            }, 
+            { 
+            role: 'hide' 
+            },
+            { 
+                role: 'hideOthers' 
+            },
+            { 
+                role: 'unhide' 
+            },
+            {
+                type: "separator"
+            }, 
+            {
                 label: "Quit",
                 accelerator: "CmdOrCtrl+Q",
                 click: () => { 
@@ -262,6 +394,49 @@ electronApp.on('ready', function () {
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 
+    let editTopMenu = {
+        label: "Edit",
+        submenu: [
+            {
+                label: "Undo",
+                accelerator: "CmdOrCtrl+Z",
+                selector: "undo:"
+            },
+            {
+                label: "Redo",
+                accelerator: "Shift+CmdOrCtrl+Z",
+                selector: "redo:"
+            },
+            {
+                type: "separator"
+            },
+            {
+                label: "Cut",
+                accelerator: "CmdOrCtrl+X",
+                selector: "cut:"
+            },
+            {
+                label: "Copy",
+                accelerator: "CmdOrCtrl+C",
+                selector: "copy:"
+            },
+            {
+                label: "Paste",
+                accelerator: "CmdOrCtrl+V",
+                selector: "paste:"
+            },
+            {
+                label: "Select All",
+                accelerator: "CmdOrCtrl+A",
+                selector: "selectAll:"
+            }
+        ]
+    };
+
+    const template = [appTopMenu, editTopMenu];
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+
     // Remove application menu on Linux
     if (process.platform === 'linux') {
         Menu.setApplicationMenu(null);
@@ -280,6 +455,19 @@ electronApp.on('ready', function () {
 
     // Load language translations and set language as used in the app
     ipcMain.handle('app-main-load-language', (event, lang, type) => {
+        if (typeof lang !== 'string' ||
+            lang.length === 0 ||
+            lang === '.' ||
+            lang === '..' ||
+            lang.startsWith('.') ||
+            !/^[a-zA-Z0-9\-_.]+$/.test(lang)) {
+            return false;
+        }
+
+        if (type !== 'default' && type !== 'installed') {
+            return false;
+        }
+
         try {
             appInstance.loadLanguage(lang, type);
             let languageChanged = false;

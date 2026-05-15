@@ -10,6 +10,7 @@ const UtilsHelper = require('./helpers/utils.js');
 const themeConfigValidator = require('./modules/render-html/validators/theme-config.js');
 const normalizePath = require('normalize-path');
 const Authors = require('./authors.js');
+const PathValidator = require('./helpers/path-validator.js');
 
 class Themes {
     constructor(appInstance, siteData = false) {
@@ -350,7 +351,17 @@ class Themes {
      * Remove specific theme from the app directory
      */
     removeTheme(directory) {
-        fs.removeSync(path.join(this.themesPath, directory));
+        if (!PathValidator.isValidDirSegment(directory)) {
+            return;
+        }
+
+        let target = PathValidator.resolveValidPath(this.themesPath, directory);
+
+        if (!target) {
+            return;
+        }
+
+        fs.removeSync(target);
     }
 
     updateThemeConfig(newConfig) {

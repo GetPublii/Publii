@@ -76,7 +76,8 @@ class PageItem {
             hasCustomExcerpt: hasCustomExcerpt,
             editor: this.metaData.editor || 'tinymce',
             metaDescription: this.metaDescription,
-            subpages: this.subpages
+            subpages: this.subpages,
+            parent: this.getParentID()
         };
 
         if (this.pageData.template === '*') {
@@ -157,6 +158,19 @@ class PageItem {
 
     setPageViewConfig(config) {
         this.renderer.cachedItems.pages[this.pageID].pageViewConfig = config;
+    }
+
+    getParentID() {
+        let pagesStructure = this.renderer.cachedItems.pagesStructure || {};
+        let pageID = this.page.id;
+
+        for (let parentID in pagesStructure) {
+            if (pagesStructure[parentID].indexOf(pageID) !== -1) {
+                return parseInt(parentID, 10);
+            }
+        }
+
+        return null;
     }
 }
 

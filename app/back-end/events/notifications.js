@@ -1,6 +1,9 @@
 const ipcMain = require('electron').ipcMain;
 const path = require('path');
 const UpdatesHelper = require('../helpers/updates.helper.js');
+const PathValidator = require('../helpers/path-validator.js');
+
+const { isValidFileName, resolveValidPath } = PathValidator;
 
 /*
  * Events for the IPC communication regarding notifications
@@ -11,7 +14,7 @@ class NotificationsEvents {
         // Save
         ipcMain.on('app-notifications-retrieve', function(event, downloadNotifications) {
             let platform;
-            
+
             if (process.platform === 'darwin') {
                 platform = process.arch === 'arm64' ? 'mac-arm64' : 'mac-x86';
             } else if (process.platform === 'win32') {
@@ -32,7 +35,16 @@ class NotificationsEvents {
 
         // Get notifications file
         ipcMain.handle('app-get-notifications-file', async (event, fileName) => {
-            let filePath = path.join(appInstance.app.getPath('logs'), fileName);
+            if (!isValidFileName(fileName)) {
+                return false;
+            }
+
+            let logsDir = appInstance.app.getPath('logs');
+            let filePath = resolveValidPath(logsDir, fileName);
+
+            if (!filePath) {
+                return false;
+            }
 
             try {
                 let data = await appInstance.app.readFile(filePath, 'utf8');

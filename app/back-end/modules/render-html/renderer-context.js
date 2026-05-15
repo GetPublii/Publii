@@ -363,6 +363,7 @@ class RendererContext {
                 searchUrl: searchUrl,
                 errorUrl: errorUrl,
                 tagsUrl: this.getTagsUrl(),
+                postsUrl: this.getPostsUrl(),
                 pageUrl: this.getPageUrl(context, paginationData, itemSlug, itemContext),
                 name: siteNameValue,
                 logo: logoUrl,
@@ -833,6 +834,20 @@ class RendererContext {
         }
 
         return tagsUrl;
+    }
+
+    getPostsUrl () {
+        let postsUrl = this.siteConfig.domain + '/';
+
+        if (this.siteConfig.advanced.urls.postsPrefix) {
+            postsUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/';
+        }
+
+        if (this.renderer.previewMode) {
+            postsUrl += 'index.html';
+        }
+
+        return postsUrl;
     }
 }
 

@@ -8,6 +8,7 @@ const FileHelper = require('./helpers/file.js');
 const UtilsHelper = require('./helpers/utils.js');
 const languageConfigValidator = require('./helpers/validators/language-config.js');
 const normalizePath = require('normalize-path');
+const PathValidator = require('./helpers/path-validator.js');
 
 class Languages {
     constructor(appInstance) {
@@ -101,7 +102,17 @@ class Languages {
      * Remove specific language from the app directory
      */
     removeLanguage(directory) {
-        fs.removeSync(path.join(this.languagesPath, directory));
+        if (!PathValidator.isValidDirSegment(directory)) {
+            return;
+        }
+
+        let target = PathValidator.resolveValidPath(this.languagesPath, directory);
+
+        if (!target) {
+            return;
+        }
+
+        fs.removeSync(target);
     }
 
     /*

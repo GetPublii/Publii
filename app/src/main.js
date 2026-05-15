@@ -116,6 +116,11 @@ import 'prismjs/components/prism-xml-doc.min.js';
 
 window.app = null;
 
+// Notice for users
+console.log('%c⚠️ WARNING! ⚠️', 'background: red; color: yellow; font-size: 30px; padding: 10px; font-weight: bold;');
+console.log('%cUsing this console may allow hackers to impersonate you and steal your data through an attack known as Self-XSS.', 'font-size: 20px;');
+console.log('%cDo not type or paste code that you do not understand.', 'font-size: 16px; color: red;');
+
 // i18n
 Vue.use(VueI18n);
 

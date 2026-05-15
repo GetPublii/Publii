@@ -2,6 +2,9 @@ const fs = require('fs-extra');
 const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Backup = require('../modules/backup/backup.js');
+const PathValidator = require('../helpers/path-validator.js');
+
+const { isValidDirSegment, isValidFileName } = PathValidator;
 
 class BackupEvents {
     constructor(appInstance) {
@@ -14,7 +17,7 @@ class BackupEvents {
         }
 
         ipcMain.on('app-backups-list-load', function (event, siteData) {
-            if(siteData.site) {
+            if (siteData && isValidDirSegment(siteData.site)) {
                 self.loadBackupsList(siteData.site, event);
             } else {
                 event.sender.send('app-backups-list-loaded', {
@@ -24,7 +27,9 @@ class BackupEvents {
         });
 
         ipcMain.on('app-backup-create', function(event, siteData) {
-            if(siteData.site) {
+            if (siteData &&
+                isValidDirSegment(siteData.site) &&
+                isValidFileName(siteData.filename)) {
                 self.createBackup(siteData.site, siteData.filename, event);
             } else {
                 event.sender.send('app-backup-created', {
@@ -34,7 +39,11 @@ class BackupEvents {
         });
 
         ipcMain.on('app-backup-remove', function(event, siteData) {
-            if(siteData.site && siteData.backupsNames) {
+            if (siteData &&
+                isValidDirSegment(siteData.site) &&
+                Array.isArray(siteData.backupsNames) &&
+                siteData.backupsNames.length > 0 &&
+                siteData.backupsNames.every(isValidFileName)) {
                 self.removeBackups(siteData.site, siteData.backupsNames, event);
             } else {
                 event.sender.send('app-backup-removed', {
@@ -44,7 +53,10 @@ class BackupEvents {
         });
 
         ipcMain.on('app-backup-rename', function(event, siteData) {
-            if(siteData.site && siteData.oldBackupName && siteData.newBackupName) {
+            if (siteData &&
+                isValidDirSegment(siteData.site) &&
+                isValidFileName(siteData.oldBackupName) &&
+                isValidFileName(siteData.newBackupName)) {
                 self.renameBackup(siteData.site, siteData.oldBackupName, siteData.newBackupName, event);
             } else {
                 event.sender.send('app-backup-renamed', {
@@ -54,7 +66,9 @@ class BackupEvents {
         });
 
         ipcMain.on('app-backup-restore', function(event, siteData) {
-            if(siteData.site && siteData.backupName) {
+            if (siteData &&
+                isValidDirSegment(siteData.site) &&
+                isValidFileName(siteData.backupName)) {
                 self.restoreBackup(siteData.site, siteData.backupName, event);
             } else {
                 event.sender.send('app-backup-restored', {
@@ -64,12 +78,27 @@ class BackupEvents {
         });
 
         ipcMain.on('app-backup-set-location', (event, newLocation) => {
-            this.backupsLocation = newLocation;
-
-            if (this.backupsLocation === '') {
+            if (newLocation === '') {
                 this.backupsLocation = path.join(this.app.appDir, 'backups');
+                return;
             }
-        }); 
+
+            if (typeof newLocation !== 'string' ||
+                newLocation.indexOf('\0') !== -1 ||
+                !path.isAbsolute(newLocation)) {
+                return;
+            }
+
+            try {
+                if (!fs.existsSync(newLocation) || !fs.statSync(newLocation).isDirectory()) {
+                    return;
+                }
+            } catch (e) {
+                return;
+            }
+
+            this.backupsLocation = newLocation;
+        });
     }
 
     loadBackupsList(siteName, event) {
