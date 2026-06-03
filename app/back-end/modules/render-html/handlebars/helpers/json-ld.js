@@ -203,7 +203,7 @@ function jsonLDHelper(rendererInstance, Handlebars) {
         }
 
         output += '<script type="application/ld+json">';
-        output += JSON.stringify(jsonLDObject);
+        output += JSON.stringify(jsonLDObject).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
         output += '</script>';
         moment.locale(momentOriginalLocale);
         return new Handlebars.SafeString(output);

@@ -37,7 +37,13 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
         }
 
         if (options.data.root.metaRobotsRaw !== '') {
-            return new Handlebars.SafeString('<meta name="robots" content="' + options.data.root.metaRobotsRaw + '">');
+            let safeRobots = String(options.data.root.metaRobotsRaw)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            return new Handlebars.SafeString('<meta name="robots" content="' + safeRobots + '">');
         }
 
         return '';
