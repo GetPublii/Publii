@@ -228,16 +228,16 @@
             </collection-header>
 
             <collection-row
-                v-for="(item, index) in items"
+                v-for="item in renderedItems"
                 slot="content"
                 :data-is-draft="item.isDraft"
-                :key="'collection-row-' + index">
+                :key="'collection-row-' + item.id">
                 <collection-cell>
                     <checkbox
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection"
-                        :key="'collection-row-checkbox-' + index" />
+                        :key="'collection-row-checkbox-' + item.id" />
                 </collection-cell>
 
                 <collection-cell
@@ -376,6 +376,13 @@
                     {{ item.id }}
                 </collection-cell>
             </collection-row>
+
+            <div
+                v-if="items.length > renderLimit"
+                ref="loadMoreSentinel"
+                slot="content"
+                class="load-more-sentinel">
+            </div>
         </collection>
 
         <empty-state
@@ -450,12 +457,18 @@ export default {
             subpageSelected: false,
             order: 'DESC',
             orderBy: '',
-            subpageSelectedChildren: []
+            subpageSelectedChildren: [],
+            renderLimit: 100
         };
+    },
+    watch: {
+        filterValue () {
+            this.renderLimit = 100;
+        }
     },
     computed: {
         items () {
-            let items = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order).filter(item => item.title !== null);
+            let items = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order);
 
             if (this.filterValue !== '' || this.orderBy !== '') {
                 return items;
@@ -501,6 +514,9 @@ export default {
 
             return results.filter(item => !!item);
         },
+        renderedItems () {
+            return this.items.slice(0, this.renderLimit);
+        },
         hasPages () {
             return this.$store.state.currentSite.pages && !!this.$store.state.currentSite.pages.length;
         },
@@ -511,20 +527,33 @@ export default {
             return this.filterValue.indexOf('is:trashed') > -1;
         },
         counters () {
+            let counters = {
+                all: 0,
+                published: 0,
+                drafts: 0,
+                trashed: 0
+            };
+
             if(!this.$store.state.currentSite || !this.$store.state.currentSite.pages) {
-                return {
-                    all: 0,
-                    published: 0,
-                    drafts: 0,
-                    trashed: 0
-                };
+                return counters;
             }
-            return {
-                all: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1).length,
-                published: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1 && page.status.indexOf('draft') === -1).length,
-                drafts: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') === -1 && page.status.indexOf('draft') > -1).length,
-                trashed: this.$store.state.currentSite.pages.filter((page) => page.status.indexOf('trashed') > -1).length
+
+            for (let page of this.$store.state.currentSite.pages) {
+                if (page.status.indexOf('trashed') > -1) {
+                    counters.trashed++;
+                    continue;
+                }
+
+                counters.all++;
+
+                if (page.status.indexOf('draft') > -1) {
+                    counters.drafts++;
+                } else {
+                    counters.published++;
+                }
             }
+
+            return counters;
         },
         showModificationDate () {
             return this.$store.state.app.config.showModificationDate;
@@ -570,6 +599,13 @@ export default {
             
             return false;
         }
+    },
+    created () {
+        this.loadMoreObserver = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                this.renderLimit += 100;
+            }
+        });
     },
     async mounted () {
         this.appTheme = await this.$root.getCurrentAppTheme();
@@ -619,7 +655,6 @@ export default {
         mainProcessAPI.receiveOnce('app-pages-hierarchy-loaded', (data) => {
             if (!data) {
                 this.pagesHierarchy = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order)
-                                                            .filter(item => item.title !== null)
                                                             .map(item => ({id: item.id, subpages: []}));
                 this.hierarchySave();
                 return;
@@ -630,8 +665,19 @@ export default {
         });
 
         this.checkPagesSupport();
+        this.$nextTick(this.observeLoadMoreSentinel);
+    },
+    updated () {
+        this.observeLoadMoreSentinel();
     },
     methods: {
+        observeLoadMoreSentinel () {
+            this.loadMoreObserver.disconnect();
+
+            if (this.$refs.loadMoreSentinel) {
+                this.loadMoreObserver.observe(this.$refs.loadMoreSentinel);
+            }
+        },
         addNewPage (editorType) {
             if (
                 editorType === 'blockeditor' &&
@@ -1188,6 +1234,7 @@ export default {
         }
     },
     beforeDestroy () {
+        this.loadMoreObserver.disconnect();
         this.$bus.$off('site-loaded', this.whenSiteLoaded);
         this.$bus.$off('pages-filter-value-changed');
         this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
@@ -1198,6 +1245,11 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
 @import '../scss/empty-states.scss';
+
+.load-more-sentinel {
+    grid-column: 1 / -1;
+    height: 1px;
+}
 
 .header {
     .col {
