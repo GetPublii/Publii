@@ -225,6 +225,7 @@ class App {
         }
 
         this.db = new DBUtils(new Database(dbPath));
+        this.db.exec(`CREATE INDEX IF NOT EXISTS posts_additional_data__post_id_key ON posts_additional_data(post_id, key);`);
         let tags = new Tags(this, {site});
         let posts = new Posts(this, {site});
         let pages = new Pages(this, {site});

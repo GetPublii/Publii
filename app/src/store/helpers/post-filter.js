@@ -1,49 +1,34 @@
-export default (state, post, filterValue) => {
+export default (state, filterValue, lookups) => {
     filterValue = filterValue.toLowerCase();
-    post = JSON.parse(JSON.stringify(post));
-    post.title = post.title.toLowerCase();
-    post.slug = post.slug.toLowerCase();
-    let deletedPostsIDs = state.currentSite.posts.filter(post => post.status.indexOf('trashed') > -1).map(post => post.id);
 
     // Check for author
-    if(filterValue.indexOf('author:') === 0) {
+    if (filterValue.indexOf('author:') === 0) {
         let authorToFind = filterValue.replace('author:', '');
 
-        let results = state.currentSite.postsAuthors.filter(postAuthor => {
-            return  postAuthor.postID === post.id && 
-                    deletedPostsIDs.indexOf(postAuthor.postID) === -1 && 
-                    postAuthor.authorName.toLowerCase() === authorToFind;
-        });
+        return post => {
+            if (post.status.indexOf('trashed') > -1) {
+                return false;
+            }
 
-        if(results.length) {
-            return true;
-        }
-
-        return false;
+            let authorName = lookups.postsAuthors.get(post.id);
+            return !!authorName && authorName.toLowerCase() === authorToFind;
+        };
     }
 
     // Check for tag
-    if(filterValue.indexOf('tag:') === 0) {
+    if (filterValue.indexOf('tag:') === 0) {
         let tagToFind = filterValue.replace('tag:', '');
-        let tagID = state.currentSite.tags.filter(tag => {
-            return tag.name.toLowerCase() === tagToFind;
-        });
+        let foundTag = state.currentSite.tags.find(tag => tag.name.toLowerCase() === tagToFind);
+        let tagID = foundTag ? foundTag.id : false;
 
-        if(tagID.length) {
-            tagID = tagID[0].id;
-        }
+        return post => {
+            if (tagID === false || post.status.indexOf('trashed') > -1) {
+                return false;
+            }
 
-        let results = state.currentSite.postsTags.filter(postTags => {
-            return  postTags.postID === post.id && 
-                    deletedPostsIDs.indexOf(postTags.postID) === -1 && 
-                    postTags.tagID === tagID;
-        });
-
-        if(results.length) {
-            return true;
-        }
-
-        return false;
+            let postTags = lookups.postsTags.get(post.id);
+            return !!postTags && postTags.some(postTag => postTag.id === tagID);
+        };
     }
 
     let searchPhrase = filterValue.replace('is:published', '')
@@ -52,98 +37,88 @@ export default (state, post, filterValue) => {
                                   .replace('is:draft', '')
                                   .replace('is:hidden', '')
                                   .replace('is:excluded', '')
-                                  .trim();
-    searchPhrase = searchPhrase.toLowerCase();
+                                  .trim()
+                                  .toLowerCase();
 
-    // Check for published posts
-    if(
-        filterValue.indexOf('is:published') === 0 &&
-        post.status.indexOf('draft') === -1 &&
-        post.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
+    let isPublishedFilter = filterValue.indexOf('is:published') === 0;
+    let isFeaturedFilter = filterValue.indexOf('is:featured') === 0;
+    let isTrashedFilter = filterValue.indexOf('is:trashed') === 0;
+    let isDraftFilter = filterValue.indexOf('is:draft') === 0;
+    let isHiddenFilter = filterValue.indexOf('is:hidden') === 0;
+    let isExcludedFilter = filterValue.indexOf('is:excluded') === 0;
+    let emptyFilter = filterValue.trim() === '';
+
+    return post => {
+        let title = post.title.toLowerCase();
+        let slug = post.slug.toLowerCase();
+        let matchesSearchPhrase = searchPhrase === '' || title.indexOf(searchPhrase) > -1 || slug.indexOf(searchPhrase) > -1;
+
+        // Check for published posts
+        if (
+            isPublishedFilter &&
+            post.status.indexOf('draft') === -1 &&
+            post.status.indexOf('trashed') === -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
-
-    // Check for featured posts
-    if(
-        filterValue.indexOf('is:featured') === 0 &&
-        post.status.indexOf('featured') > -1 &&
-        post.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
+        // Check for featured posts
+        if (
+            isFeaturedFilter &&
+            post.status.indexOf('featured') > -1 &&
+            post.status.indexOf('trashed') === -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
-
-    // Check for trashed posts
-    if(
-        filterValue.indexOf('is:trashed') === 0 &&
-        post.status.indexOf('trashed') > -1
-    ) {
-        if(searchPhrase !== '') {
-            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
+        // Check for trashed posts
+        if (
+            isTrashedFilter &&
+            post.status.indexOf('trashed') > -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
-
-    // Check for draft posts
-    if(
-        filterValue.indexOf('is:draft') === 0 &&
-        post.status.indexOf('draft') > -1 &&
-        post.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
+        // Check for draft posts
+        if (
+            isDraftFilter &&
+            post.status.indexOf('draft') > -1 &&
+            post.status.indexOf('trashed') === -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
-
-    // Check for hidden posts
-    if(
-        filterValue.indexOf('is:hidden') === 0 &&
-        post.status.indexOf('hidden') > -1 &&
-        post.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
+        // Check for hidden posts
+        if (
+            isHiddenFilter &&
+            post.status.indexOf('hidden') > -1 &&
+            post.status.indexOf('trashed') === -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
-
-    // Check for excluded posts
-    if(
-        filterValue.indexOf('is:excluded') === 0 &&
-        post.status.indexOf('excluded') > -1 &&
-        post.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return post.title.indexOf(searchPhrase) > -1 || post.slug.indexOf('searchPhrase') > -1;
+        // Check for excluded posts
+        if (
+            isExcludedFilter &&
+            post.status.indexOf('excluded') > -1 &&
+            post.status.indexOf('trashed') === -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
+        // Check the easy cases first
+        if (
+            (
+                emptyFilter ||
+                title.indexOf(filterValue) > -1 ||
+                slug.indexOf(filterValue) > -1
+            ) &&
+            post.status.indexOf('trashed') === -1
+        ) {
+            return true;
+        }
 
-    // Check the easy cases first
-    if(
-        (
-            filterValue.trim() === '' || 
-            post.title.indexOf(filterValue) > -1 ||
-            post.slug.indexOf(filterValue) > -1
-        ) &&
-        post.status.indexOf('trashed') === -1
-    ) {
-        return true;
-    }
-
-    // Unfortunately - there is no criteria which this post meets
-    return false;
+        // Unfortunately - there is no criteria which this post meets
+        return false;
+    };
 };
