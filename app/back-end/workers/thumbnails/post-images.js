@@ -1,6 +1,7 @@
 const Image = require('./../../image.js');
 const normalizePath = require('normalize-path');
 const sizeOf = require('image-size');
+const fs = require('fs');
 
 let result = false;
 let appInstance = false;
@@ -62,6 +63,44 @@ process.on('message', function(msg){
         }
 
         Promise.all(promises).then(res => {
+            let unprocessable = res.find(item => item && item.error === 'IMAGE_UNPROCESSABLE');
+
+            if (unprocessable) {
+                // Clean up: remove the copied base image and any successfully
+                // generated thumbnails so the user's media folder doesn't get
+                // littered with an unusable file.
+                try {
+                    if (result && result.newPath && fs.existsSync(result.newPath)) {
+                        fs.unlinkSync(result.newPath);
+                    }
+
+                    for (const item of res) {
+                        if (typeof item === 'string' && fs.existsSync(item)) {
+                            fs.unlinkSync(item);
+                        }
+                    }
+                } catch (cleanupErr) {
+                    console.log('Cleanup after failed image upload failed:', cleanupErr && cleanupErr.message);
+                }
+
+                setTimeout(() => {
+                    process.send({
+                        type: 'finished',
+                        result: {
+                            error: true,
+                            translation: 'core.images.imageUnprocessable',
+                            file: (result && result.filename) || (unprocessable.file || '')
+                        }
+                    });
+                }, 250);
+
+                setTimeout(function () {
+                    process.exit();
+                }, 1000);
+
+                return;
+            }
+
             setTimeout(() => {
                 let thumbnailDimensions = false;
 

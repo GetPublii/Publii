@@ -133,9 +133,22 @@
         'path': await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(file))
     });
 
-    mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {            
+    mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+        if (data && data.error) {
+            // Remove the "uploading..." placeholder that was inserted before the upload started
+            var cleaned = this.editor.getValue().replace(this.lastValue, '');
+            this.editor.setValue(cleaned);
+
+            window.app.showMessage({
+                text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
+                type: 'warning',
+                lifeTime: 6
+            });
+            return;
+        }
+
         var newValue = '';
-        
+
         if (data.baseImage.size) {
             newValue = this.settings.urlText.replace(this.filenameTag, data.baseImage.url + ' =' + data.baseImage.size[0] + 'x' + data.baseImage.size[1]);
         } else {

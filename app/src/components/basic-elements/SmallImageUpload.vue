@@ -136,6 +136,15 @@ export default {
             mainProcessAPI.send('app-image-upload', uploadData);
 
             mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
+                if (data && data.error) {
+                    this.isUploading = false;
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t(data.translation || 'core.images.imageUnprocessable', { file: data.file || '' }),
+                        buttonStyle: 'danger'
+                    });
+                    return;
+                }
+
                 let dir = 'media/website/';
 
                 if (this.imageType === 'pluginImages') {

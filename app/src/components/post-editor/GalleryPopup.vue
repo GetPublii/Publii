@@ -213,15 +213,22 @@ export default {
                 this.uploadProgress = this.uploadProgress + 1;
                 this.uploadMessage = `${this.$t('image.uploading')} ${this.uploadProgress} ${this.$t('ui.of')} ${this.imagesToUpload} ${this.$t('image.pictures')}`;
 
-                this.images.push({
-                    fullImagePath: data.baseImage.url,
-                    thumbnailPath: data.thumbnailPath,
-                    thumbnailHeight: data.thumbnailDimensions ? data.thumbnailDimensions.height : '',
-                    thumbnailWidth: data.thumbnailDimensions ? data.thumbnailDimensions.width : '',
-                    dimensions: data.baseImage.size.join('x'),
-                    alt: '',
-                    caption: ''
-                });
+                if (data && data.error) {
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t(data.translation || 'core.images.imageUnprocessable', { file: data.file || '' }),
+                        buttonStyle: 'danger'
+                    });
+                } else {
+                    this.images.push({
+                        fullImagePath: data.baseImage.url,
+                        thumbnailPath: data.thumbnailPath,
+                        thumbnailHeight: data.thumbnailDimensions ? data.thumbnailDimensions.height : '',
+                        thumbnailWidth: data.thumbnailDimensions ? data.thumbnailDimensions.width : '',
+                        dimensions: data.baseImage.size.join('x'),
+                        alt: '',
+                        caption: ''
+                    });
+                }
 
                 if(imagesPaths.length) {
                     this.loadImages(imagesPaths);

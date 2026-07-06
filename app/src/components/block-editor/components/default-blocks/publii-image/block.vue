@@ -222,6 +222,17 @@ export default {
         });
 
         mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+          if (data && data.error) {
+            this.imageUploadInProgress = false;
+            this.isHovered = false;
+            window.app.showMessage({
+              text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
+              type: 'warning',
+              lifeTime: 6
+            });
+            return;
+          }
+
           if (data.baseImage && data.baseImage.size && data.baseImage.size.length >= 2) {
             this.content.imageWidth = data.baseImage.size[0];
             this.content.imageHeight = data.baseImage.size[1];
@@ -271,6 +282,17 @@ export default {
 
           // eslint-disable-next-line
           mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+            if (data && data.error) {
+              this.fileSelectionCallback = false;
+              this.imageUploadInProgress = false;
+              window.app.showMessage({
+                text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
+                type: 'warning',
+                lifeTime: 6
+              });
+              return;
+            }
+
             this.content.imageWidth = data.baseImage.size[0];
             this.content.imageHeight = data.baseImage.size[1];
             this.content.image = data.baseImage.url;

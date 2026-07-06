@@ -55,6 +55,7 @@
             "errorLoadingLicenseMsg": "An error occurred during loading of the license. Please try again."
         },
         "images": {
+            "imageUnprocessable": "Could not process image \"{file}\". The file may be corrupt or in an unsupported format.",
             "responsiveImagesDisabled": "Responsive images are disabled under site settings - all responsive images have been removed."
         },
         "rendering": {

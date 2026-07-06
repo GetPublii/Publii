@@ -55,6 +55,7 @@
             "errorLoadingLicenseMsg": "Wystąpił błąd podczas ładowania licencji. Proszę spróbować ponownie..."
         },
         "images": {
+            "imageUnprocessable": "Nie udało się przetworzyć obrazu \"{file}\". Plik może być uszkodzony lub w nieobsługiwanym formacie.",
             "responsiveImagesDisabled": "Responsywne obrazy są wyłączone w ustawieniach witryny – wszystkie responsywne obrazy zostały usunięte."
         },
         "rendering": {
