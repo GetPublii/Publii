@@ -354,7 +354,8 @@ class Site {
             if(data.type === 'progress') {
                 sender.send('app-site-regenerate-thumbnails-progress', {
                     value: data.value,
-                    files: data.files
+                    files: data.files,
+                    brokenFilesCount: data.brokenFilesCount || 0
                 });
 
                 if(catalogs.length) {
@@ -369,7 +370,10 @@ class Site {
             }
 
             if (data.type === 'finished') {
-                sender.send('app-site-regenerate-thumbnails-success', true);
+                sender.send('app-site-regenerate-thumbnails-success', {
+                    brokenFilesCount: data.brokenFilesCount || 0,
+                    brokenFiles: data.brokenFiles || []
+                });
             }
         });
 

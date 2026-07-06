@@ -130,13 +130,21 @@ export default {
 
                 mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
                     this.progress = 100;
-                    this.progressColor = 'green';
                     this.progressIsStopped = true;
-                    this.message = this.$t('tools.thumbnails.thumbnailsCreated');
                     this.regeneratingThumbnails = false;
                     this.regenerateIsDone = true;
 
-                    if (this.savedSettingsCallback) {
+                    let brokenCount = (data && data.brokenFilesCount) || 0;
+
+                    if (brokenCount > 0) {
+                        this.progressColor = 'orange';
+                        this.message = this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', { count: brokenCount });
+                    } else {
+                        this.progressColor = 'green';
+                        this.message = this.$t('tools.thumbnails.thumbnailsCreated');
+                    }
+
+                    if (this.savedSettingsCallback && brokenCount === 0) {
                         this.skip();
                     }
                 });

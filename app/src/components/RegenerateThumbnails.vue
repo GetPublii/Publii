@@ -47,8 +47,9 @@
                     class="regenerate-thumbnails-list">
                     <li
                         v-for="(file, index) in files"
-                        :key="file + '-' + index"
+                        :key="index"
                         class="item"
+                        :class="{ 'item-error': isFileError(file) }"
                         :title="getFilePhrase(file)">
                         {{ removeSiteDir(file) }}
                     </li>
@@ -79,7 +80,8 @@ export default {
             resultLabel: '',
             resultCssClass: {
                 'error': false,
-                'success': false
+                'success': false,
+                'warning': false
             },
             buttonStatus: '',
             files: []
@@ -91,17 +93,30 @@ export default {
         }
     },
     methods: {
+        isFileError (filePath) {
+            return !!(filePath && typeof filePath === 'object' && filePath.error);
+        },
         getFilePhrase (filePath) {
-            if (filePath.translation) {
-                return this.$t(filePath.translation);
+            if (filePath && typeof filePath === 'object') {
+                if (filePath.error === 'IMAGE_UNPROCESSABLE') {
+                    return this.$t('tools.thumbnails.imageUnprocessable', { file: filePath.file || '' });
+                }
+
+                if (filePath.translation) {
+                    return this.$t(filePath.translation);
+                }
             }
 
             return filePath;
         },
         removeSiteDir (filePath) {
-            filePath = this.getFilePhrase(filePath);
+            let phrase = this.getFilePhrase(filePath);
 
-            return filePath.replace(this.$store.state.currentSite.siteDir, '');
+            if (typeof phrase !== 'string') {
+                return '';
+            }
+
+            return phrase.replace(this.$store.state.currentSite.siteDir, '');
         },
         regenerate () {
             if(this.regeneratingInProgress) {
@@ -116,7 +131,8 @@ export default {
             this.resultCssClass = {
                 'result': true,
                 'error': false,
-                'success': false
+                'success': false,
+                'warning': false
             };
 
             mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
@@ -149,12 +165,26 @@ export default {
                 });
 
                 mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
-                    this.resultCssClass = {
-                        'result': true,
-                        'error': false,
-                        'success': true
-                    };
-                    this.resultLabel = this.$t('tools.thumbnails.thumbnailsCreated');
+                    let brokenCount = (data && data.brokenFilesCount) || 0;
+
+                    if (brokenCount > 0) {
+                        this.resultCssClass = {
+                            'result': true,
+                            'error': false,
+                            'success': false,
+                            'warning': true
+                        };
+                        this.resultLabel = this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', { count: brokenCount });
+                    } else {
+                        this.resultCssClass = {
+                            'result': true,
+                            'error': false,
+                            'success': true,
+                            'warning': false
+                        };
+                        this.resultLabel = this.$t('tools.thumbnails.thumbnailsCreated');
+                    }
+
                     this.buttonStatus = '';
                     this.regeneratingInProgress = false;
                 });
@@ -169,7 +199,8 @@ export default {
             this.resultCssClass = {
                 'result': true,
                 'error': false,
-                'success': false
+                'success': false,
+                'warning': false
             };
             this.resultLabel = this.$t('tools.thumbnails.thumbnailsRegenerationCancelled');
             this.buttonStatus = '';
@@ -212,6 +243,10 @@ export default {
             &:first-child {
                 border-top: none;
             }
+
+            &-error {
+                color: var(--warning);
+            }
         }
     }
 
@@ -229,6 +264,10 @@ export default {
 
         &.success {
             color: var(--success);
+        }
+
+        &.warning {
+            color: var(--warning);
         }
     }
 }

@@ -1374,7 +1374,9 @@
             "regeneratingThumbnails": "Regenerowanie miniatur...",
             "skipRegeneration": "Pomiń regenrację",
             "themeOrThumbnailsSettingsChanged": "Twój motyw lub ustawienia miniatur zostały zmienione.",
+            "imageUnprocessable": "Nie udało się przetworzyć obrazu: {file}",
             "thumbnailsCreated": "Wszystkie miniatury zostały utworzone.",
+            "thumbnailsCreatedWithErrors": "Miniatury zostały utworzone, ale {count} obraz(ów) nie udało się przetworzyć. Szczegóły w logach.",
             "thumbnailsRegenerationCancelled": "Regeneracja miniatur została anulowana."
         },
         "wpImport": {

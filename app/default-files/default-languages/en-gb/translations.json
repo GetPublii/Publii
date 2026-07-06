@@ -1377,7 +1377,9 @@
             "regeneratingThumbnails": "Regenerating thumbnails...",
             "skipRegeneration": "Skip regeneration",
             "themeOrThumbnailsSettingsChanged": "Your theme or thumbnail settings have been changed.",
+            "imageUnprocessable": "Could not process image: {file}",
             "thumbnailsCreated": "All thumbnails have been created.",
+            "thumbnailsCreatedWithErrors": "Thumbnails have been created, but {count} image(s) could not be processed. Check the logs for details.",
             "thumbnailsRegenerationCancelled": "Thumbnails regeneration cancelled."
         },
         "wpImport": {

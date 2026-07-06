@@ -326,6 +326,8 @@ class Image extends Model {
         }
 
         let promises = [];
+        let brokenFileFlag = { broken: false };
+        let previousPromise = Promise.resolve();
 
         // create responsive images for each size
         for (let name of dimensions) {
@@ -390,11 +392,20 @@ class Image extends Model {
                 webpLossless
             };
 
-            let result = this.processImage(job).catch(err => {
-                console.log('Image processing failed for', originalPath, err && err.message);
+            let result = previousPromise.then(() => {
+                if (brokenFileFlag.broken) {
+                    return { error: 'IMAGE_UNPROCESSABLE', file: originalPath };
+                }
+
+                return this.processImage(job).catch(err => {
+                    brokenFileFlag.broken = true;
+                    console.log('Image unprocessable (both sharp and jimp failed):', originalPath, '-', err && err.message);
+                    return { error: 'IMAGE_UNPROCESSABLE', file: originalPath, message: err && err.message };
+                });
             });
 
             promises.push(result);
+            previousPromise = result;
         }
 
         return promises;
