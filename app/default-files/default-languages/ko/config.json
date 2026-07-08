@@ -1,0 +1,8 @@
+{
+	"name": "Korean - default",
+	"version": "1.0.0",
+	"author": "moduvoice",
+	"publiiSupport": "0.47.0",
+    "momentLocale": "ko",
+    "wysiwygTranslation": true
+}
