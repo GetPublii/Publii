@@ -122,7 +122,7 @@ class Files {
         let outputPath = path.join(outputDir, themeConfig.files.assetsPath, 'dynamic');
 
         // Create the dynamic assets directory or clean up it
-        fs.emptyDirSync(outputPath);
+        UtilsHelper.emptyDirRecursively(outputPath);
 
         // Create list of files to copy
         let filesToCopy = [];
@@ -206,11 +206,11 @@ class Files {
         }
 
         if (UtilsHelper.dirExists(path.join(basePathOutput, 'tags', 'temp'))) {
-            fs.removeSync(path.join(basePathOutput, 'tags', 'temp'));
+            UtilsHelper.removePathRecursively(path.join(basePathOutput, 'tags', 'temp'));
         }
 
         if (UtilsHelper.dirExists(path.join(basePathOutput, 'authors', 'temp'))) {
-            fs.removeSync(path.join(basePathOutput, 'authors', 'temp'));
+            UtilsHelper.removePathRecursively(path.join(basePathOutput, 'authors', 'temp'));
         }
 
         DiffCopy.removeUnusedItemFolders(postIDs, pageIDs, path.join(basePathOutput, 'posts'));
@@ -234,7 +234,7 @@ class Files {
 
         // if media/plugins dir exists - remove it
         if (UtilsHelper.dirExists(path.join(basePathOutput, 'plugins'))) {
-            fs.removeSync(path.join(basePathOutput, 'plugins'));
+            UtilsHelper.removePathRecursively(path.join(basePathOutput, 'plugins'));
         }
 
         // put plugin files if necessary

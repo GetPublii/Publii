@@ -443,7 +443,7 @@ class Renderer {
                     continue;
                 }
 
-                fs.rmSync(path.join(this.outputDir, file), { recursive: true });
+                UtilsHelper.removePathRecursively(path.join(this.outputDir, file));
             }
         } else {
             fs.mkdirSync(this.outputDir, { recursive: true });
@@ -453,7 +453,7 @@ class Renderer {
                 let result = await gitClient.prepareToSync(this.siteConfig, this.siteName, this.outputDir, this.sendProgress);
 
                 if (result === 'merge-error') {
-                    fs.rmSync(path.join(this.outputDir, '.git'), { recursive: true });
+                    UtilsHelper.removePathRecursively(path.join(this.outputDir, '.git'));
                     console.log('[i] Git Debug: remove .git folder due merge errors');
                     await gitClient.prepareToSync(this.siteConfig, this.siteName, this.outputDir, this.sendProgress);
                 }

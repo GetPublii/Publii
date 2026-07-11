@@ -87,6 +87,34 @@ class UtilsHelper {
     }
 
     /*
+     * Recursively remove a file or directory with retries.
+     */
+    static removePathRecursively(targetPath) {
+        fs.rmSync(targetPath, { 
+            recursive: true, 
+            force: true, 
+            maxRetries: 5, 
+            retryDelay: 200 
+        });
+    }
+
+    /*
+     * Empty a directory by removing it (with retries) and recreating it.
+     */
+    static emptyDirRecursively(dirPath) {
+        fs.rmSync(dirPath, { 
+            recursive: true, 
+            force: true, 
+            maxRetries: 5, 
+            retryDelay: 200 
+        });
+        
+        fs.mkdirSync(dirPath, { 
+            recursive: true 
+        });
+    }
+
+    /*
      *
      *  Responsive images helper functions
      *

@@ -55,7 +55,7 @@ class ManualDeployment {
 
         if (outputPath !== '') {
             if (Utils.dirExists(outputPath)) {
-                fs.emptyDirSync(outputPath);
+                Utils.emptyDirRecursively(outputPath);
             }
 
             fs.copy(this.deployment.inputDir, outputPath, {
