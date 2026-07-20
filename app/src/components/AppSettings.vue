@@ -56,13 +56,6 @@
                         id="images-resize-engine"
                         :items="imageResizeEngines"
                         v-model="imageResizeEnginesSelected"></dropdown>
-                    <p
-                        v-if="showWebpWarning"
-                        slot="note" 
-                        class="msg msg-icon msg-alert">
-                        <icon name="warning" customWidth="28" customHeight="28" />
-                        <span>{{ $t('settings.imageResizeEngineWarning') }}</span>
-                    </p>
                     <small
                         slot="note"
                         class="note">
@@ -570,9 +563,6 @@ export default {
                 'var(--font-base)': this.$t('settings.editorFontFamilySansSerif'),
                 'var(--font-serif)': this.$t('settings.editorFontFamilySerif')
             };
-        },
-        showWebpWarning () {
-            return this.imageResizeEnginesSelected === 'jimp';
         },
         isSitesLocationExists () {
             return this.sitesLocationExists;

@@ -1825,14 +1825,6 @@
                                 v-model="advanced.forceWebp"
                                 slot="field" />
 
-                            <p
-                                v-if="advanced.forceWebp && $store.state.app.config.resizeEngine === 'jimp'"
-                                slot="note" 
-                                class="msg msg-icon msg-alert">
-                                <icon name="warning" customWidth="28" customHeight="28" />
-                                <span>{{ $t('settings.convertToWebpJimpWarning') }}</span>
-                            </p>
-
                             <small
                                 slot="note"
                                 class="note">
