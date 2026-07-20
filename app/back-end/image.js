@@ -13,6 +13,7 @@ const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const { Jimp } = require('jimp');
 const sharpQueue = require('./helpers/sharp-queue.js');
+const WebpHelper = require('./helpers/webp.js');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 
@@ -269,7 +270,7 @@ class Image extends Model {
             webpLossless = !!siteConfig.advanced.webpLossless;
         }
 
-        if (siteConfig?.advanced?.forceWebp && !this.shouldUseJimp()) {
+        if (siteConfig?.advanced?.forceWebp) {
             forceWebp = !!siteConfig.advanced.forceWebp;
         }
 
@@ -341,7 +342,7 @@ class Image extends Model {
             let destinationPath = fallbackDestinationPath;
             let shouldBeChangedToWebp = false;
 
-            if (!this.shouldUseJimp() && ['.png', '.jpg', '.jpeg'].indexOf(extLower) > -1) {
+            if (['.png', '.jpg', '.jpeg'].indexOf(extLower) > -1) {
                 shouldBeChangedToWebp = true;
             }
 
@@ -428,20 +429,29 @@ class Image extends Model {
     async processWithJimp(job) {
         const {
             originalPath,
+            destinationPath,
             fallbackDestinationPath,
             sourceExtension,
+            format,
             width,
             height,
             crop,
-            imagesQuality
+            forceWebp,
+            imagesQuality,
+            alphaQuality,
+            webpLossless
         } = job;
 
-        if (sourceExtension === '.webp') {
-            console.log('jimp cannot process webp source, skipping:', originalPath);
-            return;
-        }
+        let image;
 
-        let image = await Jimp.read(originalPath);
+        if (sourceExtension === '.webp') {
+            let source = await fs.readFile(originalPath);
+            let bitmap = await WebpHelper.decode(source);
+
+            image = Jimp.fromBitmap(bitmap);
+        } else {
+            image = await Jimp.read(originalPath);
+        }
 
         if (crop) {
             if (width === null || height === null) {
@@ -467,6 +477,18 @@ class Image extends Model {
             } else if (height) {
                 image.resize({ h: height });
             }
+        }
+
+        if (format === 'webp' || forceWebp) {
+            let buffer = await WebpHelper.encode(image.bitmap, {
+                quality: imagesQuality,
+                alpha_quality: alphaQuality,
+                lossless: webpLossless ? 1 : 0
+            });
+
+            await fs.writeFile(destinationPath, buffer);
+
+            return destinationPath;
         }
 
         await image.write(fallbackDestinationPath, { quality: imagesQuality });
@@ -510,10 +532,6 @@ class Image extends Model {
      */
     allowedImageExtension(extension) {
         let allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
-
-        if (this.shouldUseJimp()) {
-            allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
-        }
 
         return allowedExtensions.indexOf(extension) > -1;
     }
