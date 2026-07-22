@@ -11,7 +11,7 @@ const normalizePath = require('normalize-path');
 const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
-const { Jimp } = require('jimp');
+const getJimp = require('./helpers/jimp-webp.js');
 const sharpQueue = require('./helpers/sharp-queue.js');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
@@ -269,7 +269,7 @@ class Image extends Model {
             webpLossless = !!siteConfig.advanced.webpLossless;
         }
 
-        if (siteConfig?.advanced?.forceWebp && !this.shouldUseJimp()) {
+        if (siteConfig?.advanced?.forceWebp) {
             forceWebp = !!siteConfig.advanced.forceWebp;
         }
 
@@ -341,7 +341,7 @@ class Image extends Model {
             let destinationPath = fallbackDestinationPath;
             let shouldBeChangedToWebp = false;
 
-            if (!this.shouldUseJimp() && ['.png', '.jpg', '.jpeg'].indexOf(extLower) > -1) {
+            if (['.png', '.jpg', '.jpeg'].indexOf(extLower) > -1) {
                 shouldBeChangedToWebp = true;
             }
 
@@ -428,19 +428,17 @@ class Image extends Model {
     async processWithJimp(job) {
         const {
             originalPath,
-            fallbackDestinationPath,
-            sourceExtension,
+            destinationPath,
+            format,
             width,
             height,
             crop,
-            imagesQuality
+            imagesQuality,
+            alphaQuality,
+            webpLossless
         } = job;
 
-        if (sourceExtension === '.webp') {
-            console.log('jimp cannot process webp source, skipping:', originalPath);
-            return;
-        }
-
+        const Jimp = await getJimp();
         let image = await Jimp.read(originalPath);
 
         if (crop) {
@@ -469,9 +467,21 @@ class Image extends Model {
             }
         }
 
-        await image.write(fallbackDestinationPath, { quality: imagesQuality });
+        let writeOptions;
 
-        return fallbackDestinationPath;
+        if (format === 'webp') {
+            writeOptions = webpLossless
+                ? { lossless: 1 }
+                : { quality: imagesQuality, alphaQuality: alphaQuality };
+        } else if (format === 'png') {
+            writeOptions = {};
+        } else {
+            writeOptions = { quality: imagesQuality };
+        }
+
+        await image.write(destinationPath, writeOptions);
+
+        return destinationPath;
     }
 
     /*
@@ -510,10 +520,6 @@ class Image extends Model {
      */
     allowedImageExtension(extension) {
         let allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
-
-        if (this.shouldUseJimp()) {
-            allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
-        }
 
         return allowedExtensions.indexOf(extension) > -1;
     }

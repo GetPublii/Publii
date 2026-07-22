@@ -99,19 +99,22 @@ class UtilsHelper {
     }
 
     /*
-     * Empty a directory by removing it (with retries) and recreating it.
+     * Empty a directory by removing its contents
      */
     static emptyDirRecursively(dirPath) {
-        fs.rmSync(dirPath, { 
-            recursive: true, 
-            force: true, 
-            maxRetries: 5, 
-            retryDelay: 200 
-        });
-        
-        fs.mkdirSync(dirPath, { 
-            recursive: true 
-        });
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, {
+                recursive: true
+            });
+
+            return;
+        }
+
+        let entries = fs.readdirSync(dirPath);
+
+        for (let entry of entries) {
+            UtilsHelper.removePathRecursively(path.join(dirPath, entry));
+        }
     }
 
     /*

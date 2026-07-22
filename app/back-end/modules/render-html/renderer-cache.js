@@ -627,7 +627,7 @@ class RendererCache {
 
             if (typeof this.renderer.cachedItems.authors[authorID].authorViewConfig === 'object') {
                 let viewConfig = this.renderer.cachedItems.authors[authorID].authorViewConfig;
-                this.renderer.cachedItems.authors[authorID].authorViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer));
+                this.renderer.cachedItems.authors[authorID].authorViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer, true));
             }
         }
 
@@ -641,7 +641,7 @@ class RendererCache {
 
             if (typeof this.renderer.cachedItems.tags[tagID].tagViewConfig === 'object') {
                 let viewConfig = this.renderer.cachedItems.tags[tagID].tagViewConfig;
-                this.renderer.cachedItems.tags[tagID].tagViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer));
+                this.renderer.cachedItems.tags[tagID].tagViewConfig = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(viewConfig), this.renderer, true));
             }
         }
     }

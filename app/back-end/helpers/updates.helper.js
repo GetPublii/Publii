@@ -1,6 +1,6 @@
 const fs = require('fs');
 const FileHelper = require('./file.js');
-const https = require('https');
+const { net } = require('electron');
 
 class UpdatesHelper {
     constructor (config) {
@@ -19,20 +19,44 @@ class UpdatesHelper {
     }
 
     download () {
-        https.get(this.url, res => {
+        let request = net.request(this.url);
+
+        request.on('response', res => {
             let body = '';
 
-            res.on('data', chunk => { 
-                body += chunk; 
+            res.on('data', chunk => {
+                body += chunk;
             });
 
             res.on('end', () => {
+                if (res.statusCode < 200 || res.statusCode >= 300) {
+                    this.sendError(new Error('Unexpected response status: ' + res.statusCode));
+                    return;
+                }
+
+                let response = false;
+
+                try {
+                    response = JSON.parse(body);
+                } catch (e) {
+                    response = false;
+                }
+
+                if (!response) {
+                    this.sendError(new Error('Received malformed notifications data.'));
+                    return;
+                }
+
                 fs.writeFileSync(this.filePath, body, 'utf8');
                 this.handleResponse(body, true);
             });
-        }).on('error', (err) => {
+        });
+
+        request.on('error', err => {
             this.sendError(err);
         });
+
+        request.end();
     }
 
     sendError (err) {

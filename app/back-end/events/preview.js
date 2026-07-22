@@ -133,8 +133,13 @@ class PreviewEvents {
                         self.showPreview(site, mode);
                     }
                 } else {
-                    let errorDesc = 'core.rendering.renderingProcessCrashedMsg';
-                    let errorTitle = 'core.rendering.renderingProcessCrashed';
+                    let errorDesc = {
+                        translation: 'core.rendering.renderingProcessCrashedMsg'
+                    };
+
+                    let errorTitle = {
+                        translation: 'core.rendering.renderingProcessCrashed'
+                    };
 
                     if (data.result && data.result[0] && data.result[0].message) {
                         errorTitle = {

@@ -16,6 +16,22 @@ const path = require('path');
 const crypto = require('crypto');
 const normalizePath = require('normalize-path');
 
+// Wrapper to handle UNC paths on Windows only
+function normalizePathPreserveUNC (pathToNormalize) {
+    if (process.platform !== 'win32' || typeof pathToNormalize !== 'string') {
+        return normalizePath(pathToNormalize);
+    }
+
+    let isUNC = /^[\\/]{2}/.test(pathToNormalize);
+    let normalized = normalizePath(pathToNormalize);
+
+    if (isUNC && normalized.charAt(0) === '/' && normalized.charAt(1) !== '/') {
+        normalized = '/' + normalized;
+    }
+
+    return normalized;
+}
+
 if (typeof process.env.NODE_ENV === 'undefined') {
     process.env.NODE_ENV = 'production';
 }
@@ -145,7 +161,7 @@ electronApp.on('ready', function () {
 
     ipcMain.handle('publii-native-exists-sync', (event, pathToCheck) => fs.existsSync(pathToCheck));
     ipcMain.handle('publii-native-md5', (event, value) => crypto.createHash('md5').update(value).digest('hex'));
-    ipcMain.handle('publii-native-normalize-path', (event, pathToNormalize) => normalizePath(pathToNormalize));
+    ipcMain.handle('publii-native-normalize-path', (event, pathToNormalize) => normalizePathPreserveUNC(pathToNormalize));
     ipcMain.handle('publii-get-spellchecker-language', (event) => global.spellCheckerLanguage);
     ipcMain.handle('app-main-webview-search-find-in-page', (event, searchPhrase, searchConfig = null) => {
         if (searchConfig) {
