@@ -597,6 +597,13 @@ class App {
 
         if((/^darwin/).test(process.platform)) {
             windowParams.titleBarStyle = 'hidden';
+
+            // on macOS Tahoe (26) and newer fix position of the native traffic lights.
+            let macOSMajorVersion = parseInt(process.getSystemVersion().split('.')[0], 10);
+
+            if (macOSMajorVersion >= 26) {
+                windowParams.trafficLightPosition = { x: 12, y: 7 };
+            }
         }
 
         if((/^win/).test(process.platform)) {
