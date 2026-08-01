@@ -1,4 +1,6 @@
 const FileHelper = require('./../../../helpers/file.js');
+const Handlebars = require('handlebars');
+
 class Gdpr {
     static popupHtmlOutput (configuration, renderer) {
         let template = FileHelper.readFileSync(__dirname + '/../../../../default-files/gdpr-assets/template.html', 'utf8');
@@ -11,28 +13,30 @@ class Gdpr {
 
         for (let i = 0; i < configuration.groups.length; i++) {
             let description = configuration.groups[i].description;
+            let groupName = Handlebars.Utils.escapeExpression(configuration.groups[i].name);
+            let groupId = Handlebars.Utils.escapeExpression(configuration.groups[i].id);
 
             if (description.trim() === '') {
                 description = '';
             } else {
                 description = `<p class="pcb__group__txt">${configuration.groups[i].description}</p>`;
             }
-            
+
             if (configuration.groups[i].id === '-' || configuration.groups[i].id === '') {
                 groups += `<li class="pcb__group">
                     <details>
                         <summary class="pcb__group__title${description.trim() === '' ? ' no-desc' : ''}">
-                            ${configuration.groups[i].name}
+                            ${groupName}
                         </summary>
                         ${description}
                     </details>
                     <div class="pcb__popup__switch is-checked">
-                        <input 
-                            type="checkbox" 
+                        <input
+                            type="checkbox"
                             data-group-name=""
-                            id="pcb-group-${i}" 
+                            id="pcb-group-${i}"
                             checked>
-                        <label for="pcb-group-${i}">${configuration.groups[i].name}</label>
+                        <label for="pcb-group-${i}">${groupName}</label>
                     </div>
                 </li>`;
                 continue;
@@ -42,17 +46,17 @@ class Gdpr {
             <li class="pcb__group">
                 <details>
                     <summary class="pcb__group__title${description.trim() === '' ? ' no-desc' : ''}">
-                        ${configuration.groups[i].name}
+                        ${groupName}
                     </summary>
                     ${description}
                 </details>
                 <div class="pcb__popup__switch">
-                    <input 
+                    <input
                         type="checkbox"
-                        data-group-name="${configuration.groups[i].id}"
-                        id="${configuration.groups[i].id}-cookies" />
-                    <label for="${configuration.groups[i].id}-cookies">
-                        ${configuration.groups[i].name}
+                        data-group-name="${groupId}"
+                        id="${groupId}-cookies" />
+                    <label for="${groupId}-cookies">
+                        ${groupName}
                     </label>
                 </div>
             </li>`;
@@ -101,28 +105,28 @@ class Gdpr {
         let privacyPolicyLink = ``;
 
         if (Gdpr.getPrivacyPolicyUrl(configuration, renderer)) {
-            privacyPolicyLink = `<a href="${Gdpr.getPrivacyPolicyUrl(configuration, renderer)}">${configuration.privacyPolicyLinkLabel}</a>`;
+            privacyPolicyLink = `<a href="${Handlebars.Utils.escapeExpression(Gdpr.getPrivacyPolicyUrl(configuration, renderer))}">${Handlebars.Utils.escapeExpression(configuration.privacyPolicyLinkLabel)}</a>`;
         }
 
-        template = template.replace(/\{\{behaviour\}\}/gmi, configuration.behaviour);
-        template = template.replace(/\{\{behaviourLink\}\}/gmi, configuration.behaviourLink);
-        template = template.replace(/\{\{badgeLabel\}\}/gmi, configuration.badgeLabel);
+        template = template.replace(/\{\{behaviour\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.behaviour));
+        template = template.replace(/\{\{behaviourLink\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.behaviourLink));
+        template = template.replace(/\{\{badgeLabel\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.badgeLabel));
         template = template.replace(/\{\{bannerPositionCssClass\}\}/gmi, bannerPositionCssClass);
-        template = template.replace(/\{\{popupTitlePrimary\}\}/gmi, configuration.popupTitlePrimary);
+        template = template.replace(/\{\{popupTitlePrimary\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.popupTitlePrimary));
         template = template.replace(/\{\{popupDesc\}\}/gmi, configuration.popupDesc);
         template = template.replace(/\{\{privacyPolicyLink\}\}/gmi, privacyPolicyLink);
-        template = template.replace(/\{\{advancedConfigurationLinkLabel\}\}/gmi, configuration.advancedConfigurationLinkLabel);
-        template = template.replace(/\{\{rejectButtonLabel\}\}/gmi, configuration.popupRejectButtonLabel);
-        template = template.replace(/\{\{saveButtonLabel\}\}/gmi, configuration.saveButtonLabel);
-        template = template.replace(/\{\{advancedConfigurationTitle\}\}/gmi, configuration.advancedConfigurationTitle);
+        template = template.replace(/\{\{advancedConfigurationLinkLabel\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.advancedConfigurationLinkLabel));
+        template = template.replace(/\{\{rejectButtonLabel\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.popupRejectButtonLabel));
+        template = template.replace(/\{\{saveButtonLabel\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.saveButtonLabel));
+        template = template.replace(/\{\{advancedConfigurationTitle\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.advancedConfigurationTitle));
         template = template.replace(/\{\{advancedConfigurationDescription\}\}/gmi, configuration.advancedConfigurationDescription);
         template = template.replace(/\{\{cbGroups\}\}/gmi, Gdpr.prepareCookieGroups(configuration));
-        template = template.replace(/\{\{advancedConfigurationAcceptButtonLabel\}\}/gmi, configuration.advancedConfigurationAcceptButtonLabel);
-        template = template.replace(/\{\{advancedConfigurationRejectButtonLabel\}\}/gmi, configuration.advancedConfigurationRejectButtonLabel);
-        template = template.replace(/\{\{advancedConfigurationSaveButtonLabel\}\}/gmi, configuration.advancedConfigurationSaveButtonLabel);
-        template = template.replace(/\{\{cookieSettingsTTL\}\}/gmi, configuration.cookieSettingsTTL);
-        template = template.replace(/\{\{cookieSettingsRevision\}\}/gmi, configuration.cookieSettingsRevision);
-        template = template.replace(/\{\{debugMode\}\}/gmi, configuration.debugMode);
+        template = template.replace(/\{\{advancedConfigurationAcceptButtonLabel\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.advancedConfigurationAcceptButtonLabel));
+        template = template.replace(/\{\{advancedConfigurationRejectButtonLabel\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.advancedConfigurationRejectButtonLabel));
+        template = template.replace(/\{\{advancedConfigurationSaveButtonLabel\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.advancedConfigurationSaveButtonLabel));
+        template = template.replace(/\{\{cookieSettingsTTL\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.cookieSettingsTTL));
+        template = template.replace(/\{\{cookieSettingsRevision\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.cookieSettingsRevision));
+        template = template.replace(/\{\{debugMode\}\}/gmi, Handlebars.Utils.escapeExpression(configuration.debugMode));
 
         return template;
     }

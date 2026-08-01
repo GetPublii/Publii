@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.47.6",
+  "version": "0.47.9",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -11,13 +11,13 @@
   "license": "GPL-3.0",
   "main": "app/main.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack --mode=development --progress --watch",
-    "prod": "cross-env NODE_ENV=production webpack --mode=production --progress",
-    "build": "node ./build/scripts/update-build-number.js && cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
-    "build2": "cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
+    "dev": "node_modules/.bin/cross-env NODE_ENV=development node_modules/.bin/webpack --mode=development --progress --watch",
+    "prod": "node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --mode=production --progress",
+    "build": "node ./build/scripts/update-build-number.js && node_modules/.bin/cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
+    "build2": "node_modules/.bin/cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
     "notarize": "xcrun notarytool submit ./dist/$npm_config_file --keychain-profile 'Publii' --wait",
-    "start": "electron app/main.js --enable-logging",
-    "test": "mocha app/back-end/**/*.spec.js --reporter dot",
+    "start": "node_modules/.bin/electron app/main.js --enable-logging",
+    "test": "node_modules/.bin/mocha app/back-end/**/*.spec.js --reporter dot",
     "prepare-editor": "npm run prepare-editor-css && npm run remove-vendor-dist-dir && npm run prepare-vendor-dist-dir && npm run copy-vendor-files",
     "remove-vendor-dist-dir": "rm -rf app/dist/vendor",
     "prepare-editor-css": "./node_modules/.bin/sass app/src/scss/editor/editor.scss app/dist/css/editor.css && ./node_modules/.bin/sass app/src/scss/editor/editor-options.scss app/dist/css/editor-options.css",
@@ -43,14 +43,13 @@
   "devDependencies": {
     "cross-env": "7.0.3",
     "css-loader": "6.8.1",
-    "electron": "39.8.9",
+    "electron": "41.10.2",
     "electron-builder": "26.8.1",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
     "mocha": "10.2.0",
     "node-abi": "4.28.0",
     "node-gyp": "12.2.0",
-    "node-loader": "2.0.0",
     "sass": "1.44",
     "sass-loader": "13.3.2",
     "vue-loader": "15.11.1",
@@ -61,10 +60,13 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "39.8.9",
+    "electronVersion": "41.10.2",
     "productName": "Publii",
     "copyright": "Copyright (C) 2016-2026 TidyCustoms. All rights reserved.",
     "asar": true,
+    "toolsets": {
+      "appimage": "1.0.2"
+    },
     "asarUnpack": [
       "*.+(dylib|node|dll|aff|dic)",
       "default-files/default-themes/**/*",
@@ -73,6 +75,7 @@
       "default-files/vendor/**/*",
       "**/node_modules/sharp/**/*",
       "**/node_modules/@img/**/*",
+      "**/node_modules/@jsquash/**/*",
       "node_modules/keytar/**/*",
       "node_modules/better-sqlite3/**/*"
     ],

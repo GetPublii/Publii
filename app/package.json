@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.47.6",
+  "version": "0.47.9",
   "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
@@ -25,31 +25,32 @@
   ],
   "homepage": "https://getpublii.com",
   "dependencies": {
-    "@aws-sdk/client-s3": "3.623.0",
-    "@gitbeaker/node": "35.8.1",
-    "@google-cloud/storage": "6.11.0",
+    "@aws-sdk/client-s3": "3.1054.0",
+    "@gitbeaker/rest": "43.8.0",
+    "@google-cloud/storage": "7.19.0",
+    "@jsquash/webp": "1.5.0",
     "@octokit/rest": "22.0.0",
     "adm-zip": "0.5.10",
     "archiver": "5.3.1",
-    "basic-ftp": "5.0.5",
+    "basic-ftp": "6.0.1",
     "better-sqlite3": "12.8.0",
     "clean-css": "5.3.2",
     "codemirror": "5.65.13",
     "codemirror-revisedsearch": "1.0.12",
     "count-files": "2.6.2",
-    "dompurify": "3.4.1",
+    "dompurify": "3.4.11",
     "easymde": "2.18.0",
     "fast-memoize": "2.5.2",
-    "fast-xml-parser": "4.4.1",
+    "fast-xml-parser": "5.8.0",
     "fs-extra": "11.1.1",
     "ftp": "0.3.10",
-    "handlebars": "4.7.8",
+    "handlebars": "4.7.9",
     "html-minifier": "4.0.0",
     "image-downloader": "4.3.0",
     "image-size": "1.0.2",
     "isbinaryfile": "5.0.0",
     "isomorphic-git": "1.33.1",
-    "jimp": "1.6.0",
+    "jimp": "1.6.1",
     "js-beautify": "1.15.4",
     "keytar": "7.9.0",
     "ls-all": "1.1.0",
@@ -77,7 +78,7 @@
     "vuex": "3.1.1"
   },
   "devDependencies": {
-    "electron": "39.8.9",
+    "electron": "41.10.2",
     "node-abi": "4.28.0"
   }
 }

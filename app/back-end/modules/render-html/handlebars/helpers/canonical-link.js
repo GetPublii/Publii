@@ -47,7 +47,7 @@ function canonicalLinkHelper(rendererInstance, Handlebars) {
             pageUrl = pageUrl + '/';
         }
 
-        let output = '<link rel="canonical" href="' + pageUrl + '">';
+        let output = '<link rel="canonical" href="' + Handlebars.escapeExpression(pageUrl) + '">';
 
         return new Handlebars.SafeString(output);
     });

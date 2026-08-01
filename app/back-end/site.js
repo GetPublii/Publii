@@ -275,7 +275,7 @@ class Site {
             let fullPath = path.join(mediaPath, catalog, 'responsive');
 
             // remove the files form dir or create dir if not exists
-            fs.emptyDirSync(fullPath);
+            UtilsHelper.emptyDirRecursively(fullPath);
 
             // Add gallery catalogs
             let galleryFullPath = path.join(mediaPath, catalog, 'gallery');
@@ -354,7 +354,8 @@ class Site {
             if(data.type === 'progress') {
                 sender.send('app-site-regenerate-thumbnails-progress', {
                     value: data.value,
-                    files: data.files
+                    files: data.files,
+                    brokenFilesCount: data.brokenFilesCount || 0
                 });
 
                 if(catalogs.length) {
@@ -369,7 +370,10 @@ class Site {
             }
 
             if (data.type === 'finished') {
-                sender.send('app-site-regenerate-thumbnails-success', true);
+                sender.send('app-site-regenerate-thumbnails-success', {
+                    brokenFilesCount: data.brokenFilesCount || 0,
+                    brokenFiles: data.brokenFiles || []
+                });
             }
         });
 
@@ -642,7 +646,7 @@ class Site {
         }
 
         if (fs.existsSync(destination)) {
-            fs.removeSync(destination);
+            UtilsHelper.removePathRecursively(destination);
         }
 
         fs.moveSync(source, destination);

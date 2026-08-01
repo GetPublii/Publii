@@ -47,19 +47,39 @@ class Utils {
         if (!Array.isArray(errorData) && errorData.message) {
             errorData = errorData.message;
         }
-        
+
+        let toText = (value) => {
+            if (value === null || typeof value === 'undefined') {
+                return '';
+            }
+
+            if (typeof value === 'string') {
+                return value;
+            }
+
+            if (typeof value === 'object' && typeof value.message === 'string') {
+                return value.message;
+            }
+
+            try {
+                return JSON.stringify(value);
+            } catch (e) {
+                return String(value);
+            }
+        };
+
         if (returnText) {
             for (let i = 0; i < errorData.length; i++) {
                 if (i > 0) {
                     output += "\n";
                 }
 
-                output += errorData[i].message + "\n" + errorData[i].desc + "\n\n";
+                output += toText(errorData[i].message) + "\n" + toText(errorData[i].desc) + "\n\n";
             }
         } else {
             for (let i = 0; i < errorData.length; i++) {
-                let preparedDesc = errorData[i].desc.replace(/\</gmi, '&lt;').replace(/\>/gmi, '&gt;');
-                output += '<strong>' + errorData[i].message + '</strong><pre>' + preparedDesc + '</pre>';
+                let preparedDesc = toText(errorData[i].desc).replace(/\</gmi, '&lt;').replace(/\>/gmi, '&gt;');
+                output += '<strong>' + toText(errorData[i].message) + '</strong><pre>' + preparedDesc + '</pre>';
             }
         }
 

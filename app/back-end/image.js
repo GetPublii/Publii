@@ -4,7 +4,6 @@
 
 const FileHelper = require('./helpers/file.js');
 const fs = require('fs-extra');
-const os = require('os');
 const path = require('path');
 const Model = require('./model.js');
 const sizeOf = require('image-size');
@@ -12,14 +11,10 @@ const normalizePath = require('normalize-path');
 const Themes = require('./themes.js');
 const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
-const { Jimp } = require('jimp');
+const getJimp = require('./helpers/jimp-webp.js');
+const sharpQueue = require('./helpers/sharp-queue.js');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
-let sharp = require('sharp');
-// Reduce concurrency on Linux systems to avoid crashes
-if (os.platform() === 'linux') {
-    sharp.concurrency(1);
-}
 
 class Image extends Model {
     constructor(appInstance, imageData) {
@@ -274,7 +269,7 @@ class Image extends Model {
             webpLossless = !!siteConfig.advanced.webpLossless;
         }
 
-        if (siteConfig?.advanced?.forceWebp && !this.shouldUseJimp()) {
+        if (siteConfig?.advanced?.forceWebp) {
             forceWebp = !!siteConfig.advanced.forceWebp;
         }
 
@@ -331,6 +326,8 @@ class Image extends Model {
         }
 
         let promises = [];
+        let brokenFileFlag = { broken: false };
+        let previousPromise = Promise.resolve();
 
         // create responsive images for each size
         for (let name of dimensions) {
@@ -339,11 +336,12 @@ class Image extends Model {
             let cropImage = dimensionsConfig[name].crop;
             let filename = path.parse(originalPath).name;
             let extension = path.parse(originalPath).ext;
-            let destinationPath = path.join(targetImagesDir, filename + '-' + name + extension);
-            let result;
+            let extLower = extension.toLowerCase();
+            let fallbackDestinationPath = path.join(targetImagesDir, filename + '-' + name + extension);
+            let destinationPath = fallbackDestinationPath;
             let shouldBeChangedToWebp = false;
 
-            if (!this.shouldUseJimp() && ['.png', '.jpg', '.jpeg'].indexOf(extension.toLowerCase()) > -1) {
+            if (['.png', '.jpg', '.jpeg'].indexOf(extLower) > -1) {
                 shouldBeChangedToWebp = true;
             }
 
@@ -366,181 +364,124 @@ class Image extends Model {
             if (finalHeight === 'auto') {
                 finalHeight = null;
             }
-            
+
             if (finalWidth === 'auto') {
                 finalWidth = null;
             }
 
-            if (cropImage) {
-                if (this.shouldUseJimp()) {
-                    result = new Promise (async (resolve, reject) => {
-                        try {
-                            let image = await Jimp.read(originalPath);
-                            console.log('JIMP COVER', finalWidth, ' x ', finalHeight);
+            let outputFormat = 'jpeg';
 
-                            if (finalWidth === null || finalHeight === null) {
-                                let resizeOptions = {};
-                                if (finalWidth !== null) {
-                                    resizeOptions.w = finalWidth;
-                                }
-
-                                if (finalHeight !== null) {
-                                    resizeOptions.h = finalHeight;
-                                }
-
-                                image.resize(resizeOptions);
-                                await image.write(destinationPath, { quality: imagesQuality });
-                                resolve(destinationPath);
-                            } else {
-                                image.cover({ w: finalWidth, h: finalHeight });
-                                await image.write(destinationPath, { quality: imagesQuality });
-                                resolve(destinationPath);
-                            }
-                        } catch (err) {
-                            console.log(err);
-                            reject(err);
-                        }
-                    });
-                } else {
-                    result = new Promise ((resolve, reject) => {
-                        if (extension.toLowerCase() === '.png' && !forceWebp) {
-                            sharp(originalPath)
-                                .withMetadata()
-                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .toBuffer()
-                                .then(function (outputBuffer) {
-                                    let wstream = fs.createWriteStream(destinationPath);
-                                    wstream.write(outputBuffer);
-                                    wstream.end();
-
-                                    resolve(destinationPath);
-                                }).catch(err => reject(err))
-                        } else if (extension.toLowerCase() === '.webp' || (forceWebp && shouldBeChangedToWebp)) {
-                            let webpConfig = {
-                                quality: imagesQuality,
-                                alphaQuality: alphaQuality,
-                            };
-
-                            if (webpLossless) {
-                                webpConfig = {
-                                    lossless: true
-                                };
-                            }
-
-                            sharp(originalPath)
-                                .autoOrient()
-                                .withMetadata()
-                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .webp(webpConfig)
-                                .toBuffer()
-                                .then(function (outputBuffer) {
-                                    let wstream = fs.createWriteStream(destinationPath);
-                                    wstream.write(outputBuffer);
-                                    wstream.end();
-
-                                    resolve(destinationPath);
-                                }).catch(err => reject(err))
-                        } else {
-                            sharp(originalPath)
-                                .withMetadata()
-                                .resize(finalWidth, finalHeight, { withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .jpeg({
-                                    quality: imagesQuality
-                                })
-                                .toBuffer()
-                                .then(function (outputBuffer) {
-                                    let wstream = fs.createWriteStream(destinationPath);
-                                    wstream.write(outputBuffer);
-                                    wstream.end();
-
-                                    resolve(destinationPath);
-                                }).catch(err => reject(err))
-                        }
-                    }).catch(err => console.log(err));
-                }
-            } else {
-                if (this.shouldUseJimp()) {
-                    result = new Promise (async (resolve, reject) => {
-                        try {
-                            const image = await Jimp.read(originalPath);
-                            console.log('JIMP RESIZE/SCALE TO FIT', finalWidth, ' x ', finalHeight);
-
-                            if (finalWidth && finalHeight) {
-                                image.scaleToFit({ w: finalWidth, h: finalHeight });
-                            } else if (finalWidth) {
-                                image.resize({ w: finalWidth });
-                            } else if (finalHeight) {
-                                image.resize({ h: finalHeight });
-                            }
-
-                            await image.write(destinationPath, { quality: imagesQuality });
-                            
-                            resolve(destinationPath);
-                        } catch (err) {
-                            console.error(err);
-                            reject(err);
-                        }
-                    });
-                } else {
-                    result = new Promise ((resolve, reject) => {
-                        if (extension.toLowerCase() === '.png' && !forceWebp) {
-                            sharp(originalPath)
-                                .withMetadata()
-                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .toBuffer()
-                                .then(function (outputBuffer) {
-                                    let wstream = fs.createWriteStream(destinationPath);
-                                    wstream.write(outputBuffer);
-                                    wstream.end();
-                                    resolve(destinationPath);
-                                }).catch(err => reject(err));
-                        } else if (extension.toLowerCase() === '.webp' || (forceWebp && shouldBeChangedToWebp)) {
-                            let webpConfig = {
-                                quality: imagesQuality,
-                                alphaQuality: alphaQuality,
-                            };
-
-                            if (webpLossless) {
-                                webpConfig = {
-                                    lossless: true
-                                };
-                            }
-
-                            sharp(originalPath)
-                                .autoOrient()
-                                .withMetadata()
-                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .webp(webpConfig)
-                                .toBuffer()
-                                .then(function (outputBuffer) {
-                                    let wstream = fs.createWriteStream(destinationPath);
-                                    wstream.write(outputBuffer);
-                                    wstream.end();
-                                    resolve(destinationPath);
-                                }).catch(err => reject(err));
-                        } else {
-                            sharp(originalPath)
-                                .withMetadata()
-                                .resize(finalWidth, finalHeight, { fit: 'inside', withoutEnlargement: true, fastShrinkOnLoad: false })
-                                .jpeg({
-                                    quality: imagesQuality
-                                })
-                                .toBuffer()
-                                .then(function (outputBuffer) {
-                                    let wstream = fs.createWriteStream(destinationPath);
-                                    wstream.write(outputBuffer);
-                                    wstream.end();
-                                    resolve(destinationPath);
-                                }).catch(err => reject(err));
-                        }
-                    }).catch(err => console.log(err));
-                }
+            if (extLower === '.png' && !forceWebp) {
+                outputFormat = 'png';
+            } else if (extLower === '.webp' || (forceWebp && shouldBeChangedToWebp)) {
+                outputFormat = 'webp';
             }
 
+            let job = {
+                originalPath,
+                destinationPath,
+                fallbackDestinationPath,
+                sourceExtension: extLower,
+                format: outputFormat,
+                width: finalWidth,
+                height: finalHeight,
+                crop: !!cropImage,
+                forceWebp,
+                imagesQuality,
+                alphaQuality,
+                webpLossless
+            };
+
+            let result = previousPromise.then(() => {
+                if (brokenFileFlag.broken) {
+                    return { error: 'IMAGE_UNPROCESSABLE', file: originalPath };
+                }
+
+                return this.processImage(job).catch(err => {
+                    brokenFileFlag.broken = true;
+                    console.log('Image unprocessable (both sharp and jimp failed):', originalPath, '-', err && err.message);
+                    return { error: 'IMAGE_UNPROCESSABLE', file: originalPath, message: err && err.message };
+                });
+            });
+
             promises.push(result);
+            previousPromise = result;
         }
 
         return promises;
+    }
+
+    processImage(job) {
+        if (this.shouldUseJimp() || !sharpQueue.isAvailable()) {
+            return this.processWithJimp(job);
+        }
+
+        return sharpQueue.process(job).catch(err => {
+            console.log('Sharp failed, falling back to jimp for', job.originalPath, '-', err && err.message);
+            return this.processWithJimp(job);
+        });
+    }
+
+    /*
+     * Process image with JIMP
+     */
+    async processWithJimp(job) {
+        const {
+            originalPath,
+            destinationPath,
+            format,
+            width,
+            height,
+            crop,
+            imagesQuality,
+            alphaQuality,
+            webpLossless
+        } = job;
+
+        const Jimp = await getJimp();
+        let image = await Jimp.read(originalPath);
+
+        if (crop) {
+            if (width === null || height === null) {
+                let resizeOptions = {};
+
+                if (width !== null) {
+                    resizeOptions.w = width;
+                }
+
+                if (height !== null) {
+                    resizeOptions.h = height;
+                }
+
+                image.resize(resizeOptions);
+            } else {
+                image.cover({ w: width, h: height });
+            }
+        } else {
+            if (width && height) {
+                image.scaleToFit({ w: width, h: height });
+            } else if (width) {
+                image.resize({ w: width });
+            } else if (height) {
+                image.resize({ h: height });
+            }
+        }
+
+        let writeOptions;
+
+        if (format === 'webp') {
+            writeOptions = webpLossless
+                ? { lossless: 1 }
+                : { quality: imagesQuality, alphaQuality: alphaQuality };
+        } else if (format === 'png') {
+            writeOptions = {};
+        } else {
+            writeOptions = { quality: imagesQuality };
+        }
+
+        await image.write(destinationPath, writeOptions);
+
+        return destinationPath;
     }
 
     /*
@@ -579,10 +520,6 @@ class Image extends Model {
      */
     allowedImageExtension(extension) {
         let allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
-
-        if (this.shouldUseJimp()) {
-            allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
-        }
 
         return allowedExtensions.indexOf(extension) > -1;
     }

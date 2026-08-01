@@ -210,7 +210,7 @@ class App {
                     // If app theme is newer version than the existing one
                     if(compare(appThemeData.version, userThemeData.version) === 1) {
                         // Remove all files from the theme dir
-                        fs.emptyDirSync(path.join(userThemesPath, file));
+                        Utils.emptyDirRecursively(path.join(userThemesPath, file));
 
                         // Copy updated theme files
                         fs.copySync(
@@ -264,7 +264,9 @@ class App {
 
         // Open DB for this site if not already open
         if (!this.dbMap.has(site)) {
-            this.dbMap.set(site, new DBUtils(new Database(dbPath)));
+            const db = new DBUtils(new Database(dbPath));
+            db.exec(`CREATE INDEX IF NOT EXISTS posts_additional_data__post_id_key ON posts_additional_data(post_id, key);`);
+            this.dbMap.set(site, db);
         }
 
         // Register site lock for this window
@@ -626,6 +628,13 @@ class App {
 
         if ((/^darwin/).test(process.platform)) {
             windowParams.titleBarStyle = 'hidden';
+
+            // on macOS Tahoe (26) and newer fix position of the native traffic lights.
+            let macOSMajorVersion = parseInt(process.getSystemVersion().split('.')[0], 10);
+
+            if (macOSMajorVersion >= 26) {
+                windowParams.trafficLightPosition = { x: 12, y: 7 };
+            }
         }
 
         if ((/^win/).test(process.platform)) {

@@ -140,6 +140,7 @@ class Deployment {
     prepareLocalFilesList () {
         let tempFileList = this.readDirRecursiveSync(this.inputDir);
         let fileList = [];
+        this.binaryPaths = new Set();
 
         for (let filePath of tempFileList) {
             if (filePath === '.git') {
@@ -184,6 +185,7 @@ class Deployment {
             let fileMD5 = false;
 
             if (isBinaryFileSync(path.join(this.inputDir, filePath))) {
+                this.binaryPaths.add(filePath);
                 let stats = fs.statSync(path.join(this.inputDir, filePath));
                 // below operations are required for backward-compatibility with previously used md5 module
                 // it differently handled integer values
@@ -294,9 +296,25 @@ class Deployment {
      */
     continueSync (remoteFiles) {
         let localFiles = FileHelper.readFileSync(path.join(this.inputDir, 'files.publii.json'), 'utf8');
-        
+
         if (localFiles) {
             localFiles = JSON.parse(localFiles);
+        }
+
+        let skipDirectories = this.siteConfig.deployment.protocol === 'google-cloud' ||
+                              this.siteConfig.deployment.protocol === 'gitlab-pages';
+
+        let localByPath = new Map();
+        for (let localFile of localFiles) {
+            localByPath.set(localFile.path, localFile);
+        }
+
+        let remoteByPath = null;
+        if (remoteFiles) {
+            remoteByPath = new Map();
+            for (let remoteFile of remoteFiles) {
+                remoteByPath.set(remoteFile.path, remoteFile);
+            }
         }
 
         // Detect files to remove
@@ -304,28 +322,18 @@ class Deployment {
 
         if (remoteFiles) {
             for (let remoteFile of remoteFiles) {
-                let fileFounded = false;
-
-                for (let localFile of localFiles) {
-                    if (localFile.path === remoteFile.path) {
-                        fileFounded = true;
-                        break;
-                    }
+                if (localByPath.has(remoteFile.path)) {
+                    continue;
                 }
 
-                if (!fileFounded) {
-                    if (
-                        (this.siteConfig.deployment.protocol === 'google-cloud' || this.siteConfig.deployment.protocol === 'gitlab-pages') &&
-                        remoteFile.type === 'directory'
-                    ) {
-                        continue;
-                    }
-
-                    filesToRemove.push({
-                        path: remoteFile.path,
-                        type: remoteFile.type
-                    });
+                if (skipDirectories && remoteFile.type === 'directory') {
+                    continue;
                 }
+
+                filesToRemove.push({
+                    path: remoteFile.path,
+                    type: remoteFile.type
+                });
             }
         }
 
@@ -333,36 +341,22 @@ class Deployment {
         let filesToUpload = [];
 
         for (let localFile of localFiles) {
-            let fileShouldBeUploaded = true;
+            if (remoteByPath) {
+                let remoteMatch = remoteByPath.get(localFile.path);
 
-            if (remoteFiles) {
-                for (let remoteFile of remoteFiles) {
-                    if(
-                        localFile.path === remoteFile.path &&
-                        localFile.md5 === remoteFile.md5
-                    ) {
-                        fileShouldBeUploaded = false;
-                        break;
-                    }
-                }
-            }
-
-            if (fileShouldBeUploaded) {
-                if (
-                    (
-                        this.siteConfig.deployment.protocol === 'google-cloud' || 
-                        this.siteConfig.deployment.protocol === 'gitlab-pages'
-                    ) &&
-                    localFile.type === 'directory'
-                ) {
+                if (remoteMatch && remoteMatch.md5 === localFile.md5) {
                     continue;
                 }
-
-                filesToUpload.push({
-                    path: localFile.path,
-                    type: localFile.type
-                });
             }
+
+            if (skipDirectories && localFile.type === 'directory') {
+                continue;
+            }
+
+            filesToUpload.push({
+                path: localFile.path,
+                type: localFile.type
+            });
         }
 
         this.filesToRemove = filesToRemove;
@@ -418,11 +412,11 @@ class Deployment {
             }
 
             // Images will be uploaded at the end
-            if (isBinaryFileSync(path.join(this.inputDir, fileA.path))) {
+            if (this.binaryPaths.has(fileA.path)) {
                 return -1;
             }
 
-            if (isBinaryFileSync(path.join(this.inputDir, fileB.path))) {
+            if (this.binaryPaths.has(fileB.path)) {
                 return 1;
             }
 

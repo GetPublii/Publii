@@ -12,7 +12,7 @@ function gdprScriptBlockerHelper(rendererInstance, Handlebars) {
         let output  = 'text/javascript';
 
         if (rendererInstance.siteConfig.advanced.gdpr.enabled) {
-            output = 'gdpr-blocker/' + groupName;
+            output = 'gdpr-blocker/' + Handlebars.escapeExpression(groupName);
         }
 
         return new Handlebars.SafeString(output);

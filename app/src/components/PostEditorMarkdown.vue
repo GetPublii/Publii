@@ -112,7 +112,10 @@ export default {
                 toolbar: false,
                 placeholder: this.$t('editor.startWriting'),
                 spellChecker: false,
+                nativeSpellcheck: !!this.$store.state.currentSite.config.spellchecking,
+                inputStyle: this.$store.state.currentSite.config.spellchecking ? 'contenteditable' : 'textarea',
                 promptURLs: true,
+                autoDownloadFontAwesome: false,
                 shortcuts: {
                     toggleHeadingSmaller: this.isMac ? null : 'Ctrl-H'
                 }

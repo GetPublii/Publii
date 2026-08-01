@@ -102,15 +102,15 @@
             </collection-header>
 
             <collection-row
-                v-for="(item, index) in items"
+                v-for="item in renderedItems"
                 slot="content"
-                :key="'collection-row-' + index">
+                :key="'collection-row-' + item.id">
                 <collection-cell>
                     <checkbox
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection"
-                        :key="'collection-row-checkbox-' + index" />
+                        :key="'collection-row-checkbox-' + item.id" />
                 </collection-cell>
 
                 <collection-cell type="titles">
@@ -150,6 +150,13 @@
                     {{ item.id }}
                 </collection-cell>
             </collection-row>
+
+            <div
+                v-if="items.length > renderLimit"
+                ref="loadMoreSentinel"
+                slot="content"
+                class="load-more-sentinel">
+            </div>
         </collection>
 
         <empty-state
@@ -199,10 +206,14 @@ export default {
             filterValue: '',
             orderBy: this.$store.state.ordering.tags.orderBy,
             order: this.$store.state.ordering.tags.order,
-            selectedItems: []
+            selectedItems: [],
+            renderLimit: 100
         };
     },
     watch: {
+        filterValue () {
+            this.renderLimit = 100;
+        },
         editorVisible (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.formAnimation = true;
@@ -226,6 +237,9 @@ export default {
 
                 return item;
             });
+        },
+        renderedItems () {
+            return this.items.slice(0, this.renderLimit);
         },
         hasTags: function() {
             return this.$store.state.currentSite.tags && !!this.$store.state.currentSite.tags.length;
@@ -259,6 +273,13 @@ export default {
         showTagSlugs () {
             return this.$store.state.app.config.showPostSlugs;
         }
+    },
+    created () {
+        this.loadMoreObserver = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                this.renderLimit += 100;
+            }
+        });
     },
     beforeMount () {
         mainProcessAPI.send('app-tags-load', {
@@ -298,8 +319,20 @@ export default {
                 this.saveOrdering(order[0], order[1]);
             }
         });
+
+        this.$nextTick(this.observeLoadMoreSentinel);
+    },
+    updated () {
+        this.observeLoadMoreSentinel();
     },
     methods: {
+        observeLoadMoreSentinel () {
+            this.loadMoreObserver.disconnect();
+
+            if (this.$refs.loadMoreSentinel) {
+                this.loadMoreObserver.observe(this.$refs.loadMoreSentinel);
+            }
+        },
         addTag () {
             this.$bus.$on('show-tag-item-editor', () => ({
                 id: 0,
@@ -418,6 +451,7 @@ export default {
         }
     },
     beforeDestroy () {
+        this.loadMoreObserver.disconnect();
         this.$bus.$off('tags-filter-value-changed');
         this.$bus.$off('hide-tag-item-editor');
         this.$bus.$off('show-tag-item-editor');
@@ -427,6 +461,11 @@ export default {
 
 <style lang="scss" scoped>
 @import '../scss/variables.scss';
+
+.load-more-sentinel {
+    grid-column: 1 / -1;
+    height: 1px;
+}
 
 .content {
     overflow-x: hidden!important;

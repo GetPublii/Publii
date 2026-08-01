@@ -1,85 +1,75 @@
-export default (state, page, filterValue) => {
+export default (filterValue, lookups) => {
     filterValue = filterValue.toLowerCase();
-    page = JSON.parse(JSON.stringify(page));
-    page.title = page.title.toLowerCase();
-    page.slug = page.slug.toLowerCase();
-    let deletedPagesIDs = state.currentSite.pages.filter(page => page.status.indexOf('trashed') > -1).map(page => page.id);
 
     // Check for author
     if (filterValue.indexOf('author:') === 0) {
         let authorToFind = filterValue.replace('author:', '');
 
-        let results = state.currentSite.pagesAuthors.filter(pageAuthor => {
-            return  pageAuthor.pageID === page.id && 
-                    deletedPagesIDs.indexOf(pageAuthor.pageID) === -1 && 
-                    pageAuthor.authorName.toLowerCase() === authorToFind;
-        });
+        return page => {
+            if (page.status.indexOf('trashed') > -1) {
+                return false;
+            }
 
-        if(results.length) {
-            return true;
-        }
-
-        return false;
+            let authorName = lookups.pagesAuthors.get(page.id);
+            return !!authorName && authorName.toLowerCase() === authorToFind;
+        };
     }
 
     let searchPhrase = filterValue.replace('is:published', '')
                                   .replace('is:trashed', '')
                                   .replace('is:draft', '')
-                                  .trim();
-    searchPhrase = searchPhrase.toLowerCase();
+                                  .trim()
+                                  .toLowerCase();
 
-    searchPhrase = searchPhrase.toLowerCase();
+    let isPublishedFilter = filterValue.indexOf('is:published') === 0;
+    let isTrashedFilter = filterValue.indexOf('is:trashed') === 0;
+    let isDraftFilter = filterValue.indexOf('is:draft') === 0;
+    let emptyFilter = filterValue.trim() === '';
 
-    // Check for published pages
-    if(
-        filterValue.indexOf('is:published') === 0 &&
-        page.status.indexOf('draft') === -1 &&
-        page.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return page.title.indexOf(searchPhrase) > -1 || page.slug.indexOf('searchPhrase') > -1;
+    return page => {
+        let title = page.title.toLowerCase();
+        let slug = page.slug.toLowerCase();
+        let matchesSearchPhrase = searchPhrase === '' || title.indexOf(searchPhrase) > -1 || slug.indexOf(searchPhrase) > -1;
+
+        // Check for published pages
+        if (
+            isPublishedFilter &&
+            page.status.indexOf('draft') === -1 &&
+            page.status.indexOf('trashed') === -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
-
-    // Check for trashed pages
-    if(
-        filterValue.indexOf('is:trashed') === 0 &&
-        page.status.indexOf('trashed') > -1
-    ) {
-        if(searchPhrase !== '') {
-            return page.title.indexOf(searchPhrase) > -1 || page.slug.indexOf('searchPhrase') > -1;
+        // Check for trashed pages
+        if (
+            isTrashedFilter &&
+            page.status.indexOf('trashed') > -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
-
-    // Check for draft pages
-    if(
-        filterValue.indexOf('is:draft') === 0 &&
-        page.status.indexOf('draft') > -1 &&
-        page.status.indexOf('trashed') === -1
-    ) {
-        if(searchPhrase !== '') {
-            return page.title.indexOf(searchPhrase) > -1 || page.slug.indexOf('searchPhrase') > -1;
+        // Check for draft pages
+        if (
+            isDraftFilter &&
+            page.status.indexOf('draft') > -1 &&
+            page.status.indexOf('trashed') === -1
+        ) {
+            return matchesSearchPhrase;
         }
 
-        return true;
-    }
+        // Check the easy cases first
+        if (
+            (
+                emptyFilter ||
+                title.indexOf(filterValue) > -1 ||
+                slug.indexOf(filterValue) > -1
+            ) &&
+            page.status.indexOf('trashed') === -1
+        ) {
+            return true;
+        }
 
-    // Check the easy cases first
-    if(
-        (
-            filterValue.trim() === '' || 
-            page.title.indexOf(filterValue) > -1 ||
-            page.slug.indexOf(filterValue) > -1
-        ) &&
-        page.status.indexOf('trashed') === -1
-    ) {
-        return true;
-    }
-
-    // Unfortunately - there is no criteria which this page meets
-    return false;
+        // Unfortunately - there is no criteria which this page meets
+        return false;
+    };
 };

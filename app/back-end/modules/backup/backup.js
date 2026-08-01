@@ -360,7 +360,7 @@ class Backup {
         }
 
         // Empty the temp directory before extracting the backups content
-        fs.emptyDirSync(tempDir);
+        Utils.emptyDirRecursively(tempDir);
 
         let safeTempBase = path.resolve(tempDir);
 
@@ -415,7 +415,7 @@ class Backup {
                         }
                     }
         
-                    fs.emptyDirSync(destinationPath);
+                    Utils.emptyDirRecursively(destinationPath);
         
                     // Move files from the temp dir to the site dir
                     let backupContents = fs.readdirSync(tempDir);

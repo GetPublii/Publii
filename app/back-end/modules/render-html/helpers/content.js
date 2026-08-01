@@ -507,17 +507,18 @@ class ContentHelper {
      *
      * @param text
      * @param renderer
+     * @param escapeForJSON
      * @returns {string}
      */
-    static setInternalLinks(text, renderer) {
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'post');
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'page');
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'tag');
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'tags');
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'author');
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage');
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'blogpage');
-        text = ContentHelper.prepareInternalLinks(text, renderer, 'file');
+    static setInternalLinks(text, renderer, escapeForJSON = false) {
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'post', escapeForJSON);
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'page', escapeForJSON);
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'tag', escapeForJSON);
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'tags', escapeForJSON);
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'author', escapeForJSON);
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'frontpage', escapeForJSON);
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'blogpage', escapeForJSON);
+        text = ContentHelper.prepareInternalLinks(text, renderer, 'file', escapeForJSON);
 
         return text;
     }
@@ -528,10 +529,13 @@ class ContentHelper {
      * @param text
      * @param renderer
      * @param type
+     * @param escapeForJSON
      *
      * @returns {string} - modified text
      */
-    static prepareInternalLinks(text, renderer, type) {
+    static prepareInternalLinks(text, renderer, type, escapeForJSON = false) {
+        // Properly prepare local paths to avoid issues with JSON.parse
+        const resolveLink = (link) => escapeForJSON ? JSON.stringify(link).slice(1, -1) : link;
         // Extract URLs
         let regexp = new RegExp('#INTERNAL_LINK#\/' + type + '\/[0-9]{1,}', 'gmi');
 
@@ -541,9 +545,12 @@ class ContentHelper {
 
         let urls = [...new Set(text.match(regexp))];
 
-        // We need to remove trailing '"' char from the files matches
+        // We need to remove trailing quote char from the files matches - and the
+        // JSON-escaping backslash that may precede it when the link sits inside an
+        // escaped HTML attribute (href=\"...\"), otherwise the leftover backslash
+        // would break the JSON.parse done on the processed content
         if (type === 'file' || type === 'author') {
-            urls = urls.map(file => file.replace(/"$/, ''));
+            urls = urls.map(file => file.replace(/["']$/, '').replace(/\\$/, ''));
         }
 
         // When there is no internal links of given type - return unmodified text
@@ -560,7 +567,7 @@ class ContentHelper {
                 link = link + '/index.html';
             }
 
-            text = text.split(url).join(link);
+            text = text.split(url).join(resolveLink(link));
 
             return text;
         }
@@ -575,10 +582,10 @@ class ContentHelper {
             }
 
             if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
-                link = link + 'index.html';
+                link = link + (link.endsWith('/') ? '' : '/') + 'index.html';
             }
 
-            text = text.split(url).join(link);
+            text = text.split(url).join(resolveLink(link));
 
             return text;
         }
@@ -596,7 +603,7 @@ class ContentHelper {
                 link = link + 'index.html';
             }
 
-            text = text.split(url).join(link);
+            text = text.split(url).join(resolveLink(link));
 
             return text;
         }
@@ -605,7 +612,7 @@ class ContentHelper {
         if (type === 'file') {
             for (let url of urls) {
                 let link = url.replace('#INTERNAL_LINK#/file/', renderer.siteConfig.domain + '/');
-                text = text.split(url).join(link);
+                text = text.split(url).join(resolveLink(link));
             }
 
             return text;
@@ -620,7 +627,7 @@ class ContentHelper {
                 for (let authorID of authorIDs) {
                     if (renderer.cachedItems.authors[authorID].username === authorSlug) {
                         let link = renderer.cachedItems.authors[authorID].url;
-                        text = text.split(url).join(link);
+                        text = text.split(url).join(resolveLink(link));
                     }
                 }
             }
@@ -651,7 +658,7 @@ class ContentHelper {
 
         // Replace original URLs with proper URLs
         for(let url of urls) {
-            text = text.split(url).join(links[url]);
+            text = text.split(url).join(resolveLink(links[url]));
         }
 
         return text;

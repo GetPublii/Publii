@@ -270,19 +270,27 @@ export default {
 
       // eslint-disable-next-line
       mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
-        let thumbnailSrc = data.thumbnailDimensions ? data.thumbnailPath[0] : data.thumbnailPath;
-        let sizeWidth = data.baseImage.size[0] || '';
-        let sizeHeight = data.baseImage.size[1] || '';
+        if (data && data.error) {
+          window.app.showMessage({
+            text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
+            type: 'warning',
+            lifeTime: 6
+          });
+        } else {
+          let thumbnailSrc = data.thumbnailDimensions ? data.thumbnailPath[0] : data.thumbnailPath;
+          let sizeWidth = data.baseImage.size[0] || '';
+          let sizeHeight = data.baseImage.size[1] || '';
 
-        this.content.images.push({
-          src: data.baseImage.url,
-          thumbnailSrc: thumbnailSrc,
-          height: data.thumbnailDimensions ? data.thumbnailDimensions.height : sizeHeight,
-          width: data.thumbnailDimensions ? data.thumbnailDimensions.width : sizeWidth,
-          dimensions: data.baseImage.size.join('x'),
-          alt: '',
-          caption: ''
-        });
+          this.content.images.push({
+            src: data.baseImage.url,
+            thumbnailSrc: thumbnailSrc,
+            height: data.thumbnailDimensions ? data.thumbnailDimensions.height : sizeHeight,
+            width: data.thumbnailDimensions ? data.thumbnailDimensions.width : sizeWidth,
+            dimensions: data.baseImage.size.join('x'),
+            alt: '',
+            caption: ''
+          });
+        }
 
         if (this.imagesQueue.length) {
           this.uploadImage();

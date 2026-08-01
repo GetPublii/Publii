@@ -158,13 +158,13 @@ class Themes {
                     console.log('(!) Cannot parse old config');
                 }
 
-                fs.removeSync(oldConfigPath);
+                UtilsHelper.removePathRecursively(oldConfigPath);
 
                 if (basicConfig) {
                     fs.writeFileSync(oldConfigPath, basicConfig);
                 }
             } else {
-                fs.removeSync(oldConfigPath);
+                UtilsHelper.removePathRecursively(oldConfigPath);
             }
 
             let newThemeName =  newTheme.replace('install-use-', '')
@@ -198,7 +198,7 @@ class Themes {
 
             if(themeDirStat && themeDirStat.isDirectory()) {
                 // If yes - remove it
-                fs.removeSync(path.join(this.sitePath, themeToRemove));
+                UtilsHelper.removePathRecursively(path.join(this.sitePath, themeToRemove));
             }
 
             // If current theme is different than removed theme - return its name
@@ -222,7 +222,7 @@ class Themes {
 
         if(themeDirStat && themeDirStat.isDirectory()) {
             // If yes - remove it
-            fs.removeSync(path.join(this.sitePath, newTheme));
+            UtilsHelper.removePathRecursively(path.join(this.sitePath, newTheme));
         }
 
         // Copy theme to the site directory
@@ -361,7 +361,7 @@ class Themes {
             return;
         }
 
-        fs.removeSync(target);
+        UtilsHelper.removePathRecursively(target);
     }
 
     updateThemeConfig(newConfig) {

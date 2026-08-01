@@ -8,33 +8,36 @@
  */
 
 export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC') => {
-    let tags = JSON.parse(JSON.stringify(state.currentSite.tags));
-    
-    tags = tags.filter(tag => {
-        if(!filterValue) {
-            return true;
+    let trashedPostsIDs = new Set();
+
+    for (let post of state.currentSite.posts) {
+        if (post.status && post.status.indexOf('trashed') > -1) {
+            trashedPostsIDs.add(post.id);
+        }
+    }
+
+    let postsCounters = new Map();
+
+    for (let postTag of state.currentSite.postsTags) {
+        if (trashedPostsIDs.has(postTag.postID)) {
+            continue;
         }
 
-        if(tag.name.toLowerCase().indexOf(filterValue) > -1) {
-            return true;
+        postsCounters.set(postTag.tagID, (postsCounters.get(postTag.tagID) || 0) + 1);
+    }
+
+    let tags = [];
+
+    for (let tag of state.currentSite.tags) {
+        if (filterValue && tag.name.toLowerCase().indexOf(filterValue) === -1) {
+            continue;
         }
 
-        return false;
-    });
-
-    let deletedPostsIDs = state.currentSite.posts.filter(post => post.status && post.status.indexOf('trashed') > -1).map(post => post.id);
-
-    tags = tags.map(tag => {
-        let postsCounter = 0;
-
-        postsCounter = state.currentSite.postsTags.filter(postTag => {
-            return postTag.tagID === tag.id && deletedPostsIDs.indexOf(postTag.postID) === -1;
-        }).length;
-
-        tag.postsCounter = postsCounter;
-
-        return tag;
-    });
+        tags.push({
+            ...tag,
+            postsCounter: postsCounters.get(tag.id) || 0
+        });
+    }
 
     tags.sort((tagA, tagB) => {
         if (orderBy === 'name') {
@@ -44,7 +47,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
 
             return tagA.name.localeCompare(tagB.name);
         }
-        
+
         if (order === 'DESC') {
             return tagB[orderBy] - tagA[orderBy];
         }

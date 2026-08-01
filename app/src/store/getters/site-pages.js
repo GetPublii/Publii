@@ -1,5 +1,27 @@
-import pageFilter from '../helpers/page-filter.js';
-import pageGetAuthor from '../helpers/page-get-author.js';
+import createPageFilter from '../helpers/page-filter.js';
+
+const coreDataCache = new WeakMap();
+
+function getPageCoreData (page) {
+    let cached = coreDataCache.get(page);
+
+    if (cached && cached.raw === page.additional_data) {
+        return cached;
+    }
+
+    let additionalData = JSON.parse(page.additional_data);
+    let coreData = {
+        raw: page.additional_data,
+        editor: 'tinymce'
+    };
+
+    if (additionalData && additionalData.editor) {
+        coreData.editor = additionalData.editor;
+    }
+
+    coreDataCache.set(page, coreData);
+    return coreData;
+}
 
 /**
  * Returns array of current site pages
@@ -15,23 +37,27 @@ export default (state, getters) => (filterValue, orderBy = '', order = 'DESC') =
         return [];
     }
 
-    let pages = state.currentSite.pages.filter(page => {
-        if (!pageFilter(state, page, filterValue)) {
-            return false;
+    let pagesAuthors = new Map();
+
+    for (let xref of state.currentSite.pagesAuthors) {
+        if (!pagesAuthors.has(xref.pageID)) {
+            pagesAuthors.set(xref.pageID, xref.authorName);
+        }
+    }
+
+    let pageFilter = createPageFilter(filterValue, { pagesAuthors });
+    let pages = [];
+
+    for (let page of state.currentSite.pages) {
+        if (page.title === null || !pageFilter(page)) {
+            continue;
         }
 
-        return true;
-    }).map(page => {
-        let additionalData = JSON.parse(page.additional_data);
-        let pageEditor = 'tinymce';
+        let coreData = getPageCoreData(page);
 
-        if (additionalData && additionalData.editor) {
-            pageEditor = additionalData.editor;
-        }
-
-        return {
+        pages.push({
             id: page.id,
-            editor: pageEditor,
+            editor: coreData.editor,
             title: page.title,
             slug: page.slug,
             status: page.status,
@@ -40,9 +66,9 @@ export default (state, getters) => (filterValue, orderBy = '', order = 'DESC') =
             isDraft: page.status.indexOf('draft') > -1,
             isTrashed: page.status.indexOf('trashed') > -1,
             author_id: page.authors,
-            author: pageGetAuthor(state, page.id)
-        }
-    });
+            author: pagesAuthors.get(page.id) || ''
+        });
+    }
 
     pages.sort((pageA, pageB) => {
         if (orderBy === 'title') {

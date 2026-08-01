@@ -55,7 +55,7 @@ function CSSHelper(rendererInstance, Handlebars) {
             filename + versionSuffix
         ].join('/');
 
-        return new Handlebars.SafeString(url);
+        return new Handlebars.SafeString(Handlebars.Utils.escapeExpression(url));
     });
 }
 

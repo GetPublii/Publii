@@ -124,7 +124,7 @@ function jsonLDHelper(rendererInstance, Handlebars) {
             }
 
             if (context.data.root.metaDescriptionRaw) {
-                jsonLDObject['description'] = context.data.root.metaDescriptionRaw.replace(/"/g, "'");
+                jsonLDObject['description'] = context.data.root.metaDescriptionRaw;
             } else {
                 jsonLDObject['description'] = itemData.excerpt;
             }
@@ -203,7 +203,7 @@ function jsonLDHelper(rendererInstance, Handlebars) {
         }
 
         output += '<script type="application/ld+json">';
-        output += JSON.stringify(jsonLDObject);
+        output += JSON.stringify(jsonLDObject).replace(/</g, '\\u003c');
         output += '</script>';
         moment.locale(momentOriginalLocale);
         return new Handlebars.SafeString(output);

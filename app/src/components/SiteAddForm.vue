@@ -324,7 +324,6 @@ export default {
             }
 
             this.restoreInProgress = true;
-            console.log('T', this.backupFile);
 
             mainProcessAPI.send('app-site-check-website-to-restore', {
                 backupPath: this.backupFile

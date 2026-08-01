@@ -6,7 +6,7 @@ const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const passwordSafeStorage = require('keytar');
 const slug = require('./../../helpers/slug');
-const { Gitlab } = require('@gitbeaker/node');
+const { Gitlab } = require('@gitbeaker/rest');
 const stripTags = require('striptags');
 
 class GitlabPages {
@@ -57,13 +57,15 @@ class GitlabPages {
         this.client.Projects.all({
             owned: true,
             maxPages: 1,
-            perPage: 1
+            perPage: 1,
+            pagination: 'offset'
         }).then(project => {
             this.client.Projects.all({
                 search: repository,
                 owned: true,
                 maxPages: 1,
-                perPage: 1
+                perPage: 1,
+                pagination: 'offset'
             }).then(projects => {
                 let projectID = projects[0].id;
 
@@ -188,7 +190,8 @@ class GitlabPages {
             search: this.repository,
             owned: true,
             maxPages: 1,
-            perPage: 1
+            perPage: 1,
+            pagination: 'offset'
         }).then(projects => {
             this.projectID = projects[0].id;
 

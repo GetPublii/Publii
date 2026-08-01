@@ -1,9 +1,35 @@
-import postFilter from '../helpers/post-filter.js';
-import postGetAuthor from '../helpers/post-get-author.js';
-import postGetTags from '../helpers/post-get-tags.js';
+import createPostFilter from '../helpers/post-filter.js';
+
+const coreDataCache = new WeakMap();
+
+function getPostCoreData (post) {
+    let cached = coreDataCache.get(post);
+
+    if (cached && cached.raw === post.additional_data) {
+        return cached;
+    }
+
+    let additionalData = JSON.parse(post.additional_data);
+    let coreData = {
+        raw: post.additional_data,
+        mainTag: '',
+        editor: 'tinymce'
+    };
+
+    if (additionalData && additionalData.mainTag) {
+        coreData.mainTag = parseInt(additionalData.mainTag, 10);
+    }
+
+    if (additionalData && additionalData.editor) {
+        coreData.editor = additionalData.editor;
+    }
+
+    coreDataCache.set(post, coreData);
+    return coreData;
+}
 
 /**
- * Returns array of current site tags
+ * Returns array of current site posts
  *
  * @param state
  * @param getters
@@ -12,35 +38,66 @@ import postGetTags from '../helpers/post-get-tags.js';
  */
 
 export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC') => {
-    if(!state.currentSite.posts) {
+    if (!state.currentSite.posts) {
         return [];
     }
 
-    let posts = state.currentSite.posts.filter(post => {
-        if(!postFilter(state, post, filterValue)) {
-            return false;
+    let tagNames = new Map();
+
+    for (let tag of state.currentSite.tags) {
+        tagNames.set(tag.id, tag.name);
+    }
+
+    let postsTags = new Map();
+
+    for (let xref of state.currentSite.postsTags) {
+        let tagName = tagNames.get(xref.tagID);
+
+        if (!tagName) {
+            continue;
         }
 
-        return true;
-    }).map(post => {
-        let additionalData = JSON.parse(post.additional_data);
-        let mainTag = '';
-        let postEditor = 'tinymce';
+        let tags = postsTags.get(xref.postID);
 
-        if (additionalData && additionalData.mainTag) {
-            mainTag = parseInt(additionalData.mainTag, 10);
+        if (!tags) {
+            tags = [];
+            postsTags.set(xref.postID, tags);
         }
 
-        if (additionalData && additionalData.editor) {
-            postEditor = additionalData.editor;
+        tags.push({
+            name: tagName,
+            id: xref.tagID
+        });
+    }
+
+    for (let tags of postsTags.values()) {
+        tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
+    }
+
+    let postsAuthors = new Map();
+
+    for (let xref of state.currentSite.postsAuthors) {
+        if (!postsAuthors.has(xref.postID)) {
+            postsAuthors.set(xref.postID, xref.authorName);
+        }
+    }
+
+    let postFilter = createPostFilter(state, filterValue, { postsTags, postsAuthors });
+    let posts = [];
+
+    for (let post of state.currentSite.posts) {
+        if (post.title === null || !postFilter(post)) {
+            continue;
         }
 
-        return {
+        let coreData = getPostCoreData(post);
+
+        posts.push({
             id: post.id,
-            editor: postEditor,
+            editor: coreData.editor,
             title: post.title,
             slug: post.slug,
-            tags: postGetTags(state, post.id),
+            tags: postsTags.get(post.id) || false,
             status: post.status,
             created: post.created_at,
             modified: post.modified_at,
@@ -50,10 +107,10 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
             isFeatured: post.status.indexOf('featured') > -1,
             isTrashed: post.status.indexOf('trashed') > -1,
             author_id: post.authors,
-            author: postGetAuthor(state, post.id),
-            mainTag: mainTag
-        }
-    });
+            author: postsAuthors.get(post.id) || '',
+            mainTag: coreData.mainTag
+        });
+    }
 
     posts.sort((postA, postB) => {
         if (orderBy === 'title') {
@@ -71,7 +128,7 @@ export default (state, getters) => (filterValue, orderBy = 'id', order = 'DESC')
 
             return postA.author.localeCompare(postB.author);
         }
-        
+
         if (order === 'DESC') {
             return postB[orderBy] - postA[orderBy];
         }

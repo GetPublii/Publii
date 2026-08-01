@@ -355,7 +355,7 @@ class RendererContext {
             config: URLHelper.prepareSettingsImages(this.siteConfig.domain, {
                 basic: JSON.parse(JSON.stringify(this.themeConfig.config)),
                 site: JSON.parse(JSON.stringify(this.siteConfig.advanced)),
-                custom: JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(this.themeConfig.customConfig), this.renderer))
+                custom: JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(this.themeConfig.customConfig), this.renderer, true))
             }),
             website: {
                 url: fullURL,
@@ -400,11 +400,11 @@ class RendererContext {
         };
 
         if (context === 'post' && itemConfig) {
-            this.context.config.post = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer));
+            this.context.config.post = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer, true));
         }
 
         if (context === 'page' && itemConfig) {
-            this.context.config.page = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer));
+            this.context.config.page = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer, true));
         }
 
         this.renderer.globalContext = this.context;

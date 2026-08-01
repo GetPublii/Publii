@@ -71,7 +71,9 @@ class S3 {
                     secretAccessKey: s3Key,
                 },
                 endpoint: s3Endpoint,
-                region: customRegion
+                region: customRegion,
+                requestChecksumCalculation: 'WHEN_REQUIRED',
+                responseChecksumValidation: 'WHEN_REQUIRED'
             }
         }
 
@@ -300,9 +302,15 @@ class S3 {
     }
 
     async removeFileObject(input) {
+        let key = input;
+
+        if (typeof this.prefix === 'string' && this.prefix !== '') {
+            key = this.prefix + input;
+        }
+
         let params = {
             Bucket: this.bucket,
-            Key: input
+            Key: key
         };
     
         try {
@@ -394,7 +402,9 @@ class S3 {
                     secretAccessKey: s3Key,
                 },
                 endpoint: s3Endpoint,
-                region: customRegion
+                region: customRegion,
+                requestChecksumCalculation: 'WHEN_REQUIRED',
+                responseChecksumValidation: 'WHEN_REQUIRED'
             }
         }
 

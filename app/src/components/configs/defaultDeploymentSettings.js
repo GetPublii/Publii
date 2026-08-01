@@ -8,6 +8,7 @@ export default {
     passphrase: '',
     path: '',
     sftpkey: '',
+    cachedDomain: '',
     git: {
         url: '',
         branch: '',

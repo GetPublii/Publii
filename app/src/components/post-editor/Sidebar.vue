@@ -273,6 +273,7 @@
                                         v-model="$parent.postData.tags"
                                         :tag-placeholder="$t('tag.addThisAsNewTag')"
                                         :options="availableTags"
+                                        :options-limit="100"
                                         :searchable="true"
                                         :show-labels="false"
                                         placeholder=""

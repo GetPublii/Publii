@@ -1675,9 +1675,12 @@ export default {
         },
         toggleDomainName () {
             if (this.deploymentSettings.relativeUrls) {
+                if (this.domain && this.domain !== '/') {
+                    this.deploymentSettings.cachedDomain = this.domain;
+                }
                 this.domain = '/';
             } else {
-                this.domain = '';
+                this.domain = this.deploymentSettings.cachedDomain || '';
             }
         },
         getDeploymentMethodName (method) {

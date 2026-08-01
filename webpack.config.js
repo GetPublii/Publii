@@ -63,10 +63,6 @@ module.exports = {
         generator: {
           filename: 'assets/images/[name].[hash][ext][query]'
         }
-      },
-      {
-        test: /\.node$/,
-        loader: 'node-loader',
       }
     ]
   },

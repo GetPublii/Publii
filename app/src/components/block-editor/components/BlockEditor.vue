@@ -42,7 +42,6 @@ import BlockLinkPopup from './BlockLinkPopup.vue';
 import BlocksList from './BlocksList.vue';
 import BlockWrapper from './BlockWrapper.vue';
 import ContentEditableImprovements from './helpers/ContentEditableImprovements.vue';
-import { compileToFunctions } from 'vue-template-compiler';
 import Icon from './elements/EditorIcon.vue';
 // default blocks
 import PubliiCode from './default-blocks/publii-code/block.vue';

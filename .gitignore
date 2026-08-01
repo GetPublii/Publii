@@ -15,6 +15,7 @@ npm-debug.log
 /app/dist/*.svg
 /app/dist/*.node
 !/app/dist/index.html
+/app/tree.txt
 /dist
 /cache/
 /StaticBlog-darwin-x64/

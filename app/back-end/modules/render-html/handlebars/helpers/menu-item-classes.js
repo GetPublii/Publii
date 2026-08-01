@@ -58,7 +58,7 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
 
         // Prepare output
         if (output.length) {
-            output = ' class="' + output.join(' ') + '"';
+            output = ' class="' + Handlebars.escapeExpression(output.join(' ')) + '"';
             return new Handlebars.SafeString(output);
         }
 
@@ -105,7 +105,7 @@ function menuItemClassesHelper(rendererInstance, Handlebars) {
 
         // Prepare output
         if (output.length) {
-            output = output.join(' ');
+            output = Handlebars.escapeExpression(output.join(' '));
             return new Handlebars.SafeString(output);
         }
 

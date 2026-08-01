@@ -7,6 +7,7 @@ const Languages = require('../languages.js');
 const Plugins = require('../plugins.js');
 const AppFiles = require('../helpers/app-files.js');
 const PathValidator = require('../helpers/path-validator.js');
+const UtilsHelper = require('../helpers/utils.js');
 const AdmZip = require("adm-zip");
 
 const { isValidDirSegment } = PathValidator;
@@ -210,7 +211,7 @@ class AppEvents {
                             themes: appInstance.themes
                         });
 
-                        fs.removeSync(zipPath);
+                        UtilsHelper.removePathRecursively(zipPath);
 
                         return;
                     }
@@ -221,13 +222,13 @@ class AppEvents {
                     try {
                         fs.statSync(directoryPath);
                         status = 'updated';
-                        fs.removeSync(directoryPath);
+                        UtilsHelper.removePathRecursively(directoryPath);
                     } catch (e) {
                         status = 'added';
                     }
 
                     fs.copySync(path.join(zipPath, newThemeDir), directoryPath);
-                    fs.removeSync(zipPath);
+                    UtilsHelper.removePathRecursively(zipPath);
                     appInstance.themes = themesLoader.loadThemes();
 
                     event.sender.send('app-theme-uploaded', {
@@ -242,7 +243,7 @@ class AppEvents {
                     try {
                         fs.statSync(directoryPath);
                         status = 'updated';
-                        fs.removeSync(directoryPath);
+                        UtilsHelper.removePathRecursively(directoryPath);
                     } catch (e) {
                         status = 'added';
                     }
@@ -290,7 +291,7 @@ class AppEvents {
                             languages: appInstance.languages
                         });
 
-                        fs.removeSync(zipPath);
+                        UtilsHelper.removePathRecursively(zipPath);
 
                         return;
                     }
@@ -302,13 +303,13 @@ class AppEvents {
                     try {
                         fs.statSync(directoryPath);
                         status = 'updated';
-                        fs.removeSync(directoryPath);
+                        UtilsHelper.removePathRecursively(directoryPath);
                     } catch (e) {
                         status = 'added';
                     }
 
                     fs.copySync(path.join(zipPath, newLanguageDir), directoryPath);
-                    fs.removeSync(zipPath);
+                    UtilsHelper.removePathRecursively(zipPath);
                     appInstance.languages = languagesLoader.loadLanguages();
 
                     event.sender.send('app-language-uploaded', {
@@ -323,7 +324,7 @@ class AppEvents {
                     try {
                         fs.statSync(directoryPath);
                         status = 'updated';
-                        fs.removeSync(directoryPath);
+                        UtilsHelper.removePathRecursively(directoryPath);
                     } catch (e) {
                         status = 'added';
                     }
@@ -371,7 +372,7 @@ class AppEvents {
                             plugins: appInstance.plugins
                         });
 
-                        fs.removeSync(zipPath);
+                        UtilsHelper.removePathRecursively(zipPath);
 
                         return;
                     }
@@ -383,13 +384,13 @@ class AppEvents {
                     try {
                         fs.statSync(directoryPath);
                         status = 'updated';
-                        fs.removeSync(directoryPath);
+                        UtilsHelper.removePathRecursively(directoryPath);
                     } catch (e) {
                         status = 'added';
                     }
 
                     fs.copySync(path.join(zipPath, newPluginDir), directoryPath);
-                    fs.removeSync(zipPath);
+                    UtilsHelper.removePathRecursively(zipPath);
                     appInstance.plugins = pluginsLoader.loadPlugins();
 
                     event.sender.send('app-plugin-uploaded', {
@@ -404,7 +405,7 @@ class AppEvents {
                     try {
                         fs.statSync(directoryPath);
                         status = 'updated';
-                        fs.removeSync(directoryPath);
+                        UtilsHelper.removePathRecursively(directoryPath);
                     } catch (e) {
                         status = 'added';
                     }

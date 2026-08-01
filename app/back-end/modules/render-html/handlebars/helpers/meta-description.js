@@ -13,7 +13,7 @@ function metaDescription(options) {
             return '';
         }
 
-        let output = '<meta name="description" content="' + options.data.root.metaDescriptionRaw.replace(/"/g, "'") + '">';
+        let output = '<meta name="description" content="' + Handlebars.escapeExpression(options.data.root.metaDescriptionRaw) + '">';
         return new Handlebars.SafeString(output);
     }
 

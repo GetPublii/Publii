@@ -25,7 +25,7 @@ function responsiveImageAttributesHelper(rendererInstance, Handlebars) {
             firstParam === 'authorImage'
         ) {
             if (secondParam && thirdParam) {
-                return new Handlebars.SafeString('srcset="' + secondParam + '" sizes="' + thirdParam + '"');
+                return new Handlebars.SafeString('srcset="' + Handlebars.escapeExpression(secondParam) + '" sizes="' + Handlebars.escapeExpression(thirdParam) + '"');
             }
 
             return '';

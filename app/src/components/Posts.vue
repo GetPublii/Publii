@@ -282,16 +282,16 @@
             </collection-header>
 
             <collection-row
-                v-for="(item, index) in items"
+                v-for="item in renderedItems"
                 slot="content"
                 :data-is-draft="item.isDraft"
-                :key="'collection-row-' + index">
+                :key="'collection-row-' + item.id">
                 <collection-cell>
                     <checkbox
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection"
-                        :key="'collection-row-checkbox-' + index" />
+                        :key="'collection-row-checkbox-' + item.id" />
                 </collection-cell>
 
                 <collection-cell
@@ -382,6 +382,13 @@
                     {{ item.id }}
                 </collection-cell>
             </collection-row>
+
+            <div
+                v-if="items.length > renderLimit"
+                ref="loadMoreSentinel"
+                slot="content"
+                class="load-more-sentinel">
+            </div>
         </collection>
 
         <empty-state
@@ -450,21 +457,21 @@ export default {
             filterValue: '',
             selectedItems: [],
             orderBy: 'id',
-            order: 'DESC'
+            order: 'DESC',
+            renderLimit: 100
         };
+    },
+    watch: {
+        filterValue () {
+            this.renderLimit = 100;
+        }
     },
     computed: {
         items () {
-            let items = this.$store.getters.sitePosts(this.filterValue, this.orderBy, this.order);
-            items = items.filter(item => item.title !== null);
-
-            items.forEach((item, i) => {
-                if (item.tags.length) {
-                    item.tags.sort((tagA, tagB) => tagA.name.localeCompare(tagB.name));
-                }
-            });
-
-            return items;
+            return this.$store.getters.sitePosts(this.filterValue, this.orderBy, this.order);
+        },
+        renderedItems () {
+            return this.items.slice(0, this.renderLimit);
         },
         hasPosts () {
             return this.$store.state.currentSite.posts && !!this.$store.state.currentSite.posts.length;
@@ -476,27 +483,48 @@ export default {
             return this.filterValue.indexOf('is:trashed') > -1;
         },
         counters () {
+            let counters = {
+                all: 0,
+                published: 0,
+                featured: 0,
+                hidden: 0,
+                excluded: 0,
+                drafts: 0,
+                trashed: 0
+            };
+
             if(!this.$store.state.currentSite || !this.$store.state.currentSite.posts) {
-                return {
-                    all: 0,
-                    published: 0,
-                    featured: 0,
-                    hidden: 0,
-                    excluded: 0,
-                    drafts: 0,
-                    trashed: 0
-                };
+                return counters;
             }
 
-            return {
-                all: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1).length,
-                published: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') === -1).length,
-                featured: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('featured') > -1).length,
-                hidden: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('hidden') > -1).length,
-                excluded: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('excluded_homepage') > -1).length,
-                drafts: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') === -1 && post.status.indexOf('draft') > -1).length,
-                trashed: this.$store.state.currentSite.posts.filter((post) => post.status.indexOf('trashed') > -1).length
+            for (let post of this.$store.state.currentSite.posts) {
+                if (post.status.indexOf('trashed') > -1) {
+                    counters.trashed++;
+                    continue;
+                }
+
+                counters.all++;
+
+                if (post.status.indexOf('draft') > -1) {
+                    counters.drafts++;
+                } else {
+                    counters.published++;
+                }
+
+                if (post.status.indexOf('featured') > -1) {
+                    counters.featured++;
+                }
+
+                if (post.status.indexOf('hidden') > -1) {
+                    counters.hidden++;
+                }
+
+                if (post.status.indexOf('excluded_homepage') > -1) {
+                    counters.excluded++;
+                }
             }
+
+            return counters;
         },
         showModificationDate () {
             return this.$store.state.app.config.showModificationDate;
@@ -538,6 +566,13 @@ export default {
         showPostSlugs () {
             return this.$store.state.app.config.showPostSlugs;
         }
+    },
+    created () {
+        this.loadMoreObserver = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                this.renderLimit += 100;
+            }
+        });
     },
     async mounted () {
         this.appTheme = await this.$root.getCurrentAppTheme();
@@ -581,8 +616,20 @@ export default {
         if (this.$route.params.filter === 'trashed') {
             this.setFilter('is:trashed');
         }
+
+        this.$nextTick(this.observeLoadMoreSentinel);
+    },
+    updated () {
+        this.observeLoadMoreSentinel();
     },
     methods: {
+        observeLoadMoreSentinel () {
+            this.loadMoreObserver.disconnect();
+
+            if (this.$refs.loadMoreSentinel) {
+                this.loadMoreObserver.observe(this.$refs.loadMoreSentinel);
+            }
+        },
         addNewPost (editorType) {
             if (
                 editorType === 'blockeditor' &&
@@ -879,6 +926,7 @@ export default {
         }
     },
     beforeDestroy () {
+        this.loadMoreObserver.disconnect();
         this.$bus.$off('site-loaded', this.whenSiteLoaded);
         this.$bus.$off('posts-filter-value-changed');
         this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
@@ -934,6 +982,11 @@ export default {
 
 .header {
     overflow-y: visible!important;
+}
+
+.load-more-sentinel {
+    grid-column: 1 / -1;
+    height: 1px;
 }
 
 .item {

@@ -37,7 +37,7 @@ function metaRobotsHelper(rendererInstance, Handlebars) {
         }
 
         if (options.data.root.metaRobotsRaw !== '') {
-            return new Handlebars.SafeString('<meta name="robots" content="' + options.data.root.metaRobotsRaw + '">');
+            return new Handlebars.SafeString('<meta name="robots" content="' + Handlebars.escapeExpression(options.data.root.metaRobotsRaw) + '">');
         }
 
         return '';

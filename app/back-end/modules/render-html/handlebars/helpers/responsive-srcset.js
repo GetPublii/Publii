@@ -85,7 +85,7 @@ function returnSrcSetAttribute (url, type, group) {
         srcset.push(responsiveImage + ' ' + dimensionsData[name].width + 'w');
     }
 
-    output = ' srcset="' + srcset.join(' ,') + '" ';
+    output = ' srcset="' + Handlebars.escapeExpression(srcset.join(' ,')) + '" ';
 
     return new Handlebars.SafeString(output);
 }

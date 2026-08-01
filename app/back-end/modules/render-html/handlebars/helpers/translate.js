@@ -64,7 +64,7 @@ function translate(key) {
             let textToTransform = translation;
 
             for(let i = 0; i < phrasesToReplace.length; i++) {
-                textToTransform = textToTransform.replace('%s', phrasesToReplace[i]);
+                textToTransform = textToTransform.replace('%s', Handlebars.escapeExpression(phrasesToReplace[i]));
             }
 
             translation = textToTransform;

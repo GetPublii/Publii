@@ -4,6 +4,7 @@
         :class="'pages-dropdown ' + customCssClasses.replace(/[^a-z0-9\-\_\s]/gmi, '')"
         :id="anchor"
         :options="pages"
+        :options-limit="100"
         v-model="selectedPage"
         :custom-label="pageLabels"
         :close-on-select="true"
@@ -44,6 +45,15 @@ export default {
         },
         placeholder () {
             return this.$t('page.selectPage');
+        },
+        pageTitlesById () {
+            let map = new Map();
+
+            for (let page of this.$store.state.currentSite.pages) {
+                map.set(page.id, page.title);
+            }
+
+            return map;
         }
     },
     watch: {
@@ -61,7 +71,7 @@ export default {
     },
     methods: {
         pageLabels (value) {
-            return this.$store.state.currentSite.pages.filter(page => page.id === value).map(page => page.title)[0];
+            return this.pageTitlesById.get(value);
         },
         closeDropdown () {
             this.$refs['dropdown'].isOpen = false;

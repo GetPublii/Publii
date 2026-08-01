@@ -4,6 +4,7 @@ const Image = require('./../../image.js');
 const UtilsHelper = require('./../../helpers/utils');
 
 let context = false;
+let brokenFiles = [];
 
 process.on('message', function(msg){
     let mediaPath = false;
@@ -113,10 +114,17 @@ function regenerateImage (images, fullPath, catalog) {
             context.totalProgress++;
             console.log('PROGRESS: ' + context.totalProgress, context.numberOfImages);
 
+            let unprocessable = results.find(r => r && r.error === 'IMAGE_UNPROCESSABLE');
+
+            if (unprocessable) {
+                brokenFiles.push(unprocessable.file);
+            }
+
             process.send({
                 type: 'progress',
                 value: parseInt((context.totalProgress / context.numberOfImages) * 100),
-                files: results
+                files: results,
+                brokenFilesCount: brokenFiles.length
             });
 
             if (context.totalProgress >= context.numberOfImages) {
@@ -222,8 +230,15 @@ function getImageType(context, image, catalog) {
 function finishProcess() {
     console.log('Finish process...');
 
+    if (brokenFiles.length) {
+        console.log('Broken files (' + brokenFiles.length + '):');
+        brokenFiles.forEach(file => console.log(' - ' + file));
+    }
+
     process.send({
-        type: 'finished'
+        type: 'finished',
+        brokenFilesCount: brokenFiles.length,
+        brokenFiles: brokenFiles
     });
 
     setTimeout(function() {

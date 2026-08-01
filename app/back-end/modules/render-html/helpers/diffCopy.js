@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const list = require('ls-all');
 const path = require('path');
+const UtilsHelper = require('./../../../helpers/utils');
 
 class DiffCopy {
     static async copy (input, output) {
@@ -34,7 +35,7 @@ class DiffCopy {
             }
 
             if (DiffCopy.getFileSize(inputFiles[i]) !== DiffCopy.getFileSize(fileToCheck)) {
-                fs.removeSync(fileToCheck);
+                UtilsHelper.removePathRecursively(fileToCheck);
                 console.log('[DIFF REMOVE DUE SIZE]', fileToCheck);
             }
         }
@@ -105,7 +106,7 @@ class DiffCopy {
                 removedDirectories.push(outputFiles[i]);
             }
 
-            fs.removeSync(outputFiles[i]);
+            UtilsHelper.removePathRecursively(outputFiles[i]);
 
             console.log('[DIFF REMOVE]', outputFiles[i]);
         }
@@ -127,7 +128,7 @@ class DiffCopy {
                 postIDs.indexOf((allPostFolders[i]).toString()) === -1 && 
                 pageIDs.indexOf((allPostFolders[i]).toString()) === -1
             ) {
-                fs.removeSync(path.join(baseOutputPath, allPostFolders[i]));
+                UtilsHelper.removePathRecursively(path.join(baseOutputPath, allPostFolders[i]));
                 console.log('[DIFF REMOVE CATALOG]', path.join(baseOutputPath, allPostFolders[i]));
             }
         }

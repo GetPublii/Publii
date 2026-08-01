@@ -651,7 +651,7 @@ class SiteEvents {
             let tempBackupDir = path.join(appInstance.appDir, 'temp', 'backup-to-restore');
 
             if (fs.existsSync(tempBackupDir)) {
-                fs.emptyDirSync(tempBackupDir);
+                UtilsHelper.emptyDirRecursively(tempBackupDir);
             }
         });
 
@@ -659,8 +659,11 @@ class SiteEvents {
          * Restore website from backup
          */
         ipcMain.on('app-site-restore-from-backup', function (event, config) {
-            if (!config || !PathValidator.isValidDirSegment(config.siteName)) {
-                event.sender.send('app-site-restored-from-backup', false);
+            if (!config ||
+                typeof config.siteName !== 'string' ||
+                config.siteName.trim() === '' ||
+                !PathValidator.isValidDirSegment(slug(config.siteName).toLowerCase())) {
+                event.sender.send('app-site-restored-from-backup', { status: 'error' });
                 return;
             }
 
@@ -794,7 +797,7 @@ class SiteEvents {
         let gitDirPath = path.join(appInstance.sitesDir, siteName, 'output', '.git');
 
         if (UtilsHelper.dirExists(gitDirPath)) {
-            fs.removeSync(gitDirPath);
+            UtilsHelper.removePathRecursively(gitDirPath);
         }
     }
 }

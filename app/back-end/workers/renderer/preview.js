@@ -18,8 +18,17 @@ process.on('message', async function(msg){
         } catch (e) {
             process.send({
                 type: 'app-rendering-results',
-                result: e
+                result: [{
+                    message: (e && e.message) ? e.message : String(e),
+                    desc: (e && e.stack) ? e.stack : ''
+                }]
             });
+
+            setTimeout(function () {
+                process.exit();
+            }, 1000);
+
+            return;
         }
 
         // When process is ready - finish it by sending a proper event

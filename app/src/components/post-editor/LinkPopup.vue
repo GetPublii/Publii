@@ -24,6 +24,7 @@
                         slot="field"
                         ref="postPagesSelect"
                         :options="postPages"
+                        :options-limit="100"
                         v-model="post"
                         :custom-label="customPostLabels"
                         :close-on-select="true"
@@ -39,6 +40,7 @@
                         slot="field"
                         ref="pageItemsSelect"
                         :options="pageItems"
+                        :options-limit="100"
                         v-model="page"
                         :custom-label="customPageLabels"
                         :close-on-select="true"
@@ -54,6 +56,7 @@
                         slot="field"
                         ref="tagPagesSelect"
                         :options="tagPages"
+                        :options-limit="100"
                         v-model="tag"
                         :custom-label="customTagLabels"
                         :close-on-select="true"
@@ -69,6 +72,7 @@
                         slot="field"
                         ref="authorPagesSelect"
                         :options="authorPages"
+                        :options-limit="100"
                         v-model="author"
                         :custom-label="customAuthorsLabels"
                         :close-on-select="true"
@@ -95,6 +99,7 @@
                         slot="field"
                         ref="fileSelect"
                         :options="filesList"
+                        :options-limit="100"
                         v-model="file"
                         :close-on-select="true"
                         :show-labels="false"
@@ -259,6 +264,42 @@ export default {
         },
         targetList () {
             return [ '-', '_blank' ];
+        },
+        postTitlesById () {
+            let map = new Map();
+
+            for (let post of this.$store.state.currentSite.posts) {
+                map.set(post.id, post.title);
+            }
+
+            return map;
+        },
+        pageTitlesById () {
+            let map = new Map();
+
+            for (let page of this.$store.state.currentSite.pages) {
+                map.set(page.id, page.title);
+            }
+
+            return map;
+        },
+        tagNamesById () {
+            let map = new Map();
+
+            for (let tag of this.$store.state.currentSite.tags) {
+                map.set(tag.id, tag.name);
+            }
+
+            return map;
+        },
+        authorNamesByUsername () {
+            let map = new Map();
+
+            for (let author of this.$store.state.currentSite.authors) {
+                map.set(author.username, author.name);
+            }
+
+            return map;
         }
     },
     mounted () {
@@ -286,16 +327,16 @@ export default {
             }
         },
         customTagLabels (value) {
-            return this.$store.state.currentSite.tags.filter(tag => tag.additionalData.indexOf('"isHidden":true') === -1 && tag.id === value).map(tag => tag.name)[0];
+            return this.tagNamesById.get(value);
         },
         customAuthorsLabels (value) {
-            return this.$store.state.currentSite.authors.filter(author => author.username === value).map(author => author.name)[0];
+            return this.authorNamesByUsername.get(value);
         },
         customPostLabels (value) {
-            return this.$store.state.currentSite.posts.filter(post => post.id === value).map(post => post.title)[0];
+            return this.postTitlesById.get(value);
         },
         customPageLabels (value) {
-            return this.$store.state.currentSite.pages.filter(page => page.id === value).map(page => page.title)[0];
+            return this.pageTitlesById.get(value);
         },
         customTargetLabels (value) {
             if (value === '-') {
