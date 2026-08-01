@@ -1,6 +1,8 @@
 'use strict';
 
 const electron = require('electron');
+const webContents = electron.webContents;
+const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const electronApp = electron.app;
 const dialog = electron.dialog;
@@ -165,14 +167,14 @@ electronApp.on('ready', function () {
     ipcMain.handle('publii-get-spellchecker-language', (event) => global.spellCheckerLanguage);
     ipcMain.handle('app-main-webview-search-find-in-page', (event, searchPhrase, searchConfig = null) => {
         if (searchConfig) {
-            appInstance.getMainWindow().webContents.findInPage(searchPhrase, searchConfig);
+            event.sender.findInPage(searchPhrase, searchConfig);
         } else {
-            appInstance.getMainWindow().webContents.findInPage(searchPhrase)
+            event.sender.findInPage(searchPhrase);
         }
     });
 
     ipcMain.handle('app-main-webview-search-stop-find-in-page', (event) => {
-        appInstance.getMainWindow().webContents.stopFindInPage('clearSelection');
+        event.sender.stopFindInPage('clearSelection');
     });
 
     // App theme mode
@@ -193,24 +195,26 @@ electronApp.on('ready', function () {
     });
 
     nativeTheme.on('updated', () => {
-        appInstance.getMainWindow().webContents.send('app-theme-mode:changed');
+        BrowserWindow.getAllWindows().forEach(win => {
+            win.webContents.send('app-theme-mode:changed');
+        });
     });
 
     // App window
-    ipcMain.handle('app-window:minimize', () => {
-        appInstance.getMainWindow().minimize();
+    ipcMain.handle('app-window:minimize', (event) => {
+        BrowserWindow.fromWebContents(event.sender)?.minimize();
     });
 
-    ipcMain.handle('app-window:maximize', () => {
-        appInstance.getMainWindow().maximize();
+    ipcMain.handle('app-window:maximize', (event) => {
+        BrowserWindow.fromWebContents(event.sender)?.maximize();
     });
 
-    ipcMain.handle('app-window:unmaximize', () => {
-        appInstance.getMainWindow().unmaximize();
+    ipcMain.handle('app-window:unmaximize', (event) => {
+        BrowserWindow.fromWebContents(event.sender)?.unmaximize();
     });
 
-    ipcMain.handle('app-window:close', () => {
-        appInstance.getMainWindow().close();
+    ipcMain.handle('app-window:close', (event) => {
+        BrowserWindow.fromWebContents(event.sender)?.close();
     });
 
     // App credits list
@@ -283,12 +287,12 @@ electronApp.on('ready', function () {
 
     // Use Electron API to display directory selection dialog
     ipcMain.handle('app-main-process-select-directory', (event, fieldName = false) => {
-        let mainWindowHandler = appInstance.getMainWindow();
+        let win = BrowserWindow.fromWebContents(event.sender);
 
-        dialog.showOpenDialog(mainWindowHandler, {
+        dialog.showOpenDialog(win, {
             properties: ['openDirectory']
         }).then(selectedPath => {
-            mainWindowHandler.webContents.send('app-directory-selected', {
+            event.sender.send('app-directory-selected', {
                 path: selectedPath,
                 fieldName: fieldName
             });
@@ -297,12 +301,12 @@ electronApp.on('ready', function () {
 
     // Use Electron API to display file selection dialog
     ipcMain.handle('app-main-process-select-file', (event, fieldName = false) => {
-        let mainWindowHandler = appInstance.getMainWindow();
+        let win = BrowserWindow.fromWebContents(event.sender);
 
-        dialog.showOpenDialog(mainWindowHandler, {
+        dialog.showOpenDialog(win, {
             properties: ['openFile', 'showHiddenFiles']
         }).then(selectedPath => {
-            mainWindowHandler.webContents.send('app-file-selected', {
+            event.sender.send('app-file-selected', {
                 path: selectedPath,
                 fieldName: fieldName
             });
@@ -311,13 +315,13 @@ electronApp.on('ready', function () {
 
     // Use Electron API to display files selection dialog
     ipcMain.handle('app-main-process-select-files', (event, fieldName = false, filters = []) => {
-        let mainWindowHandler = appInstance.getMainWindow();
+        let win = BrowserWindow.fromWebContents(event.sender);
 
-        dialog.showOpenDialog(mainWindowHandler, {
+        dialog.showOpenDialog(win, {
             properties: ['openFile', 'multiSelections'],
             filters: filters
         }).then(selectedPaths => {
-            mainWindowHandler.webContents.send('app-files-selected', {
+            event.sender.send('app-files-selected', {
                 paths: selectedPaths,
                 fieldName: fieldName
             });
@@ -325,42 +329,26 @@ electronApp.on('ready', function () {
     });
 
     // Get available spellchecker languages
-    ipcMain.handle('app-main-get-spellchecker-languages', (event) => appInstance.getMainWindow().webContents.session.availableSpellCheckerLanguages);
+    ipcMain.handle('app-main-get-spellchecker-languages', (event) => event.sender.session.availableSpellCheckerLanguages);
 
-    let appTopMenu = {
-        label: "Publii",
-        submenu: [{
-            label: "About Application",
-            selector: "orderFrontStandardAboutPanel:"
-        }, 
-        { 
-            role: 'hide' 
-        },
-        { 
-            role: 'hideOthers' 
-        },
-        { 
-            role: 'unhide' 
-        },
-        {
-            type: "separator"
-        }, 
-        {
-            label: "Quit",
-            accelerator: "CmdOrCtrl+Q",
-            click: () => { 
-                electronApp.quit();
-            }
-        }]
-    };
-
-    if (process.platform !== 'darwin') {
-        appTopMenu = {
+    const template = [{
             label: "Publii",
             submenu: [{
                 label: "About Application",
                 selector: "orderFrontStandardAboutPanel:"
             }, 
+            {
+                type: "separator"
+            }, 
+            { 
+            role: 'hide' 
+            },
+            { 
+                role: 'hideOthers' 
+            },
+            { 
+                role: 'unhide' 
+            },
             {
                 type: "separator"
             }, 
@@ -371,8 +359,56 @@ electronApp.on('ready', function () {
                     electronApp.quit();
                 }
             }]
-        };
-    }
+        }, {
+            label: "File",
+            submenu: [{
+                label: "New Window",
+                accelerator: "CmdOrCtrl+N",
+                click: () => {
+                    appInstance.openNewWindow();
+                }
+            }]
+        }, {
+            label: "Edit",
+            submenu: [
+                {
+                    label: "Undo",
+                    accelerator: "CmdOrCtrl+Z",
+                    selector: "undo:"
+                },
+                {
+                    label: "Redo",
+                    accelerator: "Shift+CmdOrCtrl+Z",
+                    selector: "redo:"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    label: "Cut",
+                    accelerator: "CmdOrCtrl+X",
+                    selector: "cut:"
+                },
+                {
+                    label: "Copy",
+                    accelerator: "CmdOrCtrl+C",
+                    selector: "copy:"
+                },
+                {
+                    label: "Paste",
+                    accelerator: "CmdOrCtrl+V",
+                    selector: "paste:"
+                },
+                {
+                    label: "Select All",
+                    accelerator: "CmdOrCtrl+A",
+                    selector: "selectAll:"
+                }
+            ]
+        }];
+
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
 
     let editTopMenu = {
         label: "Edit",
@@ -420,6 +456,17 @@ electronApp.on('ready', function () {
     // Remove application menu on Linux
     if (process.platform === 'linux') {
         Menu.setApplicationMenu(null);
+    }
+
+    // macOS dock menu
+    if (process.platform === 'darwin' && electronApp.dock) {
+        const dockMenu = Menu.buildFromTemplate([{
+            label: 'New Window',
+            click: () => {
+                appInstance.openNewWindow();
+            }
+        }]);
+        electronApp.dock.setMenu(dockMenu);
     }
 
     // Load language translations and set language as used in the app

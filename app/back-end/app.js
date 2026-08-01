@@ -11,7 +11,9 @@ const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 const url = require('url');
 // Electron classes
-const { screen, shell, nativeTheme, Menu, dialog, BrowserWindow } = require('electron');
+const { screen, shell, nativeTheme, Menu, dialog, BrowserWindow, ipcMain } = require('electron');
+// Window manager
+const PubliiWindowManager = require('./window-manager.js');
 // Collection classes
 const Posts = require('./posts.js');
 const Pages = require('./pages.js');
@@ -61,7 +63,8 @@ class App {
         this.sites = {};
         this.sitesDir = null;
         this.app.sitesDir = null;
-        this.db = false;
+        this.dbMap = new Map();
+        this.windowManager = new PubliiWindowManager(this);
         this.pluginsAPI = new PluginsAPI();
 
         /*
@@ -90,6 +93,40 @@ class App {
         this.loadPlugins();
         this.initWindow();
         this.initWindowEvents();
+    }
+
+    // Backward-compat getter: returns the first open DB or false
+    get db () {
+        if (this.dbMap.size === 0) return false;
+        return this.dbMap.values().next().value;
+    }
+
+    getDbForSite (siteName) {
+        return this.dbMap.get(siteName) || false;
+    }
+
+    setDbForSite (siteName, dbInstance) {
+        this.dbMap.set(siteName, dbInstance);
+    }
+
+    closeDbForSite (siteName) {
+        const db = this.dbMap.get(siteName);
+
+        if (db) {
+            try {
+                db.close();
+            } catch (e) {
+                console.log('[DB] closeDbForSite: already closed for', siteName);
+            }
+
+            this.dbMap.delete(siteName);
+        }
+    }
+
+    closeAllDbs () {
+        for (const [siteName] of this.dbMap.entries()) {
+            this.closeDbForSite(siteName);
+        }
     }
 
     /**
@@ -191,8 +228,8 @@ class App {
     }
 
     // Reload website data
-    reloadSite (siteName) {
-        let siteData = this.switchSite(siteName);
+    reloadSite (siteName, webContentsId = null) {
+        let siteData = this.switchSite(siteName, webContentsId);
         let siteConfig = this.loadSite(siteName);
 
         return {
@@ -202,7 +239,7 @@ class App {
     }
 
     // Load website and their config and database
-    switchSite (site) {
+    switchSite (site, webContentsId = null) {
         if (!site) {
             return { status: false };
         }
@@ -216,16 +253,27 @@ class App {
             return { status: false };
         }
 
-        if (this.db) {
-            try {
-                this.db.close();
-            } catch (e) {
-                console.log('[SWITCH WEBSITE] DB already closed');
+        // Close previous site DB for this window (if switching away from another site)
+        if (webContentsId && this.windowManager) {
+            const prevSite = this.windowManager.getSiteForWindow(webContentsId);
+
+            if (prevSite && prevSite !== site) {
+                this.closeDbForSite(prevSite);
             }
         }
 
-        this.db = new DBUtils(new Database(dbPath));
-        this.db.exec(`CREATE INDEX IF NOT EXISTS posts_additional_data__post_id_key ON posts_additional_data(post_id, key);`);
+        // Open DB for this site if not already open
+        if (!this.dbMap.has(site)) {
+            const db = new DBUtils(new Database(dbPath));
+            db.exec(`CREATE INDEX IF NOT EXISTS posts_additional_data__post_id_key ON posts_additional_data(post_id, key);`);
+            this.dbMap.set(site, db);
+        }
+
+        // Register site lock for this window
+        if (webContentsId && this.windowManager) {
+            this.windowManager.setWindowSite(webContentsId, site);
+        }
+
         let tags = new Tags(this, {site});
         let posts = new Posts(this, {site});
         let pages = new Pages(this, {site});
@@ -557,10 +605,12 @@ class App {
         return false;
     }
 
-    // Create the window
-    initWindow() {
-        let self = this;
-        let windowParams = this.windowBounds;
+    // Build common window params (platform chrome, background color, preload)
+    _buildWindowParams (baseParams = {}) {
+        let windowParams = Object.assign({
+            width: 1400,
+            height: 900
+        }, baseParams);
 
         windowParams.minWidth = 1200;
         windowParams.minHeight = 700;
@@ -576,26 +626,7 @@ class App {
             windowParams.backgroundColor = '#202128';
         }
 
-        let displays = screen.getAllDisplays();
-        let externalDisplay = displays.find((display) => {
-            return display.bounds.x !== 0 || display.bounds.y !== 0;
-        });
-
-        // Detect case when Publii was displayed on the external display which is now unavailable
-        if (
-            !externalDisplay &&
-            (
-                windowParams.x < 0 ||
-                windowParams.x > screen.getPrimaryDisplay().workAreaSize.width ||
-                windowParams.y < 0 ||
-                windowParams.y > screen.getPrimaryDisplay().workAreaSize.height
-            )
-        ) {
-            windowParams.x = 0;
-            windowParams.y = 0;
-        }
-
-        if((/^darwin/).test(process.platform)) {
+        if ((/^darwin/).test(process.platform)) {
             windowParams.titleBarStyle = 'hidden';
 
             // on macOS Tahoe (26) and newer fix position of the native traffic lights.
@@ -606,35 +637,41 @@ class App {
             }
         }
 
-        if((/^win/).test(process.platform)) {
+        if ((/^win/).test(process.platform)) {
             windowParams.frame = false;
         }
 
-        Menu.setApplicationMenu(null);
-        this.mainWindow = new BrowserWindow(windowParams);
-        this.mainWindow.setMenu(null);
-        this.mainWindow.loadURL('file:///' + this.basedir + '/dist/index.html');
-        this.mainWindow.removeMenu();
+        return windowParams;
+    }
 
-        // Register search shortcut listener
-        this.mainWindow.webContents.on('before-input-event', (event, input) => {
+    // Create and configure a single BrowserWindow; returns the window
+    _createWindow (windowParams, isNewWindow = false) {
+        let win = new BrowserWindow(windowParams);
+        win.setMenu(null);
+        win.loadURL('file:///' + this.basedir + '/dist/index.html');
+        win.removeMenu();
+
+        // Keyboard shortcut listener
+        win.webContents.on('before-input-event', (event, input) => {
             if (input.type === 'mouseDown' && (input.button === 'back' || input.button === 'forward')) {
                 event.preventDefault();
             }
 
-            if (input.key === 'f' && (input.meta || input.control)) {
-                this.mainWindow.webContents.send('app-show-search-form');
+            if (input.key === 'N' && (input.meta || input.control) && input.shift) {
+                this.openNewWindow();
+            } else if (input.key === 'f' && (input.meta || input.control)) {
+                win.webContents.send('app-show-search-form');
             } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
-                this.mainWindow.webContents.send('block-editor-undo');
+                win.webContents.send('block-editor-undo');
             } else if (
-                (input.key === 'z' && (input.meta || input.control) && input.shift) || 
+                (input.key === 'z' && (input.meta || input.control) && input.shift) ||
                 (input.key === 'y' && (input.meta || input.control) && !input.shift)
             ) {
-                this.mainWindow.webContents.send('block-editor-redo');
+                win.webContents.send('block-editor-redo');
             }
         });
 
-        this.mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        win.webContents.setWindowOpenHandler(({ url }) => {
             if (typeof url !== 'string') {
                 return { action: 'deny' };
             }
@@ -652,96 +689,138 @@ class App {
                 urlToOpen = urlToOpen.href.replace(/\s/gmi, '');
                 shell.openExternal(url);
             }
-            
+
             return { action: 'deny' };
         });
 
-        this.mainWindow.webContents.on('app-command', (e, cmd) => {
-            // disable back/forward mouse buttons
+        win.webContents.on('app-command', (e, cmd) => {
             if (cmd === 'browser-backward' || cmd === 'browser-forward') {
                 e.preventDefault();
             }
         });
 
-        this.mainWindow.webContents.on('did-finish-load', function() {
+        win.webContents.on('did-finish-load', () => {
             let appData = {
-                version: self.versionData,
-                config: self.appConfig,
+                version: this.versionData,
+                config: this.appConfig,
                 customConfig: {
-                    tinymce: self.tinymceOverridedConfig
+                    tinymce: this.tinymceOverridedConfig
                 },
                 currentLanguage: {
-                    name: self.currentLanguageName,
-                    translations: self.currentLanguageTranslations,
-                    wysiwygTranslation: self.currentWysiwygTranslation,
-                    momentLocale: self.currentLanguageMomentLocale,
-                    languageLoadingError: self.languageLoadingError
+                    name: this.currentLanguageName,
+                    translations: this.currentLanguageTranslations,
+                    wysiwygTranslation: this.currentWysiwygTranslation,
+                    momentLocale: this.currentLanguageMomentLocale,
+                    languageLoadingError: this.languageLoadingError
                 },
                 defaultLanguage: {
-                    name: self.defaultLanguageName,
-                    translations: self.defaultLanguageTranslations,
-                    wysiwygTranslation: self.defaultWysiwygTranslation,
-                    momentLocale: self.defaultLanguageMomentLocale,
-                    languageLoadingError: self.languageLoadingError
+                    name: this.defaultLanguageName,
+                    translations: this.defaultLanguageTranslations,
+                    wysiwygTranslation: this.defaultWysiwygTranslation,
+                    momentLocale: this.defaultLanguageMomentLocale,
+                    languageLoadingError: this.languageLoadingError
                 },
-                languages: self.languages,
-                languagesPath: self.languagesPath,
-                languagesDefaultPath: self.languagesDefaultPath,
-                plugins: self.plugins,
-                pluginsPath: self.pluginsPath,
-                sites: self.sites,
-                themes: self.themes,
-                themesPath: self.themesPath,
-                dirs: self.dirPaths,
-                vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked'))
+                languages: this.languages,
+                languagesPath: this.languagesPath,
+                languagesDefaultPath: this.languagesDefaultPath,
+                plugins: this.plugins,
+                pluginsPath: this.pluginsPath,
+                sites: this.sites,
+                themes: this.themes,
+                themesPath: this.themesPath,
+                dirs: this.dirPaths,
+                vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked')),
+                isNewWindow: isNewWindow
             };
-
-            self.mainWindow.webContents.send('app-data-loaded', appData);
+            
+            win.webContents.send('app-data-loaded', appData);
             
             // Open Dev Tools
-            if (self.appConfig.openDevToolsInMain) {
-                let devToolsMode = self.appConfig.devToolsMode || 'detach';
-                self.mainWindow.webContents.openDevTools({ mode: devToolsMode });
+            if (this.appConfig.openDevToolsInMain) {
+                let devToolsMode = this.appConfig.devToolsMode || 'detach';
+                win.webContents.openDevTools({ mode: devToolsMode });
             }
 
-            self.setCurrentZoomLevel();
+            this._setZoomLevel(win);
         });
 
-        this.mainWindow.on('resize', () => this.setCurrentZoomLevel());
-        this.mainWindow.on('maximize', () => this.setCurrentZoomLevel());
-        this.mainWindow.on('unmaximize', () => this.setCurrentZoomLevel());
-        this.mainWindow.on('restore', () => this.setCurrentZoomLevel());
+        win.on('resize', () => this._setZoomLevel(win));
+        win.on('maximize', () => this._setZoomLevel(win));
+        win.on('unmaximize', () => this._setZoomLevel(win));
+        win.on('restore', () => this._setZoomLevel(win));
 
         if (process.platform === 'linux') {
-            this.mainWindow.webContents.on('before-input-event', (event, input) => {
+            win.webContents.on('before-input-event', (event, input) => {
                 if (input.control && input.key === 'q') {
                     this.app.quit();
                 }
             });
         }
 
-        // Create context menu
         const ContextMenuBuilder = require('./helpers/context-menu-builder.js');
-        let contextMenuBuilder = new ContextMenuBuilder(this.mainWindow.webContents);
+        let contextMenuBuilder = new ContextMenuBuilder(win.webContents);
 
-        this.mainWindow.webContents.on('context-menu', (event, params) => {
+        win.webContents.on('context-menu', (event, params) => {
             event.preventDefault();
             contextMenuBuilder.showPopupMenu(params);
         });
-    }
 
-    // Add events to the window
-    initWindowEvents() {
-        this.mainWindow.on('close', () => {
-            let windowBounds = this.mainWindow.getBounds();
+        win.on('close', () => {
+            let windowBounds = win.getBounds();
             fs.writeFileSync(this.initPath, JSON.stringify(windowBounds, null, 4), {'flags': 'w'});
         });
 
-        this.mainWindow.on('closed', () => {
-            this.mainWindow = null;
+        win.on('closed', () => {
+            if (win === this.mainWindow) {
+                this.mainWindow = null;
+            }
         });
 
+        return win;
+    }
+
+    // Create the first (main) window
+    initWindow () {
+        let bounds = Object.assign({}, this.windowBounds);
+
+        // Detect case when Publii was displayed on external display which is now unavailable
+        let displays = screen.getAllDisplays();
+        let externalDisplay = displays.find((display) => {
+            return display.bounds.x !== 0 || display.bounds.y !== 0;
+        });
+
+        if (
+            !externalDisplay &&
+            (
+                bounds.x < 0 ||
+                bounds.x > screen.getPrimaryDisplay().workAreaSize.width ||
+                bounds.y < 0 ||
+                bounds.y > screen.getPrimaryDisplay().workAreaSize.height
+            )
+        ) {
+            bounds.x = 0;
+            bounds.y = 0;
+        }
+
+        Menu.setApplicationMenu(null);
+        this.mainWindow = this._createWindow(this._buildWindowParams(bounds));
+        this.windowManager.registerWindow(this.mainWindow);
+    }
+
+    // Open an additional window (for a second site)
+    openNewWindow () {
+        let win = this._createWindow(this._buildWindowParams(), true);
+        this.windowManager.registerWindow(win);
+        return win;
+    }
+
+    // Add events to the window
+    initWindowEvents () {
         this.initializeCustomIpcMainEvents();
+
+        ipcMain.handle('app-open-new-window', () => {
+            this.openNewWindow();
+        });
     }
 
     // Initializes all custom events for IPC Main thread
@@ -755,8 +834,8 @@ class App {
     }
 
     // Getter for the main window object
-    getMainWindow() {
-        return this.mainWindow;
+    getMainWindow () {
+        return this.windowManager.getMainWindow();
     }
 
     // Function used to filter unnecessary files
@@ -769,12 +848,21 @@ class App {
         this.sites[siteCatalog] = siteData;
     }
 
-    // Function used to restore current zoom level of window, because it is lost if zoom is changed after windo load
-    setCurrentZoomLevel () {
+    // Restore zoom level for a specific window
+    _setZoomLevel (win) {
         let zoom = parseFloat(this.appConfig.uiZoomLevel);
-        
+
         if (zoom && zoom > 0 && zoom <= 2.5) {
-            this.mainWindow.webContents.setZoomFactor(zoom);
+            win.webContents.setZoomFactor(zoom);
+        }
+    }
+
+    // Legacy alias kept for any remaining external callers
+    setCurrentZoomLevel () {
+        let win = this.windowManager.getMainWindow();
+
+        if (win) {
+            this._setZoomLevel(win);
         }
     }
 }

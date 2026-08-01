@@ -8,8 +8,8 @@ class DeployEvents {
     constructor(appInstance) {
         let self = this;
         this.app = appInstance;
-        this.deploymentProcess = false;
-        this.rendererProcess = false;
+        this.deploymentProcesses = new Map(); // webContentsId -> process
+        this.rendererProcesses = new Map();   // webContentsId -> process
 
         ipcMain.on('app-deploy-render', function (event, siteData) {
             if(siteData.site && siteData.theme) {
@@ -21,18 +21,17 @@ class DeployEvents {
             }
         });
 
-        ipcMain.on('app-deploy-render-abort', function(event, siteData) {
-            if(self.rendererProcess) {
-                try {
-                    self.rendererProcess.send({
-                        type: 'abort'
-                    });
+        ipcMain.on('app-deploy-render-abort', function(event) {
+            let rendererProcess = self.rendererProcesses.get(event.sender.id);
 
-                    self.rendererProcess = false;
+            if(rendererProcess) {
+                try {
+                    rendererProcess.send({ type: 'abort' });
                 } catch(e) {
                     console.log(e);
-                    self.rendererProcess = false;
                 }
+
+                self.rendererProcesses.delete(event.sender.id);
             }
 
             event.sender.send('app-deploy-aborted', true);
@@ -48,35 +47,33 @@ class DeployEvents {
             }
         });
 
-        ipcMain.on('app-deploy-abort', function(event, siteData) {
-            if(self.deploymentProcess) {
-                try {
-                    self.deploymentProcess.send({
-                        type: 'abort'
-                    });
+        ipcMain.on('app-deploy-abort', function(event) {
+            let deploymentProcess = self.deploymentProcesses.get(event.sender.id);
 
-                    self.deploymentProcess = false;
+            if(deploymentProcess) {
+                try {
+                    deploymentProcess.send({ type: 'abort' });
                 } catch(e) {
                     console.log(e);
-                    self.deploymentProcess = false;
                 }
+
+                self.deploymentProcesses.delete(event.sender.id);
             }
 
             event.sender.send('app-deploy-aborted', true);
         });
 
-        ipcMain.on('app-deploy-continue', function() {
-            if (self.deploymentProcess) {
-                try {
-                    self.deploymentProcess.send({
-                        type: 'continue-sync'
-                    });
+        ipcMain.on('app-deploy-continue', function(event) {
+            let deploymentProcess = self.deploymentProcesses.get(event.sender.id);
 
-                    self.deploymentProcess = false;
+            if (deploymentProcess) {
+                try {
+                    deploymentProcess.send({ type: 'continue-sync' });
                 } catch(e) {
                     console.log(e);
-                    self.deploymentProcess = false;
                 }
+
+                self.deploymentProcesses.delete(event.sender.id);
             }
         });
 
@@ -90,7 +87,7 @@ class DeployEvents {
     }
 
     renderSite(site, event) {
-        this.rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
+        let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
             stdio: [
                 null,
                 fs.openSync(this.app.app.getPath('logs') + "/rendering-deployment-process.log", "w"),
@@ -99,7 +96,9 @@ class DeployEvents {
             ]
         });
 
-        this.rendererProcess.send({
+        this.rendererProcesses.set(event.sender.id, rendererProcess);
+
+        rendererProcess.send({
             type: 'dependencies',
             appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
@@ -114,7 +113,7 @@ class DeployEvents {
             previewLocation: this.app.appConfig.previewLocation
         });
 
-        this.rendererProcess.on('message', function(data) {
+        rendererProcess.on('message', function(data) {
             if(data.type === 'app-rendering-results') {
                 if(data.result === true) {
                     event.sender.send('app-deploy-rendered', {
@@ -153,9 +152,8 @@ class DeployEvents {
     }
 
     deploySite(site, password, sender) {
-        let self = this;
         let deploymentConfig = this.app.sites[site];
-        this.deploymentProcess = childProcess.fork(__dirname + '/../workers/deploy/deployment', {
+        let deploymentProcess = childProcess.fork(__dirname + '/../workers/deploy/deployment', {
             stdio: [
                 null,
                 fs.openSync(this.app.app.getPath('logs') + "/deployment-process.log", "w"),
@@ -164,11 +162,13 @@ class DeployEvents {
             ]
         });
 
+        this.deploymentProcesses.set(sender.id, deploymentProcess);
+
         if(password !== false) {
             deploymentConfig.deployment.password = password;
         }
 
-        this.deploymentProcess.send({
+        deploymentProcess.send({
             type: 'dependencies',
             appDir: this.app.appDir,
             sitesDir: this.app.sitesDir,
@@ -176,12 +176,12 @@ class DeployEvents {
             useFtpAlt: this.app.appConfig.experimentalFeatureAppFtpAlt
         });
 
-        this.deploymentProcess.on('message', function(data) {
+        deploymentProcess.on('message', function(data) {
             if (data.type === 'web-contents') {
                 if(data.value) {
-                    self.app.mainWindow.webContents.send(data.message, data.value);
+                    sender.send(data.message, data.value);
                 } else {
-                    self.app.mainWindow.webContents.send(data.message);
+                    sender.send(data.message);
                 }
             }
 

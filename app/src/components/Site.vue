@@ -76,6 +76,20 @@ export default {
                     this.siteIsLoaded = true;
                     this.checkGdprConfig();
                     this.$bus.$emit('site-loaded', true);
+                } else if (data.error === 'site-already-open') {
+                    this.currentSite = '';
+                    this.$router.push('/site/!/posts');
+                    this.$nextTick(() => {
+                        this.$bus.$emit('sites-popup-show');
+                        this.$bus.$emit('confirm-display', {
+                            message: this.$t('site.siteAlreadyOpenInAnotherWindow'),
+                            okLabel: this.$t('site.goToWindowWithSite'),
+                            cancelLabel: this.$t('ui.cancel'),
+                            okClick: () => {
+                                mainProcessAPI.send('app-focus-window-with-site', siteName);
+                            }
+                        });
+                    });
                 } else {
                     this.$bus.$emit('message-display', {
                         message: this.$t('site.siteLoadingErrorMsg'),

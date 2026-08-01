@@ -48,14 +48,7 @@ class AppEvents {
 
                 if (appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
-                    
-                    if (appInstance.db) {
-                        try {
-                            appInstance.db.close();
-                        } catch (e) {
-                            console.log('[SITE LOCATION CHANGE] DB already closed');
-                        }
-                    }
+                    appInstance.closeAllDbs();
 
                     setTimeout(() => {
                         if (config.changeSitesLocationWithoutCopying) {
@@ -489,7 +482,7 @@ class AppEvents {
                 console.log('(!) App was unable to save the UI zoom level');
             }
 
-            appInstance.mainWindow.webContents.setZoomFactor(zoomLevel);
+            event.sender.setZoomFactor(zoomLevel);
         });
 
         /**
