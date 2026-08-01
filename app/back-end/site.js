@@ -328,8 +328,7 @@ class Site {
                 application: {
                     appConfig: self.application.appConfig,
                     appDir: self.application.appDir,
-                    sitesDir: self.application.sitesDir,
-                    db: self.application.db,
+                    sitesDir: self.application.sitesDir
                 },
                 name: self.name,
                 postImagesRef: self.postImagesRef,
@@ -440,14 +439,7 @@ class Site {
      */
     static delete(appInstance, name) {
         let sitePath = path.join(appInstance.sitesDir, name);
-
-        if (appInstance.db) {
-            try {
-                appInstance.db.close();
-            } catch (e) {
-                console.log('[SITE DELETE] DB already closed');
-            }
-        }
+        appInstance.closeDbForSite(name);
 
         setTimeout(async () => {
             await shell.trashItem(sitePath);

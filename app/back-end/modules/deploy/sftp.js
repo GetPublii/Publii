@@ -345,7 +345,7 @@ class SFTP {
         });
     }
 
-    async testConnection(app, deploymentConfig, siteName, siteConfig) {
+    async testConnection(app, deploymentConfig, siteName, siteConfig, sender) {
         let client = new sftpClient();
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
@@ -397,7 +397,7 @@ class SFTP {
                     client.delete(
                         normalizePath(path.join(deploymentConfig.path, 'publii.test'))
                     ).then(() => {
-                        app.mainWindow.webContents.send('app-deploy-test-success');
+                        sender.send('app-deploy-test-success');
                         
                         if (fs.existsSync(testFilePath)) {
                             fs.unlinkSync(testFilePath);
@@ -405,7 +405,7 @@ class SFTP {
     
                         client.end().catch(err => console.log('SFTP session end error'));
                     }).catch(() => {
-                        app.mainWindow.webContents.send('app-deploy-test-write-error');
+                        sender.send('app-deploy-test-write-error');
                         
                         if (fs.existsSync(testFilePath)) {
                             fs.unlinkSync(testFilePath);
@@ -414,7 +414,7 @@ class SFTP {
                         client.end().catch(err => console.log('SFTP session end error'));
                     });
                 }).catch(err => {
-                    app.mainWindow.webContents.send('app-deploy-test-write-error');
+                    sender.send('app-deploy-test-write-error');
                    
                     if (fs.existsSync(testFilePath)) {
                         fs.unlinkSync(testFilePath);
@@ -423,7 +423,7 @@ class SFTP {
                     client.end().catch(err => console.log('SFTP session end error'));
                 });
             }).catch(err => {
-                app.mainWindow.webContents.send('app-deploy-test-write-error');
+                sender.send('app-deploy-test-write-error');
                
                 if (fs.existsSync(testFilePath)) {
                     fs.unlinkSync(testFilePath);
@@ -433,21 +433,21 @@ class SFTP {
             });
 
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-success');
+            sender.send('app-deploy-test-success');
         }).catch(err => {
             console.log(`[${ new Date().toUTCString() }] ${err}`);
 
             if(waitForTimeout) {
                 waitForTimeout = false;
                 client.end().catch(err => console.log('SFTP session end error'));
-                app.mainWindow.webContents.send('app-deploy-test-error');
+                sender.send('app-deploy-test-error');
             }
         });
 
         setTimeout(function() {
             if(waitForTimeout === true) {
                 client.end().catch(err => console.log('SFTP session end error'));
-                app.mainWindow.webContents.send('app-deploy-test-error');
+                sender.send('app-deploy-test-error');
             }
         }, 15000);
     }

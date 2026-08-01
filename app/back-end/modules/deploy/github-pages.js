@@ -186,7 +186,7 @@ class GithubPages {
         }, 15000);
     }
 
-    async testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         let token = deploymentConfig.github.token;
         let repository = deploymentConfig.github.repo;
         let user = deploymentConfig.github.user;
@@ -228,7 +228,7 @@ class GithubPages {
         ).then(result => {
             if(result === null) {
                 this.waitForTimeout = false;
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.branchDoesNotExist'
                     }
@@ -238,18 +238,18 @@ class GithubPages {
             }
 
             this.waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-success');
+            sender.send('app-deploy-test-success');
         }).catch(err => {
             err = JSON.parse(err);
             this.waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-error', {
+            sender.send('app-deploy-test-error', {
                 message: stripTags((err.message).toString())
             });
         });
 
         setTimeout(function() {
             if(this.waitForTimeout === true) {
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
                     }

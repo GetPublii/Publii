@@ -21,8 +21,7 @@ class ImageUploaderEvents {
                 appInstance: {
                     appConfig: appInstance.appConfig,
                     appDir: appInstance.appDir,
-                    sitesDir: appInstance.sitesDir,
-                    db: appInstance.db
+                    sitesDir: appInstance.sitesDir
                 },
                 imageData: imageData
             });

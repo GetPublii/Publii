@@ -38,8 +38,7 @@ if (typeof process.env.NODE_ENV === 'undefined') {
     process.env.NODE_ENV = 'production';
 }
 
-// Keep a global reference of the window object for avoiding Garbage Collector
-let mainWindow;
+// Keep a global reference of the app instance for avoiding Garbage Collector
 let appInstance;
 
 electronApp.on('window-all-closed', function () {
@@ -49,7 +48,6 @@ electronApp.on('window-all-closed', function () {
 electronApp.on('ready', function () {
     // Start the app
     let startupSettings = {
-        'mainWindow': mainWindow,
         'app': electronApp,
         'basedir': __dirname
     };
@@ -407,49 +405,6 @@ electronApp.on('ready', function () {
             ]
         }];
 
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
-
-    let editTopMenu = {
-        label: "Edit",
-        submenu: [
-            {
-                label: "Undo",
-                accelerator: "CmdOrCtrl+Z",
-                selector: "undo:"
-            },
-            {
-                label: "Redo",
-                accelerator: "Shift+CmdOrCtrl+Z",
-                selector: "redo:"
-            },
-            {
-                type: "separator"
-            },
-            {
-                label: "Cut",
-                accelerator: "CmdOrCtrl+X",
-                selector: "cut:"
-            },
-            {
-                label: "Copy",
-                accelerator: "CmdOrCtrl+C",
-                selector: "copy:"
-            },
-            {
-                label: "Paste",
-                accelerator: "CmdOrCtrl+V",
-                selector: "paste:"
-            },
-            {
-                label: "Select All",
-                accelerator: "CmdOrCtrl+A",
-                selector: "selectAll:"
-            }
-        ]
-    };
-
-    const template = [appTopMenu, editTopMenu];
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 

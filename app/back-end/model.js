@@ -15,7 +15,7 @@ class Model {
     constructor(appInstance, data) {
         this.application = appInstance;
         this.site = data.site;
-        this.db = this.application.getDbForSite(this.site) || this.application.db;
+        this.db = (typeof this.application.getDbForSite === 'function' ? this.application.getDbForSite(this.site) : false) || this.application.db;
         this.appDir = this.application.appDir;
         this.siteDir = path.join(this.application.sitesDir, this.site);
         this.dbPath = path.join(this.siteDir, 'input', 'db.sqlite');

@@ -306,7 +306,7 @@ class FTPAlt {
         });
     }
 
-    async testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         let client = new ftp.Client(15000);
         client.ftp.verbose = true;
         client.ftp.log = this.connectionDebugger;
@@ -351,7 +351,7 @@ class FTPAlt {
             waitForTimeout = false;
         } catch (err) {
             client.close();
-            app.mainWindow.webContents.send('app-deploy-test-error', { 
+            sender.send('app-deploy-test-error', { 
                 message: stripTags((err.message).toString())
             });
         }
@@ -359,7 +359,7 @@ class FTPAlt {
         try {
             await client.uploadFrom(normalizePath(testFilePath), normalizePath(path.join(deploymentConfig.path, 'publii.test')));
         } catch (err) {
-            app.mainWindow.webContents.send('app-deploy-test-write-error');
+            sender.send('app-deploy-test-write-error');
 
             if (fs.existsSync(testFilePath)) {
                 fs.unlinkSync(testFilePath);
@@ -372,7 +372,7 @@ class FTPAlt {
         try {
             await client.remove(normalizePath(path.join(deploymentConfig.path, 'publii.test')));
         } catch (err) {
-            app.mainWindow.webContents.send('app-deploy-test-write-error');
+            sender.send('app-deploy-test-write-error');
             
             if (fs.existsSync(testFilePath)) {
                 fs.unlinkSync(testFilePath);
@@ -382,7 +382,7 @@ class FTPAlt {
             return;
         }
 
-        app.mainWindow.webContents.send('app-deploy-test-success');
+        sender.send('app-deploy-test-success');
             
         if (fs.existsSync(testFilePath)) {
             fs.unlinkSync(testFilePath);
@@ -393,7 +393,7 @@ class FTPAlt {
         setTimeout(function() {
             if (waitForTimeout === true) {
                 client.close();
-                app.mainWindow.webContents.send('app-deploy-test-error');
+                sender.send('app-deploy-test-error');
             }
         }, 15000);
     }

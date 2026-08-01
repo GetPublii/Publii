@@ -47,7 +47,7 @@ class App {
      * @param startupSettings
      */
     constructor(startupSettings) {
-        this.mainWindow = startupSettings.mainWindow;
+        this.mainWindow = null;
         this.app = startupSettings.app;
         this.basedir = startupSettings.basedir;
         this.appDir = path.join(this.app.getPath('documents'), 'Publii');

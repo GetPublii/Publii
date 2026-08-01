@@ -57,7 +57,7 @@ class Git {
         await this.deploy();
     }
 
-    async testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         this.waitForTimeout = true;
         let account = slug(siteName);
         let username = deploymentConfig.git.user;
@@ -79,7 +79,7 @@ class Git {
 
         let timeoutCheck = setTimeout(function () {
             if(this.waitForTimeout === true) {
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
                     }
@@ -95,7 +95,7 @@ class Git {
                 url,
                 onAuth: () => authObject,
                 onAuthFailure: () => {
-                    app.mainWindow.webContents.send('app-deploy-test-error', {
+                    sender.send('app-deploy-test-error', {
                         noAdditionalMessage: true,
                         message: {
                             translation: 'core.server.tokenOrServerAddressInvalid'
@@ -105,7 +105,7 @@ class Git {
                     clearTimeout(timeoutCheck);
                 },
                 onAuthSuccess: () => {
-                    app.mainWindow.webContents.send('app-deploy-test-success');
+                    sender.send('app-deploy-test-success');
                     this.waitForTimeout = false;
                     clearTimeout(timeoutCheck);
                 }
@@ -114,11 +114,11 @@ class Git {
             console.log('Cannot connect to the git repository: ', e);
 
             if (e.data && e.data.response) {
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: stripTags((e.data.response).toString())
                 });
             } else {
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: stripTags((e).toString())
                 });
             }

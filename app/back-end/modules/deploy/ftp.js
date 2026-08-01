@@ -424,7 +424,7 @@ class FTP {
         );
     }
 
-    async testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         let client = new ftpClient();
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
@@ -472,7 +472,7 @@ class FTP {
                 normalizePath(path.join(deploymentConfig.path, 'publii.test')),
                 (err) => {   
                     if (err) {
-                        app.mainWindow.webContents.send('app-deploy-test-write-error');
+                        sender.send('app-deploy-test-write-error');
 
                         if (fs.existsSync(testFilePath)) {
                             fs.unlinkSync(testFilePath);
@@ -486,7 +486,7 @@ class FTP {
                         normalizePath(path.join(deploymentConfig.path, 'publii.test')),
                         (err) => {
                             if (err) {
-                                app.mainWindow.webContents.send('app-deploy-test-write-error');
+                                sender.send('app-deploy-test-write-error');
                                 
                                 if (fs.existsSync(testFilePath)) {
                                     fs.unlinkSync(testFilePath);
@@ -496,7 +496,7 @@ class FTP {
                                 return;
                             }
 
-                            app.mainWindow.webContents.send('app-deploy-test-success');
+                            sender.send('app-deploy-test-success');
                             
                             if (fs.existsSync(testFilePath)) {
                                 fs.unlinkSync(testFilePath);
@@ -517,7 +517,7 @@ class FTP {
             if(waitForTimeout) {
                 waitForTimeout = false;
                 client.destroy();
-                app.mainWindow.webContents.send('app-deploy-test-error', { 
+                sender.send('app-deploy-test-error', { 
                     message: stripTags((err.message).toString())
                 });
             }
@@ -526,7 +526,7 @@ class FTP {
         setTimeout(function() {
             if(waitForTimeout === true) {
                 client.destroy();
-                app.mainWindow.webContents.send('app-deploy-test-error');
+                sender.send('app-deploy-test-error');
             }
         }, 15000);
     }

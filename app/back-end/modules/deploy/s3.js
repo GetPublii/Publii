@@ -361,7 +361,7 @@ class S3 {
         return filePath;
     }
 
-    async testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         let s3Provider = deploymentConfig.s3.provider;
         let s3Endpoint = deploymentConfig.s3.endpoint;
         let s3Id = deploymentConfig.s3.id;
@@ -420,7 +420,7 @@ class S3 {
             await this.connection.send(new ListObjectsCommand(testParams));
         } catch (err) {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-error', {
+            sender.send('app-deploy-test-error', {
                 message: stripTags((err.message).toString())
             });
 
@@ -428,11 +428,11 @@ class S3 {
         }
 
         waitForTimeout = false;
-        app.mainWindow.webContents.send('app-deploy-test-success');
+        sender.send('app-deploy-test-success');
 
         setTimeout(function() {
             if (waitForTimeout === true) {
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
                     }

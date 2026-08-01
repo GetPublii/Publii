@@ -267,14 +267,14 @@ class GoogleCloud {
         this.deployment.removeFile();
     }
 
-    async testConnection(app, deploymentConfig, siteName) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         let bucketName = deploymentConfig.google.bucket;
         let keyFilePath = normalizePath(deploymentConfig.google.key);
         let waitForTimeout = true;
 
         if(!fs.existsSync(keyFilePath)) {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-error');
+            sender.send('app-deploy-test-error');
             return;
         }
 
@@ -292,17 +292,17 @@ class GoogleCloud {
 
         bucket.getMetadata().then(data => {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-success');
+            sender.send('app-deploy-test-success');
         }).catch(err => {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-error', {
+            sender.send('app-deploy-test-error', {
                 message: stripTags((err.message).toString())
             });
         });
 
         setTimeout(function() {
             if(waitForTimeout === true) {
-                app.mainWindow.webContents.send('app-deploy-test-error');
+                sender.send('app-deploy-test-error');
             }
         }, 15000);
     }

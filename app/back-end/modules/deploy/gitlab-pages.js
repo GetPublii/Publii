@@ -33,7 +33,7 @@ class GitlabPages {
         this.currentUploadProgress = 0;
     }
 
-    async testConnection (app, deploymentConfig, siteName, uuid) {
+    async testConnection (app, deploymentConfig, siteName, uuid, sender) {
         let repository = deploymentConfig.gitlab.repo;
         let branchName = deploymentConfig.gitlab.branch;
         let token = deploymentConfig.gitlab.token;
@@ -72,7 +72,7 @@ class GitlabPages {
                 // Detect a case when repository name is only similar to the provided repository name (not equal)
                 if (projects[0].name !== repository && projects[0].path !== repository) {
                     this.waitForTimeout = false;
-                    app.mainWindow.webContents.send('app-deploy-test-error', {
+                    sender.send('app-deploy-test-error', {
                         message: {
                             translation: 'core.server.repositoryDoesNotExist'
                         }
@@ -83,7 +83,7 @@ class GitlabPages {
 
                 if(!projectID) {
                     this.waitForTimeout = false;
-                    app.mainWindow.webContents.send('app-deploy-test-error', {
+                    sender.send('app-deploy-test-error', {
                         message: {
                             translation: 'core.server.repositoryDoesNotExist'
                         }
@@ -95,7 +95,7 @@ class GitlabPages {
                 this.client.Branches.show(projectID, branchName).then(branch => {
                     if(!branch) {
                         this.waitForTimeout = false;
-                        app.mainWindow.webContents.send('app-deploy-test-error', {
+                        sender.send('app-deploy-test-error', {
                             message: {
                                 translation: 'core.server.branchDoesNotExist'
                             }
@@ -105,10 +105,10 @@ class GitlabPages {
                     }
 
                     this.waitForTimeout = false;
-                    app.mainWindow.webContents.send('app-deploy-test-success');
+                    sender.send('app-deploy-test-success');
                 }).catch(err => {
                     this.waitForTimeout = false;
-                    app.mainWindow.webContents.send('app-deploy-test-error', {
+                    sender.send('app-deploy-test-error', {
                         message: {
                             translation: 'core.server.branchDoesNotExist'
                         }
@@ -116,7 +116,7 @@ class GitlabPages {
                 });
             }).catch(err => {
                 this.waitForTimeout = false;
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.repositoryDoesNotExist'
                     }
@@ -124,7 +124,7 @@ class GitlabPages {
             });
         }).catch(err => {
             this.waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-error', {
+            sender.send('app-deploy-test-error', {
                 message: {
                     translation: 'core.server.tokenOrServerAddressInvalid'
                 }
@@ -133,7 +133,7 @@ class GitlabPages {
 
         setTimeout(function() {
             if(this.waitForTimeout === true) {
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
                     }

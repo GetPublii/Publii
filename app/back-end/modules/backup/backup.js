@@ -407,12 +407,8 @@ class Backup {
                     }
         
                     // Close DB connection and remove site dir contents
-                    if (appInstance.db) {
-                        try {
-                            appInstance.db.close();
-                        } catch (e) {
-                            console.log('[BACKUP RESTORE] DB already closed');
-                        }
+                    if (appInstance) {
+                        appInstance.closeDbForSite(siteName);
                     }
         
                     Utils.emptyDirRecursively(destinationPath);

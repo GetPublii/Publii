@@ -61,7 +61,7 @@ class Deployment {
      * @param deploymentConfig
      * @param siteName
      */
-    async testConnection (app, deploymentConfig, siteName, uuid) {
+    async testConnection (app, deploymentConfig, siteName, uuid, sender) {
         let connection = false;
 
         switch(deploymentConfig.protocol) {
@@ -83,7 +83,7 @@ class Deployment {
         }
 
         if (connection) {
-            await connection.testConnection(app, deploymentConfig, siteName, uuid);
+            await connection.testConnection(app, deploymentConfig, siteName, uuid, sender);
         }
     }
 

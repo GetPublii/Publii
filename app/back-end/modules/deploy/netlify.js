@@ -141,7 +141,7 @@ class Netlify {
         });
     }
 
-    async testConnection(app, deploymentConfig, siteName, uuid) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         let client;
         let siteID = deploymentConfig.netlify.id;
         let token = deploymentConfig.netlify.token;
@@ -169,17 +169,17 @@ class Netlify {
         try {
             await client.testConnection();
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-success');
+            sender.send('app-deploy-test-success');
         } catch (err) {
             waitForTimeout = false;
-            app.mainWindow.webContents.send('app-deploy-test-error', {
+            sender.send('app-deploy-test-error', {
                 message: stripTags((err.message).toString())
             });
         }
 
         setTimeout(function() {
             if(waitForTimeout === true) {
-                app.mainWindow.webContents.send('app-deploy-test-error', {
+                sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
                     }
