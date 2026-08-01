@@ -52,7 +52,7 @@ class AppFilesHelper {
 
 
         if(copyErrorOccurred) {
-            fs.emptyDirSync(newLocation);
+            Utils.emptyDirRecursively(newLocation);
 
             event.sender.send('app-config-saved', {
                 status: false,
@@ -127,7 +127,7 @@ class AppFilesHelper {
     removeCatalogs(location, catalogsToRemove) {
         for(let catalogToRemove of catalogsToRemove) {
             let catalogPath = path.join(location, catalogToRemove);
-            fs.removeSync(catalogPath);
+            Utils.removePathRecursively(catalogPath);
         }
     }
 }

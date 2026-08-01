@@ -112,7 +112,7 @@ class Languages {
             return;
         }
 
-        fs.removeSync(target);
+        UtilsHelper.removePathRecursively(target);
     }
 
     /*

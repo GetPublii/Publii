@@ -137,7 +137,7 @@ class ImageHelper {
                     }
                 });
 
-                fs.rmSync(directoryPath, { recursive: true });
+                Utils.removePathRecursively(directoryPath);
             }
         }
     }

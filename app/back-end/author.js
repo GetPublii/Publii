@@ -131,7 +131,7 @@ class Author extends Model {
             if (tempDirectoryExists) {
                 let finalImagesDir = path.join(this.siteDir, 'input', 'media', 'authors', (this.id).toString());
                 fs.copySync(tempImagesDir, finalImagesDir);
-                fs.removeSync(tempImagesDir);
+                Utils.removePathRecursively(tempImagesDir);
             }
         }
 

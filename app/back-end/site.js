@@ -275,7 +275,7 @@ class Site {
             let fullPath = path.join(mediaPath, catalog, 'responsive');
 
             // remove the files form dir or create dir if not exists
-            fs.emptyDirSync(fullPath);
+            UtilsHelper.emptyDirRecursively(fullPath);
 
             // Add gallery catalogs
             let galleryFullPath = path.join(mediaPath, catalog, 'gallery');
@@ -646,7 +646,7 @@ class Site {
         }
 
         if (fs.existsSync(destination)) {
-            fs.removeSync(destination);
+            UtilsHelper.removePathRecursively(destination);
         }
 
         fs.moveSync(source, destination);

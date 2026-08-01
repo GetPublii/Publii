@@ -210,7 +210,7 @@ class Plugins {
             return;
         }
 
-        fs.removeSync(target);
+        UtilsHelper.removePathRecursively(target);
     }
 
     getPluginConfig (siteName, pluginName) {
@@ -363,7 +363,7 @@ class Plugins {
             let file = files[i];
             
             if (file.match(/\.(svg|png|jpg|jpeg|gif|webp)$/i) && imagesInConfig.indexOf(file) === -1) {
-                fs.removeSync(path.join(pluginImagesPath, file));
+                UtilsHelper.removePathRecursively(path.join(pluginImagesPath, file));
             }
         }
     }

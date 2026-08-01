@@ -636,7 +636,7 @@ class SiteEvents {
             let tempBackupDir = path.join(appInstance.appDir, 'temp', 'backup-to-restore');
 
             if (fs.existsSync(tempBackupDir)) {
-                fs.emptyDirSync(tempBackupDir);
+                UtilsHelper.emptyDirRecursively(tempBackupDir);
             }
         });
 
@@ -782,7 +782,7 @@ class SiteEvents {
         let gitDirPath = path.join(appInstance.sitesDir, siteName, 'output', '.git');
 
         if (UtilsHelper.dirExists(gitDirPath)) {
-            fs.removeSync(gitDirPath);
+            UtilsHelper.removePathRecursively(gitDirPath);
         }
     }
 }

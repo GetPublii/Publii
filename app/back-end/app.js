@@ -173,7 +173,7 @@ class App {
                     // If app theme is newer version than the existing one
                     if(compare(appThemeData.version, userThemeData.version) === 1) {
                         // Remove all files from the theme dir
-                        fs.emptyDirSync(path.join(userThemesPath, file));
+                        Utils.emptyDirRecursively(path.join(userThemesPath, file));
 
                         // Copy updated theme files
                         fs.copySync(

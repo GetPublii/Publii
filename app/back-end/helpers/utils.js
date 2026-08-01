@@ -90,12 +90,83 @@ class UtilsHelper {
      * Recursively remove a file or directory with retries.
      */
     static removePathRecursively(targetPath) {
-        fs.rmSync(targetPath, { 
-            recursive: true, 
-            force: true, 
-            maxRetries: 5, 
-            retryDelay: 200 
-        });
+        let maxRetries = 5;
+        let retryDelay = 200;
+        let lastError = null;
+
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            if (attempt > 0) {
+                UtilsHelper.sleepSync(attempt * retryDelay);
+            }
+
+            try {
+                fs.rmSync(targetPath, {
+                    recursive: true,
+                    force: true
+                });
+
+                return;
+            } catch (error) {
+                lastError = error;
+
+                if (error.code === 'EPERM' || error.code === 'EACCES') {
+                    if (process.platform === 'win32') {
+                        UtilsHelper.clearReadOnlyRecursively(targetPath);
+                    }
+                } else if (['EBUSY', 'ENOTEMPTY', 'EMFILE', 'ENFILE'].indexOf(error.code) === -1) {
+                    throw error;
+                }
+            }
+        }
+
+        throw lastError;
+    }
+
+    /*
+     * (Windows only) Remove the read-only attribute from a path and all of its children
+     */
+    static clearReadOnlyRecursively(targetPath) {
+        let stats;
+
+        try {
+            stats = fs.lstatSync(targetPath);
+        } catch (error) {
+            return;
+        }
+
+        // chmod will follow symlinks - skip them to do not touch files outside of the removed tree
+        if (stats.isSymbolicLink()) {
+            return;
+        }
+
+        // children first - chmod on a directory could revoke the permissions for traverse into
+        if (stats.isDirectory()) {
+            let entries = [];
+
+            try {
+                entries = fs.readdirSync(targetPath);
+            } catch (error) {}
+
+            for (let entry of entries) {
+                UtilsHelper.clearReadOnlyRecursively(path.join(targetPath, entry));
+            }
+        }
+
+        try {
+            fs.chmodSync(targetPath, 0o666);
+        } catch (error) {}
+    }
+
+    /*
+     * Synchronous sleep used between removal retries
+     */
+    static sleepSync(timeInMs) {
+        try {
+            Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, timeInMs);
+        } catch (error) {
+            let end = Date.now() + timeInMs;
+            while (Date.now() < end) {}
+        }
     }
 
     /*

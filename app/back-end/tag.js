@@ -109,7 +109,7 @@ class Tag extends Model {
             if (tempDirectoryExists) {
                 let finalImagesDir = path.join(this.siteDir, 'input', 'media', 'tags', (this.id).toString());
                 fs.copySync(tempImagesDir, finalImagesDir);
-                fs.removeSync(tempImagesDir);
+                Utils.removePathRecursively(tempImagesDir);
             }
         }
 

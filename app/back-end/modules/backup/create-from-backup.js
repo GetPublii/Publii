@@ -138,7 +138,7 @@ class CreateFromBackup {
 
     removeBackupFilesIfNecessary () {
         if (fs.existsSync(this.tempDir)) {
-            fs.emptyDirSync(this.tempDir);
+            Utils.emptyDirRecursively(this.tempDir);
         }
     }
 }

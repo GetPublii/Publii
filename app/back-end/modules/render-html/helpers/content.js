@@ -545,9 +545,12 @@ class ContentHelper {
 
         let urls = [...new Set(text.match(regexp))];
 
-        // We need to remove trailing '"' char from the files matches
+        // We need to remove trailing quote char from the files matches - and the
+        // JSON-escaping backslash that may precede it when the link sits inside an
+        // escaped HTML attribute (href=\"...\"), otherwise the leftover backslash
+        // would break the JSON.parse done on the processed content
         if (type === 'file' || type === 'author') {
-            urls = urls.map(file => file.replace(/"$/, ''));
+            urls = urls.map(file => file.replace(/["']$/, '').replace(/\\$/, ''));
         }
 
         // When there is no internal links of given type - return unmodified text
@@ -579,7 +582,7 @@ class ContentHelper {
             }
 
             if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
-                link = link + 'index.html';
+                link = link + (link.endsWith('/') ? '' : '/') + 'index.html';
             }
 
             text = text.split(url).join(resolveLink(link));
