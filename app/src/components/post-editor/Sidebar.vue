@@ -542,6 +542,20 @@
                                         :item-id="$parent.postID"
                                         imageType="contentImages" />
 
+                                    <repeater
+                                        v-if="field.type === 'repeater'" 
+                                        slot="field"
+                                        :structure="field.structure"
+                                        v-model="$parent.postData.viewOptions[field.name]"
+                                        :translations="field.translations"
+                                        :maxCount="field.maxCount"
+                                        :hasEmptyState="field.hasEmptyState"
+                                        :hideLabels="field.hideLabels"
+                                        :anchor="field.anchor"
+                                        :settings="$parent.postData.viewOptions"
+                                        imageType="contentImages"
+                                        :customCssClasses="field.customCssClasses" />
+
                                     <small
                                         v-if="field.note"
                                         class="note">
