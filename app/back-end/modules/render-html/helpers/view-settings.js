@@ -85,7 +85,7 @@ class ViewSettings {
                     }
 
                     let imagePath = '/media/' + dirName + '/' + itemData.id + '/' + field.value;
-                    outputConfig[defaultViewFields[i]] = rendererInstance.siteConfig.domain + imagePath;
+                    outputConfig[viewFields[i]] = rendererInstance.siteConfig.domain + imagePath;
                 }
             } else {
                 if(typeof field !== 'undefined' && field.value) {
