@@ -173,6 +173,9 @@
             "separator": {
                 "idTooltip": "This value will be used as the separator ID"
             },
+            "table": {
+                "idTooltip": "This value will be used as the table ID"
+            },
             "toc": {
                 "idTooltip": "This value will be used as the ID of the table of contents"
             }
@@ -240,6 +243,13 @@
         "searchForABlock": "Search for a block...",
         "startWriting": "Start writing...",
         "startWritingOrPressTabToChooseBlock": "Start writing or press the TAB key to choose a block.",
+        "table": "Table",
+        "tableAddColumn": "Add column",
+        "tableAddRow": "Add row",
+        "tableDeleteColumn": "Delete column",
+        "tableDeleteRow": "Delete row",
+        "tableToggleHeader": "Toggle header row",
+        "tableToggleHeaderCol": "Toggle header column",
         "toc": "TOC",
         "tocAutoGenerationInfo": "The table of contents is generated automatically based on the headings (H1-H6) of your content.",
         "togglePostStatsPanel": "Toggle post statistics panel",

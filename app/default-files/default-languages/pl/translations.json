@@ -172,6 +172,9 @@
             "separator": {
                 "idTooltip": "Ta wartość zostanie użyta jako ID tego separatora"
             },
+            "table": {
+                "idTooltip": "Ta wartość zostanie użyta jako ID tej tabeli"
+            },
             "toc": {
                 "idTooltip": "Ta wartość zostanie użyta jako ID tego spisu treści"
             }
@@ -239,6 +242,13 @@
         "searchForABlock": "Wyszukaj blok...",
         "startWriting": "Zacznij pisać...",
         "startWritingOrPressTabToChooseBlock": "Zacznij pisać lub naciśnij klawisz TAB, aby wybrać blok.",
+        "table": "Tabela",
+        "tableAddColumn": "Dodaj kolumnę",
+        "tableAddRow": "Dodaj wiersz",
+        "tableDeleteColumn": "Usuń kolumnę",
+        "tableDeleteRow": "Usuń wiersz",
+        "tableToggleHeader": "Przełącz wiersz nagłówka",
+        "tableToggleHeaderCol": "Przełącz kolumnę nagłówkową",
         "toc": "Spis treści",
         "tocAutoGenerationInfo": "Spis treści jest generowany automatycznie poprzez zbieranie nagłówków (H1-H6) Twoich treści.",
         "togglePostStatsPanel": "Przełącz panel statystyk wpisów",

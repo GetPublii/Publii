@@ -23,6 +23,7 @@ export default class ShortcutManager {
     this.shortcuts['/more'] = 'publii-readmore';
     this.shortcuts['/html'] = 'publii-html';
     this.shortcuts['/toc'] = 'publii-toc';
+    this.shortcuts['/table'] = 'publii-table';
     // this.shortcuts['/embed'] = 'publii-embed';
     this.shortcuts['/image'] = 'publii-image';
     this.shortcuts['/img'] = 'publii-image';

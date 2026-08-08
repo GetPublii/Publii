@@ -10,5 +10,6 @@ module.exports = {
   'publii-quote': require('./components/default-blocks/publii-quote/render.js'),
   'publii-readmore': require('./components/default-blocks/publii-readmore/render.js'),
   'publii-separator': require('./components/default-blocks/publii-separator/render.js'),
+  'publii-table': require('./components/default-blocks/publii-table/render.js'),
   'publii-toc': require('./components/default-blocks/publii-toc/render.js')
 };

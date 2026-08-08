@@ -54,6 +54,7 @@ import PubliiList from './default-blocks/publii-list/block.vue';
 import PubliiParagraph from './default-blocks/publii-paragraph/block.vue';
 import PubliiReadmore from './default-blocks/publii-readmore/block.vue';
 import PubliiSeparator from './default-blocks/publii-separator/block.vue';
+import PubliiTable from './default-blocks/publii-table/block.vue';
 import PubliiToc from './default-blocks/publii-toc/block.vue';
 import PubliiQuote from './default-blocks/publii-quote/block.vue';
 // extensions
@@ -79,6 +80,7 @@ export default {
     'publii-paragraph': PubliiParagraph,
     'publii-readmore': PubliiReadmore,
     'publii-separator': PubliiSeparator,
+    'publii-table': PubliiTable,
     'publii-toc': PubliiToc,
     'publii-quote': PubliiQuote
   },

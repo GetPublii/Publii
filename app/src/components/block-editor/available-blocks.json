@@ -30,6 +30,11 @@
         "label": "editor.quote"
     },
     {
+        "blockName": "publii-table",
+        "icon": "table",
+        "label": "editor.table"
+    },
+    {
         "blockName": "publii-code",
         "icon": "code",
         "label": "editor.code"
