@@ -23,7 +23,7 @@ let embedHelper = {
     return false;
   },
   getService (code) {
-    if (code.substr(0, 8) === 'https://' && code.indexOf('youtube.com') > -1) {
+    if (code.substr(0, 8) === 'https://' && (code.indexOf('youtube.com') > -1 || code.indexOf('youtu.be') > -1)) {
       return 'youtube';
     }
 
@@ -46,9 +46,26 @@ let embedHelper = {
   youtubeIframe (code) {
     let url = code;
     let queryParams = new URLSearchParams(url.split('?')[1]);
+    let videoID = false;
 
     if (queryParams.has('v')) {
-      url = 'https://www.youtube.com/embed/' + queryParams.get('v') + '?feature=oembed';
+      videoID = queryParams.get('v');
+    } else {
+      let shortUrlMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+
+      if (shortUrlMatch) {
+        videoID = shortUrlMatch[1];
+      }
+    }
+
+    if (videoID) {
+      url = 'https://www.youtube.com/embed/' + videoID + '?feature=oembed';
+
+      if (queryParams.has('list')) {
+        url += '&list=' + queryParams.get('list');
+      }
+    } else if (queryParams.has('list')) {
+      url = 'https://www.youtube.com/embed/videoseries?list=' + queryParams.get('list');
     }
 
     return '<iframe src="' + url + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
