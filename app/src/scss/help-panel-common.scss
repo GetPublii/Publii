@@ -31,6 +31,21 @@
             width: 44.1rem;
             z-index: 1;
         }
+
+    /* RTL: stay on the right edge; text inside is RTL */
+    [dir="rtl"] &,
+    body.is-rtl & {
+        direction: rtl;
+        text-align: right;
+        left: auto;
+        right: 0;
+
+        &::before,
+        &::after {
+            left: auto;
+            right: 0;
+        }
+    }
     
     &.is-visible {
         display: block;

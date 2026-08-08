@@ -128,6 +128,14 @@ module.exports = [
         code: 'fi'
     },
     {
+        name: 'Persian (Farsi)',
+        code: 'fa'
+    },
+    {
+        name: 'Persian (Iran)',
+        code: 'fa-ir'
+    },
+    {
         name: 'French',
         code: 'fr'
     },

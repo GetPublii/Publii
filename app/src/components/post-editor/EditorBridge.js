@@ -1,5 +1,6 @@
 import EditorConfig from './../configs/postEditor.config.js';
 import Utils from './../../helpers/utils';
+import { isRtlLanguage } from './../../helpers/rtl';
 
 class EditorBridge {
     constructor(itemID, itemType = 'post') {
@@ -14,6 +15,25 @@ class EditorBridge {
         this.init();
     }
 
+    /**
+     * Content/UI RTL when app language or site language is an RTL locale.
+     */
+    isRtlContent () {
+        try {
+            let appLang = (window.app && window.app.getAppLanguage) ? window.app.getAppLanguage() : '';
+            let appDir = (window.app && window.app.getAppLanguageDirection) ? window.app.getAppLanguageDirection() : '';
+            let siteLang = (window.app && window.app.getSiteLanguage) ? window.app.getSiteLanguage() : '';
+
+            if (appDir === 'rtl' || isRtlLanguage(appLang, appDir)) {
+                return true;
+            }
+
+            return isRtlLanguage(siteLang);
+        } catch (e) {
+            return false;
+        }
+    }
+
     updateItemID (newItemID) {
         this.itemID = newItemID;
         let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
@@ -22,14 +42,26 @@ class EditorBridge {
 
     init() {
         let customFormats = this.loadCustomFormatsFromTheme();
+        let useRtl = this.isRtlContent();
         let editorConfig = Object.assign({}, EditorConfig, {
             setup: this.setupEditor.bind(this, customFormats),
             file_picker_callback: this.filePickerCallback.bind(this),
             content_css: this.tinyMCECSSFiles,
             style_formats: customFormats,
             statusbar: true,
-            browser_spellcheck: window.app.spellcheckerIsEnabled()
+            browser_spellcheck: window.app.spellcheckerIsEnabled(),
+            directionality: useRtl ? 'rtl' : 'ltr'
         });
+
+        // Ensure directionality plugin is available for LTR/RTL toggles
+        if (editorConfig.plugins && editorConfig.plugins.indexOf('directionality') === -1) {
+            editorConfig.plugins = editorConfig.plugins + ' directionality';
+        }
+
+        if (useRtl) {
+            editorConfig.content_style = (editorConfig.content_style || '') +
+                ' body { direction: rtl; text-align: right; font-family: Vazirmatn, Tahoma, sans-serif; }';
+        }
 
         if (window.app.wysiwygAdditionalValidElements() !== '') {
             let additionalValidElements = window.app.wysiwygAdditionalValidElements();
@@ -80,6 +112,14 @@ class EditorBridge {
 
             if (document.getElementById('app').classList.contains('use-wide-scrollbars')) {
                 iframe.contentWindow.document.documentElement.classList.add('use-wide-scrollbars');
+            }
+
+            if (this.isRtlContent() && iframe && iframe.contentWindow) {
+                iframe.contentWindow.document.documentElement.setAttribute('dir', 'rtl');
+                iframe.contentWindow.document.body.setAttribute('dir', 'rtl');
+                iframe.contentWindow.document.body.style.direction = 'rtl';
+                iframe.contentWindow.document.body.style.textAlign = 'right';
+                editor.getBody().setAttribute('dir', 'rtl');
             }
 
             iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {

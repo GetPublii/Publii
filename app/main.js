@@ -452,6 +452,7 @@ electronApp.on('ready', function () {
                 translations: appInstance.currentLanguageTranslations,
                 momentLocale: appInstance.currentLanguageMomentLocale,
                 wysiwygTranslation: appInstance.currentWysiwygTranslation,
+                direction: appInstance.currentLanguageDirection || 'ltr',
                 languageLoadingError: appInstance.languageLoadingError
             };
         } catch (error) {

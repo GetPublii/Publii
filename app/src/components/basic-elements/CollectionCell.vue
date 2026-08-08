@@ -19,11 +19,11 @@ export default {
             type: String
         },
         textAlign: {
-            default: 'left',
+            default: 'start',
             type: String
         },
         justifyContent: {
-            default: 'left',
+            default: 'start',
             type: String
         },
         type: {
@@ -67,12 +67,12 @@ export default {
     border-bottom: 1px solid var(--border-light-color);
     display: grid;
     font-weight: var(--font-weight-normal);
-    justify-content: left;
+    justify-content: start;
     padding: 1.4rem 1.8rem;
-    text-align: left;
+    text-align: start;
 
     &:first-child {
-        padding-right: 0;
+        padding-inline-end: 0;
     }
 
     a {
@@ -197,6 +197,41 @@ export default {
                 }
             }
         }
+    }
+}
+
+[dir="rtl"] .item {
+    &:hover,
+    &.is-edited {
+        .col:first-child {
+            box-shadow: inset -3px 0 0 var(--color-primary);
+        }
+    }
+}
+
+[dir="rtl"] .col {
+    text-align: right;
+    justify-content: start;
+
+    &.titles {
+        text-align: right;
+        justify-content: start;
+
+        .title {
+            text-align: right;
+            direction: rtl;
+        }
+
+        a {
+            text-align: right;
+        }
+    }
+
+    &.publish-dates,
+    &.modification-dates,
+    &.authors,
+    &.names {
+        text-align: right;
     }
 }
 

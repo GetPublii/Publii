@@ -44,6 +44,7 @@
 <script>
 import Vue from 'vue';
 import compare from 'node-version-compare';
+import { isRtlLanguage, applyDocumentDirection } from '../helpers/rtl';
 
 export default {
     name: 'languages-list-item',
@@ -132,6 +133,12 @@ export default {
                 }
 
                 this.$store.commit('setWysiwygTranslation', results.wysiwygTranslation);
+
+                // UI direction (RTL for fa / ar / he / …)
+                let direction = results.direction || (isRtlLanguage(results.lang) ? 'rtl' : 'ltr');
+                this.$store.commit('setAppLanguageDirection', direction);
+                applyDocumentDirection(direction === 'rtl');
+                this.$bus.$emit('app-language-direction-changed', direction);
 
                 this.$bus.$emit('message-display', {
                     message: this.$t('langs.languageChangedMsg'),

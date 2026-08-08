@@ -257,6 +257,17 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             
             window.app = {
                 languageLoadingError: !!initialData.currentLanguage.languageLoadingError,
+                getAppLanguage: () => this.$store.state.app.config.language,
+                getAppLanguageDirection: () => this.$store.state.app.config.languageDirection || 'ltr',
+                getSiteLanguage: () => this.$store.state.currentSite.config ? this.$store.state.currentSite.config.language : '',
+                isRtlUi: () => {
+                    let dir = this.$store.state.app.config.languageDirection;
+                    if (dir === 'rtl') return true;
+                    if (dir === 'ltr') return false;
+                    let lang = this.$store.state.app.config.language || '';
+                    let root = String(lang).toLowerCase().split('-')[0];
+                    return ['ar', 'fa', 'he', 'iw', 'ur', 'yi', 'ps', 'sd', 'ckb', 'ku', 'dv', 'ug'].indexOf(root) > -1;
+                },
                 getSiteName: () => this.$store.state.currentSite.config.name,
                 getSiteDir: () => this.$store.state.currentSite.siteDir,
                 getSiteTheme: () => this.$store.state.currentSite.config.theme,

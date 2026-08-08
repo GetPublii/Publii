@@ -183,6 +183,18 @@ export default {
         z-index: 102;
     }
 }
+
+/* Keep the ⋮ app menu on the physical right — flipping it breaks the dropdown */
+[dir="rtl"] .topbar,
+body.is-rtl .topbar {
+    direction: ltr;
+}
+
+[dir="rtl"] .topbar > .topbar-inner,
+body.is-rtl .topbar > .topbar-inner {
+    left: auto !important;
+    right: 0 !important;
+}
     
 /*
  * Responsive improvements

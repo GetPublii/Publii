@@ -56,7 +56,8 @@ class Languages {
                 author: languageData.author,
                 publiiSupport: languageData.publiiSupport,
                 momentLocale: languageData.momentLocale,
-                wysiwygTranslation: languageData.wysiwygTranslation
+                wysiwygTranslation: languageData.wysiwygTranslation,
+                direction: languageData.direction || null
             });
         }
 
@@ -91,7 +92,8 @@ class Languages {
                 author: languageData.author,
                 publiiSupport: languageData.publiiSupport,
                 momentLocale: languageData.momentLocale,
-                wysiwygTranslation: languageData.wysiwygTranslation
+                wysiwygTranslation: languageData.wysiwygTranslation,
+                direction: languageData.direction || null
             });
         }
 

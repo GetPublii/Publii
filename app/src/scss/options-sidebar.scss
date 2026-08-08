@@ -83,6 +83,27 @@
             right: 0;
         }
 
+        /* RTL: keep panel on the right; only flip text inside */
+        [dir="rtl"] &,
+        body.is-rtl & {
+            left: auto;
+            right: 0;
+            direction: rtl;
+            text-align: right;
+
+            &.v-enter,
+            &.v-leave-to {
+                left: auto;
+                right: -55rem;
+            }
+
+            &.v-enter-to,
+            &.v-leave {
+                left: auto;
+                right: 0;
+            }
+        }
+
         &[data-animate="false"] {
             &.v-enter-active,
             &.v-leave-active {

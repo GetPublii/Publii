@@ -63,14 +63,26 @@ module.exports = {
         generator: {
           filename: 'assets/images/[name].[hash][ext][query]'
         }
+      },
+      {
+        test: /\.(woff2?|ttf|eot|otf)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/fonts/[name].[hash][ext][query]'
+        }
       }
     ]
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': path.resolve(__dirname, 'app/node_modules/vue/dist/vue.esm.js')
     },
-    extensions: ['*', '.js', '.vue', '.json']
+    modules: [
+      path.resolve(__dirname, 'app/node_modules'),
+      path.resolve(__dirname, 'node_modules'),
+      'node_modules'
+    ],
+    extensions: ['.js', '.vue', '.json']
   },
   devServer: {
     historyApiFallback: true,

@@ -1,7 +1,7 @@
 <template>
     <div
         id="app"
-        :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars }"
+        :class="{ 'app-view': true, 'use-wide-scrollbars': useWideScrollbars, 'is-rtl': isRtlUi }"
         :style="$root.overridedCssVariables">
         <message />
         <topbar v-if="!splashScreenDisplayed && !itemEditorDisplayed" />
@@ -29,6 +29,7 @@ import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
 import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
+import { isRtlLanguage, applyDocumentDirection } from '../helpers/rtl';
 
 export default {
     name: 'app',
@@ -65,6 +66,20 @@ export default {
         },
         useWideScrollbars () {
             return this.$store.state.app.config.wideScrollbars;
+        },
+        isRtlUi () {
+            return isRtlLanguage(
+                this.$store.state.app.config.language,
+                this.$store.state.app.config.languageDirection
+            );
+        }
+    },
+    watch: {
+        isRtlUi: {
+            immediate: true,
+            handler (isRtl) {
+                applyDocumentDirection(!!isRtl);
+            }
         }
     },
     created () {
@@ -78,6 +93,7 @@ export default {
         await this.setEnvironmentInfo();
         this.setState();
         this.integrateTopBar();
+        applyDocumentDirection(this.isRtlUi);
 
         // Display initial screen after 2sec
         if(this.$store.state.app.config.licenseAccepted) {
@@ -85,9 +101,11 @@ export default {
         }
 
         this.$bus.$on('license-accepted', this.showInitialScreen);
+        this.$bus.$on('app-language-direction-changed', this.onLanguageDirectionChanged);
     },
     beforeDestroy () {
         this.$bus.$off('license-accepted');
+        this.$bus.$off('app-language-direction-changed', this.onLanguageDirectionChanged);
         mainProcessAPI.stopReceiveAll('app-license-accepted');
     },
     methods: {
@@ -111,6 +129,11 @@ export default {
         setState () {
             this.$store.commit('init', this.initialData);
             document.documentElement.style.setProperty('--ui-zoom-level', parseInt(this.$store.state.app.config.uiZoomLevel * 100.0, 10) + '%');
+            applyDocumentDirection(this.isRtlUi);
+        },
+
+        onLanguageDirectionChanged () {
+            applyDocumentDirection(this.isRtlUi);
         },
 
         // Show site screen when there is only one website
@@ -160,12 +183,14 @@ export default {
 @import '../scss/vendor/normalize.css';
 @import '../scss/vendor/vue-multiselect.scss';
 @import '../scss/variables.scss';
+@import '../scss/fonts-vazirmatn.scss';
 @import '../scss/css-variables.scss';
 @import '../scss/mixins.scss';
 @import '../scss/global.scss';
 @import '../scss/forms.scss';
 @import '../scss/scope-fix.scss';
 @import '../scss/codemirror.scss';
+@import '../scss/rtl.scss';
 
 /*
  * Main container for the app

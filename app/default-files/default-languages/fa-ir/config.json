@@ -1,0 +1,9 @@
+{
+    "name": "فارسی",
+    "version": "0.0.1",
+    "author": "Abbas Davarpanah",
+    "publiiSupport": "0.46.3",
+    "momentLocale": "fa",
+    "wysiwygTranslation": false,
+    "direction": "rtl"
+}
