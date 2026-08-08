@@ -252,13 +252,32 @@ export default {
         position: absolute;
         right: 3.2rem;
         top: 1.5rem;
+        z-index: 100000;
 
         &-separator {
             border-bottom: 1px solid var(--border-light-color);
             margin-bottom: 2rem;
             padding-bottom: 1rem;
         }
+
+        &.is-hidden {
+            display: none;
+        }
     }
+}
+
+/* RTL: menu stays on the right; labels read right-to-left */
+[dir="rtl"] .topbar-app-submenu,
+body.is-rtl .topbar-app-submenu {
+    left: auto !important;
+    right: 3.2rem !important;
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .topbar-app-settings,
+body.is-rtl .topbar-app-settings {
+    direction: ltr;
 }
 
 /*

@@ -366,10 +366,34 @@ class App {
             if (languageConfig) {
                 this.currentLanguageMomentLocale = languageConfig.momentLocale;
                 this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(this.appConfig.language, this.appConfig.languageType);
+                this.currentLanguageDirection = this.resolveLanguageDirection(this.appConfig.language, languageConfig.direction);
+            } else {
+                this.currentLanguageDirection = this.resolveLanguageDirection(this.appConfig.language);
             }
+        } else {
+            this.currentLanguageDirection = 'ltr';
         }
 
         this.loadDefaultLanguage(languagesLoader, false);
+    }
+
+    /**
+     * Resolve UI text direction for a language pack.
+     * config.direction ("rtl"|"ltr") wins; otherwise known RTL roots (fa, ar, he, …).
+     */
+    resolveLanguageDirection (languageCode, explicitDirection) {
+        if (explicitDirection === 'rtl' || explicitDirection === 'ltr') {
+            return explicitDirection;
+        }
+
+        if (!languageCode || typeof languageCode !== 'string') {
+            return 'ltr';
+        }
+
+        let root = languageCode.toLowerCase().replace(/_/g, '-').split('-')[0];
+        let rtlRoots = ['ar', 'fa', 'he', 'iw', 'ur', 'yi', 'ps', 'sd', 'ckb', 'ku', 'dv', 'ug', 'syr', 'arc'];
+
+        return rtlRoots.indexOf(root) > -1 ? 'rtl' : 'ltr';
     }
 
     // Load plugins
@@ -410,6 +434,9 @@ class App {
         if (languageConfig) {
             this.currentLanguageMomentLocale = languageConfig.momentLocale;
             this.currentWysiwygTranslation = languagesLoader.loadWysiwygTranslation(lang, type);
+            this.currentLanguageDirection = this.resolveLanguageDirection(lang, languageConfig.direction);
+        } else {
+            this.currentLanguageDirection = this.resolveLanguageDirection(lang);
         }
 
         if (
@@ -430,6 +457,7 @@ class App {
 
         this.appConfig.language = lang.replace(/[^a-z\-\_\.]/gmi, '');
         this.appConfig.languageType = type;
+        this.appConfig.languageDirection = this.currentLanguageDirection || this.resolveLanguageDirection(lang);
 
         try {
             fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
@@ -675,6 +703,7 @@ class App {
                     translations: self.currentLanguageTranslations,
                     wysiwygTranslation: self.currentWysiwygTranslation,
                     momentLocale: self.currentLanguageMomentLocale,
+                    direction: self.currentLanguageDirection || 'ltr',
                     languageLoadingError: self.languageLoadingError
                 },
                 defaultLanguage: {
@@ -682,6 +711,7 @@ class App {
                     translations: self.defaultLanguageTranslations,
                     wysiwygTranslation: self.defaultWysiwygTranslation,
                     momentLocale: self.defaultLanguageMomentLocale,
+                    direction: 'ltr',
                     languageLoadingError: self.languageLoadingError
                 },
                 languages: self.languages,

@@ -1009,6 +1009,29 @@ export default {
         font-size: 11px;
         margin-top: .2rem;
     }
+
+    .title {
+        text-align: start;
+        width: 100%;
+    }
+}
+
+[dir="rtl"] .item,
+body.is-rtl .item {
+    .title {
+        direction: rtl;
+        text-align: right;
+    }
+
+    .title a {
+        display: inline-block;
+        text-align: right;
+        width: 100%;
+    }
+
+    .post-tags a {
+        margin: .2rem 0 0 .5rem;
+    }
 }
 
 .filters {

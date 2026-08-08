@@ -151,6 +151,12 @@ export default {
         top: .5rem;
     }
 
+    [dir="rtl"] & svg,
+    body.is-rtl & svg {
+        margin-left: 2.4rem;
+        margin-right: 0;
+    }
+
     &-item {
         margin: 0 0 .2rem;
 

@@ -1,0 +1,396 @@
+/*
+ * Global RTL layout overrides for the Publii app UI.
+ * Activated when <html dir="rtl"> is set (Persian, Arabic, Hebrew, …).
+ */
+
+/* Vazirmatn for RTL UI */
+[dir="rtl"],
+body.is-rtl {
+    --font-base: 'Vazirmatn', Vazirmatn, Tahoma, 'Segoe UI', sans-serif;
+    --editor-font-family: 'Vazirmatn', Vazirmatn, Tahoma, 'Segoe UI', sans-serif;
+    font-family: var(--font-base);
+}
+
+[dir="rtl"] body,
+body.is-rtl,
+[dir="rtl"] #app,
+body.is-rtl #app,
+[dir="rtl"] .app-view {
+    font-family: var(--font-base);
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] {
+    /*
+     * Site shell: sidebar on the right, content on the left
+     */
+    .site {
+        .sidebar {
+            left: auto !important;
+            right: 0 !important;
+        }
+
+        .content {
+            left: 0 !important;
+            right: auto !important;
+        }
+    }
+
+    .app-site-sidebar {
+        left: auto;
+        right: 0;
+    }
+
+    /*
+     * Page header (title + buttons)
+     */
+    .heading {
+        direction: rtl;
+
+        .title {
+            padding: 0 0 0 2rem !important;
+            text-align: right;
+        }
+
+        .buttons {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+
+        .button + .button {
+            margin-left: 0;
+            margin-right: 1rem;
+        }
+    }
+
+    /*
+     * Filters under posts/pages headers
+     */
+    .filters {
+        direction: rtl;
+        text-align: right;
+
+        .label {
+            float: right;
+            margin-left: 1rem;
+            margin-right: 0;
+        }
+
+        .filter-value {
+            margin-left: 1rem;
+            margin-right: 0;
+        }
+    }
+
+    /*
+     * Collection / posts list
+     */
+    .collection,
+    .collection-wrapper {
+        direction: rtl;
+    }
+
+    .collection {
+        .col {
+            text-align: right !important;
+            justify-content: start !important;
+            direction: rtl;
+        }
+
+        .col.titles,
+        .col.titles .title,
+        .col.titles a,
+        .col.titles h2 {
+            text-align: right !important;
+            direction: rtl;
+            width: 100%;
+        }
+
+        .col.publish-dates,
+        .col.modification-dates,
+        .col.authors,
+        .col.names {
+            text-align: right !important;
+        }
+
+        /* ID / numeric columns stay readable */
+        .col:last-child {
+            direction: ltr;
+            unicode-bidi: isolate;
+            text-align: center !important;
+        }
+
+        .header .col {
+            text-align: right !important;
+        }
+
+        .post-tags a {
+            margin: .2rem 0 0 .5rem;
+        }
+
+        .post-slug {
+            text-align: right;
+            direction: ltr;
+            unicode-bidi: plaintext;
+        }
+    }
+
+    .item {
+        &:hover .col:first-child,
+        &.is-edited .col:first-child {
+            box-shadow: inset -3px 0 0 var(--color-primary) !important;
+        }
+    }
+
+    .order-ascending,
+    .order-descending {
+        margin-left: 0;
+        margin-right: 3px;
+    }
+
+    /*
+     * Top bar: keep ⋮ menu + dropdown on the physical RIGHT.
+     * Moving it to the left broke the absolute submenu (Languages / App Settings).
+     */
+    .topbar {
+        direction: ltr;
+
+        & > .topbar-inner {
+            left: auto !important;
+            right: 0 !important;
+        }
+    }
+
+    .topbar-app-submenu {
+        left: auto !important;
+        right: 3.2rem !important;
+        direction: rtl;
+        text-align: right;
+        z-index: 100000;
+    }
+
+    .topbar-app-settings {
+        direction: ltr;
+    }
+
+    /*
+     * Options / settings / help panels stay on the RIGHT (same as LTR).
+     * Only text direction is RTL — moving the panel breaks form width math.
+     */
+    .options-sidebar-container {
+        left: auto !important;
+        right: 0 !important;
+
+        &.v-enter,
+        &.v-leave-to {
+            left: auto !important;
+            right: -55rem !important;
+        }
+
+        &.v-enter-to,
+        &.v-leave {
+            left: auto !important;
+            right: 0 !important;
+        }
+    }
+
+    .options-sidebar,
+    .post-editor-sidebar,
+    .help-panel {
+        text-align: right;
+        direction: rtl;
+    }
+
+    .help-panel {
+        left: auto !important;
+        right: 0 !important;
+
+        &::before,
+        &::after {
+            left: auto !important;
+            right: 0 !important;
+        }
+    }
+
+    /*
+     * Notifications accent (physical start edge in RTL = right)
+     */
+    .notification {
+        border-left: none;
+        border-right: 4px solid transparent;
+    }
+
+    /*
+     * Sidebar menu icons
+     */
+    .sidebar-menu {
+        direction: rtl;
+
+        a {
+            text-align: right;
+        }
+
+        svg {
+            margin-left: 2.4rem !important;
+            margin-right: 0 !important;
+        }
+    }
+
+    /*
+     * Forms
+     */
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="email"],
+    input[type="search"],
+    input[type="password"],
+    textarea,
+    select {
+        text-align: right;
+        direction: rtl;
+        font-family: var(--font-base);
+    }
+
+    /*
+     * Popups / collections / empty
+     */
+    .popup,
+    .collection {
+        text-align: right;
+    }
+
+    .empty-state {
+        text-align: center;
+    }
+
+    .language-name {
+        text-align: right;
+    }
+
+    .language-delete {
+        left: 1.4rem;
+        right: auto;
+    }
+
+    /*
+     * =========================
+     * Post / Page editors
+     * Chrome positions stay LTR (writers left, settings right).
+     * Only editable content + panel text is RTL.
+     * =========================
+     */
+    .post-editor {
+        /* Shell stays LTR so absolute panels keep correct geometry */
+        direction: ltr !important;
+        font-family: var(--font-base);
+
+        &-topbar {
+            direction: ltr;
+        }
+
+        &-actions,
+        &-source-code-actions {
+            direction: ltr;
+        }
+
+        &-form {
+            /* form shell keeps LTR geometry; content inside is RTL */
+            direction: ltr;
+
+            &-title,
+            #post-title,
+            .post-editor-form-title {
+                direction: rtl !important;
+                text-align: right !important;
+                font-family: var(--font-base) !important;
+            }
+        }
+
+        &-wrapper {
+            direction: ltr;
+        }
+
+        &-sidebar {
+            /* settings panel stays right:0 — only text RTL */
+            direction: rtl;
+            text-align: right;
+
+            &:before {
+                left: auto !important;
+                right: 0 !important;
+            }
+        }
+
+        &-writers-panel {
+            /* writers stats stay left:0 */
+            left: 0 !important;
+            right: auto !important;
+            direction: rtl;
+            text-align: right;
+            border-right: 1px solid var(--input-border-color);
+            border-left: none;
+        }
+    }
+
+    /*
+     * TinyMCE / Markdown / Block editors content
+     */
+    .tox-tinymce,
+    .tox .tox-edit-area,
+    .vue-easymde,
+    .EasyMDEContainer,
+    .CodeMirror,
+    .publii-block-editor,
+    #publii-block-editor,
+    .block-editor,
+    [contenteditable="true"] {
+        direction: rtl !important;
+        text-align: right !important;
+        font-family: var(--font-base) !important;
+    }
+
+    .CodeMirror-lines,
+    .CodeMirror pre {
+        text-align: right !important;
+    }
+
+    .tox .tox-toolbar,
+    .tox .tox-toolbar__primary,
+    .tox .tox-menubar,
+    .editor-toolbar {
+        direction: rtl;
+    }
+
+    .multiselect,
+    .v-select {
+        text-align: right;
+        direction: rtl;
+    }
+
+    .footer .buttons {
+        justify-content: flex-start;
+    }
+
+    /*
+     * Collection tools bar (bulk actions)
+     */
+    .header .tools {
+        margin-left: 0 !important;
+        margin-right: 5rem !important;
+    }
+}
+
+/*
+ * LTR islands inside RTL UI (code, URLs, logs)
+ */
+[dir="rtl"] .force-ltr,
+[dir="rtl"] code,
+[dir="rtl"] pre:not(.CodeMirror-line),
+[dir="rtl"] input[type="url"],
+[dir="rtl"] .log-viewer {
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: isolate;
+}

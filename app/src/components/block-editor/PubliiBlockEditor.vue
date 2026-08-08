@@ -48,9 +48,40 @@ export default {
     this.$bus.$on('block-editor-set-current-site-data', this.setCurrentSiteData);
     mainProcessAPI.receive('block-editor-undo', this.undoAction);
     mainProcessAPI.receive('block-editor-redo', this.redoAction);
+    this.applyEditorDirection();
     this.$refs['post-title'].focus();
   },
   methods: {
+    applyEditorDirection () {
+      let isRtl = false;
+
+      try {
+        if (window.app && window.app.isRtlUi && window.app.isRtlUi()) {
+          isRtl = true;
+        } else if (window.app && window.app.getSiteLanguage) {
+          let siteLang = String(window.app.getSiteLanguage() || '').toLowerCase();
+          let root = siteLang.split('-')[0];
+          isRtl = ['ar', 'fa', 'he', 'iw', 'ur', 'yi', 'ps', 'sd', 'ckb', 'ku', 'dv', 'ug'].indexOf(root) > -1;
+        }
+      } catch (e) {
+        isRtl = false;
+      }
+
+      let dir = isRtl ? 'rtl' : 'ltr';
+      let align = isRtl ? 'right' : 'left';
+      let rootEl = this.$el;
+
+      if (rootEl) {
+        rootEl.setAttribute('dir', dir);
+        rootEl.style.direction = dir;
+        rootEl.style.textAlign = align;
+      }
+
+      if (this.$refs['post-title']) {
+        this.$refs['post-title'].setAttribute('dir', dir);
+        this.$refs['post-title'].style.textAlign = align;
+      }
+    },
     setPostID (postID) {
       this.$refs['block-editor'].setPostID(postID);
     },

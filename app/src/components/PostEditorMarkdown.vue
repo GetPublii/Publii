@@ -220,10 +220,45 @@ export default {
             window.prompt = this.linkPopupHandler;
             this.$refs.linkPopup.setEasyMdeInstance(this.easymde);
             inlineAttachment.editors.codemirror4.attach(this.easymde.codemirror, {});
+            this.applyEditorDirection();
             this.$refs['post-title'].focus();
         });
     },
     methods: {
+        applyEditorDirection () {
+            let isRtl = false;
+
+            try {
+                if (window.app && window.app.isRtlUi && window.app.isRtlUi()) {
+                    isRtl = true;
+                } else if (window.app && window.app.getSiteLanguage) {
+                    let siteLang = String(window.app.getSiteLanguage() || '').toLowerCase();
+                    let root = siteLang.split('-')[0];
+                    isRtl = ['ar', 'fa', 'he', 'iw', 'ur', 'yi', 'ps', 'sd', 'ckb', 'ku', 'dv', 'ug'].indexOf(root) > -1;
+                }
+            } catch (e) {
+                isRtl = false;
+            }
+
+            let dir = isRtl ? 'rtl' : 'ltr';
+            let align = isRtl ? 'right' : 'left';
+
+            if (this.$refs['post-title']) {
+                this.$refs['post-title'].setAttribute('dir', dir);
+                this.$refs['post-title'].style.textAlign = align;
+            }
+
+            if (this.easymde && this.easymde.codemirror) {
+                let wrapper = this.easymde.codemirror.getWrapperElement();
+                if (wrapper) {
+                    wrapper.setAttribute('dir', dir);
+                    wrapper.style.direction = dir;
+                    wrapper.style.textAlign = align;
+                }
+                this.easymde.codemirror.setOption('direction', dir);
+                this.easymde.codemirror.setOption('rtlMoveVisually', isRtl);
+            }
+        },
         detectEnterInTitle (event) {
             if (event.code === 'Enter' && !event.isComposing) {
                 event.preventDefault();

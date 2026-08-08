@@ -57,6 +57,11 @@ export default {
     }
 }
 
+[dir="rtl"] .heading .title,
+body.is-rtl .heading .title {
+    padding: 0 0 0 2rem;
+}
+
 .buttons {
     display: inline-flex;
     margin-left: auto;
@@ -78,6 +83,17 @@ export default {
             display: inline-block;
             width: 3.2rem;
         }
+    }
+}
+
+[dir="rtl"] .buttons,
+body.is-rtl .buttons {
+    margin-left: 0;
+    margin-right: auto;
+
+    .button + .button {
+        margin-left: 0;
+        margin-right: 1rem;
     }
 }
 </style>

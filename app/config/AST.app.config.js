@@ -23,6 +23,7 @@ const AstAppConfig = {
     appTheme: 'system',
     language: 'en-gb',
     languageType: 'default',
+    languageDirection: 'ltr',
     enableAdvancedPreview: false,
     editorFontSize: 18,
     editorFontFamily: 'sans-serif',

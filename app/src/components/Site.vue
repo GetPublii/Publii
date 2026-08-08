@@ -185,6 +185,19 @@ export default {
         }
     }
 
+    // RTL: sidebar on the right, content on the left
+    [dir="rtl"] & .sidebar,
+    body.is-rtl & .sidebar {
+        left: auto;
+        right: 0;
+    }
+
+    [dir="rtl"] & .content,
+    body.is-rtl & .content {
+        left: 0;
+        right: auto;
+    }
+
     .v-enter-to,
     .v-leave-to {
         opacity: 1;

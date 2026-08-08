@@ -20,6 +20,15 @@ export default {
         state.vendorPath = initialData.vendorPath;
         state.wysiwygTranslation = initialData.currentLanguage.wysiwygTranslation;
 
+        // Prefer backend-resolved direction; fall back to language code heuristics
+        if (initialData.currentLanguage && initialData.currentLanguage.direction) {
+            state.app.config.languageDirection = initialData.currentLanguage.direction;
+        } else if (!state.app.config.languageDirection && state.app.config.language) {
+            let root = String(state.app.config.language).toLowerCase().split('-')[0];
+            let rtlRoots = ['ar', 'fa', 'he', 'iw', 'ur', 'yi', 'ps', 'sd', 'ckb', 'ku', 'dv', 'ug'];
+            state.app.config.languageDirection = rtlRoots.indexOf(root) > -1 ? 'rtl' : 'ltr';
+        }
+
         // Set default ordering based on the app config
         let pagesOrdering = state.app.config.pagesOrdering ? state.app.config.pagesOrdering.split(' ') : ['', 'DESC'];
         let postsOrdering = state.app.config.postsOrdering ? state.app.config.postsOrdering.split(' ') : ['id', 'DESC'];
@@ -560,6 +569,9 @@ export default {
     },
     setAppLanguageType (state, type) {
         state.app.config.languageType = type;
+    },
+    setAppLanguageDirection (state, direction) {
+        state.app.config.languageDirection = direction === 'rtl' ? 'rtl' : 'ltr';
     },
     setWysiwygTranslation (state, translations) {
         state.wysiwygTranslation = translations;
