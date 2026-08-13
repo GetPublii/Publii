@@ -16,8 +16,32 @@ async function deletePassword (service, account) {
     return new AsyncEntry(service, account).deletePassword();
 }
 
+const SECRET_TYPES = [
+    'publii',
+    'publii-passphrase',
+    'publii-git-password',
+    'publii-gh-token',
+    'publii-gl-token',
+    'publii-netlify-id',
+    'publii-netlify-token',
+    'publii-s3-id',
+    'publii-s3-key'
+];
+
+async function deleteAllPasswords (account) {
+    for (let type of SECRET_TYPES) {
+        try {
+            await deletePassword(type, account);
+        } catch (e) {
+            console.log('(!) Cannot remove keychain entry: ' + type);
+        }
+    }
+}
+
 module.exports = {
     getPassword,
     setPassword,
-    deletePassword
+    deletePassword,
+    deleteAllPasswords,
+    SECRET_TYPES
 };

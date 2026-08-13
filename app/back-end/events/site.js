@@ -552,13 +552,22 @@ class SiteEvents {
         /*
          * Delete website
          */
-        ipcMain.on('app-site-delete', function (event, config) {
+        ipcMain.on('app-site-delete', async function (event, config) {
             if (!config ||
                 !PathValidator.isValidDirSegment(config.site) ||
                 !Object.prototype.hasOwnProperty.call(appInstance.sites, config.site)) {
                 event.sender.send('app-site-deleted', false);
                 return;
             }
+
+            let siteConfig = appInstance.sites[config.site];
+            let account = slug(siteConfig.name);
+
+            if (siteConfig.uuid) {
+                account = siteConfig.uuid;
+            }
+
+            await passwordSafeStorage.deleteAllPasswords(account);
 
             Site.delete(appInstance, config.site);
             delete appInstance.sites[config.site];
