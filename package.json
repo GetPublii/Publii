@@ -76,7 +76,7 @@
       "**/node_modules/sharp/**/*",
       "**/node_modules/@img/**/*",
       "**/node_modules/@jsquash/**/*",
-      "node_modules/keytar/**/*",
+      "node_modules/@napi-rs/**/*",
       "node_modules/better-sqlite3/**/*"
     ],
     "afterPack": "./build/scripts/afterPack.js",
@@ -131,13 +131,11 @@
   },
   "deb": {
     "depends": [
-      "libsecret-1-dev",
       "gnome-keyring"
     ]
   },
   "rpm": {
     "depends": [
-      "libsecret-devel",
       "gnome-keyring"
     ]
   },

@@ -5,7 +5,7 @@
 const fs = require('fs-extra');
 const gitClient = require('isomorphic-git')
 const http = require('isomorphic-git/http/node')
-const passwordSafeStorage = require('keytar');
+const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
 const stripTags = require('striptags');
 

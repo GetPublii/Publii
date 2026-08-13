@@ -11,7 +11,7 @@ const {
     PutObjectCommand, 
     DeleteObjectCommand 
 } = require("@aws-sdk/client-s3");
-const passwordSafeStorage = require('keytar');
+const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
 const mime = require('mime');
 const stripTags = require('striptags');

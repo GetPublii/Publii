@@ -4,7 +4,7 @@
 
 const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
-const passwordSafeStorage = require('keytar');
+const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
 const { Gitlab } = require('@gitbeaker/rest');
 const stripTags = require('striptags');

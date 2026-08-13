@@ -37,6 +37,7 @@ import Overlay from './components/basic-elements/Overlay';
 import PagesDropDown from './components/basic-elements/PagesDropDown';
 import PostsDropDown from './components/basic-elements/PostsDropDown';
 import ProgressBar from './components/basic-elements/ProgressBar';
+import ProtectedInput from './components/basic-elements/ProtectedInput';
 import RadioButtons from './components/basic-elements/RadioButton';
 import RangeSlider from './components/basic-elements/RangeSlider';
 import Repeater from './components/basic-elements/Repeater';
@@ -200,6 +201,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
     Vue.component('logo-creator', LogoCreator);
     Vue.component('overlay', Overlay);
     Vue.component('progress-bar', ProgressBar);
+    Vue.component('protected-input', ProtectedInput);
     Vue.component('radio-buttons', RadioButtons);
     Vue.component('range-slider', RangeSlider);
     Vue.component('separator', Separator);

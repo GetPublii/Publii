@@ -4,7 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const passwordSafeStorage = require('keytar');
+const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
 const NetlifyAPI = require('./libraries/netlify-api');
 const stripTags = require('striptags');

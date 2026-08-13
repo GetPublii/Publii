@@ -5,7 +5,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
-const passwordSafeStorage = require('keytar');
+const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
 const { Octokit } = require("@octokit/rest");
 const list = require('ls-all');

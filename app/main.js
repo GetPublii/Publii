@@ -11,7 +11,6 @@ const nativeTheme = electron.nativeTheme;
 const os = require('os');
 const App = require('./back-end/app.js');
 const createSlug = require('./back-end/helpers/slug.js');
-const passwordSafeStorage = require('keytar');
 const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
 const fs = require('fs');
 const path = require('path');
@@ -223,53 +222,6 @@ electronApp.on('ready', function () {
     // Use Electron API to create slugs
     ipcMain.handle('app-main-process-create-slug', (event, input) => {
         return createSlug(input);
-    });
-
-    // Load password from Keytar
-    let availablePasswordTypes = new Set([
-        'publii',
-        'publii-git-password',
-        'publii-passphrase',
-        'publii-s3-id',
-        'publii-s3-key',
-        'publii-gh-token',
-        'publii-gl-token',
-        'publii-netlify-id',
-        'publii-netlify-token'
-    ]);
-
-    ipcMain.handle('app-main-process-load-password', async (event, type, passwordKey) => {
-        if (!availablePasswordTypes.has(type)) {
-            return '';
-        }
-
-        let prefix = type + ' ';
-
-        if (typeof passwordKey !== 'string' || !passwordKey.startsWith(prefix)) {
-            return '';
-        }
-
-        let account = passwordKey.slice(prefix.length);
-
-        if (!account || !/^[A-Za-z0-9_-]+$/.test(account)) {
-            return '';
-        }
-
-        let retrievedPassword = '';
-
-        if (passwordSafeStorage) {
-            try {
-                retrievedPassword = await passwordSafeStorage.getPassword(type, account);
-            } catch (e) {
-                console.log('(!) Cannot retrieve password via keytar');
-            }
-        }
-
-        if (retrievedPassword === null || retrievedPassword === true || retrievedPassword === false) {
-            retrievedPassword = '';
-        }
-
-        return retrievedPassword;
     });
 
     // Export OS version

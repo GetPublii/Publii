@@ -6,7 +6,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const sftpClient = require('ssh2-sftp-client');
-const passwordSafeStorage = require('keytar');
+const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
 const normalizePath = require('normalize-path');
 

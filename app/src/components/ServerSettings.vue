@@ -387,13 +387,12 @@
                     v-if="['ftp', 'ftp+tls', 'sftp'].indexOf(deploymentMethodSelected) > -1 && !deploymentSettings.askforpassword"
                     id="password"
                     :label="$t('settings.password.password')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="password"
-                        type="password"
                         key="password"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('password') > -1 }"
+                        secretType="publii"
+                        :isInvalid="errors.indexOf('password') > -1"
                         @keyup.native="cleanError('password')"
                         v-model="deploymentSettings.password" />
                     <small
@@ -457,12 +456,11 @@
                     v-if="deploymentMethodSelected === 'sftp+key'"
                     id="passphrase"
                     :label="$t('sync.passphraseForKey')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="passphrase"
-                        type="password"
-                        :spellcheck="false"
                         key="passphrase"
+                        secretType="publii-passphrase"
                         v-model="deploymentSettings.passphrase" />
 
                     <small
@@ -586,13 +584,12 @@
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-token"
                     :label="$t('sync.token')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="gh-token"
-                        type="password"
                         key="gh-token"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('github-token') > -1 }"
+                        secretType="publii-gh-token"
+                        :isInvalid="errors.indexOf('github-token') > -1"
                         @keyup.native="cleanError('github-token')"
                         v-model="deploymentSettings.github.token" />
                     <small
@@ -677,13 +674,12 @@
                     v-if="deploymentMethodSelected === 'git'"
                     id="git-password"
                     :label="$t('sync.gitPassword')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="git-password"
-                        type="password"
                         key="git-password"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('git-password') > -1 }"
+                        secretType="publii-git-password"
+                        :isInvalid="errors.indexOf('git-password') > -1"
                         @keyup.native="cleanError('git-password')"
                         v-model="deploymentSettings.git.password" />
                     <small
@@ -858,13 +854,12 @@
                     v-if="deploymentMethodSelected === 'gitlab-pages'"
                     id="gl-token"
                     :label="$t('sync.token')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="gl-token"
-                        type="password"
                         key="gl-token"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('gitlab-token') > -1 }"
+                        secretType="publii-gl-token"
+                        :isInvalid="errors.indexOf('gitlab-token') > -1"
                         @keyup.native="cleanError('gitlab-token')"
                         v-model="deploymentSettings.gitlab.token" />
                     <small
@@ -879,12 +874,12 @@
                     v-if="deploymentMethodSelected === 'netlify'"
                     id="netlify-id"
                     :label="$t('sync.siteID')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="netlify-id"
                         key="netlify-id"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('netlify-id') > -1 }"
+                        secretType="publii-netlify-id"
+                        :isInvalid="errors.indexOf('netlify-id') > -1"
                         @keyup.native="cleanError('netlify-id')"
                         v-model="deploymentSettings.netlify.id" />
                     <small
@@ -899,13 +894,12 @@
                     v-if="deploymentMethodSelected === 'netlify'"
                     id="netlify-token"
                     :label="$t('sync.netlifyToken')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="netlify-token"
-                        type="password"
                         key="netlify-token"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('netlify-token') > -1 }"
+                        secretType="publii-netlify-token"
+                        :isInvalid="errors.indexOf('netlify-token') > -1"
                         @keyup.native="cleanError('netlify-token')"
                         v-model="deploymentSettings.netlify.token" />
                     <small
@@ -960,13 +954,12 @@
                     v-if="deploymentMethodSelected === 's3'"
                     id="s3-id"
                     :label="$t('sync.accessID')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="s3-id"
-                        type="password"
                         key="s3-id"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('s3-id') > -1 }"
+                        secretType="publii-s3-id"
+                        :isInvalid="errors.indexOf('s3-id') > -1"
                         @keyup.native="cleanError('s3-id')"
                         v-model="deploymentSettings.s3.id" />
                     <small
@@ -981,13 +974,12 @@
                     v-if="deploymentMethodSelected === 's3'"
                     id="s3-key"
                     :label="$t('sync.secretKey')">
-                    <text-input
+                    <protected-input
                         slot="field"
                         id="s3-key"
-                        type="password"
                         key="s3-key"
-                        :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('s3-key') > -1 }"
+                        secretType="publii-s3-key"
+                        :isInvalid="errors.indexOf('s3-key') > -1"
                         @keyup.native="cleanError('s3-key')"
                         v-model="deploymentSettings.s3.key" />
                     <small
@@ -1324,7 +1316,6 @@ export default {
         this.httpProtocolSelected = this.currentHttpProtocol;
         this.deploymentMethodSelected = this.$store.state.currentSite.config.deployment.protocol || '';
         let storedDeploymentSettings = JSON.parse(JSON.stringify(this.$store.state.currentSite.config.deployment));
-        storedDeploymentSettings = await this.loadPasswords(storedDeploymentSettings);
         Vue.set(this, 'deploymentSettings', Utils.deepMerge(this.deploymentSettings, storedDeploymentSettings));
 
         if (this.deploymentSettings.manual.output === '') {
@@ -1699,37 +1690,6 @@ export default {
             }
 
             return '';
-        },
-        async loadPasswords (deploymentSettings) {
-            deploymentSettings.password = await mainProcessAPI.invoke('app-main-process-load-password', 'publii', deploymentSettings.password);
-
-            if (deploymentSettings.passphrase) {
-                deploymentSettings.passphrase = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-passphrase', deploymentSettings.passphrase);
-            }
-
-            if (deploymentSettings.s3) {
-                deploymentSettings.s3.id = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-s3-id', deploymentSettings.s3.id);
-                deploymentSettings.s3.key = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-s3-key', deploymentSettings.s3.key);
-            }
-
-            if (deploymentSettings.netlify) {
-                deploymentSettings.netlify.id = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-netlify-id', deploymentSettings.netlify.id);
-                deploymentSettings.netlify.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-netlify-token', deploymentSettings.netlify.token);
-            }
-
-            if (deploymentSettings.github) {
-                deploymentSettings.github.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-gh-token', deploymentSettings.github.token);
-            }
-
-            if (deploymentSettings.git) {
-                deploymentSettings.git.password = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-git-password', deploymentSettings.git.password);
-            }
-
-            if (deploymentSettings.gitlab) {
-                deploymentSettings.gitlab.token = await mainProcessAPI.invoke('app-main-process-load-password', 'publii-gl-token', deploymentSettings.gitlab.token);
-            }
-
-            return deploymentSettings;
         },
         setHiddenPasswords (deploymentSettings) {
             let passwordKey = this.$store.state.currentSite.config.name;
