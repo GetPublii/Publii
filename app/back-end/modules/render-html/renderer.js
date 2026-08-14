@@ -1634,17 +1634,10 @@ class Renderer {
                 a.id AS id,
                 a.username AS slug,
                 a.config AS config,
-                a.additional_data AS additional_data,
-                COUNT(p.id) AS posts_number
+                a.additional_data AS additional_data
             FROM
                 authors AS a
-            LEFT JOIN
-                posts AS p
-            ON
-                CAST(p.authors AS INTEGER) = a.id
             ${queryCondition}
-            GROUP BY
-                a.id
             ORDER BY
                 a.username ASC
         `).all();
@@ -1663,7 +1656,7 @@ class Renderer {
         // Remove empty authors - without posts
         if (!this.siteConfig.advanced.displayEmptyAuthors && authorID === false) {
             authorsData = authorsData.filter(authorData => {
-                return authorData.posts_number > 0;
+                return this.cachedItems.authors[authorData.id].postsNumber > 0;
             });
         }
 
