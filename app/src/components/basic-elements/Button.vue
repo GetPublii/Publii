@@ -277,11 +277,9 @@ export default {
     background: transparent;
     box-shadow: none;
     color: var(--link-primary-color);
-    font: {
-       size: 1.3rem;
-       weight: 400;
-    }
-
+    font-size: 1.3rem;
+    font-weight: 400;
+    
     &:active,
     &:focus,
     &:hover,
@@ -296,10 +294,8 @@ export default {
     background: transparent;
     box-shadow: none;
     color: var(--link-primary-color-hover);
-    font: {
-        size: 1.3rem;
-        weight: 400;
-    }
+    font-size: 1.3rem;
+        font-weight: 400;
 
     &:active,
     &:focus,

@@ -594,13 +594,9 @@ body .tox .tox-dialog__footer-end {
         cursor: pointer;
         display: inline-block;
         flex: 0 1 100%;
-
-        font: {
-            size: 1.4rem;
-            family: var(--font-base);
-            weight: 500;
-        }
-
+        font-size: 1.4rem;
+        font-family: var(--font-base);
+        font-weight: 500;
         height: 5.6rem;
         line-height: 5.5rem;
         margin: 0 !important;

@@ -20,7 +20,8 @@ module.exports = {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          'css-loader'
+          'css-loader',
+          path.resolve(__dirname, 'build/loaders/scoped-css-compat.js')
         ],
       },
       {

@@ -163,11 +163,9 @@ export default {
             color: var(--button-secondary-color);
             cursor: pointer;
             display: inline-block;
-            font: {
-                size: 1.4rem;
-                family: var(--font-base);
-                weight: 500;
-            }
+            font-size: 1.4rem;
+            font-family: var(--font-base);
+            font-weight: 500;
             height: 3.8rem;
             line-height: 3.8rem;
             margin: 2px 2px 30px;
