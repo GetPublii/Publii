@@ -34,7 +34,7 @@ function normalizePathPreserveUNC (pathToNormalize) {
 }
 
 if (typeof process.env.NODE_ENV === 'undefined') {
-    process.env.NODE_ENV = 'production';
+    process.env.NODE_ENV = electronApp.isPackaged ? 'production' : 'development';
 }
 
 // Keep a global reference of the app instance for avoiding Garbage Collector

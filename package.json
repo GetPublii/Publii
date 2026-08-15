@@ -11,10 +11,10 @@
   "license": "GPL-3.0",
   "main": "app/main.js",
   "scripts": {
-    "dev": "node_modules/.bin/cross-env NODE_ENV=development node_modules/.bin/webpack --mode=development --progress --watch",
-    "prod": "node_modules/.bin/cross-env NODE_ENV=production node_modules/.bin/webpack --mode=production --progress",
-    "build": "node ./build/scripts/update-build-number.js && node_modules/.bin/cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
-    "build2": "node_modules/.bin/cross-env NODE_ENV=development ./node_modules/.bin/electron app/",
+    "dev": "node_modules/.bin/webpack --node-env=development --mode=development --progress --watch",
+    "prod": "node_modules/.bin/webpack --node-env=production --mode=production --progress",
+    "build": "node ./build/scripts/update-build-number.js && ./node_modules/.bin/electron app/",
+    "build2": "./node_modules/.bin/electron app/",
     "notarize": "xcrun notarytool submit ./dist/$npm_config_file --keychain-profile 'Publii' --wait",
     "start": "node_modules/.bin/electron app/main.js --enable-logging",
     "test": "node_modules/.bin/mocha app/back-end/**/*.spec.js --reporter dot",
@@ -41,7 +41,6 @@
   },
   "keywords": [],
   "devDependencies": {
-    "cross-env": "7.0.3",
     "css-loader": "6.8.1",
     "electron": "41.10.2",
     "electron-builder": "26.8.1",
