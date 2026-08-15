@@ -159,12 +159,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .topbar {
     background: var(--gray-1);
-    font-size: $app-font-base;
+    font-size: var(--app-font-base);
     height: var(--topbar-height);
     position: absolute;
     top: 0;

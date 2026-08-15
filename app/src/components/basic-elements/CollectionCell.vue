@@ -57,8 +57,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .col {
     align-items: center;
@@ -87,7 +86,7 @@ export default {
 
     &.checkbox {
         .featured-icon {
-            fill: $color-8;
+            fill: #dddddd;
             height: 20px;
             left: -2px;
             position: relative;
@@ -100,7 +99,7 @@ export default {
         flex-wrap: wrap;
 
         .title {
-            font-size: $app-font-base;
+            font-size: var(--app-font-base);
             font-weight: var(--font-weight-semibold);
             margin: 0 0 -.3rem;
             text-transform: none;
@@ -129,7 +128,7 @@ export default {
 
     &.names {
         .name {
-            font-size: $app-font-base;
+            font-size: var(--app-font-base);
             font-weight: var(--font-weight-normal);
             margin: 0;
             text-transform: none;
@@ -156,10 +155,6 @@ export default {
         }
     }
 
-    &-buttons {
-        display:  flex !important;
-    }
-
     &.authors {
         a {
             overflow: hidden;
@@ -169,6 +164,10 @@ export default {
              max-width: 15rem;
         }
     }
+}
+
+.col-buttons {
+    display:  flex !important;
 }
 
 .item {

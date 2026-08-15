@@ -215,7 +215,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 
 .blocks-list {
   bottom: .4rem;
@@ -247,165 +247,166 @@ export default {
       z-index: 1;
     }
   }
+}
 
-  &-open,
-  &-close {
-    align-items: center;
-    background: transparent;
-    border: none;
-    border-radius: 0 var(--border-radius) 0 0;
-    color: var(--link-primary-color-hover);
-    cursor: pointer;
-    display: flex;
-    font-size: 1.4rem;
-    font-weight: var(--font-weight-semibold);
-    height: 4.6rem;
-    line-height: 4.5rem;
-    padding: 0 1.3rem 0 3.8rem;
-    transition: var(--transition);
-    user-select: none;
-    white-space: nowrap;
-    z-index: 2;
+.blocks-list-open,
+.blocks-list-close {
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 0 var(--border-radius) 0 0;
+  color: var(--link-primary-color-hover);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-semibold);
+  height: 4.6rem;
+  line-height: 4.5rem;
+  padding: 0 1.3rem 0 3.8rem;
+  transition: var(--transition);
+  user-select: none;
+  white-space: nowrap;
+  z-index: 2;
 
-    & > svg {
-      left: 0.9rem;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    &:hover {
-      color: var(--link-primary-color);
-    }
+  & > svg {
+    left: 0.9rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  &-close {
-    bottom: .4rem;
-    left: 1.8rem;
-    position: fixed;
-    text-align: center; 
+  &:hover {
+    color: var(--link-primary-color);
   }
+}
 
-  &-items {
-    list-style-type: none;
-    margin: 2rem 2rem 6rem;
-    padding: 0;
-  }
+.blocks-list-close {
+  bottom: .4rem;
+  left: 1.8rem;
+  position: fixed;
+  text-align: center; 
+}
 
-  &-item {
-    border-radius: calc(var(--border-radius) / 2);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: var(--font-weight-semibold);
-    margin: 0;
-    padding: 3px 0;
+.blocks-list-items {
+  list-style-type: none;
+  margin: 2rem 2rem 6rem;
+  padding: 0;
+}
 
-    &.is-active {
-      position: relative;
-      z-index: 1;
+.blocks-list-item {
+  border-radius: calc(var(--border-radius) / 2);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+  padding: 3px 0;
 
-      & > div {
-        background-color: var(--button-secondary-bg);
-        box-shadow: 0 0 0 1px var(--color-primary);
-      }
-    }
-
-    &.is-ghost {
-      cursor: move;
-     
-      & > div {
-        background-color: transparent !important;
-        border: 1px dashed var(--input-border-focus);  
-        box-shadow: none; 
-        
-        * {
-          opacity: 0;
-        }
-      }
-    }
+  &.is-active {
+    position: relative;
+    z-index: 1;
 
     & > div {
-      align-items: center;
-      background-color: var(--gray-1);
-      display: grid;
-      border-radius: var(--border-radius);
-      grid-template-columns: auto 1fr auto auto 6px;
-      transition: var(--transition);
+      background-color: var(--button-secondary-bg);
+      box-shadow: 0 0 0 1px var(--color-primary);
+    }
+  }
 
-      &:hover {
-        background-color: var(--button-secondary-bg);
-        color: var(--headings-color);
-
-        .blocks-list-item-icon {
-            color: var(--icon-tertiary-color);
-        }
+  &.is-ghost {
+    cursor: move;
+   
+    & > div {
+      background-color: transparent !important;
+      border: 1px dashed var(--input-border-focus);  
+      box-shadow: none; 
+      
+      * {
+        opacity: 0;
       }
     }
+  }
 
-    &-icon {
-      align-items: center;
-      border-radius: var(--border-radius);
-      display: inline-flex;
-      color: var(--icon-primary-color);
-      height: 38px;
-      justify-content: center;
-      margin-right: 1px;
-      transition: var(--transition);
-      width: 38px;
-    }
+  & > div {
+    align-items: center;
+    background-color: var(--gray-1);
+    display: grid;
+    border-radius: var(--border-radius);
+    grid-template-columns: auto 1fr auto auto 6px;
+    transition: var(--transition);
 
-    &-bulk-delete, 
-    &-bulk-duplicate {
-      background: transparent;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: inline-block;
-      height: 2.8rem;
-      padding: 0;
-      text-align: center;
-      transition: all .3s ease-out;
-      width: 2.3rem;
+    &:hover {
+      background-color: var(--button-secondary-bg);
+      color: var(--headings-color);
 
-      &:active,
-      &:focus,
-      &:hover {
-        color: var(--headings-color)
-      }
-
-      &:hover {
-        & > svg {
-            color: currentColor;
-            transform: scale(1);
-        }
-      }
-
-      svg {
-        color: var(--icon-secondary-color);
-        pointer-events: none;
-        transform: scale(.9);
-        transition: var(--transition);
-        vertical-align: middle;
-      }
-
-      &.is-disabled {
-        opacity: .25;
-        pointer-events: none;
+      .blocks-list-item-icon {
+          color: var(--icon-tertiary-color);
       }
     }
-    &-bulk-delete {
-      &:hover {
-        & > svg {
-          color: var(--warning);
-        }
-      }
-      &.has-tooltip:hover .ui-tooltip { 
-        transform: scale(1) translateX(-72%); 
+  }
+}
 
-        &::after {
-          left: 68%;
-        }
-      }
+.blocks-list-item-icon {
+  align-items: center;
+  border-radius: var(--border-radius);
+  display: inline-flex;
+  color: var(--icon-primary-color);
+  height: 38px;
+  justify-content: center;
+  margin-right: 1px;
+  transition: var(--transition);
+  width: 38px;
+}
+
+.blocks-list-item-bulk-delete,
+.blocks-list-item-bulk-duplicate {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-block;
+  height: 2.8rem;
+  padding: 0;
+  text-align: center;
+  transition: all .3s ease-out;
+  width: 2.3rem;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: var(--headings-color)
+  }
+
+  &:hover {
+    & > svg {
+        color: currentColor;
+        transform: scale(1);
+    }
+  }
+
+  svg {
+    color: var(--icon-secondary-color);
+    pointer-events: none;
+    transform: scale(.9);
+    transition: var(--transition);
+    vertical-align: middle;
+  }
+
+  &.is-disabled {
+    opacity: .25;
+    pointer-events: none;
+  }
+}
+
+.blocks-list-item-bulk-delete {
+  &:hover {
+    & > svg {
+      color: var(--warning);
+    }
+  }
+  &.has-tooltip:hover .ui-tooltip { 
+    transform: scale(1) translateX(-72%); 
+
+    &::after {
+      left: 68%;
     }
   }
 }

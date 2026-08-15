@@ -37,7 +37,7 @@
 }
 
 
-// Special styles for win
+/* Special styles for win */
 body[data-os="win"] {
     .tools-log-viewer,
     .tools-custom-html {
@@ -64,7 +64,7 @@ body[data-os="linux"] {
         }
     }
 
-    // Special styles for win
+    /* Special styles for win */
     body[data-os="win"] {
         .tools-log-viewer,
         .tools-custom-html {
@@ -93,8 +93,8 @@ body[data-os="linux"] {
 
         .CodeMirror-advanced-dialog {
             position: fixed;
-            width: calc(100% - $app-sidebar - 1px);
-            left: $app-sidebar;
+            width: calc(100% - var(--app-sidebar-width) - 1px);
+            left: var(--app-sidebar-width);
         }
     }
 }

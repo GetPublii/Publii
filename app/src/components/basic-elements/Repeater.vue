@@ -474,194 +474,193 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
-@import '../../scss/editor/post-editors-common.scss';
-@import '../../scss/editor/editor-overrides.scss';
+<style>
+@import '../../css/editor/post-editors-common.css';
+@import '../../css/editor/editor-overrides.css';
 
 .publii-repeater {
-    &-item {
-        display: flex;
-        flex-wrap: wrap;
-        position: relative;
-        width: calc(100% - 68px);
+}
 
-        &-ui {
-            display: flex;
+.publii-repeater-item {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    width: calc(100% - 68px);
+
+    .move {
+        cursor: move;
+        left: -20px;
+        position: absolute;
+        width: 20px;
+
+        &:hover {
+
+            & > svg {
+                  fill: var(--icon-tertiary-color);
+                }
+            }
+
+        svg {
+            fill: var(--icon-secondary-color);
+            height: 1.6rem;
+            pointer-events: none;
+            vertical-align: middle;
+            width: 1.6rem;
+        }
+    }
+
+    &.is-ghost {
+        &::before { 
+            background-color: var(--collection-bg-hover);                
+            border: 1px dashed var(--input-border-focus);
+            border-radius: var(--border-radius);
+            content: "";
+            display: block;   
             position: absolute;
-            right: -68px;
-            width: 68px;
-
-            &-btn {
-                align-items: center;
-                background: var(--gray-1);
-                position: relative;
-                border-radius: 50%;
-                display: flex;
-                height: 30px;
-                justify-content: center;
-                margin: 0 2px;
-                position: relative;
-                text-align: center;
-                width: 30px;
-
-                &:active,
-                &:focus,
-                &:hover {
-                    color: var(--headings-color);
-                }
-
-                &:hover {
-
-                    & > svg {
-                       fill: var(--icon-tertiary-color);
-                       transform: scale(1);
-                    }
-                }
-
-                svg {
-                    fill: var(--icon-secondary-color);
-                    height: 1.6rem;
-                    pointer-events: none;
-                    transform: scale(.9);
-                    transition: var(--transition);
-                    width: 1.6rem;
-                }
-
-                &.delete {
-
-                    &:hover {
-
-                        & > svg {
-                           fill: var(--warning);
-                        }
-                    }
-                }
-
-                &.is-disabled {
-                    opacity: 0.25;
-                    pointer-events: none;
-                }
-            } 
+            left: -1.5rem;
+            right: -7rem;
+            bottom: .75rem;
+            top: -1.5rem;
         }
-
-        &-field {
-            label {
-                padding-right: 10px;
-
-                & > span {
-                    display: block;
-                    font-size: 1.4rem;
-                    font-weight: bold;
-                    margin: 0 0 1rem 0;
-                }
-
-                & > * {
-                    width: calc(100% - 10px)!important;
-                }
-            }
-
-            .note {
-                clear: both;
-                color: var(--text-light-color);
-                display: block;
-                font-size: 1.35rem;
-                font-style: italic;
-                line-height: 1.4;        
-                padding: .5rem 0 1rem 0;
-                user-select: text;
-
-                svg {
-                    display: inline-block;
-                    height: 1.4rem;
-                    margin-right: .5rem;
-                    width: 1.4rem;
-                }
-                
-                a {
-                    color: var(--link-primary-color);
-                    
-                    &:active,
-                    &:focus,
-                    &:hover {
-                        color: var(--link-primary-color-hover);
-                    }
-                }
-            }
-
-            label + .note {
-                padding-top: 1.5rem;
-            }
-
-            .checkbox ~ .note {
-                margin-bottom: 1.5rem;
-            }
-
-            .range-wrapper {
-                position: relative;
-                z-index: 1;
-
-                & + .note {
-                    padding-top: 1.5rem;
-                }
-            }
-        }
-
+        .publii-repeater-item-field, 
+        .publii-repeater-item-ui,
         .move {
-            cursor: move;
-            left: -20px;
-            position: absolute;
-            width: 20px;
+            opacity: 0;
+        }
+    }
 
+    &:first-child {
+        .move {
+            top: 3.24rem
+        }
+        .publii-repeater-item-ui {
+            top: 3.24rem
+        }
+    }
+}
+
+.publii-repeater-item-ui {
+    display: flex;
+    position: absolute;
+    right: -68px;
+    width: 68px; 
+}
+
+.publii-repeater-item-ui-btn {
+    align-items: center;
+    background: var(--gray-1);
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    margin: 0 2px;
+    position: relative;
+    text-align: center;
+    width: 30px;
+
+    &:active,
+    &:focus,
+    &:hover {
+        color: var(--headings-color);
+    }
+
+    &:hover {
+
+        & > svg {
+           fill: var(--icon-tertiary-color);
+           transform: scale(1);
+        }
+    }
+
+    svg {
+        fill: var(--icon-secondary-color);
+        height: 1.6rem;
+        pointer-events: none;
+        transform: scale(.9);
+        transition: var(--transition);
+        width: 1.6rem;
+    }
+
+    &.delete {
+
+        &:hover {
+
+            & > svg {
+               fill: var(--warning);
+            }
+        }
+    }
+
+    &.is-disabled {
+        opacity: 0.25;
+        pointer-events: none;
+    }
+}
+
+.publii-repeater-item-field {
+    label {
+        padding-right: 10px;
+
+        & > span {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 0 0 1rem 0;
+        }
+
+        & > * {
+            width: calc(100% - 10px)!important;
+        }
+    }
+
+    .note {
+        clear: both;
+        color: var(--text-light-color);
+        display: block;
+        font-size: 1.35rem;
+        font-style: italic;
+        line-height: 1.4;        
+        padding: .5rem 0 1rem 0;
+        user-select: text;
+
+        svg {
+            display: inline-block;
+            height: 1.4rem;
+            margin-right: .5rem;
+            width: 1.4rem;
+        }
+        
+        a {
+            color: var(--link-primary-color);
+            
+            &:active,
+            &:focus,
             &:hover {
-
-                & > svg {
-                      fill: var(--icon-tertiary-color);
-                    }
-                }
-
-            svg {
-                fill: var(--icon-secondary-color);
-                height: 1.6rem;
-                pointer-events: none;
-                vertical-align: middle;
-                width: 1.6rem;
-            }
-        }
-
-        &.is-ghost {
-            &::before { 
-                background-color: var(--collection-bg-hover);                
-                border: 1px dashed var(--input-border-focus);
-                border-radius: var(--border-radius);
-                content: "";
-                display: block;   
-                position: absolute;
-                left: -1.5rem;
-                right: -7rem;
-                bottom: .75rem;
-                top: -1.5rem;
-            }
-            .publii-repeater-item-field, 
-            .publii-repeater-item-ui,
-            .move {
-                opacity: 0;
-            }
-        }
-
-        &:first-child {
-            .move {
-                top: 3.24rem
-            }
-            .publii-repeater-item-ui {
-                top: 3.24rem
+                color: var(--link-primary-color-hover);
             }
         }
     }
 
-    &-empty-state {
-        margin-bottom: 1.2rem;
+    label + .note {
+        padding-top: 1.5rem;
     }
+
+    .checkbox ~ .note {
+        margin-bottom: 1.5rem;
+    }
+
+    .range-wrapper {
+        position: relative;
+        z-index: 1;
+
+        & + .note {
+            padding-top: 1.5rem;
+        }
+    }
+}
+
+.publii-repeater-empty-state {
+    margin-bottom: 1.2rem;
 }
 </style>

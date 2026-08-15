@@ -1,7 +1,0 @@
-// Stripping units is not a best practice
-// This function should not be used elsewhere
-// It is used here because calc() doesn't do unit logic
-// AND target ratios use units as a hack to get a number.
-@function ms-unitless($val) {
-  @return ($val / ($val - $val + 1));
-}

@@ -103,14 +103,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../../scss/vendor/modularscale';
-@import '../../../../../scss/variables.scss';
-@import '../../../../../scss/mixins.scss';
+<style>
 
 .publii-block-separator {
   caret-color: transparent;
-  margin: baseline(2,em) 0;
+  margin: 0.4571em 0;
   outline: none;
   width: 100%;
 

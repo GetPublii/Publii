@@ -67,7 +67,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 li {
     & > a {
         color: var(--link-invert-color);

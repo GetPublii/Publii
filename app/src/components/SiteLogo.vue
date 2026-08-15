@@ -116,9 +116,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/mixins.scss';
+<style scoped>
 
 .site-logo {
     align-items: center;
@@ -146,60 +144,60 @@ export default {
         width: 4rem;
         z-index: 1;
     }
+}
 
-    &-bg {
-        align-items: center;
-        border-radius: 3px;
-        color: var(--sidebar-icon);
-        display: flex;
-        height: 20px;
-        justify-content: center;
-        width: 20px;
-    }
+.site-logo-bg {
+    align-items: center;
+    border-radius: 3px;
+    color: var(--sidebar-icon);
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    width: 20px;
+}
 
-    &-name {
-        margin: 0 0 0 1.5rem;
-        width: calc(100% - 5rem);
-    }
+.site-logo-name {
+    margin: 0 0 0 1.5rem;
+    width: calc(100% - 5rem);
+}
 
-    &-link {
-        display: block;
-        font-size: $app-font-base;
-        font-weight: var(--font-weight-semibold);
-        margin: 0;
+.site-logo-link {
+    display: block;
+    font-size: var(--app-font-base);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    transition: all .3s ease-out;
+    white-space: nowrap;
+
+    & > span {
+        display: inline-block;
         overflow: hidden;
-        position: relative;
+        pointer-events: none;
         text-overflow: ellipsis;
-        transition: all .3s ease-out;
         white-space: nowrap;
-
-        & > span {
-            display: inline-block;
-            overflow: hidden;
-            pointer-events: none;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: 160px;
-        }
+        width: 160px;
     }
+}
 
-    &-icon-open {
-        border-color: var(--sidebar-link-icon) transparent transparent;
-        border-style: solid;
-        border-width: 5px;
-        opacity: 1;
-        cursor: pointer;
-        height: 5px;
-        left: auto;
-        line-height: 1.1;
-        opacity: var(--sidebar-link-opacity);
-        padding: 0;
-        position: absolute;
-        right: 4rem;
-        width: 5px;
-        text-align: center;
-        transition: var(--transition);
-        top: calc(50% - 2px);
-    }
+.site-logo-icon-open {
+    border-color: var(--sidebar-link-icon) transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    opacity: 1;
+    cursor: pointer;
+    height: 5px;
+    left: auto;
+    line-height: 1.1;
+    opacity: var(--sidebar-link-opacity);
+    padding: 0;
+    position: absolute;
+    right: 4rem;
+    width: 5px;
+    text-align: center;
+    transition: var(--transition);
+    top: calc(50% - 2px);
 }
 </style>

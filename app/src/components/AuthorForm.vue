@@ -759,10 +759,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/options-sidebar.scss';
-@import '../scss/notifications.scss';
+<style scoped>
+@import '../css/options-sidebar.css';
+@import '../css/notifications.css';
 
 .options-sidebar {
     .use-gravatar {
@@ -774,20 +773,20 @@ export default {
 .author-settings {
     max-height: 0;
     overflow: hidden;
-    transition: max-height .25s ease-out;
+    transition: max-height .25s ease-out
 
-    &-content {
-        padding: 0 0 1rem;
+}
 
-        .image-uploader {
-            margin-top: 0;
-        }
+.author-settings-content {
+    padding: 0 0 1rem;
 
-        .msg {
-            margin: 0 0 2rem;
-        }
+    .image-uploader {
+        margin-top: 0;
     }
 
+    .msg {
+        margin: 0 0 2rem;
+    }
 }
 
 .note {

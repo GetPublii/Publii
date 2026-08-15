@@ -364,10 +364,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import "../vendors/modularscale";
-@import "../../../scss/variables.scss";
-@import "../../../scss/mixins.scss";
+<style>
 
 .wrapper {
   border: 1px solid transparent;
@@ -406,7 +403,7 @@ export default {
   }
 
   & > div {
-    padding: baseline(4, em) 0;
+    padding: 0.9143em 0;
   }
 
   &.has-ui-opened {
@@ -427,7 +424,7 @@ export default {
       top: 44px;
 
       .publii-block-code-lang {
-        top: calc(#{baseline(6, em)} + 44px) !important;
+        top: calc(1.3714em + 44px) !important;
       }
       .publii-block-code > .prism-editor__line-numbers,
       .publii-block-html > .prism-editor__line-numbers {
@@ -466,211 +463,211 @@ export default {
       max-width: calc(var(--editor-width) + 84px);
     }
   }
+}
 
-  &-ui {
-    left: 32px;
+.wrapper-ui {
+  left: 32px;
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+  top: -2px;
+  z-index: 1;
+
+  .wrapper-ui-show-options {
+    transition: all 0.25s ease-out
+  }
+}
+
+.wrapper-ui .wrapper-ui-show-options-button {
+  background: none;
+  border: none;
+  cursor: pointer; 
+  font-size: 19px;
+  height: 32px;
+  opacity: 0;
+  padding: 4px;
+  transition: transform 0.25s ease-out; 
+  width: 32px;
+
+   /* hover effect */
+  &::before {
+    content: "";
+    background: var(--gray-6);
+    border-radius: 3px;
+    display: block;
+    left: 50%;
     opacity: 0;
     position: absolute;
-    pointer-events: none;
-    top: -2px;
-    z-index: 1;
+    height: 32px;
+    top: 50%;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.5) translate(-50%, -50%);
+    transform-origin: left top;
+    width: 32px;
+    z-index: -1;
+  }
 
-    .wrapper-ui-show-options {
-      transition: all 0.25s ease-out;
-     
-      &-button {
-        background: none;
-        border: none;
-        cursor: pointer; 
-        font-size: 19px;
-        height: 32px;
-        opacity: 0;
-        padding: 4px;
-        transition: transform 0.25s ease-out; 
-        width: 32px;
-
-         // hover effect
-        &::before {
-          content: "";
-          background: var(--gray-6);
-          border-radius: 3px;
-          display: block;
-          left: 50%;
-          opacity: 0;
-          position: absolute;
-          height: 32px;
-          top: 50%;
-          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: scale(0.5) translate(-50%, -50%);
-          transform-origin: left top;
-          width: 32px;
-          z-index: -1;
-        }
-
-        &:hover {
-          &::before {
-            opacity: 1;
-            transform: scale(1) translate(-50%, -50%);
-          }
-        }
-
-        &:focus {
-          outline: none;
-        }
-
-        & > svg {
-          color: var(--icon-tertiary-color);
-        }
-
-        &.is-visible {
-          opacity: 1;
-        }
-      }
+  &:hover {
+    &::before {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
     }
+  }
 
-    &-options {
-      left: 0;
-      position: absolute;
-      top: 0;
+  &:focus {
+    outline: none;
+  }
 
-      &.is-visible {
-        opacity: 1;
-        pointer-events: auto;
-      }
+  & > svg {
+    color: var(--icon-tertiary-color);
+  }
 
-      &-row {
-        display: flex;
-      }
-
-      &-button-move {
-        align-items: center;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        height: 32px;
-        justify-content: center;
-        margin: 0;
-        outline: none;
-        padding: 0;
-        position: absolute;
-        top: 0;
-        width: 32px;
-        z-index: 0;
-
-        svg {
-          color: var(--icon-primary-color);
-          transition: var(--transition);
-        }
-
-        // hover effect
-        &::before {
-          content: "";
-          background: var(--gray-6);
-          border-radius: 3px;
-          display: block;
-          left: 50%;
-          opacity: 0;
-          position: absolute;
-          height: 32px;
-          top: 50%;
-          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: scale(0.5) translate(-50%, -50%);
-          transform-origin: left top;
-          width: 32px;
-          z-index: -1;
-        }
-
-        &:hover,
-        &.is-active {
-          svg {
-            color: var(--icon-tertiary-color);
-          }
-
-          &::before {
-            opacity: 1;
-            transform: scale(1) translate(-50%, -50%);
-          }
-        }
-        &:disabled {
-          cursor: default;
-          opacity: 0.4;
-
-          &::before {
-            background: none;
-          }
-        }
-      }
-
-      &-button-move + .wrapper-ui-options-button-move {
-        top: 32px;
-      }
-    }
-
-    &-top-menu {
-      align-items: center;
-      border: none;
-      display: flex;
-      height: 44px;
-      justify-content: flex-end;
-      margin: -9px 0 9px 0;
-
-      &-title {
-        color: var(--gray-3);
-        display: block;
-        font-size: 11px;
-        font-weight: 700;
-        margin: 0 auto 0 0;
-        text-transform: uppercase;
-      }
-
-      &-button {
-        align-items: center;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        height: 100%;
-        min-height: 34px;
-        justify-content: center;
-        margin: 0;
-        outline: none;
-        padding: 0;
-        position: relative;
-        width: 38px;
-
-        svg {
-          color: var(--icon-tertiary-color);
-        }
-
-        // hover effect
-        &::before {
-          content: "";
-          background: var(--gray-6);
-          border-radius: 3px;
-          display: block;
-          left: 50%;
-          opacity: 0;
-          position: absolute;
-          height: 34px;
-          top: 50%;
-          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: scale(0.5) translate(-50%, -50%);
-          transform-origin: left top;
-          width: 34px;
-          z-index: -1;
-        }
-
-        &:hover,
-        &.is-active {
-          &::before {
-            opacity: 1;
-            transform: scale(1) translate(-50%, -50%);
-          }
-        }
-      }
-    }
+  &.is-visible {
+    opacity: 1;
+  }
 }
+
+.wrapper-ui-options {
+  left: 0;
+  position: absolute;
+  top: 0;
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.wrapper-ui-options-row {
+  display: flex;
+}
+
+.wrapper-ui-options-button-move {
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 32px;
+  z-index: 0;
+
+  svg {
+    color: var(--icon-primary-color);
+    transition: var(--transition);
+  }
+
+  /* hover effect */
+  &::before {
+    content: "";
+    background: var(--gray-6);
+    border-radius: 3px;
+    display: block;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    height: 32px;
+    top: 50%;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.5) translate(-50%, -50%);
+    transform-origin: left top;
+    width: 32px;
+    z-index: -1;
+  }
+
+  &:hover,
+  &.is-active {
+    svg {
+      color: var(--icon-tertiary-color);
+    }
+
+    &::before {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
+    }
+  }
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+
+    &::before {
+      background: none;
+    }
+  }
+}
+
+.wrapper-ui-options-button-move + .wrapper-ui-options-button-move {
+  top: 32px;
+}
+
+.wrapper-ui-top-menu {
+  align-items: center;
+  border: none;
+  display: flex;
+  height: 44px;
+  justify-content: flex-end;
+  margin: -9px 0 9px 0;
+}
+
+.wrapper-ui-top-menu-title {
+  color: var(--gray-3);
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 0 auto 0 0;
+  text-transform: uppercase;
+}
+
+.wrapper-ui-top-menu-button {
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  height: 100%;
+  min-height: 34px;
+  justify-content: center;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  position: relative;
+  width: 38px;
+
+  svg {
+    color: var(--icon-tertiary-color);
+  }
+
+  /* hover effect */
+  &::before {
+    content: "";
+    background: var(--gray-6);
+    border-radius: 3px;
+    display: block;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    height: 34px;
+    top: 50%;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.5) translate(-50%, -50%);
+    transform-origin: left top;
+    width: 34px;
+    z-index: -1;
+  }
+
+  &:hover,
+  &.is-active {
+    &::before {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
+    }
+  }
 }
 
 .editor[data-ui-opened-block=""] {
@@ -689,129 +686,129 @@ export default {
   &.is-visible {
     display: block !important;
   }
+}
 
-  &-list {
-    background: var(--popup-bg);
-    box-shadow: var(--box-shadow-medium);
+.block-selector-list {
+  background: var(--popup-bg);
+  box-shadow: var(--box-shadow-medium);
+  border-radius: var(--border-radius);
+  font-family: var(--font-base);
+  font-size: 14px;
+  padding: 8px 8px 0;
+  position: absolute;
+  top: 60px;
+  width: 212px;
+  z-index: 100;
+  
+  input {
+      font-size: 14px;
+      padding: 10px 38px 10px 12px !important;
+  }
+  .input-wrapper svg {
+      height: 16px !important;
+      left: auto;
+      right: 12px;
+      width: 16px !important;
+  }
+}
+
+.block-selector-list-empty-state {
+  display: block;
+  padding: 4px 12px 4px;
+}
+
+.block-selector-list-wrapper {
+    margin: 4px 0;
+    max-height: 214px;
+    overflow: auto; 
+}
+
+.block-selector-list-item {
+    align-items: center;
+    background: none;
+    border: none;
     border-radius: var(--border-radius);
-    font-family: var(--font-base);
-    font-size: 14px;
-    padding: 8px 8px 0;
-    position: absolute;
-    top: 60px;
-    width: 212px;
-    z-index: 100;
-    
-    input {
-        font-size: 14px;
-        padding: 10px 38px 10px 12px !important;
-    }
-    .input-wrapper svg {
-        height: 16px !important;
-        left: auto;
-        right: 12px;
-        width: 16px !important;
-    }
+    color: var(--text-primary-color);
+    cursor: pointer;
+    display: flex;   
+    font-weight: var(--font-weight-semibold);
+    margin: 5px 2px;
+    padding: 0;
+    text-align: left;
+    transition: var(--transition);
+    width: 98%;
 
-    &-empty-state {
-      display: block;
-      padding: 4px 12px 4px;
-    }
+  &:hover {
+      background-color: var(--gray-1);
+      color: var(--headings-color);
 
-    &-wrapper {
-        margin: 4px 0;
-        max-height: 214px;
-        overflow: auto; 
-    }
-
-    &-item {
-        align-items: center;
-        background: none;
-        border: none;
-        border-radius: var(--border-radius);
-        color: var(--text-primary-color);
-        cursor: pointer;
-        display: flex;   
-        font-weight: var(--font-weight-semibold);
-        margin: 5px 2px;
-        padding: 0;
-        text-align: left;
-        transition: var(--transition);
-        width: 98%;
-
-      &-icon {
-          align-items: center;
-          background-color: var(--gray-1);
-          border-radius: var(--border-radius);
-          display: inline-flex;
-          color: var(--icon-primary-color);
-          height: 36px;
-          justify-content: center;
-          margin-right: 12px;
-          transition: var(--transition);
-          width: 36px;
-      }
-
-      &:hover {
-          background-color: var(--gray-1);
-          color: var(--headings-color);
-
-        .block-selector-list-item-icon {
-            background: var(--button-secondary-bg);
-            color: var(--icon-tertiary-color);
-        }
-      }
-
-      &:focus-visible {
-          box-shadow: inset 0 0 2px 1px var(--input-border-focus);
-
-        .block-selector-list-item-icon {
-            background: none;
-        }
-      }
+    .block-selector-list-item-icon {
+        background: var(--button-secondary-bg);
+        color: var(--icon-tertiary-color);
     }
   }
 
-  &-add {
-      align-items: center;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      height: 32px;
-      justify-content: center;
-      outline: none;
-      width: 32px;
+  &:focus-visible {
+      box-shadow: inset 0 0 2px 1px var(--input-border-focus);
 
-       // hover effect
-       &::before {
-          content: "";
-          background: var(--gray-6);
-          border-radius: 3px;
-          display: block;
-          left: 50%;
-          opacity: 0;
-          position: absolute;
-          height: 32px;
-          top: 50%;
-          transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: scale(0.5) translate(-50%, -50%);
-          transform-origin: left top;
-          width: 32px;
-          z-index: -1;
-        }
+    .block-selector-list-item-icon {
+        background: none;
+    }
+  }
+}
 
-      & > svg {
-        color: var(--icon-tertiary-color);
-        transition: all .25s ease-out;
+.block-selector-list-item-icon {
+    align-items: center;
+    background-color: var(--gray-1);
+    border-radius: var(--border-radius);
+    display: inline-flex;
+    color: var(--icon-primary-color);
+    height: 36px;
+    justify-content: center;
+    margin-right: 12px;
+    transition: var(--transition);
+    width: 36px;
+}
+
+.block-selector-add {
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    outline: none;
+    width: 32px;
+
+     /* hover effect */
+     &::before {
+        content: "";
+        background: var(--gray-6);
+        border-radius: 3px;
+        display: block;
+        left: 50%;
+        opacity: 0;
+        position: absolute;
+        height: 32px;
+        top: 50%;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: scale(0.5) translate(-50%, -50%);
+        transform-origin: left top;
+        width: 32px;
+        z-index: -1;
       }
 
-      &:hover {
-        &::before {
-            opacity: 1;
-            transform: scale(1) translate(-50%, -50%);
-          }
-       }
+    & > svg {
+      color: var(--icon-tertiary-color);
+      transition: all .25s ease-out;
     }
-}
+
+    &:hover {
+      &::before {
+          opacity: 1;
+          transform: scale(1) translate(-50%, -50%);
+        }
+     }
+  }
 </style>

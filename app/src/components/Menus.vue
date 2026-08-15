@@ -492,8 +492,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .menu {
     overflow: auto;
@@ -518,57 +517,57 @@ export default {
         padding-top: 0;
         padding-bottom: 0;
     }
+}
 
-    &-assignment-link {
-        padding-right: 4rem;
-        position: relative;
-        width: 100%;
+.menu-assignment-link {
+    padding-right: 4rem;
+    position: relative;
+    width: 100%;
+}
 
-        &-icon {
-            border-color: var(--button-gray-bg) transparent transparent;
-            border-style: solid;
-            border-width: 5px;
-            opacity: 1;
-            cursor: pointer;
-            height: 5px;
-            left: auto;
-            line-height: 1.1;
-            padding: 0;
-            position: absolute;
-            right: 0;
-            width: 5px;
-            text-align: center;
-            transition: var(--transition);
-            top: calc(50% - 2px);
-        }
-    }
+.menu-assignment-link-icon {
+    border-color: var(--button-gray-bg) transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    opacity: 1;
+    cursor: pointer;
+    height: 5px;
+    left: auto;
+    line-height: 1.1;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    width: 5px;
+    text-align: center;
+    transition: var(--transition);
+    top: calc(50% - 2px);
+}
 
-    &-content {
-        margin: 2.5rem 0 0 0;
-    }
+.menu-content {
+    margin: 2.5rem 0 0 0;
+}
 
-    &-item {
+.menu-item {
+}
 
-        &-list {
-            list-style-type: none;
-            margin: .25 * $spacing 0;
-            padding: 0;
-        }
-    }
+.menu-item-list {
+    list-style-type: none;
+    margin: calc(.25 * var(--spacing)) 0;
+    padding: 0;
+}
 
-    &-edit-btn {
-         color: var(--link-primary-color) !important;
+.menu-edit-btn {
+     color: var(--link-primary-color) !important;
 
-         &:active,
-         &:focus,
-         &:hover {
-            color: var(--link-primary-color-hover) !important;
-         }
-    }
+     &:active,
+     &:focus,
+     &:hover {
+        color: var(--link-primary-color-hover) !important;
+     }
+}
 
-    &-empty-list {
-        display: block;
-        text-align: center;
-    }
+.menu-empty-list {
+    display: block;
+    text-align: center;
 }
 </style>

@@ -234,10 +234,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../../scss/variables.scss';
-@import '../../../../../scss/mixins.scss';
-@import '../../../../../scss/vendor/modularscale';
+<style>
 
 
 .publii-block-quote {
@@ -248,42 +245,42 @@ export default {
   }
 
   figcaption {
-    font-size: ms(-2) !important;
+    font-size: 0.7901em !important;
     border-left: 2px solid var(--gray-3);
-    padding: baseline(2,em) 0 0 baseline(5,em);
+    padding: 0.4571em 0 0 1.1429em;
     text-align: left !important;
   }
+}
 
-  &-form {
-    display: none;
-    padding: 0;
+.publii-block-quote-form {
+  display: none;
+  padding: 0;
 
-    &.is-visible {
-      display: block;
-    }
-
-    input {    
-      display: block;   
-      width: 100%;
-    }
+  &.is-visible {
+    display: block;
   }
 
-  &-text {
-    background: var(--input-bg);
-    border: 1px solid var(--input-border-color);
-    border-radius: 3px;
-    font-size: inherit;
-    line-height: inherit;
-    margin-bottom: 16px;
-    outline: none;
-    padding: 20px;
+  input {    
+    display: block;   
     width: 100%;
+  }
+}
 
-    &:empty {
-      &:before {
-        content: attr(data-translation);
-        color: var(--gray-4);
-      }
+.publii-block-quote-text {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border-color);
+  border-radius: 3px;
+  font-size: inherit;
+  line-height: inherit;
+  margin-bottom: 16px;
+  outline: none;
+  padding: 20px;
+  width: 100%;
+
+  &:empty {
+    &:before {
+      content: attr(data-translation);
+      color: var(--gray-4);
     }
   }
 }

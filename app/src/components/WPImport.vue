@@ -333,12 +333,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .wp-import {
     margin: 0 auto;
-    max-width: $wrapper;
+    max-width: var(--wrapper-width);
     user-select: none;
 
     p {
@@ -380,13 +379,6 @@ export default {
     .import-config {
         margin: 0 0 2rem 0;
 
-        &-section {
-            border-bottom: 2px solid var(--gray-1);
-            font-weight: var(--font-weight-semibold);
-            margin: 0;
-            padding: 3rem 0;
-        }
-
         & > p {
             margin: 0;
         }
@@ -409,5 +401,12 @@ export default {
             padding-bottom: 1rem;
         }
     }
+}
+
+.wp-import .import-config-section {
+    border-bottom: 2px solid var(--gray-1);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+    padding: 3rem 0;
 }
 </style>

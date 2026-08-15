@@ -776,20 +776,19 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/notifications.scss';
+<style scoped>
+@import '../css/notifications.css';
 
 .settings {
     margin: 0 auto;
     padding: 3rem 0 4rem;
     user-select: none;
-    width: 100%;
+    width: 100%
+}
 
-    &-wrapper {
-        margin: 0 auto;
-        max-width: $wrapper;
-    }
+.settings-wrapper {
+    margin: 0 auto;
+    max-width: var(--wrapper-width);
 }
 
 .note.is-warning {

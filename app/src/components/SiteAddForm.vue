@@ -477,8 +477,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 /*
  * Site create form
@@ -487,7 +486,7 @@ export default {
     background: var(--popup-bg);
     border-radius: var(--border-radius);
     box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
-    font-size: $app-font-base;
+    font-size: var(--app-font-base);
     margin: 0;
     left: 50%;
     padding: 4.8rem 4.8rem 5.6rem 4.8rem;
@@ -498,14 +497,6 @@ export default {
     user-select: none;
     width: 770px;
 
-    &-form {
-        height: 344px;  
-        overflow: hidden;
-        ::v-deep .logo-creator-preview {
-            min-width: 10rem !important;
-        }
-    }
-
     .title {
         color: var(--text-primary-color);
         font-size: 1.8rem;
@@ -514,106 +505,8 @@ export default {
         text-transform: none;
     }
 
-    &-field {
-        margin: 0 0 3rem 0;
-        text-align: left;
-
-        & > label {
-            display: block;
-            font-size: $app-font-base;
-            font-weight: 400;
-            line-height: 1.4;
-            margin-bottom: 1rem;
-        }
-
-        &-error {
-            color: var(--warning);
-            font-size: 1.4rem;
-        }
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    &-buttons {
-        display: flex;
-        margin: 0 -4.8rem -5.6rem -4.8rem;
-        overflow: hidden;
-        padding: 5.6rem 0 0 0;
-        position: relative;
-        text-align: center;
-        top: 1px;
-
-        .button {
-            border-radius: 0 0 0 var(--border-radius);
-
-            &:last-child:first-child {
-                border-radius: 0 0 var(--border-radius) var(--border-radius);
-            }
-        }
-        .button-outline {
-            box-shadow: none!important;
-            border-top: 1px solid var(--input-border-color);
-            border-radius: 0 0 var(--border-radius) 0;
-            color: var(--popup-btn-cancel-color);
-            margin-left: 0;
-
-            &:hover {
-                background: var(--popup-btn-cancel-bg-hover);
-                color: var(--popup-btn-cancel-hover-color);
-            }
-        }
-    }
-
-    &-wrapper {
-        .loader {
-            display: block;
-            height: 2.8rem;
-            margin: -5.6rem auto 2rem;
-            width: 2.8rem;
-
-            & > span {
-                animation: spin .9s infinite linear;
-                border-top: 2px solid var(--border-light-color);
-                border-right: 2px solid var(--border-light-color);
-                border-bottom: 2px solid var(--border-light-color);
-                border-left: 2px solid var(--gray-4);
-                border-radius: 50%;
-                display: block;
-                height: 3.5rem;
-                width: 3.5rem;
-
-                &::after {
-                    border-radius: 50%;
-                    content: "";
-                    display: block;
-                }
-
-                @at-root {
-                    @keyframes spin {
-                       100% {
-                          transform: rotate(360deg);
-                       }
-                    }
-                }
-          }
-       }
-    }
-
     .backup-selected {
-        text-align: left;
-
-        &-file {
-            align-items: center;
-            display: flex;
-            justify-content: space-between;
-            margin: 1rem 0;
-
-            strong {
-                margin-right: 1rem;
-            }
-        }
+        text-align: left
     }
 
     .backup {
@@ -621,51 +514,6 @@ export default {
         border-radius: var(--border-radius);
         color: var(--gray-3);
         position: relative;
-
-        &-upload {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-            height: 340px;
-            justify-content: center;
-            padding: 2rem;
-
-            .icon {
-                fill: var(--icon-primary-color);
-                margin-bottom: 1.5rem;
-            }
-
-            &-input {
-                clear: both;
-                color: transparent; // hack to remove the phrase "no file selected" from the file input
-                display: block;
-                line-height: 1.6!important;
-                margin: 3rem auto 0 auto!important;
-
-                &::-webkit-file-upload-button {
-                    -webkit-appearance: none;
-                    background: var(--button-secondary-bg);
-                    border: 1px solid var(--button-secondary-bg);
-                    border-radius: var(--border-radius);
-                    color: var(--button-secondary-color);
-                    cursor: pointer;
-                    display: inline-block;
-                    font-size: 1.4rem;
-                    font-weight: var(--font-weight-semibold);
-                    left: 50%;
-                    padding: .75rem 1.5rem;
-                    position: relative;
-                    transform: translate(-50%, 0);
-                    outline: none;
-
-                    &:hover {
-                        background: var(--button-secondary-bg-hover);
-                        border-color: var(--button-secondary-bg-hover);
-                        color: var(--button-secondary-color-hover);
-                    }
-                }
-            }
-        }
 
         .overlay.has-border {
             pointer-events: none;
@@ -699,19 +547,156 @@ export default {
                 position: absolute;      
                 top: calc(50% - 1.5rem);      
                 vertical-align: middle;
-                width: 3rem;
-
-                @at-root {
-                    @keyframes spin {
-                        100% {
-                            transform: rotate(360deg);
-                        }
-                    }
-                }
+                width: 3rem
             }
             .backup-upload {
                 opacity: 0;
             }
+        }
+    }
+}
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.site-create-form {
+    height: 344px;  
+    overflow: hidden;
+    ::v-deep .logo-creator-preview {
+        min-width: 10rem !important;
+    }
+}
+.site-create-field {
+    margin: 0 0 3rem 0;
+    text-align: left;
+
+    & > label {
+        display: block;
+        font-size: var(--app-font-base);
+        font-weight: 400;
+        line-height: 1.4;
+        margin-bottom: 1rem;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+.site-create-field-error {
+    color: var(--warning);
+    font-size: 1.4rem;
+}
+.site-create-buttons {
+    display: flex;
+    margin: 0 -4.8rem -5.6rem -4.8rem;
+    overflow: hidden;
+    padding: 5.6rem 0 0 0;
+    position: relative;
+    text-align: center;
+    top: 1px;
+
+    .button {
+        border-radius: 0 0 0 var(--border-radius);
+
+        &:last-child:first-child {
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+    }
+    .button-outline {
+        box-shadow: none!important;
+        border-top: 1px solid var(--input-border-color);
+        border-radius: 0 0 var(--border-radius) 0;
+        color: var(--popup-btn-cancel-color);
+        margin-left: 0;
+
+        &:hover {
+            background: var(--popup-btn-cancel-bg-hover);
+            color: var(--popup-btn-cancel-hover-color);
+        }
+    }
+}
+.site-create-wrapper {
+    .loader {
+        display: block;
+        height: 2.8rem;
+        margin: -5.6rem auto 2rem;
+        width: 2.8rem;
+
+        & > span {
+            animation: spin .9s infinite linear;
+            border-top: 2px solid var(--border-light-color);
+            border-right: 2px solid var(--border-light-color);
+            border-bottom: 2px solid var(--border-light-color);
+            border-left: 2px solid var(--gray-4);
+            border-radius: 50%;
+            display: block;
+            height: 3.5rem;
+            width: 3.5rem;
+
+            &::after {
+                border-radius: 50%;
+                content: "";
+                display: block;
+            }
+      }
+   }
+}
+@keyframes spin {
+   100% {
+      transform: rotate(360deg);
+   }
+}
+.site-create .backup-selected-file {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+
+    strong {
+        margin-right: 1rem;
+    }
+}
+.site-create .backup-upload {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 340px;
+    justify-content: center;
+    padding: 2rem;
+
+    .icon {
+        fill: var(--icon-primary-color);
+        margin-bottom: 1.5rem;
+    }
+}
+.site-create .backup-upload-input {
+    clear: both;
+    color: transparent; /* hack to remove the phrase "no file selected" from the file input */
+    display: block;
+    line-height: 1.6!important;
+    margin: 3rem auto 0 auto!important;
+
+    &::-webkit-file-upload-button {
+        -webkit-appearance: none;
+        background: var(--button-secondary-bg);
+        border: 1px solid var(--button-secondary-bg);
+        border-radius: var(--border-radius);
+        color: var(--button-secondary-color);
+        cursor: pointer;
+        display: inline-block;
+        font-size: 1.4rem;
+        font-weight: var(--font-weight-semibold);
+        left: 50%;
+        padding: .75rem 1.5rem;
+        position: relative;
+        transform: translate(-50%, 0);
+        outline: none;
+
+        &:hover {
+            background: var(--button-secondary-bg-hover);
+            border-color: var(--button-secondary-bg-hover);
+            color: var(--button-secondary-color-hover);
         }
     }
 }

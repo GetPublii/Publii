@@ -192,8 +192,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .button {
     background: var(--button-bg);
@@ -214,132 +213,6 @@ export default {
     user-select: none;
     white-space: nowrap;
     width: auto;
-
-    &-trigger {
-        border-radius: var(--border-radius);
-        display: block;
-        height: 4.4rem;
-        left: 0;
-        padding-left: 1.3rem;
-        padding-right: 6rem;
-        position: relative;
-        text-align: left;
-        top: 0;
-        transition: var(--transition);
-
-        &:hover {
-            background: var(--button-bg-hover);
-        }
-
-        &-icon {
-            align-items: center;
-            display: flex;
-            height: inherit;
-            justify-content: center;
-            position: absolute;
-            top: 0;
-            right: 4.4rem;
-            width: 4.2rem;
-
-            .icon {
-                color: var(--white)
-            }
-        }
-    }
-
-    &-toggle {
-        background: var(--button-bg-hover);
-        border-left: 1px solid var(--button-bg);
-        border-radius: 0 var(--border-radius) var(--border-radius) 0;
-        cursor: pointer;
-        height: 100%;
-        position: absolute;
-        right: 0;
-        top: 0;
-        transition: var(--transition);
-        width: 4.4rem;
-
-        &::before {
-            content: "";
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
-            pointer-events: none;
-            height: 100%;
-            left: 0;
-            position: absolute;
-            transition: var(--transition);
-            width: 100%;
-        }
-
-        &::after {
-            border-color: var(--white) transparent transparent;
-            border-style: solid;
-            border-width: 5px;
-            content: "";
-            pointer-events: none;
-            left: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translateX(-50%) translateY(-2.5px);
-        }
-
-        &:hover {
-            background: var(--button-bg-hover);
-
-            &::before {
-               background: rgba(black, .1);
-            }
-        }
-    }
-
-    &-dropdown {
-        background: var(--bg-secondary);
-        border-radius: var(--border-radius) var(--border-radius);
-        box-shadow: var(--box-shadow-medium);
-        overflow: hidden;
-        position: absolute;
-        right: 0;
-        text-align: left;
-        top: 5.3rem;
-        min-width: 100%;
-        z-index: 10;
-
-        &-item {
-            border-top: 1px solid var(--border-light-color);
-            color: var(--text-primary-color);
-            padding: .2rem 2rem;
-            position: relative;
-            text-align: left;
-            transition: var(--transition);
-
-            &:hover {
-                background: var(--gray-1);
-
-                .button-dropdown-item-icon .icon {
-                    color: var(--icon-tertiary-color);
-                }
-            }
-
-            &:first-child {
-                border-top: none;
-            }
-
-            &-icon {
-                align-items: center;
-                bottom: 0;
-                display: flex;
-                justify-content: center;
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 4.4rem;
-
-                .icon {
-                    color: var(--icon-secondary-color);
-                    transition: var(--transition);
-                }
-            }
-        }
-    }
 
     &.has-icon {
         .button-trigger {
@@ -427,6 +300,132 @@ export default {
             box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.125);
             top: unset;
         }
+    }
+}
+
+.button-trigger {
+    border-radius: var(--border-radius);
+    display: block;
+    height: 4.4rem;
+    left: 0;
+    padding-left: 1.3rem;
+    padding-right: 6rem;
+    position: relative;
+    text-align: left;
+    top: 0;
+    transition: var(--transition);
+
+    &:hover {
+        background: var(--button-bg-hover);
+    }
+}
+
+.button-trigger-icon {
+    align-items: center;
+    display: flex;
+    height: inherit;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 4.4rem;
+    width: 4.2rem;
+
+    .icon {
+        color: var(--white)
+    }
+}
+
+.button-toggle {
+    background: var(--button-bg-hover);
+    border-left: 1px solid var(--button-bg);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: var(--transition);
+    width: 4.4rem;
+
+    &::before {
+        content: "";
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        pointer-events: none;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        transition: var(--transition);
+        width: 100%;
+    }
+
+    &::after {
+        border-color: var(--white) transparent transparent;
+        border-style: solid;
+        border-width: 5px;
+        content: "";
+        pointer-events: none;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translateX(-50%) translateY(-2.5px);
+    }
+
+    &:hover {
+        background: var(--button-bg-hover);
+
+        &::before {
+           background: rgba(black, .1);
+        }
+    }
+}
+
+.button-dropdown {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius) var(--border-radius);
+    box-shadow: var(--box-shadow-medium);
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: 5.3rem;
+    min-width: 100%;
+    z-index: 10;
+}
+
+.button-dropdown-item {
+    border-top: 1px solid var(--border-light-color);
+    color: var(--text-primary-color);
+    padding: .2rem 2rem;
+    position: relative;
+    text-align: left;
+    transition: var(--transition);
+
+    &:hover {
+        background: var(--gray-1);
+
+        .button-dropdown-item-icon .icon {
+            color: var(--icon-tertiary-color);
+        }
+    }
+
+    &:first-child {
+        border-top: none;
+    }
+}
+
+.button-dropdown-item-icon {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 4.4rem;
+
+    .icon {
+        color: var(--icon-secondary-color);
+        transition: var(--transition);
     }
 }
 </style>

@@ -1746,13 +1746,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/notifications.scss';
+<style scoped>
+@import '../css/notifications.css';
 
 .server-settings {
     margin: 0 auto;
-    max-width: $wrapper;
+    max-width: var(--wrapper-width);
     user-select: none;
 
     #http-protocol {
@@ -1769,73 +1768,73 @@ export default {
         color: var(--warning);
     }
 
-    &-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-
-        &-item {
-            align-items: center;
-            background-color: var(--bg-secondary);
-            border: 1px solid transparent;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-small);
-            color: var(--text-primary-color);
-            display: flex;
-            flex-direction: column;
-            fill: var(--icon-primary-color);
-            font-weight: var(--font-weight-semibold);
-            justify-content: center;
-            min-height: calc(8rem + 8vh);
-            position: relative;
-            transition: var(--transition);
-
-            &:hover {
-                background: var(--bg-primary);
-                border-color: var(--color-primary);
-                box-shadow: var(--box-shadow-medium);
-                color: var(--color-primary);
-                cursor: pointer;
-            }
-
-            & > svg {
-                margin: 0 auto 1rem;
-                transition: inherit;
-            }
-
-            &.deployment-others {
-                h3 {
-                    color: var(--text-primary-color);
-                    font-size: $app-font-base;
-                    font-weight: var(--font-weight-semibold);
-                    margin-bottom: 0;
-                    transition: inherit;
-                }
-
-                svg {
-                    fill: var(--icon-primary-color);
-                    transition: inherit;
-                }
-
-                &:hover {
-                    svg {
-                        fill: var(--color-primary);
-                    }
-
-                    h3 {
-                        color: var(--color-primary);
-                    }
-                }
-            }
-        }
-    }
-
     #relative-urls {
         margin-top: 0;
     }
 
     .msg {
         margin-bottom: 3rem;
+    }
+}
+
+.server-settings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.server-settings-grid-item {
+    align-items: center;
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-small);
+    color: var(--text-primary-color);
+    display: flex;
+    flex-direction: column;
+    fill: var(--icon-primary-color);
+    font-weight: var(--font-weight-semibold);
+    justify-content: center;
+    min-height: calc(8rem + 8vh);
+    position: relative;
+    transition: var(--transition);
+
+    &:hover {
+        background: var(--bg-primary);
+        border-color: var(--color-primary);
+        box-shadow: var(--box-shadow-medium);
+        color: var(--color-primary);
+        cursor: pointer;
+    }
+
+    & > svg {
+        margin: 0 auto 1rem;
+        transition: inherit;
+    }
+
+    &.deployment-others {
+        h3 {
+            color: var(--text-primary-color);
+            font-size: var(--app-font-base);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: 0;
+            transition: inherit;
+        }
+
+        svg {
+            fill: var(--icon-primary-color);
+            transition: inherit;
+        }
+
+        &:hover {
+            svg {
+                fill: var(--color-primary);
+            }
+
+            h3 {
+                color: var(--color-primary);
+            }
+        }
     }
 }
 

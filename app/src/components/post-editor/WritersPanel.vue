@@ -78,50 +78,49 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+<style>
 
 .post-editor {
-    &-writers-panel {
-       background: var(--option-sidebar-bg);
-        border-right: 1px solid var(--input-border-color);
-        bottom: 0;
-        color: var(--label-color);
-        height: calc(100vh - var(--topbar-height));
-        left: 0;
-        opacity: 1;
-        position: absolute;
-        text-align: center;
-        top: var(--topbar-height);
-        transition: var(--transition);
-        width: $writers-panel-width;
-        z-index: 100;
+}
 
-        &.is-hidden {
-            opacity: 0;
-            pointer-events: none;
+.post-editor-writers-panel {
+   background: var(--option-sidebar-bg);
+    border-right: 1px solid var(--input-border-color);
+    bottom: 0;
+    color: var(--label-color);
+    height: calc(100vh - var(--topbar-height));
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    text-align: center;
+    top: var(--topbar-height);
+    transition: var(--transition);
+    width: var(--writers-panel-width);
+    z-index: 100;
+
+    &.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    dl {
+        margin: 10rem 15% 0 15%;
+        width: 70%;
+
+        dt {
+            color: var(--text-primary-color);
+            font-size: 2.6rem;
+            font-family: Georgia, serif;
         }
 
-        dl {
-            margin: 10rem 15% 0 15%;
-            width: 70%;
+        dd {
+            border-bottom: 1px solid var(--input-border-color);
+            font-size: 1.4rem;
+            margin: 0 0 1rem 0;
+            padding: 0 0 2rem 0;
 
-            dt {
-                color: var(--text-primary-color);
-                font-size: 2.6rem;
-                font-family: Georgia, serif;
-            }
-
-            dd {
-                border-bottom: 1px solid var(--input-border-color);
-                font-size: 1.4rem;
-                margin: 0 0 1rem 0;
-                padding: 0 0 2rem 0;
-
-                &:last-child {
-                    border-bottom: none;
-                }
+            &:last-child {
+                border-bottom: none;
             }
         }
     }
@@ -132,11 +131,11 @@ export default {
  */
 body[data-os="linux"] {
     .post-editor {
-        &-writers-panel {
-            height: 100vh;
-            top: 0;
-        }
     }
+}
+body[data-os="linux"] .post-editor-writers-panel {
+    height: 100vh;
+    top: 0;
 }
 
 /*

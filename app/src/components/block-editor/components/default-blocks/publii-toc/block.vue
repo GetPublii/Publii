@@ -156,7 +156,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 
 .publii-block-toc {
   caret-color: transparent;
@@ -166,28 +166,6 @@ export default {
   outline: none;
   width: 100%;
 
-  &-wrapper {
-    outline: none;
-    width: 100%;
-
-    .publii-block-toc-title {
-      outline: none;
-      margin: 0 0 20px !important;
-      width: 100%;
-
-      &:empty {
-        &:before {
-          content: attr(data-translation);
-          color: var(--gray-4);
-        }
-      }
-    }
-
-    a {
-      pointer-events: none;
-    }
-  }
-
   &:empty {
     &:before {
       content: attr(data-translation);
@@ -196,6 +174,28 @@ export default {
       margin-left: -2em;
       width: 100%;
     }
+  }
+}
+
+.publii-block-toc-wrapper {
+  outline: none;
+  width: 100%;
+
+  .publii-block-toc-title {
+    outline: none;
+    margin: 0 0 20px !important;
+    width: 100%;
+
+    &:empty {
+      &:before {
+        content: attr(data-translation);
+        color: var(--gray-4);
+      }
+    }
+  }
+
+  a {
+    pointer-events: none;
   }
 }
 </style>

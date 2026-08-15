@@ -1174,12 +1174,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .theme-settings {
     margin: 0 auto;
-    max-width: $wrapper;
+    max-width: var(--wrapper-width);
     user-select: none;
 
     .multiple-checkboxes {

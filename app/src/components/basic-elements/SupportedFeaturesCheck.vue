@@ -53,9 +53,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
-@import '../../scss/notifications.scss';
+<style scoped>
+@import '../../css/notifications.css';
 
 .msg {
     background: var(--bg-secondary);

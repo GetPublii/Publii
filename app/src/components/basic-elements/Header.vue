@@ -38,17 +38,23 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+<style scoped>
 
 .heading {
     display: flex;
-    margin-bottom: 12 * $spacing;
+    margin-bottom: calc(12 * var(--spacing));
     user-select: none;
     width: 100%;
 
-    @include clearfix;
+    &:after {
+
+        content: " ";
+
+        display: block;
+
+        clear: both;
+
+    }
 
     .title {    
         line-height: 4.3rem;

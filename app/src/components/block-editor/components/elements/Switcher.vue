@@ -81,8 +81,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../../../scss/variables.scss';
+<style scoped>
 
 .switcher {
   background: var(--input-border-dark);
@@ -96,14 +95,6 @@ export default {
   transition: all .28s ease;
   width: 32px;
   z-index: 1;
-
-  &-wrapper {
-    display: inline-flex;
-
-    &.has-label {
-      padding-right: 1rem;
-    }
-  }
 
   &.lower-zindex {
     z-index: 0;
@@ -138,6 +129,14 @@ export default {
   &.is-disabled {
     opacity: .5;
     pointer-events: none;
+  }
+}
+
+.switcher-wrapper {
+  display: inline-flex;
+
+  &.has-label {
+    padding-right: 1rem;
   }
 }
 </style>

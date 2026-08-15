@@ -179,17 +179,16 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/popup-common.scss';
+<style scoped>
+@import '../css/popup-common.css';
 
 .popup {
     padding: 4rem 4rem 1rem 4rem;
-    width: 60rem;
+    width: 60rem
+}
 
-    &-info {
-        margin: -1.5rem 0 4rem;
-    }
+.popup-info {
+    margin: -1.5rem 0 4rem;
 }
 
 .message {

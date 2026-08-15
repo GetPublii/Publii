@@ -62,61 +62,60 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .appbar {
-    -webkit-app-region: drag; // necessary for making window draggable
-    -webkit-user-select: none; // remove conflict with the text selection
+    -webkit-app-region: drag; /* necessary for making window draggable */
+    -webkit-user-select: none; /* remove conflict with the text selection */
     background: var(--top-app-bar);
     height: var(--topbar-height);
     padding: 0;
     position: relative;
     text-align: right;
-    z-index: 999999;
+    z-index: 999999
+}
 
-    &-button {
-        display: none;
-    }
+.appbar-button {
+    display: none;
 }
 
 body[data-os="win"] {
-    .appbar {        
+    .appbar {
+    }
+}
 
-        &-button {
-            -webkit-app-region: no-drag; // Make the buttons clickable again
-            display: inline-block;
-            height: 2.2rem;
-            padding: 6px 0.75rem;
-            vertical-align: top;
-            width: 2.4rem;
+body[data-os="win"] .appbar-button {
+    -webkit-app-region: no-drag; /* Make the buttons clickable again */
+    display: inline-block;
+    height: 2.2rem;
+    padding: 6px 0.75rem;
+    vertical-align: top;
+    width: 2.4rem;
 
-            & > svg {
-                display: block;
-                fill: var(--icon-tertiary-color);
-                margin: 0 auto;
-            }
+    & > svg {
+        display: block;
+        fill: var(--icon-tertiary-color);
+        margin: 0 auto;
+    }
 
-            &:hover {
-                background: var(--input-border-color);                
-            }
-        }
+    &:hover {
+        background: var(--input-border-color);                
+    }
+}
 
-        &-minimize {
-            & > svg {
-                position: relative;
-                top: 4px;
-            }
-        }
+body[data-os="win"] .appbar-minimize {
+    & > svg {
+        position: relative;
+        top: 4px;
+    }
+}
 
-        &-close {
-            &:hover {
-                background: var(--warning);
+body[data-os="win"] .appbar-close {
+    &:hover {
+        background: var(--warning);
 
-                & > svg {
-                    fill: var(--white);
-                }
-            }
+        & > svg {
+            fill: var(--white);
         }
     }
 }

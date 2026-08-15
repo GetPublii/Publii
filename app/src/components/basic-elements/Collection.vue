@@ -42,8 +42,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 /*
  * Collection element
@@ -103,7 +102,7 @@ export default {
             transition: background .75s ease-out;
 
             &.is-newest {
-                background: lighten($color-helper-6, 35);
+                background: #ffeaa6;
             }
         }
     }*/

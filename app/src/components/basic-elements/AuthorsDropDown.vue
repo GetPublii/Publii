@@ -82,7 +82,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .multiselect {
     line-height: 2;
 }

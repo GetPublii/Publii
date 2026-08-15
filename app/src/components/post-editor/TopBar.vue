@@ -232,42 +232,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+<style>
 
 .post-editor {
-    &-topbar {
-        align-items: center;
-        background: transparent;
-        font-size: 1.4rem;
-        display: flex;
-        height: 5.6rem;
-        justify-content: space-between;
-        padding: 0 3.2rem;
-        position: absolute;
-        top: 3.6rem;
-        width: 100%;
-        z-index: 100001;
-    }
-
-    &-actions {
-        display: flex;
-        margin-left: auto;
-
-        .button {
-            text-align: center;
-
-            &:nth-child(2) {
-                margin-left: 1rem;
-                margin-right: -1.7rem; // button padding
-            }
-        }
-    }
-
-    &-source-code-actions {
-        margin-left: auto;
-    }
 
     #post-preview-button {
         background: var(--bg-primary);
@@ -286,9 +253,43 @@ export default {
             content: "";
             height: 1.4rem;
             right: -.9375rem;
-            @include centerXY(false, true);
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
         }
     }
+}
+
+.post-editor-topbar {
+    align-items: center;
+    background: transparent;
+    font-size: 1.4rem;
+    display: flex;
+    height: 5.6rem;
+    justify-content: space-between;
+    padding: 0 3.2rem;
+    position: absolute;
+    top: 3.6rem;
+    width: 100%;
+    z-index: 100001;
+}
+
+.post-editor-actions {
+    display: flex;
+    margin-left: auto;
+
+    .button {
+        text-align: center;
+
+        &:nth-child(2) {
+            margin-left: 1rem;
+            margin-right: -1.7rem; /* button padding */
+        }
+    }
+}
+
+.post-editor-source-code-actions {
+    margin-left: auto;
 }
 
 /*
@@ -297,9 +298,10 @@ export default {
 
 body[data-os="linux"] {
     .post-editor {
-        &-topbar {
-            top: 0;
-        }
     }
+}
+
+body[data-os="linux"] .post-editor-topbar {
+    top: 0;
 }
 </style>

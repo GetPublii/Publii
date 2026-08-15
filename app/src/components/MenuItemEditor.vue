@@ -564,18 +564,17 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/options-sidebar.scss';
+<style scoped>
+@import '../css/options-sidebar.css';
 
 .options-sidebar {
     h2 {
         margin-bottom: 1.2rem;
     }
+}
 
-    &-buttons {
-        border: none;
-        padding-top: 1.8rem;
-    }
+.options-sidebar-buttons {
+    border: none;
+    padding-top: 1.8rem;
 }
 </style>

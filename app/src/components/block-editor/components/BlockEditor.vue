@@ -455,10 +455,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../scss/variables.scss';
-@import '../assets/typography.scss';
-@import '../assets/prism-theme.scss';
+<style>
+@import '../assets/typography.css';
+@import '../assets/prism-theme.css';
 
 .editor {
   min-height: 100%;
@@ -466,22 +465,7 @@ export default {
   position: relative;
   width: 100%;
 
-  &-inner {
-    margin: 0 auto;
-
-    &-trigger {
-      height: 100%;
-      left: 50%;
-      min-height: 100px;
-      position: relative;
-      top: 0;
-      transform: translateX(-50%);
-      width: var(--editor-width);
-      z-index: 0;
-    }
-  }
-
-  // UI animations
+  /* UI animations */
   .block-editor-ui-fade-enter-active {
     transition: opacity .2s ease;
     transition-delay: .3s;
@@ -493,5 +477,20 @@ export default {
   .block-editor-ui-fade-leave-to {
     opacity: 0;
   }
+}
+
+.editor-inner {
+  margin: 0 auto;
+}
+
+.editor-inner-trigger {
+  height: 100%;
+  left: 50%;
+  min-height: 100px;
+  position: relative;
+  top: 0;
+  transform: translateX(-50%);
+  width: var(--editor-width);
+  z-index: 0;
 }
 </style>

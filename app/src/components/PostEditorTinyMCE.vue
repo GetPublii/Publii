@@ -409,50 +409,48 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../scss/variables.scss';
-@import '../scss/mixins.scss';
-@import '../scss/editor/post-editors-common.scss';
-@import '../scss/editor/editor-overrides.scss';
+<style>
+@import '../css/editor/post-editors-common.css';
+@import '../css/editor/editor-overrides.css';
 
 .post-editor {
     overflow-x: hidden;
     position: relative;
     width: 100%;
-    z-index: 2;
+    z-index: 2
+}
 
-    &-form {
-        #post-title {
-            border: none;
-            box-shadow: none;
-            color: var(--headings-color);
-            display: block;
-            font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            font-size: 3.6rem;
-            font-weight: var(--font-weight-bold);
-            letter-spacing: var(--letter-spacing);
-            line-height: 1.2;
-            margin: 0 10% 2.6rem;
-            padding: 0;
-            text-align: center;
-            width: 80%;
+.post-editor-form {
+    #post-title {
+        border: none;
+        box-shadow: none;
+        color: var(--headings-color);
+        display: block;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+        font-size: 3.6rem;
+        font-weight: var(--font-weight-bold);
+        letter-spacing: var(--letter-spacing);
+        line-height: 1.2;
+        margin: 0 10% 2.6rem;
+        padding: 0;
+        text-align: center;
+        width: 80%;
 
-            &:empty {
-                color: var(--gray-4);
+        &:empty {
+            color: var(--gray-4);
 
-                &:before {
-                    content: attr(data-translation);
-                }
+            &:before {
+                content: attr(data-translation);
+            }
 
-                &:focus:before {
-                    content: "";
-                }
+            &:focus:before {
+                content: "";
             }
         }
+    }
 
-        #post-editor_ifr {
-            height: calc( 100vh - 30rem )!important;
-        }
+    #post-editor_ifr {
+        height: calc( 100vh - 30rem )!important;
     }
 }
 

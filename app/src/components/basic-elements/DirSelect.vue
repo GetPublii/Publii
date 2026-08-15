@@ -88,10 +88,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
-// @ToDo: move ".clear" to a separate component - ClearButton
+/* @ToDo: move ".clear" to a separate component - ClearButton */
 
 .box {
     position: relative;

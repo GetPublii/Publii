@@ -30,7 +30,7 @@
     border: none;
     border-radius: .6rem;
     display: inline-block;
-    font-size: $app-font-base;
+    font-size: var(--app-font-base);
     font-weight: var(--font-weight-normal);
     left: 50%;  
     overflow: hidden;

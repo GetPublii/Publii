@@ -321,198 +321,196 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .upload {
-    &-image {
-        background-clip: padding-box;
-        background-position: center;
+}
+
+.upload-image {
+    background-clip: padding-box;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px dashed var(--input-border-color);
+    border-radius: var(--border-radius);
+    color: var(--gray-3);
+    display: block;
+    font-size: var(--app-font-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+    margin: 0 0 -40px 0;
+    text-align: center;
+    padding: 3rem 5rem;
+    position: relative;
+    width: 100%;
+
+    &.is-small {
+    }
+
+    &.is-empty {
+        box-shadow: inset 0 0 0 5px var(--bg-primary);
+        container-type: inline-size;
+
+        .upload-overlay {
+            display: block;
+        }
+
+        @container (max-width: 200px) {
+            .upload-overlay svg {
+                display: none;
+            }
+        }
+
+        @container (max-width: 160px) {
+            .upload-overlay div {
+                display: none;
+            }
+            .upload-image-input {
+                margin-top: 0 !important;
+            }
+        }
+    }
+
+    &.is-hovered {
+        border-color: var(--color-primary);
+    }
+
+    &:not(.is-empty):not(.is-hovered) {
+        background-color: transparent;
+        background-position: center center;
         background-repeat: no-repeat;
-        border: 2px dashed var(--input-border-color);
-        border-radius: var(--border-radius);
-        color: var(--gray-3);
-        display: block;
-        font-size: $app-font-base;
-        font-weight: var(--font-weight-normal);
-        line-height: 1.5;
-        margin: 0 0 -40px 0;
-        text-align: center;
-        padding: 3rem 5rem;
-        position: relative;
-        width: 100%;
+        background-size: contain;
+        border: none;
+        padding: 10rem;
 
         &.is-small {
-        }
-
-        &-wrapper {
-            display: block;
-            padding: 0 0 40px 0;
-
-            &:not(.is-empty):not(.is-hovered) {
-                background-color: var(--bg-secondary);
-                background-clip: content-box;
-                background-image:   linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa),
-                                    linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa);
-                background-size:36px 36px;
-                background-position:0 0, 18px 18px;
-            }
-        }
-
-        &.is-empty {
-            box-shadow: inset 0 0 0 5px var(--bg-primary);
-            container-type: inline-size;
-
-            .upload-overlay {
-                display: block;
-            }
-
-            @container (max-width: 200px) {
-                .upload-overlay svg {
-                    display: none;
-                }
-            }
-
-            @container (max-width: 160px) {
-                .upload-overlay div {
-                    display: none;
-                }
-                .upload-image-input {
-                    margin-top: 0 !important;
-                }
-            }
-        }
-
-        &-input {
-            clear: both;
-            color: transparent; // hack to remove the phrase "no file selected" from the file input
-            display: block;
-            line-height: 1.6!important;
-            margin: 2rem auto 0 auto!important;
-
-            span {
-                    display: none;
-                }
-
-            &::-webkit-file-upload-button {
-                -webkit-appearance: none;
-                background: var(--button-secondary-bg);
-                border: 1px solid var(--button-secondary-bg);
-                border-radius: var(--border-radius);
-                color: var(--button-secondary-color);
-                cursor: pointer;
-                display: inline-block;
-                font-size: 1.4rem;
-                font-weight: var(--font-weight-semibold);
-                left: 50%;
-                padding: .75rem 1.5rem;
-                position: relative;
-                transform: translate(-50%, 0);
-                outline: none;
-                
-                &:hover {
-                    background: var(--button-secondary-bg-hover);
-                    border-color: var(--button-secondary-bg-hover);
-                    color: var(--button-secondary-color-hover);
-                }
-            }
-        }
-
-        &.is-hovered {
-            border-color: var(--color-primary);
-        }
-
-        &:not(.is-empty):not(.is-hovered) {
-            background-color: transparent;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: contain;
-            border: none;
-            padding: 10rem;
-
-            &.is-small {
-                padding: 9rem;
-            }
+            padding: 9rem;
         }
     }
+}
 
-    &-remove {
-        color: var(--warning);
-        display: block;
-        font-size: 13px;
-        margin: 10px 0;
-        position: relative;
-        text-align: center;
-        top: 40px;
-        width: 100%;
+.upload-image-wrapper {
+    display: block;
+    padding: 0 0 40px 0;
 
-        &.is-hidden {
+    &:not(.is-empty):not(.is-hovered) {
+        background-color: var(--bg-secondary);
+        background-clip: content-box;
+        background-image:   linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa),
+                                    linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa);
+        background-size:36px 36px;
+        background-position:0 0, 18px 18px;
+    }
+}
+
+.upload-image-input {
+    clear: both;
+    color: transparent; /* hack to remove the phrase "no file selected" from the file input */
+    display: block;
+    line-height: 1.6!important;
+    margin: 2rem auto 0 auto!important;
+
+    span {
             display: none;
         }
-    }
 
-    &-overlay {
-        color: var(--gray-3);
+    &::-webkit-file-upload-button {
+        -webkit-appearance: none;
+        background: var(--button-secondary-bg);
+        border: 1px solid var(--button-secondary-bg);
+        border-radius: var(--border-radius);
+        color: var(--button-secondary-color);
+        cursor: pointer;
+        display: inline-block;
+        font-size: 1.4rem;
+        font-weight: var(--font-weight-semibold);
+        left: 50%;
+        padding: .75rem 1.5rem;
+        position: relative;
+        transform: translate(-50%, 0);
+        outline: none;
+        
+        &:hover {
+            background: var(--button-secondary-bg-hover);
+            border-color: var(--button-secondary-bg-hover);
+            color: var(--button-secondary-color-hover);
+        }
+    }
+}
+
+.upload-remove {
+    color: var(--warning);
+    display: block;
+    font-size: 13px;
+    margin: 10px 0;
+    position: relative;
+    text-align: center;
+    top: 40px;
+    width: 100%;
+
+    &.is-hidden {
         display: none;
-
-        svg {
-            display: block;
-            fill: var(--icon-quaternary-color);
-            margin: 0 auto 1.5rem;
-
-        }
     }
+}
 
-    &-uploading-overlay {
-        background: var(--gray-1);
-        height: 100%;
-        left: 0;
+.upload-overlay {
+    color: var(--gray-3);
+    display: none;
+
+    svg {
+        display: block;
+        fill: var(--icon-quaternary-color);
+        margin: 0 auto 1.5rem;
+
+    }
+}
+
+.upload-uploading-overlay {
+    background: var(--gray-1);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    & > div {
+        color: var(--gray-3)!important;
+        left: 50%;
         position: absolute;
-        top: 0;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
         width: 100%;
-
-        & > div {
-            color: var(--gray-3)!important;
-            left: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translateX(-50%) translateY(-50%);
-            width: 100%;
-        }
-
-        .loader {
-            display: block;
-            height: 2.8rem;
-            margin: 0 auto 1rem;
-            width: 2.8rem;
-
-            & > span {
-                animation: spin .9s infinite linear;
-                border-top: 2px solid rgba(var(--color-primary-rgb), .2);
-                border-right: 2px solid rgba(var(--color-primary-rgb), .2);
-                border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
-                border-left: 2px solid var(--color-primary);
-                border-radius: 50%;
-                display: block;
-                height: 2.5rem;
-                width: 2.5rem;
-
-                &::after {
-                    border-radius: 50%;
-                    content: "";
-                    display: block;
-                }
-
-                @at-root {
-                    @keyframes spin {
-                       100% {
-                          transform: rotate(360deg);
-                       }
-                    }
-                }
-          }
-       }
     }
+
+    .loader {
+        display: block;
+        height: 2.8rem;
+        margin: 0 auto 1rem;
+        width: 2.8rem;
+
+        & > span {
+            animation: spin .9s infinite linear;
+            border-top: 2px solid rgba(var(--color-primary-rgb), .2);
+            border-right: 2px solid rgba(var(--color-primary-rgb), .2);
+            border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
+            border-left: 2px solid var(--color-primary);
+            border-radius: 50%;
+            display: block;
+            height: 2.5rem;
+            width: 2.5rem;
+
+            &::after {
+                border-radius: 50%;
+                content: "";
+                display: block;
+            }
+      }
+   }
+}
+
+@keyframes spin {
+   100% {
+      transform: rotate(360deg);
+   }
 }
 
 .settings-basic {

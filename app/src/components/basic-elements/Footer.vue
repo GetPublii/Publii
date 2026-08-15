@@ -19,12 +19,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+<style scoped>
 
 .footer {
-    @include clearfix;
+    &:after {
+        content: " ";
+        display: block;
+        clear: both;
+    }
 
     .buttons {
         float: right;

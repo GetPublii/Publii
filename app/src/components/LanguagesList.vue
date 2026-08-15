@@ -88,8 +88,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .languages {
     display: grid;
@@ -140,7 +139,7 @@ export default {
 
     h3 {
          color: var(--text-primary-color);
-         font-size: $app-font-base;
+         font-size: var(--app-font-base);
          font-weight: var(--font-weight-semibold);
          margin-bottom: 0;
          transition: inherit;

@@ -687,39 +687,38 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/options-sidebar.scss';
-@import '../scss/notifications.scss';
+<style scoped>
+@import '../css/options-sidebar.css';
+@import '../css/notifications.css';
 
 .tag-settings {
     max-height: 0;
     overflow: hidden;
-    transition: max-height .25s ease-out;
+    transition: max-height .25s ease-out
+}
 
-    &-content {
-        padding: 0 0 1rem;
+.tag-settings-content {
+    padding: 0 0 1rem;
 
-        .image-uploader {
-            margin-top: 0;
-        }
-
-        .msg {
-            margin: 0 0 2rem;
-        }
+    .image-uploader {
+        margin-top: 0;
     }
 
-    &-hidden {
-        font-size: 1.4rem !important;
-        font-weight: var(--font-weight-normal) !important;
-        line-height: 1.8 !important;
-        margin-top: 3rem;
+    .msg {
+        margin: 0 0 2rem;
+    }
+}
 
-        svg {
-            margin: 0 .5rem 0 0;
-            position: relative;
-            top: .2rem;
-        }
+.tag-settings-hidden {
+    font-size: 1.4rem !important;
+    font-weight: var(--font-weight-normal) !important;
+    line-height: 1.8 !important;
+    margin-top: 3rem;
+
+    svg {
+        margin: 0 .5rem 0 0;
+        position: relative;
+        top: .2rem;
     }
 }
 

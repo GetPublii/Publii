@@ -137,43 +137,43 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .credits {
-    &-list {
-        margin-top: 0;
-    }
+}
 
-    &-item {
-        border-bottom: 1px solid var(--border-light-color);
-        padding: 1.4rem 0;
+.credits-list {
+    margin-top: 0;
+}
 
-        & > a {
-            color: var(--link-primary-color);
-            float: right;
-            font-size: 1.4rem;
-            margin-left: 5rem;
+.credits-item {
+    border-bottom: 1px solid var(--border-light-color);
+    padding: 1.4rem 0;
 
-            &:active,
-            &:focus,
-            &:hover {
-                color: var(--link-primary-color-hover);
-            }
-        }
+    & > a {
+        color: var(--link-primary-color);
+        float: right;
+        font-size: 1.4rem;
+        margin-left: 5rem;
 
-        &:last-of-type {
-            border-bottom: none;
+        &:active,
+        &:focus,
+        &:hover {
+            color: var(--link-primary-color-hover);
         }
     }
 
-    &-content {
-        margin: 0;
-        padding: 2rem;
+    &:last-of-type {
+        border-bottom: none;
+    }
+}
 
-        pre {
-            white-space: pre-line;
-        }
+.credits-content {
+    margin: 0;
+    padding: 2rem;
+
+    pre {
+        white-space: pre-line;
     }
 }
 </style>

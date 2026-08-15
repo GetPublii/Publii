@@ -90,8 +90,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../scss/variables.scss';
+<style>
 @import '../../assets/vendor/css/codemirror.css';
 @import '../../../node_modules/codemirror-advanceddialog/dist/dialog.css';
 
@@ -99,7 +98,7 @@ export default {
     border: 1px solid var(--input-border-color);
 }
 
-// Search + Search and Replace popup in Code Mirror
+/* Search + Search and Replace popup in Code Mirror */
 .CodeMirror-advanced-dialog {
     background: var(--input-bg-light);
     border: none;

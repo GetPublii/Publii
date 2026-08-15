@@ -465,12 +465,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 li {
     border: 1px solid transparent;
-    margin-bottom: calc((3 * $spacing) - 2px);
+    margin-bottom: calc(3 * var(--spacing) - 2px);
     padding: 0;
     position: relative;
     
@@ -529,7 +528,7 @@ li {
         border-left: 3px solid var(--input-border-color);
         border-radius: 3px;
         cursor: move !important;
-        padding: 4 * $spacing 10 * $spacing;
+        padding: calc(4 * var(--spacing)) calc(10 * var(--spacing));
         position: relative;
 
         &.is-dnd-disabled {
@@ -672,16 +671,16 @@ li {
     ol {
         list-style-type: none;
         padding-left: 0;
-        margin-left: 15 * $spacing;
+        margin-left: calc(15 * var(--spacing));
 
         & > li:first-child {
-            margin-top: 3 * $spacing;
+            margin-top: calc(3 * var(--spacing));
         }
 
         &:empty {
-            bottom: -6 * $spacing;
+            bottom: calc(-6 * var(--spacing));
             left: 0;
-            min-height: 6 * $spacing;
+            min-height: calc(6 * var(--spacing));
             position: absolute;
             width: 100%;
             z-index: 10;

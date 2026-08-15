@@ -175,123 +175,123 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .tools {
-    &-container {
-        margin: 0 auto;
-        max-width: $wrapper;
-        user-select: none;
-        z-index: 1;
-    }
+}
 
-    &-list {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-auto-rows: minmax(calc(8rem + 8vh), auto);
-        gap: 2rem;
+.tools-container {
+    margin: 0 auto;
+    max-width: var(--wrapper-width);
+    user-select: none;
+    z-index: 1;
+}
 
-       &-item {
-            background-color: var(--bg-secondary);
-            border: 1px solid transparent;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-small);      
-            height: 100%;
-            transition: var(--transition);
-            text-align: center;
+.tools-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(calc(8rem + 8vh), auto);
+    gap: 2rem;      
+}
 
-            &:hover {
-               background: var(--bg-primary);
-               border-color: var(--color-primary);
-               box-shadow: var(--box-shadow-medium);  
-               cursor: pointer;
+.tools-list-item {
+     background-color: var(--bg-secondary);
+     border: 1px solid transparent;
+     border-radius: var(--border-radius);
+     box-shadow: var(--box-shadow-small);      
+     height: 100%;
+     transition: var(--transition);
+     text-align: center;
 
-               svg {
-                  fill: var(--color-primary);
-               }
+     &:hover {
+        background: var(--bg-primary);
+        border-color: var(--color-primary);
+        box-shadow: var(--box-shadow-medium);  
+        cursor: pointer;
 
-               a {
-                  color: var(--color-primary);
-               }
-            }
-
-            a {
-               color: var(--text-primary-color);
-               display: flex;
-               flex-direction: column;
-               justify-content: center;
-               font-weight: var(--font-weight-semibold);
-               height: 100%;
-               padding: 4rem 1rem;
-               position: relative;
-               width: 100%;
-            }
-
-            svg {
-               display: block;
-               fill: var(--icon-primary-color);
-               margin: 0 auto 1rem;
-               transition: inherit;
-            }
-
-            img {
-               display: block;
-               height: 48px;
-               margin: 0 auto 1.4rem;
-               width: auto;
-               max-width: 60%;
-            }
-
-            &.plugin-is-disabled {
-
-                a {
-                    color: var(--text-light-color);
-                    cursor: default;
-                }
-
-                &:hover {
-                   border-color: var(--border-light-color);
-                   box-shadow: var(--box-shadow-small);  
-                   
-                   .tools-switcher {
-                         animation: tools-switcher-animation 3s linear infinite;
-
-                   }
-                }
-            }
-        }      
-    }
-
-    &-switcher {
-       position: absolute;
-       left: 1.5rem;
-       bottom: 1rem;
-
-       &:hover {
-             animation: none !important;
-       }
-    }
-
-    &-description {
-        background: var(--option-sidebar-bg);
-        float: right;
-        padding: 2.4rem 3.6rem;
-        width: 45%;
-    }
-
-    &-tab {
-        h2 {
-            font-size: $app-font-base;
-            font-weight: 400;
-            margin: 1rem 0 0;
-            text-transform: none;
+        svg {
+           fill: var(--color-primary);
         }
 
-        div {
-            font-size: 1.4rem;
-            font-style: italic;
+        a {
+           color: var(--color-primary);
         }
+     }
+
+     a {
+        color: var(--text-primary-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-weight: var(--font-weight-semibold);
+        height: 100%;
+        padding: 4rem 1rem;
+        position: relative;
+        width: 100%;
+     }
+
+     svg {
+        display: block;
+        fill: var(--icon-primary-color);
+        margin: 0 auto 1rem;
+        transition: inherit;
+     }
+
+     img {
+        display: block;
+        height: 48px;
+        margin: 0 auto 1.4rem;
+        width: auto;
+        max-width: 60%;
+     }
+
+     &.plugin-is-disabled {
+
+         a {
+             color: var(--text-light-color);
+             cursor: default;
+         }
+
+         &:hover {
+            border-color: var(--border-light-color);
+            box-shadow: var(--box-shadow-small);  
+            
+            .tools-switcher {
+                  animation: tools-switcher-animation 3s linear infinite;
+
+            }
+         }
+     }
+ }
+
+.tools-switcher {
+   position: absolute;
+   left: 1.5rem;
+   bottom: 1rem;
+
+   &:hover {
+         animation: none !important;
+   }
+}
+
+.tools-description {
+    background: var(--option-sidebar-bg);
+    float: right;
+    padding: 2.4rem 3.6rem;
+    width: 45%;
+}
+
+.tools-tab {
+    h2 {
+        font-size: var(--app-font-base);
+        font-weight: 400;
+        margin: 1rem 0 0;
+        text-transform: none;
+    }
+
+    div {
+        font-size: 1.4rem;
+        font-style: italic;
     }
 }
 
@@ -310,32 +310,36 @@ export default {
 
  @media (max-height: 900px) {
     .tools {
-        &-list {
-            &-item {
-                svg,
-                img {
-                    transform: scale(0.9);
-                }
-            }
+    }
+
+    .tools-list {
+    }
+
+    .tools-list-item {
+        svg,
+        img {
+            transform: scale(0.9);
         }
     }
 }
 
 @media (max-width: 1400px) {
     .tools {
-        &-list {
-            li {
-                flex-basis: calc(50% - 2rem);
-            }
-            &-item {
-                a {
-                    padding: 3rem 1rem 3.5rem;
-                }
-                svg, 
-                img {
-                    transform: scale(0.9);
-                }
-            }
+    }
+
+    .tools-list {
+        li {
+            flex-basis: calc(50% - 2rem);
+        }
+    }
+
+    .tools-list-item {
+        a {
+            padding: 3rem 1rem 3.5rem;
+        }
+        svg, 
+        img {
+            transform: scale(0.9);
         }
     }
 }
@@ -343,17 +347,19 @@ export default {
 
 @media (min-width: 1920px) {
     .tools {
-        &-list li {
-            flex-basis: calc(25% - 2rem);
-        }
+    }
+
+    .tools-list li {
+        flex-basis: calc(25% - 2rem);
     }
 }
 
 @media (min-width: 2560px) {
     .tools {
-        &-list li {
-            flex-basis: calc(20% - 2rem);
-        }
+    }
+
+    .tools-list li {
+        flex-basis: calc(20% - 2rem);
     }
 }
 

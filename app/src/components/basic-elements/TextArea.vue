@@ -336,11 +336,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
-@import '../../scss/editor/post-editors-common.scss';
-@import '../../scss/editor/editor-overrides.scss';
+<style>
+@import '../../css/editor/post-editors-common.css';
+@import '../../css/editor/editor-overrides.css';
 
 .publii-textarea {
     background-color: var(--input-bg);
@@ -349,7 +347,7 @@ export default {
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
     display: block;
-    font: 400 #{$app-font-base}/1.5 var(--font-base);
+    font: 400 var(--app-font-base)/1.5 var(--font-base);
     max-width: 100%;
     overflow: auto;
     outline: none;

@@ -1,7 +1,7 @@
 .empty-state {
     clear: both;
     color: var(--text-light-color);
-    font-size: $app-font-base;
+    font-size: var(--app-font-base);
     left: 0;
     padding: 0 2vw;
     position: absolute;

@@ -37,15 +37,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .site-switch {
-    -webkit-app-region: no-drag; // Make the buttons clickable again         
+    -webkit-app-region: no-drag; /* Make the buttons clickable again */
     cursor: pointer;
     display: block;
     font-weight: var(--font-weight-semibold);  
-    margin: 1rem -#{$app-sidebar-margin} .5rem;    
+    margin: 1rem calc(-1 * var(--app-sidebar-margin)) .5rem;    
     position: relative;
     order: 1;
 
@@ -69,7 +68,7 @@ export default {
         }
 
         & > svg {
-            fill: lighten($color-1, 10);
+            fill: #5ab0f7;
         }
     }
 }

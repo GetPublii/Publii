@@ -163,42 +163,38 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../scss/vendor/normalize.css';
-@import '../scss/vendor/vue-multiselect.scss';
-@import '../scss/variables.scss';
-@import '../scss/css-variables.scss';
-@import '../scss/mixins.scss';
-@import '../scss/global.scss';
-@import '../scss/forms.scss';
-@import '../scss/scope-fix.scss';
-@import '../scss/codemirror.scss';
+<style>
+@import '../css/vendor/normalize.css';
+@import '../css/vendor/vue-multiselect.css';
+@import '../css/css-variables.css';
+@import '../css/global.css';
+@import '../css/forms.css';
+@import '../css/scope-fix.css';
+@import '../css/codemirror.css';
 
 /*
  * Main container for the app
  */
 .app {
+    background: var(--bg-primary)
+}
+.app-view {
     background: var(--bg-primary);
-
-    &-view {
-        background: var(--bg-primary);
-        font-size: $app-font-base;
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-    }
-
-    &-site-sidebar {
-        bottom: 0;
-        font-size: $app-font-base;
-        left: 0;
-        position: absolute;
-        top: var(--topbar-height);
-        width: 35rem;
-        z-index: 1;
-    }
+    font-size: var(--app-font-base);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.app-site-sidebar {
+    bottom: 0;
+    font-size: var(--app-font-base);
+    left: 0;
+    position: absolute;
+    top: var(--topbar-height);
+    width: 35rem;
+    z-index: 1;
 }
 
 #app {
@@ -229,11 +225,12 @@ export default {
 
 body[data-os="win"] {    
     .app {
-        &-view {
-            border: 1px solid var(--icon-secondary-color);
-            overflow: hidden;
-        }
     }
+}
+
+body[data-os="win"] .app-view {
+    border: 1px solid var(--icon-secondary-color);
+    overflow: hidden;
 }
 
 body[data-os="linux"] {
@@ -250,15 +247,16 @@ body[data-os="linux"] {
     }
 
     .app {
-        &-view {
-            border: 1px solid var(--icon-secondary-color);
-            overflow: hidden;
-        }
-
-        &-site-sidebar {
-            top: 0;
-        }
     }
+}
+
+body[data-os="linux"] .app-view {
+    border: 1px solid var(--icon-secondary-color);
+    overflow: hidden;
+}
+
+body[data-os="linux"] .app-site-sidebar {
+    top: 0;
 }
     
 /*
@@ -267,9 +265,10 @@ body[data-os="linux"] {
 
 @media (max-width: 1400px) {
     .app {
-        &-site-sidebar {        
-            width: $app-sidebar;
-        }
+    }
+
+    .app-site-sidebar {        
+        width: var(--app-sidebar-width);
     }
 }
 </style>

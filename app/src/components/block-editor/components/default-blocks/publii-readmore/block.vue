@@ -74,10 +74,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../../scss/vendor/modularscale';
-@import '../../../../../scss/variables.scss';
-@import '../../../../../scss/mixins.scss';
+<style>
 
 .publii-block-readmore {
   align-items: center;
@@ -109,7 +106,7 @@ export default {
     content: attr(data-translation);
     display: inline-block;
     font-family: var(--font-base);
-    font-size: ms(-3);
+    font-size: 0.7023em;
     font-weight: var(--font-weight-semibold);
     padding: 6px 16px;
     position: absolute;

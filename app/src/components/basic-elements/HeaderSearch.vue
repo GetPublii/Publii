@@ -76,8 +76,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .search {
     max-width: 700px;
@@ -103,7 +102,7 @@ export default {
         border: 0;
         border-radius: 30px;
         box-shadow: none;
-        font-size: $app-font-base;
+        font-size: var(--app-font-base);
         height: 4.4rem;
         opacity: 0;
         padding: 0 5rem 0 6rem;
@@ -165,19 +164,17 @@ export default {
         }
 
         & > span {
-             transition-delay: 0s;
-
-             @at-root {
-                  @keyframes close-delay {
-                     from {
-                          opacity: 0;
-                     }
-                     to {
-                          opacity: 1;
-                     }
-                 }
-            }
+             transition-delay: 0s
         }
     }
+}
+
+@keyframes close-delay {
+   from {
+        opacity: 0;
+   }
+   to {
+        opacity: 1;
+   }
 }
 </style>

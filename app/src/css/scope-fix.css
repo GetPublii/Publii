@@ -5,7 +5,7 @@
     .error-log {
         strong {
             color: var(--warning);
-            font-size: $app-font-base;
+            font-size: var(--app-font-base);
             font-weight: normal;
         }
 
@@ -25,11 +25,10 @@
  * vue-multiselect
  */
 .multiselect__tags {
-   // padding: 0 4rem .5rem 0.5rem;
-
-    &-wrap {
-        display: inline;
-    }
+   /* padding: 0 4rem .5rem 0.5rem; */
+}
+.multiselect__tags-wrap {
+    display: inline;
 }
 
 .multiselect__tag {
@@ -50,29 +49,29 @@
         height: 2.4rem;
         line-height: 2.4rem;
     }
+}
 
-    &-icon {
-        cursor: pointer;
-        display: inline-block;
-        float: left;
-        font-size: $app-font-base;
-        font-weight: bold;
-        margin-left: 0;
-        margin-right: 5px;
-        position: static;
-        width: 10px;
+.multiselect__tag-icon {
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    font-size: var(--app-font-base);
+    font-weight: bold;
+    margin-left: 0;
+    margin-right: 5px;
+    position: static;
+    width: 10px;
+
+    &:after {
+        color: var(--icon-secondary-color)!important;
+    }
+
+    &:focus,
+    &:hover {
+        background: transparent;
 
         &:after {
-            color: var(--icon-secondary-color)!important;
-        }
-
-        &:focus,
-        &:hover {
-            background: transparent;
-
-            &:after {
-                color: var(--icon-tertiary-color)!important;
-            }
+            color: var(--icon-tertiary-color)!important;
         }
     }
 }
@@ -183,7 +182,7 @@ body[data-os="linux"] {
 .popup-link-add {
     .field {
         label {
-            font-size: $app-font-base;
+            font-size: var(--app-font-base);
             padding: 0;
             text-align: left;
             vertical-align: middle;

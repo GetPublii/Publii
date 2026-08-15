@@ -99,16 +99,15 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .settings {
     padding: 3rem 0 4rem;
-    width: 100%;
+    width: 100%
+}
 
-    &-wrapper {
-        margin: 0 auto;
-        max-width: $wrapper;
-    }
+.settings-wrapper {
+    margin: 0 auto;
+    max-width: var(--wrapper-width);
 }
 </style>

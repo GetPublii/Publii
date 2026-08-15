@@ -180,9 +180,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/popup-common.scss';
+<style scoped>
+@import '../css/popup-common.css';
 
 .overlay {
     z-index: 100006;
@@ -200,12 +199,12 @@ export default {
         fill: var(--icon-quaternary-color);
 
     }
+}
 
-    &-info {
-        font-size: 1.4rem;
-        color: var(--text-light-color);
-        margin: -1.5rem 0 4rem;
-    }
+.popup-info {
+    font-size: 1.4rem;
+    color: var(--text-light-color);
+    margin: -1.5rem 0 4rem;
 }
 
 .message {

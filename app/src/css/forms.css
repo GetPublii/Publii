@@ -26,7 +26,7 @@ select {
     border-radius: var(--border-radius);
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
-    font: 400 #{$app-font-base}/1.5 var(--font-base);
+    font: 400 var(--app-font-base)/1.5 var(--font-base);
     outline: none;
     padding: 1.2rem 1.8rem;
 
@@ -112,7 +112,7 @@ input[type="range"] {
     }
 
     &::-webkit-slider-runnable-track {
-        background: $color-8;
+        background: #dddddd;
         border: none;
         cursor: pointer;
         height: 2px;
@@ -121,7 +121,7 @@ input[type="range"] {
     }
 
     &:focus::-webkit-slider-runnable-track {
-        background: rgba($color-1, .5);
+        background: rgba(42, 153, 244, 0.5);
         outline: none;
     }
 }
@@ -259,7 +259,7 @@ input[type="range"] {
 
 .multiselect__placeholder {
     color: var(--text-primary-color);
-    font-size: $app-font-base;
+    font-size: var(--app-font-base);
     height: inherit;
     line-height: 47px;
     margin: 0;

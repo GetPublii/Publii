@@ -720,7 +720,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .publii-block-table-wrapper {
   margin: -26px -34px -44px -30px;
   padding: 26px 34px 44px 30px;

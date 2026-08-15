@@ -129,8 +129,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .plugin {
     background-color: var(--bg-secondary);
@@ -145,109 +144,109 @@ export default {
     transition: var(--transition);
     text-align: center;
 
-    &-thumbnail {
-        display: block;
-        max-height: 50%;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        max-width: 90%;
-
-        &-wrapper {
-            display: block;
-            padding-bottom: 75%;
-            position: relative;
-            transition: var(--transition);
-            width: 100%;
-        }
-    }
-
-    &-delete {
-        align-items: center;
-        background: var(--bg-primary);
-        border-radius: 50%;
-        height: 3rem;
-        justify-content: center;
-        display: inline-flex;
-        position: absolute;
-        right: 1.4rem;
-        text-align: center;
-        width: 3rem;
-
-        & > svg {
-             fill: var(--icon-secondary-color);
-             transform: scale(.9);
-             transition: var(--transition);
-        }
-
-        &:hover {
-             & > svg {
-                fill: var(--warning);
-                transform: scale(1);
-             }
-        }
-    }
-
-    &-name {
-        align-items: center;
-        background: var(--gray-1);
-        border-radius: 0 0 4px 4px;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 2rem;
-        text-align: left;
-
-        & > h3 {
-             font-size: 1.4rem;
-             font-weight: var(--font-weight-semibold);
-             line-height: 1.4;
-             margin: 1.2rem 0;
-
-             span:first-of-type {
-                 display: block;
-             }
-        }
-    }
-
-    &-version {
-        color: var(--text-light-color);
-        font-size: 1.2rem;
-        font-weight: var(--font-weight-normal);
-    }
-
-    &-version,
-    &-is-incompatible {
-        color: var(--text-light-color);
-        font-size: 1.2rem;
-        font-weight: var(--font-weight-normnal);
-    }
-
-    &-is-incompatible {
-        color: var(--warning);
-        margin: 0 4rem 0 .5rem;
-        text-transform: uppercase;
-    }
-
     &.is-incompatible {
        .plugin-version {
            text-decoration-color: var(--warning);
            text-decoration-line: line-through;
        }
     }
+}
 
-    &-new-version-available {
-        background: var(--highlighted);
-        left: 1rem;
-        padding: 2rem;        
-        position: absolute;
-        right: 0;
-        top: 1rem;
-        width: calc(100% - 2rem);
+.plugin-thumbnail {
+    display: block;
+    max-height: 50%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    max-width: 90%;
+}
 
-        strong {
-            color: var(--headings-color);
-        }
+.plugin-thumbnail-wrapper {
+    display: block;
+    padding-bottom: 75%;
+    position: relative;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.plugin-delete {
+    align-items: center;
+    background: var(--bg-primary);
+    border-radius: 50%;
+    height: 3rem;
+    justify-content: center;
+    display: inline-flex;
+    position: absolute;
+    right: 1.4rem;
+    text-align: center;
+    width: 3rem;
+
+    & > svg {
+         fill: var(--icon-secondary-color);
+         transform: scale(.9);
+         transition: var(--transition);
+    }
+
+    &:hover {
+         & > svg {
+            fill: var(--warning);
+            transform: scale(1);
+         }
+    }
+}
+
+.plugin-name {
+    align-items: center;
+    background: var(--gray-1);
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+    text-align: left;
+
+    & > h3 {
+         font-size: 1.4rem;
+         font-weight: var(--font-weight-semibold);
+         line-height: 1.4;
+         margin: 1.2rem 0;
+
+         span:first-of-type {
+             display: block;
+         }
+    }
+}
+
+.plugin-version {
+    color: var(--text-light-color);
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-normal);
+}
+
+.plugin-version,
+.plugin-is-incompatible {
+    color: var(--text-light-color);
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-normnal);
+}
+
+.plugin-is-incompatible {
+    color: var(--warning);
+    margin: 0 4rem 0 .5rem;
+    text-transform: uppercase;
+}
+
+.plugin-new-version-available {
+    background: var(--highlighted);
+    left: 1rem;
+    padding: 2rem;        
+    position: absolute;
+    right: 0;
+    top: 1rem;
+    width: calc(100% - 2rem);
+
+    strong {
+        color: var(--headings-color);
     }
 }
 </style>

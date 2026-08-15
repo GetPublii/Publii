@@ -98,18 +98,15 @@ export default {
 }
 </script>
 
-<style lang="scss" >
-@import '../../../../../scss/vendor/modularscale';
-@import '../../../../../scss/variables.scss';
-@import '../../../../../scss/mixins.scss';
+<style >
 
 .publii-block-embed {
     background: var(--gray-1);
     border-radius: var(--border-radius);
     color: var(--gray-2);
     display: none;
-    font-size: ms(-1);
-    padding: baseline(6,em);
+    font-size: 0.8889em;
+    padding: 1.3714em;
     outline: none;
     width: 100%;
 
@@ -118,7 +115,7 @@ export default {
         border: 1px solid var(--gray-2);
         border-radius: var(--border-radius);
         font-family: var(--font-monospace);
-        font-size: ms(-1);
+        font-size: 0.8889em;
         min-height: 180px;
         padding: 20px;
         resize: vertical;
@@ -128,19 +125,19 @@ export default {
     &.is-visible {
         display: block;
     }
+}
 
-    &-preview {
-        background: var(--gray-1);
-        margin: 0;
-        padding: 0 0 56.25%;
-        position: relative;
+.publii-block-embed-preview {
+    background: var(--gray-1);
+    margin: 0;
+    padding: 0 0 56.25%;
+    position: relative;
 
-        iframe {
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            width: 100%;
-        }
+    iframe {
+        height: 100%;
+        pointer-events: none;
+        position: absolute;
+        width: 100%;
     }
 }
 </style>

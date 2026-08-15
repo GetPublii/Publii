@@ -149,8 +149,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .language {
     background-color: var(--bg-secondary);
@@ -181,91 +180,91 @@ export default {
         background: var(--button-secondary-bg);
     }
 
-    &-thumbnail {
-        display: block;
-        max-height: 90%;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        max-width: 90%;
-
-        &-wrapper {
-            display: block;
-            padding-bottom: 75%;
-            position: relative;
-            transition: var(--transition);
-            width: 100%;
-        }
-    }
-
-    &-delete {
-        align-items: center;
-        background: var(--bg-primary);
-        border-radius: 50%;
-        height: 3rem;
-        display: inline-flex;
-        justify-content: center;
-        position: absolute;
-        right: 1.4rem;
-        text-align: center;
-        width: 3rem;
-
-        & > svg {
-             fill: var(--icon-secondary-color);
-             transform: scale(.9);
-             transition: var(--transition);
-        }
-
-        &:hover {
-             & > svg {
-                fill: var(--warning);
-                transform: scale(1);
-             }
-        }
-    }
-
-    &-name {
-        align-items: center;
-        background: var(--gray-1);
-        border-radius: 0 0 4px 4px;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 2rem;
-        position: relative;
-        text-align: left;
-
-        & > h3 {
-             font-size: 1.4rem;
-             font-weight: var(--font-weight-semibold);
-             line-height: 1.4;
-             margin: 1.2rem 0;
-
-             span:first-of-type {
-                 display: block;
-             }
-        }
-    }
-
-    &-version,
-    &-is-outdated {
-        color: var(--text-light-color);
-        font-size: 1.2rem;
-        font-weight: var(--font-weight-normnal);
-        
-    }
-
-    &-is-outdated { 
-        color: var(--warning);
-        margin: 0 4rem 0 .5rem;
-        text-transform: uppercase;
-    }
-
     &.is-outdated {
        .language-version {
            text-decoration-color: var(--warning);
            text-decoration-line: line-through;
        }
     }
+}
+
+.language-thumbnail {
+    display: block;
+    max-height: 90%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    max-width: 90%;
+}
+
+.language-thumbnail-wrapper {
+    display: block;
+    padding-bottom: 75%;
+    position: relative;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.language-delete {
+    align-items: center;
+    background: var(--bg-primary);
+    border-radius: 50%;
+    height: 3rem;
+    display: inline-flex;
+    justify-content: center;
+    position: absolute;
+    right: 1.4rem;
+    text-align: center;
+    width: 3rem;
+
+    & > svg {
+         fill: var(--icon-secondary-color);
+         transform: scale(.9);
+         transition: var(--transition);
+    }
+
+    &:hover {
+         & > svg {
+            fill: var(--warning);
+            transform: scale(1);
+         }
+    }
+}
+
+.language-name {
+    align-items: center;
+    background: var(--gray-1);
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: relative;
+    text-align: left;
+
+    & > h3 {
+         font-size: 1.4rem;
+         font-weight: var(--font-weight-semibold);
+         line-height: 1.4;
+         margin: 1.2rem 0;
+
+         span:first-of-type {
+             display: block;
+         }
+    }
+}
+
+.language-version,
+.language-is-outdated {
+    color: var(--text-light-color);
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-normnal);
+    
+}
+
+.language-is-outdated { 
+    color: var(--warning);
+    margin: 0 4rem 0 .5rem;
+    text-transform: uppercase;
 }
 </style>

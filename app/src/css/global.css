@@ -20,7 +20,7 @@ body {
     color: var(--text-primary-color);
     font: 400 1rem var(--font-base);
     -webkit-font-smoothing: subpixel-antialiased;
-    line-height: $line-height;
+    line-height: var(--line-height);
 }
 
 html,
@@ -78,7 +78,7 @@ h3 {
 
 h4 {
     color: var(--headings-color);
-    font-size: $app-font-base;
+    font-size: var(--app-font-base);
     font-weight: 600;
     margin: 0 0 1rem;
 }
@@ -91,13 +91,13 @@ table {
     width: 100%;
 
     td {
-        padding: 0 0 12 * $spacing;
+        padding: 0 0 calc(12 * var(--spacing));
         vertical-align: top;
     }
 }
 
 form p {
-    margin-bottom: 6 * $spacing;
+    margin-bottom: calc(6 * var(--spacing));
 }
 
 
@@ -110,8 +110,8 @@ form p {
    background: var(--bg-primary);
 
     &.screen-splashscreen {
-        -webkit-app-region: drag; // necessary for making window draggable
-        -webkit-user-select: none; // remove conflict with the text selection
+        -webkit-app-region: drag; /* necessary for making window draggable */
+        -webkit-user-select: none; /* remove conflict with the text selection */
         height: 100vh;
         width: 100vw;
     }

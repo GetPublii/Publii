@@ -556,24 +556,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/mixins.scss';
+<style scoped>
 
 .notifications {
     padding: 3rem 0 4rem;
     width: 100%;
-
-    &-wrapper {
-        margin: 0 auto;
-        max-width: $wrapper;
-        min-height: calc(100vh - 8rem - var(--topbar-height));
-        position: relative;
-    }
-
-    &-version {
-        margin: -2.5rem 0 4rem;
-    }
 
     .notification {
         .notification-title {
@@ -734,15 +721,26 @@ export default {
             }
         }
     }
+}
 
-    &-consent {
-        color: var(--text-lightest-color);
-        font-size: 13px;
-        margin: 4rem auto;
-        max-width: 50%;
-        position: sticky;
-        text-align: center;
-        top: 100%;
-    }
+.notifications-wrapper {
+    margin: 0 auto;
+    max-width: var(--wrapper-width);
+    min-height: calc(100vh - 8rem - var(--topbar-height));
+    position: relative;
+}
+
+.notifications-version {
+    margin: -2.5rem 0 4rem;
+}
+
+.notifications-consent {
+    color: var(--text-lightest-color);
+    font-size: 13px;
+    margin: 4rem auto;
+    max-width: 50%;
+    position: sticky;
+    text-align: center;
+    top: 100%;
 }
 </style>

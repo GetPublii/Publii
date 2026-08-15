@@ -52,24 +52,25 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/mixins.scss';
+<style scoped>
 
 .credits {
     padding: 3rem 0 4rem;
     width: 100%;
 
-    &-wrapper {
-        margin: 0 auto;
-        max-width: $wrapper;
-    }
-
     .heading {
-        margin-bottom: 10 * $spacing;
+        margin-bottom: calc(10 * var(--spacing));
         width: 100%;
 
-        @include clearfix;
+        &:after {
+
+            content: " ";
+
+            display: block;
+
+            clear: both;
+
+        }
 
         .title {
             float: left;
@@ -81,9 +82,14 @@ export default {
             margin-top: -.5rem;
         }
     }
+}
 
-    &-intro {
-        margin: -2.5rem 0 4rem 0;
-    }
+.credits-wrapper {
+    margin: 0 auto;
+    max-width: var(--wrapper-width);
+}
+
+.credits-intro {
+    margin: -2.5rem 0 4rem 0;
 }
 </style>

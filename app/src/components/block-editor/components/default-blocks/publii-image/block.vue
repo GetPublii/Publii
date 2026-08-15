@@ -463,10 +463,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../../scss/vendor/modularscale';
-@import '../../../../../scss/variables.scss';
-@import '../../../../../scss/mixins.scss';
+<style>
 
 .publii-block-image {
   outline: none;
@@ -489,138 +486,138 @@ export default {
 
   & > figcaption {
     display: block;
-    padding: baseline(3,em) 0 0;
+    padding: 0.6857em 0 0;
+  }
+}
+
+.publii-block-image-empty-state {
+  color: var(--gray-3);
+  font-family: var(--font-base);
+  font-size: 14px;
+  text-align: center;
+}
+
+.publii-block-image-delete {
+  align-items: center;
+  background: var(--warning);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  display: flex;
+  height: 34px;
+  justify-content: center;
+  left: 15px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 15px;
+  transition: var(--transition);
+  will-change: transform;
+  width: 34px;
+  z-index: 2;
+
+  svg {
+     color: var(--white);
   }
 
-  &-empty-state {
-    color: var(--gray-3);
-    font-family: var(--font-base);
-    font-size: 14px;
+  &:active,
+  &:focus,
+  &:hover {
+     transform: scale(1.1);
+  }
+}
+
+.publii-block-image + .publii-block-image-form {
+  padding: 1.1429em 0;
+}
+
+.publii-block-image-form {
+  display: none;
+
+  &.is-visible {
+    display: block;
+    order: -1;
+  }
+
+  input,
+  textarea {  
+    display: block;
+    width: 100%;
+  }
+
+
+  input + input {
+    margin-top: 16px;
+  }
+}
+
+.publii-block-image-uploader {       
+  border: 2px dashed var(--input-border-color);
+  border-radius: var(--border-radius);
+  height: 250px;
+  margin: 0 0 16px 0;
+  padding: 6px;
+  position: relative;
+  width: 100%;
+
+  &.is-hovered {
+    border-color: var(--color-primary);
+  }
+}
+
+.publii-block-image-uploader-loader {
+  animation: loader 1s linear infinite;
+  border: 3px solid var(--color-primary);
+  border-left-color: transparent;
+  border-radius: 50%;
+  display: block;
+  height: 32px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 32px!important;
+}
+
+.publii-block-image-uploader-inner {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-base);
+  justify-content: center;
+  height: 234px;
+  padding: 2rem;
+  width: 100%;
+
+  svg {
+    fill: var(--icon-quaternary-color);
+  }
+
+  span {
+    display: block;
+    font-size: var(--app-font-base);
     text-align: center;
+    width: 100%;
   }
 
-  &-delete {
-    align-items: center;
-    background: var(--warning);
-    border: none;
+  button {
+    background: var(--button-secondary-bg);
+    border: 1px solid var(--button-secondary-bg);
     border-radius: var(--border-radius);
+    color: var(--button-secondary-color);
     cursor: pointer;
-    display: flex;
-    height: 34px;
-    justify-content: center;
-    left: 15px;
-    opacity: 0;
-    pointer-events: none;
-    position: absolute;
-    top: 15px;
-    transition: var(--transition);
-    will-change: transform;
-    width: 34px;
-    z-index: 2;
-
-    svg {
-       color: var(--white);
-    }
+    font-weight: var(--font-weight-semibold);
+    font-size: 15px;
+    padding: .5rem 2rem;
+    text-align: center;
+    outline: none;
 
     &:active,
     &:focus,
     &:hover {
-       transform: scale(1.1);
-    }
-  }
-
-  & + &-form {
-    padding: baseline(5,em) 0;
-  }
-
-  &-form {
-    display: none;
-
-    &.is-visible {
-      display: block;
-      order: -1;
-    }
-
-    input,
-    textarea {  
-      display: block;
-      width: 100%;
-    }
-
-
-    input + input {
-      margin-top: 16px;
-    }
-  }
-
-  &-uploader {       
-    border: 2px dashed var(--input-border-color);
-    border-radius: var(--border-radius);
-    height: 250px;
-    margin: 0 0 16px 0;
-    padding: 6px;
-    position: relative;
-    width: 100%;
-
-    &.is-hovered {
-      border-color: var(--color-primary);
-    }
-
-    &-loader {
-      animation: loader 1s linear infinite;
-      border: 3px solid var(--color-primary);
-      border-left-color: transparent;
-      border-radius: 50%;
-      display: block;
-      height: 32px;
-      left: 50%;
-      position: absolute;
-      top: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      width: 32px!important;
-    }
-
-    &-inner {
-      align-items: center;
-      display: flex;
-      flex-wrap: wrap;
-      font-family: var(--font-base);
-      justify-content: center;
-      height: 234px;
-      padding: 2rem;
-      width: 100%;
-
-      svg {
-        fill: var(--icon-quaternary-color);
-      }
-
-      span {
-        display: block;
-        font-size: $app-font-base;
-        text-align: center;
-        width: 100%;
-      }
-
-      button {
-        background: var(--button-secondary-bg);
-        border: 1px solid var(--button-secondary-bg);
-        border-radius: var(--border-radius);
-        color: var(--button-secondary-color);
-        cursor: pointer;
-        font-weight: var(--font-weight-semibold);
-        font-size: 15px;
-        padding: .5rem 2rem;
-        text-align: center;
-        outline: none;
-
-        &:active,
-        &:focus,
-        &:hover {
-          background: var(--button-secondary-bg-hover);
-          border-color: var(--button-secondary-bg-hover);
-          color: var(--button-secondary-color-hover);
-        }
-      }
+      background: var(--button-secondary-bg-hover);
+      border-color: var(--button-secondary-bg-hover);
+      color: var(--button-secondary-color-hover);
     }
   }
 }

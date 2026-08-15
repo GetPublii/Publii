@@ -89,8 +89,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .gdpr-groups {
     border-radius: 3px;
@@ -98,72 +97,14 @@ export default {
 
     .gdpr-groups-header {
         display: flex;
-        margin-top: 1rem;
-
-        &-cell {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin: 0 0 1rem 0;
-            width: calc(50% - 23px);
-
-            &:last-child {
-                width: 80px;
-            }
-        }
+        margin-top: 1rem
     }
 
     .gdpr-group {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
-        padding: .25rem 0;
-
-        &-btn {
-            align-items: center;
-            background: var(--gray-1);
-            position: relative;
-            border-radius: 50%;
-            display: flex;
-            height: 30px;
-            justify-content: center;
-            margin: 0 2px;
-            position: relative;
-            text-align: center;
-            width: 30px;
-
-            &:active,
-            &:focus,
-            &:hover {
-                color: var(--headings-color);
-            }
-
-            &:hover {
-
-                & > svg {
-                    fill: var(--icon-tertiary-color);
-                    transform: scale(1);
-                }
-            }
-
-            svg {
-                fill: var(--icon-secondary-color);
-                height: 1.6rem;
-                pointer-events: none;
-                transform: scale(.9);
-                transition: var(--transition);
-                width: 1.6rem;
-            }
-
-            &.delete {
-
-                &:hover {
-
-                    & > svg {
-                        fill: var(--warning);
-                    }
-                }
-            }
-        } 
+        padding: .25rem 0; 
 
         .input-wrapper {
             padding-right: 1rem;
@@ -180,6 +121,64 @@ export default {
 
     .button {
         margin: 1rem 0;
+    }
+}
+
+.gdpr-groups .gdpr-groups-header-cell {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 0 0 1rem 0;
+    width: calc(50% - 23px);
+
+    &:last-child {
+        width: 80px;
+    }
+}
+
+.gdpr-groups .gdpr-group-btn {
+    align-items: center;
+    background: var(--gray-1);
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    margin: 0 2px;
+    position: relative;
+    text-align: center;
+    width: 30px;
+
+    &:active,
+    &:focus,
+    &:hover {
+        color: var(--headings-color);
+    }
+
+    &:hover {
+
+        & > svg {
+            fill: var(--icon-tertiary-color);
+            transform: scale(1);
+        }
+    }
+
+    svg {
+        fill: var(--icon-secondary-color);
+        height: 1.6rem;
+        pointer-events: none;
+        transform: scale(.9);
+        transition: var(--transition);
+        width: 1.6rem;
+    }
+
+    &.delete {
+
+        &:hover {
+
+            & > svg {
+                fill: var(--warning);
+            }
+        }
     }
 }
 </style>

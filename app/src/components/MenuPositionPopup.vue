@@ -264,9 +264,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/popup-common.scss';
+<style scoped>
+@import '../css/popup-common.css';
 
 .overlay {
     z-index: 100006;
@@ -310,23 +309,7 @@ export default {
             align-items: baseline;
             display: flex;
             gap: 0 .75rem;
-            text-align: left;
-
-            &-desc,
-            &-error {
-                color: var(--text-light-color);
-                display: block;
-                flex-basis: 100%;
-                margin-top: .5rem;
-            }
-
-            &-error {
-                background-color: var(--popup-bg);
-                bottom: -2rem;
-                color: var(--warning);
-                margin-left: 41px;
-                position: absolute;
-            }
+            text-align: left
         }
 
         .menu-position-item-desc,
@@ -341,5 +324,21 @@ export default {
             border-color: var(--warning);
         }
     }
+}
+
+.menu-position-items .menu-position-item .menu-position-item-max-levels-desc,
+.menu-position-items .menu-position-item .menu-position-item-max-levels-error {
+    color: var(--text-light-color);
+    display: block;
+    flex-basis: 100%;
+    margin-top: .5rem;
+}
+
+.menu-position-items .menu-position-item .menu-position-item-max-levels-error {
+    background-color: var(--popup-bg);
+    bottom: -2rem;
+    color: var(--warning);
+    margin-left: 41px;
+    position: absolute;
 }
 </style>

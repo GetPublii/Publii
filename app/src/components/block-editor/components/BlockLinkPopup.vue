@@ -349,8 +349,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../../scss/variables.scss';
+<style>
 
 .block-link-popup {
   background: var(--popup-bg);
@@ -362,142 +361,142 @@ export default {
   user-select: none;
   width: 720px;
 
-  &-overlay {
-    align-items: center;
-    background: var(--overlay);
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    opacity: 0;
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    transition: all .3s ease-out;
-    width: 100%;
-    z-index: 999991;
-
-    &.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-
-      .block-link-popup {
-        transform: scale(1);
-      }
-    }
-  }
-
-  &-link {
-    width: 100%;
-
-    &-type {
-      display: flex;
-      justify-content: space-between;
-      margin: -20px 0 3rem;
-
-      &-item {
-        border-bottom: 2px solid var(--gray-6);
-        color: var(--label-color);
-        cursor: pointer;
-        font-size: $app-font-base;
-        font-weight: var(--font-weight-semibold);
-        padding: 12px 12px 20px;
-        text-align: center;
-        transition: all .24s ease-out;
-        user-select: none;
-        width: 25%;
-
-        &:hover {
-           border-bottom-color: var(--color-primary);
-        }
-
-        &.is-active {
-          border-bottom-color: var(--color-primary);
-          font-weight: var(--font-weight-bold);
-          color: var(--color-primary);
-        }
-      }
-    }
-
-    &-external-input {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border-color);
-      color: var(--text-primary-color);
-      display: block;
-      font-size: $app-font-base;
-      margin: 32px 0 24px;
-      padding: 14px;
-      width: 100%;
-
-      &::placeholder {
-        color: var(--text-light-color);
-      }
-    }
-
-    &-switcher {
-      align-items: center;
-      color: var(--label-color);
-      display: flex;
-      margin-bottom: 12px;
-
-      .switcher {
-        top: 0;
-
-          & + .switcher {
-              margin-left: 24px;
-          }
-      }
-
-      &:last-of-type {
-        margin-bottom: 12px;
-      }
-    }
-  }
-
   .multiselect {
-    margin: 32px 0 24px;
+    margin: 32px 0 24px
+  }
+}
 
-    &__tags {
-      padding-bottom: 0;
-      padding-top: 0;
+.block-link-popup-overlay {
+  align-items: center;
+  background: var(--overlay);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: all .3s ease-out;
+  width: 100%;
+  z-index: 999991;
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+
+    .block-link-popup {
+      transform: scale(1);
     }
   }
+}
 
-  &-buttons {
-    display: flex;
-    margin: 3rem -4rem -4rem;
+.block-link-popup-link {
+  width: 100%;
+}
 
-    button {
-      background: var(--button-bg);
+.block-link-popup-link-type {
+  display: flex;
+  justify-content: space-between;
+  margin: -20px 0 3rem;
+}
+
+.block-link-popup-link-type-item {
+  border-bottom: 2px solid var(--gray-6);
+  color: var(--label-color);
+  cursor: pointer;
+  font-size: var(--app-font-base);
+  font-weight: var(--font-weight-semibold);
+  padding: 12px 12px 20px;
+  text-align: center;
+  transition: all .24s ease-out;
+  user-select: none;
+  width: 25%;
+
+  &:hover {
+     border-bottom-color: var(--color-primary);
+  }
+
+  &.is-active {
+    border-bottom-color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+  }
+}
+
+.block-link-popup-link-external-input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border-color);
+  color: var(--text-primary-color);
+  display: block;
+  font-size: var(--app-font-base);
+  margin: 32px 0 24px;
+  padding: 14px;
+  width: 100%;
+
+  &::placeholder {
+    color: var(--text-light-color);
+  }
+}
+
+.block-link-popup-link-switcher {
+  align-items: center;
+  color: var(--label-color);
+  display: flex;
+  margin-bottom: 12px;
+
+  .switcher {
+    top: 0;
+
+      & + .switcher {
+          margin-left: 24px;
+      }
+  }
+
+  &:last-of-type {
+    margin-bottom: 12px;
+  }
+}
+
+.block-link-popup .multiselect__tags {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.block-link-popup-buttons {
+  display: flex;
+  margin: 3rem -4rem -4rem;
+
+  button {
+    background: var(--button-bg);
+    border: none;
+    box-shadow: none;
+    border-bottom-left-radius: 6px;
+    border-top: 1px solid var(--button-bg);
+    color: var(--white);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1;
+    width: 50%;
+    padding: 18px;
+    transition: all .25s ease-out;
+
+    &:hover {
+      background: var(--button-bg-hover);
+      border-color: var(--button-bg-hover);
+    }
+
+    &.outline {
+      background: var(--popup-btn-cancel-bg);
       border: none;
-      box-shadow: none;
-      border-bottom-left-radius: 6px;
-      border-top: 1px solid var(--button-bg);
-      color: var(--white);
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: var(--font-weight-semibold);
-      line-height: 1;
-      width: 50%;
-      padding: 18px;
-      transition: all .25s ease-out;
+      border-top: 1px solid var(--input-border-color);
+      border-bottom-right-radius: 6px;
+      color: var(--popup-btn-cancel-color);
 
       &:hover {
-        background: var(--button-bg-hover);
-        border-color: var(--button-bg-hover);
-      }
-
-      &.outline {
-        background: var(--popup-btn-cancel-bg);
-        border: none;
-        border-top: 1px solid var(--input-border-color);
-        border-bottom-right-radius: 6px;
-        color: var(--popup-btn-cancel-color);
-
-        &:hover {
-           background: var(--popup-btn-cancel-bg-hover);
-           color: var(--popup-btn-cancel-hover-color);
-        }
+         background: var(--popup-btn-cancel-bg-hover);
+         color: var(--popup-btn-cancel-hover-color);
       }
     }
   }

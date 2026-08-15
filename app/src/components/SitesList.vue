@@ -64,23 +64,23 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .sites {
-    &-list {
-        clear: both;
-        list-style-type: none;
-        margin: 0.5rem 0 0;
-        padding: 0 2rem;
-        text-align: center;
+}
 
-        &-wrapper {
-            margin-top: 1rem;
-            max-height: calc(100vh - 24rem);
-            overflow-y: auto;
-        }
-    }
+.sites-list {
+    clear: both;
+    list-style-type: none;
+    margin: 0.5rem 0 0;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.sites-list-wrapper {
+    margin-top: 1rem;
+    max-height: calc(100vh - 24rem);
+    overflow-y: auto;
 }
 
 .empty-state {

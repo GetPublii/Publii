@@ -92,7 +92,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .protected-input {
     align-items: center;
     display: flex;

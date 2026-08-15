@@ -459,8 +459,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .load-more-sentinel {
     grid-column: 1 / -1;

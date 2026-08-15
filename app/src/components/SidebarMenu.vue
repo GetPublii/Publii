@@ -107,8 +107,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .sidebar-menu {
     clear: both;
@@ -120,7 +119,7 @@ export default {
         border-radius: var(--border-radius);
         color: var(--sidebar-link-color);
         display: block;
-        font-size: $app-font-base;
+        font-size: var(--app-font-base);
         font-weight: var(--font-weight-normal);
         line-height: 2;
         margin: 0;
@@ -150,29 +149,29 @@ export default {
         transition: var(--transition);
         top: .5rem;
     }
+}
 
-    &-item {
-        margin: 0 0 .2rem;
+.sidebar-menu-item {
+    margin: 0 0 .2rem;
 
+    a {
+        display: flex;
+    }
+
+    &.is-active {
         a {
-            display: flex;
+            background: var(--sidebar-link-bg-active);
+            color: var(--sidebar-link-color-active);
+            opacity: 1;
         }
+    }
 
-        &.is-active {
-            a {
-                background: var(--sidebar-link-bg-active);
-                color: var(--sidebar-link-color-active);
-                opacity: 1;
-            }
-        }
-
-        .old-git-warning {
-            background: var(--warning);
-            border-radius: 50px;
-            fill: var(--white);
-            margin-left: auto;
-            padding: 2px;
-        }
+    .old-git-warning {
+        background: var(--warning);
+        border-radius: 50px;
+        fill: var(--white);
+        margin-left: auto;
+        padding: 2px;
     }
 }
 

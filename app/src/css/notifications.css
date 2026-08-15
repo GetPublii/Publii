@@ -1,0 +1,56 @@
+.msg {
+    background: var(--input-bg-light);
+    border-left: 4px solid transparent;
+    color: var(--text-light-color);
+    font-size: 1.4rem;
+    line-height: 1.6;
+    padding: 1.5rem 2rem;
+
+    a {
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.msg-icon {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    grid-gap: 2.2rem;
+
+    & > * {          
+        margin: 0;
+    }
+}
+
+.msg-small {
+    line-height: 1.4;
+    padding: 1.5rem 1.4rem 1.5rem 1.7rem;
+
+    &.msg-icon {
+        grid-gap: 1.2rem;
+    }
+}
+
+.msg-info {
+    background-color: rgba(var(--color-primary-rgb), .065);
+    border-color: var(--color-primary);
+
+    svg {
+        fill: var(--color-primary);
+    }
+}
+
+.msg-alert {
+    background-color: rgba(var(--warning-rgb), .065);
+    border-color: var(--warning);
+
+    svg {
+        fill: var(--warning);
+    }
+}
+
+.msg-onbg {
+    background: var(--bg-secondary);
+}

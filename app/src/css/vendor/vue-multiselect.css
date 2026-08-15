@@ -1,0 +1,81 @@
+@import 'vue-multiselect/dist/vue-multiselect.min.css';
+
+.multiselect {
+}
+
+.multiselect__tags {
+    background: var(--input-bg);
+    border-color: var(--input-border-color);
+    border-radius: var(--border-radius);
+    color: var(--text-primary-color);
+}
+
+.multiselect__single {
+    background: var(--input-bg);
+    font-size: var(--app-font-base);
+    line-height: 1.4;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.multiselect__select {
+    height: 45px;
+}
+
+.multiselect__option {
+    font-size: 15px;
+    font-weight: 400;
+    padding: 12px 2rem;
+
+    &.multiselect__option--selected {
+        background: var(--input-bg-light);
+        color: var(--text-primary-color);
+        font-weight: 600;
+    }
+}
+
+.multiselect__option--highlight,
+.multiselect__option--highlight:after {
+    background: var(--input-bg-light);
+    color: var(--text-primary-color);
+}
+
+.multiselect__option--selected,
+.multiselect__option--group-selected {
+    &.multiselect__option--highlight,
+    &.multiselect__option--highlight:after {
+        background: var(--input-bg-light);
+        color: var(--text-primary-color);
+    }                
+}
+
+.multiselect__input {
+    background: var(--input-bg);
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    &::placeholder {
+        color: var(--text-primary-color);
+    }
+}
+
+.multiselect__content-wrapper {
+    border-color: var(--input-border-color);
+    background: var(--input-bg);
+    color: var(--text-primary-color);
+}
+
+.multiselect--active {
+    z-index: 2;
+}
+.options-sidebar {
+    label {
+        &.is-invalid {
+            .multiselect__tags {
+                border-color: var(--warning);
+            }
+        }
+    }
+}

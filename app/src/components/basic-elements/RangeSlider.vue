@@ -95,8 +95,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .input-range-wrapper {
     margin-bottom: 3.6rem;

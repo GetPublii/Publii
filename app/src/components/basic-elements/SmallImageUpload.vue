@@ -165,8 +165,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .small-image-upload {
     min-height: 48px;

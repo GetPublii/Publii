@@ -58,8 +58,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .progress {
     background: var(--input-border-color);
@@ -69,54 +68,52 @@ export default {
     margin: 0 auto;
     padding: 0;
     position: relative;
+    width: 100%
+}
+
+.progress-bar {
+    background: var(--input-border-focus);
+    border-radius: 3px;
+    height: 6px;
+    margin: 0;
+    max-width: 100%;
+    position: relative;
+    transition: width .2s ease-out;
+    width: 0;
+
+    &.is-stopped {}
+
+    &.is-success {
+        background: var(--success);
+    }
+
+    &.is-error {
+        background: var(--warning);
+    }
+
+    &.is-warning {
+        background: #F2B900;
+    }
+}
+
+.sync-progress-bar {               
+    .progress-bar {
+         background: rgba(var(--yellow), 1);
+    }
+}
+
+.progress-wrapper {
+    padding: 0 0 7rem;
+    position: relative;
+}
+
+.progress-message {
+    color: var(--text-light-color);
+    font-size: 1.3rem;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    bottom: 2rem;
     width: 100%;
-
-    &-bar {
-        background: var(--input-border-focus);
-        border-radius: 3px;
-        height: 6px;
-        margin: 0;
-        max-width: 100%;
-        position: relative;
-        transition: width .2s ease-out;
-        width: 0;
-       
-        @at-root {
-            .sync-progress-bar {               
-                .progress-bar {
-                     background: rgba(var(--yellow), 1);
-                }
-            }
-        }
-
-        &.is-stopped {}
-
-        &.is-success {
-            background: var(--success);
-        }
-
-        &.is-error {
-            background: var(--warning);
-        }
-
-        &.is-warning {
-            background: $color-helper-6;
-        }
-    }
-
-    &-wrapper {
-        padding: 0 0 7rem;
-        position: relative;
-    }
-
-    &-message {
-        color: var(--text-light-color);
-        font-size: 1.3rem;
-        padding: 0;
-        position: absolute;
-        text-align: center;
-        bottom: 2rem;
-        width: 100%;
-    }
 }
 </style>

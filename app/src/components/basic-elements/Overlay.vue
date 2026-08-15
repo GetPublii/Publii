@@ -29,8 +29,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 /*
  * Overlay
@@ -48,14 +47,6 @@ export default {
     right: 0;
     top: 0;
 
-    &-icon {
-        font-size: 2rem;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-    }
-
     &.has-border {
         border: 3px dashed var(--gray-1);
         border-radius: 10px;
@@ -70,7 +61,7 @@ export default {
             background: var(--color-primary);
             border-radius: 3px;
             color: var(--white);
-            font-size: $app-font-base;
+            font-size: var(--app-font-base);
             font-weight: var(--font-weight-semibold);
             height: auto;
             left: 50%;
@@ -82,5 +73,12 @@ export default {
             width: auto;              
         }
     }
+}
+.overlay-icon {
+    font-size: 2rem;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
 </style>

@@ -400,11 +400,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../scss/variables.scss';
-@import '../scss/mixins.scss';
-@import '../scss/editor/post-editors-common.scss';
-@import '../scss/editor/editor-markdown.scss';
+<style>
+@import '../css/editor/post-editors-common.css';
+@import '../css/editor/editor-markdown.css';
 
 
 .post-editor-markdown {
@@ -414,68 +412,71 @@ export default {
     z-index: 2;
 
    .post-editor {
-        &-wrapper {
-            overflow: auto;
-            padding-top: var(--topbar-height);
+    }
+}
+
+
+.post-editor-markdown .post-editor-wrapper {
+    overflow: auto;
+    padding-top: var(--topbar-height);
+}
+
+
+.post-editor-markdown .post-editor-form {
+    height: calc(100vh - var(--topbar-height));
+    overflow: scroll;
+
+    & > div {
+        padding: 9rem 4rem 3rem 4rem;
+    }
+
+    #post-title {
+        border: none;
+        box-shadow: none;
+        columns: var(--headings-color);
+        display: block;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+        font-size: 3.6rem;
+        font-weight: var(--font-weight-bold);
+        letter-spacing: var(--letter-spacing);
+        line-height: 1.2;
+        margin: 0 10% 2.6rem;
+        padding: 0;
+        text-align: center;
+        width: 80%;
+
+        &:empty {
+            color: var(--gray-4);
+
+            &:before {
+                content: attr(data-translation);
+            }
+
+            &:focus:before {
+                content: "";
+            }
+        }
+    }
+
+    .vue-easymde {
+        position: relative;
+        z-index: 1000;
+
+        .CodeMirror {
+            border: none;
+            height: auto!important;
+            margin: 0 auto;
+            max-width: var(--editor-width);
+            padding: 0;
+
+            .CodeMirror-selected {
+                background: var(--text-selection-color)!important;
+            }
         }
 
-        &-form {
-            height: calc(100vh - var(--topbar-height));
-            overflow: scroll;
-
-            & > div {
-                padding: 9rem 4rem 3rem 4rem;
-            }
-
-            #post-title {
-                border: none;
-                box-shadow: none;
-                columns: var(--headings-color);
-                display: block;
-                font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-                font-size: 3.6rem;
-                font-weight: var(--font-weight-bold);
-                letter-spacing: var(--letter-spacing);
-                line-height: 1.2;
-                margin: 0 10% 2.6rem;
-                padding: 0;
-                text-align: center;
-                width: 80%;
-
-                &:empty {
-                    color: var(--gray-4);
-
-                    &:before {
-                        content: attr(data-translation);
-                    }
-
-                    &:focus:before {
-                        content: "";
-                    }
-                }
-            }
-
-            .vue-easymde {
-                position: relative;
-                z-index: 1000;
-
-                .CodeMirror {
-                    border: none;
-                    height: auto!important;
-                    margin: 0 auto;
-                    max-width: var(--editor-width);
-                    padding: 0;
-
-                    .CodeMirror-selected {
-                        background: var(--text-selection-color)!important;
-                    }
-                }
-
-                .CodeMirror-advanced-dialog + .CodeMirror {
-                    padding-bottom: 80px;
-                }
-            }
-       }
+        .CodeMirror-advanced-dialog + .CodeMirror {
+            padding-bottom: 80px;
+        }
     }
 }
 

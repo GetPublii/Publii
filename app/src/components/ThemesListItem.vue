@@ -110,8 +110,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .theme {
     background-color: var(--bg-secondary);
@@ -124,77 +123,77 @@ export default {
     padding: 1rem;
     position: relative;
     transition: var(--transition);
+    text-align: center
+}
+
+.theme-thumbnail {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+.theme-delete {
+    align-items: center;
+    background: var(--bg-primary);
+    border-radius: 50%;
+    height: 3rem;
+    justify-content: center;
+    display: inline-flex;
+    position: absolute;
+    right: 2rem;
     text-align: center;
+    width: 3rem;
 
-    &-thumbnail {
-        display: block;
-        height: auto;
-        max-width: 100%;
+    & > svg {
+         fill: var(--icon-secondary-color);
+         transform: scale(.9);
+         transition: var(--transition);
     }
 
-    &-delete {
-        align-items: center;
-        background: var(--bg-primary);
-        border-radius: 50%;
-        height: 3rem;
-        justify-content: center;
-        display: inline-flex;
-        position: absolute;
-        right: 2rem;
-        text-align: center;
-        width: 3rem;
-
-        & > svg {
-             fill: var(--icon-secondary-color);
-             transform: scale(.9);
-             transition: var(--transition);
-        }
-
-        &:hover {
-             & > svg {
-                fill: var(--warning);
-                transform: scale(1);
-             }
-        }
+    &:hover {
+         & > svg {
+            fill: var(--warning);
+            transform: scale(1);
+         }
     }
+}
 
-    &-name {
-        align-items: center;
-        background: var(--gray-1);
-        border-radius: 0 0 4px 4px;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 2rem;
-        text-align: left;
+.theme-name {
+    align-items: center;
+    background: var(--gray-1);
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+    text-align: left;
 
-        & > h3 {
-             font-size: 1.4rem;
-             font-weight: var(--font-weight-semibold);
-             line-height: 1.4;
-             margin: 1.2rem 0;
-        }
+    & > h3 {
+         font-size: 1.4rem;
+         font-weight: var(--font-weight-semibold);
+         line-height: 1.4;
+         margin: 1.2rem 0;
     }
+}
 
-    &-version {
-        color: var(--text-light-color);
-        display: block;
-        font-size: 1.2rem;
-        font-weight: 400;
-        margin: 0 4rem 0 auto;
-    }
+.theme-version {
+    color: var(--text-light-color);
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin: 0 4rem 0 auto;
+}
 
-    &-new-version-available {
-        background: var(--highlighted);
-        left: 1rem;
-        padding: 2rem;        
-        position: absolute;
-        right: 0;
-        top: 1rem;
-        width: calc(100% - 2rem);
+.theme-new-version-available {
+    background: var(--highlighted);
+    left: 1rem;
+    padding: 2rem;        
+    position: absolute;
+    right: 0;
+    top: 1rem;
+    width: calc(100% - 2rem);
 
-        strong {
-            color: var(--headings-color);
-        }
+    strong {
+        color: var(--headings-color);
     }
 }
 </style>

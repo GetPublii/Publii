@@ -92,8 +92,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../scss/variables.scss';
+<style>
 
 .is-highlighted {
   background: var(--color-primary);
@@ -142,64 +141,64 @@ export default {
     width: 18px;
     z-index: 1;
   }
+}
 
-  &-button {
-    align-items: center;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    height: 100%;
-    min-height: 34px;
-    justify-content: center;
-    margin: 0;
-    outline: none;
-    padding: 0;
-    position: relative;
-    width: 38px;
+.wrapper-ui-inline-menu-button {
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  height: 100%;
+  min-height: 34px;
+  justify-content: center;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  position: relative;
+  width: 38px;
 
-    &[disabled] {
-      opacity: .3;
-      pointer-events: none;
-    }
+  &[disabled] {
+    opacity: .3;
+    pointer-events: none;
+  }
 
-    svg {
-      color: var(--icon-tertiary-color);
-    }
+  svg {
+    color: var(--icon-tertiary-color);
+  }
 
-    // hover effect
+  /* hover effect */
+  &::before {
+     content: "";
+     background: var(--gray-6);
+     border-radius: 3px;
+     display: block;
+     left: 50%;
+     opacity: 0;
+     position: absolute;
+     height: 34px;
+     top: 50%;
+     transition: all .15s cubic-bezier(.4,0,.2,1);
+     transform: scale(.5) translate(-50%, -50%);
+     transform-origin: left top;
+     width: 34px;
+     z-index: -1;
+  }
+
+  &:hover,
+  &.is-active {
+
     &::before {
-       content: "";
-       background: var(--gray-6);
-       border-radius: 3px;
-       display: block;
-       left: 50%;
-       opacity: 0;
-       position: absolute;
-       height: 34px;
-       top: 50%;
-       transition: all .15s cubic-bezier(.4,0,.2,1);
-       transform: scale(.5) translate(-50%, -50%);
-       transform-origin: left top;
-       width: 34px;
-       z-index: -1;
-    }
-
-    &:hover,
-    &.is-active {
-
-      &::before {
-         opacity: 1;
-         transform: scale(1) translate(-50%, -50%);
-      }
+       opacity: 1;
+       transform: scale(1) translate(-50%, -50%);
     }
   }
+}
 
-  &-buttons {
-    cursor: pointer;
-    display: flex;
-    height: 43px;
-    width: 100%;
-  }
+.wrapper-ui-inline-menu-buttons {
+  cursor: pointer;
+  display: flex;
+  height: 43px;
+  width: 100%;
 }
 </style>

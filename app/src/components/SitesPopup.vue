@@ -72,8 +72,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .sites-popup {
     background: var(--bg-site);
@@ -92,10 +91,10 @@ export default {
         pointer-events: none;
         opacity: 0;
     }
+}
 
-    &-container {
-        margin: auto;
-        max-width: $wrapper;
-    }
+.sites-popup-container {
+    margin: auto;
+    max-width: var(--wrapper-width);
 }
 </style>

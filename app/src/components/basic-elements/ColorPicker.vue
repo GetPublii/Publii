@@ -143,31 +143,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .color-picker {
     position: relative;
-
-    &-preview {
-        border-radius: 50%;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        cursor: pointer;
-        float: left;
-        height: 20px;
-        left: 14px;
-        margin-right: -30px;
-        pointer-events: none;
-        position: relative;
-        top: 14px;
-        width: 20px!important;
-
-        & + input {
-            cursor: pointer;
-            text-indent: 25px;
-            width: 100%;
-        }
-    }
 
     .vc-chrome {
         display: none;
@@ -214,6 +193,26 @@ export default {
                 pointer-events: none;
             }
         }
+    }
+}
+
+.color-picker-preview {
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    float: left;
+    height: 20px;
+    left: 14px;
+    margin-right: -30px;
+    pointer-events: none;
+    position: relative;
+    top: 14px;
+    width: 20px!important;
+
+    & + input {
+        cursor: pointer;
+        text-indent: 25px;
+        width: 100%;
     }
 }
 </style>

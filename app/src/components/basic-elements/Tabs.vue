@@ -114,15 +114,21 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+<style scoped>
 
 .tabs {
     display: flex;
     justify-content: space-between;
 
-    @include clearfix;
+    &:after {
+
+        content: " ";
+
+        display: block;
+
+        clear: both;
+
+    }
 
     &.tabs-horizontal {
         flex-direction: column;
@@ -223,7 +229,7 @@ export default {
                     }
                 }
 
-                // Add selector for the first `.subtab` in the group
+                /* Add selector for the first `.subtab` in the group */
                 & + .subtab:not(.subtab + .subtab) {
                     margin-top: 0.6rem;
 

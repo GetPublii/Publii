@@ -215,48 +215,15 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .regenerate-thumbnails {
     margin: 0 auto;
-    max-width: $wrapper;
+    max-width: var(--wrapper-width);
     user-select: none;
-
-    &-list {  
-        list-style-type: decimal;
-        list-style-position: inside;
-        margin: 0;
-        padding: 0;
-        user-select: text;
-
-        &-container {
-           border-top: 1px solid var(--border-light-color);
-           margin-top: 4rem;
-           padding: 3rem 0 0;
-        }
-
-        .item {
-            font-size: 1.4rem;
-            padding: .5rem 0 .5rem .5rem;
-
-            &:first-child {
-                border-top: none;
-            }
-
-            &-error {
-                color: var(--warning);
-            }
-        }
-    }
 
     .result {
         padding-left: 2rem;
-
-        &-wrapper {
-            align-items: center;
-            display: flex;
-        }
 
         &.error {
             color: var(--warning);
@@ -270,5 +237,37 @@ export default {
             color: var(--warning);
         }
     }
+}
+
+.regenerate-thumbnails-list {  
+    list-style-type: decimal;
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+    user-select: text;
+
+    .item {
+        font-size: 1.4rem;
+        padding: .5rem 0 .5rem .5rem;
+
+        &:first-child {
+            border-top: none;
+        }
+    }
+}
+
+.regenerate-thumbnails-list-container {
+   border-top: 1px solid var(--border-light-color);
+   margin-top: 4rem;
+   padding: 3rem 0 0;
+}
+
+.regenerate-thumbnails-list .item-error {
+    color: var(--warning);
+}
+
+.regenerate-thumbnails .result-wrapper {
+    align-items: center;
+    display: flex;
 }
 </style>

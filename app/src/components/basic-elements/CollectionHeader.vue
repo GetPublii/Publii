@@ -10,8 +10,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .header {
     display: contents;
@@ -81,18 +80,19 @@ export default {
     .header {
         .tools {
             .button {
-                &-small {
-                    font-size: 1.3rem;
-                    padding: 0 .75rem;
+            }
+        }
+    }
 
-                    &.button-icon {
-                        padding-left: 3.6rem;
+    .header .tools .button-small {
+        font-size: 1.3rem;
+        padding: 0 .75rem;
 
-                        & > svg {
-                            display: none;
-                        }
-                    }
-                }
+        &.button-icon {
+            padding-left: 3.6rem;
+
+            & > svg {
+                display: none;
             }
         }
     }

@@ -155,24 +155,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .g-consent-mode-groups {
     border-radius: 3px;
     padding-top: 1.75rem;
-
-    &-header {
-        display: flex;
-        margin-top: 1rem;
-
-        &-cell {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin: 0 0 1rem 0;
-            width: calc(100% - 15px);
-        }
-    }
 
     .button {
         margin: 1rem 0;
@@ -180,67 +167,24 @@ export default {
     
 }
 
+.g-consent-mode-groups-header {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.g-consent-mode-groups-header-cell {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 0 0 1rem 0;
+    width: calc(100% - 15px);
+}
+
 .g-consent-mode-group {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 20px;
-    padding: .25rem 0;
-
-    &-switchers {
-        display: grid;
-        grid-template-columns: repeat(3, auto);
-        gap: .8rem 1rem;
-        margin: 1.5rem 0 2rem .5rem;
-        width: calc(100% - 51px);
-    }
-
-    &-btn {
-        align-items: center;
-        background: var(--gray-1);
-        position: relative;
-        border-radius: 50%;
-        display: flex;
-        height: 30px;
-        justify-content: center;
-        margin: 0 2px;
-        position: relative;
-        text-align: center;
-        width: 30px;
-
-        &:active,
-        &:focus,
-        &:hover {
-            color: var(--headings-color);
-        }
-
-        &:hover {
-
-            & > svg {
-                fill: var(--icon-tertiary-color);
-                transform: scale(1);
-            }
-        }
-
-        svg {
-            fill: var(--icon-secondary-color);
-            height: 1.6rem;
-            pointer-events: none;
-            transform: scale(.9);
-            transition: var(--transition);
-            width: 1.6rem;
-        }
-
-        &.delete {
-
-            &:hover {
-
-                & > svg {
-                    fill: var(--warning);
-                }
-            }
-        }
-    } 
+    padding: .25rem 0; 
 
 
     .input-wrapper,
@@ -268,5 +212,60 @@ export default {
         }
     }
     
+}
+
+.g-consent-mode-group-switchers {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: .8rem 1rem;
+    margin: 1.5rem 0 2rem .5rem;
+    width: calc(100% - 51px);
+}
+
+.g-consent-mode-group-btn {
+    align-items: center;
+    background: var(--gray-1);
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    margin: 0 2px;
+    position: relative;
+    text-align: center;
+    width: 30px;
+
+    &:active,
+    &:focus,
+    &:hover {
+        color: var(--headings-color);
+    }
+
+    &:hover {
+
+        & > svg {
+            fill: var(--icon-tertiary-color);
+            transform: scale(1);
+        }
+    }
+
+    svg {
+        fill: var(--icon-secondary-color);
+        height: 1.6rem;
+        pointer-events: none;
+        transform: scale(.9);
+        transition: var(--transition);
+        width: 1.6rem;
+    }
+
+    &.delete {
+
+        &:hover {
+
+            & > svg {
+                fill: var(--warning);
+            }
+        }
+    }
 }
 </style>

@@ -98,11 +98,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 .has-label {
-    font-size: $app-font-base;
+    font-size: var(--app-font-base);
     margin-right: 10px;
 }
 

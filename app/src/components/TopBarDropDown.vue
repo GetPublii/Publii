@@ -154,120 +154,120 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .topbar {
-    &-app-settings {
-        color: var(--icon-secondary-color);
-        cursor: pointer;
+}
+
+.topbar-app-settings {
+    color: var(--icon-secondary-color);
+    cursor: pointer;
+    display: block;
+    height: 5rem;
+    order: 3;
+    padding: 0 0 0 1.5rem;
+    width: 35px;
+
+    &:hover {
+        color: var(--icon-tertiary-color);
+    }
+
+}
+
+.topbar-app-settings-icon {
+    background: currentColor;
+    border-radius: 50%;
+    display: block;
+    height: 3px;
+    margin-top: -2px;
+    pointer-events: none;
+    position: relative;
+    right: -1px;
+    top: 50%;
+    width: 3px;
+
+    &:after,
+    &:before {
+        background: currentcolor;
+        border-radius: 50%;
+        content: "";
         display: block;
-        height: 5rem;
-        order: 3;
-        padding: 0 0 0 1.5rem;
-        width: 35px;
-
-        &:hover {
-            color: var(--icon-tertiary-color);
-        }
-
-        &-icon {
-            background: currentColor;
-            border-radius: 50%;
-            display: block;
-            height: 3px;
-            margin-top: -2px;
-            pointer-events: none;
-            position: relative;
-            right: -1px;
-            top: 50%;
-            width: 3px;
-
-            &:after,
-            &:before {
-                background: currentcolor;
-                border-radius: 50%;
-                content: "";
-                display: block;
-                height: 3px;
-                position: absolute;
-                top: -6px;
-                width: 3px;
-            }
-
-            &:before {
-                top: 6px;
-            }
-        }
-
-        &-bell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            height: 100%;
-            width: 35px;
-            margin-left: -1.7rem;
- 
-
-            svg {
-                color: var(--icon-secondary-color);
-            }
-
-           &-badge {
-                align-items: center;
-                aspect-ratio: 1/1;
-                background: rgba(var(--warning-rgb), 1);
-                border: 2px solid var(--bg-site);
-                border-radius: 50%;
-                color: white;
-                display: flex;
-                font-size: 1rem;
-                font-weight: var(--font-weight-semibold);
-                height: 20px;
-                justify-content: center;
-                min-height: 20px;
-                min-width: 20px;
-                padding: 0 4px; 
-                position: absolute;
-                right: 0;
-                top: 5px;
-                width: auto;   
-            }
-        }
-
-    }
-
-    &-app-settings {
-        -webkit-app-region: no-drag; // Make the buttons clickable again
-        font-weight: var(--font-weight-semibold);
-
-        & > svg {
-            height: 2.4rem;
-            position: relative;
-            top: .6rem;
-            width: 2.4rem;
-        }
-    }
-
-    &-app-submenu {
-        background: var(--popup-bg);
-        box-shadow: var(--box-shadow-medium);
-        border-radius: var(--border-radius);
-        cursor: default;
-        font-size: 1.4rem;
-        list-style-type: none;
-        padding: 2rem 0;
+        height: 3px;
         position: absolute;
-        right: 3.2rem;
-        top: 1.5rem;
-
-        &-separator {
-            border-bottom: 1px solid var(--border-light-color);
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-        }
+        top: -6px;
+        width: 3px;
     }
+
+    &:before {
+        top: 6px;
+    }
+}
+
+.topbar-app-settings-bell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 100%;
+    width: 35px;
+    margin-left: -1.7rem;
+
+
+    svg {
+        color: var(--icon-secondary-color);
+    }
+}
+
+.topbar-app-settings-bell-badge {
+     align-items: center;
+     aspect-ratio: 1/1;
+     background: rgba(var(--warning-rgb), 1);
+     border: 2px solid var(--bg-site);
+     border-radius: 50%;
+     color: white;
+     display: flex;
+     font-size: 1rem;
+     font-weight: var(--font-weight-semibold);
+     height: 20px;
+     justify-content: center;
+     min-height: 20px;
+     min-width: 20px;
+     padding: 0 4px; 
+     position: absolute;
+     right: 0;
+     top: 5px;
+     width: auto;   
+ }
+
+.topbar-app-settings {
+    -webkit-app-region: no-drag; /* Make the buttons clickable again */
+    font-weight: var(--font-weight-semibold);
+
+    & > svg {
+        height: 2.4rem;
+        position: relative;
+        top: .6rem;
+        width: 2.4rem;
+    }
+}
+
+.topbar-app-submenu {
+    background: var(--popup-bg);
+    box-shadow: var(--box-shadow-medium);
+    border-radius: var(--border-radius);
+    cursor: default;
+    font-size: 1.4rem;
+    list-style-type: none;
+    padding: 2rem 0;
+    position: absolute;
+    right: 3.2rem;
+    top: 1.5rem;
+}
+
+.topbar-app-submenu-separator {
+    border-bottom: 1px solid var(--border-light-color);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 /*

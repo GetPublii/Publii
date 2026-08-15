@@ -1,6 +1,3 @@
-@import '../vendor/modularscale';
-@import '../variables';
-@import '../mixins';
 
 .post-editor-markdown {
     /**
@@ -18,7 +15,7 @@
         color: var(--text-primary-color);
         font-family: var(--editor-font-family);
         font-weight: var(--font-weight-normal);
-        line-height: $line-height;
+        line-height: var(--line-height);
         padding: 0;
         z-index: 1;
     }
@@ -78,27 +75,27 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-header-1 {
-        font-size: $h1;
+        font-size: 1.802em;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-2 {
-        font-size: $h2;
+        font-size: 1.6018em;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-3 {
-        font-size: $h3;
+        font-size: 1.4238em;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-4 {
-        font-size: $h4;
+        font-size: 1.2656em;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-5 {
-        font-size: $h5;
+        font-size: 1.125em;
     }
 
     .CodeMirror .CodeMirror-code .cm-header-6 {
-        font-size: $h6;
+        font-size: 1em;
     }
 
     .CodeMirror .CodeMirror-code .cm-comment {

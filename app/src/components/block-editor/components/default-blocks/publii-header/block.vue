@@ -209,7 +209,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .publii-block-header {
   outline: none;
   width: 100%;

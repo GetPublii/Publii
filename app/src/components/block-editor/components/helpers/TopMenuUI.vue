@@ -191,68 +191,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../scss/variables.scss';
+<style>
 
 .wrapper-ui-top-menu {
   font-family: var(--font-base);
   
   svg {
     color: var(--icon-tertiary-color);
-  }
-
-  &-conversions {
-    align-items: center;
-    display: flex;
-  }
-
-  &-conversion {
-    display: inline-flex;
-    justify-content: center;
-    padding: 0;
-    position: relative;
-    width: 38px;
-
-    // hover effect
-    &::before {
-       content: "";
-       background: var(--gray-6);
-       border-radius: 3px;
-       display: block;
-       left: 50%;
-       opacity: 0;
-       position: absolute;
-       height: 34px;
-       top: 50%;
-       transition: all .15s cubic-bezier(.4,0,.2,1);
-       transform: scale(.5) translate(-50%, -50%);
-       transform-origin: left top;
-       width: 34px;
-       z-index: -1;
-    }
-
-    &:hover {
-      cursor: pointer;
-
-      &::before {
-         opacity: 1;
-         transform: scale(1) translate(-50%, -50%);
-      }
-
-      & > svg {
-         color: var(--icon-tertiary-color);
-      }
-    }
-  }
-
-  &-options {
-    align-items: center;
-    display: flex;
-
-    label {
-      font-size: 15px;
-      padding-right: 10px;
-    }
   }
 
   .top-menu-button-trash {
@@ -273,98 +218,6 @@ export default {
     top: 0;
     width: auto;
 
-    &__tags {
-      background: var(--bg-secondary);
-      border: 2px solid var(--input-border-color);
-      color: var(--text-primary-color);
-      height: 34px;
-      min-height: 100%;
-      padding: 4px 40px 5px 14px;
-      min-width: 34px;
-    }
-
-    &__placeholder {
-      color: var(--text-light-color);
-      display: block;
-      font-size: $app-font-base;
-      margin-bottom: 0;
-      padding-top: 1px;
-    }
-
-    &__single {
-      background: transparent;
-      color: var(--text-primary-color);
-      min-height: 20px;
-      line-height: 20px;
-      margin-bottom: 0;
-      padding: 1px 0 0 0;
-    }
-
-    &__select {
-      height: 28px;
-      top: 3px;
-      width: 34px;
-
-      &::before {
-          border-color: var(--gray-3) transparent transparent;
-      }
-    }
-
-    &__content {
-      margin-left: 0!important;
-    }
-
-    &__element {
-      padding-left: 0!important;
-    }
-
-    &__content-wrapper {
-      background: var(--bg-secondary);
-      border: 2px solid var(--input-border-color);
-      border-top: none;
-      color: var(--text-primary-color);
-      margin-top: -1px;
-
-      & > ul {
-        padding: 0 !important;
-      }
-    }
-
-    &__option {
-        font-size: 14px;
-        padding: 8px 15px;
-        min-height: 30px;
-
-      &--highlight {
-        background: var(--input-bg-light);
-        color: var(--text-primary-color);
-
-        &:after {
-          display: none;
-        }
-      }
-
-      &.multiselect__option--selected {
-        background: var(--gray-1);
-        color: var(--text-primary-color);
-
-        &:after {
-          display: none;
-        }
-      }
-    }
-
-    &__input {
-      background: none !important;
-      color: var(--text-primary-color);
-      font-size: 14px;
-      height: 21px;
-
-      &::placeholder {
-        color: var(--gray-4);
-      }
-    }
-
     &.is-narrow {
       .multiselect__select {
         display: none;
@@ -381,6 +234,152 @@ export default {
         text-align: center;
       }
     }
+  }
+}
+
+.wrapper-ui-top-menu-conversions {
+  align-items: center;
+  display: flex;
+}
+
+.wrapper-ui-top-menu-conversion {
+  display: inline-flex;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  width: 38px;
+
+  /* hover effect */
+  &::before {
+     content: "";
+     background: var(--gray-6);
+     border-radius: 3px;
+     display: block;
+     left: 50%;
+     opacity: 0;
+     position: absolute;
+     height: 34px;
+     top: 50%;
+     transition: all .15s cubic-bezier(.4,0,.2,1);
+     transform: scale(.5) translate(-50%, -50%);
+     transform-origin: left top;
+     width: 34px;
+     z-index: -1;
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    &::before {
+       opacity: 1;
+       transform: scale(1) translate(-50%, -50%);
+    }
+
+    & > svg {
+       color: var(--icon-tertiary-color);
+    }
+  }
+}
+
+.wrapper-ui-top-menu-options {
+  align-items: center;
+  display: flex;
+
+  label {
+    font-size: 15px;
+    padding-right: 10px;
+  }
+}
+
+.wrapper-ui-top-menu .multiselect__tags {
+  background: var(--bg-secondary);
+  border: 2px solid var(--input-border-color);
+  color: var(--text-primary-color);
+  height: 34px;
+  min-height: 100%;
+  padding: 4px 40px 5px 14px;
+  min-width: 34px;
+}
+
+.wrapper-ui-top-menu .multiselect__placeholder {
+  color: var(--text-light-color);
+  display: block;
+  font-size: var(--app-font-base);
+  margin-bottom: 0;
+  padding-top: 1px;
+}
+
+.wrapper-ui-top-menu .multiselect__single {
+  background: transparent;
+  color: var(--text-primary-color);
+  min-height: 20px;
+  line-height: 20px;
+  margin-bottom: 0;
+  padding: 1px 0 0 0;
+}
+
+.wrapper-ui-top-menu .multiselect__select {
+  height: 28px;
+  top: 3px;
+  width: 34px;
+
+  &::before {
+      border-color: var(--gray-3) transparent transparent;
+  }
+}
+
+.wrapper-ui-top-menu .multiselect__content {
+  margin-left: 0!important;
+}
+
+.wrapper-ui-top-menu .multiselect__element {
+  padding-left: 0!important;
+}
+
+.wrapper-ui-top-menu .multiselect__content-wrapper {
+  background: var(--bg-secondary);
+  border: 2px solid var(--input-border-color);
+  border-top: none;
+  color: var(--text-primary-color);
+  margin-top: -1px;
+
+  & > ul {
+    padding: 0 !important;
+  }
+}
+
+.wrapper-ui-top-menu .multiselect__option {
+    font-size: 14px;
+    padding: 8px 15px;
+    min-height: 30px;
+
+  &.multiselect__option--selected {
+    background: var(--gray-1);
+    color: var(--text-primary-color);
+
+    &:after {
+      display: none;
+    }
+  }
+}
+
+.wrapper-ui-top-menu .multiselect__option--highlight {
+  background: var(--input-bg-light);
+  color: var(--text-primary-color);
+
+  &:after {
+    display: none;
+  }
+}
+
+.wrapper-ui-top-menu .multiselect__input {
+  background: none !important;
+  color: var(--text-primary-color);
+  font-size: 14px;
+  height: 21px;
+
+  &::placeholder {
+    color: var(--gray-4);
   }
 }
 

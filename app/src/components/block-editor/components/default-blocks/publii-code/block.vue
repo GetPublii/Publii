@@ -188,10 +188,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../../scss/vendor/modularscale';
-@import '../../../../../scss/variables.scss';
-@import '../../../../../scss/mixins.scss';
+<style>
 
 .publii-block-code {
     border-radius: var(--border-radius);
@@ -222,24 +219,24 @@ export default {
             padding: 0 !important;
         }
     }
+}
 
-    &-lang {
-        position: absolute;
-        right: 40px;
-        top: baseline(6,em);
+.publii-block-code-lang {
+    position: absolute;
+    right: 40px;
+    top: 1.3714em;
 
-        .multiselect__content {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
+    .multiselect__content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 
-        .multiselect__element {
-            padding: 0 !important;
-        }
+    .multiselect__element {
+        padding: 0 !important;
+    }
 
-        .multiselect__option:after {
-            display: none;
-        }
+    .multiselect__option:after {
+        display: none;
     }
 }
 

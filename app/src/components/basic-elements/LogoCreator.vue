@@ -140,83 +140,81 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+<style scoped>
 
 .logo-creator {
     display: flex;
     margin-bottom: 32px;
     max-width: 100%;
     overflow: hidden;
-    text-align: center;
+    text-align: center
+}
 
-    &-preview {          
-        line-height: 100%;
-        min-width: 23rem;
-        overflow: hidden;
-        padding: 1rem;
-        text-align: left;       
+.logo-creator-preview {          
+    line-height: 100%;
+    min-width: 23rem;
+    overflow: hidden;
+    padding: 1rem;
+    text-align: left;       
+}
+
+.logo-creator-color {        
+    margin: 0 0 1rem;
+    padding: 0;
+}
+
+.logo-creator-color-block {  
+    border-radius: 50%;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 3.2rem;
+    list-style-type: none;
+    margin: 0 0.15rem;
+    padding: 0;
+    transition: all .2s ease-out;
+    width: 3.2rem;
+
+    &[data-status="active"] {
+        transform: scale(1);
     }
 
-    &-color {        
-        margin: 0 0 1rem;
-        padding: 0;       
+    &[data-status="inactive"] {
+        transform: scale(.75); 
+    }
+}
 
-        &-block {  
-            border-radius: 50%;
-            cursor: pointer;
-            display: block;
-            float: left;
-            height: 3.2rem;
-            list-style-type: none;
-            margin: 0 0.15rem;
-            padding: 0;
-            transition: all .2s ease-out;
-            width: 3.2rem;
+.logo-creator-icon {
+    float: right;
+    margin: 0;
+    padding: 0;
+}
 
-            &[data-status="active"] {
-                transform: scale(1);
-            }
-
-            &[data-status="inactive"] {
-                transform: scale(.75); 
-            }
-        }
+.logo-creator-icon-block {
+    color: var(--icon-secondary-color);
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 3rem;
+    list-style-type: none;
+    padding: 0 1px 0 0;
+    transition: all .2s ease-out;  
+    
+    &:hover {
+        color: var(--icon-tertiary-color);
     }
 
-    &-icon {
-        float: right;
-        margin: 0;
-        padding: 0;
+    & > svg {                 
+        margin: .5rem;
+    }
 
-        &-block {
-            color: var(--icon-secondary-color);
-            cursor: pointer;
-            display: block;
-            float: left;
-            height: 3rem;
-            list-style-type: none;
-            padding: 0 1px 0 0;
-            transition: all .2s ease-out;  
-            
-            &:hover {
-                color: var(--icon-tertiary-color);
-            }
+    &[data-status="active"] {
+        color: var(--icon-tertiary-color);
+        transform: scale(1);
+    }
 
-            & > svg {                 
-                margin: .5rem;
-            }
-
-            &[data-status="active"] {
-                color: var(--icon-tertiary-color);
-                transform: scale(1);
-            }
-
-            &[data-status="inactive"] {               
-                transform: scale(.75);
-            }
-        }
+    &[data-status="inactive"] {               
+        transform: scale(.75);
     }
 }
 </style>

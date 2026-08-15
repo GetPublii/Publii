@@ -33,8 +33,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../scss/variables.scss';
+<style>
 
 .sites-popup {
     .search {

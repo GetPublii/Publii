@@ -203,9 +203,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/mixins.scss';
+<style scoped>
 
 /*
  * Single site
@@ -229,104 +227,6 @@ export default {
         border: none;
     }
 
-    &-actions {
-        display: flex;
-        margin-left: auto;
-
-        &-disabled {
-            opacity: .75;
-            pointer-events: none;
-        }
-
-        &-btn {
-            align-items: center;
-            background: var(--bg-primary);
-            position: relative;
-            border-radius: 50%;
-            display: inline-flex;
-            height: 3rem;
-            justify-content: center;
-            margin: 0 2px;
-            opacity: 0;
-            position: relative;
-            text-align: center;
-            width: 3rem;
-
-            &:active,
-            &:focus,
-            &:hover {
-                color: var(--headings-color);
-            }
-
-            &:hover {
-
-                & > svg {
-                   fill: var(--icon-tertiary-color);
-                   transform: scale(1);
-               }
-            }
-
-            svg {
-                fill: var(--icon-secondary-color);
-                height: 1.6rem;
-                pointer-events: none;
-                transform: scale(.9);
-                transition: var(--transition);
-                width: 1.6rem;
-            }
-
-            &.delete {
-
-                &:hover {
-
-                    & > svg {
-                       fill: var(--warning);
-                   }
-                }
-            }
-
-            &.is-duplicating {
-                &::after { 
-                   animation: spin .9s infinite linear;
-                   border-top: 2px solid rgba(var(--color-primary-rgb), .2);
-                   border-right: 2px solid rgba(var(--color-primary-rgb), .2);
-                   border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
-                   border-left: 2px solid var(--color-primary);
-                   border-radius: 50%;
-                   content: "";
-                   display: block;
-                   height: 100%;
-                   width: 100%;
-                   @include centerXY(true, true);
-
-                    @at-root {
-                        @keyframes spin {
-                            100% {
-                                transform: translate(-50%, -50%) rotate(360deg);
-                            }
-                        }
-                    }
-                }
-
-                svg {
-                    opacity: 0;
-                }
-            }
-        }
-    }
-
-    &-icon {
-        align-items: center;
-        border-radius: 3px;
-        color: currentColor;
-        display: flex;
-        height: auto;
-        justify-content: center;
-        margin-right: 1.5rem;
-        position: relative;
-        width: 3.3rem;
-    }
-
     &:hover,
     &.is-duplicating {
         background: var(--collection-bg-hover);
@@ -338,31 +238,124 @@ export default {
             opacity: 1;
         }
     }
+}
+.single-site-actions {
+    display: flex;
+    margin-left: auto;
+}
+.single-site-actions-disabled {
+    opacity: .75;
+    pointer-events: none;
+}
+.single-site-actions-btn {
+    align-items: center;
+    background: var(--bg-primary);
+    position: relative;
+    border-radius: 50%;
+    display: inline-flex;
+    height: 3rem;
+    justify-content: center;
+    margin: 0 2px;
+    opacity: 0;
+    position: relative;
+    text-align: center;
+    width: 3rem;
 
-    &-name {
-        display: block;    
-        font-weight: var(--font-weight-semibold);
-        line-height: 3.6rem;
-        margin: 0;
-        overflow: hidden;
-        padding: 0;
-        text-align: left;
-        text-overflow: ellipsis;
+    &:active,
+    &:focus,
+    &:hover {
+        color: var(--headings-color);
+    }
+
+    &:hover {
+
+        & > svg {
+           fill: var(--icon-tertiary-color);
+           transform: scale(1);
+       }
+    }
+
+    svg {
+        fill: var(--icon-secondary-color);
+        height: 1.6rem;
+        pointer-events: none;
+        transform: scale(.9);
         transition: var(--transition);
-        white-space: nowrap;
-        max-width: 82%;
+        width: 1.6rem;
+    }
 
-        span {
-            display: block;
-            line-height: 1.4;
+    &.delete {
+
+        &:hover {
+
+            & > svg {
+               fill: var(--warning);
+           }
+        }
+    }
+
+    &.is-duplicating {
+        &::after { 
+           animation: spin .9s infinite linear;
+           border-top: 2px solid rgba(var(--color-primary-rgb), .2);
+           border-right: 2px solid rgba(var(--color-primary-rgb), .2);
+           border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
+           border-left: 2px solid var(--color-primary);
+           border-radius: 50%;
+           content: "";
+           display: block;
+           height: 100%;
+           width: 100%;
+           position: absolute;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%)
         }
 
-        small {
-            color: var(--gray-4);
-            display: block;
-            line-height: 1.4;
-            white-space: normal;
+        svg {
+            opacity: 0;
         }
+    }
+}
+@keyframes spin {
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+.single-site-icon {
+    align-items: center;
+    border-radius: 3px;
+    color: currentColor;
+    display: flex;
+    height: auto;
+    justify-content: center;
+    margin-right: 1.5rem;
+    position: relative;
+    width: 3.3rem;
+}
+.single-site-name {
+    display: block;    
+    font-weight: var(--font-weight-semibold);
+    line-height: 3.6rem;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    text-align: left;
+    text-overflow: ellipsis;
+    transition: var(--transition);
+    white-space: nowrap;
+    max-width: 82%;
+
+    span {
+        display: block;
+        line-height: 1.4;
+    }
+
+    small {
+        color: var(--gray-4);
+        display: block;
+        line-height: 1.4;
+        white-space: normal;
     }
 }
 </style>

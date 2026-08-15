@@ -880,9 +880,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/notifications.scss';
+<style scoped>
+@import '../css/notifications.css';
 
 #plugin-settings-root {
     border: none;
@@ -892,7 +891,7 @@ export default {
 
 .plugin-content {
     margin: 0 auto;
-    max-width: $wrapper; 
+    max-width: var(--wrapper-width); 
     user-select: none;
 }
 

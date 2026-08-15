@@ -163,8 +163,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
+<style scoped>
 
 select {
     -webkit-appearance: none;
@@ -195,7 +194,7 @@ select {
     }
 
     select[multiple] {
-        padding: baseline(6);
+        padding: 1.3714rem;
         width: 100%;
 
         &:hover {

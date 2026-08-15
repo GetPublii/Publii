@@ -97,10 +97,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../../../../scss/vendor/modularscale';
-@import '../../../../../scss/variables.scss';
-@import '../../../../../scss/mixins.scss';
+<style>
 
 .publii-block-html {
   border-radius: var(--border-radius);

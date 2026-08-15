@@ -4,7 +4,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 *[contenteditable="true"] {
   display: inline-block;
 }

@@ -162,8 +162,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .site {
     padding: 2rem;
@@ -183,7 +182,7 @@ export default {
     .sidebar {
         bottom: 0;
         left: 0;
-        width: $app-sidebar;
+        width: var(--app-sidebar-width);
     }
 
     .content {
@@ -192,7 +191,7 @@ export default {
         overflow: scroll;
         padding: 3rem 4rem;
         right: 0;
-        width: calc(100% - $app-sidebar); 
+        width: calc(100% - var(--app-sidebar-width)); 
 
         &.is-wide {
             width: 100%;

@@ -130,9 +130,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../../scss/variables.scss';
-@import '../../scss/help-panel-common.scss';
+<style scoped>
+@import '../../css/help-panel-common.css';
 
 
 </style>

@@ -1,7 +1,0 @@
-// To attempt to avoid conflicts with other libraries
-// all funcitons are namespaced with `ms-`.
-// However, to increase usability, a shorthand function is included here.
-
-@function ms($v: 0, $base: false, $ratio: false, $thread: false, $settings: $modularscale) {
-  @return ms-function($v, $base, $ratio, $thread, $settings);
-}

@@ -1,11 +1,6 @@
 /*
  * Basic files
  */
-@import '../vendor/modularscale';
-@import '../mixins';
-@import '../variables';
-@import '../css-variables';
-@import 'scrollbar';
 
 /*
  * Reset
@@ -78,7 +73,25 @@ body#tinymce {
 }
 
 a:not(.btn) {
-    @include links (var(--link-invert-color), var(--link-invert-color), var(--link-invert-color), var(--link-invert-color));
+    border-bottom: 3px solid rgba(var(--yellow), 1);
+    color: var(--link-invert-color);
+    cursor: pointer;
+    text-decoration: none !important;
+    text-decoration-skip-ink: auto;
+
+    &:hover {
+        background: rgba(var(--yellow), .2);
+        color: var(--link-invert-color);
+    }
+
+    &:active {
+        color: var(--link-invert-color);
+    }
+
+    &:focus {
+        color: var(--link-invert-color);
+        outline: 2px dotted var(--color-primary);
+    }
 }
 
 
@@ -88,20 +101,20 @@ ol,
 dl,
 table,
 hr {
-    margin-top: baseline(4);
+    margin-top: 0.9143rem;
 }
 
 blockquote,
 figure {
-    margin-top: baseline(4);
-    margin-bottom: baseline(4);
+    margin-top: 0.9143rem;
+    margin-bottom: 0.9143rem;
 }
 
 pre,
 table,
 script {
-    margin-top: baseline(4);
-    margin-bottom: baseline(5);
+    margin-top: 0.9143rem;
+    margin-bottom: 1.1429rem;
 }
 
 figcaption {
@@ -122,31 +135,31 @@ h6 {
     font-weight: var(--font-weight-bold);
     letter-spacing: var(--letter-spacing);
     line-height: 1.3;
-    margin-top: baseline(5);
+    margin-top: 1.1429rem;
 }
 
 h1 {
-    font-size: $h1;
+    font-size: 1.802em;
 }
 
 h2 {
-    font-size: $h2;
+    font-size: 1.6018em;
 }
 
 h3 {
-    font-size: $h3;
+    font-size: 1.4238em;
 }
 
 h4 {
-    font-size: $h4;
+    font-size: 1.2656em;
 }
 
 h5 {
-    font-size: $h5;
+    font-size: 1.125em;
 }
 
 h6 {
-    font-size: $h6;
+    font-size: 1em;
 }
 
 h2,
@@ -155,7 +168,7 @@ h4,
 h5,
 h6 {
     & + p {
-        margin-top: baseline(3);
+        margin-top: 0.6857rem;
     }
 }
 
@@ -168,7 +181,7 @@ blockquote {
     background: var(--gray-1);
     border-left: 3px solid var(--color-primary);
     font-style: italic;
-    padding: baseline(2) 0 baseline(2) baseline(8);
+    padding: 0.4571rem 0 0.4571rem 1.8286rem;
 
     & > :nth-child(1) {
         margin-top: 0;
@@ -181,13 +194,13 @@ ol {
 
     & > li {
         list-style: inherit;
-        padding-left: baseline(2);
+        padding-left: 0.4571rem;
     }
 
     ul,
     ol {
-        margin-bottom: baseline(2);
-        margin-top: baseline(2);
+        margin-bottom: 0.4571rem;
+        margin-top: 0.4571rem;
     }
 }
 
@@ -199,8 +212,8 @@ dl {
 
 pre {
     background-color: var(--gray-1);
-    font-size: ms(-1);
-    padding: baseline(6);
+    font-size: 0.8889em;
+    padding: 1.3714rem;
     white-space: pre-wrap;
     word-wrap: break-word;
 
@@ -208,7 +221,7 @@ pre {
         background: none;
         color: var(--headings-color);
         display: inline-block;
-        font-size: ms(-1);
+        font-size: 0.8889em;
         font-weight: normal;
         padding: 0;
     }
@@ -218,9 +231,9 @@ code {
     background-color: rgba(var(--warning-rgb), .15);
     border-radius: 2px;
     color: var(--warning);
-    font-size: ms(-1);
+    font-size: 0.8889em;
     font-family: var(--font-monospace);
-    padding: baseline(1) baseline(2);
+    padding: 0.2286rem 0.4571rem;
 }
 
 table {
@@ -233,12 +246,12 @@ table {
 
     th {
         font-weight: var(--font-weight-semibold);
-        padding: baseline(2.5) baseline(4);
+        padding: 0.5714rem 0.9143rem;
     }
 
     td {
         border-top: 1px solid var(--input-border-color);
-        padding: baseline(2.5) baseline(4);
+        padding: 0.5714rem 0.9143rem;
     }
 }
 
@@ -248,7 +261,7 @@ kbd {
     color: var(--bg-primary);
     font-family: var(--font-monospace);
     font-size: 0.8888em;
-    padding: baseline(0.5) baseline(1.5);
+    padding: 0.1143rem 0.3429rem;
 }
 
 sub,
@@ -257,7 +270,7 @@ sup {
 }
 
 small {
-    font-size: ms(-2);
+    font-size: 0.7901em;
 }
 
 hr:not(#read-more) {

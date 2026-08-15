@@ -123,8 +123,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../../scss/variables.scss';
+<style>
 
 .block-advanced-config {
    background: var(--popup-bg);
@@ -134,112 +133,112 @@ export default {
   transform: scale(.5);
   transition: all .24s cubic-bezier(0, 0, 0.25, 0.99);
   user-select: none;
-  width: 580px;
+  width: 580px
+}
 
-  &-overlay {
-    align-items: center;
-    background: var(--overlay);
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    opacity: 0;
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    transition: all .3s ease-out;
+.block-advanced-config-overlay {
+  align-items: center;
+  background: var(--overlay);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: all .3s ease-out;
+  width: 100%;
+  z-index: 999991;
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+
+    .block-advanced-config {
+      transform: scale(1);
+    }
+  }
+}
+
+.block-advanced-config-field {
+  margin: 0 0 16px 0;
+
+  label {
+    color: var(--label-color);
+    display: block;
+    font-size: 14px;
+    padding-bottom: 8px;
+  }
+
+  input,
+  select {  
+    display: block;
     width: 100%;
-    z-index: 999991;
 
-    &.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-
-      .block-advanced-config {
-        transform: scale(1);
-      }
+    &[disabled] {
+      opacity: .5;
+      pointer-events: none;
     }
   }
 
-  &-field {
-    margin: 0 0 16px 0;
-
-    &-help {
-      align-items: center;
-      background: var(--color-primary);
-      border-radius: 50%;
-      color: var(--white);
-      cursor: help;
-      display: inline-flex;
-      font-size: 10px;
-      font-weight: var(--font-weight-bold);
-      height: 14px;
-      justify-content: center;
-      position: relative;
-      top: -1px;
-      width: 14px;
-    }
-
-    label {
-      color: var(--label-color);
-      display: block;
-      font-size: 14px;
-      padding-bottom: 8px;
-    }
-
-    input,
-    select {  
-      display: block;
-      width: 100%;
-
-      &[disabled] {
-        opacity: .5;
-        pointer-events: none;
-      }
-    }
-
-    select {
-      appearance: none;
-      max-width: 100%;
-      margin: 0;
-    }
+  select {
+    appearance: none;
+    max-width: 100%;
+    margin: 0;
   }
+}
 
-  &-buttons {
-    display: flex;
-    margin: 3rem -4rem -4rem;
+.block-advanced-config-field-help {
+  align-items: center;
+  background: var(--color-primary);
+  border-radius: 50%;
+  color: var(--white);
+  cursor: help;
+  display: inline-flex;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  height: 14px;
+  justify-content: center;
+  position: relative;
+  top: -1px;
+  width: 14px;
+}
 
-    button {
-      background: var(--button-bg);
+.block-advanced-config-buttons {
+  display: flex;
+  margin: 3rem -4rem -4rem;
+
+  button {
+    background: var(--button-bg);
+    border: none;
+    box-shadow: none;
+    border-bottom-left-radius: 6px;
+    border-top: 1px solid var(--button-bg);
+    color: var(--white);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1;
+    width: 50%;
+    padding: 18px;
+    transition: all .25s ease-out;
+
+    &:hover {
+      background: var(--button-bg-hover);
+      border-color: var(--button-bg-hover);
+    }
+
+    &.outline {
+      background: var(--popup-btn-cancel-bg);
       border: none;
-      box-shadow: none;
-      border-bottom-left-radius: 6px;
-      border-top: 1px solid var(--button-bg);
-      color: var(--white);
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: var(--font-weight-semibold);
-      line-height: 1;
-      width: 50%;
-      padding: 18px;
-      transition: all .25s ease-out;
+      border-top: 1px solid var(--input-border-color);
+      border-bottom-right-radius: 6px;
+      color: var(--popup-btn-cancel-color);
 
       &:hover {
-        background: var(--button-bg-hover);
-        border-color: var(--button-bg-hover);
-      }
-
-      &.outline {
-        background: var(--popup-btn-cancel-bg);
-        border: none;
-        border-top: 1px solid var(--input-border-color);
-        border-bottom-right-radius: 6px;
-        color: var(--popup-btn-cancel-color);
-
-        &:hover {
-           background: var(--popup-btn-cancel-bg-hover);
-           color: var(--popup-btn-cancel-hover-color);
-        }
+         background: var(--popup-btn-cancel-bg-hover);
+         color: var(--popup-btn-cancel-hover-color);
       }
     }
   }

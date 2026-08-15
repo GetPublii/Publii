@@ -64,9 +64,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/popup-common.scss';
+<style scoped>
+@import '../css/popup-common.css';
 
 .popup {
     padding: 4rem;

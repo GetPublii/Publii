@@ -358,10 +358,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/mixins.scss';
-@import '../scss/editor/post-editors-common.scss';
+<style scoped>
+@import '../css/editor/post-editors-common.css';
    
 #publii-block-editor {
     font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
@@ -380,22 +378,22 @@ export default {
     width: 100%;
     z-index: 2;
 
-    &-wrapper {
-        overflow: auto;
-        padding-top: var(--topbar-height);
-    }
-
-    &-form {
-        height: calc(100vh - var(--topbar-height));
-        overflow: scroll;
-
-        & > div {
-            padding: 9rem 4rem 3rem 4rem;
-        }
-    }
-
     #post-editor {
         display: none;
+    }
+}
+
+.post-editor-wrapper {
+    overflow: auto;
+    padding-top: var(--topbar-height);
+}
+
+.post-editor-form {
+    height: calc(100vh - var(--topbar-height));
+    overflow: scroll;
+
+    & > div {
+        padding: 9rem 4rem 3rem 4rem;
     }
 }
 

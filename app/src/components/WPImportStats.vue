@@ -44,8 +44,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
+<style scoped>
 
 .import-stats {
     border-bottom: 2px solid var(--gray-1);

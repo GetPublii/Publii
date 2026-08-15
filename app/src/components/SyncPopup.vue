@@ -806,13 +806,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '../scss/variables.scss';
-@import '../scss/popup-common.scss';
+<style scoped>
+@import '../css/popup-common.css';
 
 .popup {
     background: none;
-    max-width: $wrapper;
+    max-width: var(--wrapper-width);
     overflow: visible;
     width: 100%;
 

@@ -986,202 +986,201 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../scss/variables.scss';
-@import '../../scss/options-sidebar.scss';
-@import '../../scss/mixins.scss';
+<style>
+@import '../../css/options-sidebar.css';
 
 .post-editor {
-    &-sidebar {
-        box-shadow: var(--box-shadow-medium);
-        height: calc(100vh - var(--topbar-height));
-        opacity: 0;
-        pointer-events: none;
+}
+
+.post-editor-sidebar {
+    box-shadow: var(--box-shadow-medium);
+    height: calc(100vh - var(--topbar-height));
+    opacity: 0;
+    pointer-events: none;
+    top: var(--topbar-height);
+    z-index: 99999;
+
+    &.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    &:before {
+        background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
+        content: "";
+        height: 8rem;
+        position: fixed;
         top: var(--topbar-height);
-        z-index: 99999;
+        right: 0;
+        width: var(--options-sidebar-width);
+        z-index: 1;
+    }
 
-        &.is-visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
+    .options-sidebar {
+        padding-top: 8rem;
+    }
 
-        &:before {
-            background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
-            content: "";
-            height: 8rem;
-            position: fixed;
-            top: var(--topbar-height);
-            right: 0;
-            width: $options-sidebar-width;
-            z-index: 1;
-        }
+    .post-info {
+        display: grid;
+        grid-template-columns: repeat(2, 49%);
+        grid-gap: 0 2%;
+        margin-bottom: 1rem;
 
-        .options-sidebar {
-            padding-top: 8rem;
-        }
+        dl {
+            margin: 0 0 3rem 0;
 
-        &-header {
-            color: var(--gray-3);
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-top: 0;
-            padding: 0 3.6rem 1.5rem;
-            text-transform: uppercase;
-        }
-
-        .post-info {
-            display: grid;
-            grid-template-columns: repeat(2, 49%);
-            grid-gap: 0 2%;
-            margin-bottom: 1rem;
-
-            &--nogrid {
-                 display: block;
+            &.page-parent-page-wrapper {
+                grid-column: span 2;
+                margin-bottom: 0;
             }
+        }
 
-            dl {
-                margin: 0 0 3rem 0;
+        dt {
+            color: var(--label-color);
+            font-size: 1.4rem;
+            margin: 0 0 .5rem 0;
+        }
 
-                &.page-parent-page-wrapper {
-                    grid-column: span 2;
-                    margin-bottom: 0;
-                }
+        dd {
+            color: var(--gray-4);
+            font-size: 1.3rem;
+            margin: 0;
+
+            a {
+                display: block;
+                position: relative;
+                white-space: nowrap;
             }
+        }
+    }
 
-            dt {
-                color: var(--label-color);
-                font-size: 1.4rem;
-                margin: 0 0 .5rem 0;
-            }
+    .post-editor-settings {
+        .post-author-selector {
+            border-bottom: 1px solid var(--gray-1);
+            margin-bottom: 2rem;
+            padding-bottom: 0;
+        }
+
+        .post-date {
+            margin-bottom: 2rem;
 
             dd {
+                font-size: var(--app-font-base);
+            }
+
+            small {
                 color: var(--gray-4);
-                font-size: 1.3rem;
-                margin: 0;
-
-                a {
-                    display: block;
-                    position: relative;
-                    white-space: nowrap;
-                }
+                padding: 0 .5rem;
+                position: relative;
+                top: -1px;
             }
         }
 
-        .post-editor-settings {
-            .post-author-selector {
-                border-bottom: 1px solid var(--gray-1);
-                margin-bottom: 2rem;
-                padding-bottom: 0;
-            }
+        .post-action {
+           label {
+              font-size: 1.4rem;
+              font-weight: var(--font-weight-normal);
+              line-height: 1.8;
+           }
+        }
+    }
 
-            .post-date {
-                margin-bottom: 2rem;
+    .post-tags {
+        line-height: 2;
+        margin-bottom: 0;
 
-                dd {
-                    font-size: $app-font-base;
-                }
-
-                small {
-                    color: var(--gray-4);
-                    padding: 0 .5rem;
-                    position: relative;
-                    top: -1px;
-                }
-
-                &-reset {
-                    border-radius: 50%;
-                    color: var(--icon-secondary-color);
-                    font-size: 2.4rem;
-                    font-weight: 300;
-                    height: 3rem;
-                    line-height: 1;
-                    position: absolute;
-                    right: 0;
-                    text-align: center;
-                    transition: var(--transition);
-                    top: 50%;
-                    transform: translate(0, -50%);
-                    width: 3rem;
-
-                    .icon {
-                        cursor: pointer;
-                        fill: currentColor;
-                    }
-
-                    &:active,
-                    &:focus,
-                    &:hover {
-                        color: var(--headings-color);
-                    }
-
-                    &:hover {
-                        background: var(--input-border-color);
-                    }
-                }
-            }
-
-            .post-action {
-               label {
-                  font-size: 1.4rem;
-                  font-weight: var(--font-weight-normal);
-                  line-height: 1.8;
-               }
-            }
+        .multiselect,
+        .multiselect__tags {
+            min-height: 52px;
         }
 
-        .post-tags {
-            line-height: 2;
-            margin-bottom: 0;
-
-            &-error {
-                color: var(--warning);
-                display: block;
-                font-size: 1.4rem;
-                padding: .5rem 0;
-
-                &.is-hidden {
-                    display: none;
-                }
-            }
-
-            .multiselect,
-            .multiselect__tags {
-                min-height: 52px;
-            }
-
-            .multiselect__tags {
-                padding: 0 4rem 0 0.5rem;
-            }
-
-            .multiselect__input {
-                max-width: 120px;
-            }
+        .multiselect__tags {
+            padding: 0 4rem 0 0.5rem;
         }
 
-        .post-editor-settings {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height .25s ease-out;
-
-            &-content {
-                padding: 0 0 1rem;
-
-                .image-uploader {
-                    margin-top: 0;
-                }
-            }
-
-        
-            #post-featured-wrapper {
-                margin-top: 0;
-            }
+        .multiselect__input {
+            max-width: 120px;
         }
+    }
 
-        .switcher-item-icon-helper {
-            margin: 0 .5rem 0 0;
-            position: relative;
-            top: .2rem;
+    .post-editor-settings {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .25s ease-out;
+
+    
+        #post-featured-wrapper {
+            margin-top: 0;
         }
+    }
+
+    .switcher-item-icon-helper {
+        margin: 0 .5rem 0 0;
+        position: relative;
+        top: .2rem;
+    }
+}
+
+.post-editor-sidebar-header {
+    color: var(--gray-3);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 0;
+    padding: 0 3.6rem 1.5rem;
+    text-transform: uppercase;
+}
+
+.post-editor-sidebar .post-info--nogrid {
+     display: block;
+}
+
+.post-editor-sidebar .post-editor-settings .post-date-reset {
+    border-radius: 50%;
+    color: var(--icon-secondary-color);
+    font-size: 2.4rem;
+    font-weight: 300;
+    height: 3rem;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    transition: var(--transition);
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 3rem;
+
+    .icon {
+        cursor: pointer;
+        fill: currentColor;
+    }
+
+    &:active,
+    &:focus,
+    &:hover {
+        color: var(--headings-color);
+    }
+
+    &:hover {
+        background: var(--input-border-color);
+    }
+}
+
+.post-editor-sidebar .post-tags-error {
+    color: var(--warning);
+    display: block;
+    font-size: 1.4rem;
+    padding: .5rem 0;
+
+    &.is-hidden {
+        display: none;
+    }
+}
+
+.post-editor-sidebar .post-editor-settings-content {
+    padding: 0 0 1rem;
+
+    .image-uploader {
+        margin-top: 0;
     }
 }
 
