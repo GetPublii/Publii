@@ -1,18 +1,20 @@
 {{> head}}
 {{> navbar}}
 <main class="posts">
-   <div class="hero hero--noimage">
-      <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
-         <div class="wrapper">
-            <h1>
-               {{ translate 'postPrefix.title' }} 
-            </h1>
-            <p class="page__desc">
-               {{ translate "postPrefix.description" }}
-            </p>
-         </div>
-      </header>
-   </div>
+  {{#if @config.custom.showHeader}}
+     <div class="hero hero--noimage">
+        <header class="hero__content {{#checkIf @config.custom.alignHero '==' "center" }}hero__content--centered{{/checkIf}}">
+           <div class="wrapper">
+              <h1>
+                 {{ translate 'postPrefix.title' }} 
+              </h1>
+              <p class="page__desc">
+                 {{ translate "postPrefix.description" }}
+              </p>
+           </div>
+        </header>
+     </div>
+  {{/if}}
    <div class="wrapper feed">
       {{#each posts}}
          <article class="feed__item {{#checkIf @config.custom.alignFeed '==' "center" }}feed__item--centered{{/checkIf}}">
