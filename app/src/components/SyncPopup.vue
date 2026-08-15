@@ -303,6 +303,10 @@ export default {
                     return false;
                 }
 
+                if (deploymentConfig.protocol === 'dokku' && this.checkDokkuConfig(deploymentConfig)) {
+                    return false;
+                }
+
                 if (deploymentConfig.protocol === 'github-pages' && this.checkGithubConfig(deploymentConfig)) {
                     return false;
                 }
@@ -713,6 +717,19 @@ export default {
                 deploymentConfig.git.password !== '' &&
                 deploymentConfig.git.commitAuthor !== '' &&
                 deploymentConfig.git.commitMessage !== ''
+            ) {
+                return true;
+            }
+
+            return false;
+        },
+        checkDokkuConfig: function(deploymentConfig) {
+            if (
+                deploymentConfig.dokku &&
+                deploymentConfig.dokku.url !== '' &&
+                deploymentConfig.dokku.branch !== '' &&
+                deploymentConfig.dokku.commitAuthor !== '' &&
+                deploymentConfig.dokku.commitMessage !== ''
             ) {
                 return true;
             }

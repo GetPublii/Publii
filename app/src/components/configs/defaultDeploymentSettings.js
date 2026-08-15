@@ -57,5 +57,12 @@ export default {
         region: '',
         prefix: '',
         acl: 'public-read'
+    },
+    dokku: {
+        url: '',
+        branch: 'main',
+        commitAuthor: '',
+        commitEmail: '',
+        commitMessage: 'Publii: update content'
     }
 };

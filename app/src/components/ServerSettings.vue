@@ -94,7 +94,19 @@
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.git') }}</span>
                 </div>
-                
+
+                <div
+                    @click="deploymentMethodSelected = 'dokku'"
+                    :title="$t('sync.dokku')"
+                    class="server-settings-grid-item">
+                    <icon
+                      customWidth="48"
+                      customHeight="48"
+                      name="dokku"
+                      iconset="svg-map-server"/>
+                      <span>{{ $t('sync.dokku') }}</span>
+                </div>
+
                 <div
                     @click="deploymentMethodSelected = 'github-pages'"
                     :title="$t('sync.github')"
@@ -191,7 +203,12 @@
                             v-if="deploymentMethodSelected === 'git'"
                             v-pure-html="$t('sync.deploymentMethodGitMsg')">
                         </span>
-                        
+
+                        <span
+                            v-if="deploymentMethodSelected === 'dokku'"
+                            v-pure-html="$t('sync.deploymentMethodDokkuMsg')">
+                        </span>
+
                         <span
                             v-if="deploymentMethodSelected === 'github-pages'"
                             v-pure-html="$t('sync.deploymentMethodGithubPagesMsg')">
@@ -752,6 +769,108 @@
                 </field>
 
                 <field
+                    v-if="deploymentMethodSelected === 'dokku'"
+                    id="dokku-url"
+                    :label="$t('sync.dokkuUrl')">
+                    <text-input
+                        slot="field"
+                        id="dokku-url"
+                        key="dokku-url"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('dokku-url') > -1 }"
+                        @keyup.native="cleanError('dokku-url')"
+                        v-model="deploymentSettings.dokku.url" />
+                    <small
+                        v-if="errors.indexOf('dokku-url') > -1"
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.dokkuUrlFieldCantBeEmpty') }}
+                    </small>
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.dokkuUrlNote') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'dokku'"
+                    id="dokku-branch"
+                    :label="$t('sync.branch')">
+                    <text-input
+                        slot="field"
+                        id="dokku-branch"
+                        key="dokku-branch"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('dokku-branch') > -1 }"
+                        @keyup.native="cleanError('dokku-branch')"
+                        v-model="deploymentSettings.dokku.branch" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('dokku-branch') > -1"
+                        class="note">
+                        {{ $t('sync.branchFieldCantBeEmpty') }}
+                    </small>
+                    <small
+                        slot="note"
+                        class="note"
+                        v-pure-html="$t('sync.branchExampleDokkuNote')">
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'dokku'"
+                    id="dokku-commit-author"
+                    :label="$t('sync.commitAuthor')">
+                    <text-input
+                        slot="field"
+                        id="dokku-commit-author"
+                        key="dokku-commit-author"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('dokku-commitAuthor') > -1 }"
+                        @keyup.native="cleanError('dokku-commitAuthor')"
+                        v-model="deploymentSettings.dokku.commitAuthor" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('dokku-commitAuthor') > -1"
+                        class="note">
+                        {{ $t('sync.commitAuthorFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'dokku'"
+                    id="dokku-commit-email"
+                    :label="$t('sync.commitEmail')">
+                    <text-input
+                        slot="field"
+                        id="dokku-commit-email"
+                        key="dokku-commit-email"
+                        :spellcheck="false"
+                        v-model="deploymentSettings.dokku.commitEmail" />
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'dokku'"
+                    id="dokku-commit-message"
+                    :label="$t('sync.commitMessage')">
+                    <text-input
+                        slot="field"
+                        id="dokku-commit-message"
+                        key="dokku-commit-message"
+                        :spellcheck="false"
+                        :class="{ 'is-invalid': errors.indexOf('dokku-commitMessage') > -1 }"
+                        @keyup.native="cleanError('dokku-commitMessage')"
+                        v-model="deploymentSettings.dokku.commitMessage" />
+                    <small
+                        slot="note"
+                        v-if="errors.indexOf('dokku-commitMessage') > -1"
+                        class="note">
+                        {{ $t('sync.commitMessageFieldCantBeEmpty') }}
+                    </small>
+                </field>
+
+                <field
                     v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-parallel-operations"
                     :label="$t('sync.parallelUploads')">
@@ -1251,6 +1370,7 @@ export default {
             httpProtocolSelected: '',
             deploymentMethods: {
                 'git': this.$t('sync.git'),
+                'dokku': this.$t('sync.dokku'),
                 'github-pages': this.$t('sync.githubPages'),
                 'gitlab-pages': this.$t('sync.gitlabPages'),
                 'netlify': this.$t('sync.netlify'),
@@ -1348,6 +1468,7 @@ export default {
                     this.deploymentSettings.port = '22'; break;
                 case 's3':
                 case 'git':
+                case 'dokku':
                 case 'github-pages':
                 case 'gitlab-pages':
                 case 'netlify':
@@ -1560,6 +1681,9 @@ export default {
                 case 'git':
                     this.validateGit();
                     break;
+                case 'dokku':
+                    this.validateDokku();
+                    break;
                 case 'github-pages':
                     this.validateGithubPages();
                     break;
@@ -1633,6 +1757,10 @@ export default {
             let fields = ['git_url', 'git_user', 'git_password', 'git_branch', 'git_commitAuthor', 'git_commitMessage'];
             return this.validateFields(fields);
         },
+        validateDokku () {
+            let fields = ['dokku_url', 'dokku_branch', 'dokku_commitAuthor', 'dokku_commitMessage'];
+            return this.validateFields(fields);
+        },
         validateGithubPages () {
             let fields = ['github_server', 'github_user', 'github_repo', 'github_branch', 'github_token'];
             return this.validateFields(fields);
@@ -1688,6 +1816,7 @@ export default {
                 case 'github-pages': return this.$t('sync.githubPages');
                 case 'gitlab-pages': return this.$t('sync.gitlabPages');
                 case 'git': return this.$t('sync.git');
+                case 'dokku': return this.$t('sync.dokku');
                 case 'netlify': return this.$t('sync.netlify');
                 case 's3': return this.$t('sync.s3CompatibleStorage');
                 case 'google-cloud': return this.$t('sync.googleCloud');
