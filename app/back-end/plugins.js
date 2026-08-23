@@ -211,6 +211,30 @@ class Plugins {
         }
 
         UtilsHelper.removePathRecursively(target);
+        this.removePluginFromSiteConfigs(directory);
+    }
+
+    /**
+     * Remove an uninstalled plugin from every site's activation config
+     */
+    removePluginFromSiteConfigs (directory) {
+        if (!PathValidator.isValidDirSegment(directory) || !UtilsHelper.dirExists(this.sitesDir)) {
+            return;
+        }
+
+        let sites = fs.readdirSync(this.sitesDir);
+
+        for (let i = 0; i < sites.length; i++) {
+            let siteName = sites[i];
+
+            if (!PathValidator.isValidDirSegment(siteName) ||
+                !UtilsHelper.dirExists(path.join(this.sitesDir, siteName))) {
+                continue;
+            }
+
+            // Loading validates the saved list against the plugins that still exist.
+            this.loadSitePluginsConfig(siteName);
+        }
     }
 
     getPluginConfig (siteName, pluginName) {
