@@ -1021,6 +1021,8 @@
         "urls": "URLs",
         "useAsTitlePageTitle": "Use as a title for the title page",
         "useAsTitlePageTitleInfo": "When this option is enabled, og:title and twitter:title metatags will contain the page title instead of the post title, tag name or author name.",
+        "useAuthorWebsiteInJsonLD": "Use author website in structured data",
+        "useAuthorWebsiteInJsonLDInfo": "When enabled and the author's Website field is filled, it will be used as the author URL in the JSON-LD structured data instead of the author page URL.",
         "useGlobalConfiguration": "Use global configuration",
         "useOnlyTags": "Use only tags",
         "useOnlyTitles": "Use only titles",

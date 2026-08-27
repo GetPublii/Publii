@@ -731,6 +731,20 @@
                             </small>
                         </field>
 
+                        <field
+                            id="use-author-website-in-json-ld"
+                            :label="$t('settings.useAuthorWebsiteInJsonLD')">
+                            <switcher
+                                slot="field"
+                                id="use-author-website-in-json-ld"
+                                v-model="advanced.useAuthorWebsiteInJsonLD" />
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.useAuthorWebsiteInJsonLDInfo') }}
+                            </small>
+                        </field>
+
                         <separator
                             v-if="!advanced.noIndexThisPage"
                             type="medium"

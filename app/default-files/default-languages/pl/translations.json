@@ -1019,6 +1019,8 @@
         "urls": "URLe",
         "useAsTitlePageTitle": "Użyj tytułu strony jako tytułu",
         "useAsTitlePageTitleInfo": "Kiedy ta opcja jest włączona, metatagi og:title i twitter:title będą zawierały tytuł strony zamiast tytułu wpisu, nazwy taga lub nazwy autora.",
+        "useAuthorWebsiteInJsonLD": "Użyj strony WWW autora w danych strukturalnych",
+        "useAuthorWebsiteInJsonLDInfo": "Jeśli ta opcja jest włączona i pole Strona WWW autora jest uzupełnione, zostanie ono użyte jako URL autora w danych strukturalnych JSON-LD zamiast adresu strony autora.",
         "useGlobalConfiguration": "Użyj konfiguracji globalnej",
         "useOnlyTags": "Używaj tylko tagów",
         "useOnlyTitles": "Używaj tylko tytułów",

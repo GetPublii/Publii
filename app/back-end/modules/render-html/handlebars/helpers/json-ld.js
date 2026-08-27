@@ -151,13 +151,26 @@ function jsonLDHelper(rendererInstance, Handlebars) {
                     authorPagesEnabled = false;
                 }
 
-                if (authorPagesEnabled) {
+                let authorWebsite = '';
+
+                if (
+                    context.data.config.site.useAuthorWebsiteInJsonLD &&
+                    itemData.author.website &&
+                    typeof itemData.author.website === 'string' &&
+                    itemData.author.website.trim() !== ''
+                ) {
+                    authorWebsite = itemData.author.website.trim();
+                }
+
+                if (authorWebsite) {
+                    jsonLDObject['author']['url'] = authorWebsite;
+                } else if (authorPagesEnabled) {
                     let authorUrl = context.data.website.baseUrl + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
 
                     if (context.data.config.site.urls.postsPrefix && context.data.config.site.urls.authorsPrefixAfterPostsPrefix) {
                         authorUrl = context.data.website.baseUrl + context.data.config.site.urls.postsPrefix + '/' + context.data.config.site.urls.authorsPrefix + '/' + itemData.author.username + '/';
                     }
-                    
+
                     jsonLDObject['author']['url'] = authorUrl;
                 }
             }

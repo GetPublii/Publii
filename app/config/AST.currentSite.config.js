@@ -66,6 +66,7 @@ const AstCurrentSiteConfig = {
         metaRobotsAuthors: 'noindex, follow',
         authorNoIndexPagination: false,
         authorNoPagination: false,
+        useAuthorWebsiteInJsonLD: false,
         displayEmptyAuthors: false,
         displayEmptyTags: false,
         errorMetaTitle: 'Error 404 - %sitename',
