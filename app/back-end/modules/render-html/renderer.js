@@ -1,7 +1,7 @@
 // Necessary packages
 const fs = require('fs-extra');
 const FileHelper = require('./../../helpers/file.js');
-const listAll = require('ls-all');
+const listAll = require('./../../helpers/files-list.js');
 const path = require('path');
 const Handlebars = require('handlebars');
 const CleanCSS = require('clean-css');

@@ -1,5 +1,5 @@
 const fs = require('fs-extra');
-const list = require('ls-all');
+const list = require('./../../../helpers/files-list.js');
 const path = require('path');
 const { deleteEmpty } = require('./deleteEmpty.js');
 const UtilsHelper = require('./../../../helpers/utils');
