@@ -91,7 +91,7 @@ class SFTP {
             this.downloadFilesList();
         }).catch(err => {
             console.log(`[${ new Date().toUTCString() }] ERR (1): ${err}`);
-            this.connection.end();
+            this.connection.end().catch(err => console.log('SFTP session end error'));
 
             process.send({
                 type: 'web-contents',
@@ -105,7 +105,7 @@ class SFTP {
 
         setTimeout(() => {
             if(waitForTimeout === true) {
-                this.connection.end();
+                this.connection.end().catch(err => console.log('SFTP session end error'));
 
                 process.send({
                     type: 'web-contents',
@@ -164,7 +164,7 @@ class SFTP {
         ).then(() => {
             this.connection.chmod(normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')), 0o644).then(() => {
                 console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
-                this.connection.end();
+                this.connection.end().catch(err => console.log('SFTP session end error'));
 
                 process.send({
                     type: 'web-contents',
@@ -187,7 +187,7 @@ class SFTP {
                     process.kill(process.pid, 'SIGTERM');
                 }, 1000);
             }).catch(err => {
-                this.connection.end();
+                this.connection.end().catch(err => console.log('SFTP session end error'));
                 console.log(`[${ new Date().toUTCString() }] ${err}`);
 
                 setTimeout(function () {
@@ -195,7 +195,7 @@ class SFTP {
                 }, 1000);
             });
         }).catch(err => {
-            this.connection.end();
+            this.connection.end().catch(err => console.log('SFTP session end error'));
             console.log(`[${ new Date().toUTCString() }] ${err}`);
 
             setTimeout(function () {
