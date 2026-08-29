@@ -39,7 +39,7 @@
     "codemirror": "5.65.13",
     "codemirror-revisedsearch": "1.0.12",
     "count-files": "2.6.2",
-    "dompurify": "3.4.11",
+    "dompurify": "3.4.14",
     "easymde": "2.18.0",
     "fast-memoize": "2.5.2",
     "fast-xml-parser": "5.8.0",
