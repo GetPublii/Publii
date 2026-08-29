@@ -16,8 +16,25 @@ class EditorBridge {
 
     updateItemID (newItemID) {
         this.itemID = newItemID;
+        this.updateAutosavePrefix();
         let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
         this.tinymceEditor.setContent(contentToUpdate);
+    }
+
+    getAutosavePrefix () {
+        return 'tinymce-autosave-' + this.itemID + '-';
+    }
+
+    updateAutosavePrefix () {
+        if (!this.tinymceEditor) {
+            return;
+        }
+
+        if (this.tinymceEditor.options && this.tinymceEditor.options.set) {
+            this.tinymceEditor.options.set('autosave_prefix', this.getAutosavePrefix());
+        } else {
+            this.tinymceEditor.settings.autosave_prefix = this.getAutosavePrefix();
+        }
     }
 
     init() {
@@ -28,7 +45,8 @@ class EditorBridge {
             content_css: this.tinyMCECSSFiles,
             style_formats: customFormats,
             statusbar: true,
-            browser_spellcheck: window.app.spellcheckerIsEnabled()
+            browser_spellcheck: window.app.spellcheckerIsEnabled(),
+            autosave_prefix: this.getAutosavePrefix()
         });
 
         if (window.app.wysiwygAdditionalValidElements() !== '') {
@@ -64,10 +82,113 @@ class EditorBridge {
         this.tinymceEditor.focus();
     }
 
+    setupImageFigureClassTranslation (editor) {
+        editor.on('SetContent', () => {
+            this.normalizeImageFigures();
+        });
+
+        editor.on('CloseWindow', () => {
+            setTimeout(() => this.normalizeImageFigures(), 80);
+        });
+
+        editor.on('PreInit', () => {
+            editor.serializer.addNodeFilter('figure', figures => {
+                figures.forEach(figure => {
+                    let images = figure.getAll('img');
+
+                    if (!images.length) {
+                        return;
+                    }
+
+                    let image = images[0];
+
+                    if (image.attr('data-mce-object') || image.attr('data-mce-placeholder')) {
+                        return;
+                    }
+
+                    let figureClasses = (figure.attr('class') || '').split(/\s+/).filter(cls => cls !== '');
+                    let imageClasses = (image.attr('class') || '').split(/\s+/).filter(cls => cls !== '');
+                    let figurePostClasses = figureClasses.filter(cls => cls.indexOf('post__image') === 0);
+                    let imagePostClasses = imageClasses.filter(cls => cls.indexOf('post__image') === 0);
+
+                    if (figureClasses.indexOf('image') === -1 && !figurePostClasses.length && !imagePostClasses.length) {
+                        return;
+                    }
+
+                    let postClasses = (imagePostClasses.length ? imagePostClasses : figurePostClasses).filter(cls => cls !== 'post__image');
+                    postClasses.unshift('post__image');
+
+                    let otherClasses = [];
+                    figureClasses.concat(imageClasses).forEach(cls => {
+                        if (cls !== 'image' && cls.indexOf('post__image') !== 0 && otherClasses.indexOf(cls) === -1) {
+                            otherClasses.push(cls);
+                        }
+                    });
+
+                    figure.attr('class', postClasses.concat(otherClasses).join(' '));
+                    image.attr('class', null);
+                });
+            });
+
+            editor.serializer.addNodeFilter('img', images => {
+                images.forEach(image => {
+                    let imageClasses = image.attr('class');
+
+                    if (typeof imageClasses !== 'string') {
+                        return;
+                    }
+
+                    let cleanedClasses = imageClasses.split(/\s+/).filter(cls => cls !== '' && cls !== 'image').join(' ');
+                    image.attr('class', cleanedClasses !== '' ? cleanedClasses : null);
+                });
+            });
+        });
+    }
+
+    normalizeImageFigures () {
+        if (!this.tinymceEditor || !this.tinymceEditor.getBody || !this.tinymceEditor.getBody()) {
+            return;
+        }
+
+        this.tinymceEditor.getBody().querySelectorAll('figure').forEach(figure => {
+            let img = figure.querySelector('img');
+
+            if (!img || img.hasAttribute('data-mce-object') || img.hasAttribute('data-mce-placeholder')) {
+                return;
+            }
+
+            let figureClasses = Array.from(figure.classList);
+            let imgClasses = Array.from(img.classList);
+            let figurePostClasses = figureClasses.filter(cls => cls.indexOf('post__image') === 0);
+            let imgPostClasses = imgClasses.filter(cls => cls.indexOf('post__image') === 0);
+
+            if (figureClasses.indexOf('image') === -1 && !figurePostClasses.length && !imgPostClasses.length) {
+                return;
+            }
+
+            let postClasses = (imgPostClasses.length ? imgPostClasses : figurePostClasses).filter(cls => cls !== 'post__image');
+            postClasses.unshift('post__image');
+
+            let figureOtherClasses = figureClasses.filter(cls => cls !== 'image' && cls.indexOf('post__image') !== 0);
+            let imgOtherClasses = imgClasses.filter(cls => cls.indexOf('post__image') !== 0 && cls !== 'image');
+
+            figure.className = ['image'].concat(postClasses, figureOtherClasses).join(' ');
+            img.className = postClasses.concat(imgOtherClasses).join(' ');
+            figure.setAttribute('contenteditable', 'false');
+
+            let figcaption = figure.querySelector('figcaption');
+
+            if (figcaption) {
+                figcaption.setAttribute('contenteditable', 'true');
+            }
+        });
+    }
+
     setupEditor(customFormats, editor) {
         let self = this;
         this.tinymceEditor = editor;
         this.addEditorButtons();
+        this.setupImageFigureClassTranslation(editor);
 
         editor.on('init', async () => {
             $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
@@ -133,307 +254,17 @@ class EditorBridge {
 
             // DblClick on IMG opens the dialog
             iframe.contentWindow.window.document.body.addEventListener("dblclick", function (e) {
-                if (e.target.tagName === 'IMG') {
+                if (e.target.tagName === 'IMG' && !e.target.hasAttribute('data-mce-object') && !e.target.hasAttribute('data-mce-placeholder')) {
                     const figure = e.target.closest('figure');
-                    if (figure) {
-                        // Ensure selection/handles work as expected
-                        if (figure.getAttribute('contenteditable') === 'false') {
-                            figure.removeAttribute('contenteditable');
-                            setTimeout(() => figure.setAttribute('contenteditable', 'false'), 100);
-                        }
-                        // Copy post__image* classes from FIGURE to IMG for better preselect
-                        const figcaption = figure.querySelector('figcaption');
-                        if (figcaption) {
-                            const figureClasses = Array.from(figure.classList).filter(cls => cls.startsWith('post__image'));
-                            figureClasses.forEach(cls => {
-                                if (!e.target.classList.contains(cls)) {
-                                    e.target.classList.add(cls);
-                                }
-                            });
-                        }
+
+                    if (figure && figure.getAttribute('contenteditable') === 'false') {
+                        figure.removeAttribute('contenteditable');
+                        setTimeout(() => figure.setAttribute('contenteditable', 'false'), 100);
                     }
+
                     tinymce.activeEditor.execCommand('mceImage');
                 }
             }, false);
-
-            // ---------------------- Image dialog handling (scoped) ----------------------
-
-            const LAYOUT_CLASSES = [
-                'post__image--full',
-                'post__image--wide',
-                'post__image--center',
-                'post__image--left',
-                'post__image--right'
-            ];
-
-            // State keyed by a stable token assigned on open
-            const preDialogCustomImgOnly = new Map(); // token -> string[] (custom classes originally on IMG)
-            const preDialogImgLayout = new Map(); // token -> { removed: string[], injected: string|null }
-            const customImageClasses = new Map(); // token -> string[] (persist custom classes for Save)
-
-            let activeToken = null;
-            let dialogWasConfirmed = false;
-
-            const makeToken = () => 'publii-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-
-            const findNodesByToken = (doc, token) => {
-                const figure = doc.querySelector(`figure[data-publii-token="${token}"]`);
-                const img = figure ? figure.querySelector('img') : null;
-                return { figure, img, figcaption: figure ? figure.querySelector('figcaption') : null };
-            };
-
-            const getLayoutFrom = (el) => {
-                if (!el) return null;
-                const cls = Array.from(el.classList);
-                return cls.find(c => LAYOUT_CLASSES.includes(c)) || null;
-            };
-
-            const stripLayouts = (el) => {
-                if (!el) return;
-                LAYOUT_CLASSES.forEach(c => el.classList.remove(c));
-            };
-
-            editor.on('BeforeExecCommand', function (e) {
-                if (e.command !== 'mceImage') return;
-
-                const selNode = editor.selection.getNode();
-                if (!selNode || selNode.tagName !== 'IMG') return;
-
-                const img = selNode;
-                const figure = img.closest('figure');
-
-                // Assign token ONLY to existing figure (never to IMG)
-                activeToken = makeToken();
-                if (figure) figure.setAttribute('data-publii-token', activeToken);
-                dialogWasConfirmed = false;
-
-                // Snapshot current IMG classes (keep original layout info always)
-                const imgClasses = Array.from(img.classList);
-                const imgLayoutNow = imgClasses.filter(c => LAYOUT_CLASSES.includes(c));
-                const imgCustomNow = imgClasses.filter(c => !c.startsWith('post__image'));
-
-                // Store custom IMG classes and temporarily remove them for cleaner dialog UI
-                if (imgCustomNow.length) {
-                    preDialogCustomImgOnly.set(activeToken, imgCustomNow.slice());
-                    customImageClasses.set(activeToken, imgCustomNow.slice());
-                    imgCustomNow.forEach(c => img.classList.remove(c));
-                } else {
-                    customImageClasses.set(activeToken, []);
-                }
-
-                // Merge custom classes from FIGURE (keep them for Save)
-                if (figure) {
-                    const figCustom = Array.from(figure.classList).filter(c => !c.startsWith('post__image'));
-                    if (figCustom.length) {
-                        const prev = customImageClasses.get(activeToken) || [];
-                        customImageClasses.set(activeToken, [...new Set([...prev, ...figCustom])]);
-                    }
-                }
-
-                // Preselect layout:
-                // - if FIGURE exists -> prefer FIGURE's layout and avoid duplicates on IMG
-                // - if FIGURE does NOT exist -> DO NOT strip existing IMG layout (keep preselect intact)
-                const layoutToUse = getLayoutFrom(figure) || (imgLayoutNow.length ? imgLayoutNow[0] : null);
-
-                let injected = null;
-                if (figure) {
-                    // Figure present: remove all IMG layouts to avoid dupes, inject figure's layout for dialog preselect
-                    imgLayoutNow.forEach(c => img.classList.remove(c));
-                    if (layoutToUse && !img.classList.contains(layoutToUse)) {
-                        img.classList.add(layoutToUse);
-                        injected = layoutToUse;
-                    }
-                } else {
-                    // No figure yet: leave IMG layouts as-is; no injection
-                    injected = null;
-                }
-
-                preDialogImgLayout.set(activeToken, {
-                    removed: imgLayoutNow,  // original layout classes on IMG (may be empty if none)
-                    injected                // what we temporarily added to IMG (or null)
-                });
-            });
-
-            // Mark that dialog confirmed a change (we'll apply it in CloseWindow to avoid races)
-            editor.on('ExecCommand', function (e) {
-                if (e.command === 'mceImage') {
-                    dialogWasConfirmed = true;
-                }
-            });
-
-            // Close dialog — single place to handle both Save and Cancel deterministically
-            editor.on('CloseWindow', function () {
-                setTimeout(() => {
-                    const doc = iframe.contentWindow.window.document;
-
-                    // Resolve nodes by token; if not found (node replaced), fallback to selection
-                    const resolveByTokenOrSelection = () => {
-                        let { figure, img } = findNodesByToken(doc, activeToken);
-
-                        if (!img) {
-                            let selNode = editor.selection.getNode();
-                            if (selNode && selNode.nodeType === 1) {
-                                if (selNode.tagName === 'IMG') {
-                                    img = selNode;
-                                    figure = img.closest('figure');
-                                } else if (selNode.closest) {
-                                    const f = selNode.closest('figure');
-                                    if (f) {
-                                        figure = f;
-                                        img = f.querySelector('img');
-                                    }
-                                }
-                            }
-                            if (!figure && img && img.closest) figure = img.closest('figure');
-                        }
-                        return { figure, img };
-                    };
-
-                    try {
-                        const { figure, img } = resolveByTokenOrSelection();
-                        const hasFigure = !!figure;
-                        const snap = preDialogImgLayout.get(activeToken) || { removed: [], injected: null };
-                        const origCustomImg = preDialogCustomImgOnly.get(activeToken) || [];
-                        const storedCustom = customImageClasses.get(activeToken) || [];
-
-                        // FIX: treat first insert as confirmed if figure exists and IMG holds layout/post__image
-                        if (!dialogWasConfirmed && hasFigure && img) {
-                        // if IMG has layout/post__image but FIGURE doesn't → user intended to save
-                        const imgHasLayout = LAYOUT_CLASSES.some(c => img.classList.contains(c));
-                        const figHasLayout = LAYOUT_CLASSES.some(c => figure.classList.contains(c));
-                        const imgHasPost   = img.classList.contains('post__image');
-                        const figHasPost   = figure.classList.contains('post__image');
-
-                        if ((imgHasLayout && !figHasLayout) || (imgHasPost && !figHasPost)) {
-                            dialogWasConfirmed = true;
-                        }
-                        }
-
-                        // ---- CANCEL ----
-                        if (!dialogWasConfirmed) {
-                            if (img) {
-                                // Remove injected layout and restore original IMG layout (only if we actually removed/injected)
-                                if (snap.injected) img.classList.remove(snap.injected);
-                                if (snap.removed && snap.removed.length) {
-                                    snap.removed.forEach(c => {
-                                        if (!img.classList.contains(c)) img.classList.add(c);
-                                    });
-                                }
-                                // Restore custom classes on IMG
-                                if (origCustomImg.length) {
-                                    origCustomImg.forEach(c => {
-                                        if (!img.classList.contains(c)) img.classList.add(c);
-                                    });
-                                }
-                            }
-                            // Do not touch FIGURE on Cancel
-                        } else {
-                            // ---- SAVE ----
-                            if (hasFigure && img) {
-                                // Classes after dialog
-                                const imgClsNow = Array.from(img.classList);
-                                const figClsNow = Array.from(figure.classList);
-
-                                // Layout chosen in dialog; null means "None"
-                                let newLayout = imgClsNow.find(c => LAYOUT_CLASSES.includes(c)) || null;
-
-                                // Detect explicit "None" when we had injected a layout into IMG
-                                // (BeforeExecCommand sets snap.injected for figure edits)
-                                const userSelectedNone = (newLayout === null) && (snap && snap.injected);
-
-                                // Fallback only if no explicit "None" and we previously removed layout from IMG
-                                if (!newLayout && !userSelectedNone && snap && snap.removed && snap.removed.length) {
-                                newLayout = snap.removed[0]; // restore previous layout (e.g., --wide)
-                                }
-
-                                // Strip all layout classes first
-                                stripLayouts(img);
-                                stripLayouts(figure);
-
-                                // Merge non-layout classes for FIGURE
-                                const nonLayoutImg = imgClsNow.filter(c => !LAYOUT_CLASSES.includes(c));
-                                const nonLayoutFigure = figClsNow.filter(c => !LAYOUT_CLASSES.includes(c));
-
-                                // Include stored custom classes captured before dialog
-                                const merged = new Set([
-                                    ...nonLayoutFigure,
-                                    ...nonLayoutImg,
-                                    ...storedCustom
-                                ]);
-
-                                if (!merged.has('post__image')) merged.add('post__image');
-
-                                figure.className = Array.from(merged).join(' ');
-
-                                // Apply exactly one layout (if any) on FIGURE
-                                if (newLayout) figure.classList.add(newLayout);
-
-                                // IMG must be clean in caption mode
-                                img.removeAttribute('class');
-                            } else if (img && !hasFigure) {
-                                // Plain IMG (no caption) on Save: restore custom classes we removed for dialog
-                                if (origCustomImg.length) {
-                                    origCustomImg.forEach(c => {
-                                        if (!img.classList.contains(c)) img.classList.add(c);
-                                    });
-                                }
-                                // Layout left as TinyMCE set it on IMG (we don't interfere here)
-                            }
-                        }
-
-                        // Cleanup tokens and state (remove from FIGURE if present; we never add token to IMG)
-                        if (figure && figure.removeAttribute) figure.removeAttribute('data-publii-token');
-
-                        preDialogImgLayout.delete(activeToken);
-                        preDialogCustomImgOnly.delete(activeToken);
-                        customImageClasses.delete(activeToken);
-                        activeToken = null;
-                        dialogWasConfirmed = false;
-
-                        // ---------- SAFE, LOCAL post-cleanup ----------
-                        try {
-                            // anchor: edited figure OR <p><img> OR the <img> itself
-                            const anchorEl =
-                                (hasFigure && figure) ||
-                                (img && img.closest && img.closest('p')) ||
-                                img;
-
-                            const nextEl = anchorEl && anchorEl.nextElementSibling;
-
-                            if (nextEl && nextEl.tagName === 'P') {
-                                // Keep paragraph if it contains any media
-                                const hasMedia = nextEl.querySelector('img,figure,video,iframe,svg,picture,source,canvas,audio');
-
-                                // Visible text check (strip non-breaking spaces)
-                                const text = nextEl.textContent.replace(/\u00a0/g, '').trim();
-
-                                // Remove only TinyMCE fillers from HTML and re-check emptiness
-                                const cleanedHTML = nextEl.innerHTML
-                                    .replace(/&nbsp;/gi, '')
-                                    .replace(/<br[^>]*data-mce-bogus="1"[^>]*>/gi, '')
-                                    .trim();
-
-                                // Remove paragraph ONLY if it has no media AND no visible text AND no real HTML
-                                if (!hasMedia && text === '' && cleanedHTML === '') {
-                                    nextEl.remove();
-                                }
-                            }
-                        } catch (_) { }
-                        // ---------------------------------------------
-
-                    } catch (error) {
-                        console.warn('Error during image dialog close handling:', error);
-                        // Best-effort cleanup
-                        preDialogImgLayout.delete(activeToken);
-                        preDialogCustomImgOnly.delete(activeToken);
-                        customImageClasses.delete(activeToken);
-                        activeToken = null;
-                        dialogWasConfirmed = false;
-                    }
-                }, 80); // small delay to ensure dialog DOM changes are committed
-            });
-
-            // ---------------------- END image dialog handling ----------------------
 
             // Support for dark mode
             let htmlElement = iframe.contentWindow.window.document.querySelector('html');
@@ -667,6 +498,9 @@ class EditorBridge {
                 if (e.format === 'html') {
                     // Remove contenteditable from output
                     e.content = e.content.replace(/\s*contenteditable="(true|false)"/gi, '');
+
+                    // Remove empty class attributes left by image plugin
+                    e.content = e.content.replace(/\s*class=""/gi, '');
 
                     // Remove empty paragraphs after figures
                     e.content = e.content.replace(/<\/figure>\s*<p>\s*(&nbsp;|\u00a0)?\s*<\/p>/gi, '</figure>');

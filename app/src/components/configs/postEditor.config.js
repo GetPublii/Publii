@@ -32,6 +32,55 @@ export default {
         {title: 'Right-aligned image', value: 'post__image post__image--right'},
         {title: 'Centered image', value: 'post__image post__image--center'}
     ],
+    audio_template_callback: function (data) {
+        return '<figure class="post__audio"><audio controls="controls" src="' + data.source + '">' +
+            (data.altsource ? '\n<source src="' + data.altsource + '"' + (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') + ' />\n' : '') +
+            '</audio></figure>';
+    },
+    video_template_callback: function (data) {
+        return '<figure class="post__video"><video width="' + data.width + '" height="' + data.height + '"' +
+            (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
+            '<source src="' + data.source + '"' + (data.sourcemime ? ' type="' + data.sourcemime + '"' : '') + ' />\n' +
+            (data.altsource ? '<source src="' + data.altsource + '"' + (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') + ' />\n' : '') +
+            '</video></figure>';
+    },
+    iframe_template_callback: function (data) {
+        return '<figure class="post__video"><iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' +
+            (data.allowfullscreen ? ' allowFullscreen="1"' : '') + '></iframe></figure>';
+    },
+    media_url_resolver: function (data, resolve) {
+        let patterns = [
+            { regex: /youtu\.be\/([\w\-_\?&=.]+)/i, w: 560, h: 314, url: 'www.youtube.com/embed/$1', allowFullscreen: true },
+            { regex: /youtube\.com(.+)v=([^&]+)(&([a-z0-9&=\-_]+))?/i, w: 560, h: 314, url: 'www.youtube.com/embed/$2?$4', allowFullscreen: true },
+            { regex: /youtube.com\/embed\/([a-z0-9\?&=\-_]+)/i, w: 560, h: 314, url: 'www.youtube.com/embed/$1', allowFullscreen: true },
+            { regex: /vimeo\.com\/([0-9]+)/, w: 425, h: 350, url: 'player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc', allowFullscreen: true },
+            { regex: /vimeo\.com\/(.*)\/([0-9]+)/, w: 425, h: 350, url: 'player.vimeo.com/video/$2?title=0&amp;byline=0', allowFullscreen: true },
+            { regex: /dailymotion\.com\/video\/([^_]+)/, w: 480, h: 270, url: 'www.dailymotion.com/embed/video/$1', allowFullscreen: true },
+            { regex: /dai\.ly\/([^_]+)/, w: 480, h: 270, url: 'www.dailymotion.com/embed/video/$1', allowFullscreen: true }
+        ];
+        let pattern = patterns.find(p => p.regex.test(data.url));
+
+        if (!pattern) {
+            resolve({ html: '' });
+            return;
+        }
+
+        let match = pattern.regex.exec(data.url);
+        let protocolMatch = data.url.match(/^(https?:\/\/|www\.)(.+)$/i);
+        let protocol = protocolMatch && protocolMatch[1] && protocolMatch[1].toLowerCase() !== 'www.' ? protocolMatch[1] : 'https://';
+        let embedUrl = protocol + pattern.url;
+
+        for (let i = 0; i < match.length; i++) {
+            embedUrl = embedUrl.replace('$' + i, () => match[i] || '');
+        }
+
+        embedUrl = embedUrl.replace(/\?$/, '').replace(/"/g, '&quot;');
+
+        resolve({
+            html: '<figure class="post__video"><iframe src="' + embedUrl + '" width="' + pattern.w + '" height="' + pattern.h + '"' +
+                (pattern.allowFullscreen ? ' allowFullscreen="1"' : '') + '></iframe></figure>'
+        });
+    },
     codesample_languages: [
         { text: 'Apache Configuration', value: 'apacheconf' },
         { text: 'ASP.NET', value: 'aspnet' },
