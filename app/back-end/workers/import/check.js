@@ -2,16 +2,17 @@ const Import = require('./../../modules/import/import.js');
 
 process.on('message', function(msg){
     if(msg.type === 'dependencies') {
-        let appInstance = null;
-        let siteName = msg.siteName;
-        let filePath = msg.filePath;
-        let importer = new Import(appInstance, siteName, filePath);
-        let results = importer.checkFile();
-
-        process.send(results);
-
-        setTimeout(function () {
-            process.exit();
-        }, 1000);
+        try {
+            let importer = new Import(null, msg.siteName, msg.filePath);
+            process.send(importer.checkFile());
+        } catch (e) {
+            console.error('[WP IMPORT] WXR check failed:', e);
+            process.send({
+                status: 'error',
+                message: e && e.message ? e.message : 'An error occurred during parsing selected WXR file'
+            });
+        } finally {
+            setTimeout(() => process.exit(), 100);
+        }
     }
 });

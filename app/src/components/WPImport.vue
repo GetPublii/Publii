@@ -8,153 +8,301 @@
                     type="clean back">
                     {{ $t('ui.backToTools') }}
                 </p-button>
+
+                <p-button
+                    v-if="lastImportReport"
+                    :onClick="openLastImportReport"
+                    slot="buttons"
+                    type="secondary icon"
+                    icon="view-report">
+                    {{ $t('tools.wpImport.reportOpenLast') }}
+                </p-button>
+
+                <p-button
+                    :onClick="selectWXRFile"
+                    :disabled="uploadDisabled"
+                    slot="buttons"
+                    type="icon"
+                    icon="upload-file">
+                    {{ $t('tools.wpImport.selectWXRFileButton') }}
+                </p-button>
             </p-header>
 
-            <fields-group>
+            <fields-group
+                @drop.native.stop.prevent="uploadWXRFile"
+                @dragleave.native.stop.prevent="hideDropOverlay"
+                @dragenter.native.stop.prevent="showDropOverlay"
+                @dragover.native.stop.prevent="showDropOverlay"
+                @drag.native.stop.prevent="showDropOverlay"
+                @dragstart.native.stop.prevent
+                @dragend.native.stop.prevent
+                :class="{
+                    'wp-import-drop-zone': true,
+                    'wxr-file-is-over': wxrFileIsOver
+                }">
                 <field
                     id="wxr-file"
-                    :label="$t('tools.wpImport.selectWXRFileLabel')"
-                    :labelFullWidth="true">
+                    :label="$t('tools.wpImport.selectWXRFileLabel')">
                     <file-select
                         id="wxr-file"
                         :placeholder="$t('tools.wpImport.selectWXRFilePlaceholder')"
-                        value=""
+                        :value="filePath"
                         ref="wxr-file"
                         :disabled="uploadDisabled"
                         :onChange="selectedFileChanged"
                         slot="field" />
+                    <small
+                        v-if="!stats"
+                        slot="note"
+                        class="note">
+                        {{ $t('tools.wpImport.importNote') }}
+                    </small>
+                    <div
+                        v-if="checkingFile"
+                        slot="note"
+                        class="note"
+                        role="status"
+                        aria-live="polite">
+                        {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
+                    </div>
+                    <div
+                        v-if="errorMessage"
+                        slot="note"
+                        class="note is-invalid"
+                        role="alert">
+                        {{ errorMessage }}
+                    </div>
                 </field>
 
-                <small
-                    v-if="!stats"
-                    class="note">
-                    {{ $t('tools.wpImport.importNote') }}
-                </small>
-
-                <div
-                    v-if="checkingFile"
-                    class="import-check-results">
-                    {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
-                </div>
-
-                <div
-                    v-if="errorMessage"
-                    class="import-check-results is-error">
-                    {{ errorMessage }}
-                </div>
-
-                <wp-import-stats
+                <field
                     v-if="stats"
-                    :stats="stats" />
+                    class="import-analysis"
+                    :label="$t('tools.wpImport.duringWXRAnalyzeWeHaveFound') + ':'">
+                    <wp-import-stats
+                        slot="field"
+                        :stats="stats" />
+                </field>
+
+                <field v-if="configVisible">
+                    <separator
+                        slot="field"
+                        type="thin"
+                        :label="$t('tools.wpImport.contentToImport')" />
+                </field>
 
                 <div
                     v-if="configVisible"
                     :class="importConfigCssClasses">
-                    <div class="import-config-section">
-                        <strong>{{ $t('tools.wpImport.importSelectedTypesOfPosts') }}</strong>
-
-                        <field
-                            id="import-cpt-post"
-                            :label="$t('post.posts')"
-                            :labelSeparated="false"
-                            :noLabelSpace="true"
-                            spacing="small">
-                            <switcher
-                                slot="field"
+                    <field :label="$t('tools.wpImport.importSelectedTypesOfPosts')">
+                        <div slot="field">
+                            <field
                                 id="import-cpt-post"
-                                ref="import-cpt-post"
-                                :checked="true" />
-                        </field>
+                                :label="$t('post.posts')"
+                                :labelSeparated="false"
+                                :noLabelSpace="true"
+                                spacing="small">
+                                <switcher
+                                    slot="field"
+                                    id="import-cpt-post"
+                                    ref="import-cpt-post"
+                                    :checked="true" />
+                            </field>
 
-                        <field
-                            id="import-cpt-page"
-                            :label="$t('tools.wpImport.pages')"
-                            :labelSeparated="false"
-                            :noLabelSpace="true"
-                            spacing="small">
-                            <switcher
-                                slot="field"
+                            <field
                                 id="import-cpt-page"
-                                ref="import-cpt-page"
-                                :checked="true" />
-                        </field>
+                                :label="$t('tools.wpImport.pages')"
+                                :labelSeparated="false"
+                                :noLabelSpace="true"
+                                spacing="small">
+                                <switcher
+                                    slot="field"
+                                    id="import-cpt-page"
+                                    ref="import-cpt-page"
+                                    :checked="true" />
+                            </field>
 
-                        <field
-                            v-for="(cpt, index) in customPostTypes"
-                            :id="'import-cpt-' + cpt"
-                            :label="cpt"
-                            :labelSeparated="false"
-                            :noLabelSpace="true"
-                            :key="'custom-post-type-item-' + index"
-                            spacing="small">
-                            <switcher
-                                slot="field"
+                            <field
+                                v-for="(cpt, index) in customPostTypes"
                                 :id="'import-cpt-' + cpt"
-                                :ref="'import-cpt-' + cpt"
-                                :checked="true" />
-                        </field>
-                    </div>
+                                :label="cpt"
+                                :labelSeparated="false"
+                                :noLabelSpace="true"
+                                :key="'custom-post-type-item-' + index"
+                                spacing="small">
+                                <switcher
+                                    slot="field"
+                                    :id="'import-cpt-' + cpt"
+                                    :ref="'import-cpt-' + cpt"
+                                    :checked="true" />
+                            </field>
+                        </div>
+                    </field>
 
-                    <div class="import-config-section">
-                        <strong>{{ $t('tools.wpImport.usedTaxonomyForPosts') }}</strong>
+                    <field :label="$t('tools.wpImport.additionalWordPressData')">
+                        <div slot="field">
+                            <field
+                                id="import-menus"
+                                :label="$t('tools.wpImport.importMenus')"
+                                :labelSeparated="false"
+                                :noLabelSpace="true"
+                                spacing="small">
+                                <switcher
+                                    slot="field"
+                                    id="import-menus"
+                                    ref="import-menus"
+                                    :checked="true" />
+                            </field>
+                        </div>
+                        <small
+                            slot="note"
+                            class="note">
+                            {{ $t('tools.wpImport.importMenusInfo') }}
+                        </small>
+                    </field>
 
+                    <field>
+                        <separator
+                            slot="field"
+                            type="thin"
+                            :label="$t('tools.wpImport.importRules')" />
+                    </field>
+
+                    <field :label="$t('tools.wpImport.slugStrategy')">
                         <radio-buttons
+                            slot="field"
+                            name="slugs"
+                            :items="radioSlugItems"
+                            selected="wordpress"
+                            ref="slugs" />
+                        <small
+                            slot="note"
+                            class="note">
+                            {{ $t('tools.wpImport.slugStrategyInfo') }}
+                        </small>
+                    </field>
+
+                    <field :label="$t('tools.wpImport.usedTaxonomyForPosts')">
+                        <radio-buttons
+                            slot="field"
                             name="taxonomy"
                             :items="radioTaxonomyItems"
-                            selected="tags"
+                            selected="both"
                             ref="taxonomy" />
-                    </div>
+                        <small
+                            slot="note"
+                            class="note">
+                            {{ $t('tools.wpImport.taxonomyStrategyInfo') }}
+                        </small>
+                    </field>
 
-                    <div class="import-config-section">
-                        <strong>{{ $t('tools.wpImport.postAuthors') }}</strong>
-
+                    <field :label="$t('tools.wpImport.postAuthors')">
                         <radio-buttons
+                            slot="field"
                             name="authors"
                             :items="radioAuthorItems"
                             selected="publii-author"
                             ref="authors" />
-                    </div>
+                        <small
+                            slot="note"
+                            class="note">
+                            {{ $t('tools.wpImport.authorStrategyInfo') }}
+                        </small>
+                    </field>
 
-                    <div class="import-config-section">
-                        <strong>{{ $t('tools.wpImport.contentFormatting') }}</strong>
+                    <field>
+                        <separator
+                            slot="field"
+                            type="thin"
+                            :label="$t('tools.wpImport.metadataAndFormatting')" />
+                    </field>
 
-                        <field
-                            id="use-autop"
-                            :label="$t('tools.wpImport.addTagsToContentAutomatically')"
-                            :labelSeparated="false"
-                            :noLabelSpace="true"
-                            spacing="small">
-                            <switcher
-                                slot="field"
+                    <field :label="$t('tools.wpImport.seoMetadata')">
+                        <radio-buttons
+                            slot="field"
+                            name="seo-provider"
+                            :items="radioSeoItems"
+                            :selected="seoDefaultProvider"
+                            v-model="seoProviderSelection"
+                            customCssClasses="wp-import-seo-options"
+                            ref="seo-provider" />
+                        <small
+                            slot="note"
+                            class="note">
+                            {{ seoDetectionNote }}
+                            {{ $t('tools.wpImport.seoImportInfo') }}
+                        </small>
+                    </field>
+
+                    <field :label="$t('tools.wpImport.contentFormatting')">
+                        <div slot="field">
+                            <field
                                 id="use-autop"
-                                ref="use-autop"
-                                :checked="false" />
-                        </field>
-                    </div>
+                                :label="$t('tools.wpImport.addTagsToContentAutomatically')"
+                                :labelSeparated="false"
+                                :noLabelSpace="true"
+                                spacing="small">
+                                <switcher
+                                    slot="field"
+                                    id="use-autop"
+                                    ref="use-autop"
+                                    :checked="false" />
+                            </field>
+                        </div>
+                    </field>
+
+                    <field>
+                        <separator
+                            slot="field"
+                            type="thin small" />
+                    </field>
+
+                    <field>
+                        <div
+                            slot="field"
+                            class="result-wrapper">
+                            <p-button
+                                :onClick="importFile"
+                                :disabled="importInProgress"
+                                :type="importInProgress ? 'secondary disabled preloader' : 'secondary icon'"
+                                icon="download">
+                                {{ $t('tools.wpImport.importData') }}
+                            </p-button>
+
+                            <span
+                                v-if="progressInfo"
+                                class="result"
+                                role="status"
+                                aria-live="polite">
+                                {{ progressInfo }}
+                            </span>
+                        </div>
+                    </field>
                 </div>
 
-                <p-button
-                    v-if="configVisible"
-                    :onClick="importFile"
-                    :disabled="importInProgress"
-                    type="primary">
-                    <template v-if="!importInProgress">{{ $t('tools.wpImport.importData') }}</template>
-                    <template v-if="importInProgress">{{ $t('tools.wpImport.importingData') }}&hellip;</template>
-                </p-button>
-
-                <span
-                    v-if="configVisible && progressInfo"
-                    id="import-progress">
-                    {{ progressInfo }}
-                </span>
+                <overlay
+                    v-if="wxrFileIsOver"
+                    :hasBorder="true"
+                    :isBlue="true"
+                    aria-hidden="true">
+                    <div>{{ $t('file.dropYourFileHere') }}</div>
+                </overlay>
             </fields-group>
+
         </div>
+
+        <wp-import-report
+            v-if="importReport"
+            :summary="importReport"
+            @close="closeImportReport" />
     </section>
 </template>
 
 <script>
 import BackToTools from './mixins/BackToTools.js';
 import WPImportStats from './WPImportStats';
+import WPImportReport from './WPImportReport';
+
+let lastImportReportCache = null;
 
 export default {
     name: 'wp-import',
@@ -162,9 +310,17 @@ export default {
         BackToTools
     ],
     components: {
-        'wp-import-stats': WPImportStats
+        'wp-import-stats': WPImportStats,
+        'wp-import-report': WPImportReport
     },
     data: function() {
+        let currentSite = this.$store.state.currentSite || {};
+        let currentSiteConfig = currentSite.config || {};
+        let cachedReport = lastImportReportCache &&
+            lastImportReportCache.siteName === currentSiteConfig.name &&
+            (!currentSiteConfig.uuid || lastImportReportCache.siteUUID === currentSiteConfig.uuid) ?
+            lastImportReportCache.summary : null;
+
         return {
             filePath: '',
             uploadDisabled: false,
@@ -175,6 +331,11 @@ export default {
             stats: false,
             progressInfo: '',
             importInProgress: false,
+            wxrFileIsOver: false,
+            importReport: null,
+            lastImportReport: cachedReport,
+            pendingImportSummary: null,
+            seoProviderSelection: 'none',
             radioAuthorItems: [
                 {
                     value: "publii-author",
@@ -188,14 +349,31 @@ export default {
             radioTaxonomyItems: [
                 {
                     value: "tags",
-                    label: this.$t('ui.tags')
+                    label: this.$t('tools.wpImport.wordpressTags')
                 },
                 {
                     value: "categories",
-                    label: this.$t('tools.wpImport.categories')
+                    label: this.$t('tools.wpImport.wordpressCategories')
+                },
+                {
+                    value: "both",
+                    label: this.$t('tools.wpImport.tagsAndCategories')
+                }
+            ],
+            radioSlugItems: [
+                {
+                    value: "wordpress",
+                    label: this.$t('tools.wpImport.preserveWordPressSlugs')
+                },
+                {
+                    value: "title",
+                    label: this.$t('tools.wpImport.generateSlugsFromTitles')
                 }
             ]
         };
+    },
+    mounted: function() {
+        this.loadStoredImportReport();
     },
     computed: {
         importConfigCssClasses: function() {
@@ -203,9 +381,122 @@ export default {
                 'import-config': true,
                 'is-inactive': this.importInProgress
             };
+        },
+        seoDefaultProvider: function() {
+            let detected = this.stats && this.stats.seo && Array.isArray(this.stats.seo.detected) ?
+                this.stats.seo.detected : [];
+
+            return detected.length === 1 ? 'auto' : 'none';
+        },
+        radioSeoItems: function() {
+            let detected = this.stats && this.stats.seo && Array.isArray(this.stats.seo.detected) ?
+                this.stats.seo.detected : [];
+
+            return [
+                {
+                    value: 'auto',
+                    label: this.$t('tools.wpImport.seoAutoDetect'),
+                    disabled: detected.length !== 1
+                },
+                {
+                    value: 'yoast',
+                    label: 'Yoast SEO',
+                    disabled: !detected.includes('yoast')
+                },
+                {
+                    value: 'rank-math',
+                    label: 'Rank Math',
+                    disabled: !detected.includes('rank-math')
+                },
+                {
+                    value: 'aioseo',
+                    label: 'All in One SEO (AIOSEO — ' + this.$t('tools.wpImport.seoPartial') + ')',
+                    disabled: !detected.includes('aioseo')
+                },
+                {
+                    value: 'none',
+                    label: this.$t('tools.wpImport.seoDoNotImport')
+                }
+            ];
+        },
+        seoDetectionNote: function() {
+            let detected = this.stats && this.stats.seo && Array.isArray(this.stats.seo.detected) ?
+                this.stats.seo.detected : [];
+            let labels = detected.map(this.getSeoProviderLabel);
+
+            if (!labels.length) {
+                return this.$t('tools.wpImport.seoDetectedNone') + ' ';
+            }
+
+            if (labels.length === 1) {
+                return this.$t('tools.wpImport.seoDetectedOne', { provider: labels[0] }) + ' ';
+            }
+
+            return this.$t('tools.wpImport.seoDetectedMultiple', { providers: labels.join(', ') }) + ' ';
         }
     },
     methods: {
+        getSeoProviderLabel: function(provider) {
+            return {
+                yoast: 'Yoast SEO',
+                'rank-math': 'Rank Math',
+                aioseo: 'All in One SEO (AIOSEO)'
+            }[provider] || provider;
+        },
+        loadStoredImportReport: async function() {
+            let currentSiteConfig = this.$store.state.currentSite.config || {};
+            let payload;
+
+            try {
+                payload = await mainProcessAPI.invoke('app-wxr-report-load', currentSiteConfig.name);
+            } catch (e) {
+                return false;
+            }
+
+            if (!payload ||
+                !payload.summary ||
+                !payload.summary.report ||
+                this.$store.state.currentSite.config.name !== payload.siteName) {
+                if (lastImportReportCache && lastImportReportCache.siteName === currentSiteConfig.name) {
+                    lastImportReportCache = null;
+                }
+
+                this.lastImportReport = null;
+                return false;
+            }
+
+            lastImportReportCache = payload;
+            this.lastImportReport = payload.summary;
+            return true;
+        },
+        selectWXRFile: function() {
+            if (this.uploadDisabled) {
+                return;
+            }
+
+            this.$refs['wxr-file'].selectFile();
+        },
+        showDropOverlay: function() {
+            if (!this.uploadDisabled) {
+                this.wxrFileIsOver = true;
+            }
+        },
+        hideDropOverlay: function(event) {
+            if (event.target.classList.contains('wp-import-drop-zone')) {
+                this.wxrFileIsOver = false;
+            }
+        },
+        uploadWXRFile: async function(event) {
+            this.wxrFileIsOver = false;
+
+            if (this.uploadDisabled || !event.dataTransfer.files.length) {
+                return;
+            }
+
+            let filePath = await mainProcessAPI.getPathForFile(event.dataTransfer.files[0]);
+            filePath = await mainProcessAPI.normalizePath(filePath);
+            this.selectedFileChanged(filePath);
+        },
         selectedFileChanged: function(filePath) {
             if (filePath === '') {
                 this.resetState();
@@ -216,6 +507,13 @@ export default {
             this.fileSelected();
         },
         fileSelected: function() {
+            this.errorMessage = '';
+            this.customPostTypes = [];
+            this.stats = false;
+            mainProcessAPI.receiveOnce('app-wxr-checked', (data) => {
+                this.checkFile(data);
+            });
+
             mainProcessAPI.send('app-wxr-check', {
                 siteName: this.$store.state.currentSite.config.name,
                 filePath: this.filePath
@@ -223,19 +521,18 @@ export default {
 
             this.uploadDisabled = true;
             this.checkingFile = true;
-            mainProcessAPI.receiveOnce('app-wxr-checked', (data) => {
-                this.checkFile(data);
-            });
         },
         checkFile: function(data) {
             this.uploadDisabled = false;
             this.checkingFile = false;
 
-            if(data.status === 'error') {
-                if (data.message.translation) {
-                    this.errorMessage = this.$t(data.message.translation, data.message.translationVars);
+            if(!data || data.status === 'error') {
+                let message = data && data.message ? data.message : 'Unable to check the selected WXR file.';
+
+                if (message && message.translation) {
+                    this.errorMessage = this.$t(message.translation, message.translationVars);
                 } else {
-                    this.errorMessage = data.message;
+                    this.errorMessage = message;
                 }
             }
 
@@ -251,52 +548,68 @@ export default {
                 }
 
                 this.stats = data.message;
+                this.seoProviderSelection = this.seoDefaultProvider;
             }
         },
         importFile: function() {
             this.progressInfo = '';
+            this.errorMessage = '';
             this.importInProgress = true;
             this.uploadDisabled = true;
             let selectedPostTypes = [];
             let allRefs = Object.keys(this.$refs);
 
             for(let i = 0; i < allRefs.length; i++) {
-                if(allRefs[i].indexOf('import-cpt-') === 0 && this.$refs[allRefs[i]].isChecked) {
+                let switcher = this.$refs[allRefs[i]];
+                switcher = Array.isArray(switcher) ? switcher[0] : switcher;
+
+                if(allRefs[i].indexOf('import-cpt-') === 0 && switcher && switcher.isChecked) {
                     selectedPostTypes.push(allRefs[i].replace('import-cpt-', ''));
                 }
             }
-
-            mainProcessAPI.send('app-wxr-import', {
-                siteName: this.$store.state.currentSite.config.name,
-                filePath: this.filePath,
-                importAuthors: this.$refs['authors'].content,
-                usedTaxonomy: this.$refs['taxonomy'].content,
-                autop: this.$refs['use-autop'].isChecked,
-                postTypes: selectedPostTypes
-            });
 
             this.bindedFileImported = this.fileImported.bind(this);
             mainProcessAPI.receiveOnce('app-wxr-imported', this.bindedFileImported);
 
             this.bindedFileImportProgress = this.fileImportProgress.bind(this);
             mainProcessAPI.receive('app-wxr-import-progress', this.bindedFileImportProgress);
+
+            mainProcessAPI.send('app-wxr-import', {
+                siteName: this.$store.state.currentSite.config.name,
+                filePath: this.filePath,
+                importAuthors: this.$refs['authors'].content,
+                usedTaxonomy: this.$refs['taxonomy'].content,
+                slugStrategy: this.$refs['slugs'].content,
+                seoProvider: this.seoProviderSelection,
+                autop: this.$refs['use-autop'].isChecked,
+                importMenus: this.$refs['import-menus'].isChecked,
+                postTypes: selectedPostTypes
+            });
         },
         fileImportProgress(data) {
-            this.progressInfo = this.$t(data.message.translation, data.message.translationVars);
+            if (data && data.message && data.message.translation) {
+                let translationVars = data.message.translationVars || {};
+
+                this.progressInfo = this.$t(data.message.translation, translationVars);
+            }
         },
         fileImported: function(data) {
-            let siteName = this.$store.state.currentSite.config.name;
-            this.importInProgress = false;
+            if(this.bindedFileImportProgress) {
+                mainProcessAPI.stopReceive('app-wxr-import-progress', this.bindedFileImportProgress);
+                this.bindedFileImportProgress = null;
+            }
 
-            this.$bus.$emit('confirm-display', {
-                message: this.$t('tools.wpImport.wpImportGoToRegenerateMsg'),
-                okLabel: this.$t('tools.goToTools'),
-                cancelLabel: this.$t('ui.ok'),
-                okClick: () => {
-                    let currentSite = this.$route.params.name;
-                    this.$router.push(this.$route.path.replace('wp-importer', 'regenerate-thumbnails'));
-                }
-            });
+            let siteName = this.$store.state.currentSite.config.name;
+            let siteUUID = this.$store.state.currentSite.config.uuid || '';
+            this.importInProgress = false;
+            this.uploadDisabled = false;
+
+            if (!data || data.status !== 'success') {
+                this.errorMessage = data && data.message ? data.message : 'WordPress import failed.';
+                return;
+            }
+
+            let importSummary = data.summary || {};
 
             this.resetState();
 
@@ -307,6 +620,62 @@ export default {
             mainProcessAPI.receiveOnce('app-site-reloaded', (result) => {
                 this.$store.commit('setSiteConfig', result);
                 this.$store.commit('switchSite', result.data);
+
+                if (importSummary.report) {
+                    this.pendingImportSummary = importSummary;
+                    this.lastImportReport = importSummary;
+                    lastImportReportCache = {
+                        siteName,
+                        siteUUID,
+                        summary: importSummary
+                    };
+                    this.importReport = importSummary;
+                    return;
+                }
+
+                this.showImportCompletion(importSummary);
+            });
+        },
+        closeImportReport() {
+            let summary = this.pendingImportSummary;
+            this.importReport = null;
+            this.pendingImportSummary = null;
+
+            if (summary) {
+                this.showImportCompletion(summary);
+            }
+        },
+        async openLastImportReport() {
+            let reportAvailable = await this.loadStoredImportReport();
+
+            if (reportAvailable && this.lastImportReport) {
+                this.importReport = this.lastImportReport;
+            }
+        },
+        showImportCompletion(summary) {
+            let siteConfig = this.$store.state.currentSite.config || {};
+            let responsiveImagesEnabled = siteConfig.advanced && siteConfig.advanced.responsiveImages;
+
+            if (!Number(summary.images) || !responsiveImagesEnabled) {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('tools.wpImport.wpImportSuccessMsg')
+                });
+                return;
+            }
+
+            mainProcessAPI.send('app-site-regenerate-thumbnails-required', {
+                name: this.$store.state.currentSite.config.name
+            });
+
+            mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-required-status', (data) => {
+                if (data && data.message) {
+                    this.$bus.$emit('regenerate-thumbnails-display', {});
+                    return;
+                }
+
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('tools.wpImport.wpImportSuccessMsg')
+                });
             });
         },
         resetState() {
@@ -315,10 +684,14 @@ export default {
             this.uploadDisabled = false;
             this.checkingFile = false;
             this.customPostTypes = [];
+            this.seoProviderSelection = 'none';
             this.errorMessage = '';
             this.stats = false;
             this.progressInfo = '';
             this.importInProgress = false;
+            this.wxrFileIsOver = false;
+            this.importReport = null;
+            this.pendingImportSummary = null;
         }
     },
     beforeDestroy: function() {
@@ -340,73 +713,45 @@ export default {
     max-width: var(--wrapper-width);
     user-select: none;
 
-    p {
-        margin-top: 0;
-    }
-
-    .note {
-        clear: both;
-        color: var(--text-light-color);
-        display: block;
-        font-size: 1.35rem;
-        font-style: italic;
-        line-height: 1.4;
-        padding: .5rem 0 1rem 0;
-        user-select: text;
-    }
-
-    #import-data {
-        margin-top: 2rem;
-        width: auto;
-    }
-
-    #import-progress {
-        color: var(--gray-4);
-        display: inline-block;
-        font-style: italic;
-        margin: 2rem;
-    }
-
-    .import-check-results {
-        clear: both;
-        padding: 1rem 0 0 0;
-
-        &.is-error {
-            color: var(--warning);
+    .wp-import-drop-zone.wxr-file-is-over {
+        & > * {
+            pointer-events: none;
         }
     }
 
     .import-config {
-        margin: 0 0 2rem 0;
-
-        & > p {
-            margin: 0;
-        }
-
-        label {
-            display: inline-block;
-            font-weight: 400;
-            margin: 1rem 2rem 0 0;
-        }
-
         &.is-inactive {
             opacity: .5;
             pointer-events: none;
         }
     }
 
-    .import-config-section {
-        strong {
+    .import-analysis {
+        margin-top: 3rem;
+    }
+
+    .result {
+        padding-left: 2rem;
+    }
+
+    .result-wrapper {
+        align-items: center;
+        display: flex;
+    }
+
+    ::v-deep .wp-import-seo-options {
+        display: flex;
+        flex-direction: column;
+
+        & > label.radio {
             display: block;
-            padding-bottom: 1rem;
+            margin: 0 0 1rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
     }
-}
 
-.wp-import .import-config-section {
-    border-bottom: 2px solid var(--gray-1);
-    font-weight: var(--font-weight-semibold);
-    margin: 0;
-    padding: 3rem 0;
 }
 </style>

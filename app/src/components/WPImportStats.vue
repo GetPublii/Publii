@@ -2,7 +2,6 @@
     <div
         v-if="stats"
         class="import-stats">
-        <strong>{{ $t('tools.wpImport.duringWXRAnalyzeWeHaveFound') }}:</strong>
         <p>{{ $t('ui.posts') }}: <strong>{{ stats.types.post }}</strong></p>
         <p>{{ $t('ui.pages') }}: <strong>{{ stats.types.page }}</strong></p>
         <p>{{ $t('image.images') }}: <strong>{{ stats.types.image }}</strong></p>
@@ -11,6 +10,20 @@
         <p>{{ $t('ui.tags') }}: <strong>{{ stats.tags }}</strong></p>
         <p>{{ $t('tools.wpImport.categories') }}: <strong>{{ stats.categories }}</strong></p>
         <p>{{ $t('ui.authors') }}: <strong>{{ stats.authors }}</strong></p>
+        <p v-if="stats.menus">
+            {{ $t('tools.wpImport.menus') }}: <strong>{{ stats.menus }}</strong>
+        </p>
+        <p v-if="stats.menuItems">
+            {{ $t('tools.wpImport.menuItems') }}: <strong>{{ stats.menuItems }}</strong>
+        </p>
+        <p v-if="stats.duplicates">
+            {{ $t('tools.wpImport.duplicateWXRItemsIgnored') }}:
+            <strong>{{ stats.duplicates }}</strong>
+        </p>
+        <p v-if="stats.ignoredSystemItems">
+            {{ $t('tools.wpImport.technicalWXRItemsIgnored') }}:
+            <strong>{{ stats.ignoredSystemItems }}</strong>
+        </p>
     </div>
 </template>
 
@@ -47,15 +60,6 @@ export default {
 <style scoped>
 
 .import-stats {
-    border-bottom: 2px solid var(--gray-1);
-    padding: 4rem 0 3rem 0;
-
-    & > strong {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 2rem;
-    }
-
     & > p {
         margin: .25rem 0;
     }

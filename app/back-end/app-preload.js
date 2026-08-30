@@ -251,6 +251,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-main-webview-search-find-in-page',
             'app-main-webview-search-stop-find-in-page', 
             'app-main-load-language',
+            'app-wxr-report-load',
             'app-plugins-api:save-config-file',
             'app-plugins-api:save-language-file',
             'app-plugins-api:read-config-file',

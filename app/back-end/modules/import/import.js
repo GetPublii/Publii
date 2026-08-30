@@ -88,17 +88,67 @@ class Import {
      *
      * @param importAuthors
      * @param usedTaxonomy
+     * @param autop
+     * @param postTypes
+     * @param slugStrategy
+     * @param importMenus
+     * @param seoProvider
      * @returns {{status: string, message: boolean}}
      */
-    importFile(importAuthors, usedTaxonomy, autop, postTypes) {
+    async importFile(importAuthors, usedTaxonomy, autop, postTypes, slugStrategy = 'wordpress', importMenus = true, seoProvider = 'auto') {
         console.log('(i) Import started');
-        this.parser.setConfig(importAuthors, usedTaxonomy, autop, postTypes);
-        this.parser.importAuthorsData();
-        this.parser.importTagsData();
-        this.parser.getImageURLs();
-        this.parser.importPostsData();
-        this.parser.importPagesData();
-        this.parser.importImages();
+        this.parser.setConfig(importAuthors, usedTaxonomy, autop, postTypes, slugStrategy, importMenus, seoProvider);
+        this.parser.loadExistingImportMappings();
+
+        let transactionStarted = false;
+
+        try {
+            this.appInstance.db.exec('BEGIN IMMEDIATE');
+            transactionStarted = true;
+            this.parser.importAuthorsData();
+            this.parser.importTagsData();
+            this.parser.getImageURLs();
+            this.parser.importPostsData();
+            this.parser.importPagesData();
+            this.parser.rewriteImportedInternalLinks();
+            this.parser.applyImportedSeoCanonicals();
+            this.appInstance.db.exec('COMMIT');
+            transactionStarted = false;
+
+            this.parser.savePagesHierarchy();
+            this.parser.importMenusData();
+            await this.parser.importImages();
+            this.parser.buildImportReport();
+            console.log('(i) Import is done');
+
+            return {
+                status: 'success',
+                message: true,
+                summary: this.parser.getSummary()
+            };
+        } catch (e) {
+            if (transactionStarted) {
+                try {
+                    this.appInstance.db.exec('ROLLBACK');
+                } catch (rollbackError) {
+                    console.log('[WP IMPORT] Rollback failed:', rollbackError);
+                }
+            }
+
+            throw e;
+        }
+    }
+
+    closeDatabase() {
+        if (!this.appInstance || !this.appInstance.db) {
+            return;
+        }
+
+        try {
+            this.appInstance.db.close();
+        } catch (e) {
+            console.log('[WP IMPORT] DB already closed');
+        }
     }
 }
 
