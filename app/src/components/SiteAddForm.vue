@@ -15,7 +15,9 @@
                                 {{ $t('site.websiteName') }}:
                                 <span
                                     v-if="siteNameError"
-                                    class="site-create-field-error">
+                                    id="site-name-error"
+                                    class="site-create-field-error"
+                                    role="alert">
                                     {{ $t('site.websiteNameRequired') }}
                                 </span>
                             </label>
@@ -24,6 +26,9 @@
                                 ref="site-name"
                                 id="site-name"
                                 :spellcheck="false"
+                                :required="true"
+                                :ariaInvalid="siteNameError"
+                                :ariaDescribedby="siteNameError ? 'site-name-error' : ''"
                                 changeEventName="add-website-name-changed"
                                 :customCssClasses="siteNameCssClasses" />
                         </div>
@@ -33,7 +38,9 @@
                                 {{ $t('author.authorName') }}:
                                 <span
                                     v-if="authorNameError"
-                                    class="site-create-field-error">
+                                    id="author-name-error"
+                                    class="site-create-field-error"
+                                    role="alert">
                                     {{ $t('site.websiteAuthorRequired') }}
                                 </span>
                             </label>
@@ -42,6 +49,9 @@
                                 ref="author-name"
                                 id="author-name"
                                 :spellcheck="false"
+                                :required="true"
+                                :ariaInvalid="authorNameError"
+                                :ariaDescribedby="authorNameError ? 'author-name-error' : ''"
                                 changeEventName="add-website-author-changed"
                                 :customCssClasses="authorNameCssClasses" />
                         </div>
@@ -86,14 +96,146 @@
                         </overlay>
                     </div>
                 </div>
+                <div slot="tab-2">
+                    <div
+                        v-if="!wordpressStats"
+                        @drop.stop.prevent="uploadWordPressFile"
+                        @dragleave.stop.prevent="hideWordPressOverlay"
+                        @dragenter.stop.prevent="showWordPressOverlay"
+                        @dragover.stop.prevent="showWordPressOverlay"
+                        @drag.stop.prevent="showWordPressOverlay"
+                        @dragstart.stop.prevent
+                        @dragend.stop.prevent
+                        :class="{
+                            'backup': true,
+                            'backup-is-over': wordpressFileIsOver,
+                            'restore-in-progress': wordpressCheckInProgress
+                        }"
+                        :aria-busy="wordpressCheckInProgress ? 'true' : 'false'">
+                        <div class="backup-upload">
+                            <icon
+                                customWidth="60"
+                                customHeight="60"
+                                properties="not-clickable"
+                                name="importer"
+                                aria-hidden="true" />
+
+                            <span>{{ $t('tools.wpImport.dragAndDropWXRFile') }}</span>
+
+                            <input
+                                ref="wordpress-input"
+                                type="file"
+                                accept=".xml,text/xml,application/xml"
+                                class="backup-upload-input"
+                                spellcheck="false"
+                                :disabled="wordpressCheckInProgress"
+                                :aria-label="$t('tools.wpImport.selectWXRFileButton')"
+                                @change="wordPressFileChanged">
+
+                            <span
+                                v-if="wordpressCheckInProgress"
+                                role="status">
+                                {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
+                            </span>
+
+                            <span
+                                v-if="wordpressError"
+                                class="site-create-field-error"
+                                role="alert">
+                                {{ wordpressError }}
+                            </span>
+                        </div>
+
+                        <overlay
+                            v-if="wordpressFileIsOver"
+                            :hasBorder="true"
+                            :isBlue="true">
+                            <div>{{ $t('file.dropYourFileHere') }}</div>
+                        </overlay>
+                    </div>
+
+                    <div
+                        v-else
+                        class="site-create-form site-create-form-wordpress">
+                        <div class="backup-selected-file">
+                            <span>
+                                <strong>{{ $t('tools.wpImport.selectedWXRFile') }}</strong>
+                                {{ wordpressFileName }}
+                            </span>
+                            <p-button
+                                type="clean"
+                                :onClick="resetWordPressFile">
+                                {{ $t('ui.change') }}
+                            </p-button>
+                        </div>
+
+                        <logo-creator ref="wordpress-logo-creator" />
+
+                        <div class="site-create-field">
+                            <label for="wordpress-site-name">
+                                {{ $t('site.websiteName') }}:
+                                <span
+                                    v-if="wordpressSiteNameError"
+                                    id="wordpress-site-name-error"
+                                    class="site-create-field-error"
+                                    role="alert">
+                                    {{ $t('site.websiteNameRequired') }}
+                                </span>
+                            </label>
+
+                            <text-input
+                                id="wordpress-site-name"
+                                v-model="wordpressSiteName"
+                                :spellcheck="false"
+                                :required="true"
+                                :ariaInvalid="wordpressSiteNameError"
+                                :ariaDescribedby="wordpressSiteNameError ? 'wordpress-site-name-error' : ''"
+                                :customCssClasses="wordpressSiteNameCssClasses" />
+                        </div>
+
+                        <div class="site-create-field">
+                            <label for="wordpress-author-name">
+                                {{ $t('author.authorName') }}:
+                                <span
+                                    v-if="wordpressAuthorNameError"
+                                    id="wordpress-author-name-error"
+                                    class="site-create-field-error"
+                                    role="alert">
+                                    {{ $t('site.websiteAuthorRequired') }}
+                                </span>
+                            </label>
+
+                            <text-input
+                                id="wordpress-author-name"
+                                v-model="wordpressAuthorName"
+                                :spellcheck="false"
+                                :required="true"
+                                :ariaInvalid="wordpressAuthorNameError"
+                                :ariaDescribedby="wordpressAuthorNameError ? 'wordpress-author-name-error' : ''"
+                                :customCssClasses="wordpressAuthorNameCssClasses" />
+                        </div>
+                    </div>
+                </div>
             </tabs>
 
-            <div :data-mode="status" class="site-create-buttons">
+            <div
+                :data-mode="status"
+                :class="{
+                    'site-create-buttons': true,
+                    'site-create-buttons-wordpress': tabsActiveIndex === 2 && wordpressStats
+                }">
                 <p-button
                     v-if="tabsActiveIndex === 0"
                     type="primary bottom"
                     :onClick="addWebsite">
                     {{ $t('site.createWebsite') }}
+                </p-button>
+
+                <p-button
+                    v-if="tabsActiveIndex === 2 && wordpressStats"
+                    type="primary bottom"
+                    :onClick="createWordPressWebsite">
+                    {{ $t('site.createWebsiteAndContinue') }}
                 </p-button>
 
                 <p-button
@@ -118,6 +260,7 @@
 import defaultSiteConfig from './../../config/AST.currentSite.config';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
+import { storePendingWordPressImport } from './../helpers/wp-import-onboarding';
 
 export default {
     name: 'site-add-form',
@@ -134,7 +277,16 @@ export default {
             backupFile: null,
             backupIsOver: false,
             tabsActiveIndex: 0,
-            restoreInProgress: false
+            restoreInProgress: false,
+            wordpressFile: '',
+            wordpressFileIsOver: false,
+            wordpressCheckInProgress: false,
+            wordpressError: '',
+            wordpressStats: false,
+            wordpressSiteName: '',
+            wordpressAuthorName: '',
+            wordpressSiteNameError: false,
+            wordpressAuthorNameError: false
         }
     },
     computed: {
@@ -162,6 +314,19 @@ export default {
                 return 'has-error';
             }
         },
+        wordpressSiteNameCssClasses () {
+            if(this.wordpressSiteNameError) {
+                return 'has-error';
+            }
+        },
+        wordpressAuthorNameCssClasses () {
+            if(this.wordpressAuthorNameError) {
+                return 'has-error';
+            }
+        },
+        wordpressFileName () {
+            return this.wordpressFile.split(/[\\/]/).pop();
+        },
         defaultSiteConfig () {
             return JSON.parse(JSON.stringify(defaultSiteConfig));
         },
@@ -169,7 +334,16 @@ export default {
             return [
                 this.header,
                 this.$t('site.installFromBackup'),
+                this.$t('tools.wpImport.migrateFromWordPress')
             ];
+        }
+    },
+    watch: {
+        wordpressSiteName () {
+            this.wordpressSiteNameError = false;
+        },
+        wordpressAuthorName () {
+            this.wordpressAuthorNameError = false;
         }
     },
     mounted () {
@@ -211,71 +385,101 @@ export default {
 
             return false;
         },
-        addWebsite (e) {
-            let self = this;
-
+        addWebsite () {
             if (this.formIsInvalid()) {
+                return;
+            }
+
+            let authorName = this.authorName.trim();
+
+            this.createWebsite(this.setBaseConfig(), authorName, 'standard', (data) => {
+                this.finishWebsiteCreation(data, authorName);
+                this.$router.push(`/site/${data.siteConfig.name}`);
+            });
+        },
+        createWordPressWebsite () {
+            this.wordpressSiteNameError = this.wordpressSiteName.trim() === '';
+            this.wordpressAuthorNameError = this.wordpressAuthorName.trim() === '';
+
+            if (!this.wordpressStats || this.wordpressSiteNameError || this.wordpressAuthorNameError) {
+                return;
+            }
+
+            let authorName = this.wordpressAuthorName.trim();
+
+            this.createWebsite(this.setWordPressBaseConfig(), authorName, 'wordpress', (data) => {
+                this.finishWebsiteCreation(data, authorName);
+                storePendingWordPressImport({
+                    siteName: data.siteConfig.name,
+                    filePath: this.wordpressFile,
+                    stats: this.wordpressStats
+                });
+                this.$router.push(`/site/${data.siteConfig.name}/tools/wp-importer`);
+            });
+        },
+        createWebsite (config, authorName, mode, onCreated) {
+            if (this.overlayIsVisible) {
                 return;
             }
 
             this.overlayIsVisible = true;
 
             setTimeout(() => {
-                mainProcessAPI.send('app-site-create', this.setBaseConfig(), this.authorName.trim());
-
                 mainProcessAPI.receiveOnce('app-site-creation-error', (data) => {
                     this.overlayIsVisible = false;
-                    if (data.name) {
-                        this.siteNameError = true;
-                    }
-
-                    if (data.author) {
-                        this.authorNameError = true;
-                    }
-
-                    mainProcessAPI.stopReceiveAll('app-site-created');
-                    mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
-                    mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
+                    this.setCreationErrors(mode, data);
+                    this.stopSiteCreationListeners();
                 });
 
-                mainProcessAPI.receiveOnce('app-site-creation-duplicate', (data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-duplicate', () => {
                     this.overlayIsVisible = false;
-                    this.siteNameError = true;
-
+                    this.setCreationErrors(mode, { name: true });
                     this.$bus.$emit('alert-display', {
                         message: this.$t('site.siteWithThisNameExists'),
                         textCentered: true
                     });
-
-                    mainProcessAPI.stopReceiveAll('app-site-created');
-                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
+                    this.stopSiteCreationListeners();
                 });
 
-                mainProcessAPI.receiveOnce('app-site-creation-db-error', (data) => {
+                mainProcessAPI.receiveOnce('app-site-creation-db-error', () => {
                     this.overlayIsVisible = false;
-                    this.siteNameError = true;
-
+                    this.setCreationErrors(mode, { name: true });
                     this.$bus.$emit('alert-display', {
                         message: this.$t('site.erroOcurredDuringSiteDatabaseCreationInfo'),
                         textCentered: true
                     });
-
-                    mainProcessAPI.stopReceiveAll('app-site-created');
-                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
+                    this.stopSiteCreationListeners();
                 });
 
                 mainProcessAPI.receiveOnce('app-site-created', (data) => {
                     this.overlayIsVisible = false;
-                    data.authors = self.setAuthor(data.authorName);
-                    this.$store.commit('addNewSite', data);
-                    window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
-                    this.$router.push(`/site/${data.siteConfig.name}`);
-
-                    mainProcessAPI.stopReceiveAll('app-site-creation-error');
-                    mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
-                    mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
+                    this.stopSiteCreationListeners();
+                    onCreated(data);
                 });
+
+                mainProcessAPI.send('app-site-create', config, authorName);
             }, 250);
+        },
+        setCreationErrors (mode, data = {}) {
+            if (mode === 'wordpress') {
+                this.wordpressSiteNameError = !!data.name;
+                this.wordpressAuthorNameError = !!data.author;
+                return;
+            }
+
+            this.siteNameError = !!data.name;
+            this.authorNameError = !!data.author;
+        },
+        stopSiteCreationListeners () {
+            mainProcessAPI.stopReceiveAll('app-site-created');
+            mainProcessAPI.stopReceiveAll('app-site-creation-error');
+            mainProcessAPI.stopReceiveAll('app-site-creation-duplicate');
+            mainProcessAPI.stopReceiveAll('app-site-creation-db-error');
+        },
+        finishWebsiteCreation (data, authorName) {
+            data.authors = this.setAuthor(data.authorName, authorName);
+            this.$store.commit('addNewSite', data);
+            window.localStorage.setItem('publii-last-opened-website', data.siteConfig.name);
         },
         setBaseConfig () {
             let baseConfig = {
@@ -290,10 +494,25 @@ export default {
 
             return Utils.deepMerge(this.defaultSiteConfig, baseConfig);
         },
-        setAuthor (authorName) {
+        setWordPressBaseConfig () {
+            let siteDetails = this.wordpressStats.site || {};
+            let baseConfig = {
+                name: this.wordpressSiteName.trim(),
+                displayName: this.wordpressSiteName.trim(),
+                description: siteDetails.description || '',
+                synced: false,
+                logo: {
+                    color: this.$refs['wordpress-logo-creator'].getActiveColor(),
+                    icon: this.$refs['wordpress-logo-creator'].getActiveIcon()
+                }
+            };
+
+            return Utils.deepMerge(this.defaultSiteConfig, baseConfig);
+        },
+        setAuthor (authorName, displayName) {
             return [{
                 id: 1,
-                name: this.authorName.trim(),
+                name: displayName,
                 username: authorName,
                 config: "{}",
                 additionalData: "{}",
@@ -301,8 +520,16 @@ export default {
             }];
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && !event.isComposing) {
+            if (e.code !== 'Enter' || e.isComposing || this.overlayIsVisible) {
+                return;
+            }
+
+            if (this.tabsActiveIndex === 0) {
                 this.addWebsite();
+            }
+
+            if (this.tabsActiveIndex === 2 && this.wordpressStats) {
+                this.createWordPressWebsite();
             }
         },
         onEnterKey () {
@@ -347,6 +574,90 @@ export default {
         },
         removeBackupFile () {
             this.backupFile = null;
+        },
+        showWordPressOverlay () {
+            if (!this.wordpressCheckInProgress) {
+                this.wordpressFileIsOver = true;
+            }
+        },
+        hideWordPressOverlay () {
+            this.wordpressFileIsOver = false;
+        },
+        async uploadWordPressFile (event) {
+            this.wordpressFileIsOver = false;
+
+            if (this.wordpressCheckInProgress || !event.dataTransfer.files.length) {
+                return;
+            }
+
+            let sourcePath = await mainProcessAPI.getPathForFile(event.dataTransfer.files[0]);
+            sourcePath = await mainProcessAPI.normalizePath(sourcePath);
+            this.analyzeWordPressFile(sourcePath);
+        },
+        async wordPressFileChanged (event) {
+            if (this.wordpressCheckInProgress || !event.target.files.length) {
+                return;
+            }
+
+            let sourcePath = await mainProcessAPI.getPathForFile(event.target.files[0]);
+            sourcePath = await mainProcessAPI.normalizePath(sourcePath);
+            this.analyzeWordPressFile(sourcePath);
+        },
+        analyzeWordPressFile (filePath) {
+            this.wordpressFile = filePath;
+            this.wordpressError = '';
+            this.wordpressStats = false;
+            this.wordpressCheckInProgress = true;
+
+            mainProcessAPI.receiveOnce('app-wxr-checked', (data) => {
+                this.wordpressCheckInProgress = false;
+
+                if (!data || data.status !== 'success') {
+                    let message = data && data.message;
+
+                    if (message && message.translation) {
+                        this.wordpressError = this.$t(message.translation, message.translationVars);
+                    } else {
+                        this.wordpressError = this.$t('tools.wpImport.invalidWXRFile');
+                    }
+
+                    this.$nextTick(() => {
+                        if (this.$refs['wordpress-input']) {
+                            this.$refs['wordpress-input'].value = '';
+                        }
+                    });
+                    return;
+                }
+
+                let siteDetails = data.message.site || {};
+                let fallbackName = this.wordpressFileName
+                    .replace(/\.xml$/i, '')
+                    .replace(/[_-]+/g, ' ')
+                    .trim();
+
+                this.wordpressStats = data.message;
+                this.wordpressSiteName = siteDetails.title || fallbackName;
+                this.wordpressAuthorName = siteDetails.author || 'WordPress';
+            });
+
+            mainProcessAPI.send('app-wxr-check', {
+                filePath: this.wordpressFile
+            });
+        },
+        resetWordPressFile () {
+            this.wordpressFile = '';
+            this.wordpressError = '';
+            this.wordpressStats = false;
+            this.wordpressSiteName = '';
+            this.wordpressAuthorName = '';
+            this.wordpressSiteNameError = false;
+            this.wordpressAuthorNameError = false;
+
+            this.$nextTick(() => {
+                if (this.$refs['wordpress-input']) {
+                    this.$refs['wordpress-input'].value = '';
+                }
+            });
         },
         tabChanged () {
             this.tabsActiveIndex = this.$refs['site-create-tabs'].activeIndex;
@@ -472,6 +783,7 @@ export default {
     beforeDestroy () {
         this.$bus.$off('add-website-name-changed');
         this.$bus.$off('add-website-author-changed');
+        mainProcessAPI.stopReceiveAll('app-wxr-checked');
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }
@@ -596,6 +908,10 @@ export default {
     text-align: center;
     top: 1px;
 
+    &.site-create-buttons-wordpress {
+        padding-top: 1rem;
+    }
+
     .button {
         border-radius: 0 0 0 var(--border-radius);
 
@@ -649,13 +965,22 @@ export default {
 }
 .site-create .backup-selected-file {
     align-items: center;
+    background-color: rgba(var(--color-primary-rgb), .065);
+    border-radius: var(--border-radius);
+    color: var(--text-light-color);
     display: flex;
+    font-size: 1.4rem;
     justify-content: space-between;
-    margin: 1rem 0;
+    line-height: 1.6;
+    margin: 0 0 2em;
+    padding: .7rem 2rem;
 
     strong {
         margin-right: 1rem;
     }
+}
+.site-create .site-create-form-wordpress {
+    height: 450px;
 }
 .site-create .backup-upload {
     align-items: center;

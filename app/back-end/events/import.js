@@ -27,7 +27,7 @@ class ImportEvents {
          * Import WXR file
          */
         ipcMain.on('app-wxr-check', function(event, config) {
-            if (!self.validateImportInput(config, false)) {
+            if (!self.validateImportInput(config, false, false)) {
                 event.sender.send('app-wxr-checked', {
                     status: 'error',
                     message: 'Invalid import parameters'
@@ -74,14 +74,14 @@ class ImportEvents {
     }
 
     /**
-     * Validates siteName and filePath supplied from the renderer.
+     * Validates filePath and, for an import, the destination site supplied from the renderer.
      */
-    validateImportInput(config, validateOptions = false) {
+    validateImportInput(config, validateOptions = false, requireSite = true) {
         if (!config || typeof config !== 'object') {
             return false;
         }
 
-        if (!this.validateSiteName(config.siteName)) {
+        if (requireSite && !this.validateSiteName(config.siteName)) {
             return false;
         }
 

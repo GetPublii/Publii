@@ -437,7 +437,7 @@ export default {
 
         & > .content {
             border: none;
-            margin-top: 1rem;
+            margin-top: 3rem;
             padding-left: 0;
             width: 100%;
         }

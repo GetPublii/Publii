@@ -301,6 +301,7 @@
 import BackToTools from './mixins/BackToTools.js';
 import WPImportStats from './WPImportStats';
 import WPImportReport from './WPImportReport';
+import { consumePendingWordPressImport } from './../helpers/wp-import-onboarding';
 
 let lastImportReportCache = null;
 
@@ -374,6 +375,7 @@ export default {
     },
     mounted: function() {
         this.loadStoredImportReport();
+        this.loadOnboardingImport();
     },
     computed: {
         importConfigCssClasses: function() {
@@ -436,6 +438,17 @@ export default {
         }
     },
     methods: {
+        loadOnboardingImport: function() {
+            let siteName = this.$store.state.currentSite.config.name;
+            let pendingImport = consumePendingWordPressImport(siteName);
+
+            if (!pendingImport) {
+                return;
+            }
+
+            this.filePath = pendingImport.filePath;
+            this.applyFileStats(pendingImport.stats);
+        },
         getSeoProviderLabel: function(provider) {
             return {
                 yoast: 'Yoast SEO',
@@ -534,22 +547,33 @@ export default {
                 } else {
                     this.errorMessage = message;
                 }
+
+                return;
             }
 
             if(data.status === 'success') {
-                this.configVisible = true;
+                this.applyFileStats(data.message);
+            }
+        },
+        applyFileStats: function(stats) {
+            if (!stats || !stats.types || typeof stats.types !== 'object') {
+                this.errorMessage = this.$t('tools.wpImport.invalidWXRFile');
+                return;
+            }
 
-                for(let postType of Object.keys(data.message.types)) {
-                    if(['post', 'page', 'image'].indexOf(postType) !== -1) {
-                        continue;
-                    }
+            this.configVisible = true;
+            this.customPostTypes = [];
 
-                    this.customPostTypes.push(postType);
+            for(let postType of Object.keys(stats.types)) {
+                if(['post', 'page', 'image'].indexOf(postType) !== -1) {
+                    continue;
                 }
 
-                this.stats = data.message;
-                this.seoProviderSelection = this.seoDefaultProvider;
+                this.customPostTypes.push(postType);
             }
+
+            this.stats = stats;
+            this.seoProviderSelection = this.seoDefaultProvider;
         },
         importFile: function() {
             this.progressInfo = '';

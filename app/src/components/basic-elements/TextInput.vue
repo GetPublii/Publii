@@ -18,6 +18,9 @@
             :max="max"
             :step="step"
             :spellcheck="spellcheck"
+            :required="required"
+            :aria-invalid="ariaInvalid ? 'true' : 'false'"
+            :aria-describedby="ariaDescribedby || null"
             ref="input"
             :pattern="pattern"
             @keyup="keyboardEvent"
@@ -112,6 +115,18 @@ export default {
         'spellcheck': {
             default: true,
             type: Boolean
+        },
+        'required': {
+            default: false,
+            type: Boolean
+        },
+        'ariaInvalid': {
+            default: false,
+            type: Boolean
+        },
+        'ariaDescribedby': {
+            default: '',
+            type: String
         }
     },
     computed: {

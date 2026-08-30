@@ -292,6 +292,34 @@ describeWithDatabase('WordPress WXR import', function() {
         fs.rmSync(temporaryDir, { recursive: true, force: true });
     });
 
+    it('exposes WordPress site details for the first-run import flow', function() {
+        let wxrContent = fs.readFileSync(wxrFile, 'utf8').replace(
+            '<channel>',
+            `<channel>
+                    <title><![CDATA[Example publication]]></title>
+                    <description><![CDATA[An example WordPress website]]></description>
+                    <language>en-US</language>
+                    <wp:author>
+                        <wp:author_id>1</wp:author_id>
+                        <wp:author_login><![CDATA[editor]]></wp:author_login>
+                        <wp:author_display_name><![CDATA[Example Editor]]></wp:author_display_name>
+                    </wp:author>`
+        );
+        fs.writeFileSync(wxrFile, wxrContent, 'utf8');
+
+        let importer = new Import(null, '', wxrFile);
+        let result = importer.checkFile();
+
+        assert.strictEqual(result.status, 'success');
+        assert.deepStrictEqual(result.message.site, {
+            title: 'Example publication',
+            description: 'An example WordPress website',
+            language: 'en-US',
+            url: 'https://example.com',
+            author: 'Example Editor'
+        });
+    });
+
     it('preserves slugs and dates, migrates internal links and rebuilds nested pages', async function() {
         let importer = new Import(appInstance, 'test-site', wxrFile);
         let result = await importer.importFile('publii-author', 'tags', false, ['post', 'page'], 'wordpress');

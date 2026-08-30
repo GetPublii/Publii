@@ -246,6 +246,7 @@ class WxrParser {
     getWxrStats() {
         let channel = this.getChannel();
         let authors = this.getAuthors();
+        let primaryAuthor = authors[0] || {};
         let categories = WxrUtils.asArray(channel['wp:category']);
         let tags = WxrUtils.asArray(channel['wp:tag']);
         let items = this.getItems();
@@ -256,6 +257,15 @@ class WxrParser {
         let menuItems = this.getMenuItems();
 
         let stats = {
+            site: {
+                title: WxrUtils.sanitizeTitle(channel.title),
+                description: WxrUtils.sanitizeTitle(channel.description),
+                language: WxrUtils.asString(channel.language).trim(),
+                url: this.sourceBaseUrl,
+                author: WxrUtils.sanitizeTitle(
+                    primaryAuthor['wp:author_display_name'] || primaryAuthor['wp:author_login']
+                )
+            },
             authors: this.getItemsCount(authors),
             categories: this.getItemsCount(categories),
             tags: this.getItemsCount(tags),
