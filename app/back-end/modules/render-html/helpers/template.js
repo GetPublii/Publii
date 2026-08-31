@@ -19,6 +19,7 @@ class TemplateHelper {
         this.themeConfig = this.loadThemeConfig();
         this.loadedTemplates = {};
         this.loadedPartialTemplates = {};
+        this.pendingWrites = [];
     }
 
     /*
@@ -94,7 +95,7 @@ class TemplateHelper {
         }
 
         fs.ensureDirSync(path.parse(filePath).dir);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
 
     saveOutputPostFile (postSlug, content) {
@@ -117,7 +118,7 @@ class TemplateHelper {
             fs.ensureDirSync(dirPath);
         }
 
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
 
     saveOutputHomePaginationFile(pageNumber, content) {
@@ -137,7 +138,7 @@ class TemplateHelper {
         // Create dir for specific page
         fs.ensureDirSync(dirPath);
         // Create index.html file in the created dir
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
 
     saveOutputPageFile (pageID, pageSlug, content, renderer) {
@@ -152,7 +153,7 @@ class TemplateHelper {
         if (this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage === pageID) {
             let filePath = path.join(this.outputDir, 'index.html');
             content = this.compressHTML(content);
-            fs.writeFile(filePath, content, {'flags': 'w'});
+            this.writeFile(filePath, content);
             return;
         }
 
@@ -177,7 +178,7 @@ class TemplateHelper {
             fs.ensureDirSync(dirPath);
         }
 
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
 
     /*
@@ -192,7 +193,7 @@ class TemplateHelper {
         let dirPath = path.join(baseDir, tagsPrefix);
         fs.ensureDirSync(dirPath);
         content = this.compressHTML(content);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
     
     /*
@@ -211,7 +212,7 @@ class TemplateHelper {
         if (isTagPreview) {
             filePath = path.join(this.outputDir, 'preview.html');
             content = this.compressHTML(content);
-            fs.writeFile(filePath, content, {'flags': 'w'});
+            this.writeFile(filePath, content);
             return;
         } else if (tagsPrefix) {
             filePath = path.join(baseDir, tagsPrefix, tagSlug, 'index.html');
@@ -225,7 +226,7 @@ class TemplateHelper {
 
         content = this.compressHTML(content);
         fs.ensureDirSync(dirPath);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
 
     saveOutputTagPaginationFile(tagSlug, pageNumber, content) {
@@ -263,7 +264,7 @@ class TemplateHelper {
         }
 
         // Create index.html file in the created dir
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
 
     /*
@@ -280,13 +281,13 @@ class TemplateHelper {
         if (isAuthorPreview) {
             filePath = path.join(this.outputDir, 'preview.html');
             content = this.compressHTML(content);
-            fs.writeFile(filePath, content, {'flags': 'w'});
+            this.writeFile(filePath, content);
             return;
         }
 
         content = this.compressHTML(content);
         fs.ensureDirSync(dirPath);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
     }
 
     saveOutputAuthorPaginationFile(authorSlug, pageNumber, content) {
@@ -303,7 +304,26 @@ class TemplateHelper {
         // Create dir for specific page
         fs.ensureDirSync(dirPath);
         // Create index.html file in the created dir
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        this.writeFile(filePath, content);
+    }
+
+    writeFile (filePath, content) {
+        this.pendingWrites.push(
+            fs.writeFile(filePath, content, {'flags': 'w'})
+                .then(() => false)
+                .catch(error => error)
+        );
+    }
+
+    async waitForPendingWrites () {
+        let pendingWrites = this.pendingWrites;
+        this.pendingWrites = [];
+        let results = await Promise.all(pendingWrites);
+        let writeError = results.find(result => result instanceof Error);
+
+        if (writeError) {
+            throw writeError;
+        }
     }
 
     /*

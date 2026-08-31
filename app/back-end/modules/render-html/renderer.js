@@ -36,6 +36,7 @@ const UtilsHelper = require('./../../helpers/utils');
 const Sitemap = require('./helpers/sitemap.js');
 const Gdpr = require('./helpers/gdpr.js');
 const Git = require('./../deploy/git.js');
+const LatexToSvg = require('./text-renderers/latex.js');
 
 // Default config
 const defaultAstCurrentSiteConfig = require('./../../../config/AST.currentSite.config');
@@ -175,6 +176,24 @@ class Renderer {
             } else {
                 await this.renderFullPreview();
             }
+
+            await this.templateHelper.waitForPendingWrites();
+            let latexWarnings = await LatexToSvg.processDirectory(this.outputDir);
+
+            for (let warning of latexWarnings) {
+                console.warn(
+                    `[LaTeX] ${warning.source}: ${warning.message} (${warning.formula})`
+                );
+            }
+
+            if (
+                !this.singlePageMode &&
+                !this.homepageOnlyMode &&
+                !this.tagOnlyMode &&
+                !this.authorOnlyMode
+            ) {
+                this.sendProgress(100, 'Website files are ready to upload');
+            }
         } catch (e) {
             this.errorLog.push({
                 message: 'An error occurred during rendering process:',
@@ -193,6 +212,7 @@ class Renderer {
         this.preparePageToRender();
         this.triggerEvent('beforeRender');
         await this.generateWWW();
+        await this.templateHelper.waitForPendingWrites();
         console.timeEnd("RENDERING");
 
         if (this.siteConfig.deployment.relativeUrls) {
@@ -201,7 +221,6 @@ class Renderer {
             console.timeEnd("RELATIVE URLS");
         }
 
-        this.sendProgress(100, 'Website files are ready to upload');
         this.db.close();
     }
 
