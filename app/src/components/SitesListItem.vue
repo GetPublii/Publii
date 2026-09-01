@@ -71,9 +71,6 @@ export default {
         },
         siteLogoIcon: function() {
             return this.$store.state.sites[this.site].logo.icon;
-        },
-        siteLogoColor: function() {
-            return this.$store.state.sites[this.site].logo.color;
         }
     },
     data () {
@@ -359,5 +356,4 @@ export default {
     }
 }
 </style>
-
 

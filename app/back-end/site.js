@@ -28,7 +28,6 @@ class Site {
         if (!maintenanceMode) {
             this.logo = {};
             this.logo.icon = config.logo.icon || 'fa fa-book';
-            this.logo.color = config.logo.color || 1;
         }
         this.appDir = this.application.appDir;
         this.siteDir = path.join(this.application.sitesDir, this.name);

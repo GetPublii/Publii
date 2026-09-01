@@ -3,7 +3,7 @@
         ref="content"
         class="site-logo">
         <span
-            v-if="logoColor"
+            v-if="logoIcon"
             class="site-logo-bg">
             <icon
                 :name="logoIcon"
@@ -35,13 +35,6 @@ export default {
         };
     },
     computed: {
-        logoColor: function() {
-            if(!this.siteIsLoaded) {
-                return '';
-            }
-
-            return this.$store.state.currentSite.config.logo.color;
-        },
         logoIcon: function() {
             if(!this.siteIsLoaded) {
                 return '';

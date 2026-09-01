@@ -33,14 +33,8 @@ export default {
     data () {
         return {
             activeIcon: 1,
-            activeColor: 1,
             icons: []
         };
-    },
-    computed: {
-        colors: function() {
-            return Array(16).fill().map((e, i) => i+1);
-        }
     },
     mounted () {
         Vue.nextTick(() => {
@@ -113,25 +107,12 @@ export default {
 
             this.activeIcon = newIndex;
         },
-        changeColor: function(newIndex) {
-            this.activeColor = newIndex;
-        },
-        isActiveColor: function(colorIndex) {
-            if(colorIndex === this.activeColor) {
-                return 'active';
-            }
-
-            return 'inactive';
-        },
         isActiveIcon: function(iconIndex) {
             if(iconIndex === this.activeIcon) {
                 return 'active';
             }
 
             return 'inactive';
-        },
-        getActiveColor: function() {
-            return this.activeColor;
         },
         getActiveIcon: function() {
             return this.icons[this.activeIcon - 1];
@@ -156,32 +137,6 @@ export default {
     overflow: hidden;
     padding: var(--space-4);
     text-align: left;       
-}
-
-.logo-creator-color {        
-    margin: 0 0 var(--space-4);
-    padding: 0;
-}
-
-.logo-creator-color-block {  
-    border-radius: 50%;
-    cursor: pointer;
-    display: block;
-    float: left;
-    height: 3.2rem;
-    list-style-type: none;
-    margin: 0 0.15rem;
-    padding: 0;
-    transition: var(--transition-default);
-    width: 3.2rem;
-
-    &[data-status="active"] {
-        transform: scale(1);
-    }
-
-    &[data-status="inactive"] {
-        transform: scale(.75); 
-    }
 }
 
 .logo-creator-icon {

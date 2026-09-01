@@ -2225,7 +2225,6 @@ export default {
         return {
             buttonsLocked: false,
             logo: {
-                color: '',
                 icon: ''
             },
             language: '',
@@ -2507,7 +2506,6 @@ export default {
         }
     },
     beforeMount () {
-        this.logo.color = this.$store.state.currentSite.config.logo.color;
         this.logo.icon = this.$store.state.currentSite.config.logo.icon;
         this.language = this.$store.state.currentSite.config.language;
         this.spellchecking = this.$store.state.currentSite.config.spellchecking;
@@ -2539,7 +2537,6 @@ export default {
     async mounted () {
         setTimeout(() => {
             this.$refs['logo-creator'].changeIcon(this.logo.icon);
-            this.$refs['logo-creator'].changeColor(this.logo.color);
         }, 0);
 
         this.$bus.$on('regenerate-thumbnails-close', this.savedFromPopup);
@@ -2602,8 +2599,7 @@ export default {
             newSettings.displayName = this.name;
             newSettings.spellchecking = this.spellchecking;
             newSettings.logo = {
-                icon: this.$refs['logo-creator'].getActiveIcon(),
-                color: this.$refs['logo-creator'].getActiveColor()
+                icon: this.$refs['logo-creator'].getActiveIcon()
             };
 
             if (this.language === 'custom') {

@@ -488,7 +488,6 @@ export default {
                 displayName: this.siteName.trim(),
                 synced: false,
                 logo: {
-                    color: this.$refs['logo-creator'].getActiveColor(),
                     icon: this.$refs['logo-creator'].getActiveIcon()
                 }
             };
@@ -503,7 +502,6 @@ export default {
                 description: siteDetails.description || '',
                 synced: false,
                 logo: {
-                    color: this.$refs['wordpress-logo-creator'].getActiveColor(),
                     icon: this.$refs['wordpress-logo-creator'].getActiveIcon()
                 }
             };

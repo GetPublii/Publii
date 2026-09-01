@@ -5,7 +5,6 @@ const AstCurrentSiteConfig = {
     description: '',
     synced: false,
     logo: {
-        color: '',
         icon: ''
     },
     domain: '',
