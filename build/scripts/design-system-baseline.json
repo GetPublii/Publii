@@ -1,0 +1,24 @@
+{
+    "version": 1,
+    "colorLiterals": {
+        "app/src/components/SidebarSites.vue": {
+            "#5ab0f7": 1
+        },
+        "app/src/components/basic-elements/CollectionCell.vue": {
+            "#dddddd": 1
+        },
+        "app/src/components/basic-elements/Icon.vue": {
+            "#42a5f5": 1,
+            "#2a2e30": 3,
+            "#40b771": 1,
+            "#ef5350": 2
+        },
+        "app/src/components/basic-elements/ImageUpload.vue": {
+            "#aaa": 6
+        },
+        "app/src/css/forms.css": {
+            "#dddddd": 1,
+            "rgba(42,153,244,0.5)": 1
+        }
+    }
+}

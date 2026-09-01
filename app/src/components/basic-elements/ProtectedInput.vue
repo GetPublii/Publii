@@ -11,14 +11,14 @@
 
         <p-button
             v-if="locked"
-            type="outline"
+            appearance="outline"
             :onClick="unlock">
             {{ $t('ui.change') }}
         </p-button>
 
         <p-button
             v-if="!locked && storedValue !== ''"
-            type="outline"
+            appearance="outline"
             :onClick="cancel">
             {{ $t('ui.cancel') }}
         </p-button>
@@ -96,7 +96,7 @@ export default {
 .protected-input {
     align-items: center;
     display: flex;
-    gap: 1rem;
+    gap: var(--space-4);
 
     .input-wrapper {
         flex: 1;

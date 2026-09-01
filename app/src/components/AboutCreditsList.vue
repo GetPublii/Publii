@@ -153,7 +153,7 @@ export default {
     & > a {
         color: var(--link-primary-color);
         float: right;
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
         margin-left: 5rem;
 
         &:active,
@@ -170,7 +170,7 @@ export default {
 
 .credits-content {
     margin: 0;
-    padding: 2rem;
+    padding: var(--space-8);
 
     pre {
         white-space: pre-line;

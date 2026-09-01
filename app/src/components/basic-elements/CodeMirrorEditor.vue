@@ -106,7 +106,7 @@ export default {
     box-shadow: 0 0 0 1px var(--input-border-color);
     display: block;
     left: 0;
-    padding: 2rem 5rem 1rem;
+    padding: var(--space-8) 5rem var(--space-4);
     position: fixed;
     width: 100%;
     z-index: 102;
@@ -129,9 +129,9 @@ export default {
             border-radius: 30px;
             box-shadow: none!important;            
             float: left;
-            font-family: var(--font-base);
+            font-family: var(--font-family-sans);
             margin: 0;
-            padding: 1rem 2rem;
+            padding: var(--space-4) var(--space-8);
             width: calc(100% - 80px);
         }
 
@@ -158,20 +158,20 @@ export default {
         button {
             background: var(--button-secondary-bg);
             border: none;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             box-shadow: none;
             color: var(--button-secondary-color);
             cursor: pointer;
             display: inline-block;
-            font-size: 1.4rem;
-            font-family: var(--font-base);
-            font-weight: 500;
+            font-size: var(--font-size-ui-md);
+            font-family: var(--font-family-sans);
+            font-weight: var(--font-weight-medium);
             height: 3.8rem;
             line-height: 3.8rem;
             margin: 2px 2px 30px;
-            padding: 0 1rem;
+            padding: 0 var(--space-4);
             position: relative;
-            transition: var(--transition);
+            transition: var(--transition-default);
             user-select: none;
             white-space: nowrap;
 
@@ -195,7 +195,7 @@ export default {
                 &:focus,
                 &:hover {
                     background: transparent;
-                    box-shadow: inset 0 0 0 2px var(--gray-3);
+                    box-shadow: inset 0 0 0 2px var(--color-control-border-hover);
                     color: var(--text-primary-color);
                 }
             }

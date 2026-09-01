@@ -7,14 +7,14 @@
                 <p-button
                     @click.prevent.native="checkBeforeSave(false)"
                     slot="buttons"
-                    type="secondary"
+                    appearance="secondary"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
 
                 <btn-dropdown
                     slot="buttons"
-                    buttonColor="green"
+                    intent="primary"
                     :items="dropdownItems"
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
@@ -2185,7 +2185,7 @@
             <p-footer>
                 <btn-dropdown
                     slot="buttons"
-                    buttonColor="green"
+                    intent="primary"
                     :items="dropdownItems"
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
@@ -2196,7 +2196,7 @@
                 <p-button
                     @click.native="checkBeforeSave(false)"
                     slot="buttons"
-                    type="secondary"
+                    appearance="secondary"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
@@ -2978,16 +2978,16 @@ export default {
     .multiple-checkboxes {
         label {
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: var(--space-4);
         }
     }
 }
 
 .note.is-warning {
-    color: var(--warning);
+    color: var(--color-danger);
 }
 .msg-bm {
-   margin-bottom:3rem;
+   margin-bottom:var(--space-12);
 }
 
 label[for="g-consent-mode-default-state"] + div > .has-label {

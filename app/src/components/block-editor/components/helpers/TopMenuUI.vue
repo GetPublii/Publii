@@ -194,7 +194,7 @@ export default {
 <style>
 
 .wrapper-ui-top-menu {
-  font-family: var(--font-base);
+  font-family: var(--font-family-sans);
   
   svg {
     color: var(--icon-tertiary-color);
@@ -202,7 +202,7 @@ export default {
 
   .top-menu-button-trash {
       &::before {
-         background: var(--warning);
+         background: var(--color-danger);
       }
          svg {
             color: var(--white);
@@ -252,7 +252,7 @@ export default {
   /* hover effect */
   &::before {
      content: "";
-     background: var(--gray-6);
+     background: var(--color-control-surface-hover);
      border-radius: 3px;
      display: block;
      left: 50%;
@@ -304,7 +304,7 @@ export default {
 .wrapper-ui-top-menu .multiselect__placeholder {
   color: var(--text-light-color);
   display: block;
-  font-size: var(--app-font-base);
+  font-size: var(--font-size-ui-md);
   margin-bottom: 0;
   padding-top: 1px;
 }
@@ -324,7 +324,7 @@ export default {
   width: 34px;
 
   &::before {
-      border-color: var(--gray-3) transparent transparent;
+      border-color: var(--color-border-emphasis) transparent transparent;
   }
 }
 
@@ -354,7 +354,7 @@ export default {
     min-height: 30px;
 
   &.multiselect__option--selected {
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     color: var(--text-primary-color);
 
     &:after {
@@ -379,20 +379,20 @@ export default {
   height: 21px;
 
   &::placeholder {
-    color: var(--gray-4);
+    color: var(--color-text-muted);
   }
 }
 
 .ui-tooltip {
   background: var(--input-bg-light);
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-base);
   box-shadow: 0 2px 6px rgba(0, 0, 0, .16);
   color: var(--text-primary-color);
   display: flex;
   flex-wrap: wrap;
-  font-family: var(--font-base);
+  font-family: var(--font-family-sans);
   font-size: 13px;
-  font-weight: normal;
+  font-weight: var(--font-weight-regular);
   justify-content: center;
   height: auto;
   left: 50%;

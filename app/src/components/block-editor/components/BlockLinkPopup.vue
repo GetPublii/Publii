@@ -353,8 +353,8 @@ export default {
 
 .block-link-popup {
   background: var(--popup-bg);
-  border-radius: 6px;
-  box-shadow: 0 0 32px var(--shadow);
+  border-radius: var(--radius-base);
+  box-shadow: 0 0 32px var(--shadow-color);
   padding: 4rem;
   transform: scale(.5);
   transition: all .24s cubic-bezier(0, 0, 0.25, 0.99);
@@ -402,11 +402,11 @@ export default {
 }
 
 .block-link-popup-link-type-item {
-  border-bottom: 2px solid var(--gray-6);
+  border-bottom: 2px solid var(--color-border-muted);
   color: var(--label-color);
   cursor: pointer;
-  font-size: var(--app-font-base);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-ui-md);
+  font-weight: var(--font-weight-medium);
   padding: 12px 12px 20px;
   text-align: center;
   transition: all .24s ease-out;
@@ -429,7 +429,7 @@ export default {
   border: 1px solid var(--input-border-color);
   color: var(--text-primary-color);
   display: block;
-  font-size: var(--app-font-base);
+  font-size: var(--font-size-ui-md);
   margin: 32px 0 24px;
   padding: 14px;
   width: 100%;
@@ -468,23 +468,23 @@ export default {
   margin: 3rem -4rem -4rem;
 
   button {
-    background: var(--button-bg);
+    background: var(--button-primary-bg);
     border: none;
     box-shadow: none;
     border-bottom-left-radius: 6px;
-    border-top: 1px solid var(--button-bg);
+    border-top: 1px solid var(--button-primary-bg);
     color: var(--white);
     cursor: pointer;
     font-size: 15px;
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     line-height: 1;
     width: 50%;
     padding: 18px;
     transition: all .25s ease-out;
 
     &:hover {
-      background: var(--button-bg-hover);
-      border-color: var(--button-bg-hover);
+      background: var(--button-primary-bg-hover);
+      border-color: var(--button-primary-bg-hover);
     }
 
     &.outline {

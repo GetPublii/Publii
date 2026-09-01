@@ -80,7 +80,7 @@ export default {
 
 .search {
     max-width: 700px;
-    padding-left: 1rem;
+    padding-left: var(--space-4);
     position: relative;
     width: 100%;
 
@@ -90,7 +90,7 @@ export default {
         left: 1.5rem;
         position: absolute;
         top: 1.4rem;
-        transition: var(--transition);
+        transition: var(--transition-default);
         z-index: 1;
         
         &:hover {
@@ -102,14 +102,14 @@ export default {
         border: 0;
         border-radius: 30px;
         box-shadow: none;
-        font-size: var(--app-font-base);
+        font-size: var(--font-size-ui-md);
         height: 4.4rem;
         opacity: 0;
         padding: 0 5rem 0 6rem;
         pointer-events: none;
         position: relative;
         top: -0.125rem;
-        transition: var(--transition);
+        transition: var(--transition-default);
         transform: scaleX(.25);
         transform-origin: left center;
         width: calc(100% - 3rem); 
@@ -120,8 +120,8 @@ export default {
         border-radius: 50%;
         color: var(--icon-secondary-color);
         cursor: pointer;
-        font-size: 2.4rem;
-        font-weight: 300;
+        font-size: var(--font-size-ui-xl);
+        font-weight: var(--font-weight-light);
         height: 3rem;
         line-height: 1;       
         opacity: 0;

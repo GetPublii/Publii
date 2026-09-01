@@ -246,7 +246,7 @@ export default {
 
   figcaption {
     font-size: 0.7901em !important;
-    border-left: 2px solid var(--gray-3);
+    border-left: 2px solid var(--color-border-emphasis);
     padding: 0.4571em 0 0 1.1429em;
     text-align: left !important;
   }
@@ -280,7 +280,7 @@ export default {
   &:empty {
     &:before {
       content: attr(data-translation);
-      color: var(--gray-4);
+      color: var(--color-text-muted);
     }
   }
 }

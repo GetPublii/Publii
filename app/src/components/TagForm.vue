@@ -109,7 +109,7 @@
                         <label>
                             <image-upload
                                 slot="field"
-                                type="small"
+                                size="small"
                                 id="featured-image"
                                 :item-id="tagData.id"
                                 ref="tag-featured-image"
@@ -178,7 +178,7 @@
                                     :onClick="updateSlug" 
                                     :title="$t('ui.updateSlug')"
                                     icon="refresh"
-                                    type="secondary icon">
+                                    appearance="secondary">
                                 </p-button>
                             </div>
                         </label>
@@ -332,7 +332,7 @@
 
             <div class="options-sidebar-buttons">
                 <p-button
-                    type="secondary"
+                    appearance="secondary"
                     @click.native="save(false)">
                     <template v-if="tagData.id">{{ $t('ui.saveChanges') }}</template>
                     <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
@@ -340,7 +340,7 @@
 
                 <p-button
                     :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
-                    type="primary"
+                    intent="primary"
                     class="options-sidebar-preview-button"
                     @click.native="saveAndPreview">
                     {{ $t('ui.saveAndPreview') }}
@@ -353,7 +353,7 @@
 
                 <p-button
                     @click.native="close"
-                    type="outline">
+                    appearance="outline">
                     {{ $t('ui.cancel') }}
                 </p-button>
             </div>
@@ -698,25 +698,25 @@ export default {
 }
 
 .tag-settings-content {
-    padding: 0 0 1rem;
+    padding: 0 0 var(--space-4);
 
     .image-uploader {
         margin-top: 0;
     }
 
     .msg {
-        margin: 0 0 2rem;
+        margin: 0 0 var(--space-8);
     }
 }
 
 .tag-settings-hidden {
-    font-size: 1.4rem !important;
-    font-weight: var(--font-weight-normal) !important;
+    font-size: var(--font-size-ui-md) !important;
+    font-weight: var(--font-weight-regular) !important;
     line-height: 1.8 !important;
-    margin-top: 3rem;
+    margin-top: var(--space-12);
 
     svg {
-        margin: 0 .5rem 0 0;
+        margin: 0 var(--space-2) 0 0;
         position: relative;
         top: .2rem;
     }

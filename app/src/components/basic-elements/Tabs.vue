@@ -3,7 +3,7 @@
         :class="{
             'tabs': true,
             'tabs-horizontal': isHorizontal,
-            'tabs-scrollable': isScrollable
+            'tabs-scrollable': scrollable
         }"
         @click="detectInternalNavigation">
         <div
@@ -49,7 +49,7 @@
         </div>
 
         <button
-            v-if="isHorizontal && isScrollable && canScrollBackward"
+            v-if="isHorizontal && scrollable && canScrollBackward"
             type="button"
             class="tabs-scroll-control tabs-scroll-control-previous"
             :aria-label="$t('ui.showFirstTabs')"
@@ -58,12 +58,12 @@
                 name="preview-prev"
                 customWidth="5"
                 customHeight="10"
-                properties="not-clickable"
+                non-interactive
                 aria-hidden="true" />
         </button>
 
         <button
-            v-if="isHorizontal && isScrollable && canScrollForward"
+            v-if="isHorizontal && scrollable && canScrollForward"
             type="button"
             class="tabs-scroll-control tabs-scroll-control-next"
             :aria-label="$t('ui.showLastTabs')"
@@ -72,7 +72,7 @@
                 name="preview-next"
                 customWidth="5"
                 customHeight="10"
-                properties="not-clickable"
+                non-interactive
                 aria-hidden="true" />
         </button>
 
@@ -103,7 +103,7 @@ export default {
             type: String
         },
         items: {
-            default: [],
+            default: () => [],
             type: Array
         },
         onToggle: {
@@ -118,11 +118,12 @@ export default {
             default: '',
             type: String
         },
-        isHorizontal: {
-            default: false,
-            type: Boolean
+        orientation: {
+            default: 'vertical',
+            type: String,
+            validator: value => ['vertical', 'horizontal'].includes(value)
         },
-        isScrollable: {
+        scrollable: {
             default: false,
             type: Boolean
         }
@@ -136,6 +137,11 @@ export default {
             canScrollForward: false
         }
     },
+    computed: {
+        isHorizontal () {
+            return this.orientation === 'horizontal';
+        }
+    },
     mounted () {
         let lastOpenedTab = window.sessionStorage.getItem(this.id);
 
@@ -146,7 +152,7 @@ export default {
             this.activeItem = this.items[0] || false;
         }
 
-        if (this.isHorizontal && this.isScrollable) {
+        if (this.isHorizontal && this.scrollable) {
             this.$nextTick(() => {
                 this.scrollActiveTab(this.activeIndex, false);
                 this.updateScrollControls();
@@ -326,7 +332,7 @@ export default {
             this.canScrollForward = navigation.scrollLeft < maxScroll - 1;
         },
         scrollActiveTab (previousIndex = this.activeIndex, animate = true) {
-            if (!this.isHorizontal || !this.isScrollable) {
+            if (!this.isHorizontal || !this.scrollable) {
                 return;
             }
 
@@ -410,14 +416,14 @@ export default {
                     color: var(--text-light-color);
                     border-bottom: 2px solid transparent;
                     display: inline-block;
-                    margin: 0 2rem;
+                    margin: 0 var(--space-8);
                     padding: 0 0 1.7rem 0;
                     top: 2px;
                     width: auto;
 
                     &.active {
                         background: none!important;
-                        border-bottom: 2px solid var(--button-tertiary-bg);
+                        border-bottom: 2px solid var(--button-primary-bg);
                         border-radius: 0;
                         color: var(--tab-color);
                     }
@@ -437,7 +443,7 @@ export default {
 
         & > .content {
             border: none;
-            margin-top: 3rem;
+            margin-top: var(--space-12);
             padding-left: 0;
             width: 100%;
         }
@@ -489,7 +495,7 @@ export default {
             & > svg {
                 fill: var(--icon-secondary-color);
                 opacity: .7;
-                transition: var(--transition);
+                transition: var(--transition-default);
             }
 
             &:hover > svg,
@@ -499,7 +505,7 @@ export default {
             }
 
             &:focus-visible {
-                outline: 2px solid var(--button-tertiary-bg);
+                outline: 2px solid var(--button-primary-bg);
                 outline-offset: -2px;
             }
         }
@@ -531,23 +537,23 @@ export default {
             width: 18rem;
 
             & > li {
-                border-radius: var(--border-radius);
+                border-radius: var(--radius-base);
                 color: var(--tab-color);
                 cursor: pointer;
                 padding: 0.8rem 1.2rem;
                 position: relative;
-                transition: var(--transition);
+                transition: var(--transition-default);
                 width: 100%;
 
                 &.active {
                     background: var(--tab-active-bg)!important;
-                    border-radius: var(--border-radius);
+                    border-radius: var(--radius-base);
                     color: var(--tab-active-color) !important;
                     transition: all .125s ease-out;
                 }
 
                 &.subtab {
-                    padding: 0.6rem .6rem 0.6rem 3rem;
+                    padding: 0.6rem .6rem 0.6rem var(--space-12);
 
                     &::before {
                         border-radius: 0 0 0 2px;
@@ -565,7 +571,7 @@ export default {
 
                     &.active {
                         background: none !important;
-                        font-weight: var(--font-weight-semibold);
+                        font-weight: var(--font-weight-medium);
                     }
                 }
 
@@ -584,7 +590,7 @@ export default {
                 }
 
                 &:focus-visible {
-                    outline: 2px solid var(--button-tertiary-bg);
+                    outline: 2px solid var(--button-primary-bg);
                     outline-offset: 2px;
                 }
 
@@ -603,7 +609,7 @@ export default {
     & > .content {
         border-left: 5px solid var(--bg-site);
         margin-left: auto;
-        padding-left: 4rem;
+        padding-left: var(--space-16);
         width: calc( 100% - 22rem);
 
         & > .tab {
@@ -614,7 +620,7 @@ export default {
             }
 
             .msg {
-                margin: 2rem 0;
+                margin: var(--space-8) 0;
             }
 
             .separator:first-child {
@@ -625,7 +631,7 @@ export default {
 }
 
 .tabs-warning {
-    color: var(--warning);
+    color: var(--color-danger);
     display: inline-block;
     font-weight: var(--font-weight-bold);
 }
@@ -650,11 +656,11 @@ export default {
     }
 
     .tabs > div > ul > li {
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
     }
 
     .tabs > .content {
-        padding-left: 3rem;
+        padding-left: var(--space-12);
         width: calc(100% - 18rem);
     }
 }
@@ -666,11 +672,11 @@ export default {
     }
 
     .tabs > div > ul > li {
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
     }
 
     .tabs > .content {
-        padding-left: 3rem;
+        padding-left: var(--space-12);
         width: calc(100% - 18rem);
     }
 }

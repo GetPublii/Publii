@@ -56,9 +56,10 @@ export default {
             default: '',
             type: String
         },
-        type: {
-            default: '',
-            type: String
+        size: {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'small'].includes(value)
         },
         'item-id': {
             type: [String, Number]
@@ -157,7 +158,7 @@ export default {
         },
         wrapperCssClasses () {
             let cssClasses = {
-                'is-small': this.type.indexOf('small') > -1,
+                'is-small': this.size === 'small',
                 'upload-image-wrapper': true,
                 'is-empty': this.isEmpty
             };
@@ -176,7 +177,7 @@ export default {
                 'upload-image': true,
                 'is-empty': this.isEmpty,
                 'is-hovered': this.isHovered,
-                'is-small': this.type.indexOf('small') > -1
+                'is-small': this.size === 'small'
             };
         },
         backgroundImage () {
@@ -331,15 +332,15 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     border: 2px dashed var(--input-border-color);
-    border-radius: var(--border-radius);
-    color: var(--gray-3);
+    border-radius: var(--radius-base);
+    color: var(--color-text-subtle);
     display: block;
-    font-size: var(--app-font-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-base);
     margin: 0 0 -40px 0;
     text-align: center;
-    padding: 3rem 5rem;
+    padding: var(--space-12) 5rem;
     position: relative;
     width: 100%;
 
@@ -407,7 +408,7 @@ export default {
     color: transparent; /* hack to remove the phrase "no file selected" from the file input */
     display: block;
     line-height: 1.6!important;
-    margin: 2rem auto 0 auto!important;
+    margin: var(--space-8) auto 0 auto!important;
 
     span {
             display: none;
@@ -417,14 +418,14 @@ export default {
         -webkit-appearance: none;
         background: var(--button-secondary-bg);
         border: 1px solid var(--button-secondary-bg);
-        border-radius: var(--border-radius);
+        border-radius: var(--radius-base);
         color: var(--button-secondary-color);
         cursor: pointer;
         display: inline-block;
-        font-size: 1.4rem;
-        font-weight: var(--font-weight-semibold);
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-medium);
         left: 50%;
-        padding: .75rem 1.5rem;
+        padding: var(--space-3) var(--space-6);
         position: relative;
         transform: translate(-50%, 0);
         outline: none;
@@ -438,7 +439,7 @@ export default {
 }
 
 .upload-remove {
-    color: var(--warning);
+    color: var(--color-danger);
     display: block;
     font-size: 13px;
     margin: 10px 0;
@@ -453,19 +454,19 @@ export default {
 }
 
 .upload-overlay {
-    color: var(--gray-3);
+    color: var(--color-text-subtle);
     display: none;
 
     svg {
         display: block;
         fill: var(--icon-quaternary-color);
-        margin: 0 auto 1.5rem;
+        margin: 0 auto var(--space-6);
 
     }
 }
 
 .upload-uploading-overlay {
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     height: 100%;
     left: 0;
     position: absolute;
@@ -473,7 +474,7 @@ export default {
     width: 100%;
 
     & > div {
-        color: var(--gray-3)!important;
+        color: var(--color-text-subtle)!important;
         left: 50%;
         position: absolute;
         top: 50%;
@@ -484,7 +485,7 @@ export default {
     .loader {
         display: block;
         height: 2.8rem;
-        margin: 0 auto 1rem;
+        margin: 0 auto var(--space-4);
         width: 2.8rem;
 
         & > span {

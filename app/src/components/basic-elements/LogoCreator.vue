@@ -17,7 +17,7 @@
                 class="logo-creator-icon-block" >
                 <icon                   
                     size="m"
-                    properties="not-clickable"
+                    non-interactive
                     :name="icon" 
                     iconset="svg-map-site"/>
             </li>
@@ -154,12 +154,12 @@ export default {
     line-height: 100%;
     min-width: 23rem;
     overflow: hidden;
-    padding: 1rem;
+    padding: var(--space-4);
     text-align: left;       
 }
 
 .logo-creator-color {        
-    margin: 0 0 1rem;
+    margin: 0 0 var(--space-4);
     padding: 0;
 }
 
@@ -172,7 +172,7 @@ export default {
     list-style-type: none;
     margin: 0 0.15rem;
     padding: 0;
-    transition: all .2s ease-out;
+    transition: var(--transition-default);
     width: 3.2rem;
 
     &[data-status="active"] {
@@ -198,14 +198,14 @@ export default {
     height: 3rem;
     list-style-type: none;
     padding: 0 1px 0 0;
-    transition: all .2s ease-out;  
+    transition: var(--transition-default);
     
     &:hover {
         color: var(--icon-tertiary-color);
     }
 
     & > svg {                 
-        margin: .5rem;
+        margin: var(--space-2);
     }
 
     &[data-status="active"] {

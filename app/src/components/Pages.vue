@@ -14,7 +14,7 @@
 
             <btn-dropdown
                 slot="buttons"
-                buttonColor="green"
+                intent="primary"
                 localStorageKey="publii-current-page-editor"
                 :previewIcon="true"
                 :items="dropdownItems"
@@ -70,7 +70,7 @@
 
         <collection
             v-if="dataLoaded && !emptySearchResults && hasPages"
-            :itemsCount="showModificationDate && showModificationDateAsColumn ? 6 : 5">
+            :columns="showModificationDate && showModificationDateAsColumn ? 6 : 5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -157,7 +157,8 @@
                     <p-button
                         v-if="trashVisible"
                         icon="delete"
-                        type="small light icon delete"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>
@@ -165,7 +166,8 @@
                     <p-button
                         v-if="trashVisible"
                         icon="restore"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkRestore">
                         {{ $t('file.restore') }}
                     </p-button>
@@ -173,7 +175,8 @@
                     <p-button
                         v-if="!trashVisible"
                         icon="trash"
-                        type="small light icon delete"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkTrash">
                         {{ $t('page.moveToTrash') }}
                     </p-button>
@@ -181,7 +184,8 @@
                     <p-button
                         v-if="!trashVisible"
                         icon="duplicate"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDuplicate">
                         {{ $t('page.duplicate') }}
                     </p-button>
@@ -191,7 +195,9 @@
                         class="dropdown-wrapper">
                         <p-button
                             icon="more"
-                            :type="bulkDropdownVisible ? 'small light icon active' : 'small light icon'"
+                            appearance="light"
+                            size="small"
+                            :active="bulkDropdownVisible"
                             @click.native.stop="toggleBulkDropdown">
                             {{ $t('ui.more') }}
                         </p-button>
@@ -241,7 +247,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="titles"
+                    variant="titles"
                     :style="'--item-depth: ' + (item.depth || 0)"
                     :data-item-depth="item.depth || 0">
 
@@ -346,7 +352,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="publish-dates">
+                    variant="publish-dates">
                     <span class="publish-date">{{ getCreationDate(item.created) }}</span>
                     <span
                         v-if="!showModificationDateAsColumn && showModificationDate"
@@ -357,14 +363,14 @@
 
                 <collection-cell
                     v-if="showModificationDate && showModificationDateAsColumn"
-                    type="modification-dates">
+                    variant="modification-dates">
                     <span class="modify-date">
                         {{ getModificationDate(item.modified) }}
                     </span>
                 </collection-cell>
 
                 <collection-cell
-                    type="authors">
+                    variant="authors">
                     <a
                         href="#"
                         @click.prevent.stop="setFilter('author:' + item.author)">
@@ -401,7 +407,6 @@
                 <p-button
                     slot="button"
                     icon="add-site-mono"
-                    type="icon"
                     :onClick="addNewPage.bind(this, 'tinymce')">
                     {{ $t('page.addNewPage') }}
                 </p-button>
@@ -414,7 +419,6 @@
                 <p-button
                     slot="button"
                     icon="add-site-mono"
-                    type="icon"
                     :onClick="addNewPage.bind(this, 'blockeditor')">
                     {{ $t('page.addNewPage') }}
                 </p-button>
@@ -427,7 +431,6 @@
                 <p-button
                     slot="button"
                     icon="add-site-mono"
-                    type="icon"
                     :onClick="addNewPage.bind(this, 'markdown')">
                     {{ $t('page.addNewPage') }}
                 </p-button>
@@ -1323,7 +1326,7 @@ export default {
 
 .item {
     .page-slug {
-        color: var(--gray-4);
+        color: var(--color-text-muted);
         font-size: 11px;
         margin-top: .2rem;
     }
@@ -1341,8 +1344,8 @@ export default {
     .page-item-unselect {
         color: var(--link-primary-color);
         display: inline-block;
-        font-size: 1.4rem;
-        padding: 0 .5rem;
+        font-size: var(--font-size-ui-md);
+        padding: 0 var(--space-2);
 
         &:active,
         &:focus,
@@ -1362,17 +1365,17 @@ export default {
 
     .page-item-insert-actions {
         color: var(--text-light-color);
-        font-size: 1.4rem;
-        padding: 0 .5rem;
+        font-size: var(--font-size-ui-md);
+        padding: 0 var(--space-2);
     }
 
     .page-item-unselect {
-        color: var(--warning);
+        color: var(--color-danger);
         left: -9px;
         position: relative;
 
         & > svg {
-            fill: var(--warning);
+            fill: var(--color-danger);
             position: relative;
             left: -3px;
             top: 3px;
@@ -1382,7 +1385,7 @@ export default {
     .page-item-submenu,
     .page-item-insert-before,
     .page-item-insert-after {
-        padding-right: 1rem;
+        padding-right: var(--space-4);
         position: relative;
 
         &::after {
@@ -1416,15 +1419,15 @@ export default {
     .label {
         color: var(--text-light-color);
         float: left;
-        margin-right: 1rem;
+        margin-right: var(--space-4);
     }
 
     .filter-value {
         color: var(--text-light-color);
         cursor: pointer;
         display: inline-block;
-        margin-right: 1rem;
-        transition: var(--transition);
+        margin-right: var(--space-4);
+        transition: var(--transition-default);
 
         &.filter-active {
             color: var(--link-primary-color);
@@ -1468,12 +1471,12 @@ export default {
 
         .dropdown {
             background: var(--popup-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-medium);
+            border-radius: var(--radius-base);
+            box-shadow: var(--shadow-md);
             left: 0;
             list-style-type: none;
             margin: 0;
-            padding: 1rem 0;
+            padding: var(--space-4) 0;
             position: absolute;
             top: 4rem;
             width: auto;
@@ -1483,13 +1486,13 @@ export default {
                 color: var(--text-light-color);
                 cursor: pointer;
                 display: block;
-                font-size: 1.4rem;
-                font-weight: var(--font-weight-semibold);
+                font-size: var(--font-size-ui-md);
+                font-weight: var(--font-weight-medium);
                 padding: .8rem 2.4rem;
                 white-space: nowrap;
 
                 &:hover {
-                    background: var(--gray-1);
+                    background: var(--color-surface-subtle);
                     color: var(--text-primary-color);
                 }
 
@@ -1506,8 +1509,8 @@ export default {
     border-radius: 0 0 0 2px;
     width: 11px; 
     height: 8px;
-    border-left: 1px solid var(--gray-4);
-    border-bottom: 1px solid var(--gray-4);
+    border-left: 1px solid var(--color-border-strong);
+    border-bottom: 1px solid var(--color-border-strong);
     position: absolute;
     left: calc(-.6rem + (2.4rem * var(--item-depth)));
     top: 50%;
@@ -1515,8 +1518,8 @@ export default {
 }
 
 .edit-page-hierarchy-warning {
-    color: var(--warning);
-    padding-right: 1rem;
+    color: var(--color-danger);
+    padding-right: var(--space-4);
     position: relative;
     top: -4px;
 }

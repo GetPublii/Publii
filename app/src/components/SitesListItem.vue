@@ -216,7 +216,7 @@ export default {
     cursor: pointer;
     display: flex;
     margin: 0;
-    padding: 1.2rem 2rem;
+    padding: 1.2rem var(--space-8);
     position: relative;
 
     &:focus {
@@ -280,7 +280,7 @@ export default {
         height: 1.6rem;
         pointer-events: none;
         transform: scale(.9);
-        transition: var(--transition);
+        transition: var(--transition-default);
         width: 1.6rem;
     }
 
@@ -289,7 +289,7 @@ export default {
         &:hover {
 
             & > svg {
-               fill: var(--warning);
+               fill: var(--color-danger);
            }
         }
     }
@@ -329,20 +329,20 @@ export default {
     display: flex;
     height: auto;
     justify-content: center;
-    margin-right: 1.5rem;
+    margin-right: var(--space-6);
     position: relative;
     width: 3.3rem;
 }
 .single-site-name {
     display: block;    
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     line-height: 3.6rem;
     margin: 0;
     overflow: hidden;
     padding: 0;
     text-align: left;
     text-overflow: ellipsis;
-    transition: var(--transition);
+    transition: var(--transition-default);
     white-space: nowrap;
     max-width: 82%;
 
@@ -352,7 +352,7 @@ export default {
     }
 
     small {
-        color: var(--gray-4);
+        color: var(--color-text-muted);
         display: block;
         line-height: 1.4;
         white-space: normal;

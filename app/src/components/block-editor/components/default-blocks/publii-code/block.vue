@@ -191,17 +191,17 @@ export default {
 <style>
 
 .publii-block-code {
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     background: var(--pre-bg);
-    border-radius: var(--border-radius);
-    box-shadow: 2px 4px 26px var(--shadow);
+    border-radius: var(--radius-base);
+    box-shadow: 2px 4px 26px var(--shadow-color);
     outline: none;
     width: 100%;
 
     &:empty {
         &:before {
             content: attr(data-translation);
-            color: var(--gray-4);
+            color: var(--color-text-muted);
         }
     }
 

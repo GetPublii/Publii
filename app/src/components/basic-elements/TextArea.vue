@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { applyAppAppearance } from './../../helpers/app-appearance';
 import Utils from './../../helpers/utils';
 import Vue from 'vue';
 
@@ -212,8 +213,9 @@ export default {
                 setup: async function (editor) {
                     editor.on('init', async function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
-                        let htmlElement = iframe.contentWindow.window.document.querySelector('html');
-                        htmlElement.setAttribute('data-theme', await self.$root.getCurrentAppTheme());
+                        let iframeDocument = iframe.contentWindow.window.document;
+                        let htmlElement = iframeDocument.querySelector('html');
+                        applyAppAppearance(iframeDocument, await self.$root.getCurrentAppTheme());
                         htmlElement.setAttribute('style', self.$root.overridedCssVariables);
                     });
 
@@ -343,11 +345,11 @@ export default {
 .publii-textarea {
     background-color: var(--input-bg);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
     display: block;
-    font: 400 var(--app-font-base)/1.5 var(--font-base);
+    font: var(--font-weight-regular) var(--font-size-ui-md)/var(--line-height-base) var(--font-family-sans);
     max-width: 100%;
     overflow: auto;
     outline: none;

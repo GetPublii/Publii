@@ -11,7 +11,7 @@
             <p-button
                 :onClick="showAddMenuForm"
                 slot="buttons"
-                type="primary icon"
+                intent="primary"
                 icon="add-site-mono">
                 {{ $t('menu.addNewMenu') }}
             </p-button>
@@ -19,7 +19,7 @@
 
         <collection
             v-if="!showEmptyState"
-            :itemsCount="4">
+            :columns="4">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -37,8 +37,8 @@
                 </collection-cell>
 
                 <collection-cell
-                    justifyContent="center"
-                    textAlign="center"
+                    justify-content="center"
+                    text-align="center"
                     min-width="80px">
                     {{ $t('menu.items') }}
                 </collection-cell>
@@ -48,7 +48,8 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>
@@ -66,7 +67,7 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell type="titles">
+                <collection-cell variant="titles">
                     <h2 class="title">
                         <a
                             href="#"
@@ -77,7 +78,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="assignment">
+                    variant="assignment">
                     
                     <a 
                         href="#"
@@ -92,8 +93,8 @@
                 </collection-cell>
 
                 <collection-cell
-                    justifyContent="center"
-                    textAlign="center">
+                    justify-content="center"
+                    text-align="center">
                     <a
                         @click.prevent.stop="toggleMenu(index)"
                         href="#">
@@ -106,13 +107,13 @@
                     class="item-content">
                     <p-button
                         icon="add-site-mono"
-                        type="secondary icon"
+                        appearance="secondary"
                         @click.native="addMenuItem(index)">
                         {{ $t('menu.addMenuItem') }}
                     </p-button>
                     <p-button
                      icon="edit"
-                        type="clean icon"
+                        appearance="clean"
                         class="menu-edit-btn"
                         @click.native="editMenuName(item.name, index)">
                         {{ $t('menu.editMenuName') }}
@@ -165,7 +166,6 @@
             <p-button
                 slot="button"
                 icon="add-site-mono"
-                type="icon"
                 :onClick="showAddMenuForm">
                 {{ $t('menu.addNewMenu') }}
             </p-button>
@@ -507,7 +507,7 @@ export default {
         grid-column-start: 1;
         grid-column-end: 5;
         overflow: hidden;
-        padding: 3rem 0 3rem 3rem;
+        padding: var(--space-12) 0 var(--space-12) var(--space-12);
         user-select: none;
         width: 100%;
     }
@@ -520,13 +520,13 @@ export default {
 }
 
 .menu-assignment-link {
-    padding-right: 4rem;
+    padding-right: var(--space-16);
     position: relative;
     width: 100%;
 }
 
 .menu-assignment-link-icon {
-    border-color: var(--button-gray-bg) transparent transparent;
+    border-color: var(--color-surface-strong) transparent transparent;
     border-style: solid;
     border-width: 5px;
     opacity: 1;
@@ -539,7 +539,7 @@ export default {
     right: 0;
     width: 5px;
     text-align: center;
-    transition: var(--transition);
+    transition: var(--transition-default);
     top: calc(50% - 2px);
 }
 
@@ -552,7 +552,7 @@ export default {
 
 .menu-item-list {
     list-style-type: none;
-    margin: calc(.25 * var(--spacing)) 0;
+    margin: calc(.25 * var(--space-unit)) 0;
     padding: 0;
 }
 

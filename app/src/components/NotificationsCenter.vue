@@ -8,7 +8,8 @@
             <p-header :title="$t('notifications.notifications')">
                 <p-button
                     :onClick="goBack"
-                    type="clean back"
+                    appearance="clean"
+                    back
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
@@ -17,7 +18,7 @@
                     v-if="notificationsStatus === 'accepted'"
                     :onClick="checkUpdates"
                     slot="buttons"
-                    type="primary icon"
+                    intent="primary"
                     icon="refresh"
                     :disabled="receivingNotificationsInProgress">
                     {{ $t('notifications.checkUpdates') }}
@@ -55,7 +56,7 @@
 
                             <div class="notification-item-actions">
                                 <p-button 
-                                    class="button-secondary"
+                                    appearance="secondary"
                                     v-if="news.link"
                                     :onClick="() => openLink(news.link)">
                                     {{ $t('notifications.readMore') }}
@@ -103,7 +104,8 @@
 
                                     <p-button
                                         v-if="notifications.publii.links.releaseNotes"
-                                        class="button-clean notification-item-version-details"
+                                        class="notification-item-version-details"
+                                        appearance="clean"
                                         :onClick="() => openLink(notifications.publii.links.releaseNotes)">
                                         {{ $t('notifications.viewDetails') }}
                                     </p-button>
@@ -118,9 +120,8 @@
 
                         <div class="notification-item-actions">
                             <p-button 
-                                class="button-secondary"
+                                appearance="secondary"
                                 :onClick="() => openLink(notifications.publii.links.download)" 
-                                type="icon"
                                 icon="download">
                                 {{ $t('notifications.downloadUpdate') }}
                             </p-button>
@@ -171,7 +172,8 @@
 
                                         <p-button
                                             v-if="theme.links.releaseNotes"
-                                            class="button-clean notification-item-version-details"
+                                            class="notification-item-version-details"
+                                            appearance="clean"
                                             :onClick="() => openLink(theme.links.releaseNotes)">
                                             {{ $t('notifications.viewDetails') }}
                                         </p-button>
@@ -186,9 +188,8 @@
 
                             <div class="notification-item-actions">
                                 <p-button
-                                    class="button-secondary"
+                                    appearance="secondary"
                                     :onClick="() => openLink(theme.links.download)"
-                                    type="icon"
                                     icon="download">
                                     {{ $t('notifications.downloadUpdate') }}
                                 </p-button>
@@ -241,7 +242,8 @@
 
                                         <p-button
                                             v-if="plugin.links.releaseNotes"
-                                            class="button-clean notification-item-version-details"
+                                            class="notification-item-version-details"
+                                            appearance="clean"
                                             :onClick="() => openLink(plugin.links.releaseNotes)">
                                             {{ $t('notifications.viewDetails') }}
                                         </p-button>
@@ -256,9 +258,8 @@
 
                             <div class="notification-item-actions">
                                 <p-button
-                                    class="button-secondary"
+                                    appearance="secondary"
                                     :onClick="() =>openLink(plugin.links.download)"
-                                    type="icon"
                                     icon="download">
                                     {{ $t('notifications.downloadUpdate') }}
                                 </p-button>
@@ -291,7 +292,7 @@
 
                 <p-button
                     slot="button"
-                    type="outline"
+                    appearance="outline"
                     :onClick="rejectConsent">
                     {{ $t('notifications.rejectConsent') }}
                 </p-button>
@@ -559,14 +560,14 @@ export default {
 <style scoped>
 
 .notifications {
-    padding: 3rem 0 4rem;
+    padding: var(--space-12) 0 var(--space-16);
     width: 100%;
 
     .notification {
         .notification-title {
             font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 0.25rem;
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-1);
             width: 100%;
         }
 
@@ -590,7 +591,7 @@ export default {
 
         .notification-item {
             display: flex;
-            gap: 2rem;
+            gap: var(--space-8);
 
             & + .notification-item {
                 border-top: 1px solid var(--border-light-color);
@@ -603,10 +604,10 @@ export default {
                     &::after {
                         content: attr(data-new-badge); 
                         display: inline-flex;
-                        margin-left: .75rem;
+                        margin-left: var(--space-3);
                         padding: 1px 5px;
                         border-radius: 4px;
-                        background: var(--success);
+                        background: var(--color-success);
                         color: var(--white);
                         font-size: 1rem;
                         font-weight: var(--font-weight-bold);
@@ -627,7 +628,7 @@ export default {
             align-items: center;
             display: flex;
             flex: 1;
-            gap: 2rem;
+            gap: var(--space-8);
             width: calc(100% - 220px);
         }
 
@@ -640,19 +641,19 @@ export default {
         .notification-item-name {
             font-size: 1.5rem;
             font-weight: var(--font-weight-bold);
-            margin-bottom: 0.25rem;
+            margin-bottom: var(--space-1);
             width: 100%;
         }
         .notification-item-versions {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: var(--space-4);
 
             & > * + *::before {
                 color: var(--input-border-color);
                 content: "|";
                 display: inline-block;
-                margin-right: 0.5rem;
+                margin-right: var(--space-2);
             }
         }
 
@@ -702,7 +703,7 @@ export default {
         }
 
         [data-type="warning"] .notification-icon-wrapper {
-            background: var(--warning);
+            background: var(--color-danger);
         }
 
         .notification-item-actions {
@@ -715,7 +716,7 @@ export default {
                 text-align: center;
 
                 & + .button {
-                    margin-top: 0.75rem;
+                    margin-top: var(--space-3);
                     margin-left: 0;
                 }
             }
@@ -731,13 +732,13 @@ export default {
 }
 
 .notifications-version {
-    margin: -2.5rem 0 4rem;
+    margin: -2.5rem 0 var(--space-16);
 }
 
 .notifications-consent {
     color: var(--text-lightest-color);
     font-size: 13px;
-    margin: 4rem auto;
+    margin: var(--space-16) auto;
     max-width: 50%;
     position: sticky;
     text-align: center;

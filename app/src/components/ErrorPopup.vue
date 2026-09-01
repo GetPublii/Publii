@@ -16,13 +16,19 @@
 
             <div class="buttons">
                 <p-button
-                    type="medium danger no-border-radius half-width"
+                    intent="danger"
+                    size="medium"
+                    width="half"
+                    square
                     :onClick="copyToClipboard">
                     {{ $t('ui.copyToClipboard') }}
                 </p-button>
 
                 <p-button
-                    type="medium no-border-radius half-width cancel-popup"
+                    appearance="popup-cancel"
+                    size="medium"
+                    width="half"
+                    square
                     :onClick="close">
                     {{ $t('ui.close') }}
                 </p-button>
@@ -68,7 +74,7 @@ export default {
 @import '../css/popup-common.css';
 
 .popup {
-    padding: 4rem;
+    padding: var(--space-16);
     width: 60rem;
 
     .error-log {
@@ -89,12 +95,12 @@ textarea {
 }
 
 .message {
-    padding: 0 0 4rem 0;
+    padding: 0 0 var(--space-16) 0;
 }
 
 .buttons {
     display: flex;
-    margin: 4rem -4rem -4rem -4rem;
+    margin: var(--space-16) -4rem -4rem -4rem;
     position: relative;
     text-align: center;
     top: 1px;

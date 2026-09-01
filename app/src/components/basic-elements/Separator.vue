@@ -82,7 +82,7 @@ export default {
     &.medium,
     &.big,
     &.ultra {
-        padding-bottom: 2rem;
+        padding-bottom: var(--space-8);
 
         & > .separator-wrapper {
 
@@ -93,15 +93,15 @@ export default {
     }
 
     &.small {
-        padding-top: 2rem;
+        padding-top: var(--space-8);
     }
 
     &.medium {
-        padding-top: 3rem;
+        padding-top: var(--space-12);
     }
 
     &.big {
-        padding-top: 4rem;
+        padding-top: var(--space-16);
     }
 
     &.ultra {
@@ -114,8 +114,8 @@ export default {
         & > label {
             color: var(--headings-color);
             display: block;
-            font-size: 1.6rem;
-            font-weight: 600;
+            font-size: var(--font-size-ui-lg);
+            font-weight: var(--font-weight-semibold);
             padding: 3.5rem 0 0;
 
         }
@@ -125,7 +125,7 @@ export default {
         padding: 0;
         clear: both;
         display: block;
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
         font-style: italic;
         line-height: 1.4;
         opacity: .75;
@@ -147,7 +147,7 @@ export default {
     }
 
     &.no-line {
-        padding: 0 0 2rem;
+        padding: 0 0 var(--space-8);
         & > .separator-wrapper::before {     
             content: none; 
         }
@@ -162,7 +162,7 @@ export default {
 
     &.empty {
         & > .separator-wrapper {
-            padding-bottom: .25rem;
+            padding-bottom: var(--space-1);
         }
     }
 
@@ -174,8 +174,8 @@ export default {
             }
 
              & > label {
-                 font-size: 1.6rem;
-                padding-top: 2rem;
+                 font-size: var(--font-size-ui-lg);
+                padding-top: var(--space-8);
             }
         }
     }
@@ -196,7 +196,7 @@ export default {
         .separator-wrapper {
             
             & > label {
-                padding-top: .5rem;
+                padding-top: var(--space-2);
             }
 
             &::before {
@@ -213,7 +213,7 @@ export default {
         .separator-wrapper {
             
             & > label {
-                padding-top: .5rem;
+                padding-top: var(--space-2);
             }
 
             &::before {

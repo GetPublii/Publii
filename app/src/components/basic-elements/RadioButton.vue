@@ -30,12 +30,8 @@ export default {
             type: String
         },
         items: {
-            default: [],
+            default: () => [],
             type: Array
-        },
-        selected: {
-            default: '',
-            type: String
         },
         value: {
             default: '',
@@ -68,7 +64,7 @@ export default {
     },
     data: function() {
         return {
-            content: ''
+            content: this.value
         };
     },
     watch: {
@@ -77,13 +73,6 @@ export default {
         },
         content: function(newValue) {
             this.$emit('input', newValue);
-        }
-    },
-    mounted () {
-        if (this.value) {
-            this.content = this.value;
-        } else {
-            this.content = this.selected;
         }
     }
 }
@@ -104,7 +93,7 @@ input[type="radio"] + label {
     display: inline-block;
     cursor: pointer;
     top: 0;
-    margin-right: 1rem;
+    margin-right: var(--space-4);
 }
 
 label.radio:before {
@@ -114,7 +103,7 @@ label.radio:before {
     display: inline-block;
     height: 1.8rem;
     line-height: 1.8rem;
-    margin-right: .5rem;
+    margin-right: var(--space-2);
     vertical-align: sub;
     text-align: center;
     width: 1.8rem;

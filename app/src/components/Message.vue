@@ -77,7 +77,7 @@ export default {
     transform: translate(-50%, 0);
     user-select: none;
     width: 100%;
-    z-index: 100003;
+    z-index: var(--layer-toast);
 
     .message {
         animation: messages-animation .24s cubic-bezier(.17, .67, .6, 1.34) forwards;
@@ -107,16 +107,16 @@ export default {
     align-items: center;
     background: var(--popup-bg);
     border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(var(--black-rgb), .1);
     color: var(--text-primary-color);
     display: flex;
-    font-size: 1.4rem;
-    gap: 2rem;
+    font-size: var(--font-size-ui-md);
+    gap: var(--space-8);
     justify-content: center;
     line-height: 1.4;
     margin: 0;
     max-width: 48rem;
-    padding: 2rem;
+    padding: var(--space-8);
     pointer-events: all;
     position: absolute;
 
@@ -125,11 +125,11 @@ export default {
     }
 
     &[data-type="success"] .icon-wrapper {
-        background: var(--success);
+        background: var(--color-success);
     }
 
     &[data-type="warning"] .icon-wrapper {
-        background: var(--warning);
+        background: var(--color-danger);
     }
 
     .icon-wrapper {

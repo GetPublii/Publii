@@ -19,7 +19,7 @@
                 @click.stop.prevent="deleteTheme(name, directory)">
                     <icon
                         size="xs"
-                        properties="not-clickable"
+                        non-interactive
                         name="trash" />
             </a>
 
@@ -115,14 +115,14 @@ export default {
 .theme {
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow-small);      
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-sm);
     height: 100%;
     margin: 0;
     overflow: hidden;
-    padding: 1rem;
+    padding: var(--space-4);
     position: relative;
-    transition: var(--transition);
+    transition: var(--transition-default);
     text-align: center
 }
 
@@ -147,12 +147,12 @@ export default {
     & > svg {
          fill: var(--icon-secondary-color);
          transform: scale(.9);
-         transition: var(--transition);
+         transition: var(--transition-default);
     }
 
     &:hover {
          & > svg {
-            fill: var(--warning);
+            fill: var(--color-danger);
             transform: scale(1);
          }
     }
@@ -160,16 +160,16 @@ export default {
 
 .theme-name {
     align-items: center;
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     border-radius: 0 0 4px 4px;
     display: flex;
     justify-content: space-between;
-    padding: 0 2rem;
+    padding: 0 var(--space-8);
     text-align: left;
 
     & > h3 {
-         font-size: 1.4rem;
-         font-weight: var(--font-weight-semibold);
+         font-size: var(--font-size-ui-md);
+         font-weight: var(--font-weight-medium);
          line-height: 1.4;
          margin: 1.2rem 0;
     }
@@ -178,15 +178,15 @@ export default {
 .theme-version {
     color: var(--text-light-color);
     display: block;
-    font-size: 1.2rem;
-    font-weight: 400;
-    margin: 0 4rem 0 auto;
+    font-size: var(--font-size-ui-xs);
+    font-weight: var(--font-weight-regular);
+    margin: 0 var(--space-16) 0 auto;
 }
 
 .theme-new-version-available {
-    background: var(--highlighted);
+    background: var(--color-highlight-surface);
     left: 1rem;
-    padding: 2rem;        
+    padding: var(--space-8);
     position: absolute;
     right: 0;
     top: 1rem;

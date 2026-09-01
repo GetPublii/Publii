@@ -2,8 +2,6 @@
  * Common HTML elements
  */
 
-@import url('../assets/vendor/css/normalize.css');
-
 *,
 *:before,
 *:after {
@@ -18,9 +16,9 @@ html {
 body {
     background-color: var(--bg-site);
     color: var(--text-primary-color);
-    font: 400 1rem var(--font-base);
+    font: var(--font-weight-regular) 1rem var(--font-family-sans);
     -webkit-font-smoothing: subpixel-antialiased;
-    line-height: var(--line-height);
+    line-height: var(--line-height-base);
 }
 
 html,
@@ -31,7 +29,7 @@ body {
 a {
     color: var(--link-primary-color);
     text-decoration: none;
-    transition: var(--transition);
+    transition: var(--transition-default);
 
     &:active,
     &:focus,
@@ -52,52 +50,52 @@ h1,
 h2,
 h3,
 h4 {
-    font-family: var(--font-base);
+    font-family: var(--font-family-sans);
 }
 
 h1 {
     color: var(--headings-color);
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     letter-spacing: -.01em;
 }
 
 h2 {
     color: var(--headings-color);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     text-transform: uppercase;
-    margin: 0 0 2rem;
+    margin: 0 0 var(--space-8);
 }
 
 h3 {
     color: var(--headings-color);
     font-size: 1.8rem;
-    font-weight: 600;
-    margin: 0 0 2rem;
+    font-weight: var(--font-weight-semibold);
+    margin: 0 0 var(--space-8);
 }
 
 h4 {
     color: var(--headings-color);
-    font-size: var(--app-font-base);
-    font-weight: 600;
-    margin: 0 0 1rem;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-semibold);
+    margin: 0 0 var(--space-4);
 }
 
 b {
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
 }
 
 table {
     width: 100%;
 
     td {
-        padding: 0 0 calc(12 * var(--spacing));
+        padding: 0 0 calc(12 * var(--space-unit));
         vertical-align: top;
     }
 }
 
 form p {
-    margin-bottom: calc(6 * var(--spacing));
+    margin-bottom: calc(6 * var(--space-unit));
 }
 
 
@@ -131,7 +129,7 @@ form p {
 
 .is-validation-message,
 .is-required {
-    color: var(--warning);
+    color: var(--color-danger);
 }
 
 .is-rotating {

@@ -14,7 +14,7 @@
                     <icon
                         customWidth="50"
                         customHeight="46"
-                        properties="not-clickable"
+                        non-interactive
                         name="add" />
                     <h3>{{ $t('plugins.getMorePlugins') }}</h3>
                 </a>
@@ -27,8 +27,7 @@
 
         <overlay
             v-if="pluginIsOver"
-            :hasBorder="true"
-            :isBlue="true">
+            appearance="drop-zone">
             <div>{{ $t('file.dropYourFileHere') }}</div>
         </overlay>
     </div>
@@ -81,7 +80,7 @@ export default {
 .plugins {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
+    gap: var(--space-12);
     position: relative;
     user-select: none;
 
@@ -95,16 +94,16 @@ export default {
 .add-more-plugins {
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow-small);      
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-sm);
     height: 100%;
-    transition: var(--transition);
+    transition: var(--transition-default);
     text-align: center;
 
     &:hover {
          background: var(--bg-primary);
          border-color: var(--color-primary);
-         box-shadow: 0 0 26px rgba(black, .07);
+         box-shadow: var(--shadow-list-hover);
 
          svg {
              fill: var(--color-primary);
@@ -127,8 +126,8 @@ export default {
 
     h3 {
          color: var(--text-primary-color);
-         font-size: var(--app-font-base);
-         font-weight: var(--font-weight-semibold);
+         font-size: var(--font-size-ui-md);
+         font-weight: var(--font-weight-medium);
          margin-bottom: 0;
          transition: inherit;
     }

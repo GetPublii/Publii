@@ -88,7 +88,7 @@ export default {
 
 .title {
     height: 81px;
-    margin: 1.5rem auto;
+    margin: var(--space-6) auto;
     width: 206px;
 
     img {
@@ -99,24 +99,24 @@ export default {
 }
 
 .version {
-    color: var(--gray-4);
-    font-size: 1.4rem;
-    font-weight: 400;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-regular);
 }
 
 .license {
     -webkit-app-region: no-drag;
-    color: var(--gray-4);
-    font-weight: 400;
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-regular);
     margin-top: 5rem;
 }
 
 .accept {
     -webkit-app-region: no-drag;
-    font-weight: bold;
+    font-weight: var(--font-weight-bold);
     height: 3.6rem;
     line-height: 3.4rem;
-    margin-top: 1rem;
-    padding: 0 2rem;
+    margin-top: var(--space-4);
+    padding: 0 var(--space-8);
 }
 </style>

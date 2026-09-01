@@ -9,14 +9,14 @@
                 <p-button
                     @click.native="save"
                     slot="buttons"
-                    type="secondary"
+                    appearance="secondary"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
 
                 <btn-dropdown
                     slot="buttons"
-                    buttonColor="green"
+                    intent="primary"
                     :items="dropdownItems"
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
@@ -583,7 +583,7 @@
             <p-footer>
                 <btn-dropdown
                     slot="buttons"
-                    buttonColor="green"
+                    intent="primary"
                     :items="dropdownItems"
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
@@ -594,7 +594,7 @@
                 <p-button
                     @click.native="save"
                     slot="buttons"
-                    type="secondary"
+                    appearance="secondary"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
@@ -602,7 +602,7 @@
                 <p-button
                     @click.native="reset"
                     slot="buttons"
-                    type="outline"
+                    appearance="outline"
                     :disabled="buttonsLocked">
                     {{ $t('theme.resetThemeSettings') }}
                 </p-button>
@@ -1184,7 +1184,7 @@ export default {
     .multiple-checkboxes {
         label {
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: var(--space-4);
         }
     }
 

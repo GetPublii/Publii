@@ -72,13 +72,13 @@ export default {
 .sites-list {
     clear: both;
     list-style-type: none;
-    margin: 0.5rem 0 0;
-    padding: 0 2rem;
+    margin: var(--space-2) 0 0;
+    padding: 0 var(--space-8);
     text-align: center;
 }
 
 .sites-list-wrapper {
-    margin-top: 1rem;
+    margin-top: var(--space-4);
     max-height: calc(100vh - 24rem);
     overflow-y: auto;
 }

@@ -93,7 +93,7 @@ export default {
 }
 
 .multiselect__tags {
-    padding: 0 4rem 0 1.8rem;
+    padding: 0 var(--space-16) 0 1.8rem;
 }
 
 .multiselect__input {

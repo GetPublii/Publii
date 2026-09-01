@@ -14,8 +14,8 @@
         border-bottom-right-radius: 4px;
         color: var(--text-primary-color);
         font-family: var(--editor-font-family);
-        font-weight: var(--font-weight-normal);
-        line-height: var(--line-height);
+        font-weight: var(--font-weight-regular);
+        line-height: var(--line-height-base);
         padding: 0;
         z-index: 1;
     }
@@ -46,7 +46,7 @@
 
 
     .CodeMirror .CodeMirror-code .cm-tag {
-        color: var(--success);
+        color: var(--color-success);
     }
 
     .CodeMirror .CodeMirror-code .cm-attribute {
@@ -58,7 +58,7 @@
     }
 
     .CodeMirror .CodeMirror-selected {
-        background: var(--gray-1);
+        background: var(--color-surface-subtle);
     }
 
     .CodeMirror pre {
@@ -68,7 +68,7 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-header {
-        font-family: var(--font-base);
+        font-family: var(--font-family-sans);
         color: var(--headings-color);
         line-height: 1.3;
 
@@ -99,12 +99,12 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-comment {
-        background: var(--highlighted);
+        background: var(--color-highlight-surface);
         border-radius: 2px;
     }
 
     .CodeMirror .CodeMirror-code .cm-url {
-        border-bottom: 2px solid rgba(var(--yellow), 1);
+        border-bottom: 2px solid rgba(var(--color-highlight-rgb), 1);
         color: var(--link-primary-color);
         text-decoration: none;
     }

@@ -64,9 +64,14 @@ export default {
             default: 'text',
             type: String
         },
-        'properties': {
-            default: '',
-            type: String
+        'size': {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'small'].includes(value)
+        },
+        'keyboardBlocked': {
+            default: false,
+            type: Boolean
         },
         'readonly': {
             default: false,
@@ -131,17 +136,11 @@ export default {
     },
     computed: {
         cssClasses: function() {
-            let properties = [];
             let cssClasses = {};
-
-            if(this.properties) {
-                properties = this.properties.split(' ');
-            }
 
             cssClasses = {
                 'input-wrapper': true,
-                'is-small': properties.indexOf('is-small') > -1,
-                'has-padding': properties.indexOf('has-padding') > -1,
+                'is-small': this.size === 'small',
                 'has-icon': !!this.icon,
                 'is-number': this.type === 'number'
             };
@@ -176,7 +175,7 @@ export default {
     },
     methods: {
         keyboardEvent: function (e) {
-            if(this.properties.indexOf('keyboard-blocked') > -1) {
+            if(this.keyboardBlocked) {
                 e.preventDefault();
             }
         },
@@ -219,7 +218,7 @@ export default {
         box-shadow: inset 0 0 0 1px var(--input-border-color);
         color: var(--text-primary-color);
         display: inline-block;
-        font: 400 var(--app-font-base)/1.5 var(--font-base);
+        font: var(--font-weight-regular) var(--font-size-ui-md)/var(--line-height-base) var(--font-family-sans);
         outline: none;
         padding: 12px 18px;
         width: 100%;
@@ -248,17 +247,7 @@ export default {
     &.is-invalid,
     &.has-error {
         input {
-            box-shadow: inset 0 0 0 1px var(--warning);
-        }
-    }
-
-    &.has-padding {
-        padding: 1rem 2rem;
-
-        &.has-icon {
-            svg {
-                left: 3rem;
-            }
+            box-shadow: inset 0 0 0 1px var(--color-danger);
         }
     }
 
@@ -269,7 +258,7 @@ export default {
 
         &.is-small {
             input {
-                padding-left: 4rem;
+                padding-left: var(--space-16);
             }
         }
     }

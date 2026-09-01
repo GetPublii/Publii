@@ -8,7 +8,7 @@
     right: 0;
     top: var(--topbar-height);    
     width: 44.2rem;
-    z-index: 9999;
+    z-index: var(--layer-panel);
     
      &::before {
             background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
@@ -46,8 +46,8 @@
 .help-panel-header {
         border-bottom: 1px solid var(--input-border-color); 
         font-size: 1.8rem;
-        margin: -3.6rem 0 2rem;
-        padding: calc(1rem + 0.6vw) 0 2.25rem;
+        margin: -3.6rem 0 var(--space-8);
+        padding: calc(var(--space-4) + 0.6vw) 0 2.25rem;
 }
 
 .help-panel-desc {

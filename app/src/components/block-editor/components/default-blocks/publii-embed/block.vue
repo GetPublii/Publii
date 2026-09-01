@@ -101,9 +101,9 @@ export default {
 <style >
 
 .publii-block-embed {
-    background: var(--gray-1);
-    border-radius: var(--border-radius);
-    color: var(--gray-2);
+    background: var(--color-surface-subtle);
+    border-radius: var(--radius-base);
+    color: var(--color-text-faint);
     display: none;
     font-size: 0.8889em;
     padding: 1.3714em;
@@ -112,9 +112,9 @@ export default {
 
     textarea {
         background: var(--white);
-        border: 1px solid var(--gray-2);
-        border-radius: var(--border-radius);
-        font-family: var(--font-monospace);
+        border: 1px solid var(--color-border-default);
+        border-radius: var(--radius-base);
+        font-family: var(--font-family-mono);
         font-size: 0.8889em;
         min-height: 180px;
         padding: 20px;
@@ -128,7 +128,7 @@ export default {
 }
 
 .publii-block-embed-preview {
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     margin: 0;
     padding: 0 0 56.25%;
     position: relative;

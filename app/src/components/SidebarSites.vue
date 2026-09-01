@@ -43,13 +43,13 @@ export default {
     -webkit-app-region: no-drag; /* Make the buttons clickable again */
     cursor: pointer;
     display: block;
-    font-weight: var(--font-weight-semibold);  
-    margin: 1rem calc(-1 * var(--app-sidebar-margin)) .5rem;    
+    font-weight: var(--font-weight-medium);
+    margin: var(--space-4) calc(-1 * var(--app-sidebar-margin)) var(--space-2);
     position: relative;
     order: 1;
 
     & > span {
-        transition: var(--transition);
+        transition: var(--transition-default);
     }
 
     & > svg {

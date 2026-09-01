@@ -1,13 +1,13 @@
 .options-sidebar {
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     padding: 3.5rem;
 
     h2 {
-        color: var(--gray-3);
-        font-size: 1.2rem;
-        font-weight: 600;
+        color: var(--color-text-subtle);
+        font-size: var(--font-size-ui-xs);
+        font-weight: var(--font-weight-semibold);
         margin: -0.2rem 0 0;
-        padding: 0 0 1.5rem;
+        padding: 0 0 var(--space-6);
         text-transform: uppercase;
     }
 
@@ -15,8 +15,8 @@
         color: var(--label-color);
         cursor: default;
         display: block;
-        font-size: 1.3rem;
-        font-weight: var(--font-weight-semibold);
+        font-size: var(--font-size-ui-sm);
+        font-weight: var(--font-weight-medium);
         line-height: 2.6;
         margin-bottom: 1.2rem;
         user-select: none;
@@ -50,13 +50,13 @@
 
         &.is-invalid {
             input {
-                box-shadow: inset 0 0 0 1px var(--warning) !important;
+                box-shadow: inset 0 0 0 1px var(--color-danger) !important;
             }
         }
     }
 
     .msg {
-        font-size: 1.3rem;
+        font-size: var(--font-size-ui-sm);
     }
 
     .note {
@@ -64,12 +64,12 @@
         color: var(--text-light-color);
         display: block;
         font-style: italic;
-        font-weight: var(--font-weight-normal);
+        font-weight: var(--font-weight-regular);
         line-height: 1.4;
-        padding-top: .5rem;
+        padding-top: var(--space-2);
 
         &.is-warning {
-            color: var(--warning);
+            color: var(--color-danger);
             opacity: 1;
         }
     }
@@ -77,7 +77,7 @@
 
 .options-sidebar-container {
     background: var(--option-sidebar-bg);
-    box-shadow: var(--box-shadow-small);
+    box-shadow: var(--shadow-sm);
     height: 100%;
     overflow: auto;
     position: absolute;
@@ -85,7 +85,7 @@
     top: 0;
     user-select: none;
     width: var(--options-sidebar-width);
-    z-index: 9999;
+    z-index: var(--layer-panel);
 
     &.v-enter-active,
     &.v-leave-active {
@@ -140,7 +140,7 @@
     }
 
     .button {
-        border-radius: var(--border-radius);
+        border-radius: var(--radius-base);
         bottom: 0;
         height: calc(100% - 4px);
         margin: 2px;
@@ -155,17 +155,17 @@
 .options-sidebar-header {
     align-items: center;
     background-color: var(--input-bg-light);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     color: var(--link-primary-color-hover);
     cursor: pointer;
     display: flex;
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     height: 5rem;
     margin-left: 0;
     margin-top: -1px;
     padding: 0 1.6rem;
     position: relative;
-    transition: var(--transition);
+    transition: var(--transition-default);
     user-select: none;
     width: 100%;
 
@@ -194,7 +194,7 @@
 }
 
 .options-sidebar-label {
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     left: 0;
     position: relative;
     transition: left .25s ease-out, color .0s ease-out;
@@ -202,10 +202,10 @@
 }
 
 .options-sidebar-label-warning {
-    color: var(--warning);
-    font-size: 1.4rem;
-    font-weight: var(--font-weight-normal);
-    margin-left: 1rem;
+    color: var(--color-danger);
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-regular);
+    margin-left: var(--space-4);
 }
 
 .options-sidebar-icon {
@@ -214,7 +214,7 @@
     margin-right: 1.6rem;
     opacity: 1;
     position: relative;
-    transition: var(--transition);
+    transition: var(--transition-default);
     width: 2.4rem;
 }
 
@@ -228,7 +228,7 @@
     }
 
     svg {
-        margin-right: .5rem !important;
+        margin-right: var(--space-2) !important;
     }
 }
 
@@ -238,7 +238,7 @@
     & > span {
         align-self: center;
         display: flex;
-        margin-left: 1rem;
+        margin-left: var(--space-4);
     }
 }
 
@@ -246,15 +246,15 @@
     border-radius: 50%;
     color: var(--icon-secondary-color);
     cursor: pointer;
-    font-size: 2.4rem;
-    font-weight: 300;
+    font-size: var(--font-size-ui-xl);
+    font-weight: var(--font-weight-light);
     height: 3rem;
     line-height: 1.1;
     padding: 0;
     position: absolute;
     right: 3.5rem;
     text-align: center;
-    transition: var(--transition);
+    transition: var(--transition-default);
     top: 3rem;
     width: 3rem;
 
@@ -273,7 +273,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.625rem;
-    padding: 2rem 0 0 0;
+    padding: var(--space-8) 0 0 0;
 
     & > .button{
         flex-grow: 1;

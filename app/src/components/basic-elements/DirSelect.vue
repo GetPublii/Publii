@@ -10,7 +10,7 @@
             :value="value"
             :readonly="readonly"
             :spellcheck="false"
-            properties="keyboard-blocked" />
+            keyboard-blocked />
 
         <span
             v-if="fieldValue"
@@ -103,16 +103,16 @@ export default {
 
     .clear {
         border-radius: 50%;
-        color: var(--warning);
+        color: var(--color-danger);
         cursor: pointer;
-        font-size: 2.4rem;
-        font-weight: 300;
+        font-size: var(--font-size-ui-xl);
+        font-weight: var(--font-weight-light);
         height: 3rem; 
         line-height: 1.1;
         position: absolute;
         right: 1.5rem;
         text-align: center;
-        transition: var(--transition);           
+        transition: var(--transition-default);
         top: 50%;
         transform: translateY(-50%); 
         width: 3rem;
@@ -136,12 +136,12 @@ export default {
     }
 
     & ~ small.note {
-        color: var(--warning);
-        padding: 1rem 0;
+        color: var(--color-danger);
+        padding: var(--space-4) 0;
         width: 100%;
 
         svg {
-            fill: var(--warning);
+            fill: var(--color-danger);
             height: 1.8rem!important;
             margin-left: 1.3rem;
             position: relative;

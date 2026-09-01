@@ -165,7 +165,7 @@ export default {
 <style scoped>
 
 .site {
-    padding: 2rem;
+    padding: var(--space-8);
 
     &.is-empty {
         height: 100%;
@@ -189,7 +189,7 @@ export default {
         background: var(--bg-site);
         bottom: 0;
         overflow: scroll;
-        padding: 3rem 4rem;
+        padding: var(--space-12) var(--space-16);
         right: 0;
         width: calc(100% - var(--app-sidebar-width)); 
 

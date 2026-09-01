@@ -4,7 +4,8 @@
             <p-header :title="$t('theme.themes')">
                 <p-button
                     :onClick="goBack"
-                    type="clean back"
+                    appearance="clean"
+                    back
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
@@ -12,7 +13,6 @@
                 <p-button
                     :onClick="installTheme"
                     slot="buttons" 
-                    type="icon"
                     icon="upload-file">
                     {{ $t('theme.installTheme') }}
                 </p-button>
@@ -102,7 +102,7 @@ export default {
 <style scoped>
 
 .settings {
-    padding: 3rem 0 4rem;
+    padding: var(--space-12) 0 var(--space-16);
     width: 100%
 }
 

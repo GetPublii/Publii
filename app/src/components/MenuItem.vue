@@ -469,7 +469,7 @@ export default {
 
 li {
     border: 1px solid transparent;
-    margin-bottom: calc(3 * var(--spacing) - 2px);
+    margin-bottom: calc(3 * var(--space-unit) - 2px);
     padding: 0;
     position: relative;
     
@@ -491,19 +491,19 @@ li {
 
     &.is-invalid {
         & > .menu-item-wrapper > .menu-item-label {
-            color: var(--warning);
+            color: var(--color-danger);
             text-decoration: line-through;
         }
     }
 
     &.is-draft {
         .menu-item-label {
-            color: var(--gray-4);
-            font-size: 1.4rem;
+            color: var(--color-text-muted);
+            font-size: var(--font-size-ui-md);
             font-style: italic;
 
             svg {
-                fill: var(--gray-4);
+                fill: var(--color-icon-muted);
                 position: relative;
                 top: 2px;
             }
@@ -528,7 +528,7 @@ li {
         border-left: 3px solid var(--input-border-color);
         border-radius: 3px;
         cursor: move !important;
-        padding: calc(4 * var(--spacing)) calc(10 * var(--spacing));
+        padding: calc(4 * var(--space-unit)) calc(10 * var(--space-unit));
         position: relative;
 
         &.is-dnd-disabled {
@@ -542,8 +542,8 @@ li {
 
         .menu-item-label {
             color: var(--text-primary-color);
-            font-size: 1.4rem;
-            margin-right: 2rem;
+            font-size: var(--font-size-ui-md);
+            margin-right: var(--space-8);
         }
 
         .menu-item-remove,
@@ -573,7 +573,7 @@ li {
 
             &:hover {
                 & > svg {
-                   fill: var(--warning);
+                   fill: var(--color-danger);
                    transform: scale(1);
                }
             }
@@ -583,7 +583,7 @@ li {
                 height: 1.6rem;
                 pointer-events: none;
                 transform: scale(.9);
-                transition: var(--transition);
+                transition: var(--transition-default);
                 width: 1.6rem;
             }
         }
@@ -610,8 +610,8 @@ li {
         .menu-item-unselect {
             color: var(--link-primary-color);
             display: inline-block;
-            font-size: 1.3rem;
-            padding: .25rem .5rem;
+            font-size: var(--font-size-ui-sm);
+            padding: var(--space-1) var(--space-2);
 
             &:active,
             &:focus,
@@ -622,15 +622,15 @@ li {
 
         .menu-item-insert-actions {
             color: var(--text-light-color);
-            font-size: 1.3rem;
-            padding: 1rem .5rem;
+            font-size: var(--font-size-ui-sm);
+            padding: var(--space-4) var(--space-2);
         }
 
         .menu-item-unselect {
-            color: var(--warning);
+            color: var(--color-danger);
 
             & > svg {
-               fill: var(--warning);
+               fill: var(--color-danger);
                position: relative;
                right: 3px;
                top: 3px;
@@ -643,7 +643,7 @@ li {
         .menu-item-submenu,
         .menu-item-insert-before,
         .menu-item-insert-after {
-            padding-right: 1rem;
+            padding-right: var(--space-4);
             position: relative;
 
             &::after {
@@ -671,16 +671,16 @@ li {
     ol {
         list-style-type: none;
         padding-left: 0;
-        margin-left: calc(15 * var(--spacing));
+        margin-left: calc(15 * var(--space-unit));
 
         & > li:first-child {
-            margin-top: calc(3 * var(--spacing));
+            margin-top: calc(3 * var(--space-unit));
         }
 
         &:empty {
-            bottom: calc(-6 * var(--spacing));
+            bottom: calc(-6 * var(--space-unit));
             left: 0;
-            min-height: calc(6 * var(--spacing));
+            min-height: calc(6 * var(--space-unit));
             position: absolute;
             width: 100%;
             z-index: 10;

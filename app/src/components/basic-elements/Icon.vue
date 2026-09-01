@@ -17,7 +17,8 @@ export default {
         },
         'size': {
             default: '',
-            type: String
+            type: String,
+            validator: value => ['', 'xxxs', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'].includes(value)
         },
         'iconset': {
             default: 'svg-map',
@@ -31,9 +32,9 @@ export default {
             default: '',
             type: String
         },
-        'properties': {
-            default: '',
-            type: String
+        'nonInteractive': {
+            default: false,
+            type: Boolean
         },
         'customCssClasses': {
             default: '',
@@ -62,7 +63,7 @@ export default {
                 'size-xl': this.size === 'xl',
                 'size-xxl': this.size === 'xxl',
                 'size-xxxl': this.size === 'xxxl',
-                'not-clickable': this.properties.indexOf('not-clickable') > -1
+                'not-clickable': this.nonInteractive
             };
 
             if(this.customCssClasses !== '') {
@@ -156,8 +157,8 @@ export default {
     }
 
     &.file {
-        fill: var(--gray-1);
-        margin: -2px 1rem -2px 0;
+        fill: var(--color-icon-faint);
+        margin: -2px var(--space-4) -2px 0;
         position: relative!important;
         top: 4px!important;
     }
@@ -193,7 +194,7 @@ export default {
 
 .directory-link {
     .icon {
-        margin-right: 1rem;
+        margin-right: var(--space-4);
         position: relative;
         top: 3px;
     }

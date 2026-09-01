@@ -8,21 +8,18 @@
 export default {
     name: 'overlay',
     props: {
-        hasBorder: {
-            default: false,
-            type: Boolean
-        },
-        isBlue: {
-            default: false,
-            type: Boolean
+        appearance: {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'drop-zone'].includes(value)
         }
     },
     computed: {
         cssClasses: function() {
             return {
                 'overlay': true,
-                'has-border': this.hasBorder,
-                'is-blue': this.isBlue
+                'has-border': this.appearance === 'drop-zone',
+                'is-blue': this.appearance === 'drop-zone'
             };
         }
     }
@@ -38,9 +35,9 @@ export default {
     align-items: center;
     background: var(--overlay);
     bottom: 0;
-    color: var(--gray-4);
+    color: var(--color-text-muted);
     display: flex;   
-    font-weight: bold;
+    font-weight: var(--font-weight-bold);
     justify-content: center;
     left: 0;
     position: absolute;
@@ -48,7 +45,7 @@ export default {
     top: 0;
 
     &.has-border {
-        border: 3px dashed var(--gray-1);
+        border: 3px dashed var(--color-border-subtle);
         border-radius: 10px;
     }
 
@@ -57,16 +54,16 @@ export default {
         background: rgba(var(--color-primary-rgb), .17);
         
         & > div {
-            box-shadow: 0 0 3px rgba(black, .2);
+            box-shadow: 0 0 3px rgba(var(--black-rgb), .2);
             background: var(--color-primary);
             border-radius: 3px;
             color: var(--white);
-            font-size: var(--app-font-base);
-            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-ui-md);
+            font-weight: var(--font-weight-medium);
             height: auto;
             left: 50%;
-            line-height: 1.5;                
-            padding: 1.4rem 3rem 1.4rem 3rem;
+            line-height: var(--line-height-base);
+            padding: 1.4rem var(--space-12) 1.4rem var(--space-12);
             position: absolute;
             top: 50%; 
             transform: translateX(-50%) translateY(-50%);

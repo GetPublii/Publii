@@ -104,7 +104,7 @@
                             <span>{{ $t('author.avatar') }}:</span>
                             <image-upload
                                 slot="field"
-                                type="small"
+                                size="small"
                                 id="author"
                                 ref="author-avatar"
                                 :onRemove="avatarRemoved"
@@ -139,7 +139,7 @@
                             <label>
                                 <image-upload
                                     slot="field"
-                                    type="small"
+                                    size="small"
                                     id="featured-image"
                                     :item-id="authorData.id"
                                     ref="author-featured-image"
@@ -208,7 +208,7 @@
                                     :onClick="updateSlug" 
                                     :title="$t('ui.updateSlug')"
                                     icon="refresh"
-                                    type="secondary icon">
+                                    appearance="secondary">
                                 </p-button>
                             </div>
                         </label>
@@ -362,7 +362,7 @@
 
             <div class="options-sidebar-buttons">
                 <p-button
-                    type="secondary"
+                    appearance="secondary"
                     @click.native="save(false)">
                     <template v-if="authorData.id">{{ $t('ui.saveChanges') }}</template>
                     <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
@@ -370,7 +370,7 @@
 
                 <p-button
                     :disabled="!authorData.id || !currentThemeHasSupportForAuthorPages"
-                    type="primary"
+                    intent="primary"
                     class="options-sidebar-preview-button"
                     @click.native="saveAndPreview">
                     {{ $t('ui.saveAndPreview') }}
@@ -383,7 +383,7 @@
 
                 <p-button
                     @click.native="close"
-                    type="outline">
+                    appearance="outline">
                     {{ $t('ui.cancel') }}
                 </p-button>
             </div>
@@ -765,8 +765,8 @@ export default {
 
 .options-sidebar {
     .use-gravatar {
-        font-weight: 400;
-        margin-bottom: 2rem;
+        font-weight: var(--font-weight-regular);
+        margin-bottom: var(--space-8);
     }
 }
 
@@ -778,14 +778,14 @@ export default {
 }
 
 .author-settings-content {
-    padding: 0 0 1rem;
+    padding: 0 0 var(--space-4);
 
     .image-uploader {
         margin-top: 0;
     }
 
     .msg {
-        margin: 0 0 2rem;
+        margin: 0 0 var(--space-8);
     }
 }
 

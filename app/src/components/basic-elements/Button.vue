@@ -6,13 +6,13 @@
         <icon
             v-if="icon"
             size="s"
-            properties="not-clickable"
+            non-interactive
             :name="icon" />
 
-        <slot v-if="!isPreloader"></slot>
+        <slot v-if="!loading"></slot>
 
         <span
-            v-if="isPreloader"
+            v-if="loading"
             class="preloader"></span>
     </span>
 </template>
@@ -21,69 +21,113 @@
 export default {
     name: 'p-button',
     props: {
-        'icon': {
-            default: '',
-            type: String
-        },
-        'type': {
-            default: '',
-            type: String
-        },
-        'disabled': {
+        active: {
             default: false,
             type: Boolean
         },
-        'onClick': {
+        appearance: {
+            default: 'default',
+            type: String,
+            validator: value => [
+                'default',
+                'secondary',
+                'outline',
+                'popup-cancel',
+                'clean',
+                'clean-inverse',
+                'light'
+            ].includes(value)
+        },
+        back: {
+            default: false,
+            type: Boolean
+        },
+        disabled: {
+            default: false,
+            type: Boolean
+        },
+        disabledWithEvents: {
+            default: false,
+            type: Boolean
+        },
+        icon: {
+            default: '',
+            type: String
+        },
+        iconOnly: {
+            default: false,
+            type: Boolean
+        },
+        iconTone: {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'primary'].includes(value)
+        },
+        intent: {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'primary', 'danger', 'success'].includes(value)
+        },
+        layout: {
+            default: 'inline',
+            type: String,
+            validator: value => ['inline', 'bottom'].includes(value)
+        },
+        loading: {
+            default: false,
+            type: Boolean
+        },
+        onClick: {
             default: () => false,
             type: Function
         },
-        'title': {
+        size: {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'small', 'medium'].includes(value)
+        },
+        square: {
+            default: false,
+            type: Boolean
+        },
+        title: {
             default: '',
             type: String
+        },
+        width: {
+            default: 'auto',
+            type: String,
+            validator: value => ['auto', 'quarter', 'half', 'full'].includes(value)
         }
     },
     computed: {
-        isPreloader: function() {
-            return this.type.split(' ').indexOf('preloader') > -1;
-        },
         cssClasses: function() {
-            let types = [];
-
-            if(this.type) {
-                types = this.type.split(' ');
-            }
-
             return {
                 'button': true,
-                'button-primary': types.indexOf('primary') > -1,
-                'button-secondary': types.indexOf('secondary') > -1,
-                'button-success': types.indexOf('success') > -1,
-                'button-danger': types.indexOf('danger') > -1,
-                'button-error': types.indexOf('error') > -1,
-                'button-green': types.indexOf('green') > -1,
-                'button-outline': types.indexOf('outline') > -1,
-                'button-muted': types.indexOf('muted') > -1,
-                'button-cancel-popup': types.indexOf('cancel-popup') > -1,
-                'button-icon': types.indexOf('icon') > -1,
-                'button-only-icon': types.indexOf('only-icon') > -1,
-                'button-only-icon-color': types.indexOf('only-icon-color') > -1,
-                'button-icon-smaller': types.indexOf('icon-smaller') > -1,
-                'button-bottom': types.indexOf('bottom') > -1,
-                'button-medium': types.indexOf('medium') > -1,
-                'button-small': types.indexOf('small') > -1,
-                'button-full-width': types.indexOf('full-width') > -1,
-                'button-half-width': types.indexOf('half-width') > -1,
-                'button-quarter-width': types.indexOf('quarter-width') > -1,
-                'button-no-border-radius': types.indexOf('no-border-radius') > -1,
-                'button-disabled': types.indexOf('disabled') > -1 || this.disabled,
-                'button-disabled-with-events': types.indexOf('disabled-with-events') > -1,
-                'button-preloader': this.isPreloader,
-                'button-light': types.indexOf('light') > -1,
-                'button-active': types.indexOf('active') > -1,
-                'button-delete': types.indexOf('delete') > -1,
-                'button-clean': types.indexOf('clean') > -1,
-                'button-clean-invert': types.indexOf('clean-invert') > -1,
-                'button-back': types.indexOf('back') > -1,
+                'button-primary': this.intent === 'primary',
+                'button-danger': this.intent === 'danger',
+                'button-green': this.intent === 'success',
+                'button-secondary': this.appearance === 'secondary',
+                'button-outline': this.appearance === 'outline',
+                'button-cancel-popup': this.appearance === 'popup-cancel',
+                'button-light': this.appearance === 'light',
+                'button-clean': ['clean', 'clean-inverse'].includes(this.appearance),
+                'button-clean-invert': this.appearance === 'clean-inverse',
+                'button-icon': Boolean(this.icon) && !this.loading,
+                'button-only-icon': this.iconOnly && this.iconTone === 'default',
+                'button-only-icon-color': this.iconOnly && this.iconTone === 'primary',
+                'button-bottom': this.layout === 'bottom',
+                'button-medium': this.size === 'medium',
+                'button-small': this.size === 'small',
+                'button-full-width': this.width === 'full',
+                'button-half-width': this.width === 'half',
+                'button-quarter-width': this.width === 'quarter',
+                'button-no-border-radius': this.square,
+                'button-disabled': this.disabled,
+                'button-disabled-with-events': this.disabledWithEvents,
+                'button-preloader': this.loading,
+                'button-active': this.active,
+                'button-back': this.back
             }
         }
     }
@@ -97,21 +141,21 @@ export default {
  */
 
 .button {
-    background: var(--button-bg);
+    background: var(--button-primary-bg);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     box-shadow: none;
     color: var(--white);
     cursor: pointer;
     display: inline-block;
-    font-size: 1.3rem;
-    font-family: var(--font-base);
-    font-weight: var(--font-weight-semibold);  
+    font-size: var(--font-size-ui-sm);
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-medium);
     height: 4.4rem;
     line-height: 4.3rem;
     padding: 0 1.3rem;
     position: relative;
-    transition: var(--transition);
+    transition: var(--transition-default);
     user-select: none;
     white-space: nowrap;
 
@@ -123,7 +167,7 @@ export default {
     &:focus,
     &:hover,
     &.button-active {
-        background: var(--button-bg-hover);
+        background: var(--button-primary-bg-hover);
         color: var(--white);
     }
 
@@ -151,33 +195,19 @@ export default {
 
     & + .button,
     & + button {
-        margin-left: calc(2.5 * var(--spacing));
+        margin-left: calc(2.5 * var(--space-unit));
     }
 }
 
-.button-link {
-   background: var(--bg-primary);
-    color: var(--color-primary);
-
-    &:active,
-    &:focus,
-    &:hover,
-    &.button-active {
-        background: var(--gray-1);
-        color: var(--color-primary);
-    }
-}
-
-.button-primary,
-.button-success {
-    background: var(--button-tertiary-bg);
+.button-primary {
+    background: var(--button-primary-bg);
     color: var(--white);
 
     &:active,
     &:focus,
     &:hover,
     &.button-active {
-        background: var(--button-tertiary-bg-hover);
+        background: var(--button-primary-bg-hover);
         color: var(--white);
     }
 }
@@ -218,39 +248,26 @@ export default {
     }
 }
 
-.button-danger,
-.button-error {
-    background: var(--button-red-bg);
+.button-danger {
+    background: var(--button-danger-bg);
 
     &:active,
     &:focus,
     &:hover,
     &.button-active {
-        background: var(--button-red-bg-hover);
+        background: var(--button-danger-bg-hover);
         color: var(--white);
     }
 }
 
 .button-green {
-    background: var(--success); 
+    background: var(--color-success);
 
     &:active,
     &:focus,
     &:hover,
     &.button-active {
-         background: var(--success); 
-    }
-}
-
-.button-muted {
-    background: var(--gray-4);
-
-    &:active,
-    &:focus,
-    &:hover,
-    &.button-active {
-        background: var(--color-primary);
-        color: var(--white);
+         background: var(--color-success);
     }
 }
 
@@ -264,7 +281,7 @@ export default {
     &:hover,
     &.button-active {
         background: transparent;
-        box-shadow: inset 0 0 0 2px var(--gray-3);
+        box-shadow: inset 0 0 0 2px var(--color-control-border-hover);
         color: var(--text-primary-color);
 
         &:disabled {
@@ -277,8 +294,8 @@ export default {
     background: transparent;
     box-shadow: none;
     color: var(--link-primary-color);
-    font-size: 1.3rem;
-    font-weight: 400;
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-regular);
     
     &:active,
     &:focus,
@@ -294,8 +311,8 @@ export default {
     background: transparent;
     box-shadow: none;
     color: var(--link-primary-color-hover);
-    font-size: 1.3rem;
-        font-weight: 400;
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-regular);
 
     &:active,
     &:focus,
@@ -309,18 +326,18 @@ export default {
 
 .button-back {
     & + .button {
-        margin-left: 2rem !important;
+        margin-left: var(--space-8) !important;
     }
 }
 
 .button-bottom {
-    background: var(--button-tertiary-bg);
+    background: var(--button-primary-bg);
     border-radius: 0 0 3px 3px;
     display: block;
-    font-size: 1.3rem;
+    font-size: var(--font-size-ui-sm);
     height: 5.6rem;
     line-height: 5.6rem;
-    padding: 0 2rem;
+    padding: 0 var(--space-8);
     text-align: center;
     width: 100%;
 
@@ -328,7 +345,7 @@ export default {
     &:focus,
     &:hover,
     &.button-active {
-        background: var(--button-tertiary-bg-hover);
+        background: var(--button-primary-bg-hover);
     }
 
     & > svg {
@@ -349,7 +366,7 @@ export default {
         &:hover,
         &.button-active {
             background: transparent;
-            box-shadow: inset 0 0 0 2px var(--gray-3);
+            box-shadow: inset 0 0 0 2px var(--color-control-border-hover);
             color: var(--text-primary-color);
 
             &:disabled {
@@ -360,16 +377,16 @@ export default {
 }
 
 .button-medium {
-    font-size: 1.3rem;
-    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-medium);
     height: 5.6rem;
     line-height: 5.5rem;
-    padding: 0 2rem;
+    padding: 0 var(--space-8);
 }
 
 .button-small {
-    font-size: 1.3rem;
-    font-weight: var(--font-weight-normal);
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-regular);
     height: 3.8rem;
     line-height: 3.8rem;
     padding: 0 1.4rem;
@@ -413,7 +430,7 @@ export default {
     &.button-outline {
         & > svg {
             fill: var(--icon-primary-color);
-            transition: var(--transition);
+            transition: var(--transition-default);
         }
 
         &:active,
@@ -438,11 +455,6 @@ export default {
         width: 48px;
     }
 
-    &.button-only-icon {
-        padding: 0;
-        width: 48px;
-    }
-
     &.button-only-icon-color {
         padding: 0;
         width: 48px;
@@ -452,18 +464,13 @@ export default {
         }
     }
 
-    &.button-icon-smaller {
-        & > svg {
-            transform: translateY(-50%) scale(0.8);
-        }
-    }
 }
 
 .button-preloader {
     .preloader {
         animation: rotate .6s infinite linear;
         border: .2rem solid var(--input-border-color);
-        border-top: .2rem solid var(--gray-4);
+        border-top: .2rem solid var(--color-border-strong);
         border-radius: 50%;
         clear: both;
         display: block;
@@ -478,32 +485,27 @@ export default {
 
     &.button-small {
         .preloader {
-            margin-top: 1rem;
+            margin-top: var(--space-4);
         }
     }
-}
-
-.button-preloader .preloader-white {
-    border-color: rgba(255, 255, 255, .5);
-    border-top-color: rgba(255, 255, 255, 1);
 }
 
 .button-light {
     background: var(--bg-primary);
     color: var(--text-light-color);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     padding-left: 3.8rem;
 
     & > svg {
         fill: var(--icon-secondary-color);
-        transition: var(--transition);
+        transition: var(--transition-default);
     }
 
     &:active,
     &:focus,
     &:hover,
     &.button-active {
-        background: var(--gray-1);
+        background: var(--color-surface-subtle);
         color: var(--text-primary-color);
 
         & > svg {

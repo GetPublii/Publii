@@ -58,7 +58,7 @@ export default {
 
 .msg {
     background: var(--bg-secondary);
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-4);
 }
 
 </style>

@@ -223,7 +223,7 @@
         <p-button
             v-if="maxCount === -1 || content.length < maxCount"
             :onClick="addItem"
-            type="secondary icon"
+            appearance="secondary"
             icon="add-site-mono">
             {{ translation('add') }}
         </p-button>
@@ -513,7 +513,7 @@ export default {
         &::before { 
             background-color: var(--collection-bg-hover);                
             border: 1px dashed var(--input-border-focus);
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             content: "";
             display: block;   
             position: absolute;
@@ -548,7 +548,7 @@ export default {
 
 .publii-repeater-item-ui-btn {
     align-items: center;
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     position: relative;
     border-radius: 50%;
     display: flex;
@@ -578,7 +578,7 @@ export default {
         height: 1.6rem;
         pointer-events: none;
         transform: scale(.9);
-        transition: var(--transition);
+        transition: var(--transition-default);
         width: 1.6rem;
     }
 
@@ -587,7 +587,7 @@ export default {
         &:hover {
 
             & > svg {
-               fill: var(--warning);
+               fill: var(--color-danger);
             }
         }
     }
@@ -604,9 +604,9 @@ export default {
 
         & > span {
             display: block;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin: 0 0 1rem 0;
+            font-size: var(--font-size-ui-md);
+            font-weight: var(--font-weight-bold);
+            margin: 0 0 var(--space-4) 0;
         }
 
         & > * {
@@ -621,13 +621,13 @@ export default {
         font-size: 1.35rem;
         font-style: italic;
         line-height: 1.4;        
-        padding: .5rem 0 1rem 0;
+        padding: var(--space-2) 0 var(--space-4) 0;
         user-select: text;
 
         svg {
             display: inline-block;
             height: 1.4rem;
-            margin-right: .5rem;
+            margin-right: var(--space-2);
             width: 1.4rem;
         }
         
@@ -643,11 +643,11 @@ export default {
     }
 
     label + .note {
-        padding-top: 1.5rem;
+        padding-top: var(--space-6);
     }
 
     .checkbox ~ .note {
-        margin-bottom: 1.5rem;
+        margin-bottom: var(--space-6);
     }
 
     .range-wrapper {
@@ -655,7 +655,7 @@ export default {
         z-index: 1;
 
         & + .note {
-            padding-top: 1.5rem;
+            padding-top: var(--space-6);
         }
     }
 }

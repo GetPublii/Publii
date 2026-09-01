@@ -54,7 +54,7 @@
 .cm-fat-cursor .CodeMirror-cursor {
   width: auto;
   border: 0 !important;
-  background: var(--success);
+  background: var(--color-success);
 }
 .cm-fat-cursor div.CodeMirror-cursors {
   z-index: 1;
@@ -65,7 +65,7 @@
   border: 0;
   -webkit-animation: blink 1.06s steps(1) infinite;
   animation: blink 1.06s steps(1) infinite;
-  background-color: var(--success);
+  background-color: var(--color-success);
 }
 @-webkit-keyframes blink {
   0% {}

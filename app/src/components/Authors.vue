@@ -9,7 +9,7 @@
             <p-button
                 :onClick="addAuthor"
                 slot="buttons"
-                type="primary icon"
+                intent="primary"
                 icon="add-site-mono">
                 {{ $t('author.addNewAuthor') }}
             </p-button>
@@ -17,7 +17,7 @@
 
         <collection
             v-if="!emptySearchResults"
-            :itemsCount="4">
+            :columns="4">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -41,8 +41,8 @@
                 </collection-cell>
 
                 <collection-cell 
-                    justifyContent="center"
-                    textAlign="center"
+                    justify-content="center"
+                    text-align="center"
                     min-width="100px">
                     <span
                         class="col-sortable-title"
@@ -76,7 +76,8 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>
@@ -87,7 +88,7 @@
                 v-for="(item, index) in items"
                 slot="content"
                 :key="'collection-row-' + index"
-                :cssClasses="item.id === 1 ? 'is-main-author' : ''">
+                :main-author="item.id === 1">
                 <collection-cell>
                     <checkbox
                         v-if="item.id !== 1"
@@ -106,7 +107,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell type="titles">
+                <collection-cell variant="titles">
                     <h2 class="title">
                         <a
                             href="#"
@@ -129,8 +130,8 @@
                 </collection-cell>
 
                 <collection-cell
-                    justifyContent="center"
-                    textAlign="center">
+                    justify-content="center"
+                    text-align="center">
                     <a
                         @click.prevent.stop="showPostsConnectedWithAuthor(item.name)"
                         href="#">
@@ -414,7 +415,7 @@ export default {
     }
 
     .author-slug {
-        color: var(--gray-4);
+        color: var(--color-text-muted);
         font-size: 11px;
         margin-top: .2rem;
     }

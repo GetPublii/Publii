@@ -11,14 +11,15 @@
             <p-button
                 :onClick="goBack"
                 slot="buttons"
-                type="clean back">
+                appearance="clean"
+                back>
                 {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
                 :onClick="addNewFile"
                 slot="buttons"
-                type="secondary icon"
+                appearance="secondary"
                 icon="plus">
                 {{ $t('file.addNewFile') }}
             </p-button>
@@ -26,7 +27,6 @@
             <p-button
                 :onClick="uploadFiles"
                 slot="buttons"
-                type="icon"
                 icon="upload-file">
                 {{ $t('file.uploadFiles') }}
             </p-button>
@@ -60,7 +60,7 @@
 
         <collection
             v-if="!emptySearchResults && hasFiles"
-            :itemsCount="5">
+            :columns="5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -90,7 +90,9 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small danger icon light"
+                        intent="danger"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>
@@ -110,7 +112,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="titles">
+                    variant="titles">
                     <a
                         :href="item.name"
                         class="file-link"
@@ -405,14 +407,14 @@ export default {
             color: var(--text-light-color);
             cursor: pointer;
             font-size: 1.35rem;
-            transition: var(--transition);
+            transition: var(--transition-default);
 
             &:hover {
                 color: var(--link-primary-color);
             }
 
             & + .directory-link {
-                margin-left: 2rem;
+                margin-left: var(--space-8);
             }
 
             &.is-active {

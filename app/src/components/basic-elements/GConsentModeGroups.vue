@@ -67,7 +67,7 @@
 
         <p-button
             icon="add-site-mono"
-            type="secondary icon"
+            appearance="secondary"
             @click.native="addRule">
             {{ $t('settings.gConsentMode.addGroup') }}
         </p-button>
@@ -162,20 +162,20 @@ export default {
     padding-top: 1.75rem;
 
     .button {
-        margin: 1rem 0;
+        margin: var(--space-4) 0;
     }
     
 }
 
 .g-consent-mode-groups-header {
     display: flex;
-    margin-top: 1rem;
+    margin-top: var(--space-4);
 }
 
 .g-consent-mode-groups-header-cell {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin: 0 0 1rem 0;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--space-4) 0;
     width: calc(100% - 15px);
 }
 
@@ -184,25 +184,25 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 20px;
-    padding: .25rem 0; 
+    padding: var(--space-1) 0;
 
 
     .input-wrapper,
     select {
-        padding-right: 1rem;
+        padding-right: var(--space-4);
         text-align: left;
         width: calc(100% - 15px);
     }
 
     select {
-        margin-right: 1rem;
+        margin-right: var(--space-4);
         width: calc(100% - 56px);
     }
 
     .has-label {
         align-items: center;
         display: flex;
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
         letter-spacing: -.01em;
         margin: 0;
 
@@ -217,14 +217,14 @@ export default {
 .g-consent-mode-group-switchers {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    gap: .8rem 1rem;
-    margin: 1.5rem 0 2rem .5rem;
+    gap: .8rem var(--space-4);
+    margin: var(--space-6) 0 var(--space-8) var(--space-2);
     width: calc(100% - 51px);
 }
 
 .g-consent-mode-group-btn {
     align-items: center;
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     position: relative;
     border-radius: 50%;
     display: flex;
@@ -254,7 +254,7 @@ export default {
         height: 1.6rem;
         pointer-events: none;
         transform: scale(.9);
-        transition: var(--transition);
+        transition: var(--transition-default);
         width: 1.6rem;
     }
 
@@ -263,7 +263,7 @@ export default {
         &:hover {
 
             & > svg {
-                fill: var(--warning);
+                fill: var(--color-danger);
             }
         }
     }

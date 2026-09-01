@@ -4,7 +4,8 @@
             <p-button
                 :onClick="goBack"
                 slot="buttons"
-                type="clean back">
+                appearance="clean"
+                back>
                 {{ $t('ui.backToTools') }}
             </p-button>
         </p-header>
@@ -14,12 +15,11 @@
                 id="selectedFile"
                 ref="selectedFile"
                 :items="files"
-                selected=""
                 :onChange="loadFile"></dropdown>
             
             <p-button
                 :onClick="loadSelectedFile"
-                type="secondary">
+                appearance="secondary">
                 {{ $t('ui.reloadFile') }}
             </p-button>
         </div>
@@ -99,7 +99,7 @@ export default {
     display: flex;
 
     .button {
-        margin-left: 1rem;
+        margin-left: var(--space-4);
     }
 }
 </style>

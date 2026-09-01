@@ -105,9 +105,9 @@ export default {
     background: var(--input-bg);
     content: attr(data-translation);
     display: inline-block;
-    font-family: var(--font-base);
+    font-family: var(--font-family-sans);
     font-size: 0.7023em;
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     padding: 6px 16px;
     position: absolute;
     white-space: pre;

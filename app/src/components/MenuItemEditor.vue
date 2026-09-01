@@ -199,21 +199,21 @@
             <div class="options-sidebar-buttons">
                 <p-button
                     v-if="menuItemID !== ''"
-                    type="primary"
+                    intent="primary"
                     @click.native="editMenuItem">
                     {{ $t('ui.saveChanges') }}
                 </p-button>
 
                 <p-button
                     v-if="menuItemID === ''"
-                    type="primary"
+                    intent="primary"
                     @click.native="addMenuItem">
                     {{ $t('menu.addMenuItem') }}
                 </p-button>
 
                 <p-button
                     @click.native="hide()"
-                    type="outline">
+                    appearance="outline">
                     {{ $t('ui.cancel') }}
                 </p-button>
             </div>

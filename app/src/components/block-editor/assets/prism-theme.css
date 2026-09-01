@@ -113,7 +113,7 @@
 
     .token.important,
     .token.bold {
-        font-weight: bold;
+        font-weight: var(--font-weight-bold);
     }
     .token.italic {
         font-style: italic;

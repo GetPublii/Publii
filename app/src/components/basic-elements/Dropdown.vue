@@ -79,10 +79,6 @@ export default {
             default: '',
             type: [String, Number]
         },
-        selected: {
-            default: '',
-            type: String
-        },
         onChange: {
             default: () => false,
             type: Function
@@ -130,22 +126,13 @@ export default {
     },
     data: function() {
         return {
-            selectedValue: ''
+            selectedValue: this.value
         };
     },
     watch: {
         value (newValue, oldValue) {
             this.selectedValue = newValue;
         }
-    },
-    mounted: function() {
-        setTimeout(() => {
-            if (this.value) {
-                this.selectedValue = this.value;
-            } else {
-                this.selectedValue = this.selected;
-            }
-        }, 0);
     },
     methods: {
         onChangeEvent (e) {
@@ -206,7 +193,7 @@ select {
         }
 
         &[disabled] {
-            background-color: var(--gray-1);
+            background-color: var(--color-surface-subtle);
             cursor: not-allowed;
             &:hover {
                 border-color: var(--input-border-color);
@@ -218,11 +205,11 @@ select {
         background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
         background-color: var(--input-bg);
         background-size: 10px;
-        padding-right: 3rem;
+        padding-right: var(--space-12);
     }
 
     &.invalid {
-        border: 1px solid var(--warning);
+        border: 1px solid var(--color-danger);
 
         &:focus {
             border: none;

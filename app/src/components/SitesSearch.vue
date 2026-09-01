@@ -4,7 +4,7 @@
             changeEventName="sites-list-filtered"
             v-model="value"
             icon="magnifier-small"
-            properties="is-small"
+            size="small"
             ref="search-input"
             :spellcheck="false"
             :placeholder="$t('ui.search')"
@@ -40,13 +40,13 @@ export default {
         position: relative;
 
         .input-wrapper {
-            padding: 1rem 2rem;
+            padding: var(--space-4) var(--space-8);
 
             input {
                 background: var(--input-bg-lightest);
                 border-radius: 30px;
                 box-shadow: none!important;
-                padding: 1.5rem 4.4rem 1.5rem 6rem!important;
+                padding: var(--space-6) 4.4rem var(--space-6) 6rem!important;
             }
 
             svg {
@@ -61,8 +61,8 @@ export default {
         border-radius: 50%;
         color: var(--icon-secondary-color);
         cursor: pointer;
-        font-size: 2.4rem;
-        font-weight: 300;
+        font-size: var(--font-size-ui-xl);
+        font-weight: var(--font-weight-light);
         height: 3rem;
         line-height: 1;
         padding: 0;

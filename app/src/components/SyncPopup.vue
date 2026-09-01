@@ -46,30 +46,35 @@
                 <div class="progress-bars-wrapper">
                     <progress-bar
                         :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
-                        color="green"
+                        intent="success"
                         :progress="100"
-                        :stopped="false"
                         message="" />
                 </div>
 
                 <div class="buttons">
                     <p-button
                         v-if="isManual"
-                        type="primary medium green quarter-width"
+                        intent="success"
+                        size="medium"
+                        width="quarter"
                         :onClick="showFolder">
                         {{ $t('sync.getWebsiteFiles') }}
                     </p-button>
 
                     <p-button
                         v-if="!isManual"
-                        type="primary medium green quarter-width"
+                        intent="success"
+                        size="medium"
+                        width="quarter"
                         :onClick="openWebsite">
                         {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="outline medium quarter-width">
+                        appearance="outline"
+                        size="medium"
+                        width="quarter">
                         {{ $t('ui.ok') }}
                     </p-button>
                 </div>
@@ -86,14 +91,18 @@
 
                 <div class="buttons">
                     <p-button
-                        type="primary medium  green quarter-width"
+                        intent="success"
+                        size="medium"
+                        width="quarter"
                         :onClick="openWebsite">
                         {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="outline medium quarter-width ">
+                        appearance="outline"
+                        size="medium"
+                        width="quarter">
                         {{ $t('ui.ok') }}
                     </p-button>
                 </div>
@@ -114,31 +123,32 @@
                 <div class="progress-bars-wrapper">
                     <progress-bar
                         :cssClasses="{ 'rendering-progress-bar': true }"
-                        :color="renderingProgressColor"
+                        :intent="renderingProgressIntent"
                         :progress="renderingProgress"
-                        :stopped="renderingProgressIsStopped"
                         :message="messageFromRenderer" />
 
                     <progress-bar
                         v-if="!isManual && !renderingInProgress && (uploadInProgress || syncInProgress || isInSync || uploadError)"
                         :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
-                        :color="uploadingProgressColor"
+                        :intent="uploadingProgressIntent"
                         :progress="uploadingProgress"
-                        :stopped="uploadingProgressIsStopped"
                         :message="messageFromUploader" />
                 </div>
 
                 <div class="buttons">
                     <p-button
                         :onClick="startSync"
-                        :type="syncInProgress ? 'disabled medium quarter-width': 'medium quarter-width'"
+                        size="medium"
+                        width="quarter"
                         :disabled="syncInProgress">
                         {{ $t('sync.syncYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="cancelSync"
-                        type="outline medium quarter-width">
+                        appearance="outline"
+                        size="medium"
+                        width="quarter">
                         {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
@@ -156,14 +166,17 @@
 
                 <div class="buttons">
                     <p-button
-                        type="medium  quarter-width"
+                        size="medium"
+                        width="quarter"
                         :onClick="goToServerSettings">
                         {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        type="outline medium  quarter-width">
+                        appearance="outline"
+                        size="medium"
+                        width="quarter">
                         {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
@@ -181,13 +194,16 @@
 
                 <div class="buttons">
                     <p-button
-                        type="medium  quarter-width"
+                        size="medium"
+                        width="quarter"
                         :onClick="goToServerSettings">
                         {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
-                        type="outline medium  quarter-width"
+                        appearance="outline"
+                        size="medium"
+                        width="quarter"
                         :onClick="close">
                         {{ $t('ui.cancel') }}
                     </p-button>
@@ -201,9 +217,8 @@
                 <progress-bar
                     v-if="(uploadInProgress || syncInProgress || isInSync || uploadError)"
                     :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
-                    :color="uploadingProgressColor"
+                    :intent="uploadingProgressIntent"
                     :progress="uploadingProgress"
-                    :stopped="uploadingProgressIsStopped"
                     :message="messageFromUploader" />
             </div>
 
@@ -253,12 +268,10 @@ export default {
             uploadInProgress: false,
             messageFromRenderer: 'true',
             renderingProgress: 0,
-            renderingProgressColor: 'blue',
-            renderingProgressIsStopped: false,
+            renderingProgressIntent: 'default',
             messageFromUploader: '',
             uploadingProgress: 0,
-            uploadingProgressColor: 'blue',
-            uploadingProgressIsStopped: false,
+            uploadingProgressIntent: 'default',
             syncInProgress: false,
             isInSync: false,
             manualFilePath: '',
@@ -347,13 +360,11 @@ export default {
             this.isMinimized = false;
             this.messageFromRenderer = '';
             this.renderingProgress = 0;
-            this.renderingProgressColor = 'blue';
-            this.renderingProgressIsStopped = false;
+            this.renderingProgressIntent = 'default';
             this.messageFromUploader = '';
             this.uploadInProgress = false;
             this.uploadingProgress = 0;
-            this.uploadingProgressColor = 'blue';
-            this.uploadingProgressIsStopped = false;
+            this.uploadingProgressIntent = 'default';
             this.syncInProgress = false;
             this.isInSync = false;
             this.manualFilePath = '';
@@ -381,8 +392,7 @@ export default {
             let errorsText = Utils.generateErrorLog(data, true);
 
             this.renderingProgress = 100;
-            this.renderingProgressColor = 'red';
-            this.renderingProgressIsStopped = true;
+            this.renderingProgressIntent = 'danger';
             this.messageFromRenderer = this.$t('rendering.renderingErrorText');
 
             setTimeout(() => {
@@ -465,20 +475,17 @@ export default {
             if (!this.uploadError) {
                 this.messageFromRenderer = '';
                 this.renderingProgress = 0;
-                this.renderingProgressColor = 'blue';
-                this.renderingProgressIsStopped = false;
+                this.renderingProgressIntent = 'default';
                 this.messageFromUploader = '';
                 this.uploadingProgress = 0;
-                this.uploadingProgressColor = 'blue';
-                this.uploadingProgressIsStopped = false;
+                this.uploadingProgressIntent = 'default';
                 this.startRendering();
             } else {
                 this.uploadError = false;
                 this.startUpload();
                 this.messageFromUploader = '';
                 this.uploadingProgress = 0;
-                this.uploadingProgressColor = 'blue';
-                this.uploadingProgressIsStopped = false;
+                this.uploadingProgressIntent = 'default';
             }
         },
         askForContinueSync () {
@@ -521,8 +528,7 @@ export default {
             this.$store.commit('setSidebarStatus', 'preparing');
             this.messageFromRenderer = '';
             this.renderingProgress = 0;
-            this.renderingProgressColor = 'blue';
-            this.renderingProgressIsStopped = false;
+            this.renderingProgressIntent = 'default';
 
             mainProcessAPI.send('app-deploy-render', {
                 'site': this.$store.state.currentSite.config.name,
@@ -542,8 +548,7 @@ export default {
             this.renderingProgress = data.progress;
 
             if(this.renderingProgress === 100) {
-                this.renderingProgressColor = 'green';
-                this.renderingProgressIsStopped = true;
+                this.renderingProgressIntent = 'success';
 
                 if(this.isManual) {
                     this.messageFromRenderer = this.$t('file.preparingFilesInOutputDir');
@@ -574,9 +579,8 @@ export default {
         showError: function(data) {
             this.messageFromUploader = this.$t('sync.connectionToServerErrorText');
             this.uploadError = true;
-            this.uploadingProgressColor = 'red';
+            this.uploadingProgressIntent = 'danger';
             this.uploadingProgress = 100;
-            this.uploadingProgressIsStopped = true;
             this.syncInProgress = false;
             this.$store.commit('setSidebarStatus', 'prepared');
 
@@ -658,16 +662,15 @@ export default {
                 }
 
                 this.uploadingProgress = 100;
-                this.uploadingProgressIsStopped = true;
                 this.syncInProgress = false;
                 this.uploadInProgress = false;
 
                 if (typeof data.issues !== 'undefined' && data.issues) {
                     this.noIssues = false;
-                    this.uploadingProgressColor = 'orange';
+                    this.uploadingProgressIntent = 'warning';
                     this.messageFromUploader = '';
                 } else {
-                    this.uploadingProgressColor = 'green';
+                    this.uploadingProgressIntent = 'success';
                     this.messageFromUploader = this.$t('sync.yourWebsiteIsInSync');
                 }
 
@@ -817,19 +820,19 @@ export default {
 
     .description {
         color: var(--text-light-color);
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
         line-height: 1.4;
         margin: auto;
-        padding: 0 1rem;
+        padding: 0 var(--space-4);
         text-align: center;
 
         &.alert {
-            background: var(--highlighted);
+            background: var(--color-highlight-surface);
             border-radius: .2em;
             color: var(--text-primary-color);
-            font-size: 1.4rem;
-            margin-bottom: 3rem;
-            padding: 1rem 2rem;
+            font-size: var(--font-size-ui-md);
+            margin-bottom: var(--space-12);
+            padding: var(--space-4) var(--space-8);
             text-align: left;
         }
 
@@ -849,9 +852,9 @@ export default {
 
 .message {
     color: var(--text-primary-color);
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
     margin: 0;
-    padding: 4rem;
+    padding: var(--space-16);
     position: relative;
     text-align: left;
 
@@ -863,7 +866,7 @@ export default {
 .buttons {
     display: flex;
     justify-content: center;
-    margin-top: 4rem;
+    margin-top: var(--space-16);
     position: relative;
     text-align: center;
     top: 1px;
@@ -902,7 +905,7 @@ export default {
    }
 
    & > svg {
-      transition: var(--transition);
+      transition: var(--transition-default);
    }
 
    & > span {
@@ -916,7 +919,7 @@ export default {
     &.is-minimized {
         animation: minimized-popup .25s linear .25s forwards;
         border-radius: 10px;
-        box-shadow: 0 0 160px rgba(0, 0, 0, .2);
+        box-shadow: 0 0 160px rgba(var(--black-rgb), .2);
         cursor: pointer;
         bottom: 56px;
         left: 0;

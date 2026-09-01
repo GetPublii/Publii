@@ -54,8 +54,8 @@ html {
 body {
     color: var(--text-primary-color);
     font-family: var(--editor-font-family);
-    font-weight: var(--font-weight-normal);
-    line-height: var(--line-height);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-base);
 }
 
 body#tinymce {
@@ -74,14 +74,14 @@ body#tinymce {
 }
 
 a:not(.btn):not([type=button]):not([type=submit]):not(button):not(.mce-item-anchor):not(.gallery__item a) {
-    border-bottom: 3px solid rgba(var(--yellow), 1);
+    border-bottom: 3px solid rgba(var(--color-highlight-rgb), 1);
     color: var(--link-invert-color);
     cursor: pointer;
     text-decoration: none !important;
     text-decoration-skip-ink: auto;
 
     &:hover {
-        background: rgba(var(--yellow), .2);
+        background: rgba(var(--color-highlight-rgb), .2);
         color: var(--link-invert-color);
     }
 
@@ -125,9 +125,9 @@ h4,
 h5,
 h6 {
     color: var(--headings-color);
-    font-family: var(--font-base);
+    font-family: var(--font-family-sans);
     font-weight: var(--font-weight-bold);
-    letter-spacing: var(--letter-spacing);
+    letter-spacing: var(--editor-heading-letter-spacing);
     line-height: 1.3;
     margin-top: 2.2857rem;
 }
@@ -174,8 +174,8 @@ strong {
 }
 
 blockquote {
-    border-left: 2px solid var(--gray-3);
-    font-family: var(--font-serif);
+    border-left: 2px solid var(--color-border-emphasis);
+    font-family: var(--font-family-serif);
     font-style: italic;
     padding: 0 0 0 1.3714rem;
     position: relative;
@@ -208,16 +208,16 @@ dl {
 }
 
 code {
-    background-color: var(--gray-1);
+    background-color: var(--color-surface-subtle);
     border-radius: 2px;
-    color: var(--warning);
+    color: var(--color-danger);
     font-size: 0.8889em;
-    font-family: var(--font-monospace);
+    font-family: var(--font-family-mono);
     padding: 0.2286rem 0.4571rem;
 }
 
 pre {
-    background-color: var(--gray-1);
+    background-color: var(--color-surface-subtle);
     font-size: 0.7901em;
     padding: 1.3714rem;
     white-space: pre-wrap;
@@ -228,7 +228,7 @@ pre {
         color: var(--headings-color);
         display: inline-block;
         font-size: inherit;
-        font-weight: normal;
+        font-weight: var(--font-weight-regular);
         padding: 0;
     }
 }
@@ -242,7 +242,7 @@ table {
     width: 100%;
 
     th {
-        font-weight: var(--font-weight-semibold);
+        font-weight: var(--font-weight-medium);
         padding: 0.5714rem 0.9143rem;
     }
 
@@ -256,7 +256,7 @@ kbd {
     background: var(--headings-color);
     border-radius: 2px;
     color: var(--bg-primary);
-    font-family: var(--font-monospace);
+    font-family: var(--font-family-mono);
     font-size: 0.8888em;
     padding: 0.1143rem 0.3429rem;
 }
@@ -295,7 +295,7 @@ figcaption {
 }
 
 kbd {
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     border-radius: 1px;
     color: var(--headings-color);
     font-family: Menlo, Monaco, Consolas, Courier New, monospace;
@@ -325,9 +325,9 @@ hr#read-more {
         background: var(--input-bg);
         content: attr(data-translation);
         display: inline-block;
-        font-family: var(--font-base);
+        font-family: var(--font-family-sans);
         font-size: 0.7023em;
-        font-weight: var(--font-weight-semibold);
+        font-weight: var(--font-weight-medium);
         left: 50%;
         padding: 6px 16px;
         position: absolute;
@@ -345,15 +345,15 @@ hr#read-more {
 [type=button],
 [type=submit],
 button {
-    background: var(--button-bg);
-    border: 1px solid var(--button-bg);
-    border-radius: var(--border-radius);
+    background: var(--button-primary-bg);
+    border: 1px solid var(--button-primary-bg);
+    border-radius: var(--radius-base);
     color: var(--white);
     cursor: pointer;
     display: inline-block;
     font-family: inherit;
     font-size: 0.8889em;
-    font-weight: var(--font-weight-normal);
+    font-weight: var(--font-weight-regular);
     line-height: 1.6;
     padding: 0.4571rem 0.9143rem;
     vertical-align: middle;
@@ -365,8 +365,8 @@ button {
     &:hover,
     &:active,
     &:focus {
-        background: var(--button-bg-hover);
-        border-color: var(--button-bg-hover);
+        background: var(--button-primary-bg-hover);
+        border-color: var(--button-primary-bg-hover);
         text-decoration: none !important;
     }
 }
@@ -396,7 +396,7 @@ label {
 }
 
 option {
-    font-weight: var(--font-weight-normal);
+    font-weight: var(--font-weight-regular);
 }
 
 [type=text],
@@ -494,12 +494,12 @@ select[multiple] {
     }
 }
 .post__video {
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     border: 2px dashed var(--input-border-color);
     position: relative;
 
     & > img.mce-object {
-        background: var(--gray-1);
+        background: var(--color-surface-subtle);
         border: 5px solid var(--bg-primary);
         position: relative;
         background-image: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='utf-8'?%3e%3csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 68 48' xml:space='preserve'%3e%3cpath fill='%23cbcdd4' d='M64.82,6.36c-0.58-2.21-2.97-4.3-5.17-4.61C50.94,0.58,42.22,0,33.5,0S16.06,0.58,7.34,1.75 c-2.2,0.31-4.59,2.4-5.17,4.61c-2.9,11.43-2.9,22.85,0,34.28c0.58,2.21,2.97,4.3,5.17,4.61C16.06,46.42,24.78,47,33.5,47 s17.44-0.58,26.16-1.75c2.2-0.31,4.59-2.4,5.17-4.61C67.73,29.21,67.73,17.79,64.82,6.36z M43.21,24.78l-16.14,8.07 C26.12,33.32,25,32.63,25,31.57V23.5v-8.07c0-1.06,1.12-1.76,2.07-1.28l16.14,8.07C44.26,22.75,44.26,24.25,43.21,24.78z'/%3e%3c/svg%3e");
@@ -573,8 +573,8 @@ img {
 }
 
 .msg--highlight {
-    background-color: rgba(var(--yellow), .1);
-    border-color: rgba(var(--yellow), .5);
+    background-color: rgba(var(--color-highlight-rgb), .1);
+    border-color: rgba(var(--color-highlight-rgb), .5);
 }
 
 .msg--info {
@@ -583,13 +583,13 @@ img {
 }
 
 .msg--success {
-    background-color: rgba(var(--success-rgb), .1);
-    border-color: rgba(var(--success-rgb), .51);
+    background-color: rgba(var(--color-success-rgb), .1);
+    border-color: rgba(var(--color-success-rgb), .51);
 }
 
 .msg--warning {
-    background-color: rgba(var(--warning-rgb), .1);
-    border-color: rgba(var(--warning-rgb), .5);
+    background-color: rgba(var(--color-danger-rgb), .1);
+    border-color: rgba(var(--color-danger-rgb), .5);
 }
 
 .dropcap {
@@ -623,12 +623,12 @@ img {
         &:after {
             background: var(--button-secondary-bg);
             border: 1px solid var(--button-secondary-bg);
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             color: var(--button-secondary-color);
             content: attr(data-translation);
-            font-family: var(--font-base);
+            font-family: var(--font-family-sans);
             font-size: 15px;
-            font-weight: var(--font-weight-semibold);
+            font-weight: var(--font-weight-medium);
             left: 50%;
             margin: 0;
             padding: 0.3rem .9rem;
@@ -793,7 +793,7 @@ publii-non-amp:before {
  * Styling for obfuscated e-mails
  */
 script {
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     border: 2px dashed var(--input-border-color);
     border-radius: 3px;
     display: block;
@@ -806,7 +806,7 @@ script {
     width: 100%;
 
     &:before {
-        background: var(--gray-1);
+        background: var(--color-surface-subtle);
         box-shadow: inset 0 0 0 5px var(--bg-primary);
         color: var(--text-light-color);
         content: "<script>";
@@ -840,7 +840,7 @@ a script {
  */
 .mce-item-anchor {
     background-color: var(--bg-primary);
-    border: 2px solid #F2B900;
+    border: 2px solid var(--color-warning);
     border-radius: 50%;
     height: 20px !important;
     margin: 0 3px;
@@ -962,7 +962,7 @@ pre[class*="language-"] > code {
 
 .token.important,
 .token.bold {
-    font-weight: bold;
+    font-weight: var(--font-weight-bold);
 }
 .token.italic {
     font-style: italic;

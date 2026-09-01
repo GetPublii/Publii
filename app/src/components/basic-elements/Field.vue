@@ -55,7 +55,8 @@ export default {
         },
         spacing: {
             default: 'normal',
-            type: String
+            type: String,
+            validator: value => ['normal', 'small'].includes(value)
         },
         withCharCounter: {
             default: false,
@@ -99,17 +100,17 @@ export default {
 label {
     color: var(--label-color);
     cursor: pointer;
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
 }
 
 .field {
     display: table;
-    margin: 2rem 0;
+    margin: var(--space-8) 0;
     table-layout: fixed;
     width: 100%;
 
     &.field-small-spacing {
-        margin: 1rem 0;
+        margin: var(--space-4) 0;
     }
 
     &:first-child {
@@ -125,14 +126,14 @@ label {
             cursor: default;
             display: table-cell;
             line-height: 1.4;
-            padding: 1.5rem 1rem 0 0;
+            padding: var(--space-6) var(--space-4) 0 0;
             vertical-align: top;
             width: 23rem;
 
             sup {
-                color: var(--warning);
+                color: var(--color-danger);
                 font-size: 1.8rem;
-                font-weight: 400;
+                font-weight: var(--font-weight-regular);
                 position: relative;
                 top: 1px;
             }
@@ -154,7 +155,7 @@ label {
     &.fields-2 {
         label ~ label {
             display: table-cell;
-            padding: 0 2rem;
+            padding: 0 var(--space-8);
             text-align: right;
         }
     }
@@ -188,7 +189,7 @@ label {
         }
 
         .switcher {
-            margin-top: 1.5rem;
+            margin-top: var(--space-6);
         }
     }
 
@@ -208,18 +209,18 @@ label {
         font-size: 1.35rem;
         font-style: italic;
         line-height: 1.4;        
-        padding: .5rem 0 1rem 0;
+        padding: var(--space-2) 0 var(--space-4) 0;
         user-select: text;
 
         svg {
             display: inline-block;
             height: 1.4rem;
-            margin-right: .5rem;
+            margin-right: var(--space-2);
             width: 1.4rem;
         }
 
         &.is-invalid {
-            color: var(--warning);
+            color: var(--color-danger);
         }
         
         a {
@@ -234,11 +235,11 @@ label {
     }
 
     label + .note {
-        padding-top: 1.5rem;
+        padding-top: var(--space-6);
     }
 
     .checkbox ~ .note {
-        margin-bottom: 1.5rem;
+        margin-bottom: var(--space-6);
     }
 
     .range-wrapper {
@@ -246,7 +247,7 @@ label {
         z-index: 1;
 
         & + .note {
-            padding-top: 1.5rem;
+            padding-top: var(--space-6);
         }
     }
 
@@ -257,7 +258,7 @@ label {
         width: 100%;
 
         &.line > .separator-wrapper::before {
-            border: 1px solid var(--gray-1);
+            border: 1px solid var(--color-border-subtle);
             content: "";
             left: 0;
             position: absolute;
@@ -272,9 +273,9 @@ label {
             & > label {
                 background: var(--bg-primary);
                 color: var(--color-primary);
-                font-size: 1.4rem;
-                font-weight: var(--font-weight-semibold);
-                padding-right: .5rem;
+                font-size: var(--font-size-ui-md);
+                font-weight: var(--font-weight-medium);
+                padding-right: var(--space-2);
                 position: absolute;
                 text-transform: uppercase;
                 top: 50%;

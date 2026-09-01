@@ -4,7 +4,8 @@
             <p-button
                 @click.native="goBack"
                 slot="buttons"
-                type="clean back"
+                appearance="clean"
+                back
                 :disabled="buttonsLocked">
                 {{ $t('ui.backToTools') }}
             </p-button>
@@ -12,14 +13,14 @@
             <p-button
                 @click.native="save(false, false)"
                 slot="buttons"
-                type="secondary"
+                appearance="secondary"
                 :disabled="buttonsLocked">
                 {{ $t('ui.saveChanges') }}
             </p-button>
 
             <btn-dropdown
                 slot="buttons"
-                buttonColor="green"
+                intent="primary"
                 :items="dropdownItems"
                 :disabled="!siteHasTheme || buttonsLocked"
                 :previewIcon="true"
@@ -31,7 +32,7 @@
             <tabs
                 id="custom-html-tabs"
                 :items="tabs"
-                :onToggle="refreshEditors">
+                :on-toggle="refreshEditors">
                 <supported-features-check
                     v-for="(htmlFieldName, index) in Object.keys(requiredFeatures)"
                     :key="'supported-features-check-' + index"
@@ -354,11 +355,11 @@ export default {
 <style scoped>
 
 .editor-note {
-   color: var(--gray-4);
+   color: var(--color-text-muted);
 
     span {
         display: inline-block;
-        margin: .5rem 2rem 0 0;
+        margin: var(--space-2) var(--space-8) 0 0;
     }
 }
 </style>

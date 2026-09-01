@@ -254,16 +254,16 @@ export default {
   align-items: center;
   background: transparent;
   border: none;
-  border-radius: 0 var(--border-radius) 0 0;
+  border-radius: 0 var(--radius-base) 0 0;
   color: var(--link-primary-color-hover);
   cursor: pointer;
   display: flex;
-  font-size: 1.4rem;
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-ui-md);
+  font-weight: var(--font-weight-medium);
   height: 4.6rem;
   line-height: 4.5rem;
   padding: 0 1.3rem 0 3.8rem;
-  transition: var(--transition);
+  transition: var(--transition-default);
   user-select: none;
   white-space: nowrap;
   z-index: 2;
@@ -294,10 +294,10 @@ export default {
 }
 
 .blocks-list-item {
-  border-radius: calc(var(--border-radius) / 2);
+  border-radius: calc(var(--radius-base) / 2);
   cursor: pointer;
   font-size: 14px;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   margin: 0;
   padding: 3px 0;
 
@@ -327,11 +327,11 @@ export default {
 
   & > div {
     align-items: center;
-    background-color: var(--gray-1);
+    background-color: var(--color-surface-subtle);
     display: grid;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     grid-template-columns: auto 1fr auto auto 6px;
-    transition: var(--transition);
+    transition: var(--transition-default);
 
     &:hover {
       background-color: var(--button-secondary-bg);
@@ -346,13 +346,13 @@ export default {
 
 .blocks-list-item-icon {
   align-items: center;
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-base);
   display: inline-flex;
   color: var(--icon-primary-color);
   height: 38px;
   justify-content: center;
   margin-right: 1px;
-  transition: var(--transition);
+  transition: var(--transition-default);
   width: 38px;
 }
 
@@ -386,7 +386,7 @@ export default {
     color: var(--icon-secondary-color);
     pointer-events: none;
     transform: scale(.9);
-    transition: var(--transition);
+    transition: var(--transition-default);
     vertical-align: middle;
   }
 
@@ -399,7 +399,7 @@ export default {
 .blocks-list-item-bulk-delete {
   &:hover {
     & > svg {
-      color: var(--warning);
+      color: var(--color-danger);
     }
   }
   &.has-tooltip:hover .ui-tooltip { 

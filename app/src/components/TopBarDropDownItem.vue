@@ -72,8 +72,8 @@ li {
     & > a {
         color: var(--link-invert-color);
         display: block;
-        font-weight: 400;
-        padding: .5rem 3rem;
+        font-weight: var(--font-weight-regular);
+        padding: var(--space-2) var(--space-12);
         white-space: nowrap;
 
         &:active,
@@ -93,7 +93,7 @@ li {
             border-radius: 50%;
             display: inline-flex;
             font-size: 1rem;
-            font-weight: var(--font-weight-semibold);
+            font-weight: var(--font-weight-medium);
             height: 21px;
             justify-content: center;
             min-height: 21px;
@@ -106,15 +106,15 @@ li {
             z-index: 2;
 
             &.is-warning {
-                background: rgba(var(--warning-rgb), 1);
+                background: rgba(var(--color-danger-rgb), 1);
                 border: 2px solid var(--bg-site);
                 color: white;
             }
 
             &.is-notice {
                 aspect-ratio: unset;
-                background: var(--gray-6);
-                border-radius: 6px;
+                background: var(--color-surface-notice);
+                border-radius: var(--radius-base);
                 color: var(--text-primary-color);
                 font-size: 1rem;
                 top: -2px;

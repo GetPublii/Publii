@@ -778,12 +778,12 @@ export default {
       }
 
       &.is-delete-highlight {
-        background: rgba(var(--warning-rgb), .12);
+        background: rgba(var(--color-danger-rgb), .12);
       }
     }
 
     th {
-      background: var(--gray-1);
+      background: var(--color-surface-subtle);
       text-align: left;
     }
   }
@@ -817,7 +817,7 @@ export default {
   .publii-block-table-handle,
   .publii-block-table-delete {
     align-items: center;
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     border: none;
     border-radius: 50%;
     color: var(--icon-primary-color);
@@ -860,7 +860,7 @@ export default {
 
     &.is-confirm,
     &:hover {
-      background: var(--warning);
+      background: var(--color-danger);
       color: var(--white);
     }
 

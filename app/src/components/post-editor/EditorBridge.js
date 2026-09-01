@@ -1,4 +1,5 @@
 import EditorConfig from './../configs/postEditor.config.js';
+import { applyAppAppearance } from './../../helpers/app-appearance';
 import Utils from './../../helpers/utils';
 
 class EditorBridge {
@@ -267,8 +268,9 @@ class EditorBridge {
             }, false);
 
             // Support for dark mode
-            let htmlElement = iframe.contentWindow.window.document.querySelector('html');
-            htmlElement.setAttribute('data-theme', await window.app.getCurrentAppTheme());
+            let iframeDocument = iframe.contentWindow.window.document;
+            let htmlElement = iframeDocument.querySelector('html');
+            applyAppAppearance(iframeDocument, await window.app.getCurrentAppTheme());
             htmlElement.setAttribute('style', window.app.overridedCssVariables());
 
             // Add inline editors

@@ -17,7 +17,8 @@
 
             <p-button
                 id="post-help-button"
-                type="clean-invert icon small"
+                appearance="clean-inverse"
+                size="small"
                 icon="help"
                 :title="$t('ui.help')"
                 @click.native="toggleHelp">
@@ -405,7 +406,7 @@ export default {
     line-height: 4.3rem;
     position: absolute;
     right: 1.8rem;
-    z-index: 99991;
+    z-index: var(--layer-editor-help);
 }
 
 body[data-os="win"] {

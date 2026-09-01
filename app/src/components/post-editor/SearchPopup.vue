@@ -104,7 +104,7 @@ export default {
 
 .search-popup {
     background: var(--popup-bg);
-    border-radius: 6px;
+    border-radius: var(--radius-base);
     box-shadow: 0 0 5px rgba(black, .125);
     left: 50%;
     opacity: 0;
@@ -113,7 +113,7 @@ export default {
     position: fixed;
     top: 20px;
     transform: translateX(-50%);
-    transition: var(--transition);
+    transition: var(--transition-default);
     width: auto;
     z-index: 10000000;
 
@@ -129,7 +129,7 @@ export default {
         border-bottom: 1px solid var(--input-border-focus);        
         color: var(--text-primary-color);
         font-size: 18px;
-        font-weight: var(--font-weight-semibold);
+        font-weight: var(--font-weight-medium);
         width: 300px;
     }
     
@@ -150,7 +150,7 @@ export default {
         padding: 0;
         position: relative;       
         text-align: center;       
-        transition: var(--transition);             
+        transition: var(--transition-default);
         width: 2.8rem;
         
         & > svg {           

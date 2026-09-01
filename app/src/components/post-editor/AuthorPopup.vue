@@ -19,13 +19,18 @@
 
             <div class="buttons">
                 <p-button
-                    type="medium no-border-radius half-width"
+                    size="medium"
+                    width="half"
+                    square
                     @click.native="changeAuthor">
                     {{ $t('ui.ok') }}
                 </p-button>
 
                 <p-button
-                    type="medium no-border-radius half-width cancel-popup"
+                    appearance="popup-cancel"
+                    size="medium"
+                    width="half"
+                    square
                     @click.native="cancel">
                     {{ $t('ui.cancel') }}
                 </p-button>
@@ -99,7 +104,7 @@ export default {
 @import '../../css/popup-common.css';
 
 .overlay {
-    z-index: 100005;
+    z-index: var(--layer-dialog);
 }
 
 .popup {
@@ -109,7 +114,7 @@ export default {
 }
 
 .message {
-    font-size: 1.6rem;
+    font-size: var(--font-size-ui-lg);
     padding: 0 0 4rem 0;
 }
 

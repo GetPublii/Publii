@@ -4,7 +4,8 @@
         @click="hide">
         <p-header @click.native.stop>
             <p-button
-                type="clean back"
+                appearance="clean"
+                back
                 slot="buttons"
                 :onClick="hide">
                 {{ $t('ui.goBack') }}
@@ -12,7 +13,7 @@
 
             <p-button
                 icon="add-site-mono"
-                type="primary icon"
+                intent="primary"
                 slot="buttons"
                 :onClick="addNewWebsite">
                 {{ $t('site.addNewWebsite') }}
@@ -85,7 +86,7 @@ export default {
     top: 0;
     transition: all .25s ease-out;
     width: 100vw;
-    z-index: 99999;
+    z-index: var(--layer-overlay);
 
     &.is-hidden {
         pointer-events: none;

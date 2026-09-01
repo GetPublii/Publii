@@ -39,7 +39,7 @@
 
         <p-button
             icon="add-site-mono"
-            type="secondary icon"
+            appearance="secondary"
             @click.native="addGroup">
             {{ $t('gdpr.addGroup') }}
         </p-button>
@@ -97,37 +97,37 @@ export default {
 
     .gdpr-groups-header {
         display: flex;
-        margin-top: 1rem
+        margin-top: var(--space-4)
     }
 
     .gdpr-group {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
-        padding: .25rem 0; 
+        padding: var(--space-1) 0;
 
         .input-wrapper {
-            padding-right: 1rem;
+            padding-right: var(--space-4);
             text-align: left;
             width: calc(50% - 23px);
         }
 
         div:last-child {
-            margin-bottom: 3rem;
-            margin-top: 1rem;
+            margin-bottom: var(--space-12);
+            margin-top: var(--space-4);
             width: calc(100% - 56px);
         }
     }
 
     .button {
-        margin: 1rem 0;
+        margin: var(--space-4) 0;
     }
 }
 
 .gdpr-groups .gdpr-groups-header-cell {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin: 0 0 1rem 0;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--space-4) 0;
     width: calc(50% - 23px);
 
     &:last-child {
@@ -137,7 +137,7 @@ export default {
 
 .gdpr-groups .gdpr-group-btn {
     align-items: center;
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     position: relative;
     border-radius: 50%;
     display: flex;
@@ -167,7 +167,7 @@ export default {
         height: 1.6rem;
         pointer-events: none;
         transform: scale(.9);
-        transition: var(--transition);
+        transition: var(--transition-default);
         width: 1.6rem;
     }
 
@@ -176,7 +176,7 @@ export default {
         &:hover {
 
             & > svg {
-                fill: var(--warning);
+                fill: var(--color-danger);
             }
         }
     }

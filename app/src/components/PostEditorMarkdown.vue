@@ -40,7 +40,8 @@
 
             <p-button
                 id="post-help-button"
-                type="clean-invert icon small"
+                appearance="clean-inverse"
+                size="small"
                 icon="help"
                 :title="$t('ui.help')"
                 @click.native="toggleHelp">
@@ -438,7 +439,7 @@ export default {
         font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         font-size: 3.6rem;
         font-weight: var(--font-weight-bold);
-        letter-spacing: var(--letter-spacing);
+        letter-spacing: var(--editor-heading-letter-spacing);
         line-height: 1.2;
         margin: 0 10% 2.6rem;
         padding: 0;
@@ -446,7 +447,7 @@ export default {
         width: 80%;
 
         &:empty {
-            color: var(--gray-4);
+            color: var(--color-text-muted);
 
             &:before {
                 content: attr(data-translation);
@@ -496,7 +497,7 @@ export default {
     line-height: 4.3rem;
     position: absolute;
     right: 1.8rem;
-    z-index: 99991;
+    z-index: var(--layer-editor-help);
 }
 
 body[data-os="win"] {

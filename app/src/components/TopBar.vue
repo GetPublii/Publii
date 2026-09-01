@@ -162,8 +162,8 @@ export default {
 <style scoped>
 
 .topbar {
-    background: var(--gray-1);
-    font-size: var(--app-font-base);
+    background: var(--color-surface-subtle);
+    font-size: var(--font-size-ui-md);
     height: var(--topbar-height);
     position: absolute;
     top: 0;

@@ -73,7 +73,7 @@ select {
         background: url('data:image/svg+xml;utf8,<svg fill="%238e929d" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><polygon points="10 0 5 0 0 0 5 6 10 0"/></svg>') no-repeat calc(100% - 2rem) 50%;
         background-color: var(--input-bg);
         background-size: 10px;
-        padding-right: 3rem;
+        padding-right: var(--space-12);
     }
 }
 

@@ -8,7 +8,10 @@
 
             <div class="buttons">
                 <p-button
-                    :type="buttonType"
+                    :intent="buttonIntent"
+                    size="medium"
+                    width="full"
+                    square
                     :onClick="onOk">
                     {{ buttonText }}
                 </p-button>
@@ -37,14 +40,16 @@ export default {
                 'text-centered': this.textCentered
             };
         },
-        buttonType: function() {
-            let types = 'medium no-border-radius full-width';
-
-            if(this.buttonStyle === 'normal') {
-                return types;
+        buttonIntent: function() {
+            if(this.buttonStyle === 'danger') {
+                return 'danger';
             }
 
-            return types + ' ' + this.buttonStyle;
+            if(this.buttonStyle === 'success') {
+                return 'primary';
+            }
+
+            return 'default';
         }
     },
     mounted: function() {
@@ -99,7 +104,7 @@ export default {
 @import '../../css/popup-common.css';
 
 .overlay {
-    z-index: 100006;
+    z-index: var(--layer-alert);
 }
 
 .popup {
@@ -116,7 +121,7 @@ export default {
 
 .buttons {
     display: flex;
-    margin: .5rem 0 0 0;
+    margin: var(--space-2) 0 0 0;
     position: relative;
     text-align: center;
     top: 1px;

@@ -83,7 +83,7 @@ export default {
     position: absolute;
     top: 10rem;
     width: 100vw;
-    z-index: 99999;
+    z-index: var(--layer-overlay);
     
     &::before {
         background: var(--bg-primary);

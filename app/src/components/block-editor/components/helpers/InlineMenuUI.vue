@@ -103,8 +103,8 @@ export default {
   align-items: center;
   background: var(--popup-bg);
   border: none;
-  border-radius: var(--border-radius);
-  box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
+  border-radius: var(--radius-base);
+  box-shadow: 0 5px 10px -5px var(--shadow-color), 4px -11px 26px -12px var(--shadow-color), 0 24px 50px 2px var(--shadow-color);
   left: 50%;
   margin-top: 16px;
   min-height: 44px;
@@ -170,7 +170,7 @@ export default {
   /* hover effect */
   &::before {
      content: "";
-     background: var(--gray-6);
+     background: var(--color-control-surface-hover);
      border-radius: 3px;
      display: block;
      left: 50%;

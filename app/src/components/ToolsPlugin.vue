@@ -5,7 +5,8 @@
                 <p-button
                     :onClick="goBack"
                     slot="buttons"
-                    type="clean back">
+                    appearance="clean"
+                    back>
                     {{ $t('ui.backToTools') }}
                 </p-button>
 
@@ -13,7 +14,8 @@
                     v-if="pluginHasConfig && hasPluginCustomOptions && pluginStandardOptionsVisible"
                     :onClick="showPluginCustomOptions"
                     slot="buttons"
-                    type="clean back icon" 
+                    appearance="clean"
+                    back
                     icon="settings">
                     {{ $t('ui.goToPluginCustomOptions') }}
                 </p-button>
@@ -22,7 +24,8 @@
                     v-if="pluginHasConfig && hasPluginCustomOptions && !pluginStandardOptionsVisible"
                     :onClick="showPluginStandardOptions"
                     slot="buttons"
-                    type="clean back icon" 
+                    appearance="clean"
+                    back
                     icon="settings">
                     {{ $t('ui.goToPluginStandardOptions') }}
                 </p-button>
@@ -31,7 +34,7 @@
                     v-if="pluginStandardOptionsVisible"
                     @click.native="save(false, false, false)"
                     slot="buttons"
-                    type="secondary"
+                    appearance="secondary"
                     :disabled="buttonsLocked">
                     {{ $t('settings.saveSettings') }}
                 </p-button>
@@ -39,7 +42,7 @@
                 <btn-dropdown
                     v-if="!previewNotRequired"
                     slot="buttons"
-                    buttonColor="green"
+                    intent="primary"
                     :items="dropdownItems"
                     :disabled="!siteHasTheme || buttonsLocked"
                     localStorageKey="publii-preview-mode"
@@ -447,8 +450,7 @@
                     <btn-dropdown
                         v-if="!previewNotRequired"
                         slot="buttons"
-                        buttonColor="green"
-                        type="is-reversed"
+                        intent="primary"
                         :items="dropdownItems"
                         :disabled="!siteHasTheme || buttonsLocked"
                         localStorageKey="publii-preview-mode"
@@ -460,7 +462,7 @@
                         v-if="pluginStandardOptionsVisible"
                         @click.native="save(false, false, false)"
                         slot="buttons"
-                        type="secondary"
+                        appearance="secondary"
                         :disabled="buttonsLocked">
                         {{ $t('settings.saveSettings') }}
                     </p-button>
@@ -476,6 +478,7 @@
 </template>
 
 <script>
+import { applyAppAppearance } from './../helpers/app-appearance';
 import BackToTools from './mixins/BackToTools.js';
 import SupportedFeaturesCheck from './basic-elements/SupportedFeaturesCheck.vue';
 import Repeater from './basic-elements/Repeater';
@@ -565,7 +568,7 @@ export default {
     async mounted () {
         this.loadPluginConfig(this.$route.params.pluginname, this.$route.params.name);
         document.getElementById('plugin-settings-root').addEventListener('load', async function () {
-            this.contentWindow.window.document.querySelector('html').setAttribute('data-theme', await window.app.getCurrentAppTheme());
+            applyAppAppearance(this.contentWindow.window.document, await window.app.getCurrentAppTheme());
         }, false);
     },
     methods: {
@@ -897,7 +900,7 @@ export default {
 
 .msg {
     background: var(--bg-secondary);
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-12);
 
     & + .msg {
         margin-top: -2rem;

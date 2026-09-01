@@ -4,7 +4,8 @@
             <p-header :title="$t('settings.appSettings')">
                 <p-button
                     :onClick="goBack"
-                    type="clean back"
+                    appearance="clean"
+                    back
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
@@ -560,8 +561,8 @@ export default {
         },
         editorFontFamilyItems () {
             return {
-                'var(--font-base)': this.$t('settings.editorFontFamilySansSerif'),
-                'var(--font-serif)': this.$t('settings.editorFontFamilySerif')
+                'sans-serif': this.$t('settings.editorFontFamilySansSerif'),
+                'serif': this.$t('settings.editorFontFamilySerif')
             };
         },
         isSitesLocationExists () {
@@ -781,7 +782,7 @@ export default {
 
 .settings {
     margin: 0 auto;
-    padding: 3rem 0 4rem;
+    padding: var(--space-12) 0 var(--space-16);
     user-select: none;
     width: 100%
 }
@@ -792,11 +793,11 @@ export default {
 }
 
 .note.is-warning {
-    color: var(--warning);
+    color: var(--color-danger);
 }
 
 #site-location-switcher {
-    margin: 1.5rem 0 1rem;
+    margin: var(--space-6) 0 var(--space-4);
     display: block;
 }
 </style>

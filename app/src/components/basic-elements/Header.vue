@@ -42,7 +42,7 @@ export default {
 
 .heading {
     display: flex;
-    margin-bottom: calc(12 * var(--spacing));
+    margin-bottom: calc(12 * var(--space-unit));
     user-select: none;
     width: 100%;
 
@@ -59,7 +59,7 @@ export default {
     .title {    
         line-height: 4.3rem;
         margin: 0;
-        padding: 0 2rem 0 0;
+        padding: 0 var(--space-8) 0 0;
     }
 }
 
@@ -77,7 +77,7 @@ export default {
         margin-left: auto;
 
         & + .button {
-          margin-left: 1rem;
+          margin-left: var(--space-4);
         }
 
         & > span.progress {

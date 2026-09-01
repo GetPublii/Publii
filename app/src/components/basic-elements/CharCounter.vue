@@ -48,14 +48,14 @@ export default {
 .char-counter {
     color: var(--text-light-color);
     display: block;
-    font-size: 1.2rem;
+    font-size: var(--font-size-ui-xs);
     line-height: 1.6;
-    margin: .5rem 0;
+    margin: var(--space-2) 0;
     text-align: right;
     width: 100%;
 
     &.is-too-long {
-        color: var(--warning);
+        color: var(--color-danger);
     }
 }
 </style>

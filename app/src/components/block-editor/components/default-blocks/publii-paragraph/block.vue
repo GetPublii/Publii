@@ -232,7 +232,7 @@ export default {
   &:empty {
     &:before {
       content: attr(data-translation);
-      color: var(--gray-4);
+      color: var(--color-text-muted);
     }
   }
 }

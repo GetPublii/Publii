@@ -191,22 +191,22 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: minmax(calc(8rem + 8vh), auto);
-    gap: 2rem;      
+    gap: var(--space-8);
 }
 
 .tools-list-item {
      background-color: var(--bg-secondary);
      border: 1px solid transparent;
-     border-radius: var(--border-radius);
-     box-shadow: var(--box-shadow-small);      
+     border-radius: var(--radius-base);
+     box-shadow: var(--shadow-sm);
      height: 100%;
-     transition: var(--transition);
+     transition: var(--transition-default);
      text-align: center;
 
      &:hover {
         background: var(--bg-primary);
         border-color: var(--color-primary);
-        box-shadow: var(--box-shadow-medium);  
+        box-shadow: var(--shadow-md);
         cursor: pointer;
 
         svg {
@@ -223,9 +223,9 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        font-weight: var(--font-weight-semibold);
+        font-weight: var(--font-weight-medium);
         height: 100%;
-        padding: 4rem 1rem;
+        padding: var(--space-16) var(--space-4);
         position: relative;
         width: 100%;
      }
@@ -233,7 +233,7 @@ export default {
      svg {
         display: block;
         fill: var(--icon-primary-color);
-        margin: 0 auto 1rem;
+        margin: 0 auto var(--space-4);
         transition: inherit;
      }
 
@@ -254,7 +254,7 @@ export default {
 
          &:hover {
             border-color: var(--border-light-color);
-            box-shadow: var(--box-shadow-small);  
+            box-shadow: var(--shadow-sm);
             
             .tools-switcher {
                   animation: tools-switcher-animation 3s linear infinite;
@@ -283,14 +283,14 @@ export default {
 
 .tools-tab {
     h2 {
-        font-size: var(--app-font-base);
-        font-weight: 400;
-        margin: 1rem 0 0;
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-regular);
+        margin: var(--space-4) 0 0;
         text-transform: none;
     }
 
     div {
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
         font-style: italic;
     }
 }
@@ -335,7 +335,7 @@ export default {
 
     .tools-list-item {
         a {
-            padding: 3rem 1rem 3.5rem;
+            padding: var(--space-12) var(--space-4) 3.5rem;
         }
         svg, 
         img {

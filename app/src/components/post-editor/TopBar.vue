@@ -7,7 +7,7 @@
         <p-button
             v-if="!sourceCodeEditorVisible"
             id="post-back-to-posts-button"
-            type="clean-invert icon"
+            appearance="clean-inverse"
             icon="arrow-left"
             @click.native="cancelItem">
             <template v-if="itemType === 'post'">
@@ -21,7 +21,7 @@
         <p-button
             v-if="!sourceCodeEditorVisible"
             id="post-preview-button"
-            type="clean-invert"
+            appearance="clean-inverse"
             :disabled="!themeConfigured"
             :title="themeConfigured ? $t('post.configureThemeBeforeGeneratingPreview') : ''"
             @click.native="generatePostPreview">
@@ -39,7 +39,9 @@
 
             <p-button
                 icon="settings"
-                :type="$parent.sidebarVisible ? 'clean clean-invert icon only-icon-color' : 'clean clean-invert icon only-icon'"
+                appearance="clean-inverse"
+                icon-only
+                :icon-tone="$parent.sidebarVisible ? 'primary' : 'default'"
                 @click.native="$parent.toggleSidebar" />
         </div>
 
@@ -47,21 +49,21 @@
             v-if="sourceCodeEditorVisible"
             class="post-editor-source-code-actions">
             <p-button
-                type="clean"
+                appearance="clean"
                 @click.native="sourceCodeCancel">
                 {{ $t('ui.goBack') }}
             </p-button>
 
             <p-button
                 v-if="sourceCodeEditorVisible"
-                type="secondary icon"
+                appearance="secondary"
                 icon="source-code"
                 @click.native="$bus.$emit('source-code-editor-beautify-code')">
                 {{ $t('ui.beautifyCode') }}
             </p-button>
 
             <p-button
-                type="primary"
+                intent="primary"
                 @click.native="sourceCodeApply">
                 {{ $t('ui.applyChanges') }}
             </p-button>
@@ -249,7 +251,7 @@ export default {
         position: relative;
 
         &::after {
-            border-right: 1px solid var(--gray-2);
+            border-right: 1px solid var(--color-border-default);
             content: "";
             height: 1.4rem;
             right: -.9375rem;
@@ -263,7 +265,7 @@ export default {
 .post-editor-topbar {
     align-items: center;
     background: transparent;
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     display: flex;
     height: 5.6rem;
     justify-content: space-between;
@@ -271,7 +273,7 @@ export default {
     position: absolute;
     top: 3.6rem;
     width: 100%;
-    z-index: 100001;
+    z-index: var(--layer-editor-toolbar);
 }
 
 .post-editor-actions {

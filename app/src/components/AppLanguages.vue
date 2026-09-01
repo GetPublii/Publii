@@ -4,7 +4,8 @@
             <p-header :title="$t('langs.languages')">
                 <p-button
                     :onClick="goBack"
-                    type="clean back"
+                    appearance="clean"
+                    back
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
@@ -12,7 +13,6 @@
                 <p-button
                     :onClick="installLanguage"
                     slot="buttons" 
-                    type="icon"
                     icon="upload-file">
                     {{ $t('langs.installLanguage') }}
                 </p-button>
@@ -97,7 +97,7 @@ export default {
 <style scoped>
 
 .settings {
-    padding: 3rem 0 4rem;
+    padding: var(--space-12) 0 var(--space-16);
     width: 100%
 }
 

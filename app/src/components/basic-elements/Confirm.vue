@@ -17,14 +17,20 @@
 
             <div class="buttons">
                 <p-button
-                    :type="isDanger ? 'medium no-border-radius half-width danger' : 'medium no-border-radius half-width'"
+                    :intent="isDanger ? 'danger' : 'default'"
+                    size="medium"
+                    width="half"
+                    square
                     :onClick="onOk"
                     ref="okButton">
                     {{ okLabel }}
                 </p-button>
 
                 <p-button
-                    type="medium no-border-radius half-width cancel-popup"
+                    appearance="popup-cancel"
+                    size="medium"
+                    width="half"
+                    square
                     :onClick="onCancel">
                     {{ cancelLabel }}
                 </p-button>
@@ -142,26 +148,26 @@ export default {
 @import '../../css/popup-common.css';
 
 .overlay {
-    z-index: 100005;
+    z-index: var(--layer-dialog);
 }
 
 .popup {
     max-width: 60rem;
     min-width: 60rem;
-    padding: 4rem;
+    padding: var(--space-16);
 }
 
 .message {
     padding: 0;
 
     & + * {
-        margin-top: 2rem;
+        margin-top: var(--space-8);
     }
 }
 
 .buttons {
     display: flex;
-    margin: 4rem -4rem -4rem -4rem;
+    margin: var(--space-16) -4rem -4rem -4rem;
     position: relative;
     text-align: center;
     top: 1px;

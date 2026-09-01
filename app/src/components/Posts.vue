@@ -11,7 +11,7 @@
 
             <btn-dropdown
                 slot="buttons"
-                buttonColor="green"
+                intent="primary"
                 localStorageKey="publii-current-editor"
                 :previewIcon="true"
                 :items="dropdownItems"
@@ -72,7 +72,7 @@
 
         <collection
             v-if="dataLoaded && !emptySearchResults && hasPosts"
-            :itemsCount="showModificationDate && showModificationDateAsColumn ? 6 : 5">
+            :columns="showModificationDate && showModificationDateAsColumn ? 6 : 5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -159,7 +159,8 @@
                     <p-button
                         v-if="trashVisible"
                         icon="delete"
-                        type="small light icon delete"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>
@@ -167,7 +168,8 @@
                     <p-button
                         v-if="trashVisible"
                         icon="restore"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkRestore">
                         {{ $t('file.restore') }}
                     </p-button>
@@ -175,7 +177,8 @@
                     <p-button
                         v-if="!trashVisible"
                         icon="trash"
-                        type="small light icon delete"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkTrash">
                         {{ $t('post.moveToTrash') }}
                     </p-button>
@@ -183,7 +186,8 @@
                     <p-button
                         v-if="!trashVisible"
                         icon="duplicate"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDuplicate">
                         {{ $t('post.duplicate') }}
                     </p-button>
@@ -193,7 +197,9 @@
                         class="dropdown-wrapper">
                         <p-button
                             icon="more"
-                            :type="bulkDropdownVisible ? 'small light icon active' : 'small light icon'"
+                            appearance="light"
+                            size="small"
+                            :active="bulkDropdownVisible"
                             @click.native.stop="toggleBulkDropdown">
                             {{ $t('ui.more') }}
                         </p-button>
@@ -295,7 +301,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="titles">
+                    variant="titles">
                     <h2 class="title">
                         <a
                             href="#"
@@ -352,7 +358,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    type="publish-dates">
+                    variant="publish-dates">
                     <span class="publish-date">{{ getCreationDate(item.created) }}</span>
                     <span
                         v-if="!showModificationDateAsColumn && showModificationDate"
@@ -363,14 +369,14 @@
 
                 <collection-cell
                     v-if="showModificationDate && showModificationDateAsColumn"
-                    type="modification-dates">
+                    variant="modification-dates">
                     <span class="modify-date">
                         {{ getModificationDate(item.modified) }}
                     </span>
                 </collection-cell>
 
                 <collection-cell
-                    type="authors">
+                    variant="authors">
                     <a
                         href="#"
                         @click.prevent.stop="setFilter('author:' + item.author)">
@@ -406,7 +412,6 @@
                 <p-button
                     slot="button"
                     icon="add-site-mono"
-                    type="icon"
                     :onClick="addNewPost.bind(this, 'tinymce')">
                     {{ $t('post.addNewPost') }}
                 </p-button>
@@ -419,7 +424,6 @@
                 <p-button
                     slot="button"
                     icon="add-site-mono"
-                    type="icon"
                     :onClick="addNewPost.bind(this, 'blockeditor')">
                     {{ $t('post.addNewPost') }}
                 </p-button>
@@ -432,7 +436,6 @@
                 <p-button
                     slot="button"
                     icon="add-site-mono"
-                    type="icon"
                     :onClick="addNewPost.bind(this, 'markdown')">
                     {{ $t('post.addNewPost') }}
                 </p-button>
@@ -995,7 +998,7 @@ export default {
 
         a {
             order: 2;
-            margin: .2rem .5rem 0 0;
+            margin: .2rem var(--space-2) 0 0;
 
             &.is-main-tag {
                 order: 1;
@@ -1004,7 +1007,7 @@ export default {
     }
 
     .post-slug {
-        color: var(--gray-4);
+        color: var(--color-text-muted);
         font-size: 11px;
         margin-top: .2rem;
     }
@@ -1022,15 +1025,15 @@ export default {
     .label {
         color: var(--text-light-color);
         float: left;
-        margin-right: 1rem;
+        margin-right: var(--space-4);
     }
 
     .filter-value {
         color: var(--text-light-color);
         cursor: pointer;
         display: inline-block;
-        margin-right: 1rem;
-        transition: var(--transition);
+        margin-right: var(--space-4);
+        transition: var(--transition-default);
 
         &.filter-active {
             color: var(--link-primary-color);
@@ -1053,12 +1056,12 @@ export default {
 
         .dropdown {
             background: var(--popup-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-medium);
+            border-radius: var(--radius-base);
+            box-shadow: var(--shadow-md);
             left: 0;
             list-style-type: none;
             margin: 0;
-            padding: 1rem 0;
+            padding: var(--space-4) 0;
             position: absolute;
             top: 4rem;
             width: auto;
@@ -1068,13 +1071,13 @@ export default {
                 color: var(--text-light-color);
                 cursor: pointer;
                 display: block;
-                font-size: 1.4rem;
-                font-weight: var(--font-weight-semibold);
+                font-size: var(--font-size-ui-md);
+                font-weight: var(--font-weight-medium);
                 padding: .8rem 2.4rem;
                 white-space: nowrap;
 
                 &:hover {
-                    background: var(--gray-1);
+                    background: var(--color-surface-subtle);
                     color: var(--text-primary-color);
                 }
 

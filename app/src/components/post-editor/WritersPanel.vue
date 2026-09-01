@@ -94,7 +94,7 @@ export default {
     position: absolute;
     text-align: center;
     top: var(--topbar-height);
-    transition: var(--transition);
+    transition: var(--transition-default);
     width: var(--writers-panel-width);
     z-index: 100;
 
@@ -115,7 +115,7 @@ export default {
 
         dd {
             border-bottom: 1px solid var(--input-border-color);
-            font-size: 1.4rem;
+            font-size: var(--font-size-ui-md);
             margin: 0 0 1rem 0;
             padding: 0 0 2rem 0;
 

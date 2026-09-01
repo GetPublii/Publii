@@ -104,7 +104,7 @@ export default {
         -webkit-appearance: none;
         background: transparent;
         float: left;
-        margin: 1rem 0;
+        margin: var(--space-4) 0;
         position: relative;
         top: 1.6rem;
         width: 80%!important;
@@ -122,7 +122,7 @@ export default {
             background: var(--color-primary);
             border: none;
             border-radius: 50%;
-            box-shadow: 1px 1px 1px rgba(0, 0, 0, .15);
+            box-shadow: 1px 1px 1px rgba(var(--black-rgb), .15);
             cursor: pointer;
             height: 2rem;
             margin-top: -1rem;

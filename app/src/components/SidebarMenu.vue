@@ -116,17 +116,17 @@ export default {
     padding: 0;
 
     a {
-        border-radius: var(--border-radius);
+        border-radius: var(--radius-base);
         color: var(--sidebar-link-color);
         display: block;
-        font-size: var(--app-font-base);
-        font-weight: var(--font-weight-normal);
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-regular);
         line-height: 2;
         margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
         padding: .825rem .6rem;
-        transition: var(--transition);
+        transition: var(--transition-default);
 
         &:active,
         &:focus,
@@ -146,7 +146,7 @@ export default {
         left: 1rem;
         margin-right: 2.4rem;
         position: relative;
-        transition: var(--transition);
+        transition: var(--transition-default);
         top: .5rem;
     }
 }
@@ -167,7 +167,7 @@ export default {
     }
 
     .old-git-warning {
-        background: var(--warning);
+        background: var(--color-danger);
         border-radius: 50px;
         fill: var(--white);
         margin-left: auto;
@@ -181,7 +181,7 @@ export default {
 @media (max-height: 736px) {
     .sidebar-menu {
         a {
-            padding: 0.5rem 0.8rem;
+            padding: var(--space-2) 0.8rem;
         }
     }
 }

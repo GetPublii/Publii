@@ -7,15 +7,17 @@
             <p-button
                 :onClick="goBack"
                 slot="buttons"
-                type="clean back">
+                appearance="clean"
+                back>
                 {{ $t('ui.backToTools') }}
             </p-button>
 
             <p-button
                 :onClick="createBackup"
                 slot="buttons"
-                :type="operationInProgress ? 'disabled preloader' : 'primary icon'"
+                intent="primary"
                 :disabled="operationInProgress"
+                :loading="operationInProgress"
                 icon="plus">
                 {{ $t('file.createBackup') }}
             </p-button>
@@ -32,16 +34,16 @@
             <p-button
                 slot="button"
                 icon="plus"
-                :type="operationInProgress ? 'disabled preloader' : 'icon'"
                 :onClick="createBackup"
-                :disabled="operationInProgress">
+                :disabled="operationInProgress"
+                :loading="operationInProgress">
                 {{ $t('file.createBackup') }}
             </p-button>
         </empty-state>
 
         <collection
             v-if="!noBackups"
-            :itemsCount="5">
+            :columns="5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -71,7 +73,8 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>
@@ -91,7 +94,7 @@
                         :key="'collection-row-checkbox-' + index" />
                 </collection-cell>
 
-                <collection-cell type="titles">
+                <collection-cell variant="titles">
                     <h2 class="title">
                         <a
                             :href="item.url"
@@ -109,15 +112,18 @@
                     {{ item.createdAt }}
                 </collection-cell>
 
-                <collection-cell class="col-buttons">
+                <collection-cell variant="actions">
                     <p-button
-                        :type="operationInProgress ? 'disabled outline small' : 'outline small'"
+                        appearance="outline"
+                        size="small"
+                        :disabled="operationInProgress"
                         :onClick="renameFile.bind(this, item.name)">
                         {{ $t('file.rename') }}
                     </p-button>
 
                     <p-button
-                        :type="operationInProgress ? 'disabled secondary small' : 'secondary small'"
+                        appearance="secondary"
+                        size="small"
                         :onClick="restoreFile.bind(this, item.name)"
                         :disabled="operationInProgress">
                         {{ $t('file.restore') }}

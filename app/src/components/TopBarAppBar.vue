@@ -88,7 +88,7 @@ body[data-os="win"] .appbar-button {
     -webkit-app-region: no-drag; /* Make the buttons clickable again */
     display: inline-block;
     height: 2.2rem;
-    padding: 6px 0.75rem;
+    padding: 6px var(--space-3);
     vertical-align: top;
     width: 2.4rem;
 
@@ -112,7 +112,7 @@ body[data-os="win"] .appbar-minimize {
 
 body[data-os="win"] .appbar-close {
     &:hover {
-        background: var(--warning);
+        background: var(--color-danger);
 
         & > svg {
             fill: var(--white);

@@ -40,7 +40,7 @@ export default {
             float: right;
 
             & + .button {
-              margin-right: 1rem;
+              margin-right: var(--space-4);
             }
 
             & > span.progress {

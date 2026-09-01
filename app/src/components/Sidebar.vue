@@ -24,10 +24,9 @@ export default {
 <style scoped>
 
 .sidebar {
-    background: var(--sidebar-bg);
     background: linear-gradient(to bottom, var(--sidebar-bg-top) 0%, var(--sidebar-bg-bottom) 100%);
     height: 100%;
-    padding: 0 var(--app-sidebar-margin) 3rem;
+    padding: 0 var(--app-sidebar-margin) var(--space-12);
     position: absolute;
     -webkit-app-region: no-drag;
     -webkit-user-select: none;

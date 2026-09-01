@@ -165,7 +165,7 @@ export default {
     display: block;
     height: 5rem;
     order: 3;
-    padding: 0 0 0 1.5rem;
+    padding: 0 0 0 var(--space-6);
     width: 35px;
 
     &:hover {
@@ -221,13 +221,13 @@ export default {
 .topbar-app-settings-bell-badge {
      align-items: center;
      aspect-ratio: 1/1;
-     background: rgba(var(--warning-rgb), 1);
+     background: rgba(var(--color-danger-rgb), 1);
      border: 2px solid var(--bg-site);
      border-radius: 50%;
      color: white;
      display: flex;
      font-size: 1rem;
-     font-weight: var(--font-weight-semibold);
+     font-weight: var(--font-weight-medium);
      height: 20px;
      justify-content: center;
      min-height: 20px;
@@ -241,7 +241,7 @@ export default {
 
 .topbar-app-settings {
     -webkit-app-region: no-drag; /* Make the buttons clickable again */
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
 
     & > svg {
         height: 2.4rem;
@@ -253,12 +253,12 @@ export default {
 
 .topbar-app-submenu {
     background: var(--popup-bg);
-    box-shadow: var(--box-shadow-medium);
-    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-base);
     cursor: default;
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     list-style-type: none;
-    padding: 2rem 0;
+    padding: var(--space-8) 0;
     position: absolute;
     right: 3.2rem;
     top: 1.5rem;
@@ -266,8 +266,8 @@ export default {
 
 .topbar-app-submenu-separator {
     border-bottom: 1px solid var(--border-light-color);
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-4);
 }
 
 /*

@@ -18,7 +18,7 @@ export default {
     .tools {
         background: var(--bg-site);
         display: flex;
-        gap: .75rem;
+        gap: var(--space-3);
         margin-left: 5rem;
         min-width: 200px;
         padding: .55rem 0;
@@ -33,7 +33,7 @@ export default {
             &::before {
                 content: "";
                 background: var(--popup-bg);  
-                border-radius: var(--border-radius);
+                border-radius: var(--radius-base);
                 display: block;
                 left: -2px;
                 opacity: 0;
@@ -77,16 +77,9 @@ export default {
 }
 
 @media (max-width: 1350px) {
-    .header {
-        .tools {
-            .button {
-            }
-        }
-    }
-
     .header .tools .button-small {
-        font-size: 1.3rem;
-        padding: 0 .75rem;
+        font-size: var(--font-size-ui-sm);
+        padding: 0 var(--space-3);
 
         &.button-icon {
             padding-left: 3.6rem;

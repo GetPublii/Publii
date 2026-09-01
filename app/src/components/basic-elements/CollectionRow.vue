@@ -1,5 +1,5 @@
 <template>
-    <div :class="'item ' + cssClasses">
+    <div :class="{ 'item': true, 'is-main-author': mainAuthor }">
         <slot></slot>
     </div>
 </template>
@@ -8,8 +8,9 @@
 export default {
     name: 'collection-row',
     props: {
-        'cssClasses': {
-            default: ''
+        mainAuthor: {
+            default: false,
+            type: Boolean
         }
     }
 }
@@ -19,7 +20,7 @@ export default {
 
 .item {
     display: contents;
-    font-size: 1.3rem;
+    font-size: var(--font-size-ui-sm);
 
 
     .add-form {

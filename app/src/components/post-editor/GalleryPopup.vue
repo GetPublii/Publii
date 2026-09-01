@@ -73,9 +73,7 @@
                         customWidth="75" />
 
                     <progress-bar
-                        color="blue"
                         :progress="progress"
-                        :stopped="false"
                         :message="uploadMessage" />
                 </div>
             </div>
@@ -111,7 +109,7 @@
                 <p-button
                     @click.native="addImages"
                     slot="buttons"
-                    type="primary icon"
+                    intent="primary"
                     icon="add-site-mono">
                     <template v-if="!isUploading">{{ $t('image.addImages') }}</template>
                     <template v-if="isUploading">{{ $t('ui.loading') }}</template>
@@ -120,13 +118,18 @@
 
             <div class="buttons">
                 <p-button
-                    type="medium no-border-radius half-width"
+                    size="medium"
+                    width="half"
+                    square
                     @click.native="save">
                     {{ $t('ui.ok') }}
                 </p-button>
 
                 <p-button
-                    type="medium no-border-radius half-width cancel-popup"
+                    appearance="popup-cancel"
+                    size="medium"
+                    width="half"
+                    square
                     @click.native="cancel">
                     {{ $t('ui.cancel') }}
                 </p-button>
@@ -355,7 +358,7 @@ export default {
 @import '../../css/popup-common.css';
 
 .overlay {
-    z-index: 100005;
+    z-index: var(--layer-dialog);
 }
 
 h1 {
@@ -514,8 +517,8 @@ h1 {
         }
 
         & > span {
-            font-size: 1.3rem;
-            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-ui-sm);
+            font-weight: var(--font-weight-medium);
             line-height: 1;
             padding: 0 0 .5rem 0;
             text-align: left;
@@ -534,17 +537,17 @@ h1 {
 
         & > a {
             border-radius: 50%;
-            font-size: 2.4rem;
+            font-size: var(--font-size-ui-xl);
             height: 3rem;
             left: 0;
             line-height: 1.1;
             text-align: center;
-            transition: var(--transition);
+            transition: var(--transition-default);
             position: absolute;
             width: 3rem;
 
             &[href="#remove"] {
-                color: var(--warning);
+                color: var(--color-danger);
                 top: 50%;
                 transform: translateY(-60%);
             }

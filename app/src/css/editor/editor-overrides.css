@@ -63,10 +63,10 @@
             & > div {
                 box-shadow: 0 0 3px rgba(black, .2);
                 background: var(--color-primary);
-                border-radius: var(--border-radius);
+                border-radius: var(--radius-base);
                 color: var(--white);
-                font-size: var(--app-font-base);
-                font-weight: var(--font-weight-semibold);
+                font-size: var(--font-size-ui-md);
+                font-weight: var(--font-weight-medium);
                 height: auto;
                 left: 50%;
                 line-height: 1.5;
@@ -120,7 +120,7 @@
 
         .tox-tbtn,
         .tox-panel {
-            /* background: var(--gray-1); */
+            /* background: var(--color-surface-subtle); */
         }
         
         .tox-tbtn {
@@ -134,7 +134,7 @@
         .tox-split-button,
         .tox-tbtn--select {
             background: none;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             border: 1px solid var(--border-light-color);
             color: var(--text-primary-color);
             height: 38px;
@@ -147,8 +147,8 @@
             &:hover,
             &.tox-tbtn--active[aria-expanded='true'],
             &.tox-tbtn--enabled {
-                background: var(--gray-6);
-                border-color: var(--gray-6);
+                background: var(--color-control-surface-hover);
+                border-color: var(--color-border-muted);
 
                 & > button {
                     background: transparent;
@@ -231,8 +231,8 @@
     #inline-toolbar {
         align-items: center;
         background: var(--popup-bg);
-        border-radius: var(--border-radius);
-        box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
+        border-radius: var(--radius-base);
+        box-shadow: 0 5px 10px -5px var(--shadow-color), 4px -11px 26px -12px var(--shadow-color), 0 24px 50px 2px var(--shadow-color);
         display: none;
         min-height: 44px;
         padding: 6px;
@@ -273,8 +273,8 @@
             /* hover effect */
             &::before {
                content: "";
-               background: var(--gray-6); 
-               border-radius: var(--border-radius);
+               background: var(--color-control-surface-hover);
+               border-radius: var(--radius-base);
                display: block;
                left: 50%;
                opacity: 0;
@@ -310,11 +310,11 @@
             border: none;
             border-radius: 0 !important;
             border-left: 1px solid var(--input-border-color);
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             box-shadow: none;
             box-sizing: content-box;
             color: var(--icon-primary-color);
-            font: 400 var(--app-font-base)/1.3 var(--font-base);
+            font: var(--font-weight-regular) var(--font-size-ui-md)/1.3 var(--font-family-sans);
             margin-left: 15px;
             max-width: 150px !important;
             min-width: 125px;
@@ -322,7 +322,7 @@
             outline: none;
             padding: 0 16px;
             position: relative; 
-            transition: var(--transition);
+            transition: var(--transition-default);
 
             &:hover {               
                 color: var(--icon-tertiary-color);
@@ -377,8 +377,8 @@ body {
             background-color: var(--popup-bg);
             border: none;
             border-radius: .6rem;            
-            font-size: var(--app-font-base);
-            font-weight: 400;
+            font-size: var(--font-size-ui-md);
+            font-weight: var(--font-weight-regular);
             min-width: 62rem;
             overflow: hidden;
             text-align: center;
@@ -388,13 +388,13 @@ body {
         .tox-label,
         .tox-toolbar-label {
             color: var(--label-color);
-            font-size: 1.4rem;
-            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-ui-md);
+            font-weight: var(--font-weight-medium);
             line-height: 2.6;
         }
 
         .tox-checkbox__label {
-            font-size: 1.4rem;
+            font-size: var(--font-size-ui-md);
         }
 
         .tox-selectfield select,
@@ -404,10 +404,10 @@ body {
         .tox-toolbar-textfield {
             background-color: var(--input-bg);
             border: none;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             box-shadow: inset 0 0 0 1px var(--input-border-color);
             color: var(--text-primary-color);
-            font: 400 var(--app-font-base)/1.5 var(--font-base);
+            font: var(--font-weight-regular) var(--font-size-ui-md)/1.5 var(--font-family-sans);
             outline: none;
             padding: 1.2rem 1.8rem;
 
@@ -427,7 +427,7 @@ body {
         .tox-button--naked {
             border-radius: 50%;
             color: var(--icon-secondary-color);
-            transition: var(--transition);
+            transition: var(--transition-default);
             
             &:hover:not(:disabled) {
                 background-color: var(--input-border-color);
@@ -451,7 +451,7 @@ body {
             color: var(--text-primary-color);
             cursor: pointer;
             margin: 2px 2px 3px 0;
-            transition: var(--transition);
+            transition: var(--transition-default);
             
             svg {
                 color: var(--icon-primary-color); 
@@ -471,7 +471,7 @@ body {
         .tox-menu {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-light-color);
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             margin-bottom: 3.2rem;
         }
         
@@ -556,7 +556,7 @@ body {
 }
 body .tox-tinymce {
     border-color: var(--input-border-color);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
 }
 body .tox-tinymce-aux {
     z-index: 999999;
@@ -571,7 +571,7 @@ body .tox .tox-dialog__header {
 body .tox .tox-dialog__title {
     color: var(--text-primary-color);
     font-size: 1.8rem;
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     margin: 0 auto;
     text-align: center;
     text-transform: none;
@@ -586,7 +586,7 @@ body .tox .tox-dialog__footer-end {
     flex-direction: row-reverse;
 
     .tox-button {
-        background: var(--button-bg);
+        background: var(--button-primary-bg);
         border: none;
         border-radius: initial;
         box-shadow: none;
@@ -594,15 +594,15 @@ body .tox .tox-dialog__footer-end {
         cursor: pointer;
         display: inline-block;
         flex: 0 1 100%;
-        font-size: 1.4rem;
-        font-family: var(--font-base);
-        font-weight: 500;
+        font-size: var(--font-size-ui-md);
+        font-family: var(--font-family-sans);
+        font-weight: var(--font-weight-medium);
         height: 5.6rem;
         line-height: 5.5rem;
         margin: 0 !important;
         padding: 0 2rem;
         position: relative;
-        transition: var(--transition);
+        transition: var(--transition-default);
         user-select: none;
         white-space: nowrap;
 
@@ -614,7 +614,7 @@ body .tox .tox-dialog__footer-end {
         &:focus,
         &:hover,
         &.button-active {
-            background: var(--button-bg-hover);
+            background: var(--button-primary-bg-hover);
             color: var(--white);
         }
         
@@ -659,7 +659,7 @@ body .tox .tox-dialog__body-nav-item {
     }
 }
 body .tox .tox-dialog__body-nav-item--active {
-    border-color: var(--button-tertiary-bg);
+    border-color: var(--button-primary-bg);
     color: var(--tab-active-color);  
 }
 body .tox .tox-tbtn:active,
@@ -667,7 +667,7 @@ body .tox .tox-tbtn:focus,
 body .tox .tox-tbtn:hover,
 body .tox .tox-tbtn--enabled,
 body .tox .tox-tbtn--enabled:hover {
-    background-color: var(--gray-6);
+    background-color: var(--color-control-surface-hover);
     color: var(--text-primary-color);
     
     svg {
@@ -681,15 +681,15 @@ body .tox .tox-tbtn__select-label {
 body .tox .tox-collection--toolbar {
     .tox-collection__item {
          color: var(--icon-primary-color); 
-         border-radius: var(--border-radius)
+         border-radius: var(--radius-base)
     }
 }
 body .tox .tox-collection--toolbar .tox-collection__item--enabled {
-    background-color: var(--gray-1);
+    background-color: var(--color-surface-subtle);
     color: var(--color-primary);
 }
 body .tox .tox-collection--toolbar .tox-collection__item--active {
-    background-color: var(--gray-1);
+    background-color: var(--color-surface-subtle);
     &:not(.tox-collection__item--state-disabled) {
         color: var(--icon-tertiary-color);
     }
@@ -718,7 +718,7 @@ body .tox .tox-collection--list {
     }
     
     .tox-collection__item--active {
-        background-color: var(--gray-1);
+        background-color: var(--color-surface-subtle);
         color: var(--text-primary-color);
 
         &:not(.tox-collection__item--state-disabled) {
@@ -739,7 +739,7 @@ body .tox .tox-pop__dialog {
     background: var(--popup-bg);
     border: 1px solid var(--popup-bg);
     border-radius: 4px;
-    box-shadow: 0 5px 10px -5px var(--shadow), 4px -11px 26px -12px var(--shadow), 0 24px 50px 2px var(--shadow);
+    box-shadow: 0 5px 10px -5px var(--shadow-color), 4px -11px 26px -12px var(--shadow-color), 0 24px 50px 2px var(--shadow-color);
 }
 body .tox .tox-statusbar a,
 body .tox .tox-statusbar__path-item,
@@ -799,7 +799,7 @@ body[data-os="win"] {
     user-select: none;
 
     svg {
-        fill: var(--gray-4);
+        fill: var(--color-icon-muted);
         height: 1.6rem;
         left: 0;
         margin-right: .5rem;
@@ -812,7 +812,7 @@ body[data-os="win"] {
         border-bottom: 1px solid currentColor;
         color: var(--link-primary-color);
         cursor: pointer;
-        transition: var(--transition);
+        transition: var(--transition-default);
 
         &:active,
         &:focus {
@@ -827,7 +827,7 @@ body[data-os="win"] {
 }
 
 .tinymce-iframe {
-    font-size: var(--app-font-base);
+    font-size: var(--font-size-ui-md);
     margin: 2rem auto;
     max-width: 1024px;
 }
@@ -863,16 +863,16 @@ body[data-os="win"] {
             }
 
             i {
-                color: var(--warning);
-                font-size: 1.4rem !important;
+                color: var(--color-danger);
+                font-size: var(--font-size-ui-md) !important;
             }
         }
 
         .tox-title {
             color: #2a2e30;
-            font-family: var(--font-base) !important;
+            font-family: var(--font-family-sans) !important;
             font-size: 1.8rem !important;
-            font-weight: 600 !important;
+            font-weight: var(--font-weight-semibold) !important;
             text-align: center;
         }
     }
@@ -903,7 +903,7 @@ body[data-os="win"] {
                 border-radius: 0 0 0 .6rem !important;
                 box-shadow: none !important;
                 color: var(--white) !important;
-                font-size: var(--app-font-base);
+                font-size: var(--font-size-ui-md);
                 height: 5.6rem;
                 left: 0 !important;
                 line-height: 5.6rem;
@@ -915,7 +915,7 @@ body[data-os="win"] {
                 }
 
                 & > button {
-                    font-size: var(--app-font-base);
+                    font-size: var(--font-size-ui-md);
                 }
 
                 &.tox-disabled > button {
@@ -933,18 +933,18 @@ body[data-os="win"] {
                     background: var(--white) !important;
                     border-top: 1px solid #dddddd !important;
                     border-radius: 0 0 .6rem 0 !important;
-                    color: var(--gray-4) !important;
+                    color: var(--color-text-muted) !important;
                     left: 50% !important;
 
                     &.tox-disabled > button {
-                        color: var(--gray-4) !important;
+                        color: var(--color-text-muted) !important;
                     }
 
                     &:active > button,
                     &:focus > button,
                     &:hover > button {
-                        background: var(--gray-1) !important;
-                        color: var(--gray-4) !important;
+                        background: var(--color-surface-subtle) !important;
+                        color: var(--color-text-muted) !important;
                     }
                 }
             }
@@ -954,11 +954,11 @@ body[data-os="win"] {
     .tox-textbox {
         background-color: var(--white);
         border: none;
-        border-radius: var(--border-radius);
+        border-radius: var(--radius-base);
         box-shadow: inset 0 0 0 1px #dddddd;
         box-sizing: border-box;
         color: var(--text-primary-color);
-        font: 400 var(--app-font-base)/1.5 var(--font-base);
+        font: var(--font-weight-regular) var(--font-size-ui-md)/1.5 var(--font-family-sans);
         height: 4.8rem;
         outline: none;
         padding: 1.2rem 1.8rem;
@@ -984,13 +984,13 @@ body[data-os="win"] {
     }
 
     .tox-listbox {
-        border-radius: var(--border-radius);
+        border-radius: var(--radius-base);
         height: 48px !important;
         width: 360px !important;
 
         button {
             background: var(--white) !important;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             height: 48px !important;
             line-height: 46px !important;
             padding: 0 1.8rem !important;

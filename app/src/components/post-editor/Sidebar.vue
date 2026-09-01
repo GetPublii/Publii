@@ -351,7 +351,7 @@
                                             :onClick="updateSlug" 
                                             :title="$t('ui.updateSlug')"
                                             icon="refresh"
-                                            type="secondary icon">
+                                            appearance="secondary">
                                         </p-button>
                                     </div>
                                     <small
@@ -993,12 +993,12 @@ export default {
 }
 
 .post-editor-sidebar {
-    box-shadow: var(--box-shadow-medium);
+    box-shadow: var(--shadow-md);
     height: calc(100vh - var(--topbar-height));
     opacity: 0;
     pointer-events: none;
     top: var(--topbar-height);
-    z-index: 99999;
+    z-index: var(--layer-overlay);
 
     &.is-visible {
         opacity: 1;
@@ -1037,13 +1037,13 @@ export default {
 
         dt {
             color: var(--label-color);
-            font-size: 1.4rem;
+            font-size: var(--font-size-ui-md);
             margin: 0 0 .5rem 0;
         }
 
         dd {
-            color: var(--gray-4);
-            font-size: 1.3rem;
+            color: var(--color-text-muted);
+            font-size: var(--font-size-ui-sm);
             margin: 0;
 
             a {
@@ -1056,7 +1056,7 @@ export default {
 
     .post-editor-settings {
         .post-author-selector {
-            border-bottom: 1px solid var(--gray-1);
+            border-bottom: 1px solid var(--color-border-subtle);
             margin-bottom: 2rem;
             padding-bottom: 0;
         }
@@ -1065,11 +1065,11 @@ export default {
             margin-bottom: 2rem;
 
             dd {
-                font-size: var(--app-font-base);
+                font-size: var(--font-size-ui-md);
             }
 
             small {
-                color: var(--gray-4);
+                color: var(--color-text-muted);
                 padding: 0 .5rem;
                 position: relative;
                 top: -1px;
@@ -1078,8 +1078,8 @@ export default {
 
         .post-action {
            label {
-              font-size: 1.4rem;
-              font-weight: var(--font-weight-normal);
+              font-size: var(--font-size-ui-md);
+              font-weight: var(--font-weight-regular);
               line-height: 1.8;
            }
         }
@@ -1122,9 +1122,9 @@ export default {
 }
 
 .post-editor-sidebar-header {
-    color: var(--gray-3);
-    font-size: 1.2rem;
-    font-weight: 600;
+    color: var(--color-text-subtle);
+    font-size: var(--font-size-ui-xs);
+    font-weight: var(--font-weight-semibold);
     margin-top: 0;
     padding: 0 3.6rem 1.5rem;
     text-transform: uppercase;
@@ -1137,14 +1137,14 @@ export default {
 .post-editor-sidebar .post-editor-settings .post-date-reset {
     border-radius: 50%;
     color: var(--icon-secondary-color);
-    font-size: 2.4rem;
-    font-weight: 300;
+    font-size: var(--font-size-ui-xl);
+    font-weight: var(--font-weight-light);
     height: 3rem;
     line-height: 1;
     position: absolute;
     right: 0;
     text-align: center;
-    transition: var(--transition);
+    transition: var(--transition-default);
     top: 50%;
     transform: translate(0, -50%);
     width: 3rem;
@@ -1166,9 +1166,9 @@ export default {
 }
 
 .post-editor-sidebar .post-tags-error {
-    color: var(--warning);
+    color: var(--color-danger);
     display: block;
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     padding: .5rem 0;
 
     &.is-hidden {
@@ -1207,7 +1207,7 @@ body[data-os="linux"] {
 }
 
 body > .select2-container {
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
 
     .select2-results__option--highlighted[aria-selected] {
         background: var(--color-primary);

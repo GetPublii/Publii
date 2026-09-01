@@ -2,9 +2,9 @@
     background: var(--input-bg-light);
     border-left: 4px solid transparent;
     color: var(--text-light-color);
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     line-height: 1.6;
-    padding: 1.5rem 2rem;
+    padding: var(--space-6) var(--space-8);
 
     a {
         &:hover {
@@ -26,7 +26,7 @@
 
 .msg-small {
     line-height: 1.4;
-    padding: 1.5rem 1.4rem 1.5rem 1.7rem;
+    padding: var(--space-6) 1.4rem var(--space-6) 1.7rem;
 
     &.msg-icon {
         grid-gap: 1.2rem;
@@ -43,11 +43,11 @@
 }
 
 .msg-alert {
-    background-color: rgba(var(--warning-rgb), .065);
-    border-color: var(--warning);
+    background-color: rgba(var(--color-danger-rgb), .065);
+    border-color: var(--color-danger);
 
     svg {
-        fill: var(--warning);
+        fill: var(--color-danger);
     }
 }
 

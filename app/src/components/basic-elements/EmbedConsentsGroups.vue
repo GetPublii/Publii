@@ -44,7 +44,7 @@
 
         <p-button
             icon="add-site-mono"
-            type="secondary icon"
+            appearance="secondary"
             @click.native="addRule">
             {{ $t('gdpr.embedConsents.addRule') }}
         </p-button>
@@ -136,50 +136,50 @@ export default {
 
     .embed-consents-groups-header {
         display: flex;
-        margin-top: 1rem
+        margin-top: var(--space-4)
     }
 
     .embed-consents-group {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
-        padding: .25rem 0; 
+        padding: var(--space-1) 0;
 
 
         .input-wrapper,
         select {
-            padding-right: 1rem;
+            padding-right: var(--space-4);
             text-align: left;
             width: calc((100% / 3) - 15px);
         }
 
         select {
-            margin-right: 1rem;
+            margin-right: var(--space-4);
             width: calc((100% / 3) - 15px - 1rem);
         }
 
         div:last-child {
-            margin-bottom: 3rem;
-            margin-top: 1rem;
+            margin-bottom: var(--space-12);
+            margin-top: var(--space-4);
             width: calc(100% - 56px);
         }
     }
 
     .button {
-        margin: 1rem 0;
+        margin: var(--space-4) 0;
     }
 }
 
 .embed-consents-groups .embed-consents-groups-header-cell {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin: 0 0 1rem 0;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--space-4) 0;
     width: calc((100% / 3) - 15px);
 }
 
 .embed-consents-groups .embed-consents-group-btn {
     align-items: center;
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     position: relative;
     border-radius: 50%;
     display: flex;
@@ -209,7 +209,7 @@ export default {
         height: 1.6rem;
         pointer-events: none;
         transform: scale(.9);
-        transition: var(--transition);
+        transition: var(--transition-default);
         width: 1.6rem;
     }
 
@@ -218,7 +218,7 @@ export default {
         &:hover {
 
             & > svg {
-                fill: var(--warning);
+                fill: var(--color-danger);
             }
         }
     }

@@ -8,18 +8,18 @@
         -webkit-font-smoothing: antialiased;
         font-family: var(--editor-font-family);
         font-size: 1em;
-        font-weight: var(--font-weight-normal);
-        line-height: var(--line-height);
+        font-weight: var(--font-weight-regular);
+        line-height: var(--line-height-base);
        
         a:not(.btn):not(.publii-block-toc a) {
-            border-bottom: 3px solid rgba(var(--yellow), 1);
+            border-bottom: 3px solid rgba(var(--color-highlight-rgb), 1);
             color: var(--link-invert-color);
             cursor: pointer;
             text-decoration: none !important;
             text-decoration-skip-ink: auto;
 
             &:hover {
-                background: rgba(var(--yellow), .2);
+                background: rgba(var(--color-highlight-rgb), .2);
                 color: var(--link-invert-color);
             }
 
@@ -55,9 +55,9 @@
         h5,
         h6 {
             color: var(--headings-color);
-            font-family: var(--font-base);
+            font-family: var(--font-family-sans);
             font-weight: var(--font-weight-bold);
-            letter-spacing: var(--letter-spacing);
+            letter-spacing: var(--editor-heading-letter-spacing);
             line-height: 1.3;
             margin: 0;
             text-transform: none;
@@ -96,8 +96,8 @@
         }
 
         blockquote {
-            border-left: 2px solid var(--gray-3);
-            font-family: var(--font-serif);
+            border-left: 2px solid var(--color-border-emphasis);
+            font-family: var(--font-family-serif);
             font-style: italic;
             padding: 0 0 0 1.1429em;
         }
@@ -119,11 +119,11 @@
         }
 
         code {
-            background-color: rgba(var(--warning-rgb), .15);
+            background-color: rgba(var(--color-danger-rgb), .15);
             border-radius: 2px;
-            color: var(--warning);
+            color: var(--color-danger);
             font-size: 0.8889em;
-            font-family: var(--font-monospace);
+            font-family: var(--font-family-mono);
             padding: 0.2286em 0.4571em;
         }
 
@@ -147,7 +147,7 @@
         
         label {
             color: var(--label-color);
-            font-weight: var(--font-weight-normal);
+            font-weight: var(--font-weight-regular);
         }
         
         .msg {
@@ -159,8 +159,8 @@
 }
 
 .editor > .editor-inner > .wrapper > div .msg--highlight {
-    background-color: rgba(var(--yellow), .1);
-    border-color: rgba(var(--yellow), .5);
+    background-color: rgba(var(--color-highlight-rgb), .1);
+    border-color: rgba(var(--color-highlight-rgb), .5);
 }
 
 .editor > .editor-inner > .wrapper > div .msg--info {
@@ -169,11 +169,11 @@
 }
 
 .editor > .editor-inner > .wrapper > div .msg--success {
-    background-color: rgba(var(--success-rgb), .1);
-    border-color: rgba(var(--success-rgb), .51);
+    background-color: rgba(var(--color-success-rgb), .1);
+    border-color: rgba(var(--color-success-rgb), .51);
 }
 
 .editor > .editor-inner > .wrapper > div .msg--warning {
-    background-color: rgba(var(--warning-rgb), .1);
-    border-color: rgba(var(--warning-rgb), .5);
+    background-color: rgba(var(--color-danger-rgb), .1);
+    border-color: rgba(var(--color-danger-rgb), .5);
 }

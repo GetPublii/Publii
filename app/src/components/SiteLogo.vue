@@ -122,9 +122,9 @@ export default {
     align-items: center;
     color: var(--sidebar-preview-btn-color);
     display: flex;
-    padding: 2.5rem 4rem;
+    padding: 2.5rem var(--space-16);
     width: 100%;
-    transition: var(--transition);
+    transition: var(--transition-default);
 
     &:active,
     &:focus,
@@ -139,7 +139,7 @@ export default {
     & > a {
         display: block;
         height: 4rem;
-        margin: .5rem 1rem 0 0.92rem;
+        margin: var(--space-2) var(--space-4) 0 0.92rem;
         position: relative;
         width: 4rem;
         z-index: 1;
@@ -157,14 +157,14 @@ export default {
 }
 
 .site-logo-name {
-    margin: 0 0 0 1.5rem;
+    margin: 0 0 0 var(--space-6);
     width: calc(100% - 5rem);
 }
 
 .site-logo-link {
     display: block;
-    font-size: var(--app-font-base);
-    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
     margin: 0;
     overflow: hidden;
     position: relative;
@@ -197,7 +197,7 @@ export default {
     right: 4rem;
     width: 5px;
     text-align: center;
-    transition: var(--transition);
+    transition: var(--transition-default);
     top: calc(50% - 2px);
 }
 </style>

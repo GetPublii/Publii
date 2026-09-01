@@ -12,14 +12,16 @@
                     @click.native="deploymentMethodSelected = ''"
                     slot="buttons"
                     :title="$t('sync.clickToChangeDeploymentMethod')"
-                    type="clean back">
+                    appearance="clean"
+                    back>
                     {{ $t('sync.changeServerType') }}
                 </p-button>
 
                 <p-button
                     @click.native="visitWebsite"
                     slot="buttons"
-                    :type="siteIsOnline ? 'outline' : 'outline disabled-with-events'"
+                    appearance="outline"
+                    :disabled-with-events="!siteIsOnline"
                     :title="visitTitle">
                     {{ $t('sync.visitWebsite') }}
                 </p-button>
@@ -164,7 +166,7 @@
                     <icon
                         customWidth="50"
                         customHeight="46"
-                        properties="not-clickable"
+                        non-interactive
                         name="add" />
 
                     <h3>{{ $t('ui.more') }}...</h3>
@@ -1208,7 +1210,7 @@
                     :onClick="testConnection"
                     :disabled="testInProgress"
                     slot="buttons"
-                    type="secondary">
+                    appearance="secondary">
                     <template v-if="!testInProgress">{{ $t('sync.testConnection') }}</template>
                     <template v-if="testInProgress">{{ $t('sync.checkingConnection') }}</template>
                 </p-button>
@@ -1765,7 +1767,7 @@ export default {
     }
 
     .is-invalid + .note {
-        color: var(--warning);
+        color: var(--color-danger);
     }
 
     #relative-urls {
@@ -1773,50 +1775,50 @@ export default {
     }
 
     .msg {
-        margin-bottom: 3rem;
+        margin-bottom: var(--space-12);
     }
 }
 
 .server-settings-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    gap: var(--space-8);
 }
 
 .server-settings-grid-item {
     align-items: center;
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow-small);
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-sm);
     color: var(--text-primary-color);
     display: flex;
     flex-direction: column;
     fill: var(--icon-primary-color);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     justify-content: center;
     min-height: calc(8rem + 8vh);
     position: relative;
-    transition: var(--transition);
+    transition: var(--transition-default);
 
     &:hover {
         background: var(--bg-primary);
         border-color: var(--color-primary);
-        box-shadow: var(--box-shadow-medium);
+        box-shadow: var(--shadow-md);
         color: var(--color-primary);
         cursor: pointer;
     }
 
     & > svg {
-        margin: 0 auto 1rem;
+        margin: 0 auto var(--space-4);
         transition: inherit;
     }
 
     &.deployment-others {
         h3 {
             color: var(--text-primary-color);
-            font-size: var(--app-font-base);
-            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-ui-md);
+            font-weight: var(--font-weight-medium);
             margin-bottom: 0;
             transition: inherit;
         }

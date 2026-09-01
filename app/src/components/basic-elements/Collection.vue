@@ -1,7 +1,7 @@
 <template>
     <div class="collection-wrapper">
         <div
-            :class="cssClasses"
+            class="collection"
             :style="gridLayout">
             <slot name="header"></slot>
 
@@ -16,25 +16,16 @@
 export default {
     name: 'collection',
     props: {
-        formIsOpened: {
-            default: false,
-            type: Boolean
-        },
-        itemsCount: {
+        columns: {
             default: 3,
-            type: Number
+            type: Number,
+            validator: value => Number.isInteger(value) && value >= 2
         }
     },
     computed: {
-        cssClasses: function() {
-            return {
-                'collection': true,
-                'is-add-form-opened': this.formIsOpened
-            };
-        },
         gridLayout: function() {
-            let column = ' auto';
-            let templateColumns = `auto 1fr${column.repeat(Math.max(0, this.itemsCount - 2))}`;
+            let additionalColumn = ' auto';
+            let templateColumns = `auto 1fr${additionalColumn.repeat(Math.max(0, this.columns - 2))}`;
 
             return `grid-template-columns: ${templateColumns}`;
         }
@@ -57,54 +48,24 @@ export default {
         pointer-events: none;
         position: absolute;
         right: 5px;
-        z-index: 9999;
+        z-index: var(--layer-panel);
     }
  }
 
 .collection {
-    border-top: 1px solid var(--gray-2);
+    border-top: 1px solid var(--color-border-default);
     border-collapse: collapse;
     bottom: 0;
     display: grid;
     grid-auto-rows: max-content;
     overflow: auto;
-    padding-bottom: 3rem;
+    padding-bottom: var(--space-12);
     position: absolute;
     top: 12.5rem;
     width: calc(100% - 8rem);
 
-    &.is-add-form-opened {
-        top: 64.75rem;
-    }
-
     .content {
         display: contents;
     }
-
-    /*
-    &.authors-collection{
-        .item,
-        & > .heading {
-            grid-template-columns: 30px auto 50px;
-            grid-template-areas: "col col col"
-                                 "form form form";
-        }
-    }
-
-    &.backups-collection {
-        .item,
-        & > .heading {
-            grid-template-columns: 30px auto 100px 175px 200px;
-            grid-template-areas: "col col col col col";
-        }
-
-        .item {
-            transition: background .75s ease-out;
-
-            &.is-newest {
-                background: #ffeaa6;
-            }
-        }
-    }*/
 }
 </style>

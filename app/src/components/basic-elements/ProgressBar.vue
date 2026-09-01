@@ -23,13 +23,10 @@ export default {
             default: 0,
             type: Number
         },
-        color: {
-            default: 'blue',
-            type: String
-        },
-        stopped: {
-            default: false,
-            type: Boolean
+        intent: {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'success', 'danger', 'warning'].includes(value)
         },
         message: {
             default: '',
@@ -48,10 +45,9 @@ export default {
         cssBarClasses () {
             return {
                 'progress-bar': true,
-                'is-stopped': this.stopped,
-                'is-error': this.color === 'red',
-                'is-success': this.color === 'green',
-                'is-warning': this.color === 'orange'
+                'is-error': this.intent === 'danger',
+                'is-success': this.intent === 'success',
+                'is-warning': this.intent === 'warning'
             };
         }
     }
@@ -81,24 +77,22 @@ export default {
     transition: width .2s ease-out;
     width: 0;
 
-    &.is-stopped {}
-
     &.is-success {
-        background: var(--success);
+        background: var(--color-success);
     }
 
     &.is-error {
-        background: var(--warning);
+        background: var(--color-danger);
     }
 
     &.is-warning {
-        background: #F2B900;
+        background: var(--color-warning);
     }
 }
 
 .sync-progress-bar {               
     .progress-bar {
-         background: rgba(var(--yellow), 1);
+         background: rgba(var(--color-highlight-rgb), 1);
     }
 }
 
@@ -109,7 +103,7 @@ export default {
 
 .progress-message {
     color: var(--text-light-color);
-    font-size: 1.3rem;
+    font-size: var(--font-size-ui-sm);
     padding: 0;
     position: absolute;
     text-align: center;

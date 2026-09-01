@@ -8,9 +8,8 @@
 
             <progress-bar
                 v-if="!isPostPreview && !isHomepagePreview"
-                :color="progressColor"
+                :intent="progressIntent"
                 :progress="progress"
-                :stopped="progressIsStopped"
                 :message="messageFromRenderer" />
         </div>
     </div>
@@ -30,8 +29,7 @@ export default {
             isAuthorPreview: false,
             messageFromRenderer: '',
             progress: 0,
-            progressColor: 'blue',
-            progressIsStopped: false
+            progressIntent: 'default'
         };
     },
     mounted: function() {
@@ -39,8 +37,7 @@ export default {
             this.isVisible = true;
             this.messageFromRenderer = '';
             this.progress = 0;
-            this.progressColor = 'blue';
-            this.progressIsStopped = false;
+            this.progressIntent = 'default';
             this.isPostPreview = false;
             this.isHomepagePreview = false;
             this.isTagPreview = false;
@@ -139,8 +136,7 @@ export default {
             this.progress = data.progress;
 
             if(this.progress === 100) {
-                this.progressColor = 'green';
-                this.progressIsStopped = true;
+                this.progressIntent = 'success';
                 this.messageFromRenderer = '';
 
                 setTimeout(() => {
@@ -183,19 +179,19 @@ export default {
 @import '../css/popup-common.css';
 
 .popup {
-    padding: 4rem 4rem 1rem 4rem;
+    padding: var(--space-16) var(--space-16) var(--space-4) var(--space-16);
     width: 60rem
 }
 
 .popup-info {
-    margin: -1.5rem 0 4rem;
+    margin: -1.5rem 0 var(--space-16);
 }
 
 .message {
     color: var(--text-primary-color);
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
     margin: 0;
-    padding: 4rem;
+    padding: var(--space-16);
     position: relative;
     text-align: left;
 

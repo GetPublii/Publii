@@ -5,6 +5,7 @@ import router from './router';
 import VueI18n from 'vue-i18n';
 import App from './components/App';
 import DOMPurify from 'dompurify';
+import { applyAppAppearance } from './helpers/app-appearance';
 import 'prismjs';
 
 // Basic elements
@@ -329,7 +330,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     currentTheme = await mainProcessAPI.invoke('app-theme-mode:get-theme');
                 }
 
-                document.querySelector('html').setAttribute('data-theme', currentTheme);
+                applyAppAppearance(document, currentTheme);
                 this.$bus.$on('app-theme-change', this.toggleTheme);
 
                 mainProcessAPI.receive('app-theme-mode:changed', () => {
@@ -375,10 +376,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 mainProcessAPI.send('app-save-color-theme', currentTheme);
 
                 for (let i = 0; i < iframes.length; i++) {
-                    iframes[i].contentWindow.window.document.querySelector('html').setAttribute('data-theme', theme);
+                    applyAppAppearance(iframes[i].contentWindow.window.document, theme);
                 }
 
-                document.querySelector('html').setAttribute('data-theme', theme);
+                applyAppAppearance(document, theme);
 
                 setTimeout(() => {
                     this.skipThemeChangeEvents = false;

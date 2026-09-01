@@ -61,7 +61,7 @@ export default {
 
 .import-stats {
     & > p {
-        margin: .25rem 0;
+        margin: var(--space-1) 0;
     }
 }
 </style>

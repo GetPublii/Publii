@@ -1,8 +1,8 @@
 <template>
     <div :class="{
         'button': true,
-        'is-green': isGreen,
-        'has-icon': hasIcon,
+        'is-primary': intent === 'primary',
+        'has-icon': Boolean(buttonIcon),
         'has-icon-preview': previewIcon,
         'is-reversed': isReversed,
         'disabled': disabled
@@ -14,7 +14,7 @@
             <icon
                 v-if="buttonIcon"
                 size="s"
-                properties="not-clickable"
+                non-interactive
                 :name="buttonIcon" />
 
             {{ currentLabel }}
@@ -25,7 +25,7 @@
             class="button-trigger-icon">
             <icon
                 size="s"
-                properties="not-clickable"
+                non-interactive
                 :name="currentIcon" />
         </span>
 
@@ -51,7 +51,7 @@
                     class="button-dropdown-item-icon">
                     <icon
                         size="s"
-                        properties="not-clickable"
+                        non-interactive
                         :name="item.icon" />
                 </div>
             </div>
@@ -64,16 +64,17 @@ export default {
     name: 'btn-dropdown',
     props: {
         'items': {
-            default: '',
+            default: () => [],
             type: Array
         },
         'defaultValue': {
             default: '',
             type: String
         },
-        'buttonColor': {
-            default: 'blue',
-            type: String
+        'intent': {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'primary'].includes(value)
         },
         'buttonIcon': {
             default: '',
@@ -130,8 +131,6 @@ export default {
     data () {
         return {
             value: '',
-            hasIcon: false,
-            isGreen: false,
             dropdownVisible: false
         };
     },
@@ -151,13 +150,6 @@ export default {
 
         this.$bus.$on('document-body-clicked', this.hideDropdown);
 
-        if (this.buttonColor === 'green') {
-            this.isGreen = true;
-        }
-
-        if (this.buttonIcon) {
-            this.hasIcon = true;
-        }
     },
     methods: {
         doAction (actionName) {
@@ -195,21 +187,21 @@ export default {
 <style scoped>
 
 .button {
-    background: var(--button-bg);
+    background: var(--button-primary-bg);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     box-shadow: none;
     color: var(--white);
     cursor: pointer;
     display: inline-flex;
-    font-size: 1.3rem;
-    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-medium);
     height: 4.4rem;
     line-height: 4.3rem;
     padding: 0;
     position: relative;
     text-align: left;
-    transition: var(--transition);
+    transition: var(--transition-default);
     user-select: none;
     white-space: nowrap;
     width: auto;
@@ -229,24 +221,24 @@ export default {
         }
     }
 
-    &.is-green {
-        background-color: var(--button-tertiary-bg);
+    &.is-primary {
+        background-color: var(--button-primary-bg);
 
         .button-trigger {
             &:hover {
-                background: var(--button-tertiary-bg-hover);
+                background: var(--button-primary-bg-hover);
             }
         }
 
         .button-toggle {
-            background: var(--button-tertiary-bg-hover);
-            border-left: 1px solid var(--button-tertiary-bg);
+            background: var(--button-primary-bg-hover);
+            border-left: 1px solid var(--button-primary-bg);
 
             &:hover {
-                background: var(--button-tertiary-bg-hover);
+                background: var(--button-primary-bg-hover);
 
                 &::before {
-                    background: rgba(black, .1);
+                    background: rgba(var(--black-rgb), .1);
                 }
             }
         }
@@ -284,7 +276,7 @@ export default {
         }
 
         .button-dropdown-item {
-            padding: .2rem 4rem .2rem 2rem;
+            padding: .2rem var(--space-16) .2rem var(--space-8);
         }
     }
 
@@ -295,16 +287,16 @@ export default {
         }
 
         .button-dropdown {
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             bottom: 5.3rem;
-            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.125);
+            box-shadow: 0 -1px 5px rgba(var(--black-rgb), .125);
             top: unset;
         }
     }
 }
 
 .button-trigger {
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     display: block;
     height: 4.4rem;
     left: 0;
@@ -313,10 +305,10 @@ export default {
     position: relative;
     text-align: left;
     top: 0;
-    transition: var(--transition);
+    transition: var(--transition-default);
 
     &:hover {
-        background: var(--button-bg-hover);
+        background: var(--button-primary-bg-hover);
     }
 }
 
@@ -336,25 +328,25 @@ export default {
 }
 
 .button-toggle {
-    background: var(--button-bg-hover);
-    border-left: 1px solid var(--button-bg);
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    background: var(--button-primary-bg-hover);
+    border-left: 1px solid var(--button-primary-bg);
+    border-radius: 0 var(--radius-base) var(--radius-base) 0;
     cursor: pointer;
     height: 100%;
     position: absolute;
     right: 0;
     top: 0;
-    transition: var(--transition);
+    transition: var(--transition-default);
     width: 4.4rem;
 
     &::before {
         content: "";
-        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        border-radius: 0 var(--radius-base) var(--radius-base) 0;
         pointer-events: none;
         height: 100%;
         left: 0;
         position: absolute;
-        transition: var(--transition);
+        transition: var(--transition-default);
         width: 100%;
     }
 
@@ -371,18 +363,18 @@ export default {
     }
 
     &:hover {
-        background: var(--button-bg-hover);
+        background: var(--button-primary-bg-hover);
 
         &::before {
-           background: rgba(black, .1);
+           background: rgba(var(--black-rgb), .1);
         }
     }
 }
 
 .button-dropdown {
     background: var(--bg-secondary);
-    border-radius: var(--border-radius) var(--border-radius);
-    box-shadow: var(--box-shadow-medium);
+    border-radius: var(--radius-base) var(--radius-base);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
     position: absolute;
     right: 0;
@@ -395,13 +387,13 @@ export default {
 .button-dropdown-item {
     border-top: 1px solid var(--border-light-color);
     color: var(--text-primary-color);
-    padding: .2rem 2rem;
+    padding: .2rem var(--space-8);
     position: relative;
     text-align: left;
-    transition: var(--transition);
+    transition: var(--transition-default);
 
     &:hover {
-        background: var(--gray-1);
+        background: var(--color-surface-subtle);
 
         .button-dropdown-item-icon .icon {
             color: var(--icon-tertiary-color);
@@ -425,7 +417,7 @@ export default {
 
     .icon {
         color: var(--icon-secondary-color);
-        transition: var(--transition);
+        transition: var(--transition-default);
     }
 }
 </style>

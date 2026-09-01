@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name: 'collectioncell',
+    name: 'collection-cell',
     props: {
         minWidth: {
             default: 'auto',
@@ -26,9 +26,10 @@ export default {
             default: 'left',
             type: String
         },
-        type: {
+        variant: {
             default: '',
-            type: String
+            type: String,
+            validator: value => ['', 'titles', 'assignment', 'publish-dates', 'modification-dates', 'authors', 'actions'].includes(value)
         }
     },
     computed: {
@@ -37,21 +38,19 @@ export default {
                 'col': true
             };
 
-            if(this.type !== '') {
-                classes[this.type] = true;
+            if(this.variant !== '') {
+                classes[this.variant] = true;
             }
 
             return classes;
         },
         cellStyle: function() {
-            let styles = [
-                'width: ' + this.width,
-                'min-width: ' + this.minWidth,
-                'text-align: ' + this.textAlign,
-                'justify-content: ' + this.justifyContent
-            ];
-
-            return styles.join(';');
+            return {
+                width: this.width,
+                minWidth: this.minWidth,
+                textAlign: this.textAlign,
+                justifyContent: this.justifyContent
+            };
         }
     }
 }
@@ -65,7 +64,7 @@ export default {
     box-sizing: content-box;
     border-bottom: 1px solid var(--border-light-color);
     display: grid;
-    font-weight: var(--font-weight-normal);
+    font-weight: var(--font-weight-regular);
     justify-content: left;
     padding: 1.4rem 1.8rem;
     text-align: left;
@@ -99,8 +98,8 @@ export default {
         flex-wrap: wrap;
 
         .title {
-            font-size: var(--app-font-base);
-            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-ui-md);
+            font-weight: var(--font-weight-medium);
             margin: 0 0 -.3rem;
             text-transform: none;
             width: 100%;
@@ -108,8 +107,8 @@ export default {
 
         .tag {
             color: var(--text-light-color);
-            font-size: 1.2rem;
-            font-weight: var(--font-weight-normal);
+            font-size: var(--font-size-ui-xs);
+            font-weight: var(--font-weight-regular);
 
             &:active,
             &:focus,
@@ -128,8 +127,8 @@ export default {
 
     &.names {
         .name {
-            font-size: var(--app-font-base);
-            font-weight: var(--font-weight-normal);
+            font-size: var(--font-size-ui-md);
+            font-weight: var(--font-weight-regular);
             margin: 0;
             text-transform: none;
         }
@@ -150,7 +149,7 @@ export default {
 
         .modify-date {
             color: var(--text-light-color);
-            font-size: 1.2rem;
+            font-size: var(--font-size-ui-xs);
             margin: 0;
         }
     }
@@ -166,7 +165,7 @@ export default {
     }
 }
 
-.col-buttons {
+.actions {
     display:  flex !important;
 }
 

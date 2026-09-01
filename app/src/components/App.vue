@@ -180,7 +180,7 @@ export default {
 }
 .app-view {
     background: var(--bg-primary);
-    font-size: var(--app-font-base);
+    font-size: var(--font-size-ui-md);
     height: 100%;
     left: 0;
     position: absolute;
@@ -189,7 +189,7 @@ export default {
 }
 .app-site-sidebar {
     bottom: 0;
-    font-size: var(--app-font-base);
+    font-size: var(--font-size-ui-md);
     left: 0;
     position: absolute;
     top: var(--topbar-height);

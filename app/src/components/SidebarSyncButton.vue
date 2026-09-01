@@ -257,7 +257,7 @@ export default {
 .sidebar-sync-date {
     color: var(--sidebar-link-color);
     display: block;
-    font-size: 1.2rem;
+    font-size: var(--font-size-ui-xs);
     height: 16px; 
     letter-spacing: -.025em;
     margin-top: 1.2rem;
@@ -277,14 +277,14 @@ export default {
 .sidebar-sync-link {
     align-items: center;
     background: var(--sidebar-sync-btn-bg);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     color: var(--sidebar-sync-btn-color);
     display: flex;
     gap: .6rem;
-    font-size: var(--app-font-base);
-    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
     justify-content: center;
-    padding: 1.4rem 1rem;
+    padding: 1.4rem var(--space-4);
     position: relative;
 
     /* sync cloud icon */
@@ -295,12 +295,12 @@ export default {
 
         path {
             stroke: var(--white);
-            transition: var(--transition);
+            transition: var(--transition-default);
         }
 
         polygon {
             stroke: var(--color-primary);
-            transition: var(--transition);
+            transition: var(--transition-default);
         }
     }
 
@@ -312,7 +312,7 @@ export default {
         }
 
         polygon {
-            stroke: #F2B900;
+            stroke: var(--color-warning);
         }
     }
 
@@ -338,11 +338,11 @@ export default {
     &:active,
     &:focus,
     &:hover {
-        background: #F2B900;
+        background: var(--color-warning);
         color: var(--white);
 
         .sidebar-sync-icon {
-            stroke: #F2B900;
+            stroke: var(--color-warning);
         }
     }
 }
@@ -371,9 +371,9 @@ export default {
 
     & > span {
         animation: spin .9s infinite linear;
-        border-top: 2px solid rgba(255,255,255, .2);
-        border-right: 2px solid rgba(255,255,255, .2);
-        border-bottom: 2px solid rgba(255,255,255, .2);
+        border-top: 2px solid rgba(var(--white-rgb), .2);
+        border-right: 2px solid rgba(var(--white-rgb), .2);
+        border-bottom: 2px solid rgba(var(--white-rgb), .2);
         border-left: 2px solid var(--white);
         border-radius: 50%;
         display: inline-block;
@@ -398,13 +398,13 @@ export default {
 
 .sidebar-preview-link {
     border: 2px solid var(--sidebar-preview-btn-border-color);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     color: var(--sidebar-preview-btn-color) !important;
     display: block;
-    font-size: var(--app-font-base);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: 1rem;
-    padding: 1.2rem 1rem;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-4);
+    padding: 1.2rem var(--space-4);
     text-align: center;
 
     & > span {
@@ -450,7 +450,7 @@ export default {
 }
 
 .minimized-sync-error {
-     font-size: 1.3rem;
+     font-size: var(--font-size-ui-sm);
 }
 
 @keyframes pulse {

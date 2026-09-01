@@ -20,10 +20,6 @@ export default {
             default: '',
             type: String
         },
-        checked: {
-            default: false,
-            type: Boolean
-        },
         onToggle: {
             default: () => false,
             type: Function
@@ -47,7 +43,7 @@ export default {
     },
     data: function() {
         return {
-            isChecked: this.checked
+            isChecked: !!this.value
         };
     },
     computed: {
@@ -80,11 +76,6 @@ export default {
             this.isChecked = !!newValue;
         }
     },
-    mounted () {
-        if (this.value) {
-            this.isChecked = !!this.value;
-        }
-    },
     methods: {
         toggle: function() {
             this.isChecked = !this.isChecked;
@@ -101,7 +92,7 @@ export default {
 <style scoped>
 
 .has-label {
-    font-size: var(--app-font-base);
+    font-size: var(--font-size-ui-md);
     margin-right: 10px;
 }
 
@@ -111,7 +102,7 @@ export default {
     cursor: pointer;
     display: inline-block;
     height: 18px;
-    margin-right: .5rem;
+    margin-right: var(--space-2);
     position: relative;
     top: 3px;
     transition: all .28s ease;

@@ -178,10 +178,10 @@ export default {
 
     .upload-remove {
         border-radius: 50%;
-        color: var(--warning);
+        color: var(--color-danger);
         cursor: pointer;
-        font-size: 2.4rem;
-        font-weight: 300;
+        font-size: var(--font-size-ui-xl);
+        font-weight: var(--font-weight-light);
         height: 3rem;
         line-height: 1.1;
         padding: 0;
@@ -189,7 +189,7 @@ export default {
         right: 1.5rem;
         text-align: center;
         top: 50%;
-        transition: var(--transition);
+        transition: var(--transition-default);
         transform: translateY(-50%);
         width: 3rem;
 
@@ -216,11 +216,11 @@ export default {
             -webkit-appearance: none;
             background: var(--button-secondary-bg);
             border: 1px solid var(--button-secondary-bg);
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             color: var(--button-secondary-color);
             cursor: pointer;
-            font-weight: var(--font-weight-semibold);
-            font-size: 1.4rem;
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-ui-md);
             padding: .6rem;
             text-align: center;
             width: 12rem;

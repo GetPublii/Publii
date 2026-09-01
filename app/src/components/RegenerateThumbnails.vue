@@ -5,7 +5,8 @@
                 <p-button
                     :onClick="goBack"
                     slot="buttons"
-                    type="clean back">
+                    appearance="clean"
+                    back>
                     {{ $t('ui.backToTools') }}
                 </p-button>
             </p-header>
@@ -19,14 +20,15 @@
                     <p-button
                         v-if="regeneratingInProgress"
                         :onClick="abortRegenerate"
-                        type="danger">
+                        intent="danger">
                         {{ $t('ui.cancel') }}
                     </p-button>
 
                     <p-button
-                        class="button-secondary"
                         :onClick="regenerate"
-                        :type="buttonStatus">
+                        appearance="secondary"
+                        :disabled="buttonBusy"
+                        :loading="buttonBusy">
                         {{ $t('tools.thumbnails.regenerateThumbnails') }}
                     </p-button>
 
@@ -83,7 +85,7 @@ export default {
                 'success': false,
                 'warning': false
             },
-            buttonStatus: '',
+            buttonBusy: false,
             files: []
         };
     },
@@ -123,7 +125,7 @@ export default {
                 return;
             }
 
-            this.buttonStatus = 'disabled preloader';
+            this.buttonBusy = true;
             this.regeneratingInProgress = true;
             this.regeneratingStarted = true;
             this.files = [];
@@ -151,7 +153,7 @@ export default {
                         'success': false
                     };
                     this.resultLabel = data.message.translation ? this.$t(data.message.translation) : data.message;
-                    this.buttonStatus = '';
+                    this.buttonBusy = false;
                 });
 
                 mainProcessAPI.receive('app-site-regenerate-thumbnails-progress', (data) => {
@@ -185,7 +187,7 @@ export default {
                         this.resultLabel = this.$t('tools.thumbnails.thumbnailsCreated');
                     }
 
-                    this.buttonStatus = '';
+                    this.buttonBusy = false;
                     this.regeneratingInProgress = false;
                 });
             }, 350);
@@ -203,7 +205,7 @@ export default {
                 'warning': false
             };
             this.resultLabel = this.$t('tools.thumbnails.thumbnailsRegenerationCancelled');
-            this.buttonStatus = '';
+            this.buttonBusy = false;
             this.regeneratingInProgress = false;
         }
     },
@@ -223,18 +225,18 @@ export default {
     user-select: none;
 
     .result {
-        padding-left: 2rem;
+        padding-left: var(--space-8);
 
         &.error {
-            color: var(--warning);
+            color: var(--color-danger);
         }
 
         &.success {
-            color: var(--success);
+            color: var(--color-success);
         }
 
         &.warning {
-            color: var(--warning);
+            color: var(--color-danger);
         }
     }
 }
@@ -247,8 +249,8 @@ export default {
     user-select: text;
 
     .item {
-        font-size: 1.4rem;
-        padding: .5rem 0 .5rem .5rem;
+        font-size: var(--font-size-ui-md);
+        padding: var(--space-2) 0 var(--space-2) var(--space-2);
 
         &:first-child {
             border-top: none;
@@ -258,12 +260,12 @@ export default {
 
 .regenerate-thumbnails-list-container {
    border-top: 1px solid var(--border-light-color);
-   margin-top: 4rem;
-   padding: 3rem 0 0;
+   margin-top: var(--space-16);
+   padding: var(--space-12) 0 0;
 }
 
 .regenerate-thumbnails-list .item-error {
-    color: var(--warning);
+    color: var(--color-danger);
 }
 
 .regenerate-thumbnails .result-wrapper {

@@ -28,11 +28,6 @@ export default {
             default: () => false,
             type: Function
         }
-    },
-    computed: {
-        isChecked () {
-            return this.checked;
-        }
     }
 }
 </script>
@@ -46,7 +41,7 @@ input[type="checkbox"] {
     border-radius: 4px;
     height: 1.9rem;
     line-height: 1.6rem;
-    margin: 0 .5rem 0 0;
+    margin: 0 var(--space-2) 0 0;
     outline: none;
     position: relative;
     text-align: center;
@@ -65,7 +60,7 @@ input[type="checkbox"] {
 
         &:before {
             color: var(--white);
-            font-weight: bold;
+            font-weight: var(--font-weight-bold);
             content: '\2713';
             -webkit-margin-start: 0;
             margin-left: 2px;

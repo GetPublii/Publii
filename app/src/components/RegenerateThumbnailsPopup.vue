@@ -17,9 +17,8 @@
             </p>
 
             <progress-bar
-                :color="progressColor"
+                :intent="progressIntent"
                 :progress="progress"
-                :stopped="progressIsStopped"
                 :message="message" />
 
             <div class="buttons">
@@ -27,7 +26,9 @@
                     v-if="!regenerateIsDone"
                     @click.native="regenerate"
                     :disabled="regeneratingThumbnails"
-                    type="medium no-border-radius half-width">
+                    size="medium"
+                    width="half"
+                    square>
                     {{ $t('tools.thumbnails.regenerateThumbnails') }}
                 </p-button>
 
@@ -35,14 +36,20 @@
                     v-if="!regenerateIsDone && !regeneratingThumbnails"
                     @click.native="skip"
                     :disabled="regeneratingThumbnails"
-                    type="medium no-border-radius half-width cancel-popup">
+                    appearance="popup-cancel"
+                    size="medium"
+                    width="half"
+                    square>
                     {{ $t('tools.thumbnails.skipRegeneration') }}
                 </p-button>
 
                 <p-button
                     v-if="regeneratingThumbnails"
                     @click.native="abortRegenerate"
-                    type="medium no-border-radius half-width cancel-popup">
+                    appearance="popup-cancel"
+                    size="medium"
+                    width="half"
+                    square>
                     {{ $t('ui.cancel') }}
                 </p-button>
 
@@ -50,7 +57,9 @@
                     v-if="regenerateIsDone"
                     @click.native="skip"
                     :disabled="regeneratingThumbnails"
-                    type="medium no-border-radius full-width">
+                    size="medium"
+                    width="full"
+                    square>
                     {{ $t('ui.ok') }}
                 </p-button>
             </div>
@@ -66,8 +75,7 @@ export default {
             isVisible: false,
             message: '',
             progress: 0,
-            progressColor: 'blue',
-            progressIsStopped: false,
+            progressIntent: 'default',
             regeneratingThumbnails: false,
             regenerateIsDone: false,
             savedSettingsCallback: false
@@ -78,8 +86,7 @@ export default {
             this.isVisible = true;
             this.message = '';
             this.progress = 0;
-            this.progressColor = 'blue';
-            this.progressIsStopped = false;
+            this.progressIntent = 'default';
             this.regeneratingThumbnails = false;
             this.regenerateIsDone = false;
             this.savedSettingsCallback = config.savedSettingsCallback || false;
@@ -92,8 +99,7 @@ export default {
             this.isVisible = false;
             this.message = '';
             this.progress = 0;
-            this.progressColor = 'blue';
-            this.progressIsStopped = false;
+            this.progressIntent = 'default';
             this.regeneratingThumbnails = false;
             this.regenerateIsDone = false;
 
@@ -107,7 +113,6 @@ export default {
             }
 
             this.regeneratingThumbnails = true;
-            this.progressIsStopped = false;
             this.message = this.$t('tools.thumbnails.regeneratingThumbnails');
 
             setTimeout(() => {
@@ -116,8 +121,7 @@ export default {
                 });
 
                 mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-error', (data) => {
-                    this.progressColor = 'red';
-                    this.progressIsStopped = true;
+                    this.progressIntent = 'danger';
                     this.message = data.message.translation ? this.$t(data.message.translation) : data.message;
                     this.regeneratingThumbnails = false;
                     this.regenerateIsDone = true;
@@ -130,17 +134,16 @@ export default {
 
                 mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
                     this.progress = 100;
-                    this.progressIsStopped = true;
                     this.regeneratingThumbnails = false;
                     this.regenerateIsDone = true;
 
                     let brokenCount = (data && data.brokenFilesCount) || 0;
 
                     if (brokenCount > 0) {
-                        this.progressColor = 'orange';
+                        this.progressIntent = 'warning';
                         this.message = this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', { count: brokenCount });
                     } else {
-                        this.progressColor = 'green';
+                        this.progressIntent = 'success';
                         this.message = this.$t('tools.thumbnails.thumbnailsCreated');
                     }
 
@@ -184,15 +187,15 @@ export default {
 @import '../css/popup-common.css';
 
 .overlay {
-    z-index: 100006;
+    z-index: var(--layer-alert);
 }
 
 .popup {
-    padding: 4rem 4rem 6rem 4rem;
+    padding: var(--space-16) var(--space-16) 6rem var(--space-16);
     width: 60rem;
 
     h1 {
-        margin-top: 2rem;
+        margin-top: var(--space-8);
     }
 
     svg {
@@ -202,16 +205,16 @@ export default {
 }
 
 .popup-info {
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     color: var(--text-light-color);
-    margin: -1.5rem 0 4rem;
+    margin: -1.5rem 0 var(--space-16);
 }
 
 .message {
     color: var(--text-primary-color);
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
     margin: 0;
-    padding: 4rem;
+    padding: var(--space-16);
     position: relative;
     text-align: left;
 

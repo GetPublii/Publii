@@ -4,8 +4,8 @@
             <tabs
                 ref="site-create-tabs"
                 :items="tabsItems"
-                isHorizontal
-                :onToggle="tabChanged">
+                orientation="horizontal"
+                :on-toggle="tabChanged">
                 <div slot="tab-0">
                     <div class="site-create-form">
                         <logo-creator ref="logo-creator" />
@@ -75,7 +75,7 @@
                             <icon
                                 customWidth="60"
                                 customHeight="60"
-                                properties="not-clickable"
+                                non-interactive
                                 name="backup" />
 
                                 <span>{{ $t('file.dragAndDropBackupFile') }}</span>
@@ -90,8 +90,7 @@
 
                         <overlay
                             v-if="backupIsOver"
-                            :hasBorder="true"
-                            :isBlue="true">
+                            appearance="drop-zone">
                             <div>{{ $t('file.dropYourFileHere') }}</div>
                         </overlay>
                     </div>
@@ -116,7 +115,7 @@
                             <icon
                                 customWidth="60"
                                 customHeight="60"
-                                properties="not-clickable"
+                                non-interactive
                                 name="importer"
                                 aria-hidden="true" />
 
@@ -148,8 +147,7 @@
 
                         <overlay
                             v-if="wordpressFileIsOver"
-                            :hasBorder="true"
-                            :isBlue="true">
+                            appearance="drop-zone">
                             <div>{{ $t('file.dropYourFileHere') }}</div>
                         </overlay>
                     </div>
@@ -163,7 +161,7 @@
                                 {{ wordpressFileName }}
                             </span>
                             <p-button
-                                type="clean"
+                                appearance="clean"
                                 :onClick="resetWordPressFile">
                                 {{ $t('ui.change') }}
                             </p-button>
@@ -226,21 +224,24 @@
                 }">
                 <p-button
                     v-if="tabsActiveIndex === 0"
-                    type="primary bottom"
+                    intent="primary"
+                    layout="bottom"
                     :onClick="addWebsite">
                     {{ $t('site.createWebsite') }}
                 </p-button>
 
                 <p-button
                     v-if="tabsActiveIndex === 2 && wordpressStats"
-                    type="primary bottom"
+                    intent="primary"
+                    layout="bottom"
                     :onClick="createWordPressWebsite">
                     {{ $t('site.createWebsiteAndContinue') }}
                 </p-button>
 
                 <p-button
                     v-if="this.$store.getters.siteNames.length"
-                    type="outline bottom"
+                    appearance="outline"
+                    layout="bottom"
                     :onClick="goBack">
                     {{ $t('ui.cancel') }}
                 </p-button>
@@ -796,9 +797,9 @@ export default {
  */
 .site-create {
     background: var(--popup-bg);
-    border-radius: var(--border-radius);
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
-    font-size: var(--app-font-base);
+    border-radius: var(--radius-base);
+    box-shadow: 0 0 60px rgba(var(--black-rgb), .06);
+    font-size: var(--font-size-ui-md);
     margin: 0;
     left: 50%;
     padding: 4.8rem 4.8rem 5.6rem 4.8rem;
@@ -812,8 +813,8 @@ export default {
     .title {
         color: var(--text-primary-color);
         font-size: 1.8rem;
-        font-weight: 600;
-        margin: 0 0 4rem 0!important;
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-16) 0!important;
         text-transform: none;
     }
 
@@ -823,8 +824,8 @@ export default {
 
     .backup {
         border: 2px dashed var(--input-border-color);
-        border-radius: var(--border-radius);
-        color: var(--gray-3);
+        border-radius: var(--radius-base);
+        color: var(--color-text-subtle);
         position: relative;
 
         .overlay.has-border {
@@ -880,15 +881,15 @@ export default {
     }
 }
 .site-create-field {
-    margin: 0 0 3rem 0;
+    margin: 0 0 var(--space-12) 0;
     text-align: left;
 
     & > label {
         display: block;
-        font-size: var(--app-font-base);
-        font-weight: 400;
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-regular);
         line-height: 1.4;
-        margin-bottom: 1rem;
+        margin-bottom: var(--space-4);
     }
 
     &:last-child {
@@ -896,8 +897,8 @@ export default {
     }
 }
 .site-create-field-error {
-    color: var(--warning);
-    font-size: 1.4rem;
+    color: var(--color-danger);
+    font-size: var(--font-size-ui-md);
 }
 .site-create-buttons {
     display: flex;
@@ -909,20 +910,20 @@ export default {
     top: 1px;
 
     &.site-create-buttons-wordpress {
-        padding-top: 1rem;
+        padding-top: var(--space-4);
     }
 
     .button {
-        border-radius: 0 0 0 var(--border-radius);
+        border-radius: 0 0 0 var(--radius-base);
 
         &:last-child:first-child {
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            border-radius: 0 0 var(--radius-base) var(--radius-base);
         }
     }
     .button-outline {
         box-shadow: none!important;
         border-top: 1px solid var(--input-border-color);
-        border-radius: 0 0 var(--border-radius) 0;
+        border-radius: 0 0 var(--radius-base) 0;
         color: var(--popup-btn-cancel-color);
         margin-left: 0;
 
@@ -936,7 +937,7 @@ export default {
     .loader {
         display: block;
         height: 2.8rem;
-        margin: -5.6rem auto 2rem;
+        margin: -5.6rem auto var(--space-8);
         width: 2.8rem;
 
         & > span {
@@ -944,7 +945,7 @@ export default {
             border-top: 2px solid var(--border-light-color);
             border-right: 2px solid var(--border-light-color);
             border-bottom: 2px solid var(--border-light-color);
-            border-left: 2px solid var(--gray-4);
+            border-left: 2px solid var(--color-border-strong);
             border-radius: 50%;
             display: block;
             height: 3.5rem;
@@ -966,17 +967,17 @@ export default {
 .site-create .backup-selected-file {
     align-items: center;
     background-color: rgba(var(--color-primary-rgb), .065);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     color: var(--text-light-color);
     display: flex;
-    font-size: 1.4rem;
+    font-size: var(--font-size-ui-md);
     justify-content: space-between;
     line-height: 1.6;
     margin: 0 0 2em;
-    padding: .7rem 2rem;
+    padding: .7rem var(--space-8);
 
     strong {
-        margin-right: 1rem;
+        margin-right: var(--space-4);
     }
 }
 .site-create .site-create-form-wordpress {
@@ -988,11 +989,11 @@ export default {
     flex-direction: column;
     height: 340px;
     justify-content: center;
-    padding: 2rem;
+    padding: var(--space-8);
 
     .icon {
         fill: var(--icon-primary-color);
-        margin-bottom: 1.5rem;
+        margin-bottom: var(--space-6);
     }
 }
 .site-create .backup-upload-input {
@@ -1000,20 +1001,20 @@ export default {
     color: transparent; /* hack to remove the phrase "no file selected" from the file input */
     display: block;
     line-height: 1.6!important;
-    margin: 3rem auto 0 auto!important;
+    margin: var(--space-12) auto 0 auto!important;
 
     &::-webkit-file-upload-button {
         -webkit-appearance: none;
         background: var(--button-secondary-bg);
         border: 1px solid var(--button-secondary-bg);
-        border-radius: var(--border-radius);
+        border-radius: var(--radius-base);
         color: var(--button-secondary-color);
         cursor: pointer;
         display: inline-block;
-        font-size: 1.4rem;
-        font-weight: var(--font-weight-semibold);
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-medium);
         left: 50%;
-        padding: .75rem 1.5rem;
+        padding: var(--space-3) var(--space-6);
         position: relative;
         transform: translate(-50%, 0);
         outline: none;

@@ -5,7 +5,8 @@
                 <p-button
                     :onClick="goBack"
                     slot="buttons"
-                    type="clean back">
+                    appearance="clean"
+                    back>
                     {{ $t('ui.backToTools') }}
                 </p-button>
 
@@ -13,7 +14,7 @@
                     v-if="lastImportReport"
                     :onClick="openLastImportReport"
                     slot="buttons"
-                    type="secondary icon"
+                    appearance="secondary"
                     icon="view-report">
                     {{ $t('tools.wpImport.reportOpenLast') }}
                 </p-button>
@@ -22,7 +23,6 @@
                     :onClick="selectWXRFile"
                     :disabled="uploadDisabled"
                     slot="buttons"
-                    type="icon"
                     icon="upload-file">
                     {{ $t('tools.wpImport.selectWXRFileButton') }}
                 </p-button>
@@ -104,8 +104,7 @@
                                 <switcher
                                     slot="field"
                                     id="import-cpt-post"
-                                    ref="import-cpt-post"
-                                    :checked="true" />
+                                    v-model="selectedPostTypes.post" />
                             </field>
 
                             <field
@@ -117,8 +116,7 @@
                                 <switcher
                                     slot="field"
                                     id="import-cpt-page"
-                                    ref="import-cpt-page"
-                                    :checked="true" />
+                                    v-model="selectedPostTypes.page" />
                             </field>
 
                             <field
@@ -132,8 +130,7 @@
                                 <switcher
                                     slot="field"
                                     :id="'import-cpt-' + cpt"
-                                    :ref="'import-cpt-' + cpt"
-                                    :checked="true" />
+                                    v-model="selectedPostTypes[cpt]" />
                             </field>
                         </div>
                     </field>
@@ -149,8 +146,7 @@
                                 <switcher
                                     slot="field"
                                     id="import-menus"
-                                    ref="import-menus"
-                                    :checked="true" />
+                                    v-model="importMenus" />
                             </field>
                         </div>
                         <small
@@ -172,8 +168,7 @@
                             slot="field"
                             name="slugs"
                             :items="radioSlugItems"
-                            selected="wordpress"
-                            ref="slugs" />
+                            v-model="slugStrategy" />
                         <small
                             slot="note"
                             class="note">
@@ -186,8 +181,7 @@
                             slot="field"
                             name="taxonomy"
                             :items="radioTaxonomyItems"
-                            selected="both"
-                            ref="taxonomy" />
+                            v-model="taxonomyStrategy" />
                         <small
                             slot="note"
                             class="note">
@@ -200,8 +194,7 @@
                             slot="field"
                             name="authors"
                             :items="radioAuthorItems"
-                            selected="publii-author"
-                            ref="authors" />
+                            v-model="authorStrategy" />
                         <small
                             slot="note"
                             class="note">
@@ -221,10 +214,8 @@
                             slot="field"
                             name="seo-provider"
                             :items="radioSeoItems"
-                            :selected="seoDefaultProvider"
                             v-model="seoProviderSelection"
-                            customCssClasses="wp-import-seo-options"
-                            ref="seo-provider" />
+                            customCssClasses="wp-import-seo-options" />
                         <small
                             slot="note"
                             class="note">
@@ -244,8 +235,7 @@
                                 <switcher
                                     slot="field"
                                     id="use-autop"
-                                    ref="use-autop"
-                                    :checked="false" />
+                                    v-model="autoFormatContent" />
                             </field>
                         </div>
                     </field>
@@ -263,7 +253,8 @@
                             <p-button
                                 :onClick="importFile"
                                 :disabled="importInProgress"
-                                :type="importInProgress ? 'secondary disabled preloader' : 'secondary icon'"
+                                :loading="importInProgress"
+                                appearance="secondary"
                                 icon="download">
                                 {{ $t('tools.wpImport.importData') }}
                             </p-button>
@@ -281,8 +272,7 @@
 
                 <overlay
                     v-if="wxrFileIsOver"
-                    :hasBorder="true"
-                    :isBlue="true"
+                    appearance="drop-zone"
                     aria-hidden="true">
                     <div>{{ $t('file.dropYourFileHere') }}</div>
                 </overlay>
@@ -336,6 +326,15 @@ export default {
             importReport: null,
             lastImportReport: cachedReport,
             pendingImportSummary: null,
+            selectedPostTypes: {
+                post: true,
+                page: true
+            },
+            importMenus: true,
+            autoFormatContent: false,
+            slugStrategy: 'wordpress',
+            taxonomyStrategy: 'both',
+            authorStrategy: 'publii-author',
             seoProviderSelection: 'none',
             radioAuthorItems: [
                 {
@@ -570,6 +569,10 @@ export default {
                 }
 
                 this.customPostTypes.push(postType);
+
+                if (typeof this.selectedPostTypes[postType] === 'undefined') {
+                    this.$set(this.selectedPostTypes, postType, true);
+                }
             }
 
             this.stats = stats;
@@ -580,17 +583,8 @@ export default {
             this.errorMessage = '';
             this.importInProgress = true;
             this.uploadDisabled = true;
-            let selectedPostTypes = [];
-            let allRefs = Object.keys(this.$refs);
-
-            for(let i = 0; i < allRefs.length; i++) {
-                let switcher = this.$refs[allRefs[i]];
-                switcher = Array.isArray(switcher) ? switcher[0] : switcher;
-
-                if(allRefs[i].indexOf('import-cpt-') === 0 && switcher && switcher.isChecked) {
-                    selectedPostTypes.push(allRefs[i].replace('import-cpt-', ''));
-                }
-            }
+            let availablePostTypes = ['post', 'page'].concat(this.customPostTypes);
+            let selectedPostTypes = availablePostTypes.filter(postType => this.selectedPostTypes[postType]);
 
             this.bindedFileImported = this.fileImported.bind(this);
             mainProcessAPI.receiveOnce('app-wxr-imported', this.bindedFileImported);
@@ -601,12 +595,12 @@ export default {
             mainProcessAPI.send('app-wxr-import', {
                 siteName: this.$store.state.currentSite.config.name,
                 filePath: this.filePath,
-                importAuthors: this.$refs['authors'].content,
-                usedTaxonomy: this.$refs['taxonomy'].content,
-                slugStrategy: this.$refs['slugs'].content,
+                importAuthors: this.authorStrategy,
+                usedTaxonomy: this.taxonomyStrategy,
+                slugStrategy: this.slugStrategy,
                 seoProvider: this.seoProviderSelection,
-                autop: this.$refs['use-autop'].isChecked,
-                importMenus: this.$refs['import-menus'].isChecked,
+                autop: this.autoFormatContent,
+                importMenus: this.importMenus,
                 postTypes: selectedPostTypes
             });
         },
@@ -708,6 +702,15 @@ export default {
             this.uploadDisabled = false;
             this.checkingFile = false;
             this.customPostTypes = [];
+            this.selectedPostTypes = {
+                post: true,
+                page: true
+            };
+            this.importMenus = true;
+            this.autoFormatContent = false;
+            this.slugStrategy = 'wordpress';
+            this.taxonomyStrategy = 'both';
+            this.authorStrategy = 'publii-author';
             this.seoProviderSelection = 'none';
             this.errorMessage = '';
             this.stats = false;
@@ -751,11 +754,11 @@ export default {
     }
 
     .import-analysis {
-        margin-top: 3rem;
+        margin-top: var(--space-12);
     }
 
     .result {
-        padding-left: 2rem;
+        padding-left: var(--space-8);
     }
 
     .result-wrapper {
@@ -769,7 +772,7 @@ export default {
 
         & > label.radio {
             display: block;
-            margin: 0 0 1rem;
+            margin: 0 0 var(--space-4);
 
             &:last-child {
                 margin-bottom: 0;

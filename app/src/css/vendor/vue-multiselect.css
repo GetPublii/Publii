@@ -6,13 +6,13 @@
 .multiselect__tags {
     background: var(--input-bg);
     border-color: var(--input-border-color);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     color: var(--text-primary-color);
 }
 
 .multiselect__single {
     background: var(--input-bg);
-    font-size: var(--app-font-base);
+    font-size: var(--font-size-ui-md);
     line-height: 1.4;
     margin-bottom: 0;
     padding: 0;
@@ -74,7 +74,7 @@
     label {
         &.is-invalid {
             .multiselect__tags {
-                border-color: var(--warning);
+                border-color: var(--color-danger);
             }
         }
     }

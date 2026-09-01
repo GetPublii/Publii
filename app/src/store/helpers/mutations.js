@@ -2,9 +2,21 @@ import Vue from 'vue';
 import defaultAstAppConfig from './../../../config/AST.app.config';
 import Utils from './../../helpers/utils.js';
 
+const editorFontFamilyAliases = {
+    'var(--font-base)': 'sans-serif',
+    'var(--font-serif)': 'serif',
+    'var(--font-family-sans)': 'sans-serif',
+    'var(--font-family-serif)': 'serif'
+};
+
+function normalizeEditorFontFamily (value) {
+    return editorFontFamilyAliases[value] || value || defaultAstAppConfig.editorFontFamily;
+}
+
 export default {
     init (state, initialData) {
         state.app.config = Object.assign(JSON.parse(JSON.stringify(defaultAstAppConfig)), initialData.config);
+        state.app.config.editorFontFamily = normalizeEditorFontFamily(state.app.config.editorFontFamily);
         state.app.customConfig = initialData.customConfig;
         state.app.versionInfo = initialData.version;
         state.currentSite = {};
@@ -47,6 +59,7 @@ export default {
     },
     setAppConfig (state, newAppConfig) {
         state.app.config = Utils.deepMerge(state.app.config, newAppConfig);
+        state.app.config.editorFontFamily = normalizeEditorFontFamily(state.app.config.editorFontFamily);
     },
     setAppTheme (state, newTheme) {
         state.app.theme = newTheme;

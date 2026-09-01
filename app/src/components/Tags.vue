@@ -11,7 +11,7 @@
             <p-button
                 :onClick="addTag"
                 slot="buttons"
-                type="primary icon"
+                intent="primary"
                 icon="add-site-mono">
                 {{ $t('tag.addNewTag') }}
             </p-button>
@@ -19,7 +19,7 @@
 
         <collection
             v-if="!emptySearchResults && hasTags"
-            :itemsCount="4">
+            :columns="4">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -43,8 +43,8 @@
                 </collection-cell>
 
                 <collection-cell
-                    justifyContent="center"
-                    textAlign="center"
+                    justify-content="center"
+                    text-align="center"
                     min-width="100px">
                     <span
                         class="col-sortable-title"
@@ -78,7 +78,8 @@
                     class="tools">
                     <p-button
                         icon="trash"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkDelete">
                         {{ $t('ui.delete') }}
                     </p-button>
@@ -86,7 +87,8 @@
                     <p-button
                         v-if="selectedTagsAreNotHidden"
                         icon="hidden-post"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkHide">
                         {{ $t('ui.hide') }}
                     </p-button>
@@ -94,7 +96,8 @@
                     <p-button
                         v-if="selectedTagsAreHidden"
                         icon="unhidden-post"
-                        type="small light icon"
+                        appearance="light"
+                        size="small"
                         :onClick="bulkUnhide">
                         {{ $t('ui.unhide') }}
                     </p-button>
@@ -113,7 +116,7 @@
                         :key="'collection-row-checkbox-' + item.id" />
                 </collection-cell>
 
-                <collection-cell type="titles">
+                <collection-cell variant="titles">
                     <h2 class="title">
                         <a
                             href="#"
@@ -137,8 +140,8 @@
                 </collection-cell>
 
                 <collection-cell
-                    justifyContent="center"
-                    textAlign="center">
+                    justify-content="center"
+                    text-align="center">
                     <a
                         @click.prevent.stop="showPostsConnectedWithTag(item.name)"
                         href="#">
@@ -173,7 +176,6 @@
             <p-button
                 slot="button"
                 icon="add-site-mono"
-                type="icon"
                 :onClick="addTag">
                 {{ $t('tag.addNewTag') }}
             </p-button>
@@ -516,7 +518,7 @@ export default {
     }
 
     .tag-slug {
-        color: var(--gray-4);
+        color: var(--color-text-muted);
         font-size: 11px;
         margin-top: .2rem;
     }

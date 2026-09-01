@@ -8,7 +8,8 @@
 
                 <p-button
                     :onClick="goBack"
-                    type="clean back"
+                    appearance="clean"
+                    back
                     slot="buttons">
                     {{ $t('ui.goBack') }}
                 </p-button>
@@ -55,11 +56,11 @@ export default {
 <style scoped>
 
 .credits {
-    padding: 3rem 0 4rem;
+    padding: var(--space-12) 0 var(--space-16);
     width: 100%;
 
     .heading {
-        margin-bottom: calc(10 * var(--spacing));
+        margin-bottom: calc(10 * var(--space-unit));
         width: 100%;
 
         &:after {
@@ -90,6 +91,6 @@ export default {
 }
 
 .credits-intro {
-    margin: -2.5rem 0 4rem 0;
+    margin: -2.5rem 0 var(--space-16) 0;
 }
 </style>

@@ -360,8 +360,8 @@ export default {
 }
 
 .publii-block-gallery-empty-state {
-  color: var(--gray-3);
-  font-family: var(--font-base);
+  color: var(--color-text-subtle);
+  font-family: var(--font-family-sans);
   font-size: 14px;
   text-align: center;
 }
@@ -390,9 +390,9 @@ export default {
 
 .publii-block-gallery-item-delete {
   align-items: center;
-  background: var(--warning);
+  background: var(--color-danger);
   border: none;
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-base);
   cursor: pointer;
   display: flex;
   height: 34px;
@@ -402,7 +402,7 @@ export default {
   pointer-events: none;
   position: absolute;
   top: 25px;
-  transition: var(--transition);
+  transition: var(--transition-default);
   width: 34px;
   z-index: 2;
 
@@ -419,7 +419,7 @@ export default {
 
 .publii-block-gallery-uploader {
   border: 2px dashed var(--input-border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-base);
   height: 250px;
   margin: 0 0 16px 0;
   padding: 6px;
@@ -448,7 +448,7 @@ export default {
 .publii-block-gallery-uploader-loader-overlay {
   background: var(--bg-primary);
   border: 2px dashed var(--input-border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-base);
   bottom: 0;
   padding: 6px;
   position: absolute;
@@ -460,7 +460,7 @@ export default {
 
   &::after {
     content: "";
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     display: block;
     height: 100%;
     width: 100%;
@@ -471,7 +471,7 @@ export default {
    align-items: center;
    display: flex;
    flex-wrap: wrap;
-   font-family: var(--font-base);
+   font-family: var(--font-family-sans);
    justify-content: center;
    height: 234px;
    padding: 2rem;
@@ -483,7 +483,7 @@ export default {
 
    span {
      display: block;
-     font-size: var(--app-font-base);
+     font-size: var(--font-size-ui-md);
      text-align: center;
      width: 100%;
    }
@@ -491,10 +491,10 @@ export default {
    button {
      background: var(--button-secondary-bg);
      border: 1px solid var(--button-secondary-bg);
-     border-radius: var(--border-radius);
+     border-radius: var(--radius-base);
      color: var(--button-secondary-color);
      cursor: pointer;
-     font-weight: var(--font-weight-semibold);
+     font-weight: var(--font-weight-medium);
      font-size: 15px;
      padding: .5rem 2rem;
      text-align: center;

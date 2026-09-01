@@ -34,7 +34,7 @@
                 @click.stop.prevent="deleteLanguage(name, directory)">
                     <icon
                         size="xs"
-                        properties="not-clickable"
+                        non-interactive
                         name="trash" />
             </a>
         </figcaption>
@@ -154,21 +154,21 @@ export default {
 .language {
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow-small); 
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-sm);
     cursor: default;  
     height: 100%;
     margin: 0;
     overflow: hidden;
-    padding: 1rem;
+    padding: var(--space-4);
     position: relative;
-    transition: var(--transition);
+    transition: var(--transition-default);
     text-align: center;
 
     &:hover:not(.is-active) {
         background: var(--bg-primary);
         border-color: var(--color-primary);
-        box-shadow: var(--box-shadow-medium);  
+        box-shadow: var(--shadow-md);
         cursor: pointer;
 
         a {
@@ -182,7 +182,7 @@ export default {
 
     &.is-outdated {
        .language-version {
-           text-decoration-color: var(--warning);
+           text-decoration-color: var(--color-danger);
            text-decoration-line: line-through;
        }
     }
@@ -202,7 +202,7 @@ export default {
     display: block;
     padding-bottom: 75%;
     position: relative;
-    transition: var(--transition);
+    transition: var(--transition-default);
     width: 100%;
 }
 
@@ -221,12 +221,12 @@ export default {
     & > svg {
          fill: var(--icon-secondary-color);
          transform: scale(.9);
-         transition: var(--transition);
+         transition: var(--transition-default);
     }
 
     &:hover {
          & > svg {
-            fill: var(--warning);
+            fill: var(--color-danger);
             transform: scale(1);
          }
     }
@@ -234,17 +234,17 @@ export default {
 
 .language-name {
     align-items: center;
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     border-radius: 0 0 4px 4px;
     display: flex;
     justify-content: space-between;
-    padding: 0 2rem;
+    padding: 0 var(--space-8);
     position: relative;
     text-align: left;
 
     & > h3 {
-         font-size: 1.4rem;
-         font-weight: var(--font-weight-semibold);
+         font-size: var(--font-size-ui-md);
+         font-weight: var(--font-weight-medium);
          line-height: 1.4;
          margin: 1.2rem 0;
 
@@ -257,14 +257,14 @@ export default {
 .language-version,
 .language-is-outdated {
     color: var(--text-light-color);
-    font-size: 1.2rem;
-    font-weight: var(--font-weight-normnal);
+    font-size: var(--font-size-ui-xs);
+    font-weight: var(--font-weight-regular);
     
 }
 
 .language-is-outdated { 
-    color: var(--warning);
-    margin: 0 4rem 0 .5rem;
+    color: var(--color-danger);
+    margin: 0 var(--space-16) 0 var(--space-2);
     text-transform: uppercase;
 }
 </style>

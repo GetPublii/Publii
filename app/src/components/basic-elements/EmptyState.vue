@@ -25,7 +25,7 @@
 
 <script>
 export default {
-    name: 'emptystate',
+    name: 'empty-state',
     props: {
         imageName: {
             default: '',

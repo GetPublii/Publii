@@ -398,7 +398,7 @@ export default {
 
   &.is-activated {
     background: rgba(var(--color-primary-rgb), .12);
-    border-radius: calc(var(--border-radius) / 2);
+    border-radius: calc(var(--radius-base) / 2);
     z-index: 10;
   }
 
@@ -408,8 +408,8 @@ export default {
 
   &.has-ui-opened {
     background: var(--popup-bg);
-    border-radius: var(--border-radius);
-    box-shadow: 0 0 32px var(--shadow);
+    border-radius: var(--radius-base);
+    box-shadow: 0 0 32px var(--shadow-color);
     margin-top: -44px;
     opacity: 1;
     padding: 0 32px;
@@ -492,7 +492,7 @@ export default {
    /* hover effect */
   &::before {
     content: "";
-    background: var(--gray-6);
+    background: var(--color-control-surface-hover);
     border-radius: 3px;
     display: block;
     left: 50%;
@@ -560,13 +560,13 @@ export default {
 
   svg {
     color: var(--icon-primary-color);
-    transition: var(--transition);
+    transition: var(--transition-default);
   }
 
   /* hover effect */
   &::before {
     content: "";
-    background: var(--gray-6);
+    background: var(--color-control-surface-hover);
     border-radius: 3px;
     display: block;
     left: 50%;
@@ -616,10 +616,10 @@ export default {
 }
 
 .wrapper-ui-top-menu-title {
-  color: var(--gray-3);
+  color: var(--color-text-subtle);
   display: block;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   margin: 0 auto 0 0;
   text-transform: uppercase;
 }
@@ -646,7 +646,7 @@ export default {
   /* hover effect */
   &::before {
     content: "";
-    background: var(--gray-6);
+    background: var(--color-control-surface-hover);
     border-radius: 3px;
     display: block;
     left: 50%;
@@ -690,9 +690,9 @@ export default {
 
 .block-selector-list {
   background: var(--popup-bg);
-  box-shadow: var(--box-shadow-medium);
-  border-radius: var(--border-radius);
-  font-family: var(--font-base);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-base);
+  font-family: var(--font-family-sans);
   font-size: 14px;
   padding: 8px 8px 0;
   position: absolute;
@@ -727,19 +727,19 @@ export default {
     align-items: center;
     background: none;
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     color: var(--text-primary-color);
     cursor: pointer;
     display: flex;   
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
     margin: 5px 2px;
     padding: 0;
     text-align: left;
-    transition: var(--transition);
+    transition: var(--transition-default);
     width: 98%;
 
   &:hover {
-      background-color: var(--gray-1);
+      background-color: var(--color-surface-subtle);
       color: var(--headings-color);
 
     .block-selector-list-item-icon {
@@ -759,14 +759,14 @@ export default {
 
 .block-selector-list-item-icon {
     align-items: center;
-    background-color: var(--gray-1);
-    border-radius: var(--border-radius);
+    background-color: var(--color-surface-subtle);
+    border-radius: var(--radius-base);
     display: inline-flex;
     color: var(--icon-primary-color);
     height: 36px;
     justify-content: center;
     margin-right: 12px;
-    transition: var(--transition);
+    transition: var(--transition-default);
     width: 36px;
 }
 
@@ -784,7 +784,7 @@ export default {
      /* hover effect */
      &::before {
         content: "";
-        background: var(--gray-6);
+        background: var(--color-control-surface-hover);
         border-radius: 3px;
         display: block;
         left: 50%;

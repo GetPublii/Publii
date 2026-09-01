@@ -1,10 +1,6 @@
 <template>
     <fieldset>
-        <legend
-            v-if="title" 
-            :class="{ 
-                'is-danger': type === 'danger' 
-            }">
+        <legend v-if="title">
             {{ title }}
         </legend>
 
@@ -19,10 +15,6 @@ export default {
         'title': {
             default: '',
             type: String
-        },
-        'type': {
-            default: '',
-            type: String
         }
     }
 }
@@ -33,23 +25,18 @@ export default {
 fieldset {
     background-color: var(--bg-secondary);
     border: none;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow-small);
-    border: none;
-    margin: 0 0 3rem;
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-sm);
+    margin: 0 0 var(--space-12);
     position: relative;
-    padding: 3rem 3rem 3rem;
+    padding: var(--space-12) var(--space-12) var(--space-12);
 
     & > legend {
         color: var(--headings-color);
-        font-size: 1.6rem;
-        font-weight: 600;
+        font-size: var(--font-size-ui-lg);
+        font-weight: var(--font-weight-semibold);
         position: absolute;
         top: 3rem;
-
-        &.is-danger {
-            color: var(--warning);
-        }
 
         & + * {
             margin-top: 5rem !important;

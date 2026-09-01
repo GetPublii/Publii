@@ -4,7 +4,7 @@
 
 
 option {
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
 }
 
 ::-webkit-input-placeholder {
@@ -23,10 +23,10 @@ input[type="colorpicker"],
 select {
     background-color: var(--input-bg);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
-    font: 400 var(--app-font-base)/1.5 var(--font-base);
+    font: var(--font-weight-regular) var(--font-size-ui-md)/var(--line-height-base) var(--font-family-sans);
     outline: none;
     padding: 1.2rem 1.8rem;
 
@@ -55,13 +55,13 @@ input[type="search"] {
 }
 
 input[type="file"] {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-4);
     width: 100%;
 }
 
 input {
     &.invalid {
-        border: 1px solid var(--warning);
+        border: 1px solid var(--color-danger);
 
         &:focus {
             border: none;
@@ -85,7 +85,7 @@ input[type="range"] {
     -webkit-appearance: none;
     background: transparent;
     float: left;
-    margin: 1rem 0;
+    margin: var(--space-4) 0;
     position: relative;
     top: 1.6rem;
     width: 80%!important;
@@ -103,7 +103,7 @@ input[type="range"] {
         background: var(--color-primary);
         border: none;
         border-radius: 50%;
-        box-shadow: 1px 1px 1px rgba(0, 0, 0, .15);
+        box-shadow: 1px 1px 1px rgba(var(--black-rgb), .15);
         cursor: pointer;
         height: 2rem;
         margin-top: -1rem;
@@ -134,7 +134,7 @@ input[type="range"] {
     position: relative;
 
     & > a {
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
         position: absolute;
         right: 2rem;
         top: 1.4rem;
@@ -146,7 +146,7 @@ input[type="range"] {
     position: relative;
 
     & > a {
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
         position: absolute;
         right: 2rem;
         top: 73%;
@@ -158,7 +158,7 @@ input[type="range"] {
 /* Fix for the colorpicker */
 .colorpicker input {
     box-shadow: none;
-    font: 400 1.2rem/1.5 var(--font-base);
+    font: var(--font-weight-regular) var(--font-size-ui-xs)/var(--line-height-base) var(--font-family-sans);
     padding: 2px;
 }
 
@@ -170,11 +170,11 @@ input[type="range"] {
     position: relative;
 
     .small-upload-remove {
-        background: var(--warning);
+        background: var(--color-danger);
         border-radius: 1.2rem;
         color: transparent;
         font-size: 1rem;
-        font-weight: var(--font-weight-semibold);
+        font-weight: var(--font-weight-medium);
         height: 2rem;
         line-height: 1rem;
         padding: 0;
@@ -218,12 +218,12 @@ input[type="range"] {
             -webkit-appearance: none;
             background: var(--button-secondary-bg);
             border: 1px solid var(--button-secondary-bg);
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-base);
             color: var(--button-secondary-color);
             cursor: pointer;
-            font-weight: var(--font-weight-semibold);
-            font-size: 1.4rem;
-            padding: .5rem;
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-ui-md);
+            padding: var(--space-2);
             text-align: center;
             width: 16rem;
             outline: none;
@@ -243,7 +243,7 @@ input[type="range"] {
 
 .multiselect__tags {
     min-height: 47px;
-    padding: 0 4rem 0 1.8rem;
+    padding: 0 var(--space-16) 0 1.8rem;
 }
 
 .multiselect__option--highlight {
@@ -259,7 +259,7 @@ input[type="range"] {
 
 .multiselect__placeholder {
     color: var(--text-primary-color);
-    font-size: var(--app-font-base);
+    font-size: var(--font-size-ui-md);
     height: inherit;
     line-height: 47px;
     margin: 0;

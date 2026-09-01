@@ -48,7 +48,7 @@
                                 :min="((menu.maxLevels === -1) ? -1 : 1).toString()"
                                 :max="((menu.maxLevels === -1) ? 999 : menu.maxLevels).toString()"
                                 step="1"
-                                properties="is-small"
+                                size="small"
                                 :class="{ 'is-invalid': configuration[position].invalid }" />
                             
                             <small 
@@ -69,14 +69,19 @@
             <div class="buttons">
                 <p-button
                     @click.native="close"
-                    type="medium no-border-radius half-width cancel-popup">
+                    appearance="popup-cancel"
+                    size="medium"
+                    width="half"
+                    square>
                     {{ $t('ui.cancel') }}
                 </p-button>
 
                 <p-button
                     @click.native="saveChanges"
                     :disabled="!configurationIsValid"
-                    type="medium no-border-radius half-width">
+                    size="medium"
+                    width="half"
+                    square>
                     {{ $t('ui.saveChanges') }}
                 </p-button>
             </div>
@@ -268,11 +273,11 @@ export default {
 @import '../css/popup-common.css';
 
 .overlay {
-    z-index: 100006;
+    z-index: var(--layer-alert);
 }
 
 .popup {
-    padding: 4rem 4rem 1rem 4rem;
+    padding: var(--space-16) var(--space-16) var(--space-4) var(--space-16);
     text-align: left;
     width: 60rem;
 }
@@ -290,25 +295,25 @@ export default {
 }
 
 .menu-position-items {
-    padding-bottom: 2rem;
+    padding-bottom: var(--space-8);
 
     .menu-position-item {
         align-items: baseline;
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 0 3rem;
-        margin: 3rem 0;
+        gap: 0 var(--space-12);
+        margin: var(--space-12) 0;
         position: relative;
         
         & + .menu-position-item {
             border-top: 1px solid var(--border-light-color);
-            padding-top: 3rem;
+            padding-top: var(--space-12);
         }
 
         .menu-position-item-max-levels {
             align-items: baseline;
             display: flex;
-            gap: 0 .75rem;
+            gap: 0 var(--space-3);
             text-align: left
         }
 
@@ -321,7 +326,7 @@ export default {
         }
 
         input.is-invalid {
-            border-color: var(--warning);
+            border-color: var(--color-danger);
         }
     }
 }
@@ -331,13 +336,13 @@ export default {
     color: var(--text-light-color);
     display: block;
     flex-basis: 100%;
-    margin-top: .5rem;
+    margin-top: var(--space-2);
 }
 
 .menu-position-items .menu-position-item .menu-position-item-max-levels-error {
     background-color: var(--popup-bg);
     bottom: -2rem;
-    color: var(--warning);
+    color: var(--color-danger);
     margin-left: 41px;
     position: absolute;
 }

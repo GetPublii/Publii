@@ -39,11 +39,11 @@
                 <tabs
                     ref="report-tabs"
                     :items="sectionLabels"
-                    :onToggle="setActiveSection"
-                    :warningItems="warningSectionIndexes"
-                    :warningLabel="$t('tools.wpImport.reportRequiresAttention')"
-                    isHorizontal
-                    isScrollable>
+                    :on-toggle="setActiveSection"
+                    :warning-items="warningSectionIndexes"
+                    :warning-label="$t('tools.wpImport.reportRequiresAttention')"
+                    orientation="horizontal"
+                    scrollable>
                     <div
                         v-for="(section, index) in sections"
                         :key="section.id"
@@ -64,17 +64,22 @@
 
             <div class="buttons">
                 <p-button
-                    type="medium no-border-radius"
+                    size="medium"
+                    square
                     :onClick="copyCurrentSection">
                     {{ copiedTarget === 'section' ? $t('tools.wpImport.reportCopied') : $t('tools.wpImport.reportCopySection') }}
                 </p-button>
                 <p-button
-                    type="medium secondary no-border-radius"
+                    appearance="secondary"
+                    size="medium"
+                    square
                     :onClick="copyFullReport">
                     {{ copiedTarget === 'full' ? $t('tools.wpImport.reportCopied') : $t('tools.wpImport.reportCopyAll') }}
                 </p-button>
                 <p-button
-                    type="medium no-border-radius cancel-popup"
+                    appearance="popup-cancel"
+                    size="medium"
+                    square
                     :onClick="close">
                     {{ $t('ui.close') }}
                 </p-button>
@@ -489,7 +494,7 @@ export default {
     flex-direction: column;
     max-height: calc(100vh - 6rem);
     max-width: 108rem;
-    padding: 4rem 4rem 0;
+    padding: var(--space-16) var(--space-16) 0;
     text-align: left;
     user-select: text;
     width: calc(100vw - 8rem);
@@ -497,25 +502,25 @@ export default {
 
 .popup-info {
     color: var(--text-light-color);
-    font-size: 1.4rem;
-    line-height: 1.5;
-    margin: -1.5rem 0 3rem;
+    font-size: var(--font-size-ui-md);
+    line-height: var(--line-height-base);
+    margin: -1.5rem 0 var(--space-12);
     text-align: center;
 }
 
 .wp-import-report__summary {
     background: var(--bg-secondary);
     display: grid;
-    gap: 1rem;
+    gap: var(--space-4);
     grid-template-columns: repeat(6, 1fr);
     margin: 0;
 }
 
 .wp-import-report__metric {
     border: 1px solid var(--border-light-color);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-base);
     min-width: 0;
-    padding: 1.8rem 1.5rem;
+    padding: 1.8rem var(--space-6);
     text-align: center;
 
     strong {
@@ -529,12 +534,12 @@ export default {
     span {
         color: var(--text-light-color);
         display: block;
-        font-size: 1.2rem;
+        font-size: var(--font-size-ui-xs);
         line-height: 1.3;
     }
 
     &.has-issues strong {
-        color: var(--warning);
+        color: var(--color-danger);
     }
 }
 
@@ -542,14 +547,14 @@ export default {
     flex: 1;
     min-height: 0;
     overflow: auto;
-    padding: 4rem 0 4rem;
+    padding: var(--space-16) 0 var(--space-16);
 }
 
 .wp-import-report__note {
     color: var(--text-light-color);
     font-size: 1.25rem;
-    line-height: 1.5;
-    margin: 1.6rem 0 1rem;
+    line-height: var(--line-height-base);
+    margin: 1.6rem 0 var(--space-4);
 }
 
 .wp-import-report__code {
@@ -559,10 +564,10 @@ export default {
     color: var(--text-primary-color);
     display: block;
     font-family: SFMono-Regular, Consolas, 'Liberation Mono', monospace;
-    font-size: 1.2rem;
+    font-size: var(--font-size-ui-xs);
     height: 29rem;
     line-height: 1.55;
-    padding: 1.5rem;
+    padding: var(--space-6);
     resize: vertical;
     white-space: pre;
     width: 100%;

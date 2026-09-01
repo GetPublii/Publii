@@ -9,7 +9,7 @@
     right: 0;
     text-align: center;
     top: 0;
-    z-index: 100002;
+    z-index: var(--layer-popup);
     
     &.as-page {
        background: var(--bg-primary);
@@ -20,7 +20,7 @@
         
        h1 {
           font-size: 1.9rem;
-          margin-bottom: 1.5rem;
+          margin-bottom: var(--space-6);
        }
     }
 }
@@ -30,8 +30,8 @@
     border: none;
     border-radius: .6rem;
     display: inline-block;
-    font-size: var(--app-font-base);
-    font-weight: var(--font-weight-normal);
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-regular);
     left: 50%;  
     overflow: hidden;
     position: absolute;
@@ -41,15 +41,15 @@
     user-select: none;
 
     .buttons .button {
-        font-size: 1.4rem;
+        font-size: var(--font-size-ui-md);
     }
 }
 
 .message {
     color: var(--text-primary-color);
-    font-weight: var(--font-weight-normal);
+    font-weight: var(--font-weight-regular);
     margin: 0;
-    padding: 4rem;
+    padding: var(--space-16);
     position: relative;
     text-align: left;
 
@@ -60,15 +60,15 @@
 
 h1,
 h2 {
-    font-size: 1.6rem;
-    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-ui-lg);
+    font-weight: var(--font-weight-medium);
     margin: 0 0 7rem 0;
     text-align: center;
     text-transform: none;
 }
 
 h1 {
-    margin: 1rem 0 3rem 0;
+    margin: var(--space-4) 0 var(--space-12) 0;
 }
 
 body[data-os="win"] {

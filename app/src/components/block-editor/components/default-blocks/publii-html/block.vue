@@ -100,9 +100,9 @@ export default {
 <style>
 
 .publii-block-html {
-  border-radius: var(--border-radius);
-  background: var(--gray-4);
-  box-shadow: 2px 4px 26px var(--shadow);
+  border-radius: var(--radius-base);
+  background: var(--color-surface-strong);
+  box-shadow: 2px 4px 26px var(--shadow-color);
   outline: none;
   width: 100%;
 

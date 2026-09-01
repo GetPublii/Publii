@@ -117,7 +117,7 @@ export default {
   font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   font-size: 36px;
   font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing);
+  letter-spacing: var(--editor-heading-letter-spacing);
   line-height: 1.2;
   margin: 0 10% 1.6rem;
   outline: none;
@@ -132,7 +132,7 @@ export default {
 
 #post-title:empty:before {
   content: attr(data-translation);
-  color: var(--gray-4);
+  color: var(--color-text-muted);
 }
 
 #post-title:empty:focus:before {

@@ -13,7 +13,7 @@
 
 html,
 body {
-    font-family: var(--font-base);
+    font-family: var(--font-family-sans);
 }
 
 body,
@@ -62,7 +62,7 @@ html {
 body#tinymce {
     color: var(--text-primary-color);
     -webkit-font-smoothing: antialiased;
-    font-family: var(--font-base);
+    font-family: var(--font-family-sans);
     font-size: inherit;
     line-height: 1.6;
     padding: 1.8rem 1rem 0 1rem;
@@ -73,14 +73,14 @@ body#tinymce {
 }
 
 a:not(.btn) {
-    border-bottom: 3px solid rgba(var(--yellow), 1);
+    border-bottom: 3px solid rgba(var(--color-highlight-rgb), 1);
     color: var(--link-invert-color);
     cursor: pointer;
     text-decoration: none !important;
     text-decoration-skip-ink: auto;
 
     &:hover {
-        background: rgba(var(--yellow), .2);
+        background: rgba(var(--color-highlight-rgb), .2);
         color: var(--link-invert-color);
     }
 
@@ -119,7 +119,7 @@ script {
 
 figcaption {
     clear: both;
-    color: var(--gray-4);
+    color: var(--color-text-muted);
     font-size: 0.7rem;
     margin: 0.8rem 0 0;
     text-align: center;
@@ -133,7 +133,7 @@ h5,
 h6 {
     color: var(--headings-color);
     font-weight: var(--font-weight-bold);
-    letter-spacing: var(--letter-spacing);
+    letter-spacing: var(--editor-heading-letter-spacing);
     line-height: 1.3;
     margin-top: 1.1429rem;
 }
@@ -178,7 +178,7 @@ strong {
 }
 
 blockquote {
-    background: var(--gray-1);
+    background: var(--color-surface-subtle);
     border-left: 3px solid var(--color-primary);
     font-style: italic;
     padding: 0.4571rem 0 0.4571rem 1.8286rem;
@@ -211,7 +211,7 @@ dl {
 }
 
 pre {
-    background-color: var(--gray-1);
+    background-color: var(--color-surface-subtle);
     font-size: 0.8889em;
     padding: 1.3714rem;
     white-space: pre-wrap;
@@ -222,17 +222,17 @@ pre {
         color: var(--headings-color);
         display: inline-block;
         font-size: 0.8889em;
-        font-weight: normal;
+        font-weight: var(--font-weight-regular);
         padding: 0;
     }
 }
 
 code {
-    background-color: rgba(var(--warning-rgb), .15);
+    background-color: rgba(var(--color-danger-rgb), .15);
     border-radius: 2px;
-    color: var(--warning);
+    color: var(--color-danger);
     font-size: 0.8889em;
-    font-family: var(--font-monospace);
+    font-family: var(--font-family-mono);
     padding: 0.2286rem 0.4571rem;
 }
 
@@ -245,7 +245,7 @@ table {
     width: 100%;
 
     th {
-        font-weight: var(--font-weight-semibold);
+        font-weight: var(--font-weight-medium);
         padding: 0.5714rem 0.9143rem;
     }
 
@@ -259,7 +259,7 @@ kbd {
     background: var(--headings-color);
     border-radius: 2px;
     color: var(--bg-primary);
-    font-family: var(--font-monospace);
+    font-family: var(--font-family-mono);
     font-size: 0.8888em;
     padding: 0.1143rem 0.3429rem;
 }
