@@ -56,6 +56,16 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td>Inline formula</td>
+                    <td>$E = mc^2$ or \(E = mc^2\)</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Display formula</td>
+                    <td>$$E = mc^2$$ or \[E = mc^2\]</td>
+                    <td></td>
+                </tr>
+                <tr>
                     <td>H1</td>
                     <td># Heading</td>
                     <td>
