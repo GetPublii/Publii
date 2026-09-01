@@ -51,10 +51,10 @@ export default {
 
     &.is-blue {
         border: 3px solid var(--color-primary);
-        background: rgba(var(--color-primary-rgb), .17);
+        background: oklch(from var(--color-primary) l c h / 17%);
         
         & > div {
-            box-shadow: 0 0 3px rgba(var(--black-rgb), .2);
+            box-shadow: 0 0 3px oklch(from var(--black) l c h / 20%);
             background: var(--color-primary);
             border-radius: 3px;
             color: var(--white);

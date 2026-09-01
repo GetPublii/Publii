@@ -7,81 +7,82 @@ omitted:
     reason: Component contracts remain normative in prose because the selected DTCG compatibility target does not emit component definitions.
 colors:
   primary: "{colors.color-primary}"
-  color-primary: "#0D8BF2"
-  white: "#FFFFFF"
-  color-danger: "#EA1A16"
-  color-success: "#40B771"
-  color-warning: "#F2B900"
-  color-highlight-surface: "#FFF8E1"
-  overlay: "rgba(0, 0, 0, 0.35)"
-  bg-primary: "#FFFFFF"
-  bg-secondary: "#FFFFFF"
-  bg-site: "#F6F6F9"
-  color-surface-subtle: "#F6F6F9"
-  color-surface-notice: "#E7E8EA"
-  color-surface-strong: "#686C78"
-  color-border-subtle: "#F6F6F9"
-  color-border-default: "#D7D8DC"
-  color-border-muted: "#E7E8EA"
-  color-border-emphasis: "#5D616B"
-  color-border-strong: "#686C78"
-  color-text-faint: "#D7D8DC"
-  color-text-subtle: "#5D616B"
-  color-text-muted: "#686C78"
-  color-icon-faint: "#F6F6F9"
-  color-icon-muted: "#686C78"
-  color-control-surface-hover: "#E7E8EA"
-  color-control-border-hover: "#5D616B"
-  border-light-color: "#E7E8EA"
-  text-primary-color: "#313339"
-  text-light-color: "#686C78"
-  text-lightest-color: "#767B88"
-  headings-color: "#02192B"
-  label-color: "#02192B"
-  link-primary-color: "#0A6ABA"
-  link-primary-color-hover: "#02192B"
-  link-invert-color: "#0A6ABA"
-  link-invert-color-hover: "#02192B"
-  icon-primary-color: "#3C3F46"
-  icon-secondary-color: "#5D616B"
-  icon-tertiary-color: "#3C3F46"
-  icon-quaternary-color: "#84C4F9"
-  input-bg: "#FFFFFF"
-  input-border-dark: "#C7C9CE"
-  input-bg-light: "#F6F6F9"
-  input-bg-lightest: "#FFFFFF"
-  input-border-color: "#D7D8DC"
-  input-border-focus: "#0D8BF2"
-  button-primary-bg: "#0D8BF2"
-  button-primary-bg-hover: "#0B7BD6"
-  button-secondary-bg: "#D8ECFD"
-  button-secondary-bg-hover: "#C7E4FC"
-  button-secondary-color: "#0A6ABA"
-  button-secondary-color-hover: "#085A9D"
-  button-danger-bg: "#EA1A16"
+  color-primary: "oklch(63% 0.182 251)"
+  white: "oklch(100% 0 0)"
+  color-danger: "oklch(59% 0.234 29)"
+  color-success: "oklch(70% 0.148 154)"
+  color-warning: "oklch(82% 0.167 86)"
+  color-highlight: "oklch(85% 0.174 87)"
+  color-highlight-surface: "oklch(98% 0.031 93)"
+  overlay: "oklch(0% 0 0 / 35%)"
+  bg-primary: "oklch(100% 0 0)"
+  bg-secondary: "oklch(100% 0 0)"
+  bg-site: "oklch(97% 0.004 286)"
+  color-surface-subtle: "oklch(97% 0.004 286)"
+  color-surface-notice: "oklch(93% 0.003 265)"
+  color-surface-strong: "oklch(53% 0.019 271)"
+  color-border-subtle: "oklch(97% 0.004 286)"
+  color-border-default: "oklch(88% 0.006 275)"
+  color-border-muted: "oklch(93% 0.003 265)"
+  color-border-emphasis: "oklch(49% 0.017 268)"
+  color-border-strong: "oklch(53% 0.019 271)"
+  color-text-faint: "oklch(88% 0.006 275)"
+  color-text-subtle: "oklch(49% 0.017 268)"
+  color-text-muted: "oklch(53% 0.019 271)"
+  color-icon-faint: "oklch(97% 0.004 286)"
+  color-icon-muted: "oklch(53% 0.019 271)"
+  color-control-surface-hover: "oklch(93% 0.003 265)"
+  color-control-border-hover: "oklch(49% 0.017 268)"
+  border-light-color: "oklch(93% 0.003 265)"
+  text-primary-color: "oklch(32% 0.011 271)"
+  text-light-color: "oklch(53% 0.019 271)"
+  text-lightest-color: "oklch(58% 0.021 269)"
+  headings-color: "oklch(21% 0.047 244)"
+  label-color: "oklch(21% 0.047 244)"
+  link-primary-color: "oklch(52% 0.148 251)"
+  link-primary-color-hover: "oklch(21% 0.047 244)"
+  link-invert-color: "oklch(52% 0.148 251)"
+  link-invert-color-hover: "oklch(21% 0.047 244)"
+  icon-primary-color: "oklch(37% 0.013 267)"
+  icon-secondary-color: "oklch(49% 0.017 268)"
+  icon-tertiary-color: "oklch(37% 0.013 267)"
+  icon-quaternary-color: "oklch(80% 0.100 245)"
+  input-bg: "oklch(100% 0 0)"
+  input-border-dark: "oklch(84% 0.007 269)"
+  input-bg-light: "oklch(97% 0.004 286)"
+  input-bg-lightest: "oklch(100% 0 0)"
+  input-border-color: "oklch(88% 0.006 275)"
+  input-border-focus: "oklch(63% 0.182 251)"
+  button-primary-bg: "oklch(63% 0.182 251)"
+  button-primary-bg-hover: "oklch(58% 0.165 251)"
+  button-secondary-bg: "oklch(93% 0.031 244)"
+  button-secondary-bg-hover: "oklch(91% 0.045 243)"
+  button-secondary-color: "oklch(52% 0.148 251)"
+  button-secondary-color-hover: "oklch(46% 0.129 251)"
+  button-danger-bg: "oklch(59% 0.234 29)"
   button-danger-bg-hover: "#CD1613"
-  collection-bg: "#FFFFFF"
-  collection-bg-hover: "#F4FAFE"
-  sidebar-bg-top: "#0B7BD6"
-  sidebar-bg-bottom: "#0D8BF2"
-  sidebar-link-color: "#FFFFFF"
-  sidebar-link-color-hover: "#FFFFFF"
-  sidebar-link-color-active: "#FFFFFF"
+  collection-bg: "oklch(100% 0 0)"
+  collection-bg-hover: "oklch(98% 0.008 237)"
+  sidebar-bg-top: "oklch(58% 0.165 251)"
+  sidebar-bg-bottom: "oklch(63% 0.182 251)"
+  sidebar-link-color: "oklch(100% 0 0)"
+  sidebar-link-color-hover: "oklch(100% 0 0)"
+  sidebar-link-color-active: "oklch(100% 0 0)"
   sidebar-link-bg-hover: "rgba(98, 185, 255, 0.35)"
   sidebar-link-bg-active: "rgba(98, 185, 255, 0.35)"
   sidebar-sync-btn-bg: "rgba(98, 185, 255, 0.55)"
-  tab-color: "#02192B"
-  tab-color-hover: "#0A6ABA"
-  tab-active-bg: "#D8ECFD"
-  tab-active-color: "#0A6ABA"
-  popup-bg: "#FFFFFF"
-  popup-btn-cancel-color: "#686C78"
-  popup-btn-cancel-hover-color: "#474A52"
-  popup-btn-cancel-bg: "#FFFFFF"
-  popup-btn-cancel-bg-hover: "#F6F6F9"
-  scrollbar: "#E7E8EA"
-  scrollbar-hover: "#D7D8DC"
-  top-app-bar: "#D7D8DC"
+  tab-color: "oklch(21% 0.047 244)"
+  tab-color-hover: "oklch(52% 0.148 251)"
+  tab-active-bg: "oklch(93% 0.031 244)"
+  tab-active-color: "oklch(52% 0.148 251)"
+  popup-bg: "oklch(100% 0 0)"
+  popup-btn-cancel-color: "oklch(53% 0.019 271)"
+  popup-btn-cancel-hover-color: "oklch(41% 0.014 269)"
+  popup-btn-cancel-bg: "oklch(100% 0 0)"
+  popup-btn-cancel-bg-hover: "oklch(97% 0.004 286)"
+  scrollbar: "oklch(93% 0.003 265)"
+  scrollbar-hover: "oklch(88% 0.006 275)"
+  top-app-bar: "oklch(88% 0.006 275)"
   text-selection-color: "#B6D8FD"
 typography:
   font-family-sans:
@@ -134,11 +135,11 @@ This contract covers the application workspace and the shared visual roles consu
 
 ## Colors
 
-The blue scale supplies application identity and interactive emphasis. Neutral scales supply work surfaces, text, borders, controls, and collections. Shared semantic roles remain the governing interface between these palettes and components. `primary` is the canonical brand-action role; `color-primary` remains its source-compatible alias during migration.
+The blue scale supplies application identity and interactive emphasis. Neutral scales supply work surfaces, text, borders, controls, and collections. Private brand and neutral primitives are authored in OKLCH. The normative values below preserve the source notation: migrated palette and status roles use OKLCH, while intentionally unchanged compatibility roles retain their existing HEX or RGBA notation. Shared semantic roles remain the governing interface between these palettes and components. `primary` is the canonical brand-action role; `color-primary` remains its source-compatible alias during migration.
 
-Status roles use `color-danger`, `color-success`, and `color-warning`. Highlight surfaces remain independent from warning states so content emphasis does not inherit status semantics.
+Status roles use independently tuned OKLCH values through `color-danger`, `color-success`, and `color-warning`. The solid `color-highlight` role is the source for translucent highlight effects; highlight surfaces remain independent from warning states so content emphasis does not inherit status semantics.
 
-Static black and white channels compose alpha colors such as shadows, scrims, and inverse loading indicators. Opacity is local to the effect; it does not require a separate global token for every alpha value.
+Static black and white OKLCH foundations compose alpha colors such as shadows, scrims, and inverse loading indicators through relative color syntax. Opacity is local to the effect; it does not require a separate global token or RGB-channel token for every alpha value.
 
 An `appAppearance` remaps shared visual roles. A component does not require selector overrides to participate in an application appearance.
 
@@ -154,82 +155,83 @@ The current `default` implementation is the light scheme of the `publii` applica
 
 | Token | Default/light | Dark |
 | --- | --- | --- |
-| `primary` | `#0D8BF2` | `#1089FF` |
-| `color-primary` | `#0D8BF2` | `#1089FF` |
-| `white` | `#FFFFFF` | `#FFFFFF` |
-| `color-danger` | `#EA1A16` | `#FF4A4B` |
-| `color-success` | `#40B771` | `#56A900` |
-| `color-warning` | `#F2B900` | `#F2B900` |
-| `color-highlight-surface` | `#FFF8E1` | `#343540` |
-| `overlay` | `rgba(0, 0, 0, 0.35)` | `rgba(28, 29, 35, 0.85)` |
-| `bg-primary` | `#FFFFFF` | `#191A1F` |
-| `bg-secondary` | `#FFFFFF` | `#202128` |
-| `bg-site` | `#F6F6F9` | `#191A1F` |
-| `color-surface-subtle` | `#F6F6F9` | `#2A2B34` |
-| `color-surface-notice` | `#E7E8EA` | `#393A47` |
-| `color-surface-strong` | `#686C78` | `#5D6074` |
-| `color-border-subtle` | `#F6F6F9` | `#2A2B34` |
-| `color-border-default` | `#D7D8DC` | `#393A47` |
-| `color-border-muted` | `#E7E8EA` | `#393A47` |
-| `color-border-emphasis` | `#5D616B` | `#A5A7B7` |
-| `color-border-strong` | `#686C78` | `#5D6074` |
-| `color-text-faint` | `#D7D8DC` | `#393A47` |
-| `color-text-subtle` | `#5D616B` | `#A5A7B7` |
-| `color-text-muted` | `#686C78` | `#5D6074` |
-| `color-icon-faint` | `#F6F6F9` | `#2A2B34` |
-| `color-icon-muted` | `#686C78` | `#5D6074` |
-| `color-control-surface-hover` | `#E7E8EA` | `#393A47` |
-| `color-control-border-hover` | `#5D616B` | `#A5A7B7` |
-| `border-light-color` | `#E7E8EA` | `#2A2B34` |
-| `text-primary-color` | `#313339` | `#A5A7B7` |
-| `text-light-color` | `#686C78` | `#8C8EA3` |
-| `text-lightest-color` | `#767B88` | `#5D6074` |
-| `headings-color` | `#02192B` | `#F2F2F5` |
-| `label-color` | `#02192B` | `#BFC0CC` |
-| `link-primary-color` | `#0A6ABA` | `#42A0FF` |
-| `link-primary-color-hover` | `#02192B` | `#D9D9E0` |
-| `link-invert-color` | `#0A6ABA` | `#D9D9E0` |
-| `link-invert-color-hover` | `#02192B` | `#42A0FF` |
-| `icon-primary-color` | `#3C3F46` | `#A5A7B7` |
-| `icon-secondary-color` | `#5D616B` | `#8C8EA3` |
-| `icon-tertiary-color` | `#3C3F46` | `#D9D9E0` |
-| `icon-quaternary-color` | `#84C4F9` | `#72758E` |
-| `input-bg` | `#FFFFFF` | `#1C1D23` |
-| `input-border-dark` | `#C7C9CE` | `#494B5B` |
-| `input-bg-light` | `#F6F6F9` | `#2A2B34` |
-| `input-bg-lightest` | `#FFFFFF` | `#25262E` |
-| `input-border-color` | `#D7D8DC` | `#393A47` |
-| `input-border-focus` | `#0D8BF2` | `#1089FF` |
-| `button-primary-bg` | `#0D8BF2` | `#1089FF` |
-| `button-primary-bg-hover` | `#0B7BD6` | `#0079F2` |
-| `button-secondary-bg` | `#D8ECFD` | `#004080` |
-| `button-secondary-bg-hover` | `#C7E4FC` | `#004E9C` |
-| `button-secondary-color` | `#0A6ABA` | `#8DC6FF` |
-| `button-secondary-color-hover` | `#085A9D` | `#C0DFFF` |
-| `button-danger-bg` | `#EA1A16` | `#ED0001` |
+| `primary` | `oklch(63% 0.182 251)` | `oklch(64% 0.199 254)` |
+| `color-primary` | `oklch(63% 0.182 251)` | `oklch(64% 0.199 254)` |
+| `white` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-danger` | `oklch(59% 0.234 29)` | `oklch(67% 0.217 25)` |
+| `color-success` | `oklch(70% 0.148 154)` | `oklch(66% 0.193 135)` |
+| `color-warning` | `oklch(82% 0.167 86)` | `oklch(82% 0.167 86)` |
+| `color-highlight` | `oklch(85% 0.174 87)` | `oklch(85% 0.174 87)` |
+| `color-highlight-surface` | `oklch(98% 0.031 93)` | `oklch(33% 0.019 281)` |
+| `overlay` | `oklch(0% 0 0 / 35%)` | `rgba(28, 29, 35, 0.85)` |
+| `bg-primary` | `oklch(100% 0 0)` | `oklch(22% 0.010 277)` |
+| `bg-secondary` | `oklch(100% 0 0)` | `oklch(25% 0.013 279)` |
+| `bg-site` | `oklch(97% 0.004 286)` | `oklch(22% 0.010 277)` |
+| `color-surface-subtle` | `oklch(97% 0.004 286)` | `oklch(29% 0.016 280)` |
+| `color-surface-notice` | `oklch(93% 0.003 265)` | `oklch(35% 0.023 282)` |
+| `color-surface-strong` | `oklch(53% 0.019 271)` | `oklch(49% 0.032 278)` |
+| `color-border-subtle` | `oklch(97% 0.004 286)` | `oklch(29% 0.016 280)` |
+| `color-border-default` | `oklch(88% 0.006 275)` | `oklch(35% 0.023 282)` |
+| `color-border-muted` | `oklch(93% 0.003 265)` | `oklch(35% 0.023 282)` |
+| `color-border-emphasis` | `oklch(49% 0.017 268)` | `oklch(73% 0.023 280)` |
+| `color-border-strong` | `oklch(53% 0.019 271)` | `oklch(49% 0.032 278)` |
+| `color-text-faint` | `oklch(88% 0.006 275)` | `oklch(35% 0.023 282)` |
+| `color-text-subtle` | `oklch(49% 0.017 268)` | `oklch(73% 0.023 280)` |
+| `color-text-muted` | `oklch(53% 0.019 271)` | `oklch(49% 0.032 278)` |
+| `color-icon-faint` | `oklch(97% 0.004 286)` | `oklch(29% 0.016 280)` |
+| `color-icon-muted` | `oklch(53% 0.019 271)` | `oklch(49% 0.032 278)` |
+| `color-control-surface-hover` | `oklch(93% 0.003 265)` | `oklch(35% 0.023 282)` |
+| `color-control-border-hover` | `oklch(49% 0.017 268)` | `oklch(73% 0.023 280)` |
+| `border-light-color` | `oklch(93% 0.003 265)` | `oklch(29% 0.016 280)` |
+| `text-primary-color` | `oklch(32% 0.011 271)` | `oklch(73% 0.023 280)` |
+| `text-light-color` | `oklch(53% 0.019 271)` | `oklch(65% 0.031 281)` |
+| `text-lightest-color` | `oklch(58% 0.021 269)` | `oklch(49% 0.032 278)` |
+| `headings-color` | `oklch(21% 0.047 244)` | `oklch(96% 0.004 286)` |
+| `label-color` | `oklch(21% 0.047 244)` | `oklch(81% 0.017 282)` |
+| `link-primary-color` | `oklch(52% 0.148 251)` | `oklch(69% 0.165 252)` |
+| `link-primary-color-hover` | `oklch(21% 0.047 244)` | `oklch(89% 0.010 286)` |
+| `link-invert-color` | `oklch(52% 0.148 251)` | `oklch(89% 0.010 286)` |
+| `link-invert-color-hover` | `oklch(21% 0.047 244)` | `oklch(69% 0.165 252)` |
+| `icon-primary-color` | `oklch(37% 0.013 267)` | `oklch(73% 0.023 280)` |
+| `icon-secondary-color` | `oklch(49% 0.017 268)` | `oklch(65% 0.031 281)` |
+| `icon-tertiary-color` | `oklch(37% 0.013 267)` | `oklch(89% 0.010 286)` |
+| `icon-quaternary-color` | `oklch(80% 0.100 245)` | `oklch(57% 0.039 280)` |
+| `input-bg` | `oklch(100% 0 0)` | `oklch(23% 0.012 278)` |
+| `input-border-dark` | `oklch(84% 0.007 269)` | `oklch(42% 0.027 280)` |
+| `input-bg-light` | `oklch(97% 0.004 286)` | `oklch(29% 0.016 280)` |
+| `input-bg-lightest` | `oklch(100% 0 0)` | `oklch(27% 0.015 280)` |
+| `input-border-color` | `oklch(88% 0.006 275)` | `oklch(35% 0.023 282)` |
+| `input-border-focus` | `oklch(63% 0.182 251)` | `oklch(64% 0.199 254)` |
+| `button-primary-bg` | `oklch(63% 0.182 251)` | `oklch(64% 0.199 254)` |
+| `button-primary-bg-hover` | `oklch(58% 0.165 251)` | `oklch(59% 0.203 256)` |
+| `button-secondary-bg` | `oklch(93% 0.031 244)` | `oklch(38% 0.123 255)` |
+| `button-secondary-bg-hover` | `oklch(91% 0.045 243)` | `oklch(43% 0.143 255)` |
+| `button-secondary-color` | `oklch(52% 0.148 251)` | `oklch(81% 0.100 249)` |
+| `button-secondary-color-hover` | `oklch(46% 0.129 251)` | `oklch(89% 0.055 249)` |
+| `button-danger-bg` | `oklch(59% 0.234 29)` | `#ED0001` |
 | `button-danger-bg-hover` | `#CD1613` | `#A90001` |
-| `collection-bg` | `#FFFFFF` | `#1C1D23` |
-| `collection-bg-hover` | `#F4FAFE` | `#202128` |
-| `sidebar-bg-top` | `#0B7BD6` | `#16161B` |
-| `sidebar-bg-bottom` | `#0D8BF2` | `#191A1F` |
-| `sidebar-link-color` | `#FFFFFF` | `#BFC0CC` |
-| `sidebar-link-color-hover` | `#FFFFFF` | `#D9D9E0` |
-| `sidebar-link-color-active` | `#FFFFFF` | `#D9D9E0` |
-| `sidebar-link-bg-hover` | `rgba(98, 185, 255, 0.35)` | `#1C1D23` |
-| `sidebar-link-bg-active` | `rgba(98, 185, 255, 0.35)` | `#25262E` |
-| `sidebar-sync-btn-bg` | `rgba(98, 185, 255, 0.55)` | `#1089FF` |
-| `tab-color` | `#02192B` | `#BFC0CC` |
-| `tab-color-hover` | `#0A6ABA` | `#D9D9E0` |
-| `tab-active-bg` | `#D8ECFD` | `#2A2B34` |
-| `tab-active-color` | `#0A6ABA` | `#D9D9E0` |
-| `popup-bg` | `#FFFFFF` | `#25262E` |
-| `popup-btn-cancel-color` | `#686C78` | `#A5A7B7` |
-| `popup-btn-cancel-hover-color` | `#474A52` | `#F2F2F5` |
-| `popup-btn-cancel-bg` | `#FFFFFF` | `#25262E` |
-| `popup-btn-cancel-bg-hover` | `#F6F6F9` | `#343540` |
-| `scrollbar` | `#E7E8EA` | `#2A2B34` |
-| `scrollbar-hover` | `#D7D8DC` | `#343541` |
-| `top-app-bar` | `#D7D8DC` | `#25262E` |
+| `collection-bg` | `oklch(100% 0 0)` | `oklch(23% 0.012 278)` |
+| `collection-bg-hover` | `oklch(98% 0.008 237)` | `oklch(25% 0.013 279)` |
+| `sidebar-bg-top` | `oklch(58% 0.165 251)` | `oklch(20% 0.010 285)` |
+| `sidebar-bg-bottom` | `oklch(63% 0.182 251)` | `oklch(22% 0.010 277)` |
+| `sidebar-link-color` | `oklch(100% 0 0)` | `oklch(81% 0.017 282)` |
+| `sidebar-link-color-hover` | `oklch(100% 0 0)` | `oklch(89% 0.010 286)` |
+| `sidebar-link-color-active` | `oklch(100% 0 0)` | `oklch(89% 0.010 286)` |
+| `sidebar-link-bg-hover` | `rgba(98, 185, 255, 0.35)` | `oklch(23% 0.012 278)` |
+| `sidebar-link-bg-active` | `rgba(98, 185, 255, 0.35)` | `oklch(27% 0.015 280)` |
+| `sidebar-sync-btn-bg` | `rgba(98, 185, 255, 0.55)` | `oklch(64% 0.199 254)` |
+| `tab-color` | `oklch(21% 0.047 244)` | `oklch(81% 0.017 282)` |
+| `tab-color-hover` | `oklch(52% 0.148 251)` | `oklch(89% 0.010 286)` |
+| `tab-active-bg` | `oklch(93% 0.031 244)` | `oklch(29% 0.016 280)` |
+| `tab-active-color` | `oklch(52% 0.148 251)` | `oklch(89% 0.010 286)` |
+| `popup-bg` | `oklch(100% 0 0)` | `oklch(27% 0.015 280)` |
+| `popup-btn-cancel-color` | `oklch(53% 0.019 271)` | `oklch(73% 0.023 280)` |
+| `popup-btn-cancel-hover-color` | `oklch(41% 0.014 269)` | `oklch(96% 0.004 286)` |
+| `popup-btn-cancel-bg` | `oklch(100% 0 0)` | `oklch(27% 0.015 280)` |
+| `popup-btn-cancel-bg-hover` | `oklch(97% 0.004 286)` | `#343540` |
+| `scrollbar` | `oklch(93% 0.003 265)` | `oklch(29% 0.016 280)` |
+| `scrollbar-hover` | `oklch(88% 0.006 275)` | `oklch(33% 0.021 281)` |
+| `top-app-bar` | `oklch(88% 0.006 275)` | `oklch(27% 0.015 280)` |
 | `text-selection-color` | `#B6D8FD` | `#94B6DB` |
 
 ## Typography

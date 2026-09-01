@@ -103,7 +103,7 @@ input[type="range"] {
         background: var(--color-primary);
         border: none;
         border-radius: 50%;
-        box-shadow: 1px 1px 1px rgba(var(--black-rgb), .15);
+        box-shadow: 1px 1px 1px oklch(from var(--black) l c h / 15%);
         cursor: pointer;
         height: 2rem;
         margin-top: -1rem;

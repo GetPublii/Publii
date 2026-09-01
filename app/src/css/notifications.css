@@ -34,7 +34,7 @@
 }
 
 .msg-info {
-    background-color: rgba(var(--color-primary-rgb), .065);
+    background-color: oklch(from var(--color-primary) l c h / 6.5%);
     border-color: var(--color-primary);
 
     svg {
@@ -43,7 +43,7 @@
 }
 
 .msg-alert {
-    background-color: rgba(var(--color-danger-rgb), .065);
+    background-color: oklch(from var(--color-danger) l c h / 6.5%);
     border-color: var(--color-danger);
 
     svg {

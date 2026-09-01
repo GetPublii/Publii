@@ -238,7 +238,7 @@ export default {
                 background: var(--button-primary-bg-hover);
 
                 &::before {
-                    background: rgba(var(--black-rgb), .1);
+                    background: oklch(from var(--black) l c h / 10%);
                 }
             }
         }
@@ -289,7 +289,7 @@ export default {
         .button-dropdown {
             border-radius: var(--radius-base);
             bottom: 5.3rem;
-            box-shadow: 0 -1px 5px rgba(var(--black-rgb), .125);
+            box-shadow: 0 -1px 5px oklch(from var(--black) l c h / 12.5%);
             top: unset;
         }
     }
@@ -366,7 +366,7 @@ export default {
         background: var(--button-primary-bg-hover);
 
         &::before {
-           background: rgba(var(--black-rgb), .1);
+           background: oklch(from var(--black) l c h / 10%);
         }
     }
 }

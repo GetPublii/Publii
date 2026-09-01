@@ -397,7 +397,7 @@ export default {
   }
 
   &.is-activated {
-    background: rgba(var(--color-primary-rgb), .12);
+    background: oklch(from var(--color-primary) l c h / 12%);
     border-radius: calc(var(--radius-base) / 2);
     z-index: 10;
   }

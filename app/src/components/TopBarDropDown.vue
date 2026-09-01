@@ -221,7 +221,7 @@ export default {
 .topbar-app-settings-bell-badge {
      align-items: center;
      aspect-ratio: 1/1;
-     background: rgba(var(--color-danger-rgb), 1);
+     background: var(--color-danger);
      border: 2px solid var(--bg-site);
      border-radius: 50%;
      color: white;

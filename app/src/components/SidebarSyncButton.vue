@@ -371,9 +371,9 @@ export default {
 
     & > span {
         animation: spin .9s infinite linear;
-        border-top: 2px solid rgba(var(--white-rgb), .2);
-        border-right: 2px solid rgba(var(--white-rgb), .2);
-        border-bottom: 2px solid rgba(var(--white-rgb), .2);
+        border-top: 2px solid oklch(from var(--white) l c h / 20%);
+        border-right: 2px solid oklch(from var(--white) l c h / 20%);
+        border-bottom: 2px solid oklch(from var(--white) l c h / 20%);
         border-left: 2px solid var(--white);
         border-radius: 50%;
         display: inline-block;

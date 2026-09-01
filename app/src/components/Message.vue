@@ -107,7 +107,7 @@ export default {
     align-items: center;
     background: var(--popup-bg);
     border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(var(--black-rgb), .1);
+    box-shadow: 0 10px 20px oklch(from var(--black) l c h / 10%);
     color: var(--text-primary-color);
     display: flex;
     font-size: var(--font-size-ui-md);

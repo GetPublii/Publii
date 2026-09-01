@@ -919,7 +919,7 @@ export default {
     &.is-minimized {
         animation: minimized-popup .25s linear .25s forwards;
         border-radius: 10px;
-        box-shadow: 0 0 160px rgba(var(--black-rgb), .2);
+        box-shadow: 0 0 160px oklch(from var(--black) l c h / 20%);
         cursor: pointer;
         bottom: 56px;
         left: 0;

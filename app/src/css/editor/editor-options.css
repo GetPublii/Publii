@@ -73,14 +73,14 @@ body#tinymce {
 }
 
 a:not(.btn) {
-    border-bottom: 3px solid rgba(var(--color-highlight-rgb), 1);
+    border-bottom: 3px solid var(--color-highlight);
     color: var(--link-invert-color);
     cursor: pointer;
     text-decoration: none !important;
     text-decoration-skip-ink: auto;
 
     &:hover {
-        background: rgba(var(--color-highlight-rgb), .2);
+        background: oklch(from var(--color-highlight) l c h / 20%);
         color: var(--link-invert-color);
     }
 
@@ -228,7 +228,7 @@ pre {
 }
 
 code {
-    background-color: rgba(var(--color-danger-rgb), .15);
+    background-color: oklch(from var(--color-danger) l c h / 15%);
     border-radius: 2px;
     color: var(--color-danger);
     font-size: 0.8889em;

@@ -71,14 +71,16 @@ Common families are:
 | Collections | `--collection-*` |
 | Sidebar, tabs, popups | their named component-role tokens |
 
-For transparency, compose an alpha value from an existing RGB channel when one is provided:
+For transparency, derive the alpha color from the existing semantic color with relative OKLCH syntax:
 
 ```css
-background: rgba(var(--color-primary-rgb), .17);
-box-shadow: 0 2px 6px rgba(var(--black-rgb), .15);
+background: oklch(from var(--color-primary) l c h / 17%);
+box-shadow: 0 2px 6px oklch(from var(--black) l c h / 15%);
 ```
 
-Do not use `--palette-brand-*` or `--palette-neutral-*` in a component. Those variables are private inputs to semantic roles and may change when an application appearance is retuned.
+Do not introduce separate `*-rgb` channel tokens for alpha composition.
+
+Private `--palette-brand-*` and `--palette-neutral-*` values are authored in OKLCH. Do not use them in a component; they are private inputs to semantic roles and may change when an application appearance is retuned.
 
 Before adding a color token:
 

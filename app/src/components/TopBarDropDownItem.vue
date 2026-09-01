@@ -106,7 +106,7 @@ li {
             z-index: 2;
 
             &.is-warning {
-                background: rgba(var(--color-danger-rgb), 1);
+                background: var(--color-danger);
                 border: 2px solid var(--bg-site);
                 color: white;
             }

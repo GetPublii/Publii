@@ -294,9 +294,9 @@ export default {
     &.is-duplicating {
         &::after { 
            animation: spin .9s infinite linear;
-           border-top: 2px solid rgba(var(--color-primary-rgb), .2);
-           border-right: 2px solid rgba(var(--color-primary-rgb), .2);
-           border-bottom: 2px solid rgba(var(--color-primary-rgb), .2);
+           border-top: 2px solid oklch(from var(--color-primary) l c h / 20%);
+           border-right: 2px solid oklch(from var(--color-primary) l c h / 20%);
+           border-bottom: 2px solid oklch(from var(--color-primary) l c h / 20%);
            border-left: 2px solid var(--color-primary);
            border-radius: 50%;
            content: "";

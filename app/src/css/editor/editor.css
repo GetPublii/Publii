@@ -74,14 +74,14 @@ body#tinymce {
 }
 
 a:not(.btn):not([type=button]):not([type=submit]):not(button):not(.mce-item-anchor):not(.gallery__item a) {
-    border-bottom: 3px solid rgba(var(--color-highlight-rgb), 1);
+    border-bottom: 3px solid var(--color-highlight);
     color: var(--link-invert-color);
     cursor: pointer;
     text-decoration: none !important;
     text-decoration-skip-ink: auto;
 
     &:hover {
-        background: rgba(var(--color-highlight-rgb), .2);
+        background: oklch(from var(--color-highlight) l c h / 20%);
         color: var(--link-invert-color);
     }
 
@@ -573,23 +573,23 @@ img {
 }
 
 .msg--highlight {
-    background-color: rgba(var(--color-highlight-rgb), .1);
-    border-color: rgba(var(--color-highlight-rgb), .5);
+    background-color: oklch(from var(--color-highlight) l c h / 10%);
+    border-color: oklch(from var(--color-highlight) l c h / 50%);
 }
 
 .msg--info {
-    background-color: rgba(var(--color-primary-rgb), .1);
-    border-color: rgba(var(--color-primary-rgb), .5);
+    background-color: oklch(from var(--color-primary) l c h / 10%);
+    border-color: oklch(from var(--color-primary) l c h / 50%);
 }
 
 .msg--success {
-    background-color: rgba(var(--color-success-rgb), .1);
-    border-color: rgba(var(--color-success-rgb), .51);
+    background-color: oklch(from var(--color-success) l c h / 10%);
+    border-color: oklch(from var(--color-success) l c h / 51%);
 }
 
 .msg--warning {
-    background-color: rgba(var(--color-danger-rgb), .1);
-    border-color: rgba(var(--color-danger-rgb), .5);
+    background-color: oklch(from var(--color-danger) l c h / 10%);
+    border-color: oklch(from var(--color-danger) l c h / 50%);
 }
 
 .dropcap {
@@ -778,13 +778,13 @@ publii-non-amp:before {
 .mce-content-body [contentEditable=false] [contentEditable=true]:hover,
 .mce-content-body [contentEditable=false][data-mce-selected],
 .mce-content-body .mce-edit-focus {
-    outline: 3px solid rgba(var(--color-primary-rgb), .55) !important;
+    outline: 3px solid oklch(from var(--color-primary) l c h / 55%) !important;
 }
 
 .mce-content-body [data-mce-selected=inline-boundary],
 .mce-content-body td[data-mce-selected],
 .mce-content-body th[data-mce-selected] {
-    background-color: rgba(var(--color-primary-rgb), .55) !important;
+    background-color: oklch(from var(--color-primary) l c h / 55%) !important;
 }
 
 
@@ -901,7 +901,7 @@ pre[class*="language-"] > code {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-    color: rgba(var(--white-rgb), .45);
+    color: oklch(from var(--white) l c h / 45%);
 }
 
 .token.punctuation {

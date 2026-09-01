@@ -28,10 +28,9 @@ html {
     --font-weight-bold: 700;
     --line-height-base: 1.5;
 
-    /* Static color channels used to compose alpha colors. */
-    --black-rgb: 0, 0, 0;
-    --white: #fff;
-    --white-rgb: 255, 255, 255;
+    /* Static neutral foundations. */
+    --black: oklch(0% 0 0);
+    --white: oklch(100% 0 0);
 
     /* Shape, spacing, and motion */
     --radius-base: 6px;
@@ -83,41 +82,39 @@ html[data-theme="default"],
 html[data-app-appearance="publii"][data-color-scheme="light"] {
 
     /* Private primitive palettes; components consume semantic roles below. */
-    --palette-brand-5: #f4fafe;
-    --palette-brand-10: #d8ecfd;
-    --palette-brand-15: #c7e4fc;
-    --palette-brand-25: #9acffa;
-    --palette-brand-30: #84c4f9;
-    --palette-brand-40: #57aef6;
-    --palette-brand-50: #2a99f4;
-    --palette-brand-55: #0d8bf2;
-    --palette-brand-60: #0b7bd6;
-    --palette-brand-65: #0a6aba;
-    --palette-brand-70: #085a9d;
-    --palette-brand-75: #074a81;
-    --palette-brand-90: #02192b;
+    --palette-brand-5: oklch(98% 0.008 237);
+    --palette-brand-10: oklch(93% 0.031 244);
+    --palette-brand-15: oklch(91% 0.045 243);
+    --palette-brand-25: oklch(83% 0.082 243);
+    --palette-brand-30: oklch(80% 0.100 245);
+    --palette-brand-40: oklch(73% 0.135 246);
+    --palette-brand-50: oklch(67% 0.165 249);
+    --palette-brand-55: oklch(63% 0.182 251);
+    --palette-brand-60: oklch(58% 0.165 251);
+    --palette-brand-65: oklch(52% 0.148 251);
+    --palette-brand-70: oklch(46% 0.129 251);
+    --palette-brand-75: oklch(40% 0.110 250);
+    --palette-brand-90: oklch(21% 0.047 244);
 
-    --palette-neutral-5: #f6f6f9;
-    --palette-neutral-10: #e7e8ea;
-    --palette-neutral-15: #d7d8dc;
-    --palette-neutral-20: #c7c9ce;
-    --palette-neutral-25: #b7b9c0;
-    --palette-neutral-30: #a7a9b2;
-    --palette-neutral-35: #969aa4;
-    --palette-neutral-40: #868a96;
-    --palette-neutral-45: #767b88;
-    --palette-neutral-50: #686c78;
-    --palette-neutral-55: #5d616b;
-    --palette-neutral-60: #52555f;
-    --palette-neutral-65: #474a52;
-    --palette-neutral-70: #3c3f46;
-    --palette-neutral-75: #313339;
-    --palette-neutral-80: #26282c;
+    --palette-neutral-5: oklch(97% 0.004 286);
+    --palette-neutral-10: oklch(93% 0.003 265);
+    --palette-neutral-15: oklch(88% 0.006 275);
+    --palette-neutral-20: oklch(84% 0.007 269);
+    --palette-neutral-25: oklch(79% 0.010 273);
+    --palette-neutral-30: oklch(74% 0.013 276);
+    --palette-neutral-35: oklch(69% 0.015 268);
+    --palette-neutral-40: oklch(63% 0.019 271);
+    --palette-neutral-45: oklch(58% 0.021 269);
+    --palette-neutral-50: oklch(53% 0.019 271);
+    --palette-neutral-55: oklch(49% 0.017 268);
+    --palette-neutral-60: oklch(45% 0.017 272);
+    --palette-neutral-65: oklch(41% 0.014 269);
+    --palette-neutral-70: oklch(37% 0.013 267);
+    --palette-neutral-75: oklch(32% 0.011 271);
+    --palette-neutral-80: oklch(28% 0.008 264);
 
     /* Semantic foundations */
     --color-primary: var(--palette-brand-55);
-    --color-primary-rgb: 13, 139, 242;
-
     --color-surface-subtle: var(--palette-neutral-5);
     --color-surface-notice: var(--palette-neutral-10);
     --color-surface-strong: var(--palette-neutral-50);
@@ -134,19 +131,17 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
     --color-control-surface-hover: var(--palette-neutral-10);
     --color-control-border-hover: var(--palette-neutral-55);
 
-    --color-danger: #EA1A16;
-    --color-danger-rgb: 234,26,22;
-    --color-success: #40B771;
-    --color-success-rgb: 64,183,113;
-    --color-warning: #F2B900;
-    --color-highlight-surface: #FFF8E1;
-    --color-highlight-rgb: 255, 196, 0;
-    --shadow-color: rgba(61, 70, 78, .25);
-    --shadow-sm: 0 0 1px rgba(var(--black-rgb), .06), 0 2px 6px rgba(var(--black-rgb), .03);
-    --shadow-md: 0 2px 6px rgba(var(--black-rgb), .15);
-    --shadow-list-hover: 0 0 26px rgba(var(--black-rgb), .07);
+    --color-danger: oklch(59% 0.234 29);
+    --color-success: oklch(70% 0.148 154);
+    --color-warning: oklch(82% 0.167 86);
+    --color-highlight: oklch(85% 0.174 87);
+    --color-highlight-surface: oklch(98% 0.031 93);
+    --shadow-color: oklch(39% 0.018 245 / 25%);
+    --shadow-sm: 0 0 1px oklch(from var(--black) l c h / 6%), 0 2px 6px oklch(from var(--black) l c h / 3%);
+    --shadow-md: 0 2px 6px oklch(from var(--black) l c h / 15%);
+    --shadow-list-hover: 0 0 26px oklch(from var(--black) l c h / 7%);
 
-    --overlay: rgba(var(--black-rgb), .35);
+    --overlay: oklch(from var(--black) l c h / 35%);
 
     --icon-primary-color: var(--palette-neutral-70);
     --icon-secondary-color: var(--palette-neutral-55);
@@ -209,7 +204,7 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
     --sidebar-sync-btn-color: var(--white);
     --sidebar-preview-btn-color: var(--white);
     --sidebar-preview-btn-color-hover: var(--white);
-    --sidebar-preview-btn-border-color: rgba(var(--white-rgb), .4);
+    --sidebar-preview-btn-border-color: oklch(from var(--white) l c h / 40%);
     --sidebar-preview-btn-border-color-hover: var(--white);
 
     --sidebar-icon: var(--white);
@@ -270,43 +265,42 @@ html[data-theme="dark"],
 html[data-app-appearance="publii"][data-color-scheme="dark"] {
 
     /* Private primitive palettes; components consume semantic roles below. */
-    --palette-brand-5: #f2f9ff;
-    --palette-brand-10: #d9ecff;
-    --palette-brand-15: #c0dfff;
-    --palette-brand-25: #8dc6ff;
-    --palette-brand-30: #74baff;
-    --palette-brand-40: #42a0ff;
-    --palette-brand-50: #1089ff;
-    --palette-brand-55: #0079f2;
-    --palette-brand-60: #006bd5;
-    --palette-brand-65: #005cb9;
-    --palette-brand-70: #004e9c;
-    --palette-brand-75: #004080;
-    --palette-brand-90: #00152b;
+    --palette-brand-5: oklch(98% 0.011 244);
+    --palette-brand-10: oklch(93% 0.033 248);
+    --palette-brand-15: oklch(89% 0.055 249);
+    --palette-brand-25: oklch(81% 0.100 249);
+    --palette-brand-30: oklch(77% 0.122 249);
+    --palette-brand-40: oklch(69% 0.165 252);
+    --palette-brand-50: oklch(64% 0.199 254);
+    --palette-brand-55: oklch(59% 0.203 256);
+    --palette-brand-60: oklch(54% 0.183 256);
+    --palette-brand-65: oklch(49% 0.164 256);
+    --palette-brand-70: oklch(43% 0.143 255);
+    --palette-brand-75: oklch(38% 0.123 255);
+    --palette-brand-90: oklch(19% 0.054 249);
 
-    --palette-neutral-5: #f2f2f5;
-    --palette-neutral-10: #d9d9e0;
-    --palette-neutral-15: #bfc0cc;
-    --palette-neutral-20: #a5a7b7;
-    --palette-neutral-25: #8c8ea3;
-    --palette-neutral-30: #72758e;
-    --palette-neutral-35: #5d6074;
-    --palette-neutral-40: #494b5b;
-    --palette-neutral-45: #393A47;
-    --palette-neutral-46: #343541;
-    --palette-neutral-48: #2A2B34;
-    --palette-neutral-49: #25262E;
-    --palette-neutral-50: #202128;
-    --palette-neutral-55: #1c1d23;
-    --palette-neutral-60: #191a1f;
-    --palette-neutral-65: #16161b;
-    --palette-neutral-70: #121317;
-    --palette-neutral-75: #0f0f13;
-    --palette-neutral-80: #0c0c0f;
+    --palette-neutral-5: oklch(96% 0.004 286);
+    --palette-neutral-10: oklch(89% 0.010 286);
+    --palette-neutral-15: oklch(81% 0.017 282);
+    --palette-neutral-20: oklch(73% 0.023 280);
+    --palette-neutral-25: oklch(65% 0.031 281);
+    --palette-neutral-30: oklch(57% 0.039 280);
+    --palette-neutral-35: oklch(49% 0.032 278);
+    --palette-neutral-40: oklch(42% 0.027 280);
+    --palette-neutral-45: oklch(35% 0.023 282);
+    --palette-neutral-46: oklch(33% 0.021 281);
+    --palette-neutral-48: oklch(29% 0.016 280);
+    --palette-neutral-49: oklch(27% 0.015 280);
+    --palette-neutral-50: oklch(25% 0.013 279);
+    --palette-neutral-55: oklch(23% 0.012 278);
+    --palette-neutral-60: oklch(22% 0.010 277);
+    --palette-neutral-65: oklch(20% 0.010 285);
+    --palette-neutral-70: oklch(19% 0.008 274);
+    --palette-neutral-75: oklch(17% 0.008 285);
+    --palette-neutral-80: oklch(16% 0.006 286);
 
     /* Semantic foundations */
     --color-primary: var(--palette-brand-50);
-    --color-primary-rgb: 16, 137, 255;
 
     --color-surface-subtle: var(--palette-neutral-48);
     --color-surface-notice: var(--palette-neutral-45);
@@ -324,17 +318,15 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --color-control-surface-hover: var(--palette-neutral-45);
     --color-control-border-hover: var(--palette-neutral-20);
 
-    --color-danger: #ff4a4b;
-    --color-danger-rgb: 255,16,17;
-    --color-success: #56a900;
-    --color-success-rgb: 86,169,0;
-    --color-warning: #F2B900;
-    --color-highlight-surface: #343540;
-    --color-highlight-rgb: 255, 196, 0;
-    --shadow-color: rgba(30, 33, 40, .25);
+    --color-danger: oklch(67% 0.217 25);
+    --color-success: oklch(66% 0.193 135);
+    --color-warning: oklch(82% 0.167 86);
+    --color-highlight: oklch(85% 0.174 87);
+    --color-highlight-surface: oklch(33% 0.019 281);
+    --shadow-color: oklch(25% 0.014 267 / 25%);
     --shadow-sm: 0 2px 6px rgb(23 25 31);
     --shadow-md: 0 2px 6px rgb(23 25 31);
-    --shadow-list-hover: 0 0 26px rgba(var(--black-rgb), .07);
+    --shadow-list-hover: 0 0 26px oklch(from var(--black) l c h / 7%);
 
     --overlay: rgba(28,29,35, .85);
 

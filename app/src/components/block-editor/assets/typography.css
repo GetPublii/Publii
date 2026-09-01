@@ -12,14 +12,14 @@
         line-height: var(--line-height-base);
        
         a:not(.btn):not(.publii-block-toc a) {
-            border-bottom: 3px solid rgba(var(--color-highlight-rgb), 1);
+            border-bottom: 3px solid var(--color-highlight);
             color: var(--link-invert-color);
             cursor: pointer;
             text-decoration: none !important;
             text-decoration-skip-ink: auto;
 
             &:hover {
-                background: rgba(var(--color-highlight-rgb), .2);
+                background: oklch(from var(--color-highlight) l c h / 20%);
                 color: var(--link-invert-color);
             }
 
@@ -119,7 +119,7 @@
         }
 
         code {
-            background-color: rgba(var(--color-danger-rgb), .15);
+            background-color: oklch(from var(--color-danger) l c h / 15%);
             border-radius: 2px;
             color: var(--color-danger);
             font-size: 0.8889em;
@@ -159,21 +159,21 @@
 }
 
 .editor > .editor-inner > .wrapper > div .msg--highlight {
-    background-color: rgba(var(--color-highlight-rgb), .1);
-    border-color: rgba(var(--color-highlight-rgb), .5);
+    background-color: oklch(from var(--color-highlight) l c h / 10%);
+    border-color: oklch(from var(--color-highlight) l c h / 50%);
 }
 
 .editor > .editor-inner > .wrapper > div .msg--info {
-    background-color: rgba(var(--color-primary-rgb), .1);
-    border-color: rgba(var(--color-primary-rgb), .5);
+    background-color: oklch(from var(--color-primary) l c h / 10%);
+    border-color: oklch(from var(--color-primary) l c h / 50%);
 }
 
 .editor > .editor-inner > .wrapper > div .msg--success {
-    background-color: rgba(var(--color-success-rgb), .1);
-    border-color: rgba(var(--color-success-rgb), .51);
+    background-color: oklch(from var(--color-success) l c h / 10%);
+    border-color: oklch(from var(--color-success) l c h / 51%);
 }
 
 .editor > .editor-inner > .wrapper > div .msg--warning {
-    background-color: rgba(var(--color-danger-rgb), .1);
-    border-color: rgba(var(--color-danger-rgb), .5);
+    background-color: oklch(from var(--color-danger) l c h / 10%);
+    border-color: oklch(from var(--color-danger) l c h / 50%);
 }

@@ -122,7 +122,7 @@ export default {
             background: var(--color-primary);
             border: none;
             border-radius: 50%;
-            box-shadow: 1px 1px 1px rgba(var(--black-rgb), .15);
+            box-shadow: 1px 1px 1px oklch(from var(--black) l c h / 15%);
             cursor: pointer;
             height: 2rem;
             margin-top: -1rem;
@@ -140,7 +140,7 @@ export default {
         }
 
         &:focus::-webkit-slider-runnable-track {
-            background: rgba(var(--color-primary-rgb), .5);
+            background: oklch(from var(--color-primary) l c h / 50%);
             outline: none;
         }
     }

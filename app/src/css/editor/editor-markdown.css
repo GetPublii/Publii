@@ -104,7 +104,7 @@
     }
 
     .CodeMirror .CodeMirror-code .cm-url {
-        border-bottom: 2px solid rgba(var(--color-highlight-rgb), 1);
+        border-bottom: 2px solid var(--color-highlight);
         color: var(--link-primary-color);
         text-decoration: none;
     }

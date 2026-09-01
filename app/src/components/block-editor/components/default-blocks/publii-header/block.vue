@@ -224,7 +224,7 @@ export default {
   &.is-link {
     cursor: pointer;
     text-decoration: underline;
-    text-decoration-color: rgba(var(--color-highlight-rgb), 1);
+    text-decoration-color: var(--color-highlight);
     text-decoration-thickness: 3px;
   }
 }

@@ -53,7 +53,7 @@
     .token.prolog,
     .token.doctype,
     .token.cdata {
-        color: rgba(var(--white-rgb), .45);
+        color: oklch(from var(--white) l c h / 45%);
     }
 
     .token.punctuation {

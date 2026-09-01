@@ -57,8 +57,13 @@ const legacyTokens = [
     '--button-bg-hover',
     '--button-tertiary-bg',
     '--button-tertiary-bg-hover',
+    '--black-rgb',
     '--box-shadow-medium',
     '--box-shadow-small',
+    '--color-danger-rgb',
+    '--color-highlight-rgb',
+    '--color-primary-rgb',
+    '--color-success-rgb',
     '--font-base',
     '--font-monospace',
     '--font-serif',
@@ -67,7 +72,8 @@ const legacyTokens = [
     '--line-height',
     '--shadow',
     '--spacing',
-    '--transition'
+    '--transition',
+    '--white-rgb'
 ];
 const legacyComponentProps = {
     'p-button': ['type'],
@@ -90,7 +96,17 @@ const tokenDefinitionPattern = /(^|[;{\s'"])(--[a-zA-Z0-9_-]+)\s*:/gm;
 const tokenReferencePattern = /var\(\s*(--[a-zA-Z0-9_-]+)/g;
 const tokenOccurrencePattern = /--[a-zA-Z0-9_-]+/g;
 const runtimeDefinitionPattern = /setProperty\(\s*['"](--[a-zA-Z0-9_-]+)['"]/g;
-const colorLiteralPattern = /#[0-9a-fA-F]{3,8}\b|rgba?\(\s*(?!var\()[^)]+\)|hsla?\(\s*(?!var\()[^)]+\)/g;
+const colorLiteralPattern = /#[0-9a-fA-F]{3,8}\b|rgba?\(\s*(?!var\()[^)]+\)|hsla?\(\s*(?!var\()[^)]+\)|oklch\(\s*(?!from\s+var\()[^)]+\)/g;
+const privatePaletteDefinitionPattern = /(--palette-(?:brand|neutral)-\d+)\s*:\s*([^;]+);/g;
+const oklchLiteralPattern = /^oklch\(\s*\d+(?:\.\d+)?%\s+\d+(?:\.\d+)?\s+\d+(?:\.\d+)?\s*\)$/;
+const statusColorTokens = [
+    '--color-danger',
+    '--color-success',
+    '--color-warning',
+    '--color-highlight',
+    '--color-highlight-surface',
+    '--shadow-color'
+];
 const spacingPropertyPattern = /((?:(?:margin|padding)(?:-[a-z-]+)?|(?:grid-)?(?:row-|column-)?gap)\s*:\s*)([^;}{]+)/g;
 const spacingLiteralPattern = /(?<![-\d.])(?:0?\.25|0?\.5|0?\.75|1\.5|1|2|3|4)rem\b/g;
 const typographyContracts = [
@@ -158,6 +174,20 @@ function collectMatches(content, pattern) {
 
 function collectDefinitions(content) {
     return collectMatches(content, tokenDefinitionPattern).map((match) => match[2]);
+}
+
+function collectPrivatePaletteDefinitions(content) {
+    return new Map(collectMatches(content, privatePaletteDefinitionPattern).map((match) => [
+        match[1],
+        match[2].trim()
+    ]));
+}
+
+function collectDefinitionValues(content) {
+    return new Map(collectMatches(content, /(--[a-zA-Z0-9_-]+)\s*:\s*([^;]+);/g).map((match) => [
+        match[1],
+        match[2].trim()
+    ]));
 }
 
 function collectRuntimeDefinitions(content) {
@@ -495,6 +525,44 @@ function main() {
         if (!missingInDark.length && !missingInLight.length) {
             information.push(`Light/dark appearance parity: ${lightTokens.size} tokens per scheme`);
         }
+
+        const lightPalettes = collectPrivatePaletteDefinitions(lightRule);
+        const darkPalettes = collectPrivatePaletteDefinitions(darkRule);
+        const lightValues = collectDefinitionValues(lightRule);
+        const darkValues = collectDefinitionValues(darkRule);
+        const lightBrandTokens = new Set([...lightPalettes.keys()].filter((token) => token.startsWith('--palette-brand-')));
+        const darkBrandTokens = new Set([...darkPalettes.keys()].filter((token) => token.startsWith('--palette-brand-')));
+        const missingBrandInDark = [...lightBrandTokens].filter((token) => !darkBrandTokens.has(token)).sort();
+        const missingBrandInLight = [...darkBrandTokens].filter((token) => !lightBrandTokens.has(token)).sort();
+
+        errors.push(...missingBrandInDark.map((token) => `Light-only brand palette token: ${token}`));
+        errors.push(...missingBrandInLight.map((token) => `Dark-only brand palette token: ${token}`));
+
+        for (const [scheme, palettes] of [['light', lightPalettes], ['dark', darkPalettes]]) {
+            for (const [token, value] of palettes) {
+                if (!oklchLiteralPattern.test(value)) {
+                    errors.push(`${scheme} private palette token must use a literal OKLCH value: ${token}`);
+                }
+            }
+        }
+
+        if (!missingBrandInDark.length && !missingBrandInLight.length) {
+            information.push(`Light/dark brand palette parity: ${lightBrandTokens.size} OKLCH tokens per scheme`);
+        }
+
+        information.push(`Private appearance palettes use OKLCH: ${lightPalettes.size} light and ${darkPalettes.size} dark tokens`);
+
+        for (const [scheme, values] of [['light', lightValues], ['dark', darkValues]]) {
+            for (const token of statusColorTokens) {
+                if (!values.has(token)) {
+                    errors.push(`${scheme} scheme is missing required status color: ${token}`);
+                } else if (!values.get(token).startsWith('oklch(')) {
+                    errors.push(`${scheme} status color must use OKLCH: ${token}`);
+                }
+            }
+        }
+
+        information.push(`Status and shadow foundations use OKLCH: ${statusColorTokens.length} tokens per scheme`);
     }
 
     if (!tokenContent.includes('data-app-appearance="publii"') || !tokenContent.includes('data-color-scheme="light"') || !tokenContent.includes('data-color-scheme="dark"')) {

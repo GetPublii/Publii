@@ -49,7 +49,7 @@
 
         .tinymce-overlay {
             border: 3px solid var(--color-primary);
-            background: rgba(var(--color-primary-rgb), .17);
+            background: oklch(from var(--color-primary) l c h / 17%);
             display: none;
             height: 100%;
             left: 0;
@@ -93,9 +93,9 @@
 
                 & > span {
                     animation: spin .9s infinite linear;
-                    border-top: 2px solid rgba(var(--white-rgb), 0.2);
-                    border-right: 2px solid rgba(var(--white-rgb), 0.2);
-                    border-bottom: 2px solid rgba(var(--white-rgb), 0.2);
+                    border-top: 2px solid oklch(from var(--white) l c h / 20%);
+                    border-right: 2px solid oklch(from var(--white) l c h / 20%);
+                    border-bottom: 2px solid oklch(from var(--white) l c h / 20%);
                     border-left: 2px solid var(--white);
                     border-radius: 50%;
                     display: inline-block;

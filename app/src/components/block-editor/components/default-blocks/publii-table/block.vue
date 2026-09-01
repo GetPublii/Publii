@@ -778,7 +778,7 @@ export default {
       }
 
       &.is-delete-highlight {
-        background: rgba(var(--color-danger-rgb), .12);
+        background: oklch(from var(--color-danger) l c h / 12%);
       }
     }
 

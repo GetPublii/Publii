@@ -10,7 +10,7 @@
         }
 
         pre {
-            background: rgba(var(--black-rgb), .025);
+            background: oklch(from var(--black) l c h / 2.5%);
             border: 1px solid var(--color-border-subtle);
             color: var(--color-text-muted);
             font-size: var(--font-size-ui-xs);

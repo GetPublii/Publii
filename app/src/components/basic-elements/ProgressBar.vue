@@ -92,7 +92,7 @@ export default {
 
 .sync-progress-bar {               
     .progress-bar {
-         background: rgba(var(--color-highlight-rgb), 1);
+         background: var(--color-highlight);
     }
 }
 

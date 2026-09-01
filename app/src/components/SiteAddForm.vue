@@ -796,7 +796,7 @@ export default {
 .site-create {
     background: var(--popup-bg);
     border-radius: var(--radius-base);
-    box-shadow: 0 0 60px rgba(var(--black-rgb), .06);
+    box-shadow: 0 0 60px oklch(from var(--black) l c h / 6%);
     font-size: var(--font-size-ui-md);
     margin: 0;
     left: 50%;
@@ -835,7 +835,7 @@ export default {
           
             &::after {
                 border: 3px solid var(--color-primary);
-                background: rgba(var(--color-primary-rgb), .17);
+                background: oklch(from var(--color-primary) l c h / 17%);
                 content:"";
                 height: 100%;
                 left: 0;
@@ -846,9 +846,9 @@ export default {
 
             &::before {
                 animation: spin .9s infinite linear;
-                border-top: 2px solid rgba(var(--color-primary-rgb), 0.3);
-                border-right: 2px solid rgba(var(--color-primary-rgb), 0.3);
-                border-bottom: 2px solid rgba(var(--color-primary-rgb), 0.3);
+                border-top: 2px solid oklch(from var(--color-primary) l c h / 30%);
+                border-right: 2px solid oklch(from var(--color-primary) l c h / 30%);
+                border-bottom: 2px solid oklch(from var(--color-primary) l c h / 30%);
                 border-left: 2px solid var(--color-primary);
                 border-radius: 50%;
                 content:"";
@@ -964,7 +964,7 @@ export default {
 }
 .site-create .backup-selected-file {
     align-items: center;
-    background-color: rgba(var(--color-primary-rgb), .065);
+    background-color: oklch(from var(--color-primary) l c h / 6.5%);
     border-radius: var(--radius-base);
     color: var(--text-light-color);
     display: flex;
