@@ -215,7 +215,12 @@ export default {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
                         let iframeDocument = iframe.contentWindow.window.document;
                         let htmlElement = iframeDocument.querySelector('html');
-                        applyAppAppearance(iframeDocument, await self.$root.getCurrentAppTheme());
+                        applyAppAppearance(
+                            iframeDocument,
+                            await self.$root.getCurrentAppTheme(),
+                            self.$root.getCurrentAppAppearance(),
+                            self.$root.getCurrentWorkspaceAccent()
+                        );
                         htmlElement.setAttribute('style', self.$root.overridedCssVariables);
                     });
 

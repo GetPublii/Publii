@@ -568,7 +568,12 @@ export default {
     async mounted () {
         this.loadPluginConfig(this.$route.params.pluginname, this.$route.params.name);
         document.getElementById('plugin-settings-root').addEventListener('load', async function () {
-            applyAppAppearance(this.contentWindow.window.document, await window.app.getCurrentAppTheme());
+            applyAppAppearance(
+                this.contentWindow.window.document,
+                await window.app.getCurrentAppTheme(),
+                window.app.getCurrentAppAppearance(),
+                window.app.getCurrentWorkspaceAccent()
+            );
         }, false);
     },
     methods: {

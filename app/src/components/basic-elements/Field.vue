@@ -3,6 +3,7 @@
         <!-- Fields with separated label (most cases) -->
         <label
             v-if="!labelHidden && labelSeparated && label"
+            :id="id ? id + '-label' : null"
             :for="id">
             {{ label }}
         </label>
@@ -17,6 +18,7 @@
         <label
             :class="labelCssClasses"
             v-if="!labelHidden && !labelSeparated"
+            :id="id ? id + '-label' : null"
             :for="id">
             <slot name="field"></slot>
             {{ label }}

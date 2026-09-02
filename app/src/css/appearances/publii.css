@@ -1,0 +1,856 @@
+/**
+ * Publii application appearance
+ *
+ * This file owns the complete light and dark palettes for the `publii`
+ * appAppearance plus its supported workspace accent overrides.
+ */
+
+/* Publii appearance: shared visual language */
+html[data-app-appearance="publii"] {
+    /* Typography */
+    --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --font-family-serif: Georgia, Times New Roman, Times, Serif;
+    --font-family-mono: Menlo, Monaco, Consolas, Courier New, monospace;
+    --font-size-ui-xs: 1.2rem;
+    --font-size-ui-sm: 1.3rem;
+    --font-size-ui-md: 1.4rem;
+    --font-size-ui-lg: 1.6rem;
+    --font-size-ui-xl: 2.4rem;
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --line-height-base: 1.5;
+
+    /* Shape, spacing, and motion */
+    --radius-base: 6px;
+    --space-unit: 0.25rem;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --transition-default: all .2s ease-out;
+
+    /* Site-settings previews */
+    --workspace-accent-default-preview: oklch(63% 0.182 251);
+    --workspace-accent-indigo-preview: oklch(57% 0.205 275);
+    --workspace-accent-violet-preview: oklch(59% 0.220 300);
+    --workspace-accent-magenta-preview: oklch(57% 0.215 330);
+    --workspace-accent-crimson-preview: oklch(56% 0.205 355);
+    --workspace-accent-rose-preview: oklch(56% 0.205 15);
+    --workspace-accent-orange-preview: oklch(57% 0.150 45);
+    --workspace-accent-emerald-preview: oklch(52% 0.125 155);
+    --workspace-accent-petrol-preview: oklch(48% 0.075 205);
+    --workspace-accent-graphite-preview: oklch(47% 0.025 265);
+    --workspace-accent-navy-preview: oklch(51% 0.064 269);
+    --workspace-accent-midnight-preview: oklch(42% 0.030 268);
+}
+
+/* Publii appearance: light color scheme */
+html[data-theme="default"]:not([data-app-appearance]),
+html[data-app-appearance="publii"][data-color-scheme="light"] {
+
+    /* Private primitive palettes; components consume semantic roles below. */
+    --palette-brand-5: oklch(98% 0.008 237);
+    --palette-brand-10: oklch(93% 0.031 244);
+    --palette-brand-15: oklch(91% 0.045 243);
+    --palette-brand-25: oklch(83% 0.082 243);
+    --palette-brand-30: oklch(80% 0.100 245);
+    --palette-brand-40: oklch(73% 0.135 246);
+    --palette-brand-50: oklch(67% 0.165 249);
+    --palette-brand-55: oklch(63% 0.182 251);
+    --palette-brand-60: oklch(58% 0.165 251);
+    --palette-brand-65: oklch(52% 0.148 251);
+    --palette-brand-70: oklch(46% 0.129 251);
+    --palette-brand-75: oklch(40% 0.110 250);
+    --palette-brand-90: oklch(21% 0.047 244);
+
+    --palette-neutral-5: oklch(97% 0.004 286);
+    --palette-neutral-10: oklch(93% 0.003 265);
+    --palette-neutral-15: oklch(88% 0.006 275);
+    --palette-neutral-20: oklch(84% 0.007 269);
+    --palette-neutral-25: oklch(79% 0.010 273);
+    --palette-neutral-30: oklch(74% 0.013 276);
+    --palette-neutral-35: oklch(69% 0.015 268);
+    --palette-neutral-40: oklch(63% 0.019 271);
+    --palette-neutral-45: oklch(58% 0.021 269);
+    --palette-neutral-50: oklch(53% 0.019 271);
+    --palette-neutral-55: oklch(49% 0.017 268);
+    --palette-neutral-60: oklch(45% 0.017 272);
+    --palette-neutral-65: oklch(41% 0.014 269);
+    --palette-neutral-70: oklch(37% 0.013 267);
+    --palette-neutral-75: oklch(32% 0.011 271);
+    --palette-neutral-80: oklch(28% 0.008 264);
+
+    /* Semantic foundations */
+    --color-primary: var(--palette-brand-55);
+    --color-surface-subtle: var(--palette-neutral-5);
+    --color-surface-notice: var(--palette-neutral-10);
+    --color-surface-strong: var(--palette-neutral-50);
+    --color-border-subtle: var(--palette-neutral-5);
+    --color-border-default: var(--palette-neutral-15);
+    --color-border-muted: var(--palette-neutral-10);
+    --color-border-emphasis: var(--palette-neutral-55);
+    --color-border-strong: var(--palette-neutral-50);
+    --color-text-faint: var(--palette-neutral-15);
+    --color-text-subtle: var(--palette-neutral-55);
+    --color-text-muted: var(--palette-neutral-50);
+    --color-icon-faint: var(--palette-neutral-5);
+    --color-icon-muted: var(--palette-neutral-50);
+    --color-control-surface-hover: var(--palette-neutral-10);
+    --color-control-border-hover: var(--palette-neutral-55);
+
+    --color-danger: oklch(59% 0.234 29);
+    --color-success: oklch(70% 0.148 154);
+    --color-warning: oklch(82% 0.167 86);
+    --color-highlight: oklch(85% 0.174 87);
+    --color-highlight-surface: oklch(98% 0.031 93);
+    --shadow-color: oklch(39% 0.018 245 / 25%);
+    --shadow-sm: 0 0 1px oklch(from var(--black) l c h / 6%), 0 2px 6px oklch(from var(--black) l c h / 3%);
+    --shadow-md: 0 2px 6px oklch(from var(--black) l c h / 15%);
+    --shadow-list-hover: 0 0 26px oklch(from var(--black) l c h / 7%);
+
+    --overlay: oklch(from var(--black) l c h / 35%);
+
+    --icon-primary-color: var(--palette-neutral-70);
+    --icon-secondary-color: var(--palette-neutral-55);
+    --icon-tertiary-color:  var(--palette-neutral-70);
+    --icon-quaternary-color: var(--palette-brand-30);
+
+    --bg-primary: var(--white);
+    --bg-secondary: var(--white);
+    --bg-site: var(--palette-neutral-5);
+
+    --border-light-color: var(--palette-neutral-10);
+
+    /* Form controls */
+    --input-bg: var(--white);
+    --input-border-dark: var(--palette-neutral-20);
+    --input-bg-light: var(--color-surface-subtle);
+    --input-bg-lightest: var(--white);
+    --input-border-color: var(--color-border-default);
+    --input-border-focus: var(--palette-brand-55);
+    --input-data-time-popup: light;
+
+    /* Buttons */
+    --button-primary-bg: var(--palette-brand-55);
+    --button-primary-bg-hover: var(--palette-brand-60);
+    --button-secondary-bg: var(--palette-brand-10);
+    --button-secondary-bg-hover: var(--palette-brand-15);
+    --button-secondary-color: var(--palette-brand-65);
+    --button-secondary-color-hover: var(--palette-brand-70);
+    --button-danger-bg: var(--color-danger);
+    --button-danger-bg-hover: #cd1613;
+
+    /* Content */
+    --text-primary-color: var(--palette-neutral-75);
+    --text-light-color: var(--palette-neutral-50);
+    --text-lightest-color: var(--palette-neutral-45);
+    --headings-color: var(--palette-brand-90);
+    --label-color: var(--palette-brand-90);
+
+    --link-primary-color: var(--palette-brand-65);
+    --link-primary-color-hover: var(--palette-brand-90);
+    --link-invert-color: var(--palette-brand-65);
+    --link-invert-color-hover: var(--palette-brand-90);
+
+    /* Collections */
+    --collection-bg: var(--white);
+    --collection-bg-hover: var(--palette-brand-5);
+
+    /* Site sidebar */
+    --sidebar-bg-top: var(--palette-brand-60);
+    --sidebar-bg-bottom: var(--palette-brand-55);
+    --sidebar-link-color: var(--white);
+    --sidebar-link-color-hover: var(--white);
+    --sidebar-link-color-active: var(--white);
+    --sidebar-link-bg-hover: oklch(from var(--white) l c h / 14%);
+    --sidebar-link-bg-active: oklch(from var(--white) l c h / 14%);
+    --sidebar-link-opacity: .85;
+    --sidebar-link-icon: var(--white);
+    --sidebar-link-icon-hover: var(--white);
+    --sidebar-sync-btn-bg: oklch(from var(--white) l c h / 20%);
+    --sidebar-sync-btn-color: var(--white);
+    --sidebar-preview-btn-color: var(--white);
+    --sidebar-preview-btn-color-hover: var(--white);
+    --sidebar-preview-btn-border-color: oklch(from var(--white) l c h / 40%);
+    --sidebar-preview-btn-border-color-hover: var(--white);
+
+    --sidebar-icon: var(--white);
+
+    --option-sidebar-bg: var(--white);
+
+    /* Tabs */
+    --tab-color: var(--palette-brand-90);
+    --tab-color-hover: var(--palette-brand-65);
+    --tab-active-bg: var(--palette-brand-10);
+    --tab-active-color: var(--palette-brand-65);
+    --tab-parent-active-bg: var(--palette-brand-5);
+
+    /* Application chrome */
+    --scrollbar: var(--palette-neutral-10);
+    --scrollbar-hover: var(--palette-neutral-15);
+
+    --top-app-bar: var(--palette-neutral-15);
+
+    /* Popups */
+    --popup-bg: var(--white);
+    --popup-btn-cancel-color: var(--palette-neutral-50);
+    --popup-btn-cancel-hover-color: var(--palette-neutral-65);
+    --popup-btn-cancel-bg: var(--white);
+    --popup-btn-cancel-bg-hover: var(--palette-neutral-5);
+
+    /* Editor compatibility */
+    --pre-bg: var(--palette-neutral-80);
+    --pre-bg-hover: var(--palette-neutral-80);
+    --pre-color: var(--palette-neutral-5);
+
+    --code-1: #708;
+    --code-2: #219;
+    --code-3: #164;
+    --code-4: #00f;
+    --code-5: #05a;
+    --code-6: #085;
+    --code-7: #a50;
+    --code-8: #a11;
+    --code-9: #f50;
+    --code-10: #555;
+    --code-11: #30a;
+    --code-12: #170;
+    --code-14: #00c;
+    --code-15: #999;
+    --code-16: #f00;
+    --code-17: #292;
+    --code-18: #090;
+    --code-19: #997;
+    --code-20: #d7d4f0;
+    --code-21: #000;
+
+    --text-selection-color: #b6d8fd;
+}
+
+/* Publii appearance: dark color scheme */
+html[data-theme="dark"]:not([data-app-appearance]),
+html[data-app-appearance="publii"][data-color-scheme="dark"] {
+
+    /* Private primitive palettes; components consume semantic roles below. */
+    --palette-brand-5: oklch(98% 0.011 244);
+    --palette-brand-10: oklch(93% 0.033 248);
+    --palette-brand-15: oklch(89% 0.055 249);
+    --palette-brand-25: oklch(81% 0.100 249);
+    --palette-brand-30: oklch(77% 0.122 249);
+    --palette-brand-40: oklch(69% 0.165 252);
+    --palette-brand-50: oklch(64% 0.199 254);
+    --palette-brand-55: oklch(59% 0.203 256);
+    --palette-brand-60: oklch(54% 0.183 256);
+    --palette-brand-65: oklch(49% 0.164 256);
+    --palette-brand-70: oklch(43% 0.143 255);
+    --palette-brand-75: oklch(38% 0.123 255);
+    --palette-brand-90: oklch(19% 0.054 249);
+
+    --palette-neutral-5: oklch(96% 0.004 286);
+    --palette-neutral-10: oklch(89% 0.010 286);
+    --palette-neutral-15: oklch(81% 0.017 282);
+    --palette-neutral-20: oklch(73% 0.023 280);
+    --palette-neutral-25: oklch(65% 0.031 281);
+    --palette-neutral-30: oklch(57% 0.039 280);
+    --palette-neutral-35: oklch(49% 0.032 278);
+    --palette-neutral-40: oklch(42% 0.027 280);
+    --palette-neutral-45: oklch(35% 0.023 282);
+    --palette-neutral-46: oklch(33% 0.021 281);
+    --palette-neutral-48: oklch(29% 0.016 280);
+    --palette-neutral-49: oklch(27% 0.015 280);
+    --palette-neutral-50: oklch(25% 0.013 279);
+    --palette-neutral-55: oklch(23% 0.012 278);
+    --palette-neutral-60: oklch(22% 0.010 277);
+    --palette-neutral-65: oklch(20% 0.010 285);
+    --palette-neutral-70: oklch(19% 0.008 274);
+    --palette-neutral-75: oklch(17% 0.008 285);
+    --palette-neutral-80: oklch(16% 0.006 286);
+
+    /* Semantic foundations */
+    --color-primary: var(--palette-brand-50);
+
+    --color-surface-subtle: var(--palette-neutral-48);
+    --color-surface-notice: var(--palette-neutral-45);
+    --color-surface-strong: var(--palette-neutral-35);
+    --color-border-subtle: var(--palette-neutral-48);
+    --color-border-default: var(--palette-neutral-45);
+    --color-border-muted: var(--palette-neutral-45);
+    --color-border-emphasis: var(--palette-neutral-20);
+    --color-border-strong: var(--palette-neutral-35);
+    --color-text-faint: var(--palette-neutral-45);
+    --color-text-subtle: var(--palette-neutral-20);
+    --color-text-muted: var(--palette-neutral-35);
+    --color-icon-faint: var(--palette-neutral-48);
+    --color-icon-muted: var(--palette-neutral-35);
+    --color-control-surface-hover: var(--palette-neutral-45);
+    --color-control-border-hover: var(--palette-neutral-20);
+
+    --color-danger: oklch(67% 0.217 25);
+    --color-success: oklch(66% 0.193 135);
+    --color-warning: oklch(82% 0.167 86);
+    --color-highlight: oklch(85% 0.174 87);
+    --color-highlight-surface: oklch(33% 0.019 281);
+    --shadow-color: oklch(25% 0.014 267 / 25%);
+    --shadow-sm: 0 2px 6px rgb(23 25 31);
+    --shadow-md: 0 2px 6px rgb(23 25 31);
+    --shadow-list-hover: 0 0 26px oklch(from var(--black) l c h / 7%);
+
+    --overlay: rgba(28,29,35, .85);
+
+    --icon-primary-color: var(--palette-neutral-20);
+    --icon-secondary-color: var(--palette-neutral-25);
+    --icon-tertiary-color: var(--palette-neutral-10);
+    --icon-quaternary-color: var(--palette-neutral-30);
+
+    --bg-primary: var(--palette-neutral-60);
+    --bg-secondary: var(--palette-neutral-50);
+    --bg-site: var(--palette-neutral-60);
+
+    --border-light-color: var(--palette-neutral-48);
+
+    /* Form controls */
+    --input-bg: var(--palette-neutral-55);
+    --input-border-dark: var(--palette-neutral-40);
+    --input-bg-light: var(--color-surface-subtle);
+    --input-bg-lightest: var(--palette-neutral-49);
+    --input-border-color: var(--color-border-default);
+    --input-border-focus: var(--palette-brand-50);
+    --input-data-time-popup: dark;
+
+    /* Buttons */
+    --button-primary-bg: var(--palette-brand-50);
+    --button-primary-bg-hover: var(--palette-brand-55);
+    --button-secondary-bg: var(--palette-brand-75);
+    --button-secondary-bg-hover: var(--palette-brand-70);
+    --button-secondary-color: var(--palette-brand-25);
+    --button-secondary-color-hover: var(--palette-brand-15);
+    --button-danger-bg: #ed0001;
+    --button-danger-bg-hover: #a90001;
+
+    /* Content */
+    --text-primary-color: var(--palette-neutral-20);
+    --text-light-color: var(--palette-neutral-25);
+    --text-lightest-color: var(--palette-neutral-35);
+    --headings-color: var(--palette-neutral-5);
+    --label-color: var(--palette-neutral-15);
+
+    --link-primary-color: var(--palette-brand-40);
+    --link-primary-color-hover: var(--palette-neutral-10);
+    --link-invert-color: var(--palette-neutral-10);
+    --link-invert-color-hover: var(--palette-brand-40);
+
+    /* Collections */
+    --collection-bg: var(--palette-neutral-55);
+    --collection-bg-hover: var(--palette-neutral-50);
+
+    /* Site sidebar */
+    --sidebar-bg-top: var(--palette-neutral-65);
+    --sidebar-bg-bottom: var(--palette-neutral-60);
+    --sidebar-link-color: var(--palette-neutral-15);
+    --sidebar-link-color-hover: var(--palette-neutral-10);
+    --sidebar-link-color-active: var(--palette-neutral-10);
+    --sidebar-link-bg-hover: var(--palette-neutral-55);
+    --sidebar-link-bg-active: var(--palette-neutral-49);
+    --sidebar-link-opacity: 1;
+    --sidebar-link-icon: var(--palette-neutral-20);
+    --sidebar-link-icon-hover: var(--white);
+    --sidebar-sync-btn-bg: var(--palette-brand-50);
+    --sidebar-sync-btn-color: var(--palette-neutral-5);
+    --sidebar-preview-btn-color: var(--palette-neutral-5);
+    --sidebar-preview-btn-color-hover: var(--white);
+    --sidebar-preview-btn-border-color: var(--palette-neutral-45);
+    --sidebar-preview-btn-border-color-hover: var(--palette-neutral-20);
+
+    --sidebar-icon: var(--palette-neutral-5);
+
+    --option-sidebar-bg: var(--palette-neutral-50);
+
+    /* Tabs */
+    --tab-color: var(--palette-neutral-15);
+    --tab-color-hover: var(--palette-neutral-10);
+    --tab-active-bg: var(--palette-neutral-48);
+    --tab-active-color: var(--palette-neutral-10);
+    --tab-parent-active-bg: transparent;
+
+    /* Application chrome */
+    --scrollbar: var(--palette-neutral-48);
+    --scrollbar-hover: var(--palette-neutral-46);
+
+    --top-app-bar: var(--palette-neutral-49);
+
+    /* Popups */
+    --popup-bg: var(--palette-neutral-49);
+    --popup-btn-cancel-color: var(--palette-neutral-20);
+    --popup-btn-cancel-hover-color: var(--palette-neutral-5);
+    --popup-btn-cancel-bg: var(--palette-neutral-49);
+    --popup-btn-cancel-bg-hover: #343540;
+
+    /* Editor compatibility */
+    --pre-bg: var(--palette-neutral-49);
+    --pre-bg-hover: var(--palette-neutral-60);
+    --pre-color: var(--palette-neutral-5);
+
+    --code-1: #f2777a;
+    --code-2: #DC7EED;
+    --code-3: #DC7EED;
+    --code-4: #f99157;
+    --code-5: #8ED892;
+    --code-6: #95BDF8;
+    --code-7: #bd8064;
+    --code-8: #ffcc66;
+    --code-9: #f50;
+    --code-10: #8e929d;
+    --code-11: #2e98ff;
+    --code-12: #f2777a;
+    --code-14: #DC7EED;
+    --code-15: #999;
+    --code-16: #fff;
+    --code-17: #292;
+    --code-18: #090;
+    --code-19: #CCCCCC;
+    --code-20: #272831;
+    --code-21: #f2777a;
+
+    --text-selection-color: #94b6db;
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="default"] {
+    --workspace-accent-preview: var(--workspace-accent-default-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="indigo"] {
+    --workspace-accent-preview: var(--workspace-accent-indigo-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="violet"] {
+    --workspace-accent-preview: var(--workspace-accent-violet-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="magenta"] {
+    --workspace-accent-preview: var(--workspace-accent-magenta-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="crimson"] {
+    --workspace-accent-preview: var(--workspace-accent-crimson-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="rose"] {
+    --workspace-accent-preview: var(--workspace-accent-rose-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="orange"] {
+    --workspace-accent-preview: var(--workspace-accent-orange-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="emerald"] {
+    --workspace-accent-preview: var(--workspace-accent-emerald-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="petrol"] {
+    --workspace-accent-preview: var(--workspace-accent-petrol-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="graphite"] {
+    --workspace-accent-preview: var(--workspace-accent-graphite-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="navy"] {
+    --workspace-accent-preview: var(--workspace-accent-navy-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+html[data-app-appearance="publii"] [data-workspace-accent-preview="midnight"] {
+    --workspace-accent-preview: var(--workspace-accent-midnight-preview);
+    --workspace-accent-preview-check: var(--white);
+}
+
+/* Publii workspace accent: indigo light */
+html[data-app-appearance="publii"][data-workspace-accent="indigo"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.008 275);
+    --palette-brand-10: oklch(93% 0.031 275);
+    --palette-brand-15: oklch(90% 0.045 275);
+    --palette-brand-25: oklch(82% 0.083 275);
+    --palette-brand-30: oklch(78% 0.103 275);
+    --palette-brand-40: oklch(70% 0.145 275);
+    --palette-brand-50: oklch(62% 0.190 275);
+    --palette-brand-55: oklch(57% 0.205 275);
+    --palette-brand-60: oklch(52% 0.189 275);
+    --palette-brand-65: oklch(47% 0.168 275);
+    --palette-brand-70: oklch(42% 0.148 275);
+    --palette-brand-75: oklch(36% 0.123 275);
+    --palette-brand-90: oklch(19% 0.057 275);
+}
+
+/* Publii workspace accent: indigo dark */
+html[data-app-appearance="publii"][data-workspace-accent="indigo"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.012 275);
+    --palette-brand-10: oklch(92% 0.035 275);
+    --palette-brand-15: oklch(88% 0.054 275);
+    --palette-brand-25: oklch(80% 0.093 275);
+    --palette-brand-30: oklch(76% 0.113 275);
+    --palette-brand-40: oklch(69% 0.150 275);
+    --palette-brand-50: oklch(55% 0.205 275);
+    --palette-brand-55: oklch(50% 0.193 275);
+    --palette-brand-60: oklch(46% 0.176 275);
+    --palette-brand-65: oklch(42% 0.158 275);
+    --palette-brand-70: oklch(37% 0.139 275);
+    --palette-brand-75: oklch(32% 0.119 275);
+    --palette-brand-90: oklch(18% 0.061 275);
+}
+
+/* Publii workspace accent: violet light */
+html[data-app-appearance="publii"][data-workspace-accent="violet"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.010 300);
+    --palette-brand-10: oklch(93% 0.034 300);
+    --palette-brand-15: oklch(90% 0.051 300);
+    --palette-brand-25: oklch(82% 0.093 300);
+    --palette-brand-30: oklch(78% 0.118 300);
+    --palette-brand-40: oklch(70% 0.164 300);
+    --palette-brand-50: oklch(63% 0.205 300);
+    --palette-brand-55: oklch(59% 0.220 300);
+    --palette-brand-60: oklch(54% 0.205 300);
+    --palette-brand-65: oklch(49% 0.185 300);
+    --palette-brand-70: oklch(44% 0.164 300);
+    --palette-brand-75: oklch(38% 0.139 300);
+    --palette-brand-90: oklch(20% 0.065 300);
+}
+
+/* Publii workspace accent: violet dark */
+html[data-app-appearance="publii"][data-workspace-accent="violet"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.015 300);
+    --palette-brand-10: oklch(92% 0.041 300);
+    --palette-brand-15: oklch(88% 0.064 300);
+    --palette-brand-25: oklch(80% 0.112 300);
+    --palette-brand-30: oklch(76% 0.136 300);
+    --palette-brand-40: oklch(69% 0.181 300);
+    --palette-brand-50: oklch(56% 0.220 300);
+    --palette-brand-55: oklch(51% 0.208 300);
+    --palette-brand-60: oklch(47% 0.190 300);
+    --palette-brand-65: oklch(44% 0.171 300);
+    --palette-brand-70: oklch(39% 0.151 300);
+    --palette-brand-75: oklch(34% 0.130 300);
+    --palette-brand-90: oklch(19% 0.070 300);
+}
+
+/* Publii workspace accent: magenta light */
+html[data-app-appearance="publii"][data-workspace-accent="magenta"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.009 330);
+    --palette-brand-10: oklch(93% 0.032 330);
+    --palette-brand-15: oklch(90% 0.049 330);
+    --palette-brand-25: oklch(82% 0.097 330);
+    --palette-brand-30: oklch(78% 0.123 330);
+    --palette-brand-40: oklch(70% 0.168 330);
+    --palette-brand-50: oklch(62% 0.202 330);
+    --palette-brand-55: oklch(57% 0.215 330);
+    --palette-brand-60: oklch(52% 0.198 330);
+    --palette-brand-65: oklch(47% 0.176 330);
+    --palette-brand-70: oklch(42% 0.155 330);
+    --palette-brand-75: oklch(36% 0.129 330);
+    --palette-brand-90: oklch(19% 0.060 330);
+}
+
+/* Publii workspace accent: magenta dark */
+html[data-app-appearance="publii"][data-workspace-accent="magenta"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.013 330);
+    --palette-brand-10: oklch(92% 0.039 330);
+    --palette-brand-15: oklch(88% 0.065 330);
+    --palette-brand-25: oklch(80% 0.112 330);
+    --palette-brand-30: oklch(76% 0.138 330);
+    --palette-brand-40: oklch(69% 0.185 330);
+    --palette-brand-50: oklch(56% 0.215 330);
+    --palette-brand-55: oklch(51% 0.202 330);
+    --palette-brand-60: oklch(46% 0.185 330);
+    --palette-brand-65: oklch(42% 0.166 330);
+    --palette-brand-70: oklch(37% 0.146 330);
+    --palette-brand-75: oklch(32% 0.125 330);
+    --palette-brand-90: oklch(18% 0.065 330);
+}
+
+/* Publii workspace accent: crimson light */
+html[data-app-appearance="publii"][data-workspace-accent="crimson"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.008 355);
+    --palette-brand-10: oklch(93% 0.031 355);
+    --palette-brand-15: oklch(90% 0.047 355);
+    --palette-brand-25: oklch(82% 0.092 355);
+    --palette-brand-30: oklch(78% 0.117 355);
+    --palette-brand-40: oklch(70% 0.160 355);
+    --palette-brand-50: oklch(61% 0.193 355);
+    --palette-brand-55: oklch(56% 0.205 355);
+    --palette-brand-60: oklch(51% 0.188 355);
+    --palette-brand-65: oklch(46% 0.168 355);
+    --palette-brand-70: oklch(41% 0.148 355);
+    --palette-brand-75: oklch(35% 0.123 355);
+    --palette-brand-90: oklch(19% 0.057 355);
+}
+
+/* Publii workspace accent: crimson dark */
+html[data-app-appearance="publii"][data-workspace-accent="crimson"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.012 355);
+    --palette-brand-10: oklch(92% 0.037 355);
+    --palette-brand-15: oklch(88% 0.059 355);
+    --palette-brand-25: oklch(80% 0.106 355);
+    --palette-brand-30: oklch(76% 0.131 355);
+    --palette-brand-40: oklch(69% 0.176 355);
+    --palette-brand-50: oklch(55% 0.205 355);
+    --palette-brand-55: oklch(50% 0.188 355);
+    --palette-brand-60: oklch(45% 0.169 355);
+    --palette-brand-65: oklch(40% 0.151 355);
+    --palette-brand-70: oklch(35% 0.132 355);
+    --palette-brand-75: oklch(30% 0.114 355);
+    --palette-brand-90: oklch(18% 0.061 355);
+}
+
+/* Publii workspace accent: rose light */
+html[data-app-appearance="publii"][data-workspace-accent="rose"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.008 15);
+    --palette-brand-10: oklch(93% 0.031 15);
+    --palette-brand-15: oklch(90% 0.047 15);
+    --palette-brand-25: oklch(82% 0.092 15);
+    --palette-brand-30: oklch(78% 0.117 15);
+    --palette-brand-40: oklch(70% 0.160 15);
+    --palette-brand-50: oklch(61% 0.193 15);
+    --palette-brand-55: oklch(56% 0.205 15);
+    --palette-brand-60: oklch(51% 0.188 15);
+    --palette-brand-65: oklch(46% 0.168 15);
+    --palette-brand-70: oklch(41% 0.148 15);
+    --palette-brand-75: oklch(35% 0.123 15);
+    --palette-brand-90: oklch(19% 0.057 15);
+}
+
+/* Publii workspace accent: rose dark */
+html[data-app-appearance="publii"][data-workspace-accent="rose"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.012 15);
+    --palette-brand-10: oklch(92% 0.037 15);
+    --palette-brand-15: oklch(88% 0.059 15);
+    --palette-brand-25: oklch(80% 0.106 15);
+    --palette-brand-30: oklch(76% 0.131 15);
+    --palette-brand-40: oklch(69% 0.176 15);
+    --palette-brand-50: oklch(56% 0.205 15);
+    --palette-brand-55: oklch(51% 0.188 15);
+    --palette-brand-60: oklch(46% 0.169 15);
+    --palette-brand-65: oklch(41% 0.151 15);
+    --palette-brand-70: oklch(36% 0.132 15);
+    --palette-brand-75: oklch(31% 0.114 15);
+    --palette-brand-90: oklch(18% 0.061 15);
+}
+
+/* Publii workspace accent: orange light */
+html[data-app-appearance="publii"][data-workspace-accent="orange"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.006 45);
+    --palette-brand-10: oklch(93% 0.023 45);
+    --palette-brand-15: oklch(90% 0.036 45);
+    --palette-brand-25: oklch(82% 0.070 45);
+    --palette-brand-30: oklch(78% 0.088 45);
+    --palette-brand-40: oklch(70% 0.121 45);
+    --palette-brand-50: oklch(62% 0.146 45);
+    --palette-brand-55: oklch(57% 0.150 45);
+    --palette-brand-60: oklch(52% 0.137 45);
+    --palette-brand-65: oklch(47% 0.124 45);
+    --palette-brand-70: oklch(42% 0.110 45);
+    --palette-brand-75: oklch(36% 0.093 45);
+    --palette-brand-90: oklch(19% 0.043 45);
+}
+
+/* Publii workspace accent: orange dark */
+html[data-app-appearance="publii"][data-workspace-accent="orange"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.009 45);
+    --palette-brand-10: oklch(92% 0.028 45);
+    --palette-brand-15: oklch(88% 0.046 45);
+    --palette-brand-25: oklch(80% 0.081 45);
+    --palette-brand-30: oklch(76% 0.099 45);
+    --palette-brand-40: oklch(69% 0.133 45);
+    --palette-brand-50: oklch(55% 0.150 45);
+    --palette-brand-55: oklch(50% 0.137 45);
+    --palette-brand-60: oklch(46% 0.124 45);
+    --palette-brand-65: oklch(42% 0.110 45);
+    --palette-brand-70: oklch(37% 0.097 45);
+    --palette-brand-75: oklch(32% 0.084 45);
+    --palette-brand-90: oklch(18% 0.046 45);
+}
+
+/* Publii workspace accent: emerald light */
+html[data-app-appearance="publii"][data-workspace-accent="emerald"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.005 155);
+    --palette-brand-10: oklch(93% 0.019 155);
+    --palette-brand-15: oklch(89% 0.030 155);
+    --palette-brand-25: oklch(80% 0.057 155);
+    --palette-brand-30: oklch(76% 0.071 155);
+    --palette-brand-40: oklch(68% 0.098 155);
+    --palette-brand-50: oklch(57% 0.118 155);
+    --palette-brand-55: oklch(52% 0.125 155);
+    --palette-brand-60: oklch(48% 0.116 155);
+    --palette-brand-65: oklch(43% 0.104 155);
+    --palette-brand-70: oklch(39% 0.092 155);
+    --palette-brand-75: oklch(33% 0.077 155);
+    --palette-brand-90: oklch(18% 0.036 155);
+}
+
+/* Publii workspace accent: emerald dark */
+html[data-app-appearance="publii"][data-workspace-accent="emerald"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.007 155);
+    --palette-brand-10: oklch(92% 0.023 155);
+    --palette-brand-15: oklch(88% 0.037 155);
+    --palette-brand-25: oklch(80% 0.066 155);
+    --palette-brand-30: oklch(76% 0.081 155);
+    --palette-brand-40: oklch(68% 0.108 155);
+    --palette-brand-50: oklch(51% 0.120 155);
+    --palette-brand-55: oklch(46% 0.112 155);
+    --palette-brand-60: oklch(42% 0.101 155);
+    --palette-brand-65: oklch(38% 0.090 155);
+    --palette-brand-70: oklch(34% 0.079 155);
+    --palette-brand-75: oklch(29% 0.068 155);
+    --palette-brand-90: oklch(17% 0.036 155);
+}
+
+/* Publii workspace accent: petrol light */
+html[data-app-appearance="publii"][data-workspace-accent="petrol"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.004 205);
+    --palette-brand-10: oklch(93% 0.013 205);
+    --palette-brand-15: oklch(89% 0.021 205);
+    --palette-brand-25: oklch(80% 0.039 205);
+    --palette-brand-30: oklch(75% 0.049 205);
+    --palette-brand-40: oklch(64% 0.066 205);
+    --palette-brand-50: oklch(53% 0.073 205);
+    --palette-brand-55: oklch(48% 0.075 205);
+    --palette-brand-60: oklch(44% 0.069 205);
+    --palette-brand-65: oklch(40% 0.062 205);
+    --palette-brand-70: oklch(36% 0.055 205);
+    --palette-brand-75: oklch(31% 0.046 205);
+    --palette-brand-90: oklch(17% 0.022 205);
+}
+
+/* Publii workspace accent: petrol dark */
+html[data-app-appearance="publii"][data-workspace-accent="petrol"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.005 205);
+    --palette-brand-10: oklch(92% 0.016 205);
+    --palette-brand-15: oklch(88% 0.026 205);
+    --palette-brand-25: oklch(80% 0.046 205);
+    --palette-brand-30: oklch(76% 0.057 205);
+    --palette-brand-40: oklch(68% 0.075 205);
+    --palette-brand-50: oklch(52% 0.080 205);
+    --palette-brand-55: oklch(47% 0.073 205);
+    --palette-brand-60: oklch(42% 0.066 205);
+    --palette-brand-65: oklch(38% 0.059 205);
+    --palette-brand-70: oklch(34% 0.052 205);
+    --palette-brand-75: oklch(29% 0.045 205);
+    --palette-brand-90: oklch(17% 0.024 205);
+}
+
+/* Publii workspace accent: graphite light */
+html[data-app-appearance="publii"][data-workspace-accent="graphite"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.002 265);
+    --palette-brand-10: oklch(93% 0.005 265);
+    --palette-brand-15: oklch(88% 0.008 265);
+    --palette-brand-25: oklch(80% 0.012 265);
+    --palette-brand-30: oklch(75% 0.015 265);
+    --palette-brand-40: oklch(66% 0.019 265);
+    --palette-brand-50: oklch(53% 0.023 265);
+    --palette-brand-55: oklch(47% 0.025 265);
+    --palette-brand-60: oklch(43% 0.023 265);
+    --palette-brand-65: oklch(39% 0.021 265);
+    --palette-brand-70: oklch(35% 0.019 265);
+    --palette-brand-75: oklch(30% 0.016 265);
+    --palette-brand-90: oklch(18% 0.008 265);
+}
+
+/* Publii workspace accent: graphite dark */
+html[data-app-appearance="publii"][data-workspace-accent="graphite"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.003 265);
+    --palette-brand-10: oklch(92% 0.007 265);
+    --palette-brand-15: oklch(87% 0.010 265);
+    --palette-brand-25: oklch(78% 0.015 265);
+    --palette-brand-30: oklch(73% 0.018 265);
+    --palette-brand-40: oklch(64% 0.022 265);
+    --palette-brand-50: oklch(52% 0.025 265);
+    --palette-brand-55: oklch(47% 0.023 265);
+    --palette-brand-60: oklch(42% 0.021 265);
+    --palette-brand-65: oklch(38% 0.019 265);
+    --palette-brand-70: oklch(34% 0.017 265);
+    --palette-brand-75: oklch(29% 0.014 265);
+    --palette-brand-90: oklch(17% 0.008 265);
+}
+
+/* Publii workspace accent: navy light */
+html[data-app-appearance="publii"][data-workspace-accent="navy"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.003 269);
+    --palette-brand-10: oklch(93% 0.010 269);
+    --palette-brand-15: oklch(89% 0.016 269);
+    --palette-brand-25: oklch(80% 0.029 269);
+    --palette-brand-30: oklch(75% 0.036 269);
+    --palette-brand-40: oklch(66% 0.049 269);
+    --palette-brand-50: oklch(56% 0.060 269);
+    --palette-brand-55: oklch(51% 0.064 269);
+    --palette-brand-60: oklch(46% 0.060 269);
+    --palette-brand-65: oklch(42% 0.054 269);
+    --palette-brand-70: oklch(38% 0.048 269);
+    --palette-brand-75: oklch(33% 0.040 269);
+    --palette-brand-90: oklch(18% 0.019 269);
+}
+
+/* Publii workspace accent: navy dark */
+html[data-app-appearance="publii"][data-workspace-accent="navy"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.004 269);
+    --palette-brand-10: oklch(92% 0.012 269);
+    --palette-brand-15: oklch(88% 0.020 269);
+    --palette-brand-25: oklch(80% 0.035 269);
+    --palette-brand-30: oklch(76% 0.043 269);
+    --palette-brand-40: oklch(68% 0.058 269);
+    --palette-brand-50: oklch(52% 0.066 269);
+    --palette-brand-55: oklch(48% 0.062 269);
+    --palette-brand-60: oklch(43% 0.056 269);
+    --palette-brand-65: oklch(39% 0.050 269);
+    --palette-brand-70: oklch(35% 0.044 269);
+    --palette-brand-75: oklch(30% 0.038 269);
+    --palette-brand-90: oklch(17% 0.020 269);
+}
+
+/* Publii workspace accent: midnight light */
+html[data-app-appearance="publii"][data-workspace-accent="midnight"][data-color-scheme="light"] {
+    --palette-brand-5: oklch(98% 0.002 268);
+    --palette-brand-10: oklch(93% 0.006 268);
+    --palette-brand-15: oklch(88% 0.010 268);
+    --palette-brand-25: oklch(79% 0.018 268);
+    --palette-brand-30: oklch(72% 0.022 268);
+    --palette-brand-40: oklch(61% 0.027 268);
+    --palette-brand-50: oklch(51% 0.029 268);
+    --palette-brand-55: oklch(42% 0.030 268);
+    --palette-brand-60: oklch(30% 0.030 268);
+    --palette-brand-65: oklch(27% 0.027 268);
+    --palette-brand-70: oklch(24% 0.024 268);
+    --palette-brand-75: oklch(21% 0.020 268);
+    --palette-brand-90: oklch(13% 0.010 268);
+}
+
+/* Publii workspace accent: midnight dark */
+html[data-app-appearance="publii"][data-workspace-accent="midnight"][data-color-scheme="dark"] {
+    --palette-brand-5: oklch(97% 0.003 268);
+    --palette-brand-10: oklch(92% 0.008 268);
+    --palette-brand-15: oklch(88% 0.012 268);
+    --palette-brand-25: oklch(79% 0.022 268);
+    --palette-brand-30: oklch(73% 0.027 268);
+    --palette-brand-40: oklch(65% 0.035 268);
+    --palette-brand-50: oklch(52% 0.045 268);
+    --palette-brand-55: oklch(47% 0.043 268);
+    --palette-brand-60: oklch(44% 0.041 268);
+    --palette-brand-65: oklch(41% 0.039 268);
+    --palette-brand-70: oklch(38% 0.037 268);
+    --palette-brand-75: oklch(34% 0.035 268);
+    --palette-brand-90: oklch(15% 0.013 268);
+}

@@ -9,7 +9,8 @@ The current normalization covers the main application renderer and shared visual
 | Concern | Source |
 | --- | --- |
 | Visual rules and accepted design decisions | [`DESIGN.md`](./DESIGN.md) |
-| CSS tokens and light/dark values | [`app/src/css/css-variables.css`](./app/src/css/css-variables.css) |
+| Technical CSS foundations | [`app/src/css/css-variables.css`](./app/src/css/css-variables.css) |
+| Complete application appearances | [`app/src/css/appearances/`](./app/src/css/appearances/) |
 | Shared component implementations and prop validators | [`app/src/components/basic-elements/`](./app/src/components/basic-elements/) |
 | Globally registered component names | [`app/src/main.js`](./app/src/main.js) |
 | Application appearance runtime | [`app/src/helpers/app-appearance.js`](./app/src/helpers/app-appearance.js) |
@@ -22,15 +23,15 @@ When this guide and a component disagree, treat the component's validated props 
 
 1. Reuse a shared component before adding view-local controls or classes.
 2. Express component meaning through props. Do not pass space-delimited class names as a variant API.
-3. Use semantic CSS tokens in components. Do not consume private `--palette-*` variables outside `css-variables.css`.
-4. Preserve the same semantic token names in light and dark schemes. Each scheme owns its literal values.
+3. Use semantic CSS tokens in components. Do not consume private `--palette-*` variables outside an appearance file.
+4. Preserve the same semantic token names in every application appearance and its light and dark schemes. Each scheme owns its literal values.
 5. Keep one-off optical corrections and structural dimensions local. Do not create a global token for every number.
-6. Do not change `data-theme`, `data-app-appearance`, or `data-color-scheme` directly from a component.
+6. Do not change `data-theme`, `data-app-appearance`, `data-color-scheme`, or `data-workspace-accent` directly from a component.
 7. Run the design-system audit before committing renderer UI changes.
 
 ## Using CSS tokens
 
-All application tokens are defined in `app/src/css/css-variables.css` and loaded globally by `App.vue`. Scoped component styles can use them directly.
+Application-owned tokens are loaded globally by `App.vue`. `app/src/css/css-variables.css` contains appearance-independent technical foundations such as structural dimensions, global layers, editor bridges, and runtime values. Files in `app/src/css/appearances/` provide the complete visual language for each `appAppearance`: shared typography, spacing, shape, and motion values together with independently tuned light and dark palettes. Scoped component styles consume the resulting tokens directly.
 
 ### Colors
 
@@ -156,6 +157,19 @@ These names are not interchangeable:
 | `system` | User preference that resolves to a color scheme |
 
 Use `applyAppAppearance` from `app/src/helpers/app-appearance.js` when runtime appearance attributes must be applied. `data-theme` remains a compatibility attribute; new components must not treat it as the owner of application appearance.
+
+Every `appAppearance` has one CSS file whose filename matches its registered value. It must define:
+
+1. the shared visual-language tokens under `data-app-appearance`;
+2. the complete semantic and private palette contract for `light`;
+3. the same contract, independently tuned, for `dark`;
+4. preview tokens and complete light/dark private brand-palette overrides for every registered non-default `workspaceAccent`.
+
+`workspaceAccent` is a per-site preference. It changes only the private brand palette inside the active application appearance; it does not change neutral, status, typography, spacing, or component contracts and never affects the generated website. The default accent uses the appearance's base brand palette. Missing, obsolete, or unsupported persisted values normalize to `default`. Publii registers its first seven chromatic accents as `default`, `indigo`, `violet`, `magenta`, `crimson`, `rose`, and `orange`, followed by the more tonal `emerald`, `petrol`, `navy`, `graphite`, and `midnight` set; the settings UI must preserve registry order rather than maintain a second list.
+
+Every new non-default accent must pass the automated WCAG AA contrast checks for semantic controls and links in both color schemes, including normal and hover states, dark-scheme synchronization controls, and visible focus indicators. The original default blue is a documented visual-compatibility exception and must not be used as the contrast target for new accents.
+
+To add an appearance, create its file in `app/src/css/appearances/`, register it and its supported accents in `app-appearance.js`, load it after `css-variables.css` in both `App.vue` and `prepare-editor-css.js`, and run the design-system audit. Components must not require appearance-specific class or selector overrides.
 
 ## Shared components
 

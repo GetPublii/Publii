@@ -20,6 +20,7 @@ const AstAppConfig = {
     pagesOrdering: ' DESC',
     tagsOrdering: 'id DESC',
     authorsOrdering: 'id DESC',
+    appAppearance: 'publii',
     appTheme: 'system',
     language: 'en-gb',
     languageType: 'default',

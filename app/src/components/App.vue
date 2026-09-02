@@ -167,6 +167,7 @@ export default {
 @import '../css/vendor/normalize.css';
 @import '../css/vendor/vue-multiselect.css';
 @import '../css/css-variables.css';
+@import '../css/appearances/publii.css';
 @import '../css/global.css';
 @import '../css/forms.css';
 @import '../css/scope-fix.css';

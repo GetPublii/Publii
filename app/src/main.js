@@ -5,7 +5,13 @@ import router from './router';
 import VueI18n from 'vue-i18n';
 import App from './components/App';
 import DOMPurify from 'dompurify';
-import { applyAppAppearance } from './helpers/app-appearance';
+import {
+    DEFAULT_APP_APPEARANCE,
+    DEFAULT_WORKSPACE_ACCENT,
+    applyAppAppearance,
+    normalizeAppAppearance,
+    normalizeWorkspaceAccent
+} from './helpers/app-appearance';
 import 'prismjs';
 
 // Basic elements
@@ -257,6 +263,8 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
         },
         async mounted () {
             await this.setupAppTheme();
+            this.$bus.$on('site-loaded', this.refreshCurrentAppAppearance);
+            this.$bus.$on('add-website-form-displayed', this.resetWorkspaceAccent);
             
             window.app = {
                 languageLoadingError: !!initialData.currentLanguage.languageLoadingError,
@@ -270,6 +278,8 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 wysiwygCustomElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygCustomElements,
                 tinymceCustomConfig: () => this.$store.state.app.customConfig.tinymce,
                 getCurrentAppTheme: () => this.$root.getCurrentAppTheme(),
+                getCurrentAppAppearance: () => this.$root.getCurrentAppAppearance(),
+                getCurrentWorkspaceAccent: () => this.$root.getCurrentWorkspaceAccent(),
                 reportPossibleDataLoss: () => this.$bus.$emit('post-editor-possible-data-loss'),
                 writersPanelOpen: () => this.$bus.$emit('writers-panel-open'),
                 writersPanelRefresh: () => this.$bus.$emit('writers-panel-refresh'),
@@ -330,7 +340,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     currentTheme = await mainProcessAPI.invoke('app-theme-mode:get-theme');
                 }
 
-                applyAppAppearance(document, currentTheme);
+                this.applyCurrentAppAppearance(document, currentTheme);
                 this.$bus.$on('app-theme-change', this.toggleTheme);
 
                 mainProcessAPI.receive('app-theme-mode:changed', () => {
@@ -349,6 +359,47 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 }
 
                 return currentTheme;
+            },
+            getCurrentAppAppearance () {
+                return normalizeAppAppearance(
+                    this.$store.state.app.config.appAppearance || DEFAULT_APP_APPEARANCE
+                );
+            },
+            getCurrentWorkspaceAccent () {
+                let currentSiteConfig = this.$store.state.currentSite.config || {};
+
+                return normalizeWorkspaceAccent(
+                    currentSiteConfig.workspaceAccent,
+                    this.getCurrentAppAppearance()
+                );
+            },
+            applyCurrentAppAppearance (targetDocument, theme, workspaceAccent = this.getCurrentWorkspaceAccent()) {
+                applyAppAppearance(
+                    targetDocument,
+                    theme,
+                    this.getCurrentAppAppearance(),
+                    workspaceAccent
+                );
+            },
+            async applyWorkspaceAccent (workspaceAccent) {
+                let theme = await this.getCurrentAppTheme();
+                let iframes = document.querySelectorAll('iframe[id$="_ifr"], iframe#plugin-settings-root');
+
+                for (let iframe of iframes) {
+                    this.applyCurrentAppAppearance(
+                        iframe.contentWindow.window.document,
+                        theme,
+                        workspaceAccent
+                    );
+                }
+
+                this.applyCurrentAppAppearance(document, theme, workspaceAccent);
+            },
+            refreshCurrentAppAppearance () {
+                return this.applyWorkspaceAccent(this.getCurrentWorkspaceAccent());
+            },
+            resetWorkspaceAccent () {
+                return this.applyWorkspaceAccent(DEFAULT_WORKSPACE_ACCENT);
             },
             async toggleTheme () {
                 this.skipThemeChangeEvents = true;
@@ -376,10 +427,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 mainProcessAPI.send('app-save-color-theme', currentTheme);
 
                 for (let i = 0; i < iframes.length; i++) {
-                    applyAppAppearance(iframes[i].contentWindow.window.document, theme);
+                    this.applyCurrentAppAppearance(iframes[i].contentWindow.window.document, theme);
                 }
 
-                applyAppAppearance(document, theme);
+                this.applyCurrentAppAppearance(document, theme);
 
                 setTimeout(() => {
                     this.skipThemeChangeEvents = false;

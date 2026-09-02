@@ -7,6 +7,7 @@ const AstCurrentSiteConfig = {
     logo: {
         icon: ''
     },
+    workspaceAccent: 'default',
     domain: '',
     language: 'en-gb',
     spellchecking: false,

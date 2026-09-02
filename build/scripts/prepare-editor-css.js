@@ -10,11 +10,13 @@ const distDir = path.join(__dirname, '..', '..', 'app', 'dist', 'css');
 const targets = {
     'editor.css': [
         'css-variables.css',
+        'appearances/publii.css',
         'editor/scrollbar.css',
         'editor/editor.css'
     ],
     'editor-options.css': [
         'css-variables.css',
+        'appearances/publii.css',
         'editor/scrollbar.css',
         'editor/editor-options.css'
     ]

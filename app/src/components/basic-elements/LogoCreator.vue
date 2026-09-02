@@ -125,7 +125,6 @@ export default {
 
 .logo-creator {
     display: flex;
-    margin-bottom: 32px;
     max-width: 100%;
     overflow: hidden;
     text-align: center

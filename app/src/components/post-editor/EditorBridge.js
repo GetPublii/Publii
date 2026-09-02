@@ -270,7 +270,12 @@ class EditorBridge {
             // Support for dark mode
             let iframeDocument = iframe.contentWindow.window.document;
             let htmlElement = iframeDocument.querySelector('html');
-            applyAppAppearance(iframeDocument, await window.app.getCurrentAppTheme());
+            applyAppAppearance(
+                iframeDocument,
+                await window.app.getCurrentAppTheme(),
+                window.app.getCurrentAppAppearance(),
+                window.app.getCurrentWorkspaceAccent()
+            );
             htmlElement.setAttribute('style', window.app.overridedCssVariables());
 
             // Add inline editors
