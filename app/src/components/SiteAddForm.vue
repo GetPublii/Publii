@@ -285,10 +285,7 @@ import defaultSiteConfig from './../../config/AST.currentSite.config';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 import { storePendingWordPressImport } from './../helpers/wp-import-onboarding';
-import {
-    DEFAULT_WORKSPACE_ACCENT,
-    normalizeWorkspaceAccent
-} from './../helpers/app-appearance.js';
+import { normalizeWorkspaceAccent } from './../helpers/app-appearance.js';
 import WorkspaceAccentPicker from './basic-elements/WorkspaceAccentPicker';
 
 export default {
@@ -319,7 +316,7 @@ export default {
             wordpressAuthorName: '',
             wordpressSiteNameError: false,
             wordpressAuthorNameError: false,
-            workspaceAccent: DEFAULT_WORKSPACE_ACCENT
+            workspaceAccent: this.$root.getCurrentWorkspaceAccent()
         }
     },
     computed: {
@@ -373,7 +370,7 @@ export default {
     },
     watch: {
         workspaceAccent (newValue, oldValue) {
-            if (newValue !== oldValue && this.tabsActiveIndex !== 1) {
+            if (newValue !== oldValue) {
                 this.$root.applyWorkspaceAccent(newValue);
             }
         },
@@ -705,12 +702,6 @@ export default {
         },
         tabChanged () {
             this.tabsActiveIndex = this.$refs['site-create-tabs'].activeIndex;
-
-            if (this.tabsActiveIndex === 1) {
-                this.$root.refreshCurrentAppAppearance();
-                return;
-            }
-
             this.$root.applyWorkspaceAccent(this.workspaceAccent);
         },
         handleCreateFromBackupError (problemType) {

@@ -7,7 +7,6 @@ import App from './components/App';
 import DOMPurify from 'dompurify';
 import {
     DEFAULT_APP_APPEARANCE,
-    DEFAULT_WORKSPACE_ACCENT,
     applyAppAppearance,
     normalizeAppAppearance,
     normalizeWorkspaceAccent
@@ -264,7 +263,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
         async mounted () {
             await this.setupAppTheme();
             this.$bus.$on('site-loaded', this.refreshCurrentAppAppearance);
-            this.$bus.$on('add-website-form-displayed', this.resetWorkspaceAccent);
+            this.$bus.$on('add-website-form-displayed', this.refreshCurrentAppAppearance);
             
             window.app = {
                 languageLoadingError: !!initialData.currentLanguage.languageLoadingError,
@@ -397,9 +396,6 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
             },
             refreshCurrentAppAppearance () {
                 return this.applyWorkspaceAccent(this.getCurrentWorkspaceAccent());
-            },
-            resetWorkspaceAccent () {
-                return this.applyWorkspaceAccent(DEFAULT_WORKSPACE_ACCENT);
             },
             async toggleTheme () {
                 this.skipThemeChangeEvents = true;
