@@ -1,5 +1,5 @@
 const assert = require('assert');
-const PubliiWindowManager = require('./window-manager.js');
+const PubliiWindowManager = require('../window-manager.js');
 
 function createWindow (id) {
     let listeners = {};

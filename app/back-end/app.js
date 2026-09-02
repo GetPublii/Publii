@@ -793,6 +793,16 @@ class App {
         this.windowManager.registerWindow(this.mainWindow);
     }
 
+    // Restore the primary window after the application is reactivated on macOS
+    reopenMainWindow () {
+        if (this.windowManager.getAllWindows().length > 0) {
+            return { status: false, error: 'window-already-open' };
+        }
+
+        this.initWindow();
+        return { status: true };
+    }
+
     // Open an additional window (for a second site)
     openNewWindow (siteName = '') {
         if (

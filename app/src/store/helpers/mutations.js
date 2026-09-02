@@ -558,7 +558,7 @@ export default {
         state.currentSite.themeSettings.defaultTemplates = JSON.parse(JSON.stringify(data.newConfig.defaultTemplates));
     },
     setEditorOpenState (state, isOpened) {
-        state.editorOpened = isOpened;
+        state.app.editorOpened = isOpened;
     },
     setOrdering (state, data) {
         state.ordering[data.type].orderBy = data.orderBy;

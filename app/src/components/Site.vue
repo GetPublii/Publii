@@ -31,11 +31,11 @@ export default {
             return this.$route.params.name;
         },
         isEmpty: function() {
-            if(this.currentSite !== this.siteName && this.siteName !== '!' && !this.$store.state.editorOpened) {
+            if(this.currentSite !== this.siteName && this.siteName !== '!' && !this.$store.state.app.editorOpened) {
                 this.switchSite(this.siteName);
             }
 
-            if (this.$store.state.editorOpened) {
+            if (this.$store.state.app.editorOpened) {
                 this.$store.commit('setEditorOpenState', false);
 
                 setTimeout(() => {

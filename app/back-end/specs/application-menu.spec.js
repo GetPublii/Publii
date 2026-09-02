@@ -4,7 +4,7 @@ const assert = require('assert');
 const {
     ApplicationMenuController,
     buildApplicationMenuTemplate
-} = require('./application-menu.js');
+} = require('../application-menu.js');
 
 function findTopLevel (template, label) {
     return template.find(item => item.label && item.label.replace(/&/g, '') === label);

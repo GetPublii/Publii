@@ -50,7 +50,7 @@ electronApp.on('window-all-closed', function () {
 
 electronApp.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0 && appInstance) {
-        appInstance.openNewWindow();
+        appInstance.reopenMainWindow();
     }
 });
 

@@ -204,12 +204,16 @@ export default {
         },
         syncApplicationMenuState () {
             let siteName = (this.$store.state.currentSite.config && this.$store.state.currentSite.config.name) || '';
+            let routeSiteName = this.$route.params.name;
             let supportedFeatures = this.$store.state.currentSite.themeSettings && this.$store.state.currentSite.themeSettings.supportedFeatures;
+            let siteIsReady = siteName !== '' &&
+                siteName !== '!' &&
+                (!routeSiteName || routeSiteName === siteName);
 
             mainProcessAPI.send('app-menu-state', {
                 advancedPreview: this.$store.state.app.config.enableAdvancedPreview === true,
                 editorOpen: this.itemEditorDisplayed || this.$store.state.app.editorOpened === true,
-                hasSite: siteName !== '' && siteName !== '!',
+                hasSite: siteIsReady,
                 pagesSupported: !supportedFeatures || supportedFeatures.pages !== false,
                 ready: !this.splashScreenDisplayed,
                 siteName: siteName,
@@ -260,6 +264,10 @@ export default {
         navigateFromApplicationMenu (path) {
             if (this.itemEditorDisplayed || this.$store.state.app.editorOpened) {
                 return;
+            }
+
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                document.activeElement.blur();
             }
 
             this.$router.push(path);
