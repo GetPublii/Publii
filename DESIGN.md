@@ -170,6 +170,8 @@ Light and dark share semantic role names and component contracts, not literal co
 
 The current `default` implementation is the light scheme of the `publii` application appearance. The existing source name remains valid during compatibility migration. Each appearance lives in a matching file under `app/src/css/appearances/`; `css-variables.css` retains only appearance-independent technical foundations.
 
+Empty-state illustrations use one inline SVG symbol per illustration. Their surfaces, borders, muted details, and shadows consume the same semantic roles as application UI, while branded details consume `color-primary`. They must therefore react to `colorScheme` and `workspaceAccent` through inherited CSS custom properties; separate light/dark illustration assets and component-owned theme switching are not part of the contract.
+
 | Token | Default/light | Dark |
 | --- | --- | --- |
 | `primary` | `oklch(63% 0.182 251)` | `oklch(64% 0.199 254)` |

@@ -26,9 +26,9 @@
 
         <empty-state
             v-if="noBackups"
-            imageName="backups.svg"
-            imageWidth="344"
-            imageHeight="286"
+            illustrationName="backups"
+            illustrationWidth="344"
+            illustrationHeight="286"
             :title="$t('file.noBackupsAvailable')"
             :description="$t('file.createFirstBackupMsg')">
             <p-button

@@ -406,7 +406,12 @@
             class="empty-state post">
 
            <div>
-                <img :src="'../src/assets/svg/' + appTheme + '/wysiwyg-editor.svg'" height="286" width="331" />
+                <app-illustration
+                    name="wysiwyg-editor"
+                    height="286"
+                    scale="1.08"
+                    translate-y="0"
+                    width="331" />
                 <h3>{{ $t('post.editorWYSIWYG') }}</h3>
                 <p>{{ $t('post.editorWYSIWYGInfo') }}</p>
                 <p-button
@@ -418,7 +423,12 @@
            </div>
 
            <div>
-                <img :src="'../src/assets/svg/' + appTheme + '/block-editor.svg'" height="286" width="331" />
+                <app-illustration
+                    name="block-editor"
+                    height="286"
+                    scale="1.4"
+                    translate-y="-32"
+                    width="331" />
                 <h3>{{ $t('post.editorBlock') }}</h3>
                 <p>{{ $t('post.editorBlockInfo') }}</p>
                 <p-button
@@ -430,7 +440,12 @@
            </div>
 
            <div>
-                <img :src="'../src/assets/svg/' + appTheme + '/markdown-editor.svg'" height="286" width="331" />
+                <app-illustration
+                    name="markdown-editor"
+                    height="286"
+                    scale="1.08"
+                    translate-y="0"
+                    width="331" />
                 <h3>{{ $t('post.editorMarkdown') }}</h3>
                 <p>{{ $t('post.editorMarkdownInfo') }}</p>
                 <p-button
@@ -454,7 +469,6 @@ export default {
     ],
     data () {
         return {
-            appTheme: '',
             bulkDropdownVisible: false,
             dataLoaded: false,
             filterValue: '',
@@ -577,8 +591,7 @@ export default {
             }
         });
     },
-    async mounted () {
-        this.appTheme = await this.$root.getCurrentAppTheme();
+    mounted () {
         this.orderBy = this.$store.state.ordering.posts.orderBy;
         this.order = this.$store.state.ordering.posts.order;
         this.$bus.$on('site-loaded', this.whenSiteLoaded);

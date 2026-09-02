@@ -158,9 +158,9 @@
 
         <empty-state
             v-if="showEmptyState"
-            imageName="menus.svg"
-            imageWidth="344"
-            imageHeight="286"
+            illustrationName="menus"
+            illustrationWidth="344"
+            illustrationHeight="286"
             :title="$t('menu.noMenusAvailable')"
             :description="$t('menu.noMenusCreateNewOne')">
             <p-button

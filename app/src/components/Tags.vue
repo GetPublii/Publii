@@ -168,9 +168,9 @@
 
         <empty-state
             v-if="showEmptyState"
-            imageName="tags.svg"
-            imageWidth="344"
-            imageHeight="286"
+            illustrationName="tags"
+            illustrationWidth="344"
+            illustrationHeight="286"
             :title="$t('tag.noTagsAvailable')"
             :description="$t('tag.createFirstTag')">
             <p-button

@@ -1,4 +1,7 @@
 .empty-state {
+    --empty-state-column-width: 40rem;
+    --empty-state-responsive-column-width: calc(33.3333% - 1.3333vw);
+
     clear: both;
     color: var(--text-light-color);
     font-size: var(--font-size-ui-md);
@@ -11,12 +14,33 @@
     user-select: none;
     width: 100%;
 
+    &:not(.page):not(.post) {
+        left: 50%;
+        max-width: calc(100% - 4vw);
+        padding: 0;
+        transform: translate(-50%, -40%);
+        width: min(
+            var(--empty-state-column-width),
+            var(--empty-state-responsive-column-width)
+        );
+    }
+
+    .illustration {
+        height: auto;
+        max-width: 95%;
+        width: 100%;
+    }
+
     &.page,
     &.post {
         display: grid;
-        grid-template-columns: repeat(3, fit-content(400px));
+        grid-template-columns: repeat(3, minmax(0, var(--empty-state-column-width)));
         grid-gap: 2vw;
         justify-content: center;
+
+        & > div {
+            min-width: 0;
+        }
     }
 
     h3 {
@@ -26,7 +50,7 @@
 
     p {
         margin: -0.5rem auto var(--space-12);
-        max-width: 66ch;
+        max-width: 42ch;
     }
 }
 
@@ -35,9 +59,7 @@
  */
 @media (max-height: 900px) {
     .empty-state {
-        img {
-            height: auto;
-            max-width: 26rem;
+        .illustration {
             margin-bottom: var(--space-2);
         }
         
@@ -53,9 +75,7 @@
 
 @media (max-width: 1400px) {
     .empty-state {
-        img {
-            height: auto;
-            max-width: 26rem;
+        .illustration {
             margin-bottom: var(--space-2);
         }
         

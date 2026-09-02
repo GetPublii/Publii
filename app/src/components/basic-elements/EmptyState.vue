@@ -1,13 +1,12 @@
 <template>
-    <div 
-        v-if="theme"
-        class="empty-state">
-        <img
-            v-if="imageName"
-            :src="imagePath"
-            :height="imageHeight"
-            :width="imageWidth"
-            alt="">
+    <div class="empty-state">
+        <app-illustration
+            v-if="illustrationName"
+            :name="illustrationName"
+            :height="illustrationHeight"
+            :width="illustrationWidth"
+            :scale="1.4"
+            :translate-y="-32" />
 
         <h3 v-if="title">
             {{ title }}
@@ -27,15 +26,15 @@
 export default {
     name: 'empty-state',
     props: {
-        imageName: {
+        illustrationName: {
             default: '',
             type: String
         },
-        imageWidth: {
+        illustrationWidth: {
             default: '',
             type: String
         },
-        imageHeight: {
+        illustrationHeight: {
             default: '',
             type: String
         },
@@ -51,18 +50,7 @@ export default {
     computed: {
         hasButtonSlot () {
             return !!this.$slots['button'];
-        },
-        imagePath () {
-            return '../src/assets/svg/' + this.theme + '/' + this.imageName;
         }
-    },
-    data () {
-        return {
-            theme: ''
-        };
-    },
-    async mounted () {
-        this.theme = await this.$root.getCurrentAppTheme();
     }
 }
 </script>

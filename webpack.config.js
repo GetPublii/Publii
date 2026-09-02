@@ -29,7 +29,13 @@ module.exports = {
         loader: 'vue-loader'
       },
       {
+        test: /svg-map-empty-states\.svg$/,
+        resourceQuery: /raw/,
+        type: 'asset/source'
+      },
+      {
         test: /\.(png|jpg|gif|svg)$/,
+        resourceQuery: { not: [/raw/] },
         type: 'asset/resource',
         generator: {
           filename: 'assets/images/[name].[hash][ext][query]'

@@ -185,12 +185,17 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 | `progress-bar` | `intent="default|success|danger|warning"` |
 | `overlay` | `appearance="default|drop-zone"` |
 | `icon` | named `size`; `non-interactive` boolean; controlled custom classes when required |
+| `app-illustration` | allowlisted `name`; optional `scale` and `translate-y`; one inline, token-driven SVG symbol per illustration |
 | `collection` | numeric `columns` |
 | `collection-cell` | `variant="titles|assignment|publish-dates|modification-dates|authors|actions"` |
 | `collection-row` | semantic row states such as `main-author` |
 | `tabs` | `orientation="vertical|horizontal"`; independent `scrollable` boolean |
 
 The prop validators in the component files are the complete accepted-value lists.
+
+### Empty-state illustrations
+
+Add each illustration once to `app/src/assets/svg/svg-map-empty-states.svg` under the same base name accepted by `app-illustration`. Use existing semantic roles such as `--bg-secondary`, `--color-surface-*`, `--color-border-*`, `--color-text-faint`, and `--color-primary` for its paint values. Because the selected symbol is rendered inline, those custom properties update with the active application appearance and workspace accent. Do not add `-default` or `-dark` symbol pairs, hardcoded theme selectors, or theme-change listeners to the component.
 
 ### Window commands
 

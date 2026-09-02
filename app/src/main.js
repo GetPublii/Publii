@@ -38,6 +38,7 @@ import Header from './components/basic-elements/Header';
 import HeaderSearch from './components/basic-elements/HeaderSearch';
 import Icon from './components/basic-elements/Icon';
 import ImageUpload from './components/basic-elements/ImageUpload';
+import Illustration from './components/basic-elements/Illustration';
 import LogoCreator from './components/basic-elements/LogoCreator';
 import Overlay from './components/basic-elements/Overlay';
 import PagesDropDown from './components/basic-elements/PagesDropDown';
@@ -204,6 +205,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
     Vue.component('header-search', HeaderSearch);
     Vue.component('icon', Icon);
     Vue.component('image-upload', ImageUpload);
+    Vue.component('app-illustration', Illustration);
     Vue.component('logo-creator', LogoCreator);
     Vue.component('overlay', Overlay);
     Vue.component('progress-bar', ProgressBar);

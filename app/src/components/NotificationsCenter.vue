@@ -279,9 +279,9 @@
 
             <empty-state
                 v-if="notificationsStatus !== 'accepted'"
-                imageName="notifications-center.svg"
-                imageWidth="344"
-                imageHeight="286"
+                illustrationName="notifications-center"
+                illustrationWidth="344"
+                illustrationHeight="286"
                 :title="$t('notifications.consentStateTitle')"
                 :description="$t('notifications.consentStateDescription')">
                 <p-button
@@ -300,9 +300,9 @@
 
             <empty-state
                 v-if="notificationsStatus === 'accepted' && newsToDisplay.length === 0 && pluginUpdates.length === 0 && themeUpdates.length === 0 && !hasPubliiUpdate"
-                imageName="notifications-center.svg"
-                imageWidth="344"
-                imageHeight="286"
+                illustrationName="notifications-center"
+                illustrationWidth="344"
+                illustrationHeight="286"
                 :title="$t('notifications.noUpdatesTitle')"
                 :description="$t('notifications.noUpdatesDescription')">
             </empty-state>
