@@ -5,8 +5,7 @@
                 v-for="(siteName, key) in sites"
                 :site="siteName"
                 :key="key"
-                :duplicateInProgress="siteDuplicateInProgress"
-                tabindex="1">
+                :duplicateInProgress="siteDuplicateInProgress">
             </sites-list-item>
 
             <li

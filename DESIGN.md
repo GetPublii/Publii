@@ -292,6 +292,8 @@ Inputs use the shared input background, border, focus, text, disabled, readonly,
 
 The sidebar is the principal branded application surface. Its existing gradient, inverse content, site context, preview action, and synchronization action remain part of the Publii application appearance.
 
+The site selector owns contextual website switching and the action for opening a selected website in another application window. Application Settings contains persisted preferences only; immediate window-management commands remain in the application menu and the site selector.
+
 ## Automated Governance
 
 Run `npm run audit:design-system` before merging renderer styling changes. The audit must keep global custom-property references resolved, reject unused or legacy global tokens, require every registered appearance to have a matching CSS file and complete shared visual-language tokens, enforce the shared semantic contract across independently tuned light and dark color schemes, require every registered non-default workspace accent to provide complete light and dark OKLCH brand palettes and previews, verify WCAG AA contrast for its semantic controls and links, keep private palettes inside appearance files, prevent new literal colors from entering application-owned styles, require canonical spacing and typography values to use their shared tokens, and reject retired shared-component props.

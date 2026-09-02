@@ -645,7 +645,7 @@ class App {
     }
 
     // Create and configure a single BrowserWindow; returns the window
-    _createWindow (windowParams, isNewWindow = false) {
+    _createWindow (windowParams, isNewWindow = false, initialSite = '') {
         let win = new BrowserWindow(windowParams);
         win.setMenu(null);
         win.loadURL('file:///' + this.basedir + '/dist/index.html');
@@ -657,7 +657,16 @@ class App {
                 event.preventDefault();
             }
 
-            if (input.key === 'N' && (input.meta || input.control) && input.shift) {
+            if (
+                input.type === 'keyDown' &&
+                typeof input.key === 'string' &&
+                input.key.toLowerCase() === 'n' &&
+                (input.meta || input.control) &&
+                !input.shift &&
+                !input.alt &&
+                !input.isAutoRepeat
+            ) {
+                event.preventDefault();
                 this.openNewWindow();
             } else if (input.key === 'f' && (input.meta || input.control)) {
                 win.webContents.send('app-show-search-form');
@@ -730,7 +739,8 @@ class App {
                 themesPath: this.themesPath,
                 dirs: this.dirPaths,
                 vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked')),
-                isNewWindow: isNewWindow
+                isNewWindow: isNewWindow,
+                initialSite: initialSite
             };
             
             win.webContents.send('app-data-loaded', appData);
@@ -808,19 +818,37 @@ class App {
     }
 
     // Open an additional window (for a second site)
-    openNewWindow () {
-        let win = this._createWindow(this._buildWindowParams(), true);
+    openNewWindow (siteName = '') {
+        if (
+            siteName !== '' &&
+            (
+                typeof siteName !== 'string' ||
+                !Object.prototype.hasOwnProperty.call(this.sites, siteName)
+            )
+        ) {
+            return { status: false, error: 'site-not-found' };
+        }
+
+        if (siteName !== '' && this.windowManager.focusWindowBySite(siteName)) {
+            return { status: false, error: 'site-already-open' };
+        }
+
+        let win = this._createWindow(this._buildWindowParams(), true, siteName);
         this.windowManager.registerWindow(win);
-        return win;
+
+        if (siteName !== '') {
+            // Reserve the site for this window before its renderer finishes loading.
+            this.windowManager.setWindowSite(win.webContents.id, siteName);
+        }
+
+        return { status: true };
     }
 
     // Add events to the window
     initWindowEvents () {
         this.initializeCustomIpcMainEvents();
 
-        ipcMain.handle('app-open-new-window', () => {
-            this.openNewWindow();
-        });
+        ipcMain.handle('app-open-new-window', (event, siteName = '') => this.openNewWindow(siteName));
     }
 
     // Initializes all custom events for IPC Main thread

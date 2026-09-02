@@ -3,54 +3,80 @@
         :class="{ 
             'single-site': true, 
             'is-duplicating': isDuplicating 
-        }"
-        @click="showWebsite(site)"
-        @keydown="showWebsiteOnEnter($event, site)">
+        }">
 
-        <span class="single-site-icon">
-            <icon
-                :name="siteLogoIcon"
-                iconset="svg-map-site"
-                customWidth="22"
-                customHeight="22" />
-        </span>
-
-        <strong class="single-site-name" :title="displayName">
-            <span>
-                {{ displayName }}
+        <button
+            type="button"
+            class="single-site-primary-action"
+            @click="showWebsite(site)">
+            <span class="single-site-icon">
+                <icon
+                    :name="siteLogoIcon"
+                    iconset="svg-map-site"
+                    customWidth="22"
+                    customHeight="22"
+                    non-interactive
+                    aria-hidden="true" />
             </span>
 
-            <small v-if="description">
-                {{ description }}
-            </small>
-        </strong>
+            <strong class="single-site-name" :title="displayName">
+                <span>
+                    {{ displayName }}
+                </span>
+
+                <small v-if="description">
+                    {{ description }}
+                </small>
+            </strong>
+        </button>
 
         <div 
             :class="{
                 'single-site-actions': true, 
                 'single-site-actions-disabled': duplicateInProgress 
             }">
-            <a
-                href="#"
+            <button
+                v-if="canOpenInNewWindow"
+                type="button"
+                class="single-site-actions-btn open-in-new-window"
+                :title="$t('site.openWebsiteInNewWindow', { websiteName: displayName })"
+                :aria-label="$t('site.openWebsiteInNewWindow', { websiteName: displayName })"
+                :disabled="duplicateInProgress"
+                @click.stop="openWebsiteInNewWindow">
+                <icon
+                    name="open-new-window"
+                    size="xs"
+                    non-interactive
+                    aria-hidden="true" />
+            </button>
+
+            <button
+                type="button"
                 :class="{ 'single-site-actions-btn': true, 'is-duplicating': isDuplicating }"
                 :title="$t('site.duplicateWebsite')"
-                tabindex="-1"
-                @click.stop.prevent="askForClone">
+                :aria-label="$t('site.duplicateWebsite') + ': ' + displayName"
+                :disabled="duplicateInProgress"
+                @click.stop="askForClone">
                 <icon
                     name="duplicate"
-                    size="xs" />
-            </a>
+                    size="xs"
+                    non-interactive
+                    aria-hidden="true" />
+            </button>
 
-            <a
-                href="#"
+            <button
+                type="button"
                 class="single-site-actions-btn delete"
                 :title="$t('site.deleteWebsite')"
-                tabindex="-1"
-                @click.stop.prevent="askForRemove">
+                :aria-label="$t('site.deleteWebsite') + ': ' + displayName"
+                :disabled="duplicateInProgress"
+                @click.stop="askForRemove">
                 <icon
                     name="trash"
-                    size="xs" />
-            </a>
+                    size="xs"
+                    non-interactive
+                    aria-hidden="true" />
+            </button>
         </div>
     </li>
 </template>
@@ -71,6 +97,14 @@ export default {
         },
         siteLogoIcon: function() {
             return this.$store.state.sites[this.site].logo.icon;
+        },
+        currentSiteName () {
+            return this.$store.state.currentSite && this.$store.state.currentSite.config
+                ? this.$store.state.currentSite.config.name || ''
+                : '';
+        },
+        canOpenInNewWindow () {
+            return this.currentSiteName !== '' && this.currentSiteName !== this.site;
         }
     },
     data () {
@@ -85,10 +119,22 @@ export default {
             this.$bus.$emit('sites-popup-hide');
             this.$router.push(`/site/${siteToDisplay}`);
         },
-        showWebsiteOnEnter (event, siteToDisplay) {
-            if (event.key === 'Enter' && !event.isComposing && !document.body.classList.contains('has-popup-visible')) {
-                this.showWebsite(siteToDisplay);
+        async openWebsiteInNewWindow () {
+            try {
+                let result = await mainProcessAPI.invoke('app-open-new-window', this.site);
+
+                if (result && (result.status === true || result.error === 'site-already-open')) {
+                    this.$bus.$emit('sites-popup-hide');
+                    return;
+                }
+            } catch (error) {
+                // The shared warning below is sufficient for renderer-side failures.
             }
+
+            this.$bus.$emit('message-display', {
+                message: this.$t('site.siteLoadingErrorMsg'),
+                type: 'warning'
+            });
         },
         askForRemove () {
             this.$bus.$emit('confirm-display', {
@@ -210,13 +256,12 @@ export default {
     background: var(--collection-bg);
     border-bottom: 1px solid var(--border-light-color);
     color: var(--link-primary-color-hover);
-    cursor: pointer;
     display: flex;
     margin: 0;
     padding: 1.2rem var(--space-8);
     position: relative;
 
-    &:focus {
+    &:focus-within {
         background: var(--input-bg-light);
     }
 
@@ -236,9 +281,34 @@ export default {
         }
     }
 }
+.single-site-primary-action {
+    align-items: center;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    font: inherit;
+    min-width: 0;
+    padding: 0;
+    text-align: left;
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+}
 .single-site-actions {
     display: flex;
+    gap: 8px;
     margin-left: auto;
+
+    &:focus-within {
+        .single-site-actions-btn {
+            opacity: 1;
+        }
+    }
 }
 .single-site-actions-disabled {
     opacity: .75;
@@ -247,13 +317,16 @@ export default {
 .single-site-actions-btn {
     align-items: center;
     background: var(--bg-primary);
-    position: relative;
+    border: 0;
     border-radius: 50%;
+    color: inherit;
+    cursor: pointer;
     display: inline-flex;
+    font: inherit;
     height: 3rem;
     justify-content: center;
-    margin: 0 2px;
     opacity: 0;
+    padding: 0;
     position: relative;
     text-align: center;
     width: 3rem;
@@ -262,6 +335,11 @@ export default {
     &:focus,
     &:hover {
         color: var(--headings-color);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
     }
 
     &:hover {
@@ -288,6 +366,18 @@ export default {
             & > svg {
                fill: var(--color-danger);
            }
+        }
+    }
+
+    &.open-in-new-window {
+        svg {
+            color: var(--icon-secondary-color);
+            fill: none;
+        }
+
+        &:hover > svg {
+            color: var(--icon-tertiary-color);
+            fill: none;
         }
     }
 
@@ -356,4 +446,3 @@ export default {
     }
 }
 </style>
-

@@ -81,10 +81,15 @@ export default {
 
         if (this.initialData.isNewWindow) {
             // Secondary window: skip splash screen
-            this.$router.push('/site/!/posts');
-            // If there are existing sites, show the sites picker immediately
-            if (this.siteNames.length > 0) {
-                this.$nextTick(() => this.$bus.$emit('sites-popup-show'));
+            if (this.initialData.initialSite && this.siteNames.indexOf(this.initialData.initialSite) > -1) {
+                this.$router.push(`/site/${this.initialData.initialSite}/posts`);
+            } else {
+                this.$router.push('/site/!/posts');
+
+                // If there are existing sites, show the sites picker immediately
+                if (this.siteNames.length > 0) {
+                    this.$nextTick(() => this.$bus.$emit('sites-popup-show'));
+                }
             }
         } else if (this.$store.state.app.config.licenseAccepted) {
             // Primary window: normal 2-second splash screen

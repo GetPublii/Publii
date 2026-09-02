@@ -192,6 +192,10 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 
 The prop validators in the component files are the complete accepted-value lists.
 
+### Window commands
+
+Keep immediate window-management commands out of Application Settings. The generic `New Window` command remains available from the application menu, while the site selector owns the contextual `Open in new window` action for a specific website. Both routes must reuse the allowlisted preload IPC command and let the main process validate the optional website identifier, enforce window ownership, and create the `BrowserWindow`.
+
 ### Buttons
 
 Button concerns are independent:

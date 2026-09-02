@@ -1072,6 +1072,7 @@
         "duplicateWebsite": "Duplikuj stronę internetową",
         "erroOcurredDuringSiteDatabaseCreationInfo": "Wystąpił błąd poczas tworzenia bazy danych dla strony. Sprawdź swój program antywirusowy i spróbuj ponownie. Możliwe, że musisz również usunąć niepoprawny katalog strony z katalogu stron Publii.",
         "installFromBackup": "Zainstaluj z kopii zapasowej",
+        "openWebsiteInNewWindow": "Otwórz witrynę „{websiteName}” w nowym oknie",
         "removeWebsite": "Usuń stronę internetową",
         "restoreFromBackup": {
             "createWebsite": "Utwórz stronę",
@@ -1589,8 +1590,6 @@
         "moreItems": "Więcej elementów",
         "name": "Nazwa",
         "newWindow": "Nowym oknie",
-        "openNewWindow": "Nowe okno",
-        "openNewWindowTitle": "Otwórz Publii w nowym oknie",
         "noindexFollow": "noindex, follow",
         "noindexNofollow": "noindex, nofollow",
         "none": "None",
