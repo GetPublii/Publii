@@ -13,13 +13,32 @@ function normalizeEditorFontFamily (value) {
     return editorFontFamilyAliases[value] || value || defaultAstAppConfig.editorFontFamily;
 }
 
+function getEmptyCurrentSite () {
+    return {
+        config: {},
+        posts: [],
+        pages: [],
+        tags: [],
+        postsTags: [],
+        postsAuthors: [],
+        postTemplates: [],
+        pagesAuthors: [],
+        pageTemplates: [],
+        themes: [],
+        images: [],
+        menuStructure: [],
+        themeSettings: [],
+        siteDir: ''
+    };
+}
+
 export default {
     init (state, initialData) {
         state.app.config = Object.assign(JSON.parse(JSON.stringify(defaultAstAppConfig)), initialData.config);
         state.app.config.editorFontFamily = normalizeEditorFontFamily(state.app.config.editorFontFamily);
         state.app.customConfig = initialData.customConfig;
         state.app.versionInfo = initialData.version;
-        state.currentSite = {};
+        state.currentSite = getEmptyCurrentSite();
         state.languages = initialData.languages;
         state.languagesPath = initialData.languagesPath;
         state.languagesDefaultPath = initialData.languagesDefaultPath;
@@ -75,22 +94,7 @@ export default {
         );
     },
     clearCurrentSite (state) {
-        state.currentSite = {
-            config: {},
-            posts: [],
-            pages: [],
-            tags: [],
-            postsTags: [],
-            postsAuthors: [],
-            postTemplates: [],
-            pagesAuthors: [],
-            pageTemplates: [],
-            themes: [],
-            images: [],
-            menuStructure: [],
-            themeSettings: [],
-            siteDir: ''
-        };
+        state.currentSite = getEmptyCurrentSite();
     },
     copySiteConfig (state, siteName) {
         state.currentSite.config = JSON.parse(JSON.stringify(state.sites[siteName]));

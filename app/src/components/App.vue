@@ -193,7 +193,7 @@ export default {
                     this.$store.state.app.editorOpened,
                     this.$store.state.app.config.enableAdvancedPreview,
                     this.$store.state.components.sidebar.syncInProgress,
-                    this.$store.state.currentSite.config.name,
+                    this.$store.state.currentSite.config && this.$store.state.currentSite.config.name,
                     this.$store.state.currentSite.themeSettings &&
                         this.$store.state.currentSite.themeSettings.supportedFeatures &&
                         this.$store.state.currentSite.themeSettings.supportedFeatures.pages
@@ -203,7 +203,7 @@ export default {
             );
         },
         syncApplicationMenuState () {
-            let siteName = this.$store.state.currentSite.config.name || '';
+            let siteName = (this.$store.state.currentSite.config && this.$store.state.currentSite.config.name) || '';
             let supportedFeatures = this.$store.state.currentSite.themeSettings && this.$store.state.currentSite.themeSettings.supportedFeatures;
 
             mainProcessAPI.send('app-menu-state', {
