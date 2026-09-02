@@ -125,7 +125,7 @@ export default {
         margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
-        padding: .825rem .6rem;
+        padding: .75rem .6rem;
         transition: var(--transition-default);
 
         &:active,
@@ -144,7 +144,7 @@ export default {
     svg {
         fill: var(--sidebar-link-icon);
         left: 1rem;
-        margin-right: 2.4rem;
+        margin-right: 2.3rem;
         position: relative;
         transition: var(--transition-default);
         top: .5rem;
@@ -181,7 +181,7 @@ export default {
 @media (max-height: 736px) {
     .sidebar-menu {
         a {
-            padding: var(--space-2) 0.8rem;
+            padding: 0.6rem;
         }
     }
 }
