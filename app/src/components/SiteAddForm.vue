@@ -10,6 +10,19 @@
                     <div class="site-create-form">
                         <logo-creator ref="logo-creator" />
 
+                        <div class="site-create-field site-create-workspace-accent-field">
+                            <span
+                                id="create-workspace-accent-label"
+                                class="site-create-field-label">
+                                {{ $t('settings.workspaceAccent') }}
+                            </span>
+                            <workspace-accent-picker
+                                v-model="workspaceAccent"
+                                group-name="create-workspace-accent"
+                                id-prefix="create-workspace-accent"
+                                labelled-by="create-workspace-accent-label" />
+                        </div>
+
                         <div class="site-create-field">
                             <label for="site-name">
                                 {{ $t('site.websiteName') }}:
@@ -169,6 +182,19 @@
 
                         <logo-creator ref="wordpress-logo-creator" />
 
+                        <div class="site-create-field site-create-workspace-accent-field">
+                            <span
+                                id="wordpress-workspace-accent-label"
+                                class="site-create-field-label">
+                                {{ $t('settings.workspaceAccent') }}
+                            </span>
+                            <workspace-accent-picker
+                                v-model="workspaceAccent"
+                                group-name="wordpress-workspace-accent"
+                                id-prefix="wordpress-workspace-accent"
+                                labelled-by="wordpress-workspace-accent-label" />
+                        </div>
+
                         <div class="site-create-field">
                             <label for="wordpress-site-name">
                                 {{ $t('site.websiteName') }}:
@@ -218,10 +244,7 @@
 
             <div
                 :data-mode="status"
-                :class="{
-                    'site-create-buttons': true,
-                    'site-create-buttons-wordpress': tabsActiveIndex === 2 && wordpressStats
-                }">
+                class="site-create-buttons">
                 <p-button
                     v-if="tabsActiveIndex === 0"
                     intent="primary"
@@ -262,9 +285,17 @@ import defaultSiteConfig from './../../config/AST.currentSite.config';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 import { storePendingWordPressImport } from './../helpers/wp-import-onboarding';
+import {
+    DEFAULT_WORKSPACE_ACCENT,
+    normalizeWorkspaceAccent
+} from './../helpers/app-appearance.js';
+import WorkspaceAccentPicker from './basic-elements/WorkspaceAccentPicker';
 
 export default {
     name: 'site-add-form',
+    components: {
+        'workspace-accent-picker': WorkspaceAccentPicker
+    },
     mixins: [
         GoToLastOpenedWebsite
     ],
@@ -287,7 +318,8 @@ export default {
             wordpressSiteName: '',
             wordpressAuthorName: '',
             wordpressSiteNameError: false,
-            wordpressAuthorNameError: false
+            wordpressAuthorNameError: false,
+            workspaceAccent: DEFAULT_WORKSPACE_ACCENT
         }
     },
     computed: {
@@ -340,6 +372,11 @@ export default {
         }
     },
     watch: {
+        workspaceAccent (newValue, oldValue) {
+            if (newValue !== oldValue && this.tabsActiveIndex !== 1) {
+                this.$root.applyWorkspaceAccent(newValue);
+            }
+        },
         wordpressSiteName () {
             this.wordpressSiteNameError = false;
         },
@@ -487,6 +524,10 @@ export default {
                 name: this.siteName.trim(),
                 displayName: this.siteName.trim(),
                 synced: false,
+                workspaceAccent: normalizeWorkspaceAccent(
+                    this.workspaceAccent,
+                    this.$root.getCurrentAppAppearance()
+                ),
                 logo: {
                     icon: this.$refs['logo-creator'].getActiveIcon()
                 }
@@ -501,6 +542,10 @@ export default {
                 displayName: this.wordpressSiteName.trim(),
                 description: siteDetails.description || '',
                 synced: false,
+                workspaceAccent: normalizeWorkspaceAccent(
+                    this.workspaceAccent,
+                    this.$root.getCurrentAppAppearance()
+                ),
                 logo: {
                     icon: this.$refs['wordpress-logo-creator'].getActiveIcon()
                 }
@@ -660,6 +705,13 @@ export default {
         },
         tabChanged () {
             this.tabsActiveIndex = this.$refs['site-create-tabs'].activeIndex;
+
+            if (this.tabsActiveIndex === 1) {
+                this.$root.refreshCurrentAppAppearance();
+                return;
+            }
+
+            this.$root.applyWorkspaceAccent(this.workspaceAccent);
         },
         handleCreateFromBackupError (problemType) {
             if (problemType === 'unsupported-format') {
@@ -780,6 +832,7 @@ export default {
         } 
     },
     beforeDestroy () {
+        this.$root.refreshCurrentAppAppearance();
         this.$bus.$off('add-website-name-changed');
         this.$bus.$off('add-website-author-changed');
         mainProcessAPI.stopReceiveAll('app-wxr-checked');
@@ -824,6 +877,8 @@ export default {
         border: 2px dashed var(--input-border-color);
         border-radius: var(--radius-base);
         color: var(--color-text-subtle);
+        height: calc(404px - 46px);
+        margin-bottom: 46px;
         position: relative;
 
         .overlay.has-border {
@@ -872,14 +927,14 @@ export default {
     }
 }
 .site-create-form {
-    height: 344px;  
+    height: 404px;
     overflow: hidden;
     ::v-deep .logo-creator-preview {
         min-width: 10rem !important;
     }
 }
 .site-create-field {
-    margin: 0 0 var(--space-12) 0;
+    margin: 0 0 var(--space-8) 0;
     text-align: left;
 
     & > label {
@@ -894,6 +949,24 @@ export default {
         margin-bottom: 0;
     }
 }
+.site-create-workspace-accent-field {
+    align-items: center;
+    display: flex;
+    margin: var(--space-8) 0 var(--space-12);
+
+    .site-create-field-label {
+        color: var(--label-color);
+        flex: 0 0 10rem;
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-regular);
+        line-height: 1.4;
+        text-align: left;
+    }
+
+    .workspace-accent-picker {
+        flex: 1;
+    }
+}
 .site-create-field-error {
     color: var(--color-danger);
     font-size: var(--font-size-ui-md);
@@ -902,14 +975,10 @@ export default {
     display: flex;
     margin: 0 -4.8rem -5.6rem -4.8rem;
     overflow: hidden;
-    padding: 5.6rem 0 0 0;
+    padding: var(--space-4) 0 0;
     position: relative;
     text-align: center;
     top: 1px;
-
-    &.site-create-buttons-wordpress {
-        padding-top: var(--space-4);
-    }
 
     .button {
         border-radius: 0 0 0 var(--radius-base);
@@ -979,13 +1048,13 @@ export default {
     }
 }
 .site-create .site-create-form-wordpress {
-    height: 450px;
+    height: 490px;
 }
 .site-create .backup-upload {
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: 340px;
+    height: 100%;
     justify-content: center;
     padding: var(--space-8);
 
