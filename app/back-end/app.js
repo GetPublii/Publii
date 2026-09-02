@@ -11,7 +11,7 @@ const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 const url = require('url');
 // Electron classes
-const { screen, shell, nativeTheme, Menu, dialog, BrowserWindow, ipcMain } = require('electron');
+const { screen, shell, nativeTheme, dialog, BrowserWindow, ipcMain } = require('electron');
 // Window manager
 const PubliiWindowManager = require('./window-manager.js');
 // Collection classes
@@ -647,9 +647,7 @@ class App {
     // Create and configure a single BrowserWindow; returns the window
     _createWindow (windowParams, isNewWindow = false, initialSite = '') {
         let win = new BrowserWindow(windowParams);
-        win.setMenu(null);
         win.loadURL('file:///' + this.basedir + '/dist/index.html');
-        win.removeMenu();
 
         // Keyboard shortcut listener
         win.webContents.on('before-input-event', (event, input) => {
@@ -657,20 +655,7 @@ class App {
                 event.preventDefault();
             }
 
-            if (
-                input.type === 'keyDown' &&
-                typeof input.key === 'string' &&
-                input.key.toLowerCase() === 'n' &&
-                (input.meta || input.control) &&
-                !input.shift &&
-                !input.alt &&
-                !input.isAutoRepeat
-            ) {
-                event.preventDefault();
-                this.openNewWindow();
-            } else if (input.key === 'f' && (input.meta || input.control)) {
-                win.webContents.send('app-show-search-form');
-            } else if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
+            if (input.key === 'z' && (input.meta || input.control) && !input.shift) {
                 win.webContents.send('block-editor-undo');
             } else if (
                 (input.key === 'z' && (input.meta || input.control) && input.shift) ||
@@ -759,14 +744,6 @@ class App {
         win.on('unmaximize', () => this._setZoomLevel(win));
         win.on('restore', () => this._setZoomLevel(win));
 
-        if (process.platform === 'linux') {
-            win.webContents.on('before-input-event', (event, input) => {
-                if (input.control && input.key === 'q') {
-                    this.app.quit();
-                }
-            });
-        }
-
         const ContextMenuBuilder = require('./helpers/context-menu-builder.js');
         let contextMenuBuilder = new ContextMenuBuilder(win.webContents);
 
@@ -812,7 +789,6 @@ class App {
             bounds.y = 0;
         }
 
-        Menu.setApplicationMenu(null);
         this.mainWindow = this._createWindow(this._buildWindowParams(bounds));
         this.windowManager.registerWindow(this.mainWindow);
     }

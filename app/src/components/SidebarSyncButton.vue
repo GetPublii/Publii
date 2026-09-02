@@ -134,6 +134,16 @@ export default {
             return this.$store.state.components.sidebar.syncInProgress;
         }
     },
+    mounted () {
+        this.$bus.$on('app-menu-preview', this.renderPreview);
+        this.$bus.$on('app-menu-generate-preview', this.renderFiles);
+        this.$bus.$on('app-menu-sync', this.syncWebsite);
+    },
+    beforeDestroy () {
+        this.$bus.$off('app-menu-preview', this.renderPreview);
+        this.$bus.$off('app-menu-generate-preview', this.renderFiles);
+        this.$bus.$off('app-menu-sync', this.syncWebsite);
+    },
     methods: {
         renderPreview: async function() {
             if (!this.$store.state.currentSite.config.theme) {
@@ -196,7 +206,7 @@ export default {
             });
         },
         syncWebsite: function(e) {
-            if (e.screenX === 0 && e.screenY === 0) {
+            if (e && e.screenX === 0 && e.screenY === 0) {
                 return;
             }
 

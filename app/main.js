@@ -10,6 +10,7 @@ const ipcMain = electron.ipcMain;
 const nativeTheme = electron.nativeTheme;
 const os = require('os');
 const App = require('./back-end/app.js');
+const { ApplicationMenuController } = require('./back-end/application-menu.js');
 const createSlug = require('./back-end/helpers/slug.js');
 const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
 const fs = require('fs');
@@ -39,9 +40,18 @@ if (typeof process.env.NODE_ENV === 'undefined') {
 
 // Keep a global reference of the app instance for avoiding Garbage Collector
 let appInstance;
+let applicationMenu;
 
 electronApp.on('window-all-closed', function () {
-    electronApp.quit();
+    if (process.platform !== 'darwin') {
+        electronApp.quit();
+    }
+});
+
+electronApp.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0 && appInstance) {
+        appInstance.openNewWindow();
+    }
 });
 
 electronApp.on('ready', function () {
@@ -52,6 +62,16 @@ electronApp.on('ready', function () {
     };
 
     appInstance = new App(startupSettings);
+    applicationMenu = new ApplicationMenuController({
+        app: electronApp,
+        Menu: Menu,
+        BrowserWindow: BrowserWindow,
+        shell: electron.shell,
+        ipcMain: ipcMain,
+        appInstance: appInstance,
+        isDevelopment: process.env.NODE_ENV !== 'production'
+    });
+    applicationMenu.install();
     
     ipcMain.on('publii-set-spellchecker-language', (event, language) => {
         global.spellCheckerLanguage = new String(language).replace(/[^a-z\-_]/gmi, '');
@@ -281,101 +301,6 @@ electronApp.on('ready', function () {
     // Get available spellchecker languages
     ipcMain.handle('app-main-get-spellchecker-languages', (event) => event.sender.session.availableSpellCheckerLanguages);
 
-    const template = [{
-            label: "Publii",
-            submenu: [{
-                label: "About Application",
-                selector: "orderFrontStandardAboutPanel:"
-            }, 
-            {
-                type: "separator"
-            }, 
-            { 
-            role: 'hide' 
-            },
-            { 
-                role: 'hideOthers' 
-            },
-            { 
-                role: 'unhide' 
-            },
-            {
-                type: "separator"
-            }, 
-            {
-                label: "Quit",
-                accelerator: "CmdOrCtrl+Q",
-                click: () => { 
-                    electronApp.quit();
-                }
-            }]
-        }, {
-            label: "File",
-            submenu: [{
-                label: "New Window",
-                accelerator: "CmdOrCtrl+N",
-                click: () => {
-                    appInstance.openNewWindow();
-                }
-            }]
-        }, {
-            label: "Edit",
-            submenu: [
-                {
-                    label: "Undo",
-                    accelerator: "CmdOrCtrl+Z",
-                    selector: "undo:"
-                },
-                {
-                    label: "Redo",
-                    accelerator: "Shift+CmdOrCtrl+Z",
-                    selector: "redo:"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    label: "Cut",
-                    accelerator: "CmdOrCtrl+X",
-                    selector: "cut:"
-                },
-                {
-                    label: "Copy",
-                    accelerator: "CmdOrCtrl+C",
-                    selector: "copy:"
-                },
-                {
-                    label: "Paste",
-                    accelerator: "CmdOrCtrl+V",
-                    selector: "paste:"
-                },
-                {
-                    label: "Select All",
-                    accelerator: "CmdOrCtrl+A",
-                    selector: "selectAll:"
-                }
-            ]
-        }];
-
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
-
-    // Remove application menu on Linux
-    if (process.platform === 'linux') {
-        Menu.setApplicationMenu(null);
-    }
-
-    // macOS dock menu
-    if (process.platform === 'darwin' && electronApp.dock) {
-        const dockMenu = Menu.buildFromTemplate([{
-            label: 'New Window',
-            click: () => {
-                appInstance.openNewWindow();
-            }
-        }]);
-        electronApp.dock.setMenu(dockMenu);
-    }
-
     // Load language translations and set language as used in the app
     ipcMain.handle('app-main-load-language', (event, lang, type) => {
         if (typeof lang !== 'string' ||
@@ -398,6 +323,8 @@ electronApp.on('ready', function () {
             if (!appInstance.languageLoadingError) {
                 languageChanged = appInstance.setLanguage(lang, type);
             }
+
+            applicationMenu.rebuild();
 
             return {
                 languageChanged: languageChanged,

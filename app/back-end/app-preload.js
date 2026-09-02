@@ -105,7 +105,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-get-notifications-file',
             'app-pages-hierarchy-update',
             'app-content-fields-update',
-            'app-focus-window-with-site'
+            'app-focus-window-with-site',
+            'app-menu-state'
         ];
 
         if (validChannels.includes(channel)) {
@@ -131,6 +132,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-show-search-form',
             'block-editor-undo',
             'block-editor-redo',
+            'app-menu-command',
             'no-remote-files'
         ];
 
@@ -300,7 +302,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-connection-error',
             'app-show-search-form',
             'block-editor-undo',
-            'block-editor-redo'
+            'block-editor-redo',
+            'app-menu-command'
         ];
 
         if (validChannels.includes(channel)) {

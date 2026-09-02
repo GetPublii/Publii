@@ -30,6 +30,33 @@ import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
 
+const GLOBAL_MENU_ROUTES = Object.freeze({
+    'about': '/about/',
+    'app-settings': '/app-settings/',
+    'credits': '/about/credits/',
+    'tools-languages': '/app-languages/',
+    'tools-plugins': '/app-plugins/',
+    'tools-themes': '/app-themes/'
+});
+
+const SITE_MENU_ROUTES = Object.freeze({
+    'site-authors': 'authors',
+    'site-menus': 'menus',
+    'site-pages': 'pages',
+    'site-posts': 'posts',
+    'site-server-settings': 'settings/server',
+    'site-settings': 'settings',
+    'site-tags': 'tags',
+    'site-theme-settings': 'settings/themes',
+    'tools-backups': 'tools/backups',
+    'tools-custom-css': 'tools/custom-css',
+    'tools-custom-html': 'tools/custom-html',
+    'tools-file-manager': 'tools/file-manager',
+    'tools-log-viewer': 'tools/log-viewer',
+    'tools-regenerate-thumbnails': 'tools/regenerate-thumbnails',
+    'tools-wordpress-import': 'tools/wp-importer'
+});
+
 export default {
     name: 'app',
     props: [
@@ -78,6 +105,7 @@ export default {
         await this.setEnvironmentInfo();
         this.setState();
         this.integrateTopBar();
+        this.setupApplicationMenu();
 
         if (this.initialData.isNewWindow) {
             // Secondary window: skip splash screen
@@ -97,10 +125,6 @@ export default {
         }
 
         this.$bus.$on('license-accepted', this.showInitialScreen);
-    },
-    beforeDestroy () {
-        this.$bus.$off('license-accepted');
-        mainProcessAPI.stopReceiveAll('app-license-accepted');
     },
     methods: {
         // Block drag'n'drop redirects
@@ -160,10 +184,137 @@ export default {
             document.body.addEventListener('click', e => {
                 this.$bus.$emit('document-body-clicked');
             });
+        },
+        setupApplicationMenu () {
+            mainProcessAPI.receive('app-menu-command', this.handleApplicationMenuCommand);
+            this.applicationMenuStateUnwatch = this.$watch(
+                () => [
+                    this.$route.path,
+                    this.$store.state.app.editorOpened,
+                    this.$store.state.app.config.enableAdvancedPreview,
+                    this.$store.state.components.sidebar.syncInProgress,
+                    this.$store.state.currentSite.config.name,
+                    this.$store.state.currentSite.themeSettings &&
+                        this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                        this.$store.state.currentSite.themeSettings.supportedFeatures.pages
+                ],
+                this.syncApplicationMenuState,
+                { immediate: true }
+            );
+        },
+        syncApplicationMenuState () {
+            let siteName = this.$store.state.currentSite.config.name || '';
+            let supportedFeatures = this.$store.state.currentSite.themeSettings && this.$store.state.currentSite.themeSettings.supportedFeatures;
+
+            mainProcessAPI.send('app-menu-state', {
+                advancedPreview: this.$store.state.app.config.enableAdvancedPreview === true,
+                editorOpen: this.itemEditorDisplayed || this.$store.state.app.editorOpened === true,
+                hasSite: siteName !== '' && siteName !== '!',
+                pagesSupported: !supportedFeatures || supportedFeatures.pages !== false,
+                ready: !this.splashScreenDisplayed,
+                siteName: siteName,
+                syncInProgress: this.$store.state.components.sidebar.syncInProgress === true
+            });
+        },
+        handleApplicationMenuCommand (command) {
+            let newContent = /^new-(post|page)-(blockeditor|tinymce|markdown)$/.exec(command);
+
+            if (newContent) {
+                this.openNewContent(newContent[1], newContent[2]);
+                return;
+            }
+
+            if (GLOBAL_MENU_ROUTES[command]) {
+                this.navigateFromApplicationMenu(GLOBAL_MENU_ROUTES[command]);
+                return;
+            }
+
+            if (SITE_MENU_ROUTES[command]) {
+                let siteName = this.$store.state.currentSite.config.name;
+
+                if (siteName && siteName !== '!') {
+                    this.navigateFromApplicationMenu('/site/' + siteName + '/' + SITE_MENU_ROUTES[command]);
+                }
+                return;
+            }
+
+            if (command === 'check-updates') {
+                this.navigateFromApplicationMenu('/notifications-center/');
+                this.$nextTick(() => this.$bus.$emit('app-get-forced-notifications'));
+            } else if (command === 'edit-find') {
+                this.$bus.$emit('app-show-search-form');
+            } else if (command === 'site-preview') {
+                this.$bus.$emit('app-menu-preview');
+            } else if (command === 'site-generate-preview') {
+                this.$bus.$emit('app-menu-generate-preview');
+            } else if (command === 'site-sync') {
+                this.$bus.$emit('app-menu-sync');
+            } else if (command === 'view-reset-zoom') {
+                this.setApplicationZoom(1);
+            } else if (command === 'view-zoom-in') {
+                this.setApplicationZoom(this.getApplicationZoom() + 0.05);
+            } else if (command === 'view-zoom-out') {
+                this.setApplicationZoom(this.getApplicationZoom() - 0.05);
+            }
+        },
+        navigateFromApplicationMenu (path) {
+            if (this.itemEditorDisplayed || this.$store.state.app.editorOpened) {
+                return;
+            }
+
+            this.$router.push(path);
+        },
+        openNewContent (type, editorType) {
+            let siteName = this.$store.state.currentSite.config.name;
+
+            if (!siteName || siteName === '!' || this.itemEditorDisplayed || this.$store.state.app.editorOpened) {
+                return;
+            }
+
+            if (
+                editorType === 'blockeditor' &&
+                this.$store.state.currentSite.themeSettings &&
+                this.$store.state.currentSite.themeSettings.supportedFeatures &&
+                !this.$store.state.currentSite.themeSettings.supportedFeatures.blockEditor
+            ) {
+                let translationGroup = type === 'post' ? 'post' : 'page';
+                let itemName = type === 'post' ? 'Post' : 'Page';
+
+                this.$bus.$emit('confirm-display', {
+                    message: this.$t(translationGroup + '.editorBlockNotSupportedNew' + itemName + 'Info'),
+                    okLabel: this.$t(translationGroup + '.openEditorAnyway'),
+                    isDanger: true,
+                    okClick: () => this.openContentEditor(type, editorType, siteName)
+                });
+                return;
+            }
+
+            this.openContentEditor(type, editorType, siteName);
+        },
+        openContentEditor (type, editorType, siteName) {
+            this.$store.commit('setEditorOpenState', true);
+            this.$router.push('/site/' + siteName + '/' + type + 's/editor/' + editorType + '/');
+        },
+        getApplicationZoom () {
+            let zoom = parseFloat(this.$store.state.app.config.uiZoomLevel);
+            return Number.isFinite(zoom) ? zoom : 1;
+        },
+        setApplicationZoom (zoom) {
+            let normalizedZoom = Math.min(2.5, Math.max(0.75, Math.round(zoom * 20) / 20));
+
+            this.$store.commit('setAppUIZoomLevel', normalizedZoom);
+            document.documentElement.style.setProperty('--ui-zoom-level', parseInt(normalizedZoom * 100.0, 10) + '%');
+            mainProcessAPI.send('app-set-ui-zoom-level', normalizedZoom);
         }
     },
     beforeDestroy () {
         this.$bus.$off('license-accepted');
+        mainProcessAPI.stopReceiveAll('app-license-accepted');
+        mainProcessAPI.stopReceiveAll('app-menu-command');
+
+        if (this.applicationMenuStateUnwatch) {
+            this.applicationMenuStateUnwatch();
+        }
     }
 }
 </script>
