@@ -125,7 +125,7 @@ export default {
         margin: 0;
         opacity: var(--sidebar-link-opacity);
         position: relative;
-        padding: .75rem .6rem;
+        padding: var(--space-3) .6rem;
         transition: var(--transition-default);
 
         &:active,
