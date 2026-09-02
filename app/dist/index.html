@@ -2,15 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob: http: https:; font-src 'self' file: data:; media-src 'self' file: blob: http: https:; frame-src file: http: https:; connect-src 'self' file:;">
     <title>Publii</title>
   </head>
   <body>
     <div id="app"></div>
-    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="./init.js"></script>
     <script src="./vendor/jquery/jquery.min.js"></script>
     <script src="./vendor/tinymce/tinymce.min.js"></script>
-    <script>if (window.module) module = window.module;</script>
-    <script>if (typeof global === 'undefined') window.global = window;</script>
+    <script src="./init-post.js"></script>
     <script src="./build.js"></script>
   </body>
 </html>

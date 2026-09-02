@@ -15,6 +15,8 @@ npm-debug.log
 /app/dist/*.svg
 /app/dist/*.node
 !/app/dist/index.html
+!/app/dist/init.js
+!/app/dist/init-post.js
 /app/tree.txt
 /dist
 /cache/

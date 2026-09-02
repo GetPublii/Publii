@@ -381,19 +381,19 @@ export default {
                 let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
 
                 if (!document.querySelector('#custom-post-editor-script')) {
-                    $(document.body).append(
-                        // It seems that Webpack goes crazy when it sees 'script' tag :)
-                        $('<' + 'script' + ' id="custom-post-editor-script" src="' + customEditorScriptPath + '"></' + 'script' + '>')
-                    );
+                    let customEditorScript = document.createElement('script');
+                    customEditorScript.id = 'custom-post-editor-script';
+                    customEditorScript.src = customEditorScriptPath;
+                    document.body.appendChild(customEditorScript);
                 }
             }
 
             // Add prism.js script
             if (!document.querySelector('#custom-prismjs-script')) {
-                $(document.body).append(
-                    // It seems that Webpack goes crazy when it sees 'script' tag :)
-                    $('<' + 'script' + ' id="custom-prismjs-script" src="' + this.vendorPath + '/prism.js"></' + 'script' + '>')
-                );
+                let prismScript = document.createElement('script');
+                prismScript.id = 'custom-prismjs-script';
+                prismScript.src = this.vendorPath + '/prism.js';
+                document.body.appendChild(prismScript);
             }
         }
     }, 

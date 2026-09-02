@@ -57,7 +57,7 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
+  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'inline-cheap-module-source-map',
   externals: {
     'sharp': 'commonjs sharp'
   }
