@@ -1099,6 +1099,7 @@
         "siteWithThisNameExists": "A site using this name already exists!",
         "specifyNameForWebsiteDuplicate": "Please specify the new name for the duplicate website:",
         "websiteAuthorRequired": "author name is required and should contain letters",
+        "websiteAlreadyOpenInCurrentWindow": "{websiteName} is already open in this window",
         "websiteName": "Website name",
         "websiteNameAlreadyInUseMsg": "The selected name is in use by another website. Please try again.",
         "websiteNameCantBeEmpty": "The website name cannot be empty. Please try again.",

@@ -36,11 +36,16 @@
                 'single-site-actions-disabled': duplicateInProgress 
             }">
             <button
-                v-if="canOpenInNewWindow"
+                v-if="currentSiteName"
                 type="button"
-                class="single-site-actions-btn open-in-new-window"
-                :title="$t('site.openWebsiteInNewWindow', { websiteName: displayName })"
-                :aria-label="$t('site.openWebsiteInNewWindow', { websiteName: displayName })"
+                :class="{
+                    'single-site-actions-btn': true,
+                    'open-in-new-window': true,
+                    'is-unavailable': isCurrentSite
+                }"
+                :title="openWebsiteInNewWindowLabel"
+                :aria-label="openWebsiteInNewWindowLabel"
+                :aria-disabled="isCurrentSite ? 'true' : 'false'"
                 :disabled="duplicateInProgress"
                 @click.stop="openWebsiteInNewWindow">
                 <icon
@@ -103,8 +108,15 @@ export default {
                 ? this.$store.state.currentSite.config.name || ''
                 : '';
         },
-        canOpenInNewWindow () {
-            return this.currentSiteName !== '' && this.currentSiteName !== this.site;
+        isCurrentSite () {
+            return this.currentSiteName === this.site;
+        },
+        openWebsiteInNewWindowLabel () {
+            if (this.isCurrentSite) {
+                return this.$t('site.websiteAlreadyOpenInCurrentWindow', { websiteName: this.displayName });
+            }
+
+            return this.$t('site.openWebsiteInNewWindow', { websiteName: this.displayName });
         }
     },
     data () {
@@ -120,6 +132,10 @@ export default {
             this.$router.push(`/site/${siteToDisplay}`);
         },
         async openWebsiteInNewWindow () {
+            if (this.isCurrentSite) {
+                return;
+            }
+
             try {
                 let result = await mainProcessAPI.invoke('app-open-new-window', this.site);
 
@@ -278,6 +294,10 @@ export default {
 
         .single-site-actions-btn {
             opacity: 1;
+
+            &.is-unavailable {
+                opacity: .6;
+            }
         }
     }
 }
@@ -307,6 +327,10 @@ export default {
     &:focus-within {
         .single-site-actions-btn {
             opacity: 1;
+
+            &.is-unavailable {
+                opacity: .6;
+            }
         }
     }
 }
@@ -378,6 +402,15 @@ export default {
         &:hover > svg {
             color: var(--icon-tertiary-color);
             fill: none;
+        }
+    }
+
+    &.is-unavailable {
+        cursor: not-allowed;
+
+        &:hover > svg {
+            color: var(--icon-secondary-color);
+            transform: scale(.9);
         }
     }
 

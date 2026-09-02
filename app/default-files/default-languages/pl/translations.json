@@ -1097,6 +1097,7 @@
         "siteWithThisNameExists": "Strona o podanej nazwie już istnieje!",
         "specifyNameForWebsiteDuplicate": "Podaj nową nazwę duplikatu witryny:",
         "websiteAuthorRequired": "nazwa autora strony jest wymagana i powinna zawierać litery",
+        "websiteAlreadyOpenInCurrentWindow": "Witryna „{websiteName}” jest już otwarta w tym oknie",
         "websiteName": "Nazwa strony",
         "websiteNameAlreadyInUseMsg": "Wybrana nazwa jest używana przez inną stronę internetową. Proszę spróbować ponownie.",
         "websiteNameCantBeEmpty": "Nazwa witryny nie może być pusta. Proszę spróbować ponownie.",
