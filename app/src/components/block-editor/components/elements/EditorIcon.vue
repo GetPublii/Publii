@@ -102,7 +102,7 @@ export default {
         case 'unordered-list': return 18;
         case 'quote': return 16;
         case 'code': return 18;
-        case 'table': return 14;
+        case 'table': return 18;
         case 'table-header': return 18;
         case 'table-header-column': return 18;
         case 'html': return 18;
