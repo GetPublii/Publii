@@ -57,6 +57,10 @@ const SITE_MENU_ROUTES = Object.freeze({
     'tools-wordpress-import': 'tools/wp-importer'
 });
 
+const RECENT_SITES_STORAGE_KEY = 'publii-recent-websites';
+const LAST_OPENED_SITE_STORAGE_KEY = 'publii-last-opened-website';
+const MAX_RECENT_SITES = 5;
+
 export default {
     name: 'app',
     props: [
@@ -188,24 +192,73 @@ export default {
         setupApplicationMenu () {
             mainProcessAPI.receive('app-menu-command', this.handleApplicationMenuCommand);
             this.applicationMenuStateUnwatch = this.$watch(
-                () => [
-                    this.$route.path,
-                    this.$store.state.app.editorOpened,
-                    this.$store.state.app.config.enableAdvancedPreview,
-                    this.$store.state.components.sidebar.syncInProgress,
-                    this.$store.state.currentSite.config && this.$store.state.currentSite.config.name,
-                    this.$store.state.currentSite.themeSettings &&
-                        this.$store.state.currentSite.themeSettings.supportedFeatures &&
-                        this.$store.state.currentSite.themeSettings.supportedFeatures.pages
-                ],
+                () => {
+                    let currentSite = this.$store.state.currentSite || {};
+
+                    return [
+                        this.$route.path,
+                        this.$store.state.app.editorOpened,
+                        this.$store.state.app.config.enableAdvancedPreview,
+                        this.$store.state.components.sidebar.syncInProgress,
+                        currentSite.config && currentSite.config.name,
+                        currentSite.themeSettings &&
+                            currentSite.themeSettings.supportedFeatures &&
+                            currentSite.themeSettings.supportedFeatures.pages
+                    ];
+                },
                 this.syncApplicationMenuState,
                 { immediate: true }
             );
         },
+        getRecentSiteNames (activeSiteName = '') {
+            let storedSiteNames = [];
+            let lastOpenedSite = '';
+            let rawStoredValue = '';
+            let availableSiteNames = Array.isArray(this.siteNames) ? this.siteNames : [];
+
+            try {
+                rawStoredValue = window.localStorage.getItem(RECENT_SITES_STORAGE_KEY) || '';
+            } catch (error) {}
+
+            try {
+                let parsedSiteNames = JSON.parse(rawStoredValue || '[]');
+
+                if (Array.isArray(parsedSiteNames)) {
+                    storedSiteNames = parsedSiteNames.slice(0, MAX_RECENT_SITES);
+                }
+            } catch (error) {
+                storedSiteNames = [];
+            }
+
+            try {
+                lastOpenedSite = window.localStorage.getItem(LAST_OPENED_SITE_STORAGE_KEY) || '';
+            } catch (error) {}
+
+            let recentSiteNames = [activeSiteName, lastOpenedSite]
+                .concat(storedSiteNames)
+                .filter((siteName, index, allSiteNames) => (
+                    typeof siteName === 'string' &&
+                    siteName.length <= 200 &&
+                    availableSiteNames.indexOf(siteName) > -1 &&
+                    allSiteNames.indexOf(siteName) === index
+                ))
+                .slice(0, MAX_RECENT_SITES);
+            let serializedSiteNames = JSON.stringify(recentSiteNames);
+
+            if (serializedSiteNames !== rawStoredValue) {
+                try {
+                    window.localStorage.setItem(RECENT_SITES_STORAGE_KEY, serializedSiteNames);
+                } catch (error) {}
+            }
+
+            return recentSiteNames;
+        },
         syncApplicationMenuState () {
-            let siteName = (this.$store.state.currentSite.config && this.$store.state.currentSite.config.name) || '';
-            let routeSiteName = this.$route.params.name;
-            let supportedFeatures = this.$store.state.currentSite.themeSettings && this.$store.state.currentSite.themeSettings.supportedFeatures;
+            let currentSite = this.$store.state.currentSite || {};
+            let siteConfig = currentSite.config || {};
+            let siteName = siteConfig.name || '';
+            let routeSiteName = (this.$route.params && this.$route.params.name) || '';
+            let supportedFeatures = currentSite.themeSettings && currentSite.themeSettings.supportedFeatures;
             let siteIsReady = siteName !== '' &&
                 siteName !== '!' &&
                 (!routeSiteName || routeSiteName === siteName);
@@ -216,6 +269,7 @@ export default {
                 hasSite: siteIsReady,
                 pagesSupported: !supportedFeatures || supportedFeatures.pages !== false,
                 ready: !this.splashScreenDisplayed,
+                recentSiteNames: this.getRecentSiteNames(siteIsReady ? siteName : ''),
                 siteName: siteName,
                 syncInProgress: this.$store.state.components.sidebar.syncInProgress === true
             });

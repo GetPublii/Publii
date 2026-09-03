@@ -2,6 +2,7 @@
 
 const MENU_COMMAND_CHANNEL = 'app-menu-command';
 const MENU_STATE_CHANNEL = 'app-menu-state';
+const MAX_RECENT_SITES = 5;
 
 const DEFAULT_LABELS = Object.freeze({
     about: 'About Publii',
@@ -40,6 +41,7 @@ const DEFAULT_LABELS = Object.freeze({
     newPage: 'New Page',
     newPost: 'New Post',
     newWindow: 'New Window',
+    openRecentSite: 'Open Recent Site',
     pages: 'Pages',
     paste: 'Paste',
     pasteAndMatchStyle: 'Paste and Match Style',
@@ -83,6 +85,90 @@ const EXTERNAL_LINKS = Object.freeze({
     releaseNotes: 'https://github.com/GetPublii/Publii/releases',
     reportIssue: 'https://github.com/GetPublii/Publii/issues'
 });
+
+function sanitizeMenuLabel (value, fallback = 'Site') {
+    const clean = input => typeof input === 'string'
+        ? input.replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 100)
+        : '';
+
+    return clean(value) || clean(fallback) || 'Site';
+}
+
+function normalizeRecentSiteNames (siteNames, sites, limit = MAX_RECENT_SITES) {
+    if (!Array.isArray(siteNames) || !sites || typeof sites !== 'object') {
+        return [];
+    }
+
+    const normalized = [];
+    const maxItems = Number.isInteger(limit) && limit > 0 ? limit : MAX_RECENT_SITES;
+
+    for (const siteName of siteNames) {
+        if (
+            typeof siteName === 'string' &&
+            siteName.length <= 200 &&
+            Object.prototype.hasOwnProperty.call(sites, siteName) &&
+            normalized.indexOf(siteName) === -1
+        ) {
+            normalized.push(siteName);
+        }
+
+        if (normalized.length === maxItems) {
+            break;
+        }
+    }
+
+    return normalized;
+}
+
+function buildDockMenuTemplate (options = {}) {
+    const translate = options.translate || (key => DEFAULT_LABELS[key] || key);
+    const sites = options.sites && typeof options.sites === 'object' ? options.sites : {};
+    const recentSiteNames = normalizeRecentSiteNames(options.recentSiteNames, sites);
+    const openNewWindow = options.openNewWindow || (() => {});
+    const openSite = options.openSite || (() => {});
+    const canOpenSites = options.canOpenSites === true;
+    const label = key => translate(key) || DEFAULT_LABELS[key] || key;
+    const separator = () => ({ type: 'separator' });
+    const template = [{
+        id: 'dock-new-window',
+        label: label('newWindow'),
+        click: () => openNewWindow()
+    }];
+
+    if (recentSiteNames.length > 0) {
+        const entries = recentSiteNames.map(siteName => {
+            const site = sites[siteName] || {};
+
+            return {
+                displayName: sanitizeMenuLabel(site.displayName, siteName),
+                siteName
+            };
+        });
+        const duplicateDisplayNames = entries.reduce((counts, entry) => {
+            const key = entry.displayName.toLocaleLowerCase();
+            counts[key] = (counts[key] || 0) + 1;
+            return counts;
+        }, {});
+
+        template.push(
+            separator(),
+            {
+                id: 'dock-recent-sites',
+                label: label('openRecentSite'),
+                enabled: canOpenSites,
+                submenu: entries.map((entry, index) => ({
+                    id: 'dock-recent-site-' + index,
+                    label: duplicateDisplayNames[entry.displayName.toLocaleLowerCase()] > 1
+                        ? entry.displayName + ' — ' + sanitizeMenuLabel(entry.siteName)
+                        : entry.displayName,
+                    click: () => openSite(entry.siteName)
+                }))
+            }
+        );
+    }
+
+    return template;
+}
 
 function buildApplicationMenuTemplate (options = {}) {
     const platform = options.platform || process.platform;
@@ -301,8 +387,12 @@ class ApplicationMenuController {
         this.platform = options.platform || process.platform;
         this.isDevelopment = options.isDevelopment === true;
         this.menu = null;
+        this.dockMenu = null;
         this.windowStates = new Map();
         this.trackedWindows = new Set();
+        this.recentSiteNames = [];
+        this.recentSitesInitialized = false;
+        this.applicationReady = false;
 
         this.handleMenuState = this.handleMenuState.bind(this);
         this.handleWindowFocus = this.handleWindowFocus.bind(this);
@@ -331,20 +421,86 @@ class ApplicationMenuController {
             translate: key => this.translate(key),
             dispatch: (command, browserWindow) => this.dispatch(command, browserWindow),
             openExternal: url => this.shell.openExternal(url),
-            openNewWindow: () => this.appInstance.openNewWindow()
+            openNewWindow: () => this.openNewWindow()
         });
 
         this.menu = this.Menu.buildFromTemplate(template);
         this.Menu.setApplicationMenu(this.menu);
 
-        if (this.platform === 'darwin' && this.app.dock) {
-            this.app.dock.setMenu(this.Menu.buildFromTemplate([{
-                label: this.translate('newWindow'),
-                click: () => this.appInstance.openNewWindow()
-            }]));
-        }
+        this.rebuildDockMenu();
 
         this.applyFocusedWindowState();
+    }
+
+    rebuildDockMenu () {
+        if (this.platform !== 'darwin' || !this.app.dock) {
+            return;
+        }
+
+        const sites = this.appInstance.sites || {};
+        const template = buildDockMenuTemplate({
+            canOpenSites: this.applicationReady,
+            openNewWindow: () => this.openNewWindow(),
+            openSite: siteName => this.openSiteFromDock(siteName),
+            recentSiteNames: this.recentSiteNames,
+            sites,
+            translate: key => this.translate(key)
+        });
+
+        this.dockMenu = this.Menu.buildFromTemplate(template);
+        this.app.dock.setMenu(this.dockMenu);
+    }
+
+    openNewWindow () {
+        if (
+            this.appInstance.windowManager &&
+            this.appInstance.windowManager.getAllWindows().length === 0 &&
+            typeof this.appInstance.reopenMainWindow === 'function'
+        ) {
+            return this.appInstance.reopenMainWindow();
+        }
+
+        return this.appInstance.openNewWindow();
+    }
+
+    getSiteConfig (siteName) {
+        const sites = this.appInstance.sites || {};
+
+        if (typeof siteName !== 'string' || !Object.prototype.hasOwnProperty.call(sites, siteName)) {
+            return null;
+        }
+
+        return sites[siteName];
+    }
+
+    openSiteFromDock (siteName) {
+        if (!this.applicationReady || !this.getSiteConfig(siteName)) {
+            return;
+        }
+
+        this.appInstance.openNewWindow(siteName);
+    }
+
+    updateRecentSites (siteNames) {
+        const normalized = normalizeRecentSiteNames(siteNames, this.appInstance.sites || {});
+
+        if (!this.recentSitesInitialized) {
+            this.recentSiteNames = normalized;
+            this.recentSitesInitialized = true;
+            return;
+        }
+
+        this.recentSiteNames = normalizeRecentSiteNames(
+            this.recentSiteNames.concat(normalized.filter(siteName => this.recentSiteNames.indexOf(siteName) === -1)),
+            this.appInstance.sites || {}
+        );
+    }
+
+    touchRecentSite (siteName) {
+        this.recentSiteNames = normalizeRecentSiteNames(
+            [siteName].concat(this.recentSiteNames.filter(name => name !== siteName)),
+            this.appInstance.sites || {}
+        );
     }
 
     dispatch (command, browserWindow) {
@@ -364,12 +520,18 @@ class ApplicationMenuController {
             hasSite: state.hasSite === true,
             pagesSupported: state.pagesSupported !== false,
             ready: state.ready === true,
+            recentSiteNames: normalizeRecentSiteNames(state.recentSiteNames, this.appInstance.sites || {}),
             siteName: typeof state.siteName === 'string' ? state.siteName.slice(0, 200) : '',
             syncInProgress: state.syncInProgress === true
         };
 
         const senderId = event.sender.id;
         this.windowStates.set(senderId, normalizedState);
+        this.updateRecentSites(normalizedState.recentSiteNames);
+
+        if (normalizedState.ready) {
+            this.applicationReady = true;
+        }
 
         const browserWindow = this.BrowserWindow.fromWebContents(event.sender);
 
@@ -378,17 +540,30 @@ class ApplicationMenuController {
             browserWindow.once('closed', () => {
                 this.windowStates.delete(senderId);
                 this.trackedWindows.delete(browserWindow.id);
+                this.rebuildDockMenu();
             });
         }
 
         if (browserWindow && browserWindow.isFocused()) {
+            if (normalizedState.ready && normalizedState.hasSite && this.getSiteConfig(normalizedState.siteName)) {
+                this.touchRecentSite(normalizedState.siteName);
+            }
+
             this.applyState(normalizedState);
         }
+
+        this.rebuildDockMenu();
     }
 
     handleWindowFocus (event, browserWindow) {
         const state = this.windowStates.get(browserWindow.webContents.id);
+
+        if (state && state.ready && state.hasSite && this.getSiteConfig(state.siteName)) {
+            this.touchRecentSite(state.siteName);
+        }
+
         this.applyState(state);
+        this.rebuildDockMenu();
     }
 
     applyFocusedWindowState () {
@@ -452,7 +627,10 @@ module.exports = {
     ApplicationMenuController,
     DEFAULT_LABELS,
     EXTERNAL_LINKS,
+    MAX_RECENT_SITES,
     MENU_COMMAND_CHANNEL,
     MENU_STATE_CHANNEL,
-    buildApplicationMenuTemplate
+    buildApplicationMenuTemplate,
+    buildDockMenuTemplate,
+    normalizeRecentSiteNames
 };
