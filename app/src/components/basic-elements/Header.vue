@@ -68,11 +68,6 @@ export default {
     margin-left: auto;
     white-space: nowrap;
 
-    button {
-        position: relative;
-        top: -0.75rem;
-    }
-
     .button {
         margin-left: auto;
 

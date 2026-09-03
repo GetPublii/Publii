@@ -1,16 +1,22 @@
 <template>
-    <div :class="{
-        'button': true,
-        'is-primary': intent === 'primary',
-        'has-icon': Boolean(buttonIcon),
-        'has-icon-preview': previewIcon,
-        'is-reversed': isReversed,
-        'disabled': disabled
-    }">
-        <span
+    <div
+        :class="{
+            'button': true,
+            'is-primary': intent === 'primary',
+            'has-icon': Boolean(buttonIcon),
+            'has-icon-preview': previewIcon,
+            'is-reversed': isReversed,
+            'disabled': disabled
+        }"
+        @focusout="handleFocusOut">
+        <button
+            ref="trigger"
+            type="button"
             class="button-trigger"
             :style="'min-width:' + minWidth + 'px;'"
-            @click.stop="doCurrentAction()">
+            :disabled="disabled"
+            @click.stop="doCurrentAction()"
+            @keydown="handleTriggerKeydown">
             <icon
                 v-if="buttonIcon"
                 size="s"
@@ -18,43 +24,55 @@
                 :name="buttonIcon" />
 
             {{ currentLabel }}
-       
 
-        <span
-            v-if="previewIcon && currentIcon"
-            class="button-trigger-icon">
-            <icon
-                size="s"
-                non-interactive
-                :name="currentIcon" />
-        </span>
+            <span
+                v-if="previewIcon && currentIcon"
+                class="button-trigger-icon">
+                <icon
+                    size="s"
+                    non-interactive
+                    :name="currentIcon" />
+            </span>
+        </button>
 
-         </span>
-
-        <span
+        <button
+            ref="toggle"
+            type="button"
             class="button-toggle"
-            @click.stop="toggleDropdown()">
-        </span>
+            aria-haspopup="menu"
+            :aria-expanded="dropdownVisible ? 'true' : 'false'"
+            :aria-controls="dropdownVisible ? menuID : null"
+            :aria-label="$t('ui.otherOptions')"
+            :disabled="disabled"
+            @click.stop="toggleDropdown($event)"
+            @keydown="handleToggleKeydown">
+        </button>
 
         <div
             v-if="dropdownVisible"
-            class="button-dropdown">
-            <div
+            :id="menuID"
+            class="button-dropdown"
+            role="menu"
+            @keydown="handleMenuKeydown">
+            <button
                 v-for="(item, index) of filteredItems"
                 :key="'button-dropdown-' + index"
+                type="button"
                 class="button-dropdown-item"
-                @click="doAction(item.value)">
+                role="menuitem"
+                tabindex="-1"
+                @click="doAction(item.value, $event)">
                 {{ item.label }}
 
-                <div
+                <span
                     v-if="previewIcon"
                     class="button-dropdown-item-icon">
                     <icon
                         size="s"
                         non-interactive
                         :name="item.icon" />
-                </div>
-            </div>
+                </span>
+            </button>
         </div>
     </div>
 </template>
@@ -126,6 +144,9 @@ export default {
             }
 
             return false;
+        },
+        menuID () {
+            return 'btn-dropdown-menu-' + this._uid;
         }
     },
     data () {
@@ -152,7 +173,7 @@ export default {
 
     },
     methods: {
-        doAction (actionName) {
+        doAction (actionName, event = null) {
             this.value = actionName;
             this.items.filter(item => item.value === this.value)[0].onClick();
 
@@ -161,15 +182,111 @@ export default {
             }
 
             this.hideDropdown();
+
+            if (this.isKeyboardClick(event)) {
+                this.focusElement('trigger');
+            }
         },
         doCurrentAction () {
             this.items.filter(item => item.value === this.value)[0].onClick();
         },
-        toggleDropdown () {
+        toggleDropdown (event = null) {
             this.dropdownVisible = !this.dropdownVisible;
+
+            if (this.dropdownVisible && this.isKeyboardClick(event)) {
+                this.focusMenuItem(0);
+            }
+        },
+        openDropdown (indexToFocus) {
+            this.dropdownVisible = true;
+            this.focusMenuItem(indexToFocus);
         },
         hideDropdown () {
             this.dropdownVisible = false;
+        },
+        closeDropdownFromKeyboard () {
+            if (!this.dropdownVisible) {
+                return;
+            }
+
+            this.hideDropdown();
+            this.focusElement('toggle');
+        },
+        isKeyboardClick (event) {
+            // Clicks synthesized from Enter or Space report detail === 0
+            return !!event && event.detail === 0;
+        },
+        getMenuItems () {
+            return Array.from(this.$el.querySelectorAll('.button-dropdown-item'));
+        },
+        focusElement (refName) {
+            this.$nextTick(() => {
+                if (this.$refs[refName]) {
+                    this.$refs[refName].focus();
+                }
+            });
+        },
+        focusMenuItem (index) {
+            this.$nextTick(() => {
+                let menuItems = this.getMenuItems();
+
+                if (!menuItems.length) {
+                    return;
+                }
+
+                let normalizedIndex = ((index % menuItems.length) + menuItems.length) % menuItems.length;
+                menuItems[normalizedIndex].focus();
+            });
+        },
+        handleTriggerKeydown (event) {
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                this.openDropdown(0);
+            }
+        },
+        handleToggleKeydown (event) {
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                this.openDropdown(0);
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                this.openDropdown(-1);
+            } else if (event.key === 'Escape') {
+                this.closeDropdownFromKeyboard();
+            }
+        },
+        handleMenuKeydown (event) {
+            let currentIndex = this.getMenuItems().indexOf(document.activeElement);
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                this.focusMenuItem(currentIndex + 1);
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                this.focusMenuItem(currentIndex - 1);
+            } else if (event.key === 'Home') {
+                event.preventDefault();
+                this.focusMenuItem(0);
+            } else if (event.key === 'End') {
+                event.preventDefault();
+                this.focusMenuItem(-1);
+            } else if (event.key === 'Escape') {
+                event.preventDefault();
+                this.closeDropdownFromKeyboard();
+            } else if (event.key === 'Tab') {
+                this.hideDropdown();
+            }
+        },
+        handleFocusOut (event) {
+            if (!this.dropdownVisible) {
+                return;
+            }
+
+            if (event.relatedTarget && this.$el.contains(event.relatedTarget)) {
+                return;
+            }
+
+            this.hideDropdown();
         },
         setValue (newValue) {
             this.value = newValue;
@@ -225,6 +342,7 @@ export default {
         background-color: var(--button-primary-bg);
 
         .button-trigger {
+            &:focus-visible,
             &:hover {
                 background: var(--button-primary-bg-hover);
             }
@@ -234,6 +352,7 @@ export default {
             background: var(--button-primary-bg-hover);
             border-left: 1px solid var(--button-primary-bg);
 
+            &:focus-visible,
             &:hover {
                 background: var(--button-primary-bg-hover);
 
@@ -295,11 +414,43 @@ export default {
     }
 }
 
+/* Native <button> parts: inherit like the former span and div parts and ignore
+   global element rules such as vendor `.buttons button` margins. */
+.button-trigger,
+.button-toggle,
+.button-dropdown-item {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    margin: 0;
+    padding: 0;
+    text-align: inherit;
+    text-indent: inherit;
+    text-shadow: inherit;
+    text-transform: inherit;
+    white-space: inherit;
+    word-spacing: inherit;
+}
+
+.button-trigger:focus-visible,
+.button-toggle:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
+}
+
 .button-trigger {
     border-radius: var(--radius-base);
     display: block;
     height: 4.4rem;
     left: 0;
+    /* Chromium centres <button> content vertically; the bottom padding equals
+       height minus the inherited 4.3rem line height, so the label stays where
+       the former span drew it. */
+    padding-bottom: .1rem;
     padding-left: 1.3rem;
     padding-right: 6rem;
     position: relative;
@@ -307,6 +458,7 @@ export default {
     top: 0;
     transition: var(--transition-default);
 
+    &:focus-visible,
     &:hover {
         background: var(--button-primary-bg-hover);
     }
@@ -346,6 +498,7 @@ export default {
         height: 100%;
         left: 0;
         position: absolute;
+        top: 0;
         transition: var(--transition-default);
         width: 100%;
     }
@@ -362,6 +515,7 @@ export default {
         transform: translateX(-50%) translateY(-2.5px);
     }
 
+    &:focus-visible,
     &:hover {
         background: var(--button-primary-bg-hover);
 
@@ -387,17 +541,25 @@ export default {
 .button-dropdown-item {
     border-top: 1px solid var(--border-light-color);
     color: var(--text-primary-color);
+    display: block;
     padding: .2rem var(--space-8);
     position: relative;
     text-align: left;
     transition: var(--transition-default);
+    width: 100%;
 
+    &:focus-visible,
     &:hover {
         background: var(--color-surface-subtle);
 
         .button-dropdown-item-icon .icon {
             color: var(--icon-tertiary-color);
         }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: -2px;
     }
 
     &:first-child {

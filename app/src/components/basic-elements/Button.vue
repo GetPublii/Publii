@@ -1,8 +1,12 @@
 <template>
-    <span
+    <button
         :class="cssClasses"
-        @click="onClick"
-        :title="title">
+        type="button"
+        :disabled="disabled"
+        :aria-disabled="disabledWithEvents ? 'true' : null"
+        :aria-busy="loading ? 'true' : null"
+        :title="title"
+        @click="onClick">
         <icon
             v-if="icon"
             size="s"
@@ -14,7 +18,7 @@
         <span
             v-if="loading"
             class="preloader"></span>
-    </span>
+    </button>
 </template>
 
 <script>
@@ -141,6 +145,9 @@ export default {
  */
 
 .button {
+    /* Native <button> reset: keep the inheritance of the former inline span and
+       ignore global element rules such as vendor `.buttons button` margins. */
+    appearance: none;
     background: var(--button-primary-bg);
     border: none;
     border-radius: var(--radius-base);
@@ -148,23 +155,35 @@ export default {
     color: var(--white);
     cursor: pointer;
     display: inline-block;
+    font: inherit;
     font-size: var(--font-size-ui-sm);
     font-family: var(--font-family-sans);
     font-weight: var(--font-weight-medium);
     height: 4.4rem;
+    letter-spacing: inherit;
     line-height: 4.3rem;
-    padding: 0 1.3rem;
+    margin: 0;
+    /* Chromium centres <button> content vertically; the bottom padding equals
+       height minus line-height, so the line box stays pinned to the top exactly
+       like the former inline span. */
+    padding: 0 1.3rem .1rem;
     position: relative;
+    text-align: inherit;
+    text-indent: inherit;
+    text-shadow: inherit;
+    text-transform: inherit;
     transition: var(--transition-default);
     user-select: none;
     white-space: nowrap;
+    word-spacing: inherit;
 
-    &:focus {
-        outline: none;
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
     }
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: var(--button-primary-bg-hover);
@@ -204,7 +223,7 @@ export default {
     color: var(--white);
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: var(--button-primary-bg-hover);
@@ -221,7 +240,7 @@ export default {
     }
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: var(--button-secondary-bg-hover);
@@ -230,7 +249,7 @@ export default {
         & > svg {
             fill: var(--button-secondary-color-hover);
         }
-    }  
+    }
 }
 
 .button-cancel-popup {
@@ -240,7 +259,7 @@ export default {
     color: var(--popup-btn-cancel-color);
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: var(--popup-btn-cancel-bg-hover);
@@ -252,7 +271,7 @@ export default {
     background: var(--button-danger-bg);
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: var(--button-danger-bg-hover);
@@ -264,7 +283,7 @@ export default {
     background: var(--color-success);
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
          background: var(--color-success);
@@ -277,7 +296,7 @@ export default {
     color: var(--text-primary-color);
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: transparent;
@@ -296,9 +315,9 @@ export default {
     color: var(--link-primary-color);
     font-size: var(--font-size-ui-sm);
     font-weight: var(--font-weight-regular);
-    
+
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: transparent;
@@ -315,7 +334,7 @@ export default {
     font-weight: var(--font-weight-regular);
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: transparent;
@@ -341,8 +360,12 @@ export default {
     text-align: center;
     width: 100%;
 
+    &:focus-visible {
+        outline-offset: -2px;
+    }
+
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: var(--button-primary-bg-hover);
@@ -362,7 +385,7 @@ export default {
         color: var(--text-primary-color);
 
         &:active,
-        &:focus,
+        &:focus-visible,
         &:hover,
         &.button-active {
             background: transparent;
@@ -381,7 +404,7 @@ export default {
     font-weight: var(--font-weight-medium);
     height: 5.6rem;
     line-height: 5.5rem;
-    padding: 0 var(--space-8);
+    padding: 0 var(--space-8) .1rem;
 }
 
 .button-small {
@@ -434,7 +457,7 @@ export default {
         }
 
         &:active,
-        &:focus,
+        &:focus-visible,
         &:hover {
 
            & > svg {
@@ -502,7 +525,7 @@ export default {
     }
 
     &:active,
-    &:focus,
+    &:focus-visible,
     &:hover,
     &.button-active {
         background: var(--color-surface-subtle);

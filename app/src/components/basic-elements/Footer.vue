@@ -31,11 +31,6 @@ export default {
     .buttons {
         float: right;
 
-        button {
-            position: relative;
-            top: -0.75rem;
-        }
-
         .button {
             float: right;
 
