@@ -1,6 +1,5 @@
 .empty-state {
     --empty-state-column-width: 40rem;
-    --empty-state-responsive-column-width: calc(33.3333% - 1.3333vw);
 
     clear: both;
     color: var(--text-light-color);
@@ -16,18 +15,18 @@
 
     &:not(.page):not(.post) {
         left: 50%;
-        max-width: calc(100% - 4vw);
+        max-width: min(
+            var(--empty-state-column-width),
+            calc(100% - 4vw)
+        );
         padding: 0;
         transform: translate(-50%, -40%);
-        width: min(
-            var(--empty-state-column-width),
-            var(--empty-state-responsive-column-width)
-        );
+        width: 100%;
     }
 
     .illustration {
         height: auto;
-        max-width: 95%;
+        max-width: clamp(320px, 20vw, 420px);
         width: 100%;
     }
 
