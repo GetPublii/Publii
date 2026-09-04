@@ -141,6 +141,8 @@ Use `--font-family-serif` and `--font-family-mono` only when the content role re
 
 Use `--radius-base` for ordinary rectangular controls and containers. Circles and fully rounded controls may keep a component-owned radius.
 
+Fields draw their focus ring with `--input-shadow-focus` and their invalid ring with `--input-shadow-invalid`; both share one inset shape, and the invalid ring stays visible while the field is focused. Flag a shared `text-input`, `dropdown`, or `file-select` with the `invalid` prop, which sets the `is-invalid` class and `aria-invalid` for you; a plain field takes `aria-invalid="true"` or sits inside an `is-invalid` wrapper, which the global rule in `forms.css` styles the same way.
+
 Use `--shadow-sm`, `--shadow-md`, and `--shadow-list-hover` for their documented elevation roles. Keep a unique effect local rather than adding a global shadow token without a shared role.
 
 Use `--transition-default` for the standard UI transition. Use the named `--layer-*` tokens for viewport-level surfaces. Numeric `z-index` values are allowed only for local sibling ordering inside a component-owned stacking context.
@@ -180,7 +182,7 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 | `p-button` | `intent`, `appearance`, `size`, `width`, `layout`; independent state booleans |
 | `btn-dropdown` | `intent="default|primary"`, `button-icon`, `preview-icon`, `is-reversed`, `disabled` |
 | `action-menu` | `items` array of `{ label, value, icon, intent="default|danger", disabled, visible, onClick }` or `{ separator: true }`; `label`; `icon`; `size="default|small"`; `align="left|right"`; `disabled` |
-| `text-input` | native `type`; visual `size="default|small"`; `keyboard-blocked` boolean |
+| `text-input` | native `type`; visual `size="default|small"`; `keyboard-blocked` and `invalid` booleans |
 | `field` | `spacing="normal|small"`; independent label-layout booleans |
 | `image-upload` | `size="default|small"` |
 | `progress-bar` | `intent="default|success|danger|warning"` |
@@ -348,6 +350,7 @@ Do not introduce the legacy forms in new code. The automated audit rejects the r
 | `btn-dropdown type="is-reversed"` | `is-reversed` boolean prop |
 | `text-input properties="is-small"` | `size="small"` |
 | `text-input properties="keyboard-blocked"` | `keyboard-blocked` boolean prop |
+| `text-input ariaInvalid`, or `:class="{ 'is-invalid': … }"` on `text-input`, `dropdown`, `file-select` | `invalid` boolean prop, which sets both the class and `aria-invalid` |
 | `image-upload type="small"` | `size="small"` |
 | `icon properties="not-clickable"` | `non-interactive` boolean prop |
 | `collection itemsCount` | `columns` |

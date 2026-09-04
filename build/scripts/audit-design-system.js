@@ -102,7 +102,7 @@ const legacyComponentProps = {
     'radio-buttons': ['selected'],
     'switcher': ['checked'],
     'tabs': ['isHorizontal', 'isScrollable'],
-    'text-input': ['properties']
+    'text-input': ['properties', 'ariaInvalid']
 };
 const tokenDefinitionPattern = /(^|[;{\s'"])(--[a-zA-Z0-9_-]+)\s*:/gm;
 const tokenReferencePattern = /var\(\s*(--[a-zA-Z0-9_-]+)/g;

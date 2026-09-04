@@ -31,7 +31,7 @@
                                     id="site-name-error"
                                     class="site-create-field-error"
                                     role="alert">
-                                    {{ $t('site.websiteNameRequired') }}
+                                    {{ siteNameErrorMessage }}
                                 </span>
                             </label>
 
@@ -40,10 +40,9 @@
                                 id="site-name"
                                 :spellcheck="false"
                                 :required="true"
-                                :ariaInvalid="siteNameError"
+                                :invalid="!!siteNameError"
                                 :ariaDescribedby="siteNameError ? 'site-name-error' : ''"
-                                changeEventName="add-website-name-changed"
-                                :customCssClasses="siteNameCssClasses" />
+                                changeEventName="add-website-name-changed" />
                         </div>
 
                         <div class="site-create-field">
@@ -63,10 +62,9 @@
                                 id="author-name"
                                 :spellcheck="false"
                                 :required="true"
-                                :ariaInvalid="authorNameError"
+                                :invalid="authorNameError"
                                 :ariaDescribedby="authorNameError ? 'author-name-error' : ''"
-                                changeEventName="add-website-author-changed"
-                                :customCssClasses="authorNameCssClasses" />
+                                changeEventName="add-website-author-changed" />
                         </div>
                     </div>
                 </div>
@@ -203,18 +201,18 @@
                                     id="wordpress-site-name-error"
                                     class="site-create-field-error"
                                     role="alert">
-                                    {{ $t('site.websiteNameRequired') }}
+                                    {{ wordpressSiteNameErrorMessage }}
                                 </span>
                             </label>
 
                             <text-input
+                                ref="wordpress-site-name"
                                 id="wordpress-site-name"
                                 v-model="wordpressSiteName"
                                 :spellcheck="false"
                                 :required="true"
-                                :ariaInvalid="wordpressSiteNameError"
-                                :ariaDescribedby="wordpressSiteNameError ? 'wordpress-site-name-error' : ''"
-                                :customCssClasses="wordpressSiteNameCssClasses" />
+                                :invalid="!!wordpressSiteNameError"
+                                :ariaDescribedby="wordpressSiteNameError ? 'wordpress-site-name-error' : ''" />
                         </div>
 
                         <div class="site-create-field">
@@ -234,9 +232,8 @@
                                 v-model="wordpressAuthorName"
                                 :spellcheck="false"
                                 :required="true"
-                                :ariaInvalid="wordpressAuthorNameError"
-                                :ariaDescribedby="wordpressAuthorNameError ? 'wordpress-author-name-error' : ''"
-                                :customCssClasses="wordpressAuthorNameCssClasses" />
+                                :invalid="wordpressAuthorNameError"
+                                :ariaDescribedby="wordpressAuthorNameError ? 'wordpress-author-name-error' : ''" />
                         </div>
                     </div>
                 </div>
@@ -300,8 +297,10 @@ export default {
         return {
             siteName: '',
             authorName: '',
-            siteNameError: false,
+            siteNameError: '',
             authorNameError: false,
+            nameCheckTimer: null,
+            nameCheckToken: 0,
             overlayIsVisible: false,
             backupFile: null,
             backupIsOver: false,
@@ -314,7 +313,7 @@ export default {
             wordpressStats: false,
             wordpressSiteName: '',
             wordpressAuthorName: '',
-            wordpressSiteNameError: false,
+            wordpressSiteNameError: '',
             wordpressAuthorNameError: false,
             workspaceAccent: this.$root.getCurrentWorkspaceAccent()
         }
@@ -334,28 +333,14 @@ export default {
 
             return this.$t('site.createYourFirstWebsite');
         },
-        siteNameCssClasses () {
-            if(this.siteNameError) {
-                return 'has-error';
-            }
-        },
-        authorNameCssClasses () {
-            if(this.authorNameError) {
-                return 'has-error';
-            }
-        },
-        wordpressSiteNameCssClasses () {
-            if(this.wordpressSiteNameError) {
-                return 'has-error';
-            }
-        },
-        wordpressAuthorNameCssClasses () {
-            if(this.wordpressAuthorNameError) {
-                return 'has-error';
-            }
-        },
         wordpressFileName () {
             return this.wordpressFile.split(/[\\/]/).pop();
+        },
+        siteNameErrorMessage () {
+            return this.nameErrorMessage(this.siteNameError);
+        },
+        wordpressSiteNameErrorMessage () {
+            return this.nameErrorMessage(this.wordpressSiteNameError);
         },
         defaultSiteConfig () {
             return JSON.parse(JSON.stringify(defaultSiteConfig));
@@ -375,7 +360,8 @@ export default {
             }
         },
         wordpressSiteName () {
-            this.wordpressSiteNameError = false;
+            this.wordpressSiteNameError = '';
+            this.scheduleNameCheck('wordpress', this.wordpressSiteName);
         },
         wordpressAuthorName () {
             this.wordpressAuthorNameError = false;
@@ -384,7 +370,8 @@ export default {
     mounted () {
         this.$bus.$on('add-website-name-changed', (newValue) => {
             this.siteName = newValue;
-            this.siteNameError = false;
+            this.siteNameError = '';
+            this.scheduleNameCheck('standard', newValue);
         });
 
         this.$bus.$on('add-website-author-changed', (newValue) => {
@@ -397,11 +384,72 @@ export default {
     },
     methods: {
         checkWebsiteName () {
-            if(this.siteName.trim() === '') {
-                this.siteNameError = true;
-            } else {
-                this.siteNameError = false;
+            if (this.siteName.trim() === '') {
+                this.siteNameError = 'required';
+            } else if (this.siteNameError !== 'exists') {
+                this.siteNameError = '';
             }
+        },
+        nameErrorMessage (error) {
+            if (error === 'exists') {
+                return this.$t('site.websiteNameExists');
+            }
+
+            return this.$t('site.websiteNameRequired');
+        },
+        setNameError (mode, error) {
+            if (mode === 'wordpress') {
+                this.wordpressSiteNameError = error;
+                return;
+            }
+
+            this.siteNameError = error;
+        },
+        focusNameField (mode) {
+            let field = mode === 'wordpress' ? this.$refs['wordpress-site-name'] : this.$refs['site-name'];
+            let input = field && field.$el ? field.$el.querySelector('input') : null;
+
+            if (input) {
+                input.focus();
+                input.select();
+            }
+        },
+        scheduleNameCheck (mode, name) {
+            // Ask the main process whether the website catalog is free while the user types
+            clearTimeout(this.nameCheckTimer);
+            let trimmedName = (name || '').trim();
+
+            if (trimmedName === '') {
+                return;
+            }
+
+            this.nameCheckTimer = setTimeout(() => {
+                this.checkNameAvailability(mode, trimmedName);
+            }, 300);
+        },
+        checkNameAvailability (mode, name) {
+            let token = ++this.nameCheckToken;
+
+            mainProcessAPI.stopReceiveAll('app-site-website-catalog-availability-checked');
+            mainProcessAPI.receiveOnce('app-site-website-catalog-availability-checked', (data) => {
+                if (token !== this.nameCheckToken) {
+                    return;
+                }
+
+                let currentName = mode === 'wordpress' ? this.wordpressSiteName : this.siteName;
+
+                if ((currentName || '').trim() !== name) {
+                    return;
+                }
+
+                if (data && data.catalogExists === true) {
+                    this.setNameError(mode, 'exists');
+                }
+            });
+
+            mainProcessAPI.send('app-site-check-website-catalog-availability', {
+                siteName: name
+            });
         },
         checkAuthorName () {
             if(this.authorName.trim() === '' || this.authorName.trim() === '') {
@@ -433,7 +481,12 @@ export default {
             });
         },
         createWordPressWebsite () {
-            this.wordpressSiteNameError = this.wordpressSiteName.trim() === '';
+            if (this.wordpressSiteName.trim() === '') {
+                this.wordpressSiteNameError = 'required';
+            } else if (this.wordpressSiteNameError !== 'exists') {
+                this.wordpressSiteNameError = '';
+            }
+
             this.wordpressAuthorNameError = this.wordpressAuthorName.trim() === '';
 
             if (!this.wordpressStats || this.wordpressSiteNameError || this.wordpressAuthorNameError) {
@@ -468,17 +521,13 @@ export default {
 
                 mainProcessAPI.receiveOnce('app-site-creation-duplicate', () => {
                     this.overlayIsVisible = false;
-                    this.setCreationErrors(mode, { name: true });
-                    this.$bus.$emit('alert-display', {
-                        message: this.$t('site.siteWithThisNameExists'),
-                        textCentered: true
-                    });
+                    this.setNameError(mode, 'exists');
                     this.stopSiteCreationListeners();
+                    this.$nextTick(() => this.focusNameField(mode));
                 });
 
                 mainProcessAPI.receiveOnce('app-site-creation-db-error', () => {
                     this.overlayIsVisible = false;
-                    this.setCreationErrors(mode, { name: true });
                     this.$bus.$emit('alert-display', {
                         message: this.$t('site.erroOcurredDuringSiteDatabaseCreationInfo'),
                         textCentered: true
@@ -497,12 +546,12 @@ export default {
         },
         setCreationErrors (mode, data = {}) {
             if (mode === 'wordpress') {
-                this.wordpressSiteNameError = !!data.name;
+                this.wordpressSiteNameError = data.name ? 'required' : '';
                 this.wordpressAuthorNameError = !!data.author;
                 return;
             }
 
-            this.siteNameError = !!data.name;
+            this.siteNameError = data.name ? 'required' : '';
             this.authorNameError = !!data.author;
         },
         stopSiteCreationListeners () {
@@ -739,6 +788,7 @@ export default {
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
                 message: this.$t('site.restoreFromBackup.selectSiteName'),
+                validate: name => (name || '').trim() !== '' ? true : this.$t('site.restoreFromBackup.siteNameCannotBeEmpty'),
                 okClick: this.checkCatalogAvailability,
                 okLabel: this.$t('site.restoreFromBackup.createWebsite'),
                 cancelLabel: this.$t('ui.cancel'),
@@ -750,17 +800,6 @@ export default {
             });
         },
         checkCatalogAvailability (siteName) {
-            if (siteName.trim() === '') {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('site.restoreFromBackup.siteNameCannotBeEmpty'),
-                    buttonStyle: 'danger',
-                    okClick: () => {
-                        this.askForWebsiteName (siteName);
-                    }
-                });
-                return;
-            }
-
             mainProcessAPI.send('app-site-check-website-catalog-availability', {
                 siteName: siteName
             });
@@ -823,10 +862,12 @@ export default {
         } 
     },
     beforeDestroy () {
+        clearTimeout(this.nameCheckTimer);
         this.$root.refreshCurrentAppAppearance();
         this.$bus.$off('add-website-name-changed');
         this.$bus.$off('add-website-author-changed');
         mainProcessAPI.stopReceiveAll('app-wxr-checked');
+        mainProcessAPI.stopReceiveAll('app-site-website-catalog-availability-checked');
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }

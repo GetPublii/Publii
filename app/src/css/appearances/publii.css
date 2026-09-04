@@ -36,6 +36,10 @@ html[data-app-appearance="publii"] {
     --space-16: 4rem;
     --transition-default: all .2s ease-out;
 
+    /* Form control rings: focus and invalid share one shape */
+    --input-shadow-focus: inset 0 0 2px 1px var(--input-border-focus);
+    --input-shadow-invalid: inset 0 0 2px 1px var(--color-danger);
+
     /* Site-settings previews */
     --workspace-accent-default-preview: oklch(63% 0.182 251);
     --workspace-accent-indigo-preview: oklch(57% 0.205 275);

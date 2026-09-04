@@ -913,7 +913,7 @@
                             :label="$t('settings.postsPrefix')">
                             <text-input
                                 id="url-posts-prefix"
-                                :class="{ 'is-invalid': errors.indexOf('posts-prefix') > -1 }"
+                                :invalid="errors.indexOf('posts-prefix') > -1"
                                 @click.native="clearErrors('posts-prefix')"
                                 v-model="advanced.urls.postsPrefix"
                                 :spellcheck="false"
@@ -930,7 +930,7 @@
                             :label="$t('settings.tagPrefix')">
                             <text-input
                                 id="url-tags-prefix"
-                                :class="{ 'is-invalid': errors.indexOf('tags-prefix') > -1 }"
+                                :invalid="errors.indexOf('tags-prefix') > -1"
                                 @click.native="clearErrors('tags-prefix')"
                                 v-model="advanced.urls.tagsPrefix"
                                 :spellcheck="false"
@@ -964,7 +964,7 @@
                             :label="$t('settings.authorPrefix')">
                             <text-input
                                 id="url-authors-prefix"
-                                :class="{ 'is-invalid': errors.indexOf('authors-prefix') > -1 }"
+                                :invalid="errors.indexOf('authors-prefix') > -1"
                                 @click.native="clearErrors('authors-prefix')"
                                 v-model="advanced.urls.authorsPrefix"
                                 :spellcheck="false"
@@ -998,7 +998,7 @@
                             :label="$t('settings.paginationPhrase')">
                             <text-input
                                 id="url-pagination-phrase"
-                                :class="{ 'is-invalid': errors.indexOf('pagination-phrase') > -1 }"
+                                :invalid="errors.indexOf('pagination-phrase') > -1"
                                 @click.native="clearErrors('pagination-phrase')"
                                 v-model="advanced.urls.pageName"
                                 :spellcheck="false"
@@ -1015,7 +1015,7 @@
                             :label="$t('settings.errorPage')">
                             <text-input
                                 id="error-page-file"
-                                :class="{ 'is-invalid': errors.indexOf('error-page') > -1 }"
+                                :invalid="errors.indexOf('error-page') > -1"
                                 @click.native="clearErrors('error-page')"
                                 :readonly="!currentThemeSupportsErrorPage"
                                 v-model="advanced.urls.errorPage"
@@ -1035,7 +1035,7 @@
                             :label="$t('settings.searchPage')">
                             <text-input
                                 id="search-page-file"
-                                :class="{ 'is-invalid': errors.indexOf('search-page') > -1 }"
+                                :invalid="errors.indexOf('search-page') > -1"
                                 @click.native="clearErrors('search-page')"
                                 :readonly="!currentThemeSupportsSearchPage"
                                 v-model="advanced.urls.searchPage"

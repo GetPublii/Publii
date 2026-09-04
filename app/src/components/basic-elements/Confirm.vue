@@ -13,7 +13,7 @@
                 :type="inputIsPassword ? 'password' : 'text'"
                 :value="defaultText"
                 :spellcheck="false"
-                :aria-invalid="!!inputError"
+                :invalid="!!inputError"
                 :aria-describedby="inputError ? inputErrorID : ''"
                 @input="inputError = ''"
                 ref="input" />

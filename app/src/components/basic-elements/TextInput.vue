@@ -19,7 +19,7 @@
             :step="step"
             :spellcheck="spellcheck"
             :required="required"
-            :aria-invalid="ariaInvalid ? 'true' : 'false'"
+            :aria-invalid="invalid ? 'true' : 'false'"
             :aria-describedby="ariaDescribedby || null"
             ref="input"
             :pattern="pattern"
@@ -125,7 +125,7 @@ export default {
             default: false,
             type: Boolean
         },
-        'ariaInvalid': {
+        'invalid': {
             default: false,
             type: Boolean
         },
@@ -140,6 +140,7 @@ export default {
 
             cssClasses = {
                 'input-wrapper': true,
+                'is-invalid': this.invalid,
                 'is-small': this.size === 'small',
                 'has-icon': !!this.icon,
                 'is-number': this.type === 'number'
@@ -224,7 +225,7 @@ export default {
         width: 100%;
 
         &:focus {
-            box-shadow: inset 0 0 2px 1px var(--input-border-focus);
+            box-shadow: var(--input-shadow-focus);
         }
 
         &[disabled],
@@ -244,11 +245,10 @@ export default {
         }
     }
 
-    &.is-invalid,
-    &.has-error {
-        input {
-            box-shadow: inset 0 0 0 1px var(--color-danger);
-        }
+    /* Invalid state: the shared ring, kept while focused */
+    &.is-invalid input,
+    input[aria-invalid="true"] {
+        box-shadow: var(--input-shadow-invalid);
     }
 
     &.has-icon {

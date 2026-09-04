@@ -6,7 +6,7 @@
             type="password"
             :spellcheck="false"
             :readonly="locked"
-            :class="{ 'is-invalid': isInvalid }"
+            :invalid="isInvalid"
             v-model="innerValue" />
 
         <p-button

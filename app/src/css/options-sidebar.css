@@ -47,12 +47,6 @@
         &.no-margin {
             margin: 0;
         }
-
-        &.is-invalid {
-            input {
-                box-shadow: inset 0 0 0 1px var(--color-danger) !important;
-            }
-        }
     }
 
     .msg {

@@ -4,6 +4,7 @@
         :multiple="multiple"
         :disabled="disabled"
         :readonly="readonly"
+        :aria-invalid="invalid ? 'true' : 'false'"
         :class="cssClasses"
         @change="onChangeEvent">
         <slot name="first-choice"></slot>
@@ -99,6 +100,10 @@ export default {
             default: false,
             type: Boolean
         },
+        invalid: {
+            default: false,
+            type: Boolean
+        },
         disabledValues: {
             default: () => [],
             type: Array
@@ -110,8 +115,9 @@ export default {
     },
     computed: {
         cssClasses () {
-            let cssClasses = { 
-                'no-border': this.noBorder 
+            let cssClasses = {
+                'no-border': this.noBorder,
+                'is-invalid': this.invalid
             };
 
             if (this.customCssClasses && this.customCssClasses.trim() !== '') {
@@ -208,11 +214,13 @@ select {
         padding-right: var(--space-12);
     }
 
-    &.invalid {
-        border: 1px solid var(--color-danger);
+    &.invalid,
+    &.is-invalid,
+    &[aria-invalid="true"] {
+        box-shadow: var(--input-shadow-invalid);
 
         &:focus {
-            border: none;
+            box-shadow: var(--input-shadow-invalid);
         }
     }
 }

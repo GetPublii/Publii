@@ -363,7 +363,7 @@ export default {
     width: 100%;
 
     &:focus {
-        box-shadow: inset 0 0 2px 1px var(--input-border-focus);
+        box-shadow: var(--input-shadow-focus);
     }
 
     &[disabled],
@@ -374,6 +374,12 @@ export default {
         &:focus {
             box-shadow: inset 0 0 0 1px var(--input-border-color);
         }
+    }
+
+    /* Invalid state: the shared ring, kept while focused */
+    &[aria-invalid="true"],
+    .is-invalid & {
+        box-shadow: var(--input-shadow-invalid);
     }
 }
 </style>

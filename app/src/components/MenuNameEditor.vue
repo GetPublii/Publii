@@ -145,9 +145,9 @@ export default {
 
 .menu-name-editor-input {
     background: var(--input-bg);
-    border: 1px solid var(--input-border-color);
+    border: none;
     border-radius: var(--radius-base);
-    box-shadow: none;
+    box-shadow: inset 0 0 0 1px var(--input-border-color);
     color: var(--text-primary-color);
     flex: 1 1 12rem;
     font-family: var(--font-family-sans);
@@ -161,13 +161,14 @@ export default {
     padding: 0 var(--space-2);
 
     &:focus {
-        border-color: var(--input-border-focus);
-        box-shadow: none;
+        box-shadow: var(--input-shadow-focus);
         outline: none;
     }
 
-    &[aria-invalid="true"] {
-        border-color: var(--color-danger);
+    /* Invalid state: the shared ring, kept while focused */
+    &[aria-invalid="true"],
+    &[aria-invalid="true"]:focus {
+        box-shadow: var(--input-shadow-invalid);
     }
 }
 

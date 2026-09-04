@@ -58,9 +58,8 @@
                                 :max="menu.maxLevels === -1 ? '' : menu.maxLevels.toString()"
                                 step="1"
                                 size="small"
-                                :aria-invalid="configuration[position].invalid"
-                                :aria-describedby="configuration[position].invalid ? 'menu-position-error-' + position : ''"
-                                :class="{ 'is-invalid': configuration[position].invalid }" />
+                                :invalid="configuration[position].invalid"
+                                :aria-describedby="configuration[position].invalid ? 'menu-position-error-' + position : ''" />
                         </div>
 
                         <small

@@ -300,7 +300,7 @@
                         min="1"
                         max="65535"
                         step="1"
-                        :class="{ 'is-invalid': errors.indexOf('port') > -1 }"
+                        :invalid="errors.indexOf('port') > -1"
                         @keyup.native="cleanError('port')"
                         v-model="deploymentSettings.port" />
                     <small
@@ -341,7 +341,7 @@
                         id="server"
                         key="server"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('server') > -1 }"
+                        :invalid="errors.indexOf('server') > -1"
                         @keyup.native="cleanError('server')"
                         v-model="deploymentSettings.server" />
                     <small
@@ -361,7 +361,7 @@
                         id="username"
                         key="username"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('username') > -1 }"
+                        :invalid="errors.indexOf('username') > -1"
                         @keyup.native="cleanError('username')"
                         v-model="deploymentSettings.username" />
                     <small
@@ -441,7 +441,7 @@
                     :label="$t('sync.yourPrivateKey')">
                     <file-select
                         id="sftpkey"
-                        :class="{ 'is-invalid': errors.indexOf('key') > -1 }"
+                        :invalid="errors.indexOf('key') > -1"
                         @click.native="cleanError('key')"
                         v-model="deploymentSettings.sftpkey"
                         key="sftpkey"
@@ -507,7 +507,7 @@
                         id="gh-server"
                         key="gh-server"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('github-server') > -1 }"
+                        :invalid="errors.indexOf('github-server') > -1"
                         @keyup.native="cleanError('github-server')"
                         v-model="deploymentSettings.github.server" />
                     <small
@@ -526,7 +526,7 @@
                         id="gh-user"
                         key="gh-user"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('github-user') > -1 }"
+                        :invalid="errors.indexOf('github-user') > -1"
                         @keyup.native="cleanError('github-user')"
                         v-model="deploymentSettings.github.user" />
                     <small
@@ -546,7 +546,7 @@
                         id="gh-repo"
                         key="gh-repo"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('github-repo') > -1 }"
+                        :invalid="errors.indexOf('github-repo') > -1"
                         @keyup.native="cleanError('github-repo')"
                         v-model="deploymentSettings.github.repo" />
                     <small
@@ -566,7 +566,7 @@
                         id="gh-branch"
                         key="gh-branch"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('github-branch') > -1 }"
+                        :invalid="errors.indexOf('github-branch') > -1"
                         @keyup.native="cleanError('github-branch')"
                         v-model="deploymentSettings.github.branch" />
                     <small
@@ -611,7 +611,7 @@
                         id="git-url"
                         key="git-url"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('git-url') > -1 }"
+                        :invalid="errors.indexOf('git-url') > -1"
                         @keyup.native="cleanError('git-url')"
                         v-model="deploymentSettings.git.url" />
                     <small
@@ -636,7 +636,7 @@
                         id="git-branch"
                         key="git-branch"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('git-branch') > -1 }"
+                        :invalid="errors.indexOf('git-branch') > -1"
                         @keyup.native="cleanError('git-branch')"
                         v-model="deploymentSettings.git.branch" />
                     <small
@@ -661,7 +661,7 @@
                         id="git-user"
                         key="git-user"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('git-user') > -1 }"
+                        :invalid="errors.indexOf('git-user') > -1"
                         @keyup.native="cleanError('git-user')"
                         v-model="deploymentSettings.git.user" />
                     <small
@@ -706,7 +706,7 @@
                         id="git-commit-author"
                         key="git-commit-author"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('git-commitAuthor') > -1 }"
+                        :invalid="errors.indexOf('git-commitAuthor') > -1"
                         @keyup.native="cleanError('git-commitAuthor')"
                         v-model="deploymentSettings.git.commitAuthor" />
                     <small
@@ -738,7 +738,7 @@
                         id="git-commit-message"
                         key="git-commit-message"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('git-commitMessage') > -1 }"
+                        :invalid="errors.indexOf('git-commitMessage') > -1"
                         @keyup.native="cleanError('git-commitMessage')"
                         v-model="deploymentSettings.git.commitMessage" />
                     <small
@@ -792,7 +792,7 @@
                         id="gl-server"
                         key="gl-server"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('gitlab-server') > -1 }"
+                        :invalid="errors.indexOf('gitlab-server') > -1"
                         @keyup.native="cleanError('gitlab-server')"
                         v-model="deploymentSettings.gitlab.server" />
                     <small
@@ -811,7 +811,7 @@
                         id="gl-repo"
                         key="gl-repo"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('gitlab-repo') > -1 }"
+                        :invalid="errors.indexOf('gitlab-repo') > -1"
                         @keyup.native="cleanError('gitlab-repo')"
                         v-model="deploymentSettings.gitlab.repo" />
                     <small
@@ -836,7 +836,7 @@
                         id="gl-branch"
                         key="gl-branch"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('gitlab-branch') > -1 }"
+                        :invalid="errors.indexOf('gitlab-branch') > -1"
                         @keyup.native="cleanError('gitlab-branch')"
                         v-model="deploymentSettings.gitlab.branch" />
                     <small
@@ -941,7 +941,7 @@
                         id="s3-endpoint"
                         key="s3-endpoint"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('s3-endpoint') > -1 }"
+                        :invalid="errors.indexOf('s3-endpoint') > -1"
                         @keyup.native="cleanError('s3-endpoint')"
                         v-model="deploymentSettings.s3.endpoint" />
                     <small
@@ -1001,7 +1001,7 @@
                         id="s3-bucket"
                         key="s3-bucket"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('s3-bucket') > -1 }"
+                        :invalid="errors.indexOf('s3-bucket') > -1"
                         @keyup.native="cleanError('s3-bucket')"
                         v-model="deploymentSettings.s3.bucket" />
                     <small
@@ -1022,7 +1022,7 @@
                         id="s3-region"
                         :items="s3Regions"
                         key="s3-region"
-                        :class="{ 'is-invalid': errors.indexOf('s3-region') > -1 }"
+                        :invalid="errors.indexOf('s3-region') > -1"
                         @click.native="cleanError('s3-region')"
                         v-model="deploymentSettings.s3.region"></dropdown>
                     <text-input
@@ -1031,7 +1031,7 @@
                         id="s3-customRegion"
                         key="s3-customRegion"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('s3-customRegion') > -1 }"
+                        :invalid="errors.indexOf('s3-customRegion') > -1"
                         @keyup.native="cleanError('s3-customRegion')"
                         v-model="deploymentSettings.s3.customRegion" />
                     <small
@@ -1103,7 +1103,7 @@
                         id="google-key"
                         v-model="deploymentSettings.google.key"
                         key="google-key"
-                        :class="{ 'is-invalid': errors.indexOf('google-key') > -1 }"
+                        :invalid="errors.indexOf('google-key') > -1"
                         @click.native="cleanError('google-key')"
                         slot="field" />
                     <small
@@ -1123,7 +1123,7 @@
                         id="google-bucket"
                         key="google-bucket"
                         :spellcheck="false"
-                        :class="{ 'is-invalid': errors.indexOf('google-bucket') > -1 }"
+                        :invalid="errors.indexOf('google-bucket') > -1"
                         @keyup.native="cleanError('google-bucket')"
                         v-model="deploymentSettings.google.bucket" />
                     <small
@@ -1160,7 +1160,7 @@
                         id="manual-output"
                         key="manual-output"
                         :items="{ 'catalog': $t('sync.nonCompressedCatalog'), 'zip-archive': $t('sync.zipArchive'), 'tar-archive': $t('sync.tarArchive') }"
-                        :class="{ 'is-invalid': errors.indexOf('manual-output') > -1 }"
+                        :invalid="errors.indexOf('manual-output') > -1"
                         @click.native="cleanError('manual-output')"
                         v-model="deploymentSettings.manual.output"></dropdown>
 

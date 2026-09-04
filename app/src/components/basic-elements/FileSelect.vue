@@ -1,6 +1,6 @@
 <template>
     <div
-        class="box"
+        :class="{ 'box': true, 'is-invalid': invalid }"
         @click="selectFile">
         <text-input
             icon="folder"
@@ -8,6 +8,7 @@
             :id="id"
             :placeholder="placeholder"
             :disabled="disabled"
+            :invalid="invalid"
             :value="value"
             :spellcheck="false"
             keyboard-blocked />
@@ -36,6 +37,10 @@ export default {
             type: String
         },
         disabled: {
+            default: false,
+            type: Boolean
+        },
+        invalid: {
             default: false,
             type: Boolean
         },
