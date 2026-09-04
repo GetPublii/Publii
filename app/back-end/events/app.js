@@ -217,6 +217,17 @@ class AppEvents {
                     }
 
                     newThemeDir = dirs[0];
+
+                    if (!isValidDirSegment(newThemeDir)) {
+                        event.sender.send('app-theme-uploaded', {
+                            status: 'wrong-format',
+                            themes: appInstance.themes
+                        });
+
+                        UtilsHelper.removePathRecursively(zipPath);
+
+                        return;
+                    }
                     let directoryPath = path.join(themesLoader.themesPath, newThemeDir);
 
                     try {
@@ -238,6 +249,8 @@ class AppEvents {
                     });
 
                     return;
+                } else if (!isValidDirSegment(newThemeDir)) {
+                    status = 'wrong-format';
                 } else {
                     let directoryPath = path.join(themesLoader.themesPath, newThemeDir);
 
@@ -300,6 +313,17 @@ class AppEvents {
 
                     newLanguageDir = dirs[0];
 
+                    if (!isValidDirSegment(newLanguageDir)) {
+                        event.sender.send('app-language-uploaded', {
+                            status: 'wrong-format',
+                            languages: appInstance.languages
+                        });
+
+                        UtilsHelper.removePathRecursively(zipPath);
+
+                        return;
+                    }
+
                     let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
 
                     try {
@@ -320,6 +344,8 @@ class AppEvents {
                     });
 
                     return;
+                } else if (!isValidDirSegment(newLanguageDir)) {
+                    status = 'wrong-format';
                 } else {
                     let directoryPath = path.join(languagesLoader.languagesPath, newLanguageDir);
 
@@ -381,6 +407,17 @@ class AppEvents {
 
                     newPluginDir = dirs[0];
 
+                    if (!isValidDirSegment(newPluginDir)) {
+                        event.sender.send('app-plugin-uploaded', {
+                            status: 'wrong-format',
+                            plugins: appInstance.plugins
+                        });
+
+                        UtilsHelper.removePathRecursively(zipPath);
+
+                        return;
+                    }
+
                     let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
 
                     try {
@@ -401,6 +438,8 @@ class AppEvents {
                     });
 
                     return;
+                } else if (!isValidDirSegment(newPluginDir)) {
+                    status = 'wrong-format';
                 } else {
                     let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
 
