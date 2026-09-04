@@ -137,7 +137,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell min-width="35px">
+                <collection-cell variant="identifier">
                     <span
                         class="col-sortable-title"
                         @click="ordering('id')">
@@ -378,7 +378,7 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell>
+                <collection-cell variant="identifier">
                     {{ item.id }}
                 </collection-cell>
             </collection-row>

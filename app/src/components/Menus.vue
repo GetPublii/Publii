@@ -37,14 +37,11 @@
                     {{ $t('menu.position') }}
                 </collection-cell>
 
-                <collection-cell
-                    justify-content="center"
-                    text-align="center"
-                    min-width="80px">
+                <collection-cell variant="identifier">
                     {{ $t('menu.items') }}
                 </collection-cell>
 
-                <collection-cell></collection-cell>
+                <collection-cell variant="menu"></collection-cell>
 
                 <div
                     v-if="anyCheckboxIsSelected"
@@ -121,9 +118,7 @@
                     </button>
                 </collection-cell>
 
-                <collection-cell
-                    justify-content="center"
-                    text-align="center">
+                <collection-cell variant="identifier">
                     <button
                         type="button"
                         class="menu-count"
@@ -135,7 +130,7 @@
                 </collection-cell>
 
                 <collection-cell
-                    variant="actions"
+                    variant="menu"
                     justify-content="flex-end">
                     <action-menu
                         :items="menuRowActions(item, index)"

@@ -29,7 +29,7 @@ export default {
         variant: {
             default: '',
             type: String,
-            validator: value => ['', 'titles', 'assignment', 'publish-dates', 'modification-dates', 'authors', 'actions'].includes(value)
+            validator: value => ['', 'titles', 'assignment', 'publish-dates', 'modification-dates', 'authors', 'actions', 'menu', 'identifier'].includes(value)
         }
     },
     computed: {
@@ -45,12 +45,26 @@ export default {
             return classes;
         },
         cellStyle: function() {
-            return {
-                width: this.width,
-                minWidth: this.minWidth,
-                textAlign: this.textAlign,
-                justifyContent: this.justifyContent
-            };
+            // Only explicit overrides become inline styles, so variants can own their alignment
+            let style = {};
+
+            if (this.width !== 'auto') {
+                style.width = this.width;
+            }
+
+            if (this.minWidth !== 'auto') {
+                style.minWidth = this.minWidth;
+            }
+
+            if (this.textAlign !== 'left') {
+                style.textAlign = this.textAlign;
+            }
+
+            if (this.justifyContent !== 'left') {
+                style.justifyContent = this.justifyContent;
+            }
+
+            return style;
         }
     }
 }
@@ -167,6 +181,20 @@ export default {
 
 .actions {
     display:  flex !important;
+}
+
+/* Trailing cell for a row action menu, with the regular cell padding on both sides */
+.col.menu {
+    display: flex;
+}
+
+/* Numeric identifier or counter column: regular padding, centred numbers,
+   a shared minimum width instead of per-screen values, never wrapped */
+.col.identifier {
+    justify-content: center;
+    min-width: 3.5rem;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .item {
