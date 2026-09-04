@@ -5,7 +5,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 const slug = require('./../../helpers/slug');
-const archiver = require('archiver');
+const tarFs = require('tar-fs');
+const ZipHelper = require('./../../helpers/zip.helper.js');
 const Utils = require('./../../helpers/utils');
 
 class ManualDeployment {
@@ -86,30 +87,9 @@ class ManualDeployment {
             backupFile = path.join(this.deployment.siteConfig.deployment.manual.outputDirectory, slug(this.deployment.siteName) + '-files.zip');
         }
 
-        let output = fs.createWriteStream(backupFile);
-        let archive = archiver('zip');
-
-        output.on('error', function (err) {
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-error',
-                value: {
-                    additionalMessage: {
-                        translation: 'core.archive.errorDuringCreatingZIP'
-                    }
-                }
-            });
-
-            setTimeout(function () {
-                process.kill(process.pid, 'SIGTERM');
-            }, 1000);
-        });
-
-        output.on('close', function () {
+        ZipHelper.createZipFromDirectory(this.deployment.inputDir, backupFile).then(function () {
             self.endDeployment('zip-archive', backupFile);
-        });
-
-        archive.on('error', function (err) {
+        }).catch(function (err) {
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-error',
@@ -124,10 +104,6 @@ class ManualDeployment {
                 process.kill(process.pid, 'SIGTERM');
             }, 1000);
         });
-
-        archive.pipe(output);
-        archive.directory(this.deployment.inputDir, '/');
-        archive.finalize();
     }
 
     returnTarArchive() {
@@ -143,7 +119,7 @@ class ManualDeployment {
         }
 
         let output = fs.createWriteStream(backupFile);
-        let archive = archiver('tar');
+        let archive = tarFs.pack(this.deployment.inputDir);
 
         output.on('error', function (err) {
             process.send({
@@ -182,8 +158,6 @@ class ManualDeployment {
         });
 
         archive.pipe(output);
-        archive.directory(this.deployment.inputDir, '/');
-        archive.finalize();
     }
 
     endDeployment(type, pathToOutput) {

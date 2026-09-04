@@ -8,7 +8,6 @@ const FileHelper = require('./../../helpers/file.js');
 const Utils = require('./../../helpers/utils.js');
 const PathValidator = require('./../../helpers/path-validator.js');
 const moment = require('moment');
-const archiver = require('archiver');
 const tar = require('tar-fs');
 const { shell } = require('electron');
 
@@ -140,8 +139,18 @@ class Backup {
             }
             let createOperation = new Promise(function (resolve, reject) {
                 let output = fs.createWriteStream(backupFile);
-                let archive = archiver('tar');
-                
+                let archive = tar.pack(path.join(sourcePath, 'input'), {
+                    map: function (header) {
+                        header.name = 'input/' + header.name;
+                        return header;
+                    },
+                    finalize: false,
+                    finish: function (pack) {
+                        pack.entry({ name: 'backup-date.log' }, (+new Date).toString());
+                        pack.finalize();
+                    }
+                });
+
                 output.on('error', function (err) {
                     resolve({
                         type: 'app-backup-create-error',
@@ -166,9 +175,6 @@ class Backup {
                 });
 
                 archive.pipe(output);
-                archive.append((+new Date).toString(), { name: 'backup-date.log' });
-                archive.directory(sourcePath + '/input/', 'input');
-                archive.finalize();
             });
 
             let results = await createOperation;

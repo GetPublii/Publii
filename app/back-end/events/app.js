@@ -8,7 +8,7 @@ const Plugins = require('../plugins.js');
 const AppFiles = require('../helpers/app-files.js');
 const PathValidator = require('../helpers/path-validator.js');
 const UtilsHelper = require('../helpers/utils.js');
-const AdmZip = require("adm-zip");
+const ZipHelper = require('./../helpers/zip.helper.js');
 
 const { isValidDirSegment } = PathValidator;
 
@@ -193,9 +193,19 @@ class AppEvents {
             if (extension === '.zip' || extension === '') {
                 if (extension === '.zip') {
                     let zipPath = path.join(themesLoader.themesPath, '__TEMP__');
-                    let zip = new AdmZip(config.sourcePath);
-                    fs.mkdirSync(zipPath, { recursive: true });
-                    zip.extractAllTo(zipPath, true);
+
+                    try {
+                        ZipHelper.extractZipSafely(config.sourcePath, zipPath);
+                    } catch (e) {
+                        event.sender.send('app-theme-uploaded', {
+                            status: 'wrong-format',
+                            themes: appInstance.themes
+                        });
+
+                        UtilsHelper.removePathRecursively(zipPath);
+
+                        return;
+                    }
 
                     let dirs = fs.readdirSync(zipPath).filter(function(file) {
                         if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
@@ -288,9 +298,19 @@ class AppEvents {
             if (extension === '.zip' || extension === '') {
                 if (extension === '.zip') {
                     let zipPath = path.join(languagesLoader.languagesPath, '__TEMP__');
-                    let zip = new AdmZip(config.sourcePath);
-                    fs.mkdirSync(zipPath, { recursive: true });
-                    zip.extractAllTo(zipPath, true);
+
+                    try {
+                        ZipHelper.extractZipSafely(config.sourcePath, zipPath);
+                    } catch (e) {
+                        event.sender.send('app-language-uploaded', {
+                            status: 'wrong-format',
+                            languages: appInstance.languages
+                        });
+
+                        UtilsHelper.removePathRecursively(zipPath);
+
+                        return;
+                    }
 
                     let dirs = fs.readdirSync(zipPath).filter(function(file) {
                         if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
@@ -382,9 +402,19 @@ class AppEvents {
             if (extension === '.zip' || extension === '') {
                 if (extension === '.zip') {
                     let zipPath = path.join(pluginsLoader.pluginsPath, '__TEMP__');
-                    fs.mkdirSync(zipPath, { recursive: true });
-                    let zip = new AdmZip(config.sourcePath);
-                    zip.extractAllTo(zipPath, true);
+
+                    try {
+                        ZipHelper.extractZipSafely(config.sourcePath, zipPath);
+                    } catch (e) {
+                        event.sender.send('app-plugin-uploaded', {
+                            status: 'wrong-format',
+                            plugins: appInstance.plugins
+                        });
+
+                        UtilsHelper.removePathRecursively(zipPath);
+
+                        return;
+                    }
 
                     let dirs = fs.readdirSync(zipPath).filter(function(file) {
                         if(file.substr(0,1) === '_' || file.substr(0,1) === '.') {
