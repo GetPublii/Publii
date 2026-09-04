@@ -2,16 +2,43 @@
     <select
         :id="id"
         @change="onChangeEvent">
-        <option value="">{{ $t('theme.selectTheme') }}</option>
+        <option
+            value=""
+            :selected="value === ''">
+            {{ placeholderLabel }}
+        </option>
+
         <optgroup
-            v-for="key in themesGroups()"
-            :label="themesGroupName(key)"
-            :key="'themes-group-' + key">
+            v-if="updateOption"
+            :label="$t('theme.groupUpdateAvailable')">
             <option
-                v-for="(item, value) in themesGroup(key)"
-                :value="value"
-                :key="'themes-group-' + key + '-' + value">
-                {{ item }}
+                :value="updateOption.value"
+                :selected="value === updateOption.value">
+                {{ updateOption.label }}
+            </option>
+        </optgroup>
+
+        <optgroup
+            v-if="siteOptions.length"
+            :label="$t('theme.groupInstalledOnSite')">
+            <option
+                v-for="option in siteOptions"
+                :value="option.value"
+                :selected="value === option.value"
+                :key="option.value">
+                {{ option.label }}
+            </option>
+        </optgroup>
+
+        <optgroup
+            v-if="libraryOptions.length"
+            :label="$t('theme.groupInLibrary')">
+            <option
+                v-for="option in libraryOptions"
+                :value="option.value"
+                :selected="value === option.value"
+                :key="option.value">
+                {{ option.label }}
             </option>
         </optgroup>
     </select>
@@ -31,29 +58,65 @@ export default {
             type: String
         }
     },
-    data: function() {
-        return {
-            selectedValue: ''
-        };
-    },
     computed: {
         themes () {
-            return this.$store.getters.themeSelect;
+            return this.$store.getters.siteThemesState;
+        },
+        placeholderLabel () {
+            if (!this.themes.current) {
+                return this.$t('theme.selectTheme');
+            }
+
+            return this.$t('theme.optionCurrent', {
+                name: this.themes.current.name,
+                version: this.themes.current.version
+            });
+        },
+        updateOption () {
+            let current = this.themes.current;
+
+            if (!current || !current.updateFromLibrary) {
+                return null;
+            }
+
+            return {
+                value: 'install-use-' + current.directory,
+                label: this.$t('theme.optionUpdateFromLibrary', {
+                    name: current.name,
+                    version: current.libraryVersion
+                })
+            };
+        },
+        siteOptions () {
+            return this.themes.siteCopies
+                .filter(copy => !copy.isCurrent)
+                .map(copy => ({
+                    value: 'use-' + copy.directory,
+                    label: copy.updateFromLibrary
+                        ? this.$t('theme.optionLibraryVersion', {
+                            name: copy.name,
+                            version: copy.version,
+                            libraryVersion: copy.libraryVersion
+                        })
+                        : this.$t('theme.optionVersion', {
+                            name: copy.name,
+                            version: copy.version
+                        })
+                }));
+        },
+        libraryOptions () {
+            return this.themes.library.map(theme => ({
+                value: 'install-use-' + theme.directory,
+                label: this.$t('theme.optionVersion', {
+                    name: theme.name,
+                    version: theme.version
+                })
+            }));
         }
     },
     methods: {
         onChangeEvent (e) {
-            this.selectedValue = e.target.value;
-            this.$emit('input', this.selectedValue);
-        },
-        themesGroups () {
-            return Object.keys(this.themes);
-        },
-        themesGroupName (key) {
-            return this.themes[key].name;
-        },
-        themesGroup (key) {
-            return this.themes[key].items;
+            this.$emit('input', e.target.value);
         }
     }
 }

@@ -229,6 +229,9 @@ export default {
         state.currentSite.themes = state.currentSite.themes.filter(theme => theme.location !== 'app');
         state.currentSite.themes = [...state.currentSite.themes, ...state.themes].slice();
     },
+    replaceSiteThemes (state, themes) {
+        state.currentSite.themes = themes.slice();
+    },
     replaceAppLanguages (state, newLanguages) {
         state.languages = newLanguages.slice();
     },

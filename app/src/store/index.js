@@ -19,7 +19,7 @@ import appVersion from './getters/app-version';
 import languages from './getters/languages';
 import plugins from './getters/plugins';
 import themes from './getters/themes';
-import themeSelect from './getters/theme-select';
+import siteThemesState from './getters/site-themes-state';
 import tagTemplates from './getters/tag-templates';
 import authorTemplates from './getters/author-templates';
 // Actions
@@ -41,7 +41,7 @@ export default new Vuex.Store({
         sitePlugins,
         appVersion,
         themes,
-        themeSelect,
+        siteThemesState,
         tagTemplates,
         authorTemplates,
         notifications,

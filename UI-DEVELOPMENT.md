@@ -302,6 +302,12 @@ Do not use the retired `selected` or `checked` initialization aliases on these c
 
 `customCssClasses` remains available only where schema-driven theme or plugin settings require an extension point. Do not use it as the normal way to create component variants.
 
+### Site theme field
+
+Site Settings selects the website theme with `themes-dropdown`, which reads the `siteThemesState` store getter. The getter merges the theme library (`location: 'app'`) with the site copies of the current website and reports, for the current theme, whether the library or the Publii marketplace holds a newer version. The dropdown stays a value control: an empty value keeps the current theme (its placeholder option names it), `use-<directory>` switches to an existing site copy, and `install-use-<directory>` copies a library theme into the site or updates the current copy from the library. Options describe states, never actions, and every theme appears once. The value is applied by the regular settings save through `changeTheme()` in the back-end, and the field shows a note while a change is pending.
+
+Commands live beside the field. The "Update to v.X" button only selects the update option; the field's `action-menu` installs a theme file into the library (shared `ThemeUpload` mixin; a component may define `themeUploadedHint(data)` to append the next step to the success toast), opens the theme library, opens the marketplace, and removes unused site copies. Removal is destructive, so it asks through the shared `confirm` dialog and then calls the dedicated `app-site-theme-remove` IPC, which deletes an unused copy (never the active theme) and returns the refreshed theme list; the settings form itself is not saved. A marketplace update is reported with the `msg msg-small msg-icon msg-info` block and its download and install links; the notifications feed's `free` flag decides whether the link is a direct download or opens the marketplace account downloads page. Do not add action verbs back into the option list.
+
 ### Collections
 
 The parent supplies the column count, cells supply validated visual roles, and rows expose semantic states:

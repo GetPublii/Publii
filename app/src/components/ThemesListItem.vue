@@ -23,10 +23,16 @@
                         name="trash" />
             </a>
 
-            <span 
+            <span
                 v-if="hasUpdateAvailable"
                 class="theme-new-version-available">
                 {{ $t('theme.newVersionAvailable') }}: <strong>{{ updateVersion }}</strong>
+                <a
+                    v-if="updateDownloadLink"
+                    href="#"
+                    @click.prevent="downloadUpdate">
+                    {{ $t(updateIsFree ? 'notifications.downloadUpdate' : 'theme.openMyDownloads') }}
+                </a>
             </span>
         </figcaption>
     </figure>
@@ -57,30 +63,38 @@ export default {
         version () {
             return this.themeData.version;
         },
-        updateVersion () {
-            let availableTheme = this.notifications.themes[this.directory];
+        availableTheme () {
+            if (!this.notifications || !this.notifications.themes) {
+                return null;
+            }
 
-            if (!availableTheme) {
+            return this.notifications.themes[this.directory] || null;
+        },
+        updateVersion () {
+            return this.availableTheme ? this.availableTheme.version : '';
+        },
+        updateDownloadLink () {
+            if (!this.availableTheme || !this.availableTheme.links || !this.availableTheme.links.download) {
                 return '';
             }
 
-            return availableTheme.version;
+            return this.availableTheme.links.download;
+        },
+        updateIsFree () {
+            return !this.availableTheme || this.availableTheme.free !== false;
         },
         hasUpdateAvailable () {
-            if (!this.notifications || !this.notifications.themes) {
+            if (!this.availableTheme) {
                 return false;
             }
 
-            let availableTheme = this.notifications.themes[this.directory];
-
-            if (!availableTheme) {
-                return false;
-            }
-
-            return VersionComparator(availableTheme.version, this.version) === 1;
+            return VersionComparator(String(this.availableTheme.version), String(this.version)) === 1;
         }
     },
     methods: {
+        downloadUpdate () {
+            mainProcessAPI.shellOpenExternal(this.updateDownloadLink);
+        },
         deleteTheme: function(themeName, themeDirectory) {
             let confirmConfig = {
                 message: this.$t('theme.removeThemeMessage', { themeName }),
@@ -194,6 +208,16 @@ export default {
 
     strong {
         color: var(--headings-color);
+    }
+
+    a {
+        color: var(--link-primary-color);
+        font-weight: var(--font-weight-medium);
+        margin-left: var(--space-2);
+
+        &:hover {
+            color: var(--link-primary-color-hover);
+        }
     }
 }
 </style>

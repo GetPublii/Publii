@@ -148,11 +148,12 @@ class SiteEvents {
                     site: siteName
                 });
 
-                if(self.prepareThemeName(config.settings.theme) !== oldConfig.theme) {
+                config.settings.theme = themes.changeTheme(config.settings.theme, oldConfig.theme);
+
+                // Compare the resulting theme, so removing an unused site copy does not ask for new thumbnails
+                if (config.settings.theme && config.settings.theme !== oldConfig.theme) {
                     thumbnailsRegenerateRequired = true;
                 }
-
-                config.settings.theme = themes.changeTheme(config.settings.theme, oldConfig.theme);
                 let themeConfigPath = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'theme.config.json');
                 let themePath = path.join(themesPath, config.settings.theme);
                 newThemeConfig = Themes.loadThemeConfig(themeConfigPath, themePath);
@@ -358,6 +359,42 @@ class SiteEvents {
                 themeName: config.settings.theme,
                 newThemeConfig: newThemeConfig,
                 thumbnailsRegenerateRequired: thumbnailsRegenerateRequired
+            });
+        });
+
+        /*
+         * Remove an unused theme copy from a website
+         */
+        ipcMain.on('app-site-theme-remove', function (event, config) {
+            if (
+                !config ||
+                !self.siteDirExists(appInstance, config.site) ||
+                !PathValidator.isValidDirSegment(config.directory)
+            ) {
+                event.sender.send('app-site-theme-removed', { status: false });
+                return;
+            }
+
+            let themes = new Themes(appInstance, { site: config.site });
+
+            // The active theme is switched, never removed
+            if (themes.currentTheme(true) === config.directory.toLowerCase()) {
+                event.sender.send('app-site-theme-removed', { status: false });
+                return;
+            }
+
+            let themeDir = PathValidator.resolveValidPath(themes.sitePath, config.directory);
+
+            if (!themeDir || !UtilsHelper.dirExists(themeDir)) {
+                event.sender.send('app-site-theme-removed', { status: false });
+                return;
+            }
+
+            UtilsHelper.removePathRecursively(themeDir);
+
+            event.sender.send('app-site-theme-removed', {
+                status: true,
+                themes: themes.load()
             });
         });
 
@@ -679,16 +716,6 @@ class SiteEvents {
             let result = Site.restoreFromBackup(appInstance, config.siteName);
             event.sender.send('app-site-restored-from-backup', result);
         });
-    }
-
-    prepareThemeName(themeName) {
-        if(!themeName) {
-            return false;
-        }
-
-        return themeName.replace('install-use-', '')
-                        .replace('uninstall-', '')
-                        .replace('use-', '');
     }
 
     /**

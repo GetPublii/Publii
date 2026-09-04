@@ -112,25 +112,57 @@
 
                 <field
                     id="theme"
-                    :label="$t('settings.currentTheme')">
-                    <strong
-                        v-if="currentTheme"
-                        slot="field">
-                        {{ currentTheme }} (v.{{currentThemeVersion}})
-                    </strong>
-
-                    <strong
-                        v-if="!currentTheme"
-                        slot="field">
-                        {{ $t('settings.notSelected') }}
-                    </strong>
-
-                    <themes-dropdown
+                    :label="$t('settings.theme')">
+                    <div
                         slot="field"
-                        id="theme"
-                        ref="theme"
-                        key="theme"
-                        v-model="theme"></themes-dropdown>
+                        class="theme-field">
+                        <themes-dropdown
+                            id="theme"
+                            v-model="theme" />
+
+                        <p-button
+                            v-if="themeUpdateFromLibrary"
+                            :onClick="selectThemeUpdate"
+                            :disabled="buttonsLocked"
+                            icon="refresh">
+                            {{ $t('theme.updateTo', { version: currentTheme.libraryVersion }) }}
+                        </p-button>
+
+                        <action-menu
+                            :label="$t('theme.themeOptions')"
+                            :items="themeMenuItems"
+                            :disabled="buttonsLocked" />
+                    </div>
+
+                    <small
+                        v-if="theme !== ''"
+                        slot="note"
+                        class="note">
+                        {{ $t('theme.themeChangeAppliedOnSave') }}
+                    </small>
+
+                    <div
+                        v-if="themeUpdateFromMarketplace"
+                        slot="note"
+                        class="msg msg-small msg-icon msg-info theme-marketplace-msg">
+                        <icon
+                            name="info"
+                            customWidth="28"
+                            customHeight="28" />
+                        <p>
+                            {{ marketplaceUpdateMessage }}
+                            <a
+                                href="#"
+                                @click.prevent="downloadThemeUpdate">
+                                {{ marketplaceUpdateLinkLabel }}
+                            </a>
+                            <a
+                                href="#"
+                                @click.prevent="installThemeFromFile">
+                                {{ $t('theme.installFromFile') }}
+                            </a>
+                        </p>
+                    </div>
                 </field>
 
                 <div
@@ -2228,10 +2260,14 @@ import EmbedConsentsGroups from './basic-elements/EmbedConsentsGroups';
 import GConsentModeGroups from './basic-elements/GConsentModeGroups';
 import GdprGroups from './basic-elements/GdprGroups';
 import ThemesDropdown from './basic-elements/ThemesDropdown';
+import ThemeUpload from './mixins/ThemeUpload';
 import WorkspaceAccentPicker from './basic-elements/WorkspaceAccentPicker';
 
 export default {
     name: 'site-settings',
+    mixins: [
+        ThemeUpload
+    ],
     components: {
         'embed-consents-groups': EmbedConsentsGroups,
         'g-consent-mode-groups': GConsentModeGroups,
@@ -2253,8 +2289,6 @@ export default {
             name: '',
             uuid: '',
             theme: '',
-            currentTheme: '',
-            currentThemeVersion: '',
             advanced: {},
             errors: [],
             spellcheckerLanguages: false
@@ -2403,6 +2437,76 @@ export default {
                 'titles-and-tags': this.$t('settings.useTitlesAndTags')
             };
         },
+        siteThemesState () {
+            return this.$store.getters.siteThemesState;
+        },
+        currentTheme () {
+            return this.siteThemesState.current;
+        },
+        themeUpdateFromLibrary () {
+            return !!this.currentTheme && this.currentTheme.updateFromLibrary && this.theme !== 'install-use-' + this.currentTheme.directory;
+        },
+        themeUpdateFromMarketplace () {
+            return !!this.currentTheme && this.currentTheme.updateFromMarketplace;
+        },
+        marketplaceUpdateMessage () {
+            if (!this.currentTheme) {
+                return '';
+            }
+
+            let messageKey = this.currentTheme.marketplaceIsFree ? 'theme.marketplaceUpdateAvailable' : 'theme.marketplaceUpdateAvailablePremium';
+
+            return this.$t(messageKey, {
+                name: this.currentTheme.name,
+                version: this.currentTheme.marketplaceVersion
+            });
+        },
+        marketplaceUpdateLinkLabel () {
+            if (!this.currentTheme) {
+                return '';
+            }
+
+            return this.$t(this.currentTheme.marketplaceIsFree ? 'notifications.downloadUpdate' : 'theme.openMyDownloads');
+        },
+        themeMenuItems () {
+            let items = [
+                {
+                    label: this.$t('theme.installThemeFromFile'),
+                    value: 'install-theme',
+                    icon: 'upload-file',
+                    onClick: this.installThemeFromFile
+                },
+                {
+                    label: this.$t('theme.openThemeLibrary'),
+                    value: 'open-theme-library',
+                    icon: 'themes',
+                    onClick: this.openThemeLibrary
+                },
+                {
+                    label: this.$t('theme.getMoreThemes'),
+                    value: 'get-more-themes',
+                    icon: 'external-link',
+                    onClick: this.openThemesMarketplace
+                }
+            ];
+            let removableCopies = this.siteThemesState.siteCopies.filter(copy => !copy.isCurrent);
+
+            if (removableCopies.length) {
+                items.push({ separator: true });
+
+                removableCopies.forEach(copy => {
+                    items.push({
+                        label: this.$t('theme.removeFromSite', { name: copy.name }),
+                        value: 'remove-' + copy.directory,
+                        icon: 'trash',
+                        intent: 'danger',
+                        onClick: () => this.removeThemeFromSite(copy)
+                    });
+                });
+            }
+
+            return items;
+        },
         siteHasTheme () {
             if (
                 !this.$store.state.currentSite.config.theme &&
@@ -2545,7 +2649,6 @@ export default {
             this.uuid = this.$store.state.currentSite.config.uuid;
         }
 
-        this.setCurrentTheme();
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
     },
     watch: {
@@ -2719,6 +2822,9 @@ export default {
                             newThemeConfig: data.newThemeConfig
                         });
                     }
+
+                    // The saved theme is the current one now, so the field returns to its resting state
+                    this.theme = '';
                 }
 
                 if(data.message === 'success-save') {
@@ -2793,7 +2899,10 @@ export default {
         saved (newSettings, oldName, showPreview = false, renderingType = false, renderFiles = false) {
             let oldTheme = this.$store.state.currentSite.config.theme;
 
-            if (newSettings.theme) {
+            if (newSettings.theme && newSettings.theme.indexOf('uninstall-') === 0) {
+                // Removing a copy never changes the theme in use
+                newSettings.theme = oldTheme;
+            } else if (newSettings.theme) {
                 newSettings.theme =    newSettings.theme.replace(/^site-/, '')
                                                         .replace(/^app-/, '')
                                                         .replace(/^install-use-/, '')
@@ -2811,8 +2920,6 @@ export default {
             });
 
             setTimeout(async () => {
-                this.setCurrentTheme();
-
                 // Remove old entry if user changed the site name
                 if (oldName !== this.$store.state.currentSite.config.name) {
                     this.$store.commit('removeWebsite', oldName);
@@ -2960,23 +3067,67 @@ export default {
             let pos = this.errors.indexOf(errorName);
             this.errors.splice(pos, 1);
         },
-        setCurrentTheme () {
-            this.currentTheme = this.$store.state.currentSite.config.theme;
+        selectThemeUpdate () {
+            this.theme = 'install-use-' + this.currentTheme.directory;
+        },
+        themeUploadedHint (data) {
+            if (
+                !this.currentTheme ||
+                !this.currentTheme.updateFromLibrary ||
+                data.directory !== this.currentTheme.directory
+            ) {
+                return '';
+            }
 
-            if (this.currentTheme !== '') {
-                let oldName = this.currentTheme;
-                this.currentTheme = this.$store.state.currentSite.themes.filter(theme => theme.directory === this.currentTheme);
+            return this.$t('theme.libraryUpdateReadyMessage', { version: this.currentTheme.libraryVersion });
+        },
+        removeThemeFromSite (themeCopy) {
+            this.$bus.$emit('confirm-display', {
+                message: this.$t('theme.removeFromSiteMessage', { themeName: themeCopy.name }),
+                okLabel: this.$t('theme.removeFromSiteConfirm'),
+                isDanger: true,
+                okClick: () => {
+                    mainProcessAPI.send('app-site-theme-remove', {
+                        site: this.$store.state.currentSite.config.name,
+                        directory: themeCopy.directory
+                    });
 
-                if(this.currentTheme.length) {
-                    this.currentTheme = this.currentTheme[0].name;
-                } else {
-                    this.currentTheme = oldName;
+                    mainProcessAPI.receiveOnce('app-site-theme-removed', (data) => {
+                        if (!data.status) {
+                            this.$bus.$emit('message-display', {
+                                message: this.$t('theme.removeFromSiteErrorMessage'),
+                                type: 'warning',
+                                lifeTime: 3
+                            });
+
+                            return;
+                        }
+
+                        this.$store.commit('replaceSiteThemes', data.themes);
+
+                        // A pending switch to the removed copy has nothing left to switch to
+                        if (this.theme === 'use-' + themeCopy.directory) {
+                            this.theme = '';
+                        }
+
+                        this.$bus.$emit('message-display', {
+                            message: this.$t('theme.removeFromSiteSuccessMessage'),
+                            type: 'success',
+                            lifeTime: 3
+                        });
+                    });
                 }
-            }
-
-            if (this.$store.state.currentSite.themeSettings) {
-                this.currentThemeVersion = this.$store.state.currentSite.themeSettings.version;
-            }
+            });
+        },
+        openThemeLibrary () {
+            this.$router.push('/app-themes');
+        },
+        openThemesMarketplace () {
+            mainProcessAPI.shellOpenExternal('https://marketplace.getpublii.com/');
+        },
+        downloadThemeUpdate () {
+            let links = this.currentTheme.marketplaceLinks;
+            mainProcessAPI.shellOpenExternal(links.download ? links.download : 'https://marketplace.getpublii.com/');
         },
         customPostLabels (value) {
             let postsAndPages = this.$store.state.currentSite.posts.concat(this.$store.state.currentSite.pages);
@@ -3018,6 +3169,29 @@ export default {
 
 .note.is-warning {
     color: var(--color-danger);
+}
+
+.theme-field {
+    align-items: center;
+    display: flex;
+    gap: var(--space-2);
+
+    & > select {
+        flex: 1;
+        min-width: 0;
+    }
+
+    & > .button {
+        flex-shrink: 0;
+    }
+}
+
+.theme-marketplace-msg {
+    margin-top: var(--space-4);
+
+    a {
+        margin-left: var(--space-2);
+    }
 }
 .msg-bm {
    margin-bottom:var(--space-12);

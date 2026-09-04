@@ -233,6 +233,7 @@ class AppEvents {
 
                     event.sender.send('app-theme-uploaded', {
                         status: status,
+                        directory: newThemeDir,
                         themes: appInstance.themes
                     });
 
@@ -257,6 +258,7 @@ class AppEvents {
 
             event.sender.send('app-theme-uploaded', {
                 status: status,
+                directory: newThemeDir,
                 themes: appInstance.themes
             });
         });

@@ -11,8 +11,8 @@
                 </p-button>
 
                 <p-button
-                    :onClick="installTheme"
-                    slot="buttons" 
+                    :onClick="installThemeFromFile"
+                    slot="buttons"
                     icon="upload-file">
                     {{ $t('theme.installTheme') }}
                 </p-button>
@@ -28,11 +28,13 @@
 <script>
 import ThemesList from './ThemesList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
+import ThemeUpload from './mixins/ThemeUpload';
 
 export default {
     name: 'app-themes',
     mixins: [
-        GoToLastOpenedWebsite
+        GoToLastOpenedWebsite,
+        ThemeUpload
     ],
     components: {
         'themes-list': ThemesList
@@ -57,43 +59,6 @@ export default {
                     this.$router.push('/site/!/posts/');
                 }
             }
-        },
-        async installTheme () {
-            await mainProcessAPI.invoke('app-main-process-select-file', 'file-select');
-
-            mainProcessAPI.receiveOnce('app-file-selected', (data) => {
-                if (data.path === undefined || !data.path.filePaths.length) {
-                    return;
-                }
-
-                mainProcessAPI.send('app-theme-upload', {
-                    sourcePath: data.path.filePaths[0]
-                });
-
-                mainProcessAPI.receiveOnce('app-theme-uploaded', this.uploadedTheme);
-            });
-        },
-        uploadedTheme (data) {
-            this.$store.commit('replaceAppThemes', data.themes);
-            this.$store.commit('updateSiteThemes');
-
-            let messageConfig = {
-                message: '',
-                type: 'success',
-                lifeTime: 3
-            };
-
-            if (data.status === 'added') {
-                messageConfig.message = this.$t('theme.addThemeSuccessMessage');
-            } else if(data.status === 'updated') {
-                messageConfig.message = this.$t('theme.updateThemeSuccessMessage');
-            } else if(data.status === 'wrong-format') {
-                messageConfig.message = this.$t('theme.uploadThemeErrorMessage');
-                messageConfig.type = 'warning';
-            }
-
-            this.$bus.$emit('app-update-notifications-counters');
-            this.$bus.$emit('message-display', messageConfig);
         }
     }
 }
