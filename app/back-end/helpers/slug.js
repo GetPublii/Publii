@@ -1,4 +1,4 @@
-const transliterate = require('transliteration').transliterate;
+const transliterate = require('../vendor/transliteration.min.js').transliterate;
 const slug = require('slug');
 
 /*
