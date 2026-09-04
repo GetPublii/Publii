@@ -14,6 +14,7 @@ import {
 import 'prismjs';
 
 // Basic elements
+import ActionMenu from './components/basic-elements/ActionMenu';
 import Alert from './components/basic-elements/Alert';
 import AuthorsDropDown from './components/basic-elements/AuthorsDropDown';
 import Button from './components/basic-elements/Button';
@@ -182,6 +183,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
     Vue.prototype.$bus = new Vue();
 
     // Register global components
+    Vue.component('action-menu', ActionMenu);
     Vue.component('alert', Alert);
     Vue.component('p-button', Button);
     Vue.component('btn-dropdown', ButtonDropdown);

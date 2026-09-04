@@ -13,7 +13,18 @@
                 :type="inputIsPassword ? 'password' : 'text'"
                 :value="defaultText"
                 :spellcheck="false"
+                :aria-invalid="!!inputError"
+                :aria-describedby="inputError ? inputErrorID : ''"
+                @input="inputError = ''"
                 ref="input" />
+
+            <p
+                v-if="hasInput && inputError"
+                :id="inputErrorID"
+                class="input-error"
+                role="alert">
+                {{ inputError }}
+            </p>
 
             <div class="buttons">
                 <p-button
@@ -51,6 +62,8 @@ export default {
             textCentered: false,
             okClick: () => false,
             cancelClick: () => false,
+            validate: null,
+            inputError: '',
             okLabel: this.$t('ui.ok'),
             isDanger: false,
             cancelLabel: this.$t('ui.cancel'),
@@ -64,6 +77,9 @@ export default {
                 'message': true,
                 'text-centered': this.textCentered
             };
+        },
+        inputErrorID () {
+            return 'confirm-input-error-' + this._uid;
         }
     },
     mounted () {
@@ -81,6 +97,8 @@ export default {
                 this.defaultText = config.defaultText || "";
                 this.isDanger = config.isDanger || false;
                 this.cancelNotClosePopup = config.cancelNotClosePopup || false;
+                this.validate = typeof config.validate === 'function' ? config.validate : null;
+                this.inputError = '';
 
                 if(config.okClick) {
                     this.okClick = config.okClick;
@@ -106,6 +124,16 @@ export default {
     },
     methods: {
         onOk () {
+            if (this.hasInput && this.validate) {
+                let validation = this.validate(this.$refs.input.content);
+
+                if (validation !== true) {
+                    this.inputError = typeof validation === 'string' ? validation : '';
+                    this.$refs.input.$el.querySelector('input').focus();
+                    return false;
+                }
+            }
+
             this.isVisible = false;
             document.body.classList.remove('has-popup-visible');
 
@@ -114,6 +142,8 @@ export default {
             } else {
                 this.okClick();
             }
+
+            return true;
         },
         onCancel () {
             if (!this.cancelNotClosePopup) {
@@ -129,7 +159,9 @@ export default {
             }
         },
         onEnterKey () {
-            this.onOk();
+            if (!this.onOk()) {
+                return;
+            }
 
             setTimeout(() => {
                 this.isVisible = false;
@@ -163,6 +195,13 @@ export default {
     & + * {
         margin-top: var(--space-8);
     }
+}
+
+.input-error {
+    color: var(--color-danger);
+    font-size: var(--font-size-ui-sm);
+    margin: var(--space-2) 0 0;
+    text-align: left;
 }
 
 .buttons {

@@ -4,7 +4,14 @@
         :class="wrapperCssClasses">
         <span
             :class="cssClasses"
-            @click="toggle"></span>
+            role="switch"
+            :aria-checked="isChecked ? 'true' : 'false'"
+            :aria-disabled="disabled ? 'true' : null"
+            :aria-label="label || null"
+            :tabindex="disabled ? -1 : 0"
+            @click="toggle"
+            @keydown.space.prevent="toggle"
+            @keydown.enter.prevent="toggle"></span>
         {{ label }}
     </span>
 </template>
@@ -78,6 +85,10 @@ export default {
     },
     methods: {
         toggle: function() {
+            if (this.disabled) {
+                return;
+            }
+
             this.isChecked = !this.isChecked;
             this.$emit('input', this.isChecked);
             this.onToggle(this.isChecked);
@@ -111,6 +122,11 @@ export default {
 
     &.lower-zindex {
         z-index: 0;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
     }
 
     &:after {

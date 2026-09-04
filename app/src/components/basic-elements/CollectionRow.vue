@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'item': true, 'is-main-author': mainAuthor }">
+    <div :class="{ 'item': true, 'is-main-author': mainAuthor, 'is-expanded': expanded }">
         <slot></slot>
     </div>
 </template>
@@ -9,6 +9,10 @@ export default {
     name: 'collection-row',
     props: {
         mainAuthor: {
+            default: false,
+            type: Boolean
+        },
+        expanded: {
             default: false,
             type: Boolean
         }

@@ -1,68 +1,83 @@
 <template>
     <div class="overlay">
-        <div 
+        <div
             class="popup"
             @click.stop>
             <h1>{{ $t('menuPositionPopup.title') }}</h1>
 
             <div class="menu-position-items">
-                <div 
+                <div
                     v-for="(menu, position) of availableMenus"
                     :key="'menu-position-item-' + position"
                     class="menu-position-item">
-                    <div>
-                        <switcher 
+                    <div class="menu-position-item-main">
+                        <switcher
                             v-model="configuration[position].status"
                             :key="'menu-position-item-' + position + '-switcher'"
                             :disabled="!!menu.used" />
-                    
+
                         <span class="menu-position-item-name">
                             {{ menu.name }}
                         </span>
-                    
 
-                        <small 
+                        <small
                             v-if="menu.desc"
                             class="menu-position-item-desc">
                             {{ menu.desc }}
                         </small>
 
-                        <small 
+                        <small
                             v-if="menu.used"
                             class="menu-position-item-usedby">
                             {{ $t('menuPositionPopup.usedBy') }} {{ getMenuUsingPosition(position) }}
                         </small>
+                    </div>
 
-                    </div> 
-
-                    <div 
+                    <div
                         v-if="configuration[position].status && !menu.used"
-                        class="menu-position-item-max-levels"
-                        :key="'menu-position-item-' + position + '-input'">
-                        {{ $t('menuPositionPopup.maxLevels') }}
-                        <div>
-                            <text-input 
+                        class="menu-position-item-depth"
+                        :key="'menu-position-item-' + position + '-depth'">
+                        <switcher
+                            v-if="menu.maxLevels === -1"
+                            v-model="configuration[position].unlimited"
+                            :key="'menu-position-item-' + position + '-unlimited'"
+                            :label="$t('menuPositionPopup.noDepthLimit')" />
+
+                        <div
+                            v-if="!configuration[position].unlimited"
+                            class="menu-position-item-max-levels">
+                            <label :for="'menu-position-depth-' + position">
+                                {{ $t('menuPositionPopup.depthLabel') }}
+                            </label>
+
+                            <text-input
+                                :id="'menu-position-depth-' + position"
                                 type="number"
-                                @input="validateMaxLevels"
                                 v-model="configuration[position].maxLevels"
-                                :min="((menu.maxLevels === -1) ? -1 : 1).toString()"
-                                :max="((menu.maxLevels === -1) ? 999 : menu.maxLevels).toString()"
+                                min="1"
+                                :max="menu.maxLevels === -1 ? '' : menu.maxLevels.toString()"
                                 step="1"
                                 size="small"
+                                :aria-invalid="configuration[position].invalid"
+                                :aria-describedby="configuration[position].invalid ? 'menu-position-error-' + position : ''"
                                 :class="{ 'is-invalid': configuration[position].invalid }" />
-                            
-                            <small 
-                                v-if="(configuration[position].maxLevels).toString() !== (menu.maxLevels).toString()"
-                                class="menu-position-item-max-levels-desc">
-                                {{ $t('menuPositionPopup.themeDefaultValue') }} {{ menu.maxLevels }}
-                            </small>
                         </div>
+
+                        <small
+                            v-if="menu.maxLevels !== -1"
+                            class="menu-position-item-hint">
+                            {{ $t('menuPositionPopup.themeLimit', { levels: menu.maxLevels }) }}
+                        </small>
+
+                        <small
+                            v-if="configuration[position].invalid"
+                            :id="'menu-position-error-' + position"
+                            class="menu-position-item-error"
+                            role="alert">
+                            <template v-if="menu.maxLevels === -1">{{ $t('menuPositionPopup.depthMinError') }}</template>
+                            <template v-else>{{ $t('menuPositionPopup.depthRangeError', { max: menu.maxLevels }) }}</template>
+                        </small>
                     </div>
-                    <small 
-                        v-if="configuration[position].invalid"
-                        class="menu-position-item-max-levels-error">
-                        {{ $t('menuPositionPopup.invalidValue') }}
-                    </small>
                 </div>
             </div>
 
@@ -110,7 +125,7 @@ export default {
                     return false;
                 }
             }
-            
+
             return true;
         },
         menusInUse () {
@@ -152,51 +167,58 @@ export default {
             configuration: {}
         };
     },
+    watch: {
+        configuration: {
+            deep: true,
+            handler () {
+                this.validateMaxLevels();
+            }
+        }
+    },
     beforeMount () {
         let menus = JSON.parse(JSON.stringify(this.$store.state.currentSite.themeSettings.menus));
         let menuPositions = Object.keys(menus);
         let currentlyUsedMenuPositions = this.editedItem.position ? this.editedItem.position.split(';') : [];
-        let currentlyUsedMaxLevels = this.editedItem.maxLevels ? this.editedItem.maxLevels.split(';').map(level => parseInt(level, 10)) : []; 
-        let maxLevels = {};
-        
-        if (!currentlyUsedMaxLevels && currentlyUsedMenuPositions.length && currentlyUsedMenuPositions[0] !== '') {
-            currentlyUsedMaxLevels = Array.from({length: currentlyUsedMenuPositions.length}, () => -1);
-        }
+        let currentlyUsedMaxLevels = this.editedItem.maxLevels ? this.editedItem.maxLevels.split(';').map(level => parseInt(level, 10)) : [];
+        let savedLevels = {};
 
-        if (currentlyUsedMenuPositions.length && currentlyUsedMenuPositions[0] !== '') {
-            for (let i = 0; i < currentlyUsedMenuPositions.length; i++) {
-                let position = currentlyUsedMenuPositions[i];
+        for (let i = 0; i < currentlyUsedMenuPositions.length; i++) {
+            let position = currentlyUsedMenuPositions[i];
 
-                if (menus[position]) {
-                    maxLevels[position] = currentlyUsedMaxLevels[i];
-
-                    if (menus[position].maxLevels) {
-                        if (maxLevels[position] === -1 && menus[position].maxLevels !== -1) {
-                            maxLevels[position] = menus[position].maxLevels;
-                        } else if (maxLevels[position] > 0 && menus[position].maxLevels > -1 && maxLevels[position] > menus[position].maxLevels) {
-                            maxLevels[position] = menus[position].maxLevels;
-                        }
-                    }    
-                }
+            if (position === '') {
+                continue;
             }
+
+            savedLevels[position] = Number.isInteger(currentlyUsedMaxLevels[i]) ? currentlyUsedMaxLevels[i] : -1;
         }
 
         for (let i = 0; i < menuPositions.length; i++) {
             let position = menuPositions[i];
-            let themeMaxLevel = menus[position].maxLevels;
+            let themeMaxLevels = this.getThemeMaxLevels(menus[position]);
+            let savedLevel = Object.prototype.hasOwnProperty.call(savedLevels, position) ? savedLevels[position] : null;
+            let unlimited = themeMaxLevels === -1 && (savedLevel === null || savedLevel === -1);
+            let depth = savedLevel > 0 ? savedLevel : (themeMaxLevels > 0 ? themeMaxLevels : 1);
 
-            if (!themeMaxLevel) {
-                themeMaxLevel = -1;
+            if (themeMaxLevels > 0 && depth > themeMaxLevels) {
+                depth = themeMaxLevels;
             }
 
             Vue.set(this.configuration, position, {
                 status: currentlyUsedMenuPositions.indexOf(position) > -1,
-                maxLevels: maxLevels[position] ? maxLevels[position] : themeMaxLevel,
+                unlimited: unlimited,
+                maxLevels: depth.toString(),
                 invalid: false
             });
         }
     },
     methods: {
+        getThemeMaxLevels (menu) {
+            if (menu && typeof menu === 'object' && menu.maxLevels) {
+                return menu.maxLevels;
+            }
+
+            return -1;
+        },
         close () {
             this.$bus.$emit('hide-menu-position-popup');
         },
@@ -216,10 +238,11 @@ export default {
 
             for (let i = 0; i < positions.length; i++) {
                 let position = positions[i];
+                let config = this.configuration[position];
 
-                if (this.configuration[position].status) {
+                if (config.status) {
                     itemPositions.push(position);
-                    itemMaxLevels.push(this.configuration[position].maxLevels);
+                    itemMaxLevels.push(config.unlimited ? -1 : parseInt(config.maxLevels, 10));
                 }
             }
 
@@ -236,32 +259,29 @@ export default {
         },
         validateMaxLevels () {
             let positions = Object.keys(this.configuration);
-            
+
             for (let i = 0; i < positions.length; i++) {
                 let position = positions[i];
 
-                if (this.menusInUse.indexOf(position) === -1) {
-                    let menu = this.availableMenus[position];
-                    
-                    if (
-                        (this.configuration[position].maxLevels).toString() === '' ||
-                        this.configuration[position].maxLevels < -1 ||
-                        this.configuration[position].maxLevels === 0 ||
-                        parseInt(this.configuration[position].maxLevels, 10) === 0 || 
-                        (this.configuration[position].maxLevels).toString().indexOf('+') > -1 ||
-                        (this.configuration[position].maxLevels).toString().indexOf('e') > -1 ||
-                        (this.configuration[position].maxLevels).toString().indexOf(',') > -1 ||
-                        (this.configuration[position].maxLevels).toString().indexOf('.') > -1 ||
-                        isNaN(this.configuration[position].maxLevels) ||
-                        (
-                            menu.maxLevels > -1 && 
-                            this.configuration[position].maxLevels > menu.maxLevels
-                        )
-                    ) {
-                        Vue.set(this.configuration[position], 'invalid', true);
-                    } else {
-                        Vue.set(this.configuration[position], 'invalid', false);
-                    }
+                if (this.menusInUse.indexOf(position) > -1) {
+                    continue;
+                }
+
+                let menu = this.availableMenus[position];
+                let config = this.configuration[position];
+                let invalid = false;
+
+                if (config.status && !config.unlimited) {
+                    let value = (config.maxLevels === null || config.maxLevels === undefined) ? '' : config.maxLevels.toString().trim();
+                    let depth = parseInt(value, 10);
+
+                    invalid = !/^\d+$/.test(value) ||
+                        depth < 1 ||
+                        (menu.maxLevels > -1 && depth > menu.maxLevels);
+                }
+
+                if (config.invalid !== invalid) {
+                    Vue.set(config, 'invalid', invalid);
                 }
             }
         }
@@ -298,52 +318,65 @@ export default {
     padding-bottom: var(--space-8);
 
     .menu-position-item {
-        align-items: baseline;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 0 var(--space-12);
-        margin: var(--space-12) 0;
+        margin: var(--space-8) 0;
         position: relative;
-        
+
         & + .menu-position-item {
             border-top: 1px solid var(--border-light-color);
-            padding-top: var(--space-12);
+            padding-top: var(--space-8);
         }
 
-        .menu-position-item-max-levels {
+        .menu-position-item-main {
             align-items: baseline;
             display: flex;
+            flex-wrap: wrap;
             gap: 0 var(--space-3);
-            text-align: left
+        }
+
+        .menu-position-item-name {
+            font-weight: var(--font-weight-medium);
         }
 
         .menu-position-item-desc,
-        .menu-position-item-usedby {   
+        .menu-position-item-usedby {
             color: var(--text-light-color);
             display: block;
             flex-basis: 100%;
             margin-left: 41px;
         }
 
-        input.is-invalid {
-            border-color: var(--color-danger);
+        .menu-position-item-depth {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            margin: var(--space-3) 0 0 41px;
+        }
+
+        .menu-position-item-max-levels {
+            align-items: center;
+            display: flex;
+            gap: var(--space-3);
+
+            label {
+                color: var(--label-color);
+                font-size: var(--font-size-ui-sm);
+                font-weight: var(--font-weight-medium);
+            }
+
+            .input-wrapper {
+                width: 10rem;
+            }
+        }
+
+        .menu-position-item-hint {
+            color: var(--text-light-color);
+            display: block;
+        }
+
+        .menu-position-item-error {
+            color: var(--color-danger);
+            display: block;
         }
     }
-}
-
-.menu-position-items .menu-position-item .menu-position-item-max-levels-desc,
-.menu-position-items .menu-position-item .menu-position-item-max-levels-error {
-    color: var(--text-light-color);
-    display: block;
-    flex-basis: 100%;
-    margin-top: var(--space-2);
-}
-
-.menu-position-items .menu-position-item .menu-position-item-max-levels-error {
-    background-color: var(--popup-bg);
-    bottom: -2rem;
-    color: var(--color-danger);
-    margin-left: 41px;
-    position: absolute;
 }
 </style>

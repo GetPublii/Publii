@@ -171,7 +171,8 @@ export default {
 
 .item {
     &:hover,
-    &.is-edited {
+    &.is-edited,
+    &.is-expanded {
         .col {
            background: var(--collection-bg-hover);
 

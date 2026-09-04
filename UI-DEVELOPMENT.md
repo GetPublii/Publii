@@ -179,6 +179,7 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 | --- | --- |
 | `p-button` | `intent`, `appearance`, `size`, `width`, `layout`; independent state booleans |
 | `btn-dropdown` | `intent="default|primary"`, `button-icon`, `preview-icon`, `is-reversed`, `disabled` |
+| `action-menu` | `items` array of `{ label, value, icon, intent="default|danger", disabled, visible, onClick }` or `{ separator: true }`; `label`; `icon`; `size="default|small"`; `align="left|right"`; `disabled` |
 | `text-input` | native `type`; visual `size="default|small"`; `keyboard-blocked` boolean |
 | `field` | `spacing="normal|small"`; independent label-layout booleans |
 | `image-upload` | `size="default|small"` |
@@ -188,7 +189,7 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 | `app-illustration` | allowlisted `name`; optional `scale` and `translate-y`; one inline, token-driven SVG symbol per illustration |
 | `collection` | numeric `columns` |
 | `collection-cell` | `variant="titles|assignment|publish-dates|modification-dates|authors|actions"` |
-| `collection-row` | semantic row states such as `main-author` |
+| `collection-row` | semantic row states: `main-author`, `expanded` (an expanded row keeps the edited-row highlight) |
 | `tabs` | `orientation="vertical|horizontal"`; independent `scrollable` boolean |
 
 The prop validators in the component files are the complete accepted-value lists.
@@ -235,6 +236,38 @@ Do not rebuild the old space-delimited `type` API:
 
 The `icon` prop automatically enables leading-icon layout. Do not pass a separate `icon` class or state. `disabled` controls availability; `loading` controls the preloader. Dynamic state belongs in the relevant boolean prop rather than in a conditional variant string.
 
+### Action menus
+
+`action-menu` is the overflow control for row-level and card-level actions. It renders an icon-only native button that opens a `role="menu"` list of native `menuitem` buttons and follows the same keyboard model as `btn-dropdown`: Arrow Down or Arrow Up opens the list and moves between items, Home and End jump to the ends, Escape closes the list and returns focus to the trigger, Tab closes it while moving on, and pointer interaction shows no focus ring. An open menu closes when another one opens or when the document body is clicked, and the list flips upwards on its own near the bottom of the viewport.
+
+Describe each action as data rather than markup:
+
+```vue
+<action-menu
+    size="small"
+    :items="[
+        { label: $t('menu.renameMenu'), value: 'rename', icon: 'edit', onClick: startRename },
+        { separator: true },
+        { label: $t('menu.deleteMenu'), value: 'delete', icon: 'trash', intent: 'danger', onClick: deleteMenu }
+    ]" />
+```
+
+`intent="danger"` is the only item variant. `disabled` and `visible`, a boolean or a function, control availability. The component calls the item's `onClick` and also emits `select` with the chosen `value`. Use `size="small"` inside dense rows and `align="left"` when the trigger sits at the left edge of its container. The trigger label defaults to the shared "Other options" string; pass `label` when the menu belongs to a named object.
+
+### Prompt dialogs
+
+The shared `confirm` dialog accepts an optional `validate` callback together with `hasInput`. It receives the current value and returns `true` or an error message. The dialog shows the message under the field, keeps itself open, and clears the message as soon as the value changes. Use it instead of closing the dialog and reporting the problem in a toast:
+
+```js
+this.$bus.$emit('confirm-display', {
+    hasInput: true,
+    message: this.$t('menu.provideNameForNewMenu'),
+    okLabel: this.$t('menu.createNewMenu'),
+    validate: name => this.validateMenuName(name),
+    okClick: name => this.addNewMenu(name)
+});
+```
+
 ### Form values
 
 `dropdown`, `radio-buttons`, and `switcher` use `value` through `v-model` as their single value contract:
@@ -253,6 +286,8 @@ The `icon` prop automatically enables leading-icon layout. Do not pass a separat
 ```
 
 Do not use the retired `selected` or `checked` initialization aliases on these components.
+
+`switcher` is a keyboard-operable `role="switch"` control: it is focusable, exposes `aria-checked`, toggles with Space or Enter, ignores input while `disabled`, and shows the shared `--input-border-focus` ring on keyboard focus.
 
 `checkbox` is intentionally different. It is a controlled list-selection primitive and still uses `checked`, `value`, and `on-click`:
 

@@ -1,9 +1,10 @@
 <template>
-    <section :class="{ 
-        'content': true, 
-        'menu': true, 
-        'menus-list-view': true, 
-        'no-scroll': editorVisible 
+    <section :class="{
+        'content': true,
+        'menu': true,
+        'menus-list-view': true,
+        'no-scroll': editorVisible,
+        'is-dragging': dragInProgress
     }">
         <p-header
             v-if="!showEmptyState"
@@ -19,7 +20,7 @@
 
         <collection
             v-if="!showEmptyState"
-            :columns="4">
+            :columns="5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -33,7 +34,7 @@
                 </collection-cell>
 
                 <collection-cell>
-                    {{ $t('menu.assignedMenu') }}
+                    {{ $t('menu.position') }}
                 </collection-cell>
 
                 <collection-cell
@@ -42,6 +43,8 @@
                     min-width="80px">
                     {{ $t('menu.items') }}
                 </collection-cell>
+
+                <collection-cell></collection-cell>
 
                 <div
                     v-if="anyCheckboxIsSelected"
@@ -59,7 +62,8 @@
             <collection-row
                 v-for="(item, index) in items"
                 slot="content"
-                :key="'menu-item-in-menus-list-' + index">
+                :key="'menu-row-' + index"
+                :expanded="menuIsOpened(index)">
                 <collection-cell>
                     <checkbox
                         :value="index"
@@ -68,91 +72,153 @@
                 </collection-cell>
 
                 <collection-cell variant="titles">
-                    <h2 class="title">
-                        <a
-                            href="#"
-                            @click.prevent.stop="toggleMenu(index)">
-                            {{ item.name }}
-                        </a>
-                    </h2>
+                    <menu-name-editor
+                        v-if="isRenaming(index)"
+                        :value="item.name"
+                        :validate="name => validateMenuName(name, item.name)"
+                        @save="finishRename(index, $event)"
+                        @cancel="cancelRename" />
+
+                    <div
+                        v-else
+                        class="menu-title">
+                        <button
+                            type="button"
+                            class="menu-toggle"
+                            :aria-expanded="menuIsOpened(index) ? 'true' : 'false'"
+                            :aria-controls="menuIsOpened(index) ? menuContentID(index) : null"
+                            @click="toggleMenu(index)">
+                            <span class="menu-name">
+                                {{ item.name }}
+                            </span>
+                        </button>
+                    </div>
                 </collection-cell>
 
-                <collection-cell
-                    variant="assignment">
-                    
-                    <a 
-                        href="#"
-                        @click.prevent="openMenuPositionPopup(item, index)"
-                        class="menu-assignment-link">
-                        {{ menuPositions(item.position) }} 
+                <collection-cell variant="assignment">
+                    <button
+                        type="button"
+                        :class="{
+                            'menu-position': true,
+                            'is-unassigned': !item.position
+                        }"
+                        :title="item.position ? $t('menu.changePosition') : $t('menu.assignPosition')"
+                        @click="openMenuPositionPopup(item, index)">
+                        <icon
+                            v-if="!item.position"
+                            name="warning"
+                            size="xs"
+                            non-interactive
+                            class="menu-position-warning" />
+
+                        <span class="menu-position-label">
+                            {{ menuPositions(item.position) }}
+                        </span>
+
                         <span
-                            class="menu-assignment-link-icon"
-                            name="sidebar-arrow">
-                        </span>                      
-                    </a>
+                            class="menu-position-icon"
+                            aria-hidden="true"></span>
+                    </button>
                 </collection-cell>
 
                 <collection-cell
                     justify-content="center"
                     text-align="center">
-                    <a
-                        @click.prevent.stop="toggleMenu(index)"
-                        href="#">
+                    <button
+                        type="button"
+                        class="menu-count"
+                        :aria-expanded="menuIsOpened(index) ? 'true' : 'false'"
+                        :aria-controls="menuIsOpened(index) ? menuContentID(index) : null"
+                        @click="toggleMenu(index)">
                         {{ countMenuItems(item.items) }}
-                    </a>
+                    </button>
                 </collection-cell>
 
-                <div
-                    v-if="menuIsOpened(index)"
-                    class="item-content">
-                    <p-button
-                        icon="add-site-mono"
-                        appearance="secondary"
-                        @click.native="addMenuItem(index)">
-                        {{ $t('menu.addMenuItem') }}
-                    </p-button>
-                    <p-button
-                     icon="edit"
-                        appearance="clean"
-                        class="menu-edit-btn"
-                        @click.native="editMenuName(item.name, index)">
-                        {{ $t('menu.editMenuName') }}
-                    </p-button>
+                <collection-cell
+                    variant="actions"
+                    justify-content="flex-end">
+                    <action-menu
+                        :items="menuRowActions(item, index)"
+                        :label="$t('ui.otherOptions') + ': ' + item.name" />
+                </collection-cell>
 
-                    <div class="menu-content">
-                        <em
-                            v-if="!item.items.length"
-                            class="menu-empty-list">
-                            {{ $t('menu.noMenusMessage') }}
-                        </em>
+                <template v-if="menuIsOpened(index)">
+                    <div class="item-content-gutter"></div>
 
-                        <draggable
-                            v-if="item.items.length"
-                            tag="ol"
-                            group="menu-items"
-                            chosenClass="is-chosen"
-                            ghostClass="is-ghost"
-                            class="menu-item-list"
-                            v-model="$store.state.currentSite.menuStructure[index].items"
-                            v-bind="{
-                                animation: 0,
-                                forceFallback: true,
-                                disabled: !!selectedItem
-                            }"
-                            :key="'draggable-menu-items-levle0-' + index"
-                            @update="listItemUpdated($event, index)"
-                            @add="listItemAdded($event, index)">
-                            <menu-item
-                                v-for="(subitem, subindex) in item.items"
-                                :key="'menu-' + subindex + '-' + getUID()"
-                                :itemData="subitem"
-                                :itemMenuID="index"
-                                :itemOrder="subindex"
-                                :editedID="parseInt(editedID, 10)"
-                                :selectedItem="selectedItemMenuID === index ? selectedItem : null" />
-                        </draggable>
+                    <div
+                        :id="menuContentID(index)"
+                        class="item-content">
+                        <div
+                            v-if="!item.position"
+                            class="menu-notice"
+                            role="status">
+                            <icon
+                                name="warning"
+                                size="s"
+                                non-interactive
+                                class="menu-notice-icon" />
+
+                            <p class="menu-notice-text">
+                                {{ $t('menu.unassignedNotice') }}
+                            </p>
+
+                            <p-button
+                                appearance="outline"
+                                size="small"
+                                :onClick="openMenuPositionPopup.bind(this, item, index)">
+                                {{ $t('menu.assignPosition') }}
+                            </p-button>
+                        </div>
+
+                        <div class="menu-toolbar">
+                            <p-button
+                                icon="add-site-mono"
+                                appearance="secondary"
+                                :onClick="addMenuItem.bind(this, index)">
+                                {{ $t('menu.addMenuItem') }}
+                            </p-button>
+                        </div>
+
+                        <div class="menu-content">
+                            <draggable
+                                tag="ol"
+                                group="menu-items"
+                                chosenClass="is-chosen"
+                                ghostClass="is-ghost"
+                                dragClass="is-dragging"
+                                class="menu-item-list"
+                                v-model="$store.state.currentSite.menuStructure[index].items"
+                                v-bind="dragOptions"
+                                :move="keepItemOutOfItsAncestors"
+                                :key="'draggable-menu-items-level0-' + index"
+                                @start="setDragState(true)"
+                                @end="setDragState(false)"
+                                @update="listItemUpdated($event, index)"
+                                @add="listItemAdded($event, index)">
+                                <menu-item
+                                    v-for="(subitem, subindex) in item.items"
+                                    :key="'menu-item-' + subitem.id"
+                                    :itemData="subitem"
+                                    :itemMenuID="index"
+                                    :itemOrder="subindex"
+                                    :editedID="parseInt(editedID, 10)"
+                                    :dragging="dragInProgress"
+                                    :selectedItem="selectedItemMenuID === index ? selectedItem : null" />
+                            </draggable>
+
+                            <button
+                                type="button"
+                                class="menu-add-item"
+                                @click="addMenuItem(index)">
+                                <icon
+                                    name="plus"
+                                    size="xs"
+                                    non-interactive />
+                                {{ item.items.length ? $t('menu.addMenuItem') : $t('menu.addFirstMenuItem') }}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </template>
             </collection-row>
         </collection>
 
@@ -175,7 +241,7 @@
             <menu-item-editor v-if="editorVisible" />
         </transition>
 
-        <menu-position-popup 
+        <menu-position-popup
             v-if="menuPositionPopupVisible"
             :editedItem="selectedMenuItemToEditPosition"
             :editedItemIndex="selectedMenuItemToEditIndex"
@@ -185,11 +251,21 @@
 
 <script>
 import Draggable from 'vuedraggable';
-import Vue from 'vue';
+import Sortable from 'sortablejs';
 import MenuItem from './MenuItem.vue';
 import MenuItemEditor from './MenuItemEditor.vue';
+import MenuNameEditor from './MenuNameEditor.vue';
 import MenuPositionPopup from './MenuPositionPopup.vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
+import menuDragOptions, { keepItemOutOfItsAncestors } from './configs/menuDragOptions.js';
+
+/*
+ * Horizontal nesting while dragging: moving the pointer this far to the right
+ * of the dragged row nests it under the row above, moving it this far to the
+ * left pulls it out of its parent (when it is the last child).
+ */
+const NEST_THRESHOLD = 48;
+const UNNEST_THRESHOLD = 24;
 
 export default {
     name: 'menus',
@@ -200,6 +276,7 @@ export default {
         'draggable': Draggable,
         'menu-item': MenuItem,
         'menu-item-editor': MenuItemEditor,
+        'menu-name-editor': MenuNameEditor,
         'menu-position-popup': MenuPositionPopup
     },
     data () {
@@ -208,13 +285,17 @@ export default {
             editorVisible: false,
             filterValue: '',
             selectedItems: [],
-            openedItems: [],
-            openedEditForms: [],
+            openedMenus: [],
+            renamedMenuIndex: null,
             selectedItem: null,
             selectedItemMenuID: null,
             selectedMenuItemToEditPosition: false,
             selectedMenuItemToEditIndex: false,
-            menuPositionPopupVisible: false
+            menuPositionPopupVisible: false,
+            dragInProgress: false,
+            saveTimer: null,
+            nestingFrame: null,
+            nestingPointer: null
         };
     },
     computed: {
@@ -223,6 +304,9 @@ export default {
         },
         showEmptyState: function() {
             return !this.items.length;
+        },
+        dragOptions () {
+            return menuDragOptions(!!this.selectedItem);
         }
     },
     mounted () {
@@ -259,62 +343,142 @@ export default {
         this.$bus.$on('menus-manager-save-menu-positions', config => {
             this.changeMenu(config.index, config.position, config.maxLevels);
         });
+
+        this.$bus.$on('menus-manager-drag-state', state => {
+            this.setDragState(state);
+        });
     },
     methods: {
         toggleMenu (index) {
-            if (this.openedItems.indexOf(index) === -1) {
-                this.openedItems.push(index);
+            let menuName = this.items[index].name;
+            let position = this.openedMenus.indexOf(menuName);
+
+            if (position === -1) {
+                this.openedMenus.push(menuName);
             } else {
-                let position = this.openedItems.indexOf(index);
-                this.openedItems.splice(position, 1);
+                this.openedMenus.splice(position, 1);
             }
+        },
+        menuIsOpened (index) {
+            return this.openedMenus.indexOf(this.items[index].name) > -1;
+        },
+        menuContentID (index) {
+            return 'menu-content-' + this._uid + '-' + index;
+        },
+        isRenaming (index) {
+            return this.renamedMenuIndex === index;
+        },
+        validateMenuName (name, currentName = null) {
+            let trimmedName = (name || '').trim();
+
+            if (trimmedName === '') {
+                return this.$t('menu.menuNameRequired');
+            }
+
+            if (!this.menuNameIsUnique(trimmedName, currentName)) {
+                return this.$t('menu.menuNameTaken');
+            }
+
+            return true;
         },
         showAddMenuForm () {
             this.$bus.$emit('confirm-display', {
                 hasInput: true,
                 message: this.$t('menu.provideNameForNewMenu'),
-                okClick: (result) => this.addNewMenu(result),
-                okLabel: this.$t('menu.createNewMenu')
+                okLabel: this.$t('menu.createNewMenu'),
+                validate: name => this.validateMenuName(name),
+                okClick: result => this.addNewMenu(result)
             });
         },
         addNewMenu (newMenuName) {
-            if(newMenuName !== '') {
-                if(this.menuNameIsUnique(newMenuName)) {
-                    this.$store.commit('addNewMenu', newMenuName);
-                    this.saveNewMenuStructure();
+            let menuName = (newMenuName || '').trim();
 
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('menu.newMenuCreated'),
-                        type: 'success',
-                        lifeTime: 3
-                    });
-                } else {
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('menu.menuNameExistsErrorMessage'),
-                        type: 'warning',
-                        lifeTime: 3
-                    });
-                }
-            } else {
-                this.$bus.$emit('message-display', {
-                    message: this.$t('menu.menuNameCannotBeEmptyCreateNewMenuErrorMessage'),
-                    type: 'warning',
-                    lifeTime: 3
-                });
+            if (this.validateMenuName(menuName) !== true) {
+                return;
             }
+
+            this.$store.commit('addNewMenu', menuName);
+            this.saveNewMenuStructure();
+            this.openedMenus.push(menuName);
+
+            this.$bus.$emit('message-display', {
+                message: this.$t('menu.newMenuCreated'),
+                type: 'success',
+                lifeTime: 3
+            });
         },
-        menuNameIsUnique(name, oldName = false) {
-            for(let i = 0; i < this.$store.state.currentSite.menuStructure.length; i++) {
-                if(oldName) {
-                    if(name === this.$store.state.currentSite.menuStructure[i].name && name !== oldName) {
-                        return false;
-                    }
-                } else if(name === this.$store.state.currentSite.menuStructure[i].name) {
-                    return false;
+        menuNameIsUnique (name, oldName = null) {
+            for (let i = 0; i < this.items.length; i++) {
+                if (this.items[i].name !== name) {
+                    continue;
                 }
+
+                if (oldName !== null && name === oldName) {
+                    continue;
+                }
+
+                return false;
             }
 
             return true;
+        },
+        startRename (index) {
+            this.renamedMenuIndex = index;
+        },
+        cancelRename () {
+            this.renamedMenuIndex = null;
+        },
+        finishRename (index, newMenuName) {
+            let oldMenuName = this.items[index].name;
+            this.renamedMenuIndex = null;
+
+            if (newMenuName === oldMenuName) {
+                return;
+            }
+
+            this.$store.commit('editMenuName', {
+                newName: newMenuName,
+                index: index
+            });
+            this.saveNewMenuStructure();
+
+            let openedPosition = this.openedMenus.indexOf(oldMenuName);
+
+            if (openedPosition > -1) {
+                this.$set(this.openedMenus, openedPosition, newMenuName);
+            }
+
+            this.$bus.$emit('message-display', {
+                message: this.$t('menu.menuNameHasBeenEdited'),
+                type: 'success',
+                lifeTime: 3
+            });
+        },
+        menuRowActions (item, index) {
+            return [
+                {
+                    label: this.$t('menu.renameMenu'),
+                    value: 'rename',
+                    icon: 'edit',
+                    onClick: () => this.startRename(index)
+                },
+                {
+                    label: item.position ? this.$t('menu.changePosition') : this.$t('menu.assignPosition'),
+                    value: 'position',
+                    icon: 'settings',
+                    onClick: () => this.openMenuPositionPopup(item, index)
+                },
+                {
+                    separator: true
+                },
+                {
+                    label: this.$t('menu.deleteMenu'),
+                    value: 'delete',
+                    icon: 'trash',
+                    intent: 'danger',
+                    onClick: () => this.deleteMenu(index)
+                }
+            ];
         },
         changeMenu (itemIndex, itemPosition, itemMaxLevels) {
             this.$store.commit('setMenuPosition', {
@@ -325,9 +489,6 @@ export default {
 
             this.saveNewMenuStructure();
         },
-        menuIsOpened (index) {
-            return this.openedItems.indexOf(index) > -1;
-        },
         addMenuItem (index) {
             this.editorVisible = true;
 
@@ -337,65 +498,140 @@ export default {
                 });
             }, 0);
         },
-        editMenuName (oldName, index) {
+        deleteMenu (index) {
             this.$bus.$emit('confirm-display', {
-                hasInput: true,
-                message: this.$t('menu.provideNewNameForMenu'),
-                okClick: (result) => this.changeMenuName(result, index),
-                okLabel: this.$t('menu.editMenuName'),
-                defaultText: oldName
+                message: this.$t('menu.menuRemoveMessage'),
+                isDanger: true,
+                okClick: () => this.deleteMenus([index], this.$t('menu.menuRemoveSuccessMessage'))
             });
-        },
-        changeMenuName (newMenuName, index) {
-            if(newMenuName !== '') {
-                if(this.menuNameIsUnique(newMenuName)) {
-                    this.$store.commit('editMenuName', {
-                        newName: newMenuName,
-                        index: index
-                    });
-                    this.saveNewMenuStructure();
-
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('menu.menuNameHasBeenEdited'),
-                        type: 'success',
-                        lifeTime: 3
-                    });
-                } else {
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('menu.menuNameInUseErrorMessage'),
-                        type: 'warning',
-                        lifeTime: 3
-                    });
-                }
-            } else {
-                this.$bus.$emit('message-display', {
-                    message: this.$t('menu.menuNameCannotBeEmptyErrorMessage'),
-                    type: 'warning',
-                    lifeTime: 3
-                });
-            }
         },
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('menu.menusRemoveMessage'),
                 isDanger: true,
-                okClick: this.deleteSelected
+                okClick: () => this.deleteMenus(this.getSelectedItems(false), this.$t('menu.menusRemoveSuccessMessage'))
             });
         },
-        deleteSelected () {
-            let itemsToRemove = this.getSelectedItems(false);
+        deleteMenus (indexes, successMessage) {
+            let removedNames = indexes
+                .map(index => this.items[index] ? this.items[index].name : null)
+                .filter(name => name !== null);
 
-            this.$store.commit('deleteMenuByIDs', itemsToRemove);
+            this.$store.commit('deleteMenuByIDs', indexes);
             this.saveNewMenuStructure();
             this.selectedItems = [];
+            this.renamedMenuIndex = null;
+            this.unselectMenuItem();
+            this.openedMenus = this.openedMenus.filter(name => removedNames.indexOf(name) === -1);
 
             this.$bus.$emit('message-display', {
-                message: this.$t('menu.menusRemoveSuccessMessage'),
+                message: successMessage,
                 type: 'success',
                 lifeTime: 3
             });
         },
+        keepItemOutOfItsAncestors,
+        setDragState (state) {
+            this.dragInProgress = !!state;
+
+            if (this.dragInProgress) {
+                document.addEventListener('mousemove', this.handleNestingMove);
+            } else {
+                document.removeEventListener('mousemove', this.handleNestingMove);
+            }
+        },
+        handleNestingMove (event) {
+            // Coalesce pointer moves into one check per frame
+            this.nestingPointer = { clientX: event.clientX, clientY: event.clientY };
+
+            if (this.nestingFrame) {
+                return;
+            }
+
+            this.nestingFrame = requestAnimationFrame(() => {
+                this.nestingFrame = null;
+                this.applyNestingGesture(this.nestingPointer);
+            });
+        },
+        applyNestingGesture (event) {
+            let dragEl = Sortable.dragged;
+
+            if (!event || !dragEl || !dragEl.classList.contains('menu-item')) {
+                return;
+            }
+
+            // Only react while the pointer stays on the dragged row itself;
+            // everywhere else SortableJS decides where the row goes
+            let rect = dragEl.getBoundingClientRect();
+
+            if (event.clientY < rect.top || event.clientY > rect.bottom) {
+                return;
+            }
+
+            let offset = event.clientX - rect.left;
+
+            if (offset > NEST_THRESHOLD) {
+                this.nestDraggedItem(dragEl, event);
+            } else if (offset < -UNNEST_THRESHOLD) {
+                this.unnestDraggedItem(dragEl);
+            }
+        },
+        nestDraggedItem (dragEl, event) {
+            let previous = dragEl.previousElementSibling;
+
+            while (previous && !previous.classList.contains('menu-item')) {
+                previous = previous.previousElementSibling;
+            }
+
+            if (!previous) {
+                return;
+            }
+
+            let childList = previous.querySelector(':scope > .menu-item-list');
+            let sortable = childList ? Sortable.get(childList) : null;
+
+            if (!sortable || sortable.options.disabled) {
+                return;
+            }
+
+            // Plain DOM move: on drop SortableJS reads the row's final parent and
+            // index from the DOM and emits add/remove for vuedraggable itself
+            childList.appendChild(dragEl);
+        },
+        unnestDraggedItem (dragEl) {
+            let list = dragEl.parentNode;
+            let parentItem = list ? list.parentNode : null;
+
+            if (!parentItem || !parentItem.classList || !parentItem.classList.contains('menu-item')) {
+                return;
+            }
+
+            // Only the last child can be pulled out; otherwise the rows below it
+            // would have to travel with it
+            let lastItem = list.lastElementChild;
+
+            while (lastItem && !lastItem.classList.contains('menu-item')) {
+                lastItem = lastItem.previousElementSibling;
+            }
+
+            if (lastItem !== dragEl) {
+                return;
+            }
+
+            parentItem.parentNode.insertBefore(dragEl, parentItem.nextSibling);
+        },
         saveNewMenuStructure () {
+            // One drag can trigger several list updates; write the file once
+            clearTimeout(this.saveTimer);
+
+            this.saveTimer = setTimeout(() => {
+                this.flushMenuStructureSave();
+            }, 150);
+        },
+        flushMenuStructureSave () {
+            clearTimeout(this.saveTimer);
+            this.saveTimer = null;
+
             mainProcessAPI.send('app-menu-update', {
                 siteName: this.$store.state.currentSite.config.name,
                 menuStructure: this.$store.state.currentSite.menuStructure
@@ -411,9 +647,6 @@ export default {
             }
 
             return result;
-        },
-        getUID () {
-            return Math.random().toString(36).substr(2, 9);
         },
         listItemUpdated (e, menuID) {
             this.saveNewMenuStructure();
@@ -447,7 +680,7 @@ export default {
         menuPositions (positions) {
             let menus = JSON.parse(JSON.stringify(this.$store.state.currentSite.themeSettings.menus));
             let output = [];
-            positions = positions.split(';');
+            positions = (positions || '').split(';');
 
             if (positions[0] === '') {
                 return this.$t('menu.unassigned');
@@ -475,16 +708,28 @@ export default {
             this.selectedMenuItemToEditPosition = item;
             this.selectedMenuItemToEditIndex = index;
 
-            Vue.nextTick(() => {
+            this.$nextTick(() => {
                 this.menuPositionPopupVisible = true;
             });
         }
     },
     beforeDestroy () {
+        document.removeEventListener('mousemove', this.handleNestingMove);
+
+        if (this.nestingFrame) {
+            cancelAnimationFrame(this.nestingFrame);
+        }
+
+        if (this.saveTimer) {
+            this.flushMenuStructureSave();
+        }
+
+        this.$bus.$off('menus-manager-drag-state');
         this.$bus.$off('hide-menu-item-editor');
         this.$bus.$off('show-menu-item-editor-from-submenu');
         this.$bus.$off('save-new-menu-structure');
         this.$bus.$off('menus-manager-selected-item');
+        this.$bus.$off('menus-manager-unselect-item');
         this.$bus.$off('menus-manager-move-item');
         this.$bus.$off('hide-menu-position-popup');
         this.$bus.$off('menus-manager-save-menu-positions');
@@ -493,7 +738,6 @@ export default {
 </script>
 
 <style scoped>
-
 .menu {
     overflow: auto;
     overflow-x: hidden!important;
@@ -502,72 +746,243 @@ export default {
         overflow: hidden;
     }
 
-    .item-content {
-        border-bottom: 1px solid var(--border-light-color);
-        grid-column-start: 1;
-        grid-column-end: 5;
-        overflow: hidden;
-        padding: var(--space-12) 0 var(--space-12) var(--space-12);
-        user-select: none;
-        width: 100%;
-    }
-
     .col.assignment {
         display: flex;
         padding-top: 0;
         padding-bottom: 0;
     }
+
+    .item-content-gutter {
+        border-bottom: 1px solid var(--border-light-color);
+        grid-column: 1 / 2;
+    }
+
+    .item-content {
+        border-bottom: 1px solid var(--border-light-color);
+        grid-column: 2 / -1;
+        min-width: 0;
+        padding: var(--space-6) 1.8rem var(--space-8) 1.8rem;
+        user-select: none;
+    }
 }
 
-.menu-assignment-link {
-    padding-right: var(--space-16);
-    position: relative;
+.menu-title {
+    align-items: center;
+    display: flex;
+    gap: var(--space-1);
+    min-width: 0;
     width: 100%;
 }
 
-.menu-assignment-link-icon {
-    border-color: var(--color-surface-strong) transparent transparent;
+.menu-toggle {
+    align-items: center;
+    appearance: none;
+    background: none;
+    border: none;
+    border-radius: var(--radius-base);
+    color: var(--link-invert-color);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+    min-width: 0;
+    padding: var(--space-1) var(--space-2) var(--space-1) 0;
+    text-align: left;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--link-invert-color-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+}
+
+.menu-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.menu-position {
+    align-items: center;
+    appearance: none;
+    background: none;
+    border: none;
+    border-radius: var(--radius-base);
+    color: var(--link-invert-color);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-regular);
+    gap: var(--space-2);
+    margin: 0;
+    max-width: 100%;
+    padding: var(--space-1) var(--space-16) var(--space-1) 0;
+    position: relative;
+    text-align: left;
+    width: 100%;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--link-invert-color-hover);
+
+        .menu-position-icon {
+            border-top-color: var(--icon-tertiary-color);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+
+    &.is-unassigned {
+        color: var(--text-light-color);
+    }
+}
+
+.menu-position-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.menu-position-warning {
+    fill: var(--color-warning);
+    flex-shrink: 0;
+}
+
+/* Same triangle as the site switcher, split buttons and selects,
+   pinned to the column edge so every row's arrow lines up */
+.menu-position-icon {
+    border-color: var(--icon-secondary-color) transparent transparent;
     border-style: solid;
     border-width: 5px;
-    opacity: 1;
-    cursor: pointer;
-    height: 5px;
-    left: auto;
-    line-height: 1.1;
-    padding: 0;
+    height: 0;
     position: absolute;
     right: 0;
-    width: 5px;
-    text-align: center;
-    transition: var(--transition-default);
     top: calc(50% - 2px);
+    transition: var(--transition-default);
+    width: 0;
+}
+
+.menu-count {
+    appearance: none;
+    background: none;
+    border: none;
+    border-radius: var(--radius-base);
+    color: var(--link-invert-color);
+    cursor: pointer;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-regular);
+    margin: 0;
+    padding: var(--space-1) var(--space-2);
+
+    &:hover,
+    &:focus-visible {
+        color: var(--link-invert-color-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+}
+
+/* Warning tint from the inline-message recipe, icon matches the unassigned marker */
+.menu-notice {
+    align-items: center;
+    background: oklch(from var(--color-warning) l c h / 12.5%);
+    border-radius: var(--radius-base);
+    color: var(--text-primary-color);
+    display: flex;
+    font-size: var(--font-size-ui-sm);
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    padding: var(--space-3) var(--space-4);
+
+    .button {
+        flex-shrink: 0;
+    }
+}
+
+.menu-notice-icon {
+    fill: var(--color-warning);
+    flex-shrink: 0;
+}
+
+.menu-notice-text {
+    flex: 1;
+    margin: 0;
+}
+
+.menu-toolbar {
+    margin-bottom: var(--space-4);
 }
 
 .menu-content {
-    margin: 2.5rem 0 0 0;
-}
-
-.menu-item {
+    position: relative;
 }
 
 .menu-item-list {
     list-style-type: none;
-    margin: calc(.25 * var(--space-unit)) 0;
+    margin: 0;
     padding: 0;
+
+    /* An empty menu accepts drops over its "add item" row, but only while dragging */
+    &:empty {
+        inset: 0;
+        pointer-events: none;
+        position: absolute;
+    }
 }
 
-.menu-edit-btn {
-     color: var(--link-primary-color) !important;
-
-     &:active,
-     &:focus,
-     &:hover {
-        color: var(--link-primary-color-hover) !important;
-     }
+.menu.is-dragging .menu-item-list:empty {
+    pointer-events: auto;
 }
 
-.menu-empty-list {
-    display: block;
-    text-align: center;
+.menu-add-item {
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    /* Solid on purpose: a dashed frame reads as a drop placeholder here */
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-base);
+    color: var(--text-light-color);
+    cursor: pointer;
+    display: flex;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-ui-sm);
+    font-weight: var(--font-weight-medium);
+    gap: var(--space-2);
+    justify-content: center;
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+    transition: var(--transition-default);
+    width: 100%;
+
+    & > svg {
+        fill: currentColor;
+        pointer-events: none;
+    }
+
+    &:hover,
+    &:focus-visible {
+        background: var(--collection-bg-hover);
+        border-color: var(--color-primary);
+        color: var(--link-primary-color);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
 }
 </style>
