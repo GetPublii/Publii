@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import beautify from 'js-beautify';
+import indentHtml from './../../helpers/html-indenter.js';
 import CodeMirror from 'codemirror';
 import cssMode from '../../assets/vendor/js/codemirror/css.js';
 import xmlMode from '../../assets/vendor/js/codemirror/xml.js';
@@ -79,7 +79,7 @@ export default {
         },
         beautifyCode () {
             let editorContent = this.editor.getValue();
-            editorContent = beautify.html(editorContent, { indent_with_tabs: true });
+            editorContent = indentHtml(editorContent);
             this.editor.setValue(editorContent);
             this.editor.refresh();
         }
