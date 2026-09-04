@@ -1153,6 +1153,7 @@
         "duplicateWebsite": "Duplicate website",
         "erroOcurredDuringSiteDatabaseCreationInfo": "An error occurred during site database creation. Please check your antivirus software and try again. You can also need to remove the invalid website's folder from the Publii sites directory.",
         "installFromBackup": "Install from backup",
+        "openInNewWindow": "Open in new window",
         "openWebsiteInNewWindow": "Open {websiteName} in a new window",
         "removeWebsite": "Remove website",
         "restoreFromBackup": {

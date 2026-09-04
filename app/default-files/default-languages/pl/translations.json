@@ -1151,6 +1151,7 @@
         "duplicateWebsite": "Duplikuj stronę internetową",
         "erroOcurredDuringSiteDatabaseCreationInfo": "Wystąpił błąd poczas tworzenia bazy danych dla strony. Sprawdź swój program antywirusowy i spróbuj ponownie. Możliwe, że musisz również usunąć niepoprawny katalog strony z katalogu stron Publii.",
         "installFromBackup": "Zainstaluj z kopii zapasowej",
+        "openInNewWindow": "Otwórz w nowym oknie",
         "openWebsiteInNewWindow": "Otwórz witrynę „{websiteName}” w nowym oknie",
         "removeWebsite": "Usuń stronę internetową",
         "restoreFromBackup": {

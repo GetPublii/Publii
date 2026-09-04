@@ -8,7 +8,8 @@
         <button
             type="button"
             class="single-site-primary-action"
-            @click="showWebsite(site)">
+            @click="handlePrimaryClick"
+            @auxclick="handleAuxClick">
             <span class="single-site-icon">
                 <icon
                     :name="siteLogoIcon"
@@ -30,58 +31,18 @@
             </strong>
         </button>
 
-        <div 
-            :class="{
-                'single-site-actions': true, 
-                'single-site-actions-disabled': duplicateInProgress 
-            }">
-            <button
-                v-if="currentSiteName"
-                type="button"
-                :class="{
-                    'single-site-actions-btn': true,
-                    'open-in-new-window': true,
-                    'is-unavailable': isCurrentSite
-                }"
-                :title="openWebsiteInNewWindowLabel"
-                :aria-label="openWebsiteInNewWindowLabel"
-                :aria-disabled="isCurrentSite ? 'true' : 'false'"
-                :disabled="duplicateInProgress"
-                @click.stop="openWebsiteInNewWindow">
-                <icon
-                    name="open-new-window"
-                    size="xs"
-                    non-interactive
-                    aria-hidden="true" />
-            </button>
+        <div class="single-site-actions">
+            <span
+                v-if="isDuplicating"
+                class="single-site-spinner"
+                aria-hidden="true"></span>
 
-            <button
-                type="button"
-                :class="{ 'single-site-actions-btn': true, 'is-duplicating': isDuplicating }"
-                :title="$t('site.duplicateWebsite')"
-                :aria-label="$t('site.duplicateWebsite') + ': ' + displayName"
-                :disabled="duplicateInProgress"
-                @click.stop="askForClone">
-                <icon
-                    name="duplicate"
-                    size="xs"
-                    non-interactive
-                    aria-hidden="true" />
-            </button>
-
-            <button
-                type="button"
-                class="single-site-actions-btn delete"
-                :title="$t('site.deleteWebsite')"
-                :aria-label="$t('site.deleteWebsite') + ': ' + displayName"
-                :disabled="duplicateInProgress"
-                @click.stop="askForRemove">
-                <icon
-                    name="trash"
-                    size="xs"
-                    non-interactive
-                    aria-hidden="true" />
-            </button>
+            <action-menu
+                v-else
+                class="single-site-menu"
+                :items="siteActions"
+                :label="$t('ui.otherOptions') + ': ' + displayName"
+                :disabled="duplicateInProgress" />
         </div>
     </li>
 </template>
@@ -111,12 +72,36 @@ export default {
         isCurrentSite () {
             return this.currentSiteName === this.site;
         },
-        openWebsiteInNewWindowLabel () {
-            if (this.isCurrentSite) {
-                return this.$t('site.websiteAlreadyOpenInCurrentWindow', { websiteName: this.displayName });
-            }
-
-            return this.$t('site.openWebsiteInNewWindow', { websiteName: this.displayName });
+        canOpenInNewWindow () {
+            return !!this.currentSiteName && !this.isCurrentSite;
+        },
+        siteActions () {
+            return [
+                {
+                    label: this.$t('site.openInNewWindow'),
+                    value: 'open-new-window',
+                    icon: 'open-new-window',
+                    visible: !!this.currentSiteName,
+                    disabled: this.isCurrentSite,
+                    onClick: () => this.openWebsiteInNewWindow()
+                },
+                {
+                    label: this.$t('site.duplicateWebsite'),
+                    value: 'duplicate',
+                    icon: 'duplicate',
+                    onClick: () => this.askForClone()
+                },
+                {
+                    separator: true
+                },
+                {
+                    label: this.$t('site.deleteWebsite'),
+                    value: 'delete',
+                    icon: 'trash',
+                    intent: 'danger',
+                    onClick: () => this.askForRemove()
+                }
+            ];
         }
     },
     data () {
@@ -125,6 +110,22 @@ export default {
         };
     },
     methods: {
+        handlePrimaryClick (event) {
+            // Cmd on macOS or Ctrl elsewhere opens the website in a new window
+            if ((event.metaKey || event.ctrlKey) && this.canOpenInNewWindow) {
+                this.openWebsiteInNewWindow();
+                return;
+            }
+
+            this.showWebsite(this.site);
+        },
+        handleAuxClick (event) {
+            // Middle click follows the browser convention for "open in new window"
+            if (event.button === 1 && this.canOpenInNewWindow) {
+                event.preventDefault();
+                this.openWebsiteInNewWindow();
+            }
+        },
         showWebsite (siteToDisplay) {
             window.localStorage.setItem('publii-last-opened-website', siteToDisplay);
             this.$bus.$emit('site-switched');
@@ -290,15 +291,6 @@ export default {
         background: var(--collection-bg-hover);
         box-shadow: inset 3px 0 0 var(--color-primary);
         color: var(--link-primary-color);
-        will-change: transform;
-
-        .single-site-actions-btn {
-            opacity: 1;
-
-            &.is-unavailable {
-                opacity: .6;
-            }
-        }
     }
 }
 .single-site-primary-action {
@@ -320,121 +312,29 @@ export default {
     }
 }
 .single-site-actions {
-    display: flex;
-    gap: 8px;
-    margin-left: auto;
-
-    &:focus-within {
-        .single-site-actions-btn {
-            opacity: 1;
-
-            &.is-unavailable {
-                opacity: .6;
-            }
-        }
-    }
-}
-.single-site-actions-disabled {
-    opacity: .75;
-    pointer-events: none;
-}
-.single-site-actions-btn {
     align-items: center;
-    background: var(--bg-primary);
-    border: 0;
-    border-radius: 50%;
-    color: inherit;
-    cursor: pointer;
-    display: inline-flex;
-    font: inherit;
+    display: flex;
+    margin-left: auto;
+}
+.single-site-spinner {
+    display: inline-block;
     height: 3rem;
-    justify-content: center;
-    opacity: 0;
-    padding: 0;
     position: relative;
-    text-align: center;
     width: 3rem;
 
-    &:active,
-    &:focus,
-    &:hover {
-        color: var(--headings-color);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--input-border-focus);
-        outline-offset: 2px;
-    }
-
-    &:hover {
-
-        & > svg {
-           fill: var(--icon-tertiary-color);
-           transform: scale(1);
-       }
-    }
-
-    svg {
-        fill: var(--icon-secondary-color);
-        height: 1.6rem;
-        pointer-events: none;
-        transform: scale(.9);
-        transition: var(--transition-default);
-        width: 1.6rem;
-    }
-
-    &.delete {
-
-        &:hover {
-
-            & > svg {
-               fill: var(--color-danger);
-           }
-        }
-    }
-
-    &.open-in-new-window {
-        svg {
-            color: var(--icon-secondary-color);
-            fill: none;
-        }
-
-        &:hover > svg {
-            color: var(--icon-tertiary-color);
-            fill: none;
-        }
-    }
-
-    &.is-unavailable {
-        cursor: not-allowed;
-
-        &:hover > svg {
-            color: var(--icon-secondary-color);
-            transform: scale(.9);
-        }
-    }
-
-    &.is-duplicating {
-        &::after { 
-           animation: spin .9s infinite linear;
-           border-top: 2px solid oklch(from var(--color-primary) l c h / 20%);
-           border-right: 2px solid oklch(from var(--color-primary) l c h / 20%);
-           border-bottom: 2px solid oklch(from var(--color-primary) l c h / 20%);
-           border-left: 2px solid var(--color-primary);
-           border-radius: 50%;
-           content: "";
-           display: block;
-           height: 100%;
-           width: 100%;
-           position: absolute;
-           top: 50%;
-           left: 50%;
-           transform: translate(-50%, -50%)
-        }
-
-        svg {
-            opacity: 0;
-        }
+    &::after {
+        animation: spin .9s infinite linear;
+        border: 2px solid oklch(from var(--color-primary) l c h / 20%);
+        border-left-color: var(--color-primary);
+        border-radius: 50%;
+        content: "";
+        display: block;
+        height: 2rem;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 2rem;
     }
 }
 @keyframes spin {
