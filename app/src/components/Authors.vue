@@ -17,7 +17,7 @@
 
         <collection
             v-if="!emptySearchResults"
-            :columns="4">
+            :columns="5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -57,7 +57,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell min-width="40px">
+                <collection-cell variant="identifier">
                     <span
                         class="col-sortable-title"
                         @click="ordering('id')">
@@ -70,6 +70,8 @@
                         <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
+
+                <collection-cell variant="menu"></collection-cell>
 
                 <div
                     v-if="anyCheckboxIsSelected"
@@ -139,8 +141,16 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell>
+                <collection-cell variant="identifier">
                     {{ item.id }}
+                </collection-cell>
+
+                <collection-cell
+                    variant="menu"
+                    justify-content="flex-end">
+                    <action-menu
+                        :items="authorRowActions(item)"
+                        :label="$t('ui.otherOptions') + ': ' + item.name" />
                 </collection-cell>
             </collection-row>
         </collection>
@@ -289,7 +299,37 @@ export default {
             });
         },
         deleteSelected: function() {
-            let itemsToRemove = this.getSelectedItems();
+            this.deleteAuthors(this.getSelectedItems());
+        },
+        deleteAuthor (item) {
+            this.$bus.$emit('confirm-display', {
+                message: this.$t('author.removeAuthorsMessage'),
+                isDanger: true,
+                okClick: () => this.deleteAuthors([item.id])
+            });
+        },
+        authorRowActions (item) {
+            return [
+                {
+                    label: this.$t('ui.edit'),
+                    value: 'edit',
+                    icon: 'edit',
+                    onClick: () => this.editAuthor(item)
+                },
+                {
+                    separator: true
+                },
+                {
+                    label: this.$t('ui.delete'),
+                    value: 'delete',
+                    icon: 'trash',
+                    intent: 'danger',
+                    disabled: item.id === 1,
+                    onClick: () => this.deleteAuthor(item)
+                }
+            ];
+        },
+        deleteAuthors (itemsToRemove) {
             itemsToRemove = itemsToRemove.filter(item => item !== 1);
 
             if(itemsToRemove.length === 0) {

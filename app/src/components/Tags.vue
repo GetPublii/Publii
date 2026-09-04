@@ -19,7 +19,7 @@
 
         <collection
             v-if="!emptySearchResults && hasTags"
-            :columns="4">
+            :columns="5">
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
@@ -59,7 +59,7 @@
                     </span>
                 </collection-cell>
 
-                <collection-cell min-width="40px">
+                <collection-cell variant="identifier">
                     <span
                         class="col-sortable-title"
                         @click="ordering('id')">
@@ -72,6 +72,8 @@
                         <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
                     </span>
                 </collection-cell>
+
+                <collection-cell variant="menu"></collection-cell>
 
                 <div
                     v-if="anyCheckboxIsSelected"
@@ -149,8 +151,16 @@
                     </a>
                 </collection-cell>
 
-                <collection-cell>
+                <collection-cell variant="identifier">
                     {{ item.id }}
+                </collection-cell>
+
+                <collection-cell
+                    variant="menu"
+                    justify-content="flex-end">
+                    <action-menu
+                        :items="tagRowActions(item)"
+                        :label="$t('ui.otherOptions') + ': ' + item.name" />
                 </collection-cell>
             </collection-row>
 
@@ -377,8 +387,45 @@ export default {
             this.changeStateForSelected('hidden', true);
         },
         changeStateForSelected (status, inverse = false) {
-            let itemsToChange = this.getSelectedItems();
-
+            this.changeTagsState(this.getSelectedItems(), status, inverse);
+        },
+        toggleTagVisibility (item) {
+            this.changeTagsState([item.id], 'hidden', !!item.isHidden);
+        },
+        deleteTag (item) {
+            this.$bus.$emit('confirm-display', {
+                message: this.$t('tag.removeTagMessage'),
+                isDanger: true,
+                okClick: () => this.deleteTags([item.id])
+            });
+        },
+        tagRowActions (item) {
+            return [
+                {
+                    label: this.$t('ui.edit'),
+                    value: 'edit',
+                    icon: 'edit',
+                    onClick: () => this.editTag(item)
+                },
+                {
+                    label: item.isHidden ? this.$t('ui.unhide') : this.$t('ui.hide'),
+                    value: 'visibility',
+                    icon: item.isHidden ? 'unhidden-post' : 'hidden-post',
+                    onClick: () => this.toggleTagVisibility(item)
+                },
+                {
+                    separator: true
+                },
+                {
+                    label: this.$t('ui.delete'),
+                    value: 'delete',
+                    icon: 'trash',
+                    intent: 'danger',
+                    onClick: () => this.deleteTag(item)
+                }
+            ];
+        },
+        changeTagsState (itemsToChange, status, inverse = false) {
             this.$store.commit('changeTagsVisibility', {
                 tagsIDs: itemsToChange,
                 status: status,
@@ -404,8 +451,9 @@ export default {
             });
         },
         deleteSelected () {
-            let itemsToRemove = this.getSelectedItems();
-
+            this.deleteTags(this.getSelectedItems());
+        },
+        deleteTags (itemsToRemove) {
             mainProcessAPI.send('app-tag-delete', {
                 "site": this.$store.state.currentSite.config.name,
                 "ids": itemsToRemove
