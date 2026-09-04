@@ -186,6 +186,7 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 | `field` | `spacing="normal|small"`; independent label-layout booleans |
 | `image-upload` | `size="default|small"` |
 | `progress-bar` | `intent="default|success|danger|warning"` |
+| `progress-orb` | `phase="idle|rendering|connecting|uploading|success|warning|error"`; numeric `progress`; independent `indeterminate` boolean; `message`; `size="default|small"` |
 | `overlay` | `appearance="default|drop-zone"` |
 | `icon` | named `size`; `non-interactive` boolean; controlled custom classes when required |
 | `app-illustration` | allowlisted `name`; optional `scale` and `translate-y`; one inline, token-driven SVG symbol per illustration |
@@ -211,7 +212,7 @@ Button concerns are independent:
 | Concern | Prop | Accepted values |
 | --- | --- | --- |
 | Meaning | `intent` | `default`, `primary`, `danger`, `success` |
-| Presentation | `appearance` | `default`, `secondary`, `outline`, `popup-cancel`, `clean`, `clean-inverse`, `light` |
+| Presentation | `appearance` | `default`, `secondary`, `outline`, `popup-cancel`, `clean`, `clean-inverse`, `clean-muted`, `light` |
 | Size | `size` | `default`, `small`, `medium` |
 | Width | `width` | `auto`, `quarter`, `half`, `full` |
 | Layout | `layout` | `inline`, `bottom` |
@@ -235,6 +236,8 @@ Do not rebuild the old space-delimited `type` API:
     {{ $t('file.createBackup') }}
 </p-button>
 ```
+
+`clean` is the text button for inline actions and uses the link roles. `clean-muted` is the low-emphasis text button for dismiss actions such as Cancel or OK placed under a primary action; it uses the dialog cancel roles, `--popup-btn-cancel-color` and `--popup-btn-cancel-hover-color`, so it never competes with the primary action or the accent. Reserve `popup-cancel` for dialog footers, where its surface and top border belong.
 
 The `icon` prop automatically enables leading-icon layout. Do not pass a separate `icon` class or state. `disabled` controls availability; `loading` controls the preloader. Dynamic state belongs in the relevant boolean prop rather than in a conditional variant string.
 
@@ -307,6 +310,12 @@ Do not use the retired `selected` or `checked` initialization aliases on these c
 Site Settings selects the website theme with `themes-dropdown`, which reads the `siteThemesState` store getter. The getter merges the theme library (`location: 'app'`) with the site copies of the current website and reports, for the current theme, whether the library or the Publii marketplace holds a newer version. The dropdown stays a value control: an empty value keeps the current theme (its placeholder option names it), `use-<directory>` switches to an existing site copy, and `install-use-<directory>` copies a library theme into the site or updates the current copy from the library. Options describe states, never actions, and every theme appears once. The value is applied by the regular settings save through `changeTheme()` in the back-end, and the field shows a note while a change is pending.
 
 Commands live beside the field. The "Update to v.X" button only selects the update option, and the action menu's "Reinstall <name> from your theme library" (offered when the library holds the same or an older version) selects the same `install-use-<directory>` value, which the dropdown then lists under "Reinstall" only while it is pending; the field's `action-menu` installs a theme file into the library (shared `ThemeUpload` mixin; a component may define `themeUploadedHint(data)` to append the next step to the success toast), opens the theme library, opens the marketplace, and removes unused site copies. Removal is destructive, so it asks through the shared `confirm` dialog and then calls the dedicated `app-site-theme-remove` IPC, which deletes an unused copy (never the active theme) and returns the refreshed theme list; the settings form itself is not saved. A marketplace update is reported with the `msg msg-small msg-icon msg-info` block and its download and install links; the notifications feed's `free` flag decides whether the link is a direct download or opens the marketplace account downloads page. Do not add action verbs back into the option list.
+
+### Synchronization indicator
+
+`progress-orb` is the phase-aware activity indicator of the synchronization popup. It shows one phase at a time through the validated `phase`, keeps real progress visible in its ring through the numeric `progress`, switches the ring to a spinning arc with the independent `indeterminate` boolean, and prints the stage text passed as `message` under the disc, the same role the `progress-bar` message has. The drawn part is `aria-hidden`; the message is its only text. It is drawn with the empty-state illustration material: the disc uses `--bg-secondary`, `--color-surface-subtle`, and `--color-border-muted`, while the glow, shadow, ring, icon, and particles derive from `--color-primary` and the status roles through relative OKLCH and `color-mix()`, so the indicator follows the workspace accent and the color scheme without overrides. Its motion is CSS-only transform and opacity and stops under `prefers-reduced-motion`. Consumers own the surrounding layout: pass a class for margins and do not restyle its internals.
+
+The synchronization popup maps its own state to the phases: `idle` before the sync starts, `rendering` while the site is generated, `connecting` until the first upload progress arrives, `uploading` afterwards, then `success`, `warning` for a sync that finished with issues, and `error` for a failed connection or render. The minimized popup keeps `progress-bar` because it lives over the sidebar.
 
 ### Collections
 

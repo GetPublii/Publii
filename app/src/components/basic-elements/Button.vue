@@ -39,6 +39,7 @@ export default {
                 'popup-cancel',
                 'clean',
                 'clean-inverse',
+                'clean-muted',
                 'light'
             ].includes(value)
         },
@@ -115,8 +116,9 @@ export default {
                 'button-outline': this.appearance === 'outline',
                 'button-cancel-popup': this.appearance === 'popup-cancel',
                 'button-light': this.appearance === 'light',
-                'button-clean': ['clean', 'clean-inverse'].includes(this.appearance),
+                'button-clean': ['clean', 'clean-inverse', 'clean-muted'].includes(this.appearance),
                 'button-clean-invert': this.appearance === 'clean-inverse',
+                'button-clean-muted': this.appearance === 'clean-muted',
                 'button-icon': Boolean(this.icon) && !this.loading,
                 'button-only-icon': this.iconOnly && this.iconTone === 'default',
                 'button-only-icon-color': this.iconOnly && this.iconTone === 'primary',
@@ -340,6 +342,20 @@ export default {
         background: transparent;
         box-shadow: none;
         color: var(--link-primary-color);
+    }
+}
+
+/* Low-emphasis text button for dismiss actions under a primary action,
+   in the same roles as the dialog cancel button */
+.button-clean-muted {
+    color: var(--popup-btn-cancel-color);
+    font-weight: var(--font-weight-regular);
+
+    &:active,
+    &:focus-visible,
+    &:hover,
+    &.button-active {
+        color: var(--popup-btn-cancel-hover-color);
     }
 }
 

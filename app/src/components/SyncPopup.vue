@@ -12,6 +12,11 @@
                 v-if="isInSync && noIssues && !isMinimized"
                 class="sync-success">
 
+                <progress-orb
+                    class="sync-orb"
+                    phase="success"
+                    :progress="100" />
+
                 <h1>{{ $t('sync.yourWebsiteIsInSync') }}</h1>
 
                 <p
@@ -43,20 +48,11 @@
                     {{ $t('sync.allFilesUploadedPart2') }}
                 </p>
 
-                <div class="progress-bars-wrapper">
-                    <progress-bar
-                        :cssClasses="{ 'sync-progress-bar': true, 'is-synced': true }"
-                        intent="success"
-                        :progress="100"
-                        message="" />
-                </div>
-
                 <div class="buttons">
                     <p-button
                         v-if="isManual"
                         intent="success"
                         size="medium"
-                        width="quarter"
                         :onClick="showFolder">
                         {{ $t('sync.getWebsiteFiles') }}
                     </p-button>
@@ -65,16 +61,13 @@
                         v-if="!isManual"
                         intent="success"
                         size="medium"
-                        width="quarter"
                         :onClick="openWebsite">
                         {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        appearance="outline"
-                        size="medium"
-                        width="quarter">
+                        appearance="clean-muted">
                         {{ $t('ui.ok') }}
                     </p-button>
                 </div>
@@ -83,6 +76,11 @@
             <div
                 v-if="isInSync && !noIssues && !isMinimized"
                 class="sync-success">
+                <progress-orb
+                    class="sync-orb"
+                    phase="warning"
+                    :progress="100" />
+
                 <h1>{{ $t('sync.filesNotSyncedErrorText') }}</h1>
 
                 <p class="description">
@@ -93,16 +91,13 @@
                     <p-button
                         intent="success"
                         size="medium"
-                        width="quarter"
                         :onClick="openWebsite">
                         {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        appearance="outline"
-                        size="medium"
-                        width="quarter">
+                        appearance="clean-muted">
                         {{ $t('ui.ok') }}
                     </p-button>
                 </div>
@@ -111,6 +106,13 @@
             <div
                 v-if="properConfig && !isInSync && !isMinimized"
                 class="sync-todo">
+                <progress-orb
+                    class="sync-orb"
+                    :phase="orbPhase"
+                    :progress="orbProgress"
+                    :indeterminate="orbIndeterminate"
+                    :message="orbMessage" />
+
                 <div class="heading">
                     <h1>{{ $t('sync.websiteSynchronization') }}</h1>
 
@@ -120,35 +122,17 @@
                     </p>
                 </div>
 
-                <div class="progress-bars-wrapper">
-                    <progress-bar
-                        :cssClasses="{ 'rendering-progress-bar': true }"
-                        :intent="renderingProgressIntent"
-                        :progress="renderingProgress"
-                        :message="messageFromRenderer" />
-
-                    <progress-bar
-                        v-if="!isManual && !renderingInProgress && (uploadInProgress || syncInProgress || isInSync || uploadError)"
-                        :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
-                        :intent="uploadingProgressIntent"
-                        :progress="uploadingProgress"
-                        :message="messageFromUploader" />
-                </div>
-
                 <div class="buttons">
                     <p-button
                         :onClick="startSync"
                         size="medium"
-                        width="quarter"
                         :disabled="syncInProgress">
                         {{ $t('sync.syncYourWebsite') }}
                     </p-button>
 
                     <p-button
                         :onClick="cancelSync"
-                        appearance="outline"
-                        size="medium"
-                        width="quarter">
+                        appearance="clean-muted">
                         {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
@@ -167,16 +151,13 @@
                 <div class="buttons">
                     <p-button
                         size="medium"
-                        width="quarter"
                         :onClick="goToServerSettings">
                         {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
-                        appearance="outline"
-                        size="medium"
-                        width="quarter">
+                        appearance="clean-muted">
                         {{ $t('ui.cancel') }}
                     </p-button>
                 </div>
@@ -195,15 +176,12 @@
                 <div class="buttons">
                     <p-button
                         size="medium"
-                        width="quarter"
                         :onClick="goToServerSettings">
                         {{ $t('sync.goToSettings') }}
                     </p-button>
 
                     <p-button
-                        appearance="outline"
-                        size="medium"
-                        width="quarter"
+                        appearance="clean-muted"
                         :onClick="close">
                         {{ $t('ui.cancel') }}
                     </p-button>
@@ -294,6 +272,48 @@ export default {
         },
         properConfig: function() {
             return !this.noServerConfig && !this.noDomainConfig;
+        },
+        showsUploadMessage: function() {
+            return !this.isManual && !this.renderingInProgress && (this.uploadInProgress || this.syncInProgress || this.isInSync || this.uploadError);
+        },
+        orbPhase: function() {
+            if (this.uploadError || this.renderingProgressIntent === 'danger' || this.uploadingProgressIntent === 'danger') {
+                return 'error';
+            }
+
+            if (this.isInSync || this.uploadingProgressIntent === 'success' || this.uploadingProgressIntent === 'warning') {
+                return (this.noIssues && this.uploadingProgressIntent !== 'warning') ? 'success' : 'warning';
+            }
+
+            if (this.uploadInProgress) {
+                return (this.isManual || this.uploadingProgress > 0) ? 'uploading' : 'connecting';
+            }
+
+            if (this.renderingInProgress) {
+                return 'rendering';
+            }
+
+            return 'idle';
+        },
+        orbProgress: function() {
+            switch (this.orbPhase) {
+                case 'rendering':
+                    return this.renderingProgress;
+                case 'uploading':
+                    return this.uploadingProgress;
+                case 'success':
+                case 'warning':
+                case 'error':
+                    return 100;
+                default:
+                    return 0;
+            }
+        },
+        orbIndeterminate: function() {
+            return this.orbPhase === 'connecting' || (this.orbPhase === 'uploading' && this.isManual);
+        },
+        orbMessage: function() {
+            return this.showsUploadMessage ? this.messageFromUploader : this.messageFromRenderer;
         },
         noDomainConfig: function() {
             let domainConfig = this.$store.state.currentSite.config.domain;
@@ -593,11 +613,13 @@ export default {
                     }
                 }
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage
+                    message: this.$t('sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage,
+                    buttonStyle: 'danger'
                 });
             } else {
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('sync.connectionToServerErrorMessage')
+                    message: this.$t('sync.connectionToServerErrorMessage'),
+                    buttonStyle: 'danger'
                 });
             }
         },
@@ -620,7 +642,8 @@ export default {
                     okClick: (result) => {
                         if(!result || result.trim() === '') {
                             this.$bus.$emit('alert-display', {
-                                message: this.$t('sync.syncFTPNoPasswordMsg')
+                                message: this.$t('sync.syncFTPNoPasswordMsg'),
+                                buttonStyle: 'danger'
                             });
 
                             this.uploadingProgress = 0;
@@ -634,7 +657,8 @@ export default {
                     },
                     cancelClick: () => {
                         this.$bus.$emit('alert-display', {
-                            message: this.$t('sync.syncFTPNoPasswordMsg')
+                            message: this.$t('sync.syncFTPNoPasswordMsg'),
+                            buttonStyle: 'danger'
                         });
 
                         this.uploadingProgress = 0;
@@ -864,26 +888,23 @@ export default {
 }
 
 .buttons {
+    align-items: center;
     display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
     justify-content: center;
-    margin-top: var(--space-16);
+    margin-top: var(--space-12);
     position: relative;
     text-align: center;
     top: 1px;
+
+    .button {
+        min-width: 20%;
+    }
 }
 
-.progress-bars-wrapper {
-    margin-top: 7rem;
-    margin-bottom: -4rem;
-    position: relative;
-
-    .progress-wrapper + .progress-wrapper {
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 10;
-    }
+.sync-orb {
+    margin: 0 auto var(--space-8);
 }
 
 .minimize-popup {
