@@ -68,7 +68,9 @@
                         :onClick="toggleSelection" />
                 </collection-cell>
 
-                <collection-cell variant="titles">
+                <collection-cell
+                    variant="titles"
+                    justify-content="stretch">
                     <menu-name-editor
                         v-if="isRenaming(index)"
                         :value="item.name"
