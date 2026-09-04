@@ -719,7 +719,11 @@ export default {
         outline-offset: -2px;
     }
 
-    /* Short centred divider between actions, as on the previous layout */
+    /* Short centred divider between actions, with the same distance on both sides */
+    & + .menu-item-action {
+        padding-left: var(--space-4);
+    }
+
     &:not(:last-child) {
         padding-right: var(--space-4);
 
@@ -743,6 +747,7 @@ export default {
 
 .menu-item-action-icon {
     color: currentColor;
+    fill: currentColor;
     pointer-events: none;
 
     &.is-stroke {
