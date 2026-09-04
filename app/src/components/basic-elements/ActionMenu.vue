@@ -20,7 +20,8 @@
             @keydown="handleTriggerKeydown">
             <icon
                 :name="icon"
-                size="xs"
+                customWidth="18"
+                customHeight="18"
                 non-interactive />
         </button>
 
@@ -30,10 +31,9 @@
             :id="menuID"
             :class="{
                 'action-menu-list': true,
-                'is-left': align === 'left',
-                'is-right': align === 'right',
-                'opens-up': opensUp
+                'is-placed': isPlaced
             }"
+            :style="listStyle"
             role="menu"
             @keydown="handleMenuKeydown">
             <template v-for="(item, index) in visibleItems">
@@ -104,7 +104,8 @@ export default {
     data () {
         return {
             isOpen: false,
-            opensUp: false
+            isPlaced: false,
+            listStyle: null
         };
     },
     computed: {
@@ -142,8 +143,14 @@ export default {
             this.$bus.$emit('document-body-clicked');
             this.$bus.$on('document-body-clicked', this.close);
 
-            this.opensUp = false;
+            this.isPlaced = false;
+            this.listStyle = null;
             this.isOpen = true;
+
+            // The list is positioned against the viewport, so any scrolling or
+            // resizing underneath it would leave it detached from its trigger
+            window.addEventListener('resize', this.close);
+            document.addEventListener('scroll', this.close, true);
 
             this.$nextTick(() => {
                 this.updatePlacement();
@@ -154,7 +161,11 @@ export default {
             });
         },
         close () {
+            window.removeEventListener('resize', this.close);
+            document.removeEventListener('scroll', this.close, true);
             this.isOpen = false;
+            this.isPlaced = false;
+            this.listStyle = null;
         },
         closeFromKeyboard () {
             if (!this.isOpen) {
@@ -181,15 +192,37 @@ export default {
             }
         },
         updatePlacement () {
+            let trigger = this.$refs.trigger;
             let list = this.$refs.list;
 
-            if (!list) {
+            if (!trigger || !list) {
                 return;
             }
 
-            let rect = list.getBoundingClientRect();
+            let gap = 4;
+            let margin = 8;
+            let triggerRect = trigger.getBoundingClientRect();
+            let listRect = list.getBoundingClientRect();
+            let viewportWidth = window.innerWidth || document.documentElement.clientWidth;
             let viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-            this.opensUp = rect.bottom > viewportHeight && rect.height < rect.top;
+            let top = triggerRect.bottom + gap;
+
+            // Flip above the trigger when there is not enough room below it
+            if (top + listRect.height > viewportHeight - margin && triggerRect.top - gap - listRect.height >= margin) {
+                top = triggerRect.top - gap - listRect.height;
+            }
+
+            let left = this.align === 'right'
+                ? triggerRect.right - listRect.width
+                : triggerRect.left;
+
+            left = Math.max(margin, Math.min(left, viewportWidth - listRect.width - margin));
+
+            this.listStyle = {
+                top: Math.round(top) + 'px',
+                left: Math.round(left) + 'px'
+            };
+            this.isPlaced = true;
         },
         isKeyboardClick (event) {
             // Clicks synthesized from Enter or Space report detail === 0
@@ -264,6 +297,8 @@ export default {
         }
     },
     beforeDestroy () {
+        window.removeEventListener('resize', this.close);
+        document.removeEventListener('scroll', this.close, true);
         this.$bus.$off('document-body-clicked', this.close);
     }
 };
@@ -297,13 +332,12 @@ export default {
     padding: 0;
     width: 3rem;
 
+    /* Size comes from the icon's customWidth/customHeight props */
     & > svg {
         fill: var(--icon-secondary-color);
-        height: 16px;
         pointer-events: none;
         transform: scale(.9);
         transition: var(--transition-default);
-        width: 16px;
     }
 
     &:hover > svg,
@@ -334,26 +368,19 @@ export default {
 }
 
 .action-menu-list {
-    /* Same rounding and elevation as the application menu in the top bar */
+    /* Same rounding and elevation as the application menu in the top bar.
+       Positioned against the viewport so scrolling containers never clip it;
+       it stays invisible until its place has been measured. */
     background: var(--popup-bg);
     border-radius: var(--radius-base);
     box-shadow: var(--shadow-md);
     min-width: 16rem;
     padding: var(--space-3) 0;
-    position: absolute;
-    top: calc(100% + var(--space-1));
+    position: fixed;
+    visibility: hidden;
 
-    &.is-right {
-        right: 0;
-    }
-
-    &.is-left {
-        left: 0;
-    }
-
-    &.opens-up {
-        bottom: calc(100% + var(--space-1));
-        top: auto;
+    &.is-placed {
+        visibility: visible;
     }
 }
 
@@ -410,7 +437,7 @@ export default {
 
 .action-menu-separator {
     border-top: 1px solid var(--border-light-color);
-    margin: var(--space-2) 0;
+    margin: var(--space-3) 0 var(--space-2) 0;
 }
 
 </style>
