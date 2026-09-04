@@ -1233,7 +1233,7 @@
         "connectingToServer": "Connecting to the server...",
         "connectionToServerErrorAdditionalMessage": "An error occurred while connecting to the server: ",
         "connectionToServerErrorMessage": "An error occurred while connecting to the server. Please check your server settings or try again.",
-        "connectionToServerErrorText": "An error occurred while connecting to the server...",
+        "connectionToServerErrorText": "An error occurred while connecting to the server.",
         "connectToServerCantStoreFilesErrorMsg": "Error! Application was able to connect with your server but was unable to store files. Please check file permissions on your server",
         "connectToServerErrorMsg": "Error! The application was unable to connect to your server.",
         "connectToServerSuccessMsg": "Success! The application was able to connect to your server.",

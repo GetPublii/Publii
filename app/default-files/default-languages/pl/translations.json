@@ -1231,7 +1231,7 @@
         "connectingToServer": "Łączenie z serwerem...",
         "connectionToServerErrorAdditionalMessage": "Wystąpił błąd podczas łączenia się z serwerem: ",
         "connectionToServerErrorMessage": "Wystąpił błąd podczas łączenia się z serwerem. Proszę sprawdzić ustawienia serwera i spróbować ponownie.",
-        "connectionToServerErrorText": "Wystąpił błąd podczas łączenia się z serwerem...",
+        "connectionToServerErrorText": "Wystąpił błąd podczas łączenia się z serwerem.",
         "connectToServerCantStoreFilesErrorMsg": "Błąd! Aplikacja mogła połączyć się z Twoim serwerem, ale nie mogła zapisać plików. Sprawdź uprawnienia do plików na Twoim serwerze",
         "connectToServerErrorMsg": "Błąd! Aplikacja nie mogła połączyć się z Twoim serwerem.",
         "connectToServerSuccessMsg": "Sukces! Aplikacja mogła połączyć się z Twoim serwerem.",
