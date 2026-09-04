@@ -188,7 +188,7 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 | `icon` | named `size`; `non-interactive` boolean; controlled custom classes when required |
 | `app-illustration` | allowlisted `name`; optional `scale` and `translate-y`; one inline, token-driven SVG symbol per illustration |
 | `collection` | numeric `columns` |
-| `collection-cell` | `variant="titles|assignment|publish-dates|modification-dates|authors|actions"` |
+| `collection-cell` | `variant="titles|assignment|publish-dates|modification-dates|authors|actions|menu|identifier"`; `menu` is the trailing cell that holds a row `action-menu`, `identifier` is the centred column for IDs and counts with a shared minimum width and the regular cell padding; alignment and size props become inline styles only when they differ from the defaults |
 | `collection-row` | semantic row states: `main-author`, `expanded` (an expanded row keeps the edited-row highlight) |
 | `tabs` | `orientation="vertical|horizontal"`; independent `scrollable` boolean |
 
@@ -200,7 +200,7 @@ Add each illustration once to `app/src/assets/svg/svg-map-empty-states.svg` unde
 
 ### Window commands
 
-Keep immediate window-management commands out of Application Settings. The generic `New Window` command remains available from the application menu, while the site selector owns the contextual `Open in new window` action for a specific website. Both routes must reuse the allowlisted preload IPC command and let the main process validate the optional website identifier, enforce window ownership, and create the `BrowserWindow`.
+Keep immediate window-management commands out of Application Settings. The generic `New Window` command remains available from the application menu, while the site selector owns the contextual `Open in new window` action for a specific website: it lives in the row's `action-menu` and behind Cmd-click (macOS), Ctrl-click, or middle-click on the website name. Both routes must reuse the allowlisted preload IPC command and let the main process validate the optional website identifier, enforce window ownership, and create the `BrowserWindow`.
 
 ### Buttons
 
@@ -238,7 +238,7 @@ The `icon` prop automatically enables leading-icon layout. Do not pass a separat
 
 ### Action menus
 
-`action-menu` is the overflow control for row-level and card-level actions. It renders an icon-only native button that opens a `role="menu"` list of native `menuitem` buttons and follows the same keyboard model as `btn-dropdown`: Arrow Down or Arrow Up opens the list and moves between items, Home and End jump to the ends, Escape closes the list and returns focus to the trigger, Tab closes it while moving on, and pointer interaction shows no focus ring. An open menu closes when another one opens or when the document body is clicked, and the list flips upwards on its own near the bottom of the viewport.
+`action-menu` is the overflow control for row-level and card-level actions. It renders an icon-only native button that opens a `role="menu"` list of native `menuitem` buttons and follows the same keyboard model as `btn-dropdown`: Arrow Down or Arrow Up opens the list and moves between items, Home and End jump to the ends, Escape closes the list and returns focus to the trigger, Tab closes it while moving on, and pointer interaction shows no focus ring. An open menu closes when another one opens, when the document body is clicked, or when anything scrolls or the window resizes. The list is positioned against the viewport, so scrolling containers never clip it, and it flips above the trigger on its own near the bottom of the viewport. Do not place the trigger inside an ancestor with `transform` or `will-change: transform`, which would turn that ancestor into the list's containing block.
 
 Describe each action as data rather than markup:
 
