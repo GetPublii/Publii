@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-const os = require('os');
 const path = require('path');
 const FileHelper = require('../helpers/file.js');
 const slug = require('./../helpers/slug');
@@ -7,7 +6,7 @@ const passwordSafeStorage = require('./../helpers/password-storage.js');
 const ipcMain = require('electron').ipcMain;
 const Site = require('../site.js');
 const Themes = require('../themes.js');
-const Database = os.platform() === 'linux' ? require('node-sqlite3-wasm').Database : require('better-sqlite3');
+const Database = require('better-sqlite3');
 const DBUtils = require('../helpers/db.utils.js');
 const UtilsHelper = require('../helpers/utils.js');
 const normalizePath = require('normalize-path');

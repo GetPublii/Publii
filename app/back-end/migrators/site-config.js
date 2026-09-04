@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 const slug = require('./../helpers/slug');
-const Database = os.platform() === 'linux' ? require('node-sqlite3-wasm').Database : require('better-sqlite3');
+const Database = require('better-sqlite3');
 const DBUtils = require('../helpers/db.utils.js');
 
 class SiteConfigMigrator {

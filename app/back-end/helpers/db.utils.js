@@ -1,13 +1,10 @@
-const os = require('os');
-
 /*
- * Other helper functions
+ * DB helper functions
  */
 class DBUtils {
     constructor (dbInstance) {
-        this.DB = dbInstance; 
+        this.DB = dbInstance;
         this.statement = '';
-        this.useWASM = os.platform() === 'linux';
     }
 
     prepare (sqlStatement) {
@@ -16,15 +13,6 @@ class DBUtils {
     }
 
     get (paramsObject = null) {
-        if (this.useWASM) {
-            if (paramsObject) {
-                paramsObject = this.transformParams(paramsObject);
-                return this.DB.get(this.statement, paramsObject);
-            }
-
-            return this.DB.get(this.statement);
-        }
-
         if (paramsObject !== null) {
             return this.DB.prepare(this.statement).get(paramsObject);
         }
@@ -33,15 +21,6 @@ class DBUtils {
     }
 
     run (paramsObject = null) {
-        if (this.useWASM) {
-            if (paramsObject) {
-                paramsObject = this.transformParams(paramsObject);
-                return this.DB.run(this.statement, paramsObject);
-            }
-
-            return this.DB.run(this.statement);
-        }
-
         if (paramsObject !== null) {
             return this.DB.prepare(this.statement).run(paramsObject);
         }
@@ -50,15 +29,6 @@ class DBUtils {
     }
 
     all (paramsObject = null) {
-        if (this.useWASM) {
-            if (paramsObject) {
-                paramsObject = this.transformParams(paramsObject);
-                return this.DB.all(this.statement, paramsObject);
-            }
-
-            return this.DB.all(this.statement);
-        }
-
         if (paramsObject !== null) {
             return this.DB.prepare(this.statement).all(paramsObject);
         }
@@ -72,21 +42,6 @@ class DBUtils {
 
     close () {
         this.DB.close();
-    }
-
-    /**
-     * Prefix all params in object with "@"
-     */
-    transformParams (paramsObject) {
-        const newParamsObject = {};
-
-        for (const key in paramsObject) {
-            if (paramsObject.hasOwnProperty(key)) {
-                newParamsObject["@" + key] = paramsObject[key];
-            }
-        }
-
-        return newParamsObject;
     }
 }
 

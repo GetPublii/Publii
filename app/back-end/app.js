@@ -6,7 +6,7 @@
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
-const Database = os.platform() === 'linux' ? require('node-sqlite3-wasm').Database : require('better-sqlite3');
+const Database = require('better-sqlite3');
 const compare = require('node-version-compare');
 const normalizePath = require('normalize-path');
 const url = require('url');

@@ -3,10 +3,9 @@
  */
 
 const fs = require('fs-extra');
-const os = require('os');
 const path = require('path');
 const FileHelper = require('./helpers/file.js');
-const Database = os.platform() === 'linux' ? require('node-sqlite3-wasm').Database : require('better-sqlite3');
+const Database = require('better-sqlite3');
 const DBUtils = require('./helpers/db.utils.js');
 const Themes = require('./themes.js');
 const Image = require('./image.js');
