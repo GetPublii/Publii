@@ -19,6 +19,16 @@
         </optgroup>
 
         <optgroup
+            v-if="reinstallOption"
+            :label="$t('theme.groupReinstall')">
+            <option
+                :value="reinstallOption.value"
+                :selected="value === reinstallOption.value">
+                {{ reinstallOption.label }}
+            </option>
+        </optgroup>
+
+        <optgroup
             v-if="siteOptions.length"
             :label="$t('theme.groupInstalledOnSite')">
             <option
@@ -82,6 +92,22 @@ export default {
             return {
                 value: 'install-use-' + current.directory,
                 label: this.$t('theme.optionUpdateFromLibrary', {
+                    name: current.name,
+                    version: current.libraryVersion
+                })
+            };
+        },
+        reinstallOption () {
+            let current = this.themes.current;
+
+            // Offered from the field's action menu; listed only while it is the pending choice
+            if (!current || !current.libraryVersion || current.updateFromLibrary || this.value !== 'install-use-' + current.directory) {
+                return null;
+            }
+
+            return {
+                value: 'install-use-' + current.directory,
+                label: this.$t('theme.optionReinstallFromLibrary', {
                     name: current.name,
                     version: current.libraryVersion
                 })

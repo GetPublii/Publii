@@ -2449,6 +2449,14 @@ export default {
         themeUpdateFromMarketplace () {
             return !!this.currentTheme && this.currentTheme.updateFromMarketplace;
         },
+        themeReinstallAvailable () {
+            return (
+                !!this.currentTheme &&
+                !!this.currentTheme.libraryVersion &&
+                !this.currentTheme.updateFromLibrary &&
+                this.theme !== 'install-use-' + this.currentTheme.directory
+            );
+        },
         marketplaceUpdateMessage () {
             if (!this.currentTheme) {
                 return '';
@@ -2475,6 +2483,13 @@ export default {
                     value: 'install-theme',
                     icon: 'upload-file',
                     onClick: this.installThemeFromFile
+                },
+                {
+                    label: this.$t('theme.reinstallFromLibrary', { name: this.currentTheme ? this.currentTheme.name : '' }),
+                    value: 'reinstall-theme',
+                    icon: 'refresh',
+                    visible: () => this.themeReinstallAvailable,
+                    onClick: this.selectThemeReinstall
                 },
                 {
                     label: this.$t('theme.openThemeLibrary'),
@@ -3068,6 +3083,9 @@ export default {
             this.errors.splice(pos, 1);
         },
         selectThemeUpdate () {
+            this.theme = 'install-use-' + this.currentTheme.directory;
+        },
+        selectThemeReinstall () {
             this.theme = 'install-use-' + this.currentTheme.directory;
         },
         themeUploadedHint (data) {
