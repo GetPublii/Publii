@@ -754,11 +754,13 @@ body .wysiwyg-mini-editor {
     
 
     .tox-toolbar-overlord {
-        padding: 3px 5px;
+        padding: 3px 0;
     }
 
     .tox-tbtn {
-        transform: scale(.9);
+        border-radius: var(--radius-base);
+        transform: scale(.8);
+        margin: 0;
     }
 
     .tox-split-button__chevron {

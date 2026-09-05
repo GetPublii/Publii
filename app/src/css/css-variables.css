@@ -24,7 +24,7 @@ html {
     /* Workspace layout */
     --wrapper-width: 960px;
     --topbar-height: 2.2rem;
-    --options-sidebar-width: 47.5rem;
+    --options-sidebar-width: 44rem;
     --app-sidebar-width: 28rem;
     --app-sidebar-margin: var(--space-12);
 
