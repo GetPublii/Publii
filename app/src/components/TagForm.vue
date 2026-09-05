@@ -58,6 +58,7 @@
                                 v-model="tagData.description"
                                 :wysiwyg="true"
                                 :miniEditorMode="true"
+                                internal-links
                                 :simplifiedToolbar="true"
                                 :rows="4"></text-area>
                         </label>

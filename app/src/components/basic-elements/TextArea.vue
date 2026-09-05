@@ -11,6 +11,11 @@
             :spellcheck="spellcheck"
             :placeholder="placeholder"
             v-model="content"></textarea>
+        <link-popup
+            v-if="internalLinks"
+            ref="linkPopup"
+            local
+            @resolve="resolveLinkPopup" />
         <char-counter
             v-if="charCounter"
             v-model="content"
@@ -22,9 +27,12 @@
 import { applyAppAppearance } from './../../helpers/app-appearance';
 import Utils from './../../helpers/utils';
 import Vue from 'vue';
+import LinkPopup from './../post-editor/LinkPopup';
+import { createMiniEditorLinkSession } from './../../helpers/mini-editor-link';
 
 export default {
     name: 'text-area',
+    components: { 'link-popup': LinkPopup },
     props: {
         id: {
             default: 't-editor',
@@ -65,6 +73,10 @@ export default {
         placeholder: {
             default: '',
             type: String
+        },
+        internalLinks: {
+            default: false,
+            type: Boolean
         },
         miniEditorMode: {
             default: false,
@@ -177,6 +189,10 @@ export default {
                 secondToolbarStructure = "";
             }
 
+            if (this.internalLinks) {
+                firstToolbarStructure = firstToolbarStructure.replace(/\blink\b/, 'publiilink');
+            }
+
             tinymce.init({
                 selector: 'textarea[data-id="' + this.editorID + '"]',
                 language: this.$store.state.wysiwygTranslation ? 'en' : 'custom',
@@ -211,6 +227,24 @@ export default {
                 contextmenu: false,
                 browser_spellcheck: this.$store.state.currentSite.config.spellchecking,
                 setup: async function (editor) {
+                    if (self.internalLinks) {
+                        editor.ui.registry.addButton('publiilink', {
+                            icon: 'link',
+                            tooltip: self.$t('link.insertEditLink'),
+                            onAction: () => self.openLinkPopup(editor)
+                        });
+                        // TinyMCE's link shortcut also uses this command.
+                        editor.on('BeforeExecCommand', event => {
+                            if (event.command.toLowerCase() === 'mcelink') {
+                                event.preventDefault();
+                                self.openLinkPopup(editor);
+                            }
+                        });
+                        editor.on('change undo redo', () => {
+                            self.content = editor.getContent();
+                        });
+                    }
+
                     editor.on('init', async function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
                         let iframeDocument = iframe.contentWindow.window.document;
@@ -230,7 +264,25 @@ export default {
                 }
             });
         },
+        openLinkPopup (editor) {
+            if (this._linkSession || !this.$refs.linkPopup) {
+                return;
+            }
+
+            this._linkSession = createMiniEditorLinkSession(editor);
+            this.$refs.linkPopup.open(this._linkSession.config);
+        },
+        resolveLinkPopup (response) {
+            const session = this._linkSession;
+            this._linkSession = null;
+
+            if (session) {
+                session.finish(response);
+                this.content = session.getContent();
+            }
+        },
         removeEditor () {
+            this._linkSession = null;
             let editorToRemove = tinymce.get(this.editorID);
 
             if (editorToRemove) {
@@ -328,6 +380,7 @@ export default {
         }
     },
     beforeDestroy () {
+        this._linkSession = null;
         if (this.wysiwyg) {
             let editorToRemove = tinymce.get(this.editorID);
 

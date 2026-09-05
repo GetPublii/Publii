@@ -7,7 +7,7 @@
             role="switch"
             :aria-checked="isChecked ? 'true' : 'false'"
             :aria-disabled="disabled ? 'true' : null"
-            :aria-label="label || null"
+            :aria-label="accessibleLabel || label || null"
             :tabindex="disabled ? -1 : 0"
             @click="toggle"
             @keydown.space.prevent="toggle"
@@ -24,6 +24,10 @@ export default {
             type: [Boolean, Number]
         },
         label: {
+            default: '',
+            type: String
+        },
+        accessibleLabel: {
             default: '',
             type: String
         },

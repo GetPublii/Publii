@@ -1,14 +1,24 @@
 <template>
     <div
         v-if="isVisible"
-        class="overlay">
-        <div class="popup popup-link-add">
+        :class="['overlay', { 'is-local': local }]"
+        @keydown="onDialogKeyDown">
+        <div
+            ref="dialog"
+            class="popup popup-link-add"
+            :role="local ? 'dialog' : null"
+            :aria-modal="local ? 'true' : null"
+            :aria-label="local ? $t('link.insertEditLink') : null"
+            tabindex="-1">
             <div class="message">
                 <h1>{{ $t('link.insertEditLink') }}</h1>
 
-                <field :label="$t('link.selectLinkType') + ':'">
+                <field
+                    :id="fieldID('type')" :label="$t('link.selectLinkType') + ':'">
                     <v-select
+                        :id="fieldID('type')"
                         slot="field"
+                        ref="linkTypeSelect"
                         v-model="type"
                         :options="linkTypes"
                         :searchable="false"
@@ -18,9 +28,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('post')"
                     v-if="type === 'post'"
                     :label="$t('post.postName')">
                     <v-select
+                        :id="fieldID('post')"
                         slot="field"
                         ref="postPagesSelect"
                         :options="postPages"
@@ -34,9 +46,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('page')"
                     v-if="type === 'page'"
                     :label="$t('page.pageName')">
                     <v-select
+                        :id="fieldID('page')"
                         slot="field"
                         ref="pageItemsSelect"
                         :options="pageItems"
@@ -50,9 +64,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('tag')"
                     v-if="type === 'tag'"
                     :label="$t('tag.tagName')">
                     <v-select
+                        :id="fieldID('tag')"
                         slot="field"
                         ref="tagPagesSelect"
                         :options="tagPages"
@@ -66,9 +82,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('author')"
                     v-if="type === 'author'"
                     :label="$t('author.authorName') + ':'">
                     <v-select
+                        :id="fieldID('author')"
                         slot="field"
                         ref="authorPagesSelect"
                         :options="authorPages"
@@ -82,9 +100,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('external')"
                     v-if="type === 'external'"
                     :label="$t('ui.customLink') + ':'">
                     <input
+                        :id="fieldID('external')"
                         slot="field"
                         type="text"
                         spellcheck="false"
@@ -93,9 +113,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('file')"
                     v-if="type === 'file'"
                     :label="$t('file.fileSemicolon')">
                     <v-select
+                        :id="fieldID('file')"
                         slot="field"
                         ref="fileSelect"
                         :options="filesList"
@@ -108,9 +130,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('target')"
                     v-if="!markdown"
                     :label="$t('ui.linkTarget') + ':'">
                     <v-select
+                        :id="fieldID('target')"
                         slot="field"
                         ref="targetSelect"
                         :options="targetList"
@@ -122,8 +146,10 @@
                         :placeholder="$t('ui.selectOption')"></v-select>
                 </field>
 
-                <field :label="$t('settings.linkLabel') + ':'">
+                <field
+                    :id="fieldID('label')" :label="$t('settings.linkLabel') + ':'">
                     <input
+                        :id="fieldID('label')"
                         slot="field"
                         type="text"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -132,9 +158,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('title')"
                     v-if="!markdown"
                     :label="$t('link.linkTitleAttribute')">
                     <input
+                        :id="fieldID('title')"
                         slot="field"
                         type="text"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -143,9 +171,11 @@
                 </field>
 
                 <field
+                    :id="fieldID('cssClass')"
                     v-if="!markdown"
                     :label="$t('link.linkClassAttribute')">
                     <input
+                        :id="fieldID('cssClass')"
                         slot="field"
                         type="text"
                         :spellcheck="$store.state.currentSite.config.spellchecking"
@@ -175,6 +205,7 @@
                     :label="$t('link.downloadAttribute')">
                     <switcher
                         slot="field"
+                        :accessible-label="$t('link.downloadAttribute')"
                         label=""
                         v-model="downloadAttr" />
                 </field>
@@ -185,6 +216,7 @@
                     size="medium"
                     width="half"
                     square
+                    :disabled="local && !canSubmit"
                     @click.native="setLink">
                     {{ $t('ui.ok') }}
                 </p-button>
@@ -206,6 +238,10 @@
 export default {
     name: 'link-popup',
     props: {
+        local: {
+            type: Boolean,
+            default: false
+        },
         'markdown': {
             default: false
         }
@@ -236,6 +272,14 @@ export default {
         };
     },
     computed: {
+        canSubmit () {
+            if (this.type === 'external') {
+                return this.external.trim() !== '';
+            }
+
+            return ['tags', 'frontpage', 'blogpage'].includes(this.type) ||
+                (this[this.type] !== null && this[this.type] !== '');
+        },
         linkTypes () {
             return [ 'external', 'post', 'page', 'tag', 'tags', 'author', 'frontpage', 'blogpage', 'file' ];
         },
@@ -308,16 +352,84 @@ export default {
         }
     },
     mounted () {
-        this.$bus.$on('init-link-popup', config => {
-            this.postID = config.postID;
-            this.parseContent(config.selection);
-            this.isVisible = true;
-        });
-
-        this.loadFiles();
-        this.$bus.$on('link-popup-updated', this.addLink);
+        if (!this.local) {
+            this.$bus.$on('init-link-popup', this.open);
+            this.loadFiles();
+            this.$bus.$on('link-popup-updated', this.addLink);
+        }
     },
     methods: {
+        fieldID (name) {
+            return 'link-popup-' + this._uid + '-' + name;
+        },
+        open (config) {
+            this.cleanPopup();
+            this.postID = config.postID;
+            if (this.local) {
+                this.label = config.label || '';
+                const attributes = config.attributes;
+                if (attributes) {
+                    this.title = attributes.title || '';
+                    this.cssClass = attributes.class || '';
+                    this.target = attributes.target || '';
+                    this.downloadAttr = attributes.download !== null;
+                    Object.keys(this.rel).forEach(name => {
+                        this.rel[name] = (attributes.rel || '').split(/\s+/).includes(name);
+                    });
+                    this.parseUrlContent(['', attributes.href]);
+                }
+            } else {
+                this.parseContent(config.selection);
+            }
+            this.isVisible = true;
+
+            if (this.local) {
+                this.loadFiles();
+                this.$nextTick(() => {
+                    if (!this.isVisible || this._isDestroyed) return;
+                    // Sidebars create their own stacking context; keep the dialog above them.
+                    document.body.appendChild(this.$el);
+                    this.$refs.dialog.focus({ preventScroll: true });
+                });
+            }
+        },
+        onDialogKeyDown (event) {
+            if (!this.local || !this.isVisible) return;
+            event.stopPropagation();
+
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                const dropdown = Object.values(this.$refs).find(ref => ref && ref.isOpen);
+                if (dropdown) {
+                    dropdown.deactivate();
+                } else {
+                    this.cancel();
+                }
+            } else if (event.key === 'Tab') {
+                const controls = Array.from(this.$refs.dialog.querySelectorAll(
+                    'button:not([disabled]), input:not([disabled]), [tabindex="0"]'
+                )).filter(element => element.tabIndex >= 0 && element.getBoundingClientRect().width > 0 && element.getBoundingClientRect().height > 0);
+                if (!controls.length) return;
+                const first = controls[0];
+                const last = controls[controls.length - 1];
+                if (event.shiftKey && (document.activeElement === first || document.activeElement === this.$refs.dialog)) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+        },
+        resolve (response) {
+            this.cleanPopup();
+            this.isVisible = false;
+            if (this.local) {
+                this.$emit('resolve', response);
+            } else {
+                this.$bus.$emit('link-popup-updated', response);
+            }
+        },
         customTypeLabels (value) {
             switch (value) {
                 case 'post': return this.$t('post.postLink');
@@ -443,29 +555,29 @@ export default {
         },
         parseUrlContent (urlContent) {
             if (urlContent && urlContent[1]) {
-                if (urlContent[1].indexOf('/post/') !== -1) {
+                if (urlContent[1].indexOf('#INTERNAL_LINK#/post/') === 0) {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/post/', '');
                     this.type = 'post';
                     this.post = parseInt(id, 10);
-                } else if (urlContent[1].indexOf('/page/') !== -1) {
+                } else if (urlContent[1].indexOf('#INTERNAL_LINK#/page/') === 0) {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/page/', '');
                     this.type = 'page';
                     this.page = parseInt(id, 10);
-                } else if (urlContent[1].indexOf('/tag/') !== -1) {
+                } else if (urlContent[1].indexOf('#INTERNAL_LINK#/tag/') === 0) {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/tag/', '');
                     this.type = 'tag';
                     this.tag = parseInt(id, 10);
-                } else if (urlContent[1].indexOf('/tags/') !== -1) {
+                } else if (urlContent[1].indexOf('#INTERNAL_LINK#/tags/') === 0) {
                     this.type = 'tags';
-                } else if (urlContent[1].indexOf('/author/') !== -1) {
+                } else if (urlContent[1].indexOf('#INTERNAL_LINK#/author/') === 0) {
                     let id = urlContent[1].replace('#INTERNAL_LINK#/author/', '');
                     this.type = 'author';
-                    this.author = parseInt(id, 10);
-                } else if (urlContent[1].indexOf('/frontpage/') !== -1) {
+                    this.author = id;
+                } else if (urlContent[1].indexOf('#INTERNAL_LINK#/frontpage/') === 0) {
                     this.type = 'frontpage';
-                } else if (urlContent[1].indexOf('/blogpage/') !== -1) {
+                } else if (urlContent[1].indexOf('#INTERNAL_LINK#/blogpage/') === 0) {
                     this.type = 'blogpage';
-                } else if (urlContent[1].indexOf('/file/') !== -1) {
+                } else if (urlContent[1].indexOf('#INTERNAL_LINK#/file/') === 0) {
                     this.type = 'file';
                     this.file = urlContent[1].replace('#INTERNAL_LINK#/file/', '');
                 } else {
@@ -475,6 +587,7 @@ export default {
             }
         },
         setLink () {
+            if (this.local && !this.canSubmit) return;
             let response = {
                 url: '',
                 title: '',
@@ -511,14 +624,33 @@ export default {
                 response.cssClass = ' class="' + this.cssClass + '"'
             }
 
-            this.cleanPopup();
-            this.isVisible = false;
-            this.$bus.$emit('link-popup-updated', response);
+            if (this.local) {
+                const rel = Object.keys(this.rel).filter(name => this.rel[name]);
+                if (this.target === '_blank') rel.push('noopener', 'noreferrer');
+                if (!response.text) {
+                    const labels = {
+                        post: this.postTitlesById.get(this.post),
+                        page: this.pageTitlesById.get(this.page),
+                        tag: this.tagNamesById.get(this.tag),
+                        author: this.authorNamesByUsername.get(this.author),
+                        file: this.file,
+                        external: response.url
+                    };
+                    response.text = labels[this.type] || this.customTypeLabels(this.type);
+                }
+                response.attributes = {
+                    href: response.url,
+                    title: this.title || null,
+                    class: this.cssClass || null,
+                    target: this.target === '_blank' ? '_blank' : null,
+                    rel: rel.join(' ') || null,
+                    download: this.type === 'file' && this.downloadAttr ? 'download' : null
+                };
+            }
+            this.resolve(response);
         },
         cancel () {
-            this.cleanPopup();
-            this.isVisible = false;
-            this.$bus.$emit('link-popup-updated', false);
+            this.resolve(false);
         },
         addLink (response) {
             if (this.markdown) {
@@ -582,12 +714,15 @@ export default {
             this.easymdeInstance = instance;
         },
         loadFiles () {
+            if (this._filesLoading) return;
+            this._filesLoading = true;
             mainProcessAPI.send('app-file-manager-list', {
                 siteName: this.$store.state.currentSite.config.name,
                 dirPath: 'root-files'
             });
 
             mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                if (this._isDestroyed) return;
                 this.filesList = data.map(file => file.name);
 
                 mainProcessAPI.send('app-file-manager-list', {
@@ -596,14 +731,21 @@ export default {
                 });
 
                 mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
+                    this._filesLoading = false;
+                    if (this._isDestroyed) return;
                     this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
                 });
             });
         }
     },
     beforeDestroy () {
-        this.$bus.$off('init-link-popup');
-        this.$bus.$off('link-popup-updated', this.addLink);
+        if (!this.local) {
+            this.$bus.$off('init-link-popup', this.open);
+            this.$bus.$off('link-popup-updated', this.addLink);
+        }
+        if (this.local && this.$el.parentNode === document.body) {
+            document.body.removeChild(this.$el);
+        }
     }
 }
 </script>
@@ -613,6 +755,24 @@ export default {
 
 .overlay {
     z-index: var(--layer-dialog);
+
+    &.is-local {
+        display: flex;
+        overflow: auto;
+        padding: var(--space-6);
+
+        .popup {
+            flex-shrink: 0;
+            left: auto;
+            margin: auto;
+            max-width: 100%;
+            min-width: 0;
+            position: relative;
+            top: auto;
+            transform: none;
+            width: 60rem;
+        }
+    }
 }
 
 h1 {
