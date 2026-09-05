@@ -17,36 +17,39 @@
                     phase="success"
                     :progress="100" />
 
-                <h1>{{ successMessage }}</h1>
+                <!-- Separate state headings so v-pure-html content cannot leak into another state. -->
+                <div class="heading" key="success-heading">
+                    <h1>{{ successMessage }}</h1>
 
-                <p
-                    v-if="isManual"
-                    class="description"
-                    v-pure-html="$t('sync.websiteFilesPreparedInfo')">
-                </p>
+                    <p
+                        v-if="isManual"
+                        class="description"
+                        v-pure-html="$t('sync.websiteFilesPreparedInfo')">
+                    </p>
 
-                <p
-                    v-if="isGithubPages"
-                    class="description">
-                    <strong>{{ $t('sync.note') }}</strong> 
-                    {{ $t('sync.githubSyncedPart1') }}<br>
-                    {{ $t('sync.githubSyncedPart2') }}
-                </p>
+                    <p
+                        v-if="isGithubPages"
+                        class="description">
+                        <strong>{{ $t('sync.note') }}</strong>
+                        {{ $t('sync.githubSyncedPart1') }}<br>
+                        {{ $t('sync.githubSyncedPart2') }}
+                    </p>
 
-                <p
-                    v-if="isGitlabPages"
-                    class="description">
-                    <strong>{{ $t('sync.note') }}</strong> 
-                    {{ $t('sync.gitlabSyncedPart1') }}<br>
-                    {{ $t('sync.gitlabSyncedPart2') }}
-                </p>
+                    <p
+                        v-if="isGitlabPages"
+                        class="description">
+                        <strong>{{ $t('sync.note') }}</strong>
+                        {{ $t('sync.gitlabSyncedPart1') }}<br>
+                        {{ $t('sync.gitlabSyncedPart2') }}
+                    </p>
 
-                <p 
-                    v-if="!(isGithubPages || isGitlabPages || isManual)"
-                    class="description">
-                    {{ $t('sync.allFilesUploadedPart1') }}<br>
-                    {{ $t('sync.allFilesUploadedPart2') }}
-                </p>
+                    <p
+                        v-if="!(isGithubPages || isGitlabPages || isManual)"
+                        class="description">
+                        {{ $t('sync.allFilesUploadedPart1') }}<br>
+                        {{ $t('sync.allFilesUploadedPart2') }}
+                    </p>
+                </div>
 
                 <div class="buttons">
                     <p-button
@@ -81,11 +84,13 @@
                     phase="warning"
                     :progress="100" />
 
-                <h1>{{ $t('sync.filesNotSyncedErrorText') }}</h1>
+                <div class="heading" key="warning-heading">
+                    <h1>{{ $t('sync.filesNotSyncedErrorText') }}</h1>
 
-                <p class="description">
-                    {{ $t('sync.filesNotSyncedErrorMessage') }}
-                </p>
+                    <p class="description">
+                        {{ $t('sync.filesNotSyncedErrorMessage') }}
+                    </p>
+                </div>
 
                 <div class="buttons">
                     <p-button
@@ -112,7 +117,7 @@
                     :indeterminate="orbIndeterminate"
                     :message="orbMessage" />
 
-                <div class="heading">
+                <div class="heading" key="preparation-heading">
                     <h1>{{ isManual ? $t('sync.websiteFilesPreparation') : $t('sync.websiteSynchronization') }}</h1>
 
                     <p
@@ -141,11 +146,13 @@
                 v-if="noDomainConfig"
                 class="sync-issues-to-resolve">
 
-                <h1>{{ $t('sync.domainNameNotSetErrorText') }}</h1>
-                <p
-                    class="description"
-                    v-pure-html="$t('sync.domainNameNotSetErrorMessage')">
-                </p>
+                <div class="heading" key="domain-heading">
+                    <h1>{{ $t('sync.domainNameNotSetErrorText') }}</h1>
+                    <p
+                        class="description"
+                        v-pure-html="$t('sync.domainNameNotSetErrorMessage')">
+                    </p>
+                </div>
 
                 <div class="buttons">
                     <p-button
@@ -166,11 +173,13 @@
                 v-if="!noDomainConfig && noServerConfig"
                 class="sync-issues-to-resolve">
 
-                <h1>{{ $t('sync.destinationServerNotConfiguredErrorText') }}</h1>
-                <p
-                    class="description"
-                    v-pure-html="$t('sync.destinationServerNotConfiguredErrorMessage')">
-                </p>
+                <div class="heading" key="server-heading">
+                    <h1>{{ $t('sync.destinationServerNotConfiguredErrorText') }}</h1>
+                    <p
+                        class="description"
+                        v-pure-html="$t('sync.destinationServerNotConfiguredErrorMessage')">
+                    </p>
+                </div>
 
                 <div class="buttons">
                     <p-button
@@ -886,6 +895,7 @@ export default {
         color: var(--text-light-color);
         font-size: var(--font-size-ui-md);
         line-height: 1.4;
+        min-height: 2lh;
         margin: auto;
         padding: 0 var(--space-4);
         text-align: center;
@@ -940,6 +950,10 @@ export default {
 
     .button {
         min-width: 20%;
+    }
+
+    .button + .button {
+        margin-left: 0;
     }
 }
 
