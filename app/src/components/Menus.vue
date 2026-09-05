@@ -71,9 +71,10 @@
                 <collection-cell
                     variant="titles"
                     justify-content="stretch">
-                    <menu-name-editor
+                    <inline-name-editor
                         v-if="isRenaming(index)"
                         :value="item.name"
+                        :save-label="$t('menu.saveMenuName')"
                         :validate="name => validateMenuName(name, item.name)"
                         @save="finishRename(index, $event)"
                         @cancel="cancelRename" />
@@ -251,7 +252,7 @@ import Draggable from 'vuedraggable';
 import Sortable from 'sortablejs';
 import MenuItem from './MenuItem.vue';
 import MenuItemEditor from './MenuItemEditor.vue';
-import MenuNameEditor from './MenuNameEditor.vue';
+import InlineNameEditor from './basic-elements/InlineNameEditor.vue';
 import MenuPositionPopup from './MenuPositionPopup.vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import menuDragOptions, { keepItemOutOfItsAncestors } from './configs/menuDragOptions.js';
@@ -273,7 +274,7 @@ export default {
         'draggable': Draggable,
         'menu-item': MenuItem,
         'menu-item-editor': MenuItemEditor,
-        'menu-name-editor': MenuNameEditor,
+        'inline-name-editor': InlineNameEditor,
         'menu-position-popup': MenuPositionPopup
     },
     data () {

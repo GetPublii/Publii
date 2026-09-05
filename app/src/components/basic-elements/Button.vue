@@ -13,11 +13,17 @@
             non-interactive
             :name="icon" />
 
-        <slot v-if="!loading"></slot>
+        <span
+            v-if="loadingLayout === 'overlay'"
+            :class="{ 'button-label-hidden': loading }">
+            <slot></slot>
+        </span>
+        <slot v-else-if="!loading"></slot>
 
         <span
             v-if="loading"
-            class="preloader"></span>
+            class="preloader"
+            aria-hidden="true"></span>
     </button>
 </template>
 
@@ -82,6 +88,11 @@ export default {
             default: false,
             type: Boolean
         },
+        loadingLayout: {
+            default: 'replace',
+            type: String,
+            validator: value => ['replace', 'overlay'].includes(value)
+        },
         onClick: {
             default: () => false,
             type: Function
@@ -119,7 +130,7 @@ export default {
                 'button-clean': ['clean', 'clean-inverse', 'clean-muted'].includes(this.appearance),
                 'button-clean-invert': this.appearance === 'clean-inverse',
                 'button-clean-muted': this.appearance === 'clean-muted',
-                'button-icon': Boolean(this.icon) && !this.loading,
+                'button-icon': Boolean(this.icon) && (!this.loading || this.loadingLayout === 'overlay'),
                 'button-only-icon': this.iconOnly && this.iconTone === 'default',
                 'button-only-icon-color': this.iconOnly && this.iconTone === 'primary',
                 'button-bottom': this.layout === 'bottom',
@@ -129,9 +140,10 @@ export default {
                 'button-half-width': this.width === 'half',
                 'button-quarter-width': this.width === 'quarter',
                 'button-no-border-radius': this.square,
-                'button-disabled': this.disabled,
+                'button-disabled': this.disabled && !(this.loading && this.loadingLayout === 'overlay'),
                 'button-disabled-with-events': this.disabledWithEvents,
                 'button-preloader': this.loading,
+                'button-preloader-overlay': this.loading && this.loadingLayout === 'overlay',
                 'button-active': this.active,
                 'button-back': this.back
             }
@@ -526,6 +538,31 @@ export default {
         .preloader {
             margin-top: var(--space-4);
         }
+    }
+}
+
+/* Keep the label's layout space while the loader replaces it visually.
+   Opt-in buttons retain their action colors and native disabled state. */
+.button-preloader.button-preloader-overlay {
+    cursor: wait;
+    pointer-events: none;
+
+    .button-label-hidden {
+        visibility: hidden;
+    }
+
+    .preloader {
+        border-color: currentColor;
+        border-right-color: transparent;
+        inset: 0;
+        margin: auto;
+        position: absolute;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .button-preloader-overlay .preloader {
+        animation: none;
     }
 }
 

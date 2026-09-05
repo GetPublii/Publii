@@ -16,8 +16,10 @@
                 :onClick="createBackup"
                 slot="buttons"
                 intent="primary"
-                :disabled="operationInProgress"
-                :loading="operationInProgress"
+                :disabled="backupActionsDisabled"
+                :loading="activeOperation === 'create'"
+                loading-layout="overlay"
+                :aria-label="activeOperation === 'create' ? $t('file.creatingBackup') : null"
                 icon="plus">
                 {{ $t('file.createBackup') }}
             </p-button>
@@ -35,8 +37,10 @@
                 slot="button"
                 icon="plus"
                 :onClick="createBackup"
-                :disabled="operationInProgress"
-                :loading="operationInProgress">
+                :disabled="backupActionsDisabled"
+                :loading="activeOperation === 'create'"
+                loading-layout="overlay"
+                :aria-label="activeOperation === 'create' ? $t('file.creatingBackup') : null">
                 {{ $t('file.createBackup') }}
             </p-button>
         </empty-state>
@@ -75,7 +79,8 @@
                         icon="trash"
                         appearance="light"
                         size="small"
-                        :onClick="bulkDelete">
+                        :onClick="bulkDelete"
+                        :disabled="backupActionsDisabled">
                         {{ $t('ui.delete') }}
                     </p-button>
                 </div>
@@ -84,7 +89,7 @@
             <collection-row
                 v-for="(item, index) in items"
                 slot="content"
-                :key="'collection-row-' + index">
+                :key="item.name">
                 <collection-cell>
                     <checkbox
                         :id="item.name"
@@ -94,14 +99,35 @@
                         :key="'collection-row-checkbox-' + index" />
                 </collection-cell>
 
-                <collection-cell variant="titles">
-                    <h2 class="title">
+                <collection-cell variant="titles" justify-content="stretch">
+                    <inline-name-editor
+                        v-if="fileToRename === item.name"
+                        ref="nameEditor"
+                        :value="item.name.slice(0, -4)"
+                        :validate="validateBackupName"
+                        :input-label="$t('file.filename')"
+                        :save-label="$t('file.saveBackupName')"
+                        suffix=".tar"
+                        persistent
+                        :pending="activeOperation === 'rename'"
+                        :pending-label="$t('file.renamingBackup')"
+                        :error-message="renameError"
+                        @input="renameError = ''"
+                        @save="rename"
+                        @cancel="cancelRename" />
+                    <h2 v-else class="title">
                         <a
                             :href="item.url"
                             @click.prevent.stop="showFileInFolder(item.url)">
                             {{ item.name }}
                         </a>
                     </h2>
+                    <p
+                        v-if="isRestoring(item.name)"
+                        class="backup-status"
+                        role="status">
+                        {{ $t('file.restoringBackup') }}
+                    </p>
                 </collection-cell>
 
                 <collection-cell>
@@ -116,7 +142,8 @@
                     <p-button
                         appearance="outline"
                         size="small"
-                        :disabled="operationInProgress"
+                        :disabled="backupActionsDisabled"
+                        :ref="'renameButton-' + item.id"
                         :onClick="renameFile.bind(this, item.name)">
                         {{ $t('file.rename') }}
                     </p-button>
@@ -125,7 +152,10 @@
                         appearance="secondary"
                         size="small"
                         :onClick="restoreFile.bind(this, item.name)"
-                        :disabled="operationInProgress">
+                        :loading="isRestoring(item.name)"
+                        loading-layout="overlay"
+                        :aria-label="isRestoring(item.name) ? $t('file.restoringBackup') : null"
+                        :disabled="backupActionsDisabled">
                         {{ $t('file.restore') }}
                     </p-button>
                 </collection-cell>
@@ -135,11 +165,13 @@
 </template>
 
 <script>
+import InlineNameEditor from './basic-elements/InlineNameEditor.vue';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 
 export default {
     name: 'backups',
+    components: { InlineNameEditor },
     mixins: [
         BackToTools,
         CollectionCheckboxes
@@ -148,13 +180,20 @@ export default {
         return {
             isLoading: true,
             items: [],
-            operationInProgress: false,
+            activeOperation: '',
+            renameError: '',
             selectedItems: [],
             fileToRename: '',
             fileToRestore: ''
         };
     },
     computed: {
+        operationInProgress () {
+            return this.activeOperation !== '';
+        },
+        backupActionsDisabled () {
+            return this.operationInProgress || this.fileToRename !== '';
+        },
         noBackups () {
             return this.items.length === 0;
         }
@@ -176,6 +215,7 @@ export default {
             this.$router.push('/app-settings');
         },
         bulkDelete: function() {
+            if (this.backupActionsDisabled) return;
             this.$bus.$emit('confirm-display', {
                 message: this.$t('file.deleteBackupsConfirmMsg'),
                 isDanger: true,
@@ -215,78 +255,85 @@ export default {
             mainProcessAPI.shellShowItemInFolder(url);
         },
         renameFile: function(originalName) {
-            let oldFilename = originalName.substr(0, originalName.length - 4);
-            this.fileToRename = oldFilename;
-
-            this.$bus.$emit('confirm-display', {
-                hasInput: true,
-                message: this.$t('file.renameBackupConfirmMsg'),
-                okClick: this.rename,
-                okLabel: this.$t('file.renameBackupConfirmLabel'),
-                cancelLabel: this.$t('ui.cancel'),
-                defaultText: oldFilename
+            if (this.backupActionsDisabled) return;
+            this.fileToRename = originalName;
+            this.renameError = '';
+        },
+        cancelRename: function(_name, { restoreFocus = true } = {}) {
+            if (this.operationInProgress) return;
+            let originalName = this.fileToRename;
+            this.fileToRename = '';
+            this.renameError = '';
+            if (restoreFocus) this.focusRenameButton(originalName);
+        },
+        focusRenameButton: function(filename) {
+            this.$nextTick(() => {
+                let item = this.items.find(item => item.name === filename);
+                let buttons = item && this.$refs['renameButton-' + item.id];
+                let button = Array.isArray(buttons) ? buttons[0] : buttons;
+                if (button && button.$el) button.$el.focus();
             });
         },
-        rename: function(newFilename) {
-            if (!newFilename) {
+        validateBackupName: function(filename) {
+            if (!filename.trim()) return this.$t('file.renameBackupNameEmptyMsg');
+            if (!/^[a-z0-9_-]+$/i.test(filename)) return this.$t('file.renameBackupInvalidNameMsg');
+            if (filename + '.tar' !== this.fileToRename && this.filenameIsInUse(filename)) {
+                return this.$t('file.renameBackupNameInUseMsg');
+            }
+            return true;
+        },
+        rename: function(newFilename, { restoreFocus = true } = {}) {
+            if (this.operationInProgress || !this.fileToRename) return;
+            let validation = this.validateBackupName(newFilename);
+            if (validation !== true) {
+                this.renameError = validation;
                 return;
             }
+            let originalName = this.fileToRename;
+            if (newFilename + '.tar' === originalName) {
+                this.cancelRename(undefined, { restoreFocus });
+                return;
+            }
+            this.activeOperation = 'rename';
+            this.renameError = '';
 
-            newFilename = newFilename.replace(/[^a-z0-9\-\_]/gmi, '');
+            mainProcessAPI.receiveOnce('app-backup-renamed', (data) => {
+                this.activeOperation = '';
+                if (!data.status) {
+                    // Keep both the original file identity and the user's draft for retry.
+                    this.renameError = this.$t('file.renameBackupErrorMsg');
+                    if (restoreFocus) {
+                        this.$nextTick(() => {
+                            let editors = this.$refs.nameEditor;
+                            let editor = Array.isArray(editors) ? editors[0] : editors;
+                            if (editor) editor.focusInput();
+                        });
+                    }
+                    return;
+                }
 
-            if(newFilename.trim() === '') {
+                // Backend IDs come from directory enumeration and can change after rename.
+                let selectedNames = this.items
+                    .filter(item => this.selectedItems.includes(item.id))
+                    .map(item => item.name === originalName ? newFilename + '.tar' : item.name);
+                this.items = data.backups;
+                this.selectedItems = this.items
+                    .filter(item => selectedNames.includes(item.name))
+                    .map(item => item.id);
+                this.fileToRename = '';
+                this.renameError = '';
                 this.$bus.$emit('message-display', {
-                    message: this.$t('file.renameBackupNameEmptyMsg'),
-                    type: 'warning',
+                    message: this.$t('file.renameBackupSuccessMsg'),
+                    type: 'success',
                     lifeTime: 3
                 });
-
-                return;
-            }
-
-            if(this.fileToRename === newFilename) {
-                this.$bus.$emit('message-display', {
-                    message: this.$t('file.renameBackupSameNameMsg'),
-                    type: 'warning',
-                    lifeTime: 3
-                });
-
-                return;
-            }
-
-            if(this.filenameIsInUse(newFilename)) {
-                this.$bus.$emit('message-display', {
-                    message: this.$t('file.renameBackupNameInUseMsg'),
-                    type: 'warning',
-                    lifeTime: 3
-                });
-
-                return;
-            }
+                if (restoreFocus) this.focusRenameButton(newFilename + '.tar');
+            });
 
             mainProcessAPI.send('app-backup-rename', {
                 site: this.$store.state.currentSite.config.name,
-                oldBackupName: this.fileToRename,
+                oldBackupName: originalName.slice(0, -4),
                 newBackupName: newFilename
-            });
-
-            mainProcessAPI.receiveOnce('app-backup-renamed', (data) => {
-                if (!data.status) {
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('file.renameBackupErrorMsg'),
-                        type: 'warning',
-                        lifeTime: 3
-                    });
-                } else {
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('file.renameBackupSuccessMsg'),
-                        type: 'success',
-                        lifeTime: 3
-                    });
-                }
-
-                this.items = data.backups;
-                this.fileToRename = '';
             });
         },
         filenameIsInUse(filename) {
@@ -299,6 +346,7 @@ export default {
             return false;
         },
         createBackup: function() {
+            if (this.backupActionsDisabled) return;
             let siteNamePrefix = this.$store.state.currentSite.config.name;
             let defaultFilename = siteNamePrefix + '-' + this.$moment().format('MM-DD-YYYY-HH-mm-ss');
 
@@ -312,6 +360,7 @@ export default {
             });
         },
         create: function(filename) {
+            if (this.backupActionsDisabled) return;
             if (filename === false) {
                 return;
             }
@@ -338,7 +387,7 @@ export default {
                 return;
             }
 
-            this.operationInProgress = true;
+            this.activeOperation = 'create';
 
             mainProcessAPI.send('app-backup-create', {
                 site: this.$store.state.currentSite.config.name,
@@ -369,21 +418,32 @@ export default {
                     }
                 }
 
-                this.operationInProgress = false;
+                this.activeOperation = '';
             });
         },
+        isRestoring: function(filename) {
+            return this.activeOperation === 'restore' && this.fileToRestore === filename;
+        },
         restoreFile: function(fileName) {
+            if (this.backupActionsDisabled) return;
             this.fileToRestore = fileName;
+            // Confirm renders sanitized HTML; keep the filename literal and wrappable.
+            let filename = document.createElement('strong');
+            filename.textContent = fileName;
+            filename.style.overflowWrap = 'anywhere';
 
             this.$bus.$emit('confirm-display', {
-                message: this.$t('file.restoreBackupConfirmMsg'),
+                message: this.$t('file.restoreNamedBackupConfirmMsg', { filename: filename.outerHTML }),
+                isDanger: true,
+                cancelClick: () => { this.fileToRestore = ''; },
                 okClick: this.restore,
                 okLabel: this.$t('file.restoreBackupConfirmLabel'),
                 cancelLabel: this.$t('ui.cancel'),
             });
         },
         restore: function() {
-            this.operationInProgress = true;
+            if (this.backupActionsDisabled || !this.fileToRestore) return;
+            this.activeOperation = 'restore';
 
             mainProcessAPI.send('app-backup-restore', {
                 site: this.$store.state.currentSite.config.name,
@@ -415,11 +475,17 @@ export default {
                 }
 
                 this.fileToRestore = '';
-                this.operationInProgress = false;
+                this.activeOperation = '';
             });
         }
     }
 }
 </script>
 <style scoped>
+.backup-status {
+    color: var(--text-light-color);
+    font-size: var(--font-size-ui-xs);
+    font-weight: var(--font-weight-regular);
+    margin: var(--space-2) 0 0;
+}
 </style>
