@@ -13,7 +13,7 @@
         <div class="tools-log-viewer-selector">
             <dropdown
                 id="selectedFile"
-                ref="selectedFile"
+                v-model="selectedFile"
                 :items="files"
                 :onChange="loadFile"></dropdown>
             
@@ -27,6 +27,7 @@
         <codemirror-editor
             id="log-viewer"
             ref="codemirror"
+            editorLoadedEventName="log-viewer-editor-loaded"
             :readonly="true">
         </codemirror-editor>
     </section>
@@ -42,13 +43,39 @@ export default {
     ],
     data () {
         return {
-            files: {}
+            files: {},
+            selectedFile: '',
+            editorReady: false
         };
     },
+    watch: {
+        '$route.query.file' () {
+            this.loadRequestedFile();
+        }
+    },
     mounted () {
+        this.$bus.$on('log-viewer-editor-loaded', this.onEditorLoaded);
         this.loadFilesList();
     },
+    beforeDestroy () {
+        this.$bus.$off('log-viewer-editor-loaded', this.onEditorLoaded);
+    },
     methods: {
+        onEditorLoaded () {
+            this.editorReady = true;
+            this.loadRequestedFile();
+        },
+        loadRequestedFile () {
+            let filename = this.$route.query.file;
+
+            if (!this.editorReady || typeof filename !== 'string' || filename === '' ||
+                !Object.prototype.hasOwnProperty.call(this.files, filename)) {
+                return;
+            }
+
+            this.selectedFile = filename;
+            this.loadFile(filename);
+        },
         loadFilesList () {
             mainProcessAPI.send('app-log-files-load');
 
@@ -63,6 +90,7 @@ export default {
                 }
 
                 this.files = items;
+                this.loadRequestedFile();
             });
         },
         loadFile (filename) {
@@ -86,8 +114,7 @@ export default {
             });
         },
         loadSelectedFile () {
-            let filename = this.$refs['selectedFile'].selectedValue;
-            this.loadFile(filename);
+            this.loadFile(this.selectedFile);
         }
     }
 }

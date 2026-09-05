@@ -17,7 +17,7 @@
                     phase="success"
                     :progress="100" />
 
-                <h1>{{ $t('sync.yourWebsiteIsInSync') }}</h1>
+                <h1>{{ successMessage }}</h1>
 
                 <p
                     v-if="isManual"
@@ -54,7 +54,7 @@
                         intent="success"
                         size="medium"
                         :onClick="showFolder">
-                        {{ $t('sync.getWebsiteFiles') }}
+                        {{ $t('sync.showInFolder') }}
                     </p-button>
 
                     <p-button
@@ -68,7 +68,7 @@
                     <p-button
                         :onClick="close"
                         appearance="clean-muted">
-                        {{ $t('ui.ok') }}
+                        {{ $t('ui.close') }}
                     </p-button>
                 </div>
             </div>
@@ -89,16 +89,15 @@
 
                 <div class="buttons">
                     <p-button
-                        intent="success"
                         size="medium"
-                        :onClick="openWebsite">
-                        {{ $t('sync.visitYourWebsite') }}
+                        :onClick="viewLog">
+                        {{ $t('sync.viewLog') }}
                     </p-button>
 
                     <p-button
                         :onClick="close"
                         appearance="clean-muted">
-                        {{ $t('ui.ok') }}
+                        {{ $t('ui.close') }}
                     </p-button>
                 </div>
             </div>
@@ -114,7 +113,7 @@
                     :message="orbMessage" />
 
                 <div class="heading">
-                    <h1>{{ $t('sync.websiteSynchronization') }}</h1>
+                    <h1>{{ isManual ? $t('sync.websiteFilesPreparation') : $t('sync.websiteSynchronization') }}</h1>
 
                     <p
                         class="description"
@@ -127,7 +126,7 @@
                         :onClick="startSync"
                         size="medium"
                         :disabled="syncInProgress">
-                        {{ $t('sync.syncYourWebsite') }}
+                        {{ syncButtonLabel }}
                     </p-button>
 
                     <p-button
@@ -190,27 +189,16 @@
 
             <!-- Minimized states -->
             <div
-                v-if="properConfig && !isInSync && !isManual && isMinimized && !renderingInProgress"
+                v-if="properConfig && (!isInSync || !noIssues) && !isManual && isMinimized && !renderingInProgress"
                 class="minimized-sync-in-progress">
                 <progress-bar
-                    v-if="(uploadInProgress || syncInProgress || isInSync || uploadError)"
-                    :cssClasses="{ 'sync-progress-bar': true, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': isInSync, 'is-error': uploadError }"
+                    v-if="(uploadInProgress || syncInProgress || isInSync || uploadError || !noIssues)"
+                    :cssClasses="{ 'sync-progress-bar': noIssues, 'is-in-progress': (uploadInProgress || syncInProgress), 'is-synced': (isInSync && noIssues), 'is-error': uploadError }"
                     :intent="uploadingProgressIntent"
                     :progress="uploadingProgress"
                     :message="messageFromUploader" />
             </div>
 
-            <!-- <div
-                v-if="properConfig && !isInSync && !isManual && isMinimized && !renderingInProgress && uploadError"
-                class="minimized-sync-error">
-                Error during sync
-            </div>
-
-            <div
-                v-if="isInSync && !noIssues && isMinimized"
-                class="minimized-sync-issues">
-                Issues during sync
-            </div> -->
         </div>
 
         <a
@@ -258,6 +246,32 @@ export default {
         };
     },
     computed: {
+        successMessage () {
+            if (this.isManual) {
+                return this.$t('sync.websiteFilesReady');
+            }
+
+            if (this.isGithubPages) {
+                return this.$t('sync.githubChangesSent');
+            }
+
+            if (this.isGitlabPages) {
+                return this.$t('sync.gitlabChangesSent');
+            }
+
+            return this.$t('sync.yourWebsiteIsInSync');
+        },
+        syncButtonLabel () {
+            if (this.syncInProgress) {
+                return this.$t(this.isManual ? 'sync.preparingWebsiteFiles' : 'sync.syncingWebsite');
+            }
+
+            if (this.uploadError) {
+                return this.$t(this.isManual ? 'sync.retryPreparation' : 'sync.retryUpload');
+            }
+
+            return this.$t(this.isManual ? 'sync.prepareWebsiteFiles' : 'sync.syncYourWebsite');
+        },
         isGithubPages: function() {
             let deploymentConfig = this.$store.state.currentSite.config.deployment;
             return deploymentConfig && deploymentConfig.protocol === 'github-pages';
@@ -313,6 +327,10 @@ export default {
             return this.orbPhase === 'connecting' || (this.orbPhase === 'uploading' && this.isManual);
         },
         orbMessage: function() {
+            if (this.uploadError) {
+                return this.messageFromUploader;
+            }
+
             return this.showsUploadMessage ? this.messageFromUploader : this.messageFromRenderer;
         },
         noDomainConfig: function() {
@@ -466,6 +484,17 @@ export default {
 
             this.close();
         },
+        viewLog () {
+            let siteName = this.$store.state.currentSite.config.name;
+            let path = '/site/' + siteName + '/tools/log-viewer';
+            let filename = 'deployment-process.log';
+
+            if (this.$route.path !== path || this.$route.query.file !== filename) {
+                this.$router.push({ path, query: { file: filename } });
+            }
+
+            this.close();
+        },
         showFolder: function() {
             let folderPath = this.manualFilePath;
             mainProcessAPI.shellShowItemInFolder(folderPath);
@@ -597,7 +626,7 @@ export default {
             }
         },
         showError: function(data) {
-            this.messageFromUploader = this.$t('sync.connectionToServerErrorText');
+            this.messageFromUploader = this.$t(this.isManual ? 'sync.websiteFilesPreparationErrorText' : 'sync.connectionToServerErrorText');
             this.uploadError = true;
             this.uploadingProgressIntent = 'danger';
             this.uploadingProgress = 100;
@@ -607,18 +636,18 @@ export default {
             if(data && data.additionalMessage ) {
                 if (data.additionalMessage.translation) {
                     if (data.additionalMessage.translationVars) {
-                        data.additionalMessage = this.$t(data.additionalMessage.translation, data.message.translationVars);
+                        data.additionalMessage = this.$t(data.additionalMessage.translation, data.additionalMessage.translationVars);
                     } else {
                         data.additionalMessage = this.$t(data.additionalMessage.translation);
                     }
                 }
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage,
+                    message: this.$t(this.isManual ? 'sync.websiteFilesPreparationErrorAdditionalMessage' : 'sync.connectionToServerErrorAdditionalMessage') + data.additionalMessage,
                     buttonStyle: 'danger'
                 });
             } else {
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('sync.connectionToServerErrorMessage'),
+                    message: this.$t(this.isManual ? 'sync.websiteFilesPreparationErrorMessage' : 'sync.connectionToServerErrorMessage'),
                     buttonStyle: 'danger'
                 });
             }
@@ -636,7 +665,8 @@ export default {
                 let serverName = this.$store.state.currentSite.config.deployment.server;
 
                 this.$bus.$emit('confirm-display', {
-                    message: this.$t('sync.provideFTPPasswordForServer') + serverName,
+                    message: this.$t('sync.provideServerPassword') + serverName,
+                    okLabel: this.$t('sync.connect'),
                     hasInput: true,
                     inputIsPassword: true,
                     okClick: (result) => {
@@ -692,10 +722,10 @@ export default {
                 if (typeof data.issues !== 'undefined' && data.issues) {
                     this.noIssues = false;
                     this.uploadingProgressIntent = 'warning';
-                    this.messageFromUploader = '';
+                    this.messageFromUploader = this.$t('sync.filesNotSyncedShortMessage');
                 } else {
                     this.uploadingProgressIntent = 'success';
-                    this.messageFromUploader = this.$t('sync.yourWebsiteIsInSync');
+                    this.messageFromUploader = this.successMessage;
                 }
 
                 if (data.status) {
@@ -798,12 +828,22 @@ export default {
             return !(!this.$store.state.currentSite.config.theme || this.$store.state.currentSite.config.theme === '');
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && !event.isComposing && this.isVisible && !this.syncInProgress) {
-                this.onEnterKey();
+            if (e.code !== 'Enter' || e.isComposing || e.defaultPrevented || !this.isVisible || this.syncInProgress || this.isMinimized) {
+                return;
             }
+
+            // Let focused controls and the overlaid password/error dialogs handle Enter.
+            if (document.body.classList.contains('has-popup-visible') ||
+                (e.target && e.target.closest('button, a, input, textarea, select, [contenteditable="true"]'))) {
+                return;
+            }
+
+            this.onEnterKey();
         },
         onEnterKey () {
-            if (this.isInSync && this.noIssues && this.isManual) {
+            if (this.isInSync && !this.noIssues) {
+                this.viewLog();
+            } else if (this.isInSync && this.noIssues && this.isManual) {
                 this.showFolder();
             } else if (this.properConfig && !this.isInSync) {
                 this.startSync();
