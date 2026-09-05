@@ -55,12 +55,14 @@ function setup(locale = 'en-gb') {
     } };
     const InlineNameEditor = component('basic-elements/InlineNameEditor.vue');
     const options = component('Backups.vue', { mainProcessAPI: api, document, InlineNameEditor,
+        CollectionSortButton: component('basic-elements/CollectionSortButton.vue'), CollectionOrdering: evaluate(read('mixins/CollectionOrdering.js')),
         BackToTools: evaluate(read('mixins/BackToTools.js')), CollectionCheckboxes: evaluate(read('mixins/CollectionCheckboxes.js')) });
     const instance = new Vue({ ...options, i18n: i18n(locale) });
     instance.$store = { state: { currentSite: { config: { name: 'demo' } } }, commit: (...args) => calls.commits.push(args) };
     instance.$bus = { $emit: (...args) => calls.emits.push(args) };
     instance.$moment = () => ({ format: () => '09-05-2026-10-00-00' });
     instance.items = [backup('alpha.tar', 0), backup('beta.tar', 1)];
+    instance.isLoading = false;
     return { instance, calls, listeners };
 }
 function editor(options = {}) {
@@ -75,6 +77,34 @@ function editor(options = {}) {
 function emittedDialog(calls) { return calls.emits.find(([event]) => event === 'confirm-display')[1]; }
 
 describe('Backup actions', () => {
+    it('sorts names naturally, exact byte sizes numerically and creation dates chronologically', () => {
+        const { instance: b } = setup();
+        b.items = [
+            {...backup('copy2.tar', 4), size: '0.00 MB', sizeBytes: 2, createdAt: '12-31-2025 23:59', createdAtTimestamp: Date.UTC(2025,11,31,23,59)},
+            {...backup('copy10.tar', 9), size: '0.00 MB', sizeBytes: 100, createdAt: '01-01-2026 00:00', createdAtTimestamp: Date.UTC(2026,0,1)}
+        ];
+        assert.deepEqual(Array.from(b.sortedItems, item=>item.id), [9,4]);
+        b.ordering('sizeBytes'); assert.deepEqual(Array.from(b.sortedItems, item=>item.id), [9,4]);
+        b.ordering('sizeBytes'); assert.deepEqual(Array.from(b.sortedItems, item=>item.id), [4,9]);
+        b.ordering('name'); assert.deepEqual(Array.from(b.sortedItems, item=>item.name), ['copy10.tar','copy2.tar']);
+        b.ordering('name'); assert.deepEqual(Array.from(b.sortedItems, item=>item.name), ['copy2.tar','copy10.tar']);
+        assert.deepEqual(Array.from(b.items, item=>item.id), [4,9]);
+    });
+    it('keeps selected backup identities when sorting and sends their names for deletion', () => {
+        const { instance: b, calls } = setup();
+        b.selectedItems = [0]; b.ordering('name');
+        assert.equal(b.sortedItems[0].id, 1); assert.deepEqual(Array.from(b.selectedItems), [0]);
+        b.bulkDelete(); emittedDialog(calls).okClick();
+        assert.deepEqual(Array.from(calls.sends[0][1].backupsNames), ['alpha.tar']);
+    });
+    it('keeps the edited or restoring row in place and retains ordering when the list is refreshed', () => {
+        const { instance: b, listeners } = setup();
+        b.ordering('name'); b.renameFile('alpha.tar'); b.ordering('sizeBytes');
+        assert.equal(b.orderBy,'name'); b.cancelRename(undefined,{restoreFocus:false});
+        b.create('new'); b.ordering('sizeBytes'); assert.equal(b.orderBy,'name');
+        listeners['app-backup-created']({status:true,backups:[backup('alpha.tar',0),backup('zeta.tar',2)]});
+        assert.equal(b.orderBy,'name'); assert.equal(b.order,'DESC'); assert.equal(b.sortedItems[0].name,'zeta.tar');
+    });
     for (const locale of ['en-gb', 'pl']) {
         it(`${locale}: rename opens an inline editor with a protected tar suffix`, () => {
             const { instance: b, calls } = setup(locale);

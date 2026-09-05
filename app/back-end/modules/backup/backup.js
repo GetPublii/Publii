@@ -57,7 +57,9 @@ class Backup {
                 id: index,
                 name: file,
                 size: size,
+                sizeBytes: stats.size,
                 url: path.join(backupsPath, file),
+                createdAtTimestamp: Date.parse(createdAt),
                 createdAt: Date.parse(createdAt)
             });
 

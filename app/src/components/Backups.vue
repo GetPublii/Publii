@@ -56,16 +56,10 @@
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
-                <collection-cell>
-                    {{ $t('file.filename') }}
-                </collection-cell>
-
-                <collection-cell min-width="120px">
-                    {{ $t('file.fileSize') }}
-                </collection-cell>
-
-                <collection-cell min-width="160px">
-                    {{ $t('file.creationDate') }}
+                <collection-cell v-for="column in columns" :key="column.field"
+                    :variant="column.field === 'sizeBytes' ? 'file-size' : ''">
+                    <collection-sort-button :label="column.label" :active="orderBy === column.field" :order="order"
+                        :disabled="backupActionsDisabled || isLoading" @click="ordering(column.field)" />
                 </collection-cell>
 
                 <collection-cell min-width="150px">
@@ -87,7 +81,7 @@
             </collection-header>
 
             <collection-row
-                v-for="(item, index) in items"
+                v-for="(item, index) in sortedItems"
                 slot="content"
                 :key="item.name">
                 <collection-cell>
@@ -130,7 +124,7 @@
                     </p>
                 </collection-cell>
 
-                <collection-cell>
+                <collection-cell variant="file-size">
                     {{ item.size }}
                 </collection-cell>
 
@@ -168,10 +162,12 @@
 import InlineNameEditor from './basic-elements/InlineNameEditor.vue';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
+import CollectionOrdering from './mixins/CollectionOrdering.js';
+import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 
 export default {
     name: 'backups',
-    components: { InlineNameEditor },
+    components: { InlineNameEditor, CollectionSortButton },
     mixins: [
         BackToTools,
         CollectionCheckboxes
@@ -180,6 +176,8 @@ export default {
         return {
             isLoading: true,
             items: [],
+            orderBy: 'createdAtTimestamp',
+            order: 'DESC',
             activeOperation: '',
             renameError: '',
             selectedItems: [],
@@ -188,6 +186,21 @@ export default {
         };
     },
     computed: {
+        columns () {
+            return [
+                { field: 'name', label: this.$t('file.filename') },
+                { field: 'sizeBytes', label: this.$t('file.fileSize') },
+                { field: 'createdAtTimestamp', label: this.$t('file.creationDate') }
+            ];
+        },
+        sortedItems () {
+            const collator = new Intl.Collator(this.$i18n.locale, { numeric: true, sensitivity: 'base' });
+            return this.items.slice().sort((a, b) => {
+                const value = this.orderBy === 'name' ? collator.compare(a.name, b.name) :
+                    (a[this.orderBy] || 0) - (b[this.orderBy] || 0);
+                return this.order === 'DESC' ? -value : value;
+            });
+        },
         operationInProgress () {
             return this.activeOperation !== '';
         },
@@ -211,6 +224,14 @@ export default {
         });
     },
     methods: {
+        ordering (field) {
+            if (this.backupActionsDisabled || this.isLoading) return;
+            CollectionOrdering.methods.ordering.call(this, field);
+        },
+        saveOrdering (orderBy, order) {
+            this.orderBy = orderBy;
+            this.order = order;
+        },
         goToSettings: function() {
             this.$router.push('/app-settings');
         },
@@ -223,9 +244,9 @@ export default {
             });
         },
         deleteSelected: function() {
-            let backupsToRemove = this.selectedItems.map(id => {
-                return document.querySelector('input[value="' + id + '"]').getAttribute('id');
-            });
+            if (this.backupActionsDisabled) return;
+            let backupsToRemove = this.items.filter(item => this.selectedItems.includes(item.id)).map(item => item.name);
+            if (!backupsToRemove.length) return;
 
             mainProcessAPI.send('app-backup-remove', {
                 site: this.$store.state.currentSite.config.name,
