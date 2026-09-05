@@ -335,6 +335,11 @@
         "wideLine": "Wide line"
     },
     "file": {
+        "manager": {
+            "sort": "Sort by {column}, {direction}",
+            "ascending": "ascending",
+            "descending": "descending"
+        },
         "addNewFile": "Add new file",
         "backups": "Backups",
         "createBackup": "Create backup",

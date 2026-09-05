@@ -29,7 +29,7 @@ export default {
         variant: {
             default: '',
             type: String,
-            validator: value => ['', 'titles', 'assignment', 'publish-dates', 'modification-dates', 'authors', 'actions', 'menu', 'identifier'].includes(value)
+            validator: value => ['', 'titles', 'assignment', 'publish-dates', 'modification-dates', 'authors', 'actions', 'menu', 'identifier', 'file-size'].includes(value)
         }
     },
     computed: {
@@ -194,6 +194,10 @@ export default {
     justify-content: center;
     min-width: 3.5rem;
     text-align: center;
+    white-space: nowrap;
+}
+
+.col.file-size {
     white-space: nowrap;
 }
 

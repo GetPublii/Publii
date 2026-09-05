@@ -335,6 +335,11 @@
         "wideLine": "Szeroka linia"
     },
     "file": {
+        "manager": {
+            "sort": "Sortuj według: {column}, {direction}",
+            "ascending": "rosnąco",
+            "descending": "malejąco"
+        },
         "addNewFile": "Dodaj nowy plik",
         "backups": "Kopie zapasowe",
         "createBackup": "Utwórz kopię zapasową",

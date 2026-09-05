@@ -1,0 +1,47 @@
+/* Shared listing arrows, extracted unchanged from Posts. */
+.order-ascending,
+.order-descending {
+    margin-left: 3px;
+    position: relative;
+    &:after {
+        border-top: solid 5px var(--icon-secondary-color);
+        border-left: solid 5px transparent;
+        border-right: solid 5px transparent;
+        content: "";
+        cursor: pointer;
+        display: inline-block;
+        height: 4px;
+        left: 0;
+        line-height: 1.1;
+        opacity: 1;
+        padding: 0;
+        position: relative;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+    }
+}
+
+.order-descending {
+    &:after {
+        border-top-color: transparent;
+        border-bottom: solid 5px var(--icon-secondary-color);
+    }
+}
+
+button.col-sortable-title {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-align: left;
+    white-space: nowrap;
+}
+button.col-sortable-title:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
+}
