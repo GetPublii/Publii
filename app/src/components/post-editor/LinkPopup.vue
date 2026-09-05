@@ -216,7 +216,7 @@
                     size="medium"
                     width="half"
                     square
-                    :disabled="local && !canSubmit"
+                    :disabled="!canSubmit"
                     @click.native="setLink">
                     {{ $t('ui.ok') }}
                 </p-button>
@@ -277,8 +277,20 @@ export default {
                 return this.external.trim() !== '';
             }
 
-            return ['tags', 'frontpage', 'blogpage'].includes(this.type) ||
-                (this[this.type] !== null && this[this.type] !== '');
+            if (['tags', 'frontpage', 'blogpage'].includes(this.type)) {
+                return true;
+            }
+
+            const choices = {
+                post: 'postPages',
+                page: 'pageItems',
+                tag: 'tagPages',
+                author: 'authorPages',
+                file: 'filesList'
+            };
+            const options = choices[this.type];
+
+            return !!options && this[options].includes(this[this.type]);
         },
         linkTypes () {
             return [ 'external', 'post', 'page', 'tag', 'tags', 'author', 'frontpage', 'blogpage', 'file' ];
@@ -587,7 +599,7 @@ export default {
             }
         },
         setLink () {
-            if (this.local && !this.canSubmit) return;
+            if (!this.canSubmit) return;
             let response = {
                 url: '',
                 title: '',

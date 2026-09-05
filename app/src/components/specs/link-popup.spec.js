@@ -16,10 +16,15 @@ const compiler = appRequire('vue-template-compiler');
 function loadComponent(name, globals = {}) {
     const source = fs.readFileSync(path.join(repo, 'app/src/components', name + '.vue'), 'utf8');
     const parsed = compiler.parseComponent(source);
-    assert.deepEqual(compiler.compile(parsed.template.content).errors, []);
+    const compiled = compiler.compile(parsed.template.content);
+    assert.deepEqual(compiled.errors, []);
     const context = { module: { exports: {} }, ...globals };
     vm.runInNewContext(parsed.script.content.replace(/^import .*;\s*$/gm, '').replace('export default', 'module.exports ='), context);
-    return context.module.exports;
+    return {
+        ...context.module.exports,
+        render: new Function(compiled.render),
+        staticRenderFns: compiled.staticRenderFns.map(code => new Function(code))
+    };
 }
 function popup(local = true, markdown = false) {
     const inserted = [], events = [], callbacks = {};
@@ -42,6 +47,7 @@ function popup(local = true, markdown = false) {
         tags: [{ id: 7, name: 'Visible tag', additionalData: '{}' }, { id: 8, name: 'Hidden', additionalData: '{"isHidden":true}' }],
         authors: [{ username: 'anna-nowak', name: 'Anna Nowak' }]
     } } };
+    instance.filesList = ['media/files/guide.pdf'];
     instance.$nextTick = () => {};
     definition.mounted.call(instance);
     return { instance, definition, bus, events, inserted, callbacks };
@@ -157,6 +163,91 @@ describe('Shared link popup', () => {
         assert.equal(result, false);
         assert.equal(events.length, 0);
     });
+});
+
+
+function submitDisabled(instance) {
+    function nodes(node) {
+        return [node, ...(node.children || []).flatMap(nodes)];
+    }
+    const button = nodes(instance._render()).find(node =>
+        node.data && node.data.attrs && Object.hasOwn(node.data.attrs, 'disabled')
+    );
+    assert.ok(button, 'Popup renders its submit button');
+    return button.data.attrs.disabled;
+}
+
+describe('Link validation in mini editors, WYSIWYG and Markdown', () => {
+    const targets = { external: 'https://example.test', post: 12, page: 21, tag: 7, author: 'anna-nowak', file: 'media/files/guide.pdf' };
+    for (const [mode, local, markdown] of [['mini', true, false], ['WYSIWYG', false, false], ['Markdown', false, true]]) {
+        function setup() {
+            const state = popup(local, markdown);
+            const p = state.instance;
+            const results = [];
+            p.$on('resolve', result => results.push(result));
+            state.bus.$on('link-popup-updated', result => results.push(result));
+            if (markdown) p.easymdeInstance = { codemirror: { replaceSelections: values => state.inserted.push(values[0]) } };
+            p.open({ label: 'Read more', selection: 'Read more' });
+            return { ...state, results };
+        }
+        for (const [type, target] of Object.entries(targets)) {
+            it(`${mode}: requires a ${type} target and disables submit again after clearing it`, () => {
+                const { instance: p, results, inserted } = setup();
+                p.type = type;
+                assert.equal(submitDisabled(p), true);
+                p.setLink();
+                assert.equal(p.isVisible, true);
+                assert.equal(results.length, 0);
+                assert.equal(inserted.length, 0);
+                p[type] = target;
+                assert.equal(submitDisabled(p), false);
+                p[type] = type === 'external' ? '   ' : null;
+                assert.equal(submitDisabled(p), true);
+                p.setLink();
+                assert.equal(results.length, 0);
+                p[type] = target;
+                p.setLink();
+                assert.equal(p.isVisible, false);
+                assert.equal(results.length, 1);
+                const expected = type === 'external' ? target : '#INTERNAL_LINK#/' + type + '/' + target;
+                assert.equal(results[0].url, expected);
+                if (!local) assert.ok(inserted[0].includes(expected));
+            });
+        }
+        for (const type of ['tags', 'frontpage', 'blogpage']) {
+            it(`${mode}: allows ${type} without a secondary selection`, () => {
+                const { instance: p, results } = setup();
+                p.type = type;
+                assert.equal(submitDisabled(p), false);
+                p.setLink();
+                assert.equal(results[0].url, '#INTERNAL_LINK#/' + type + '/1');
+            });
+        }
+        it(`${mode}: blocks previously saved /null markers until a valid target is selected`, () => {
+            const { instance: p, results } = setup();
+            for (const type of ['post', 'page', 'tag', 'author', 'file']) {
+                p.cleanPopup();
+                p.parseUrlContent(['', '#INTERNAL_LINK#/' + type + '/null']);
+                assert.equal(submitDisabled(p), true, type);
+                p.setLink();
+                assert.equal(results.length, 0, type);
+                p[type] = targets[type];
+                assert.equal(submitDisabled(p), false, type);
+            }
+        });
+        it(`${mode}: blocks deleted/unavailable targets and empty option lists`, () => {
+            const { instance: p, results } = setup();
+            for (const type of ['post', 'page', 'tag', 'author', 'file']) {
+                p.type = type;
+                p[type] = typeof targets[type] === 'number' ? 99999 : 'missing-target';
+                assert.equal(submitDisabled(p), true, type);
+                p.setLink();
+            }
+            p.type = 'file'; p.file = targets.file; p.filesList = [];
+            assert.equal(submitDisabled(p), true);
+            assert.equal(results.length, 0);
+        });
+    }
 });
 
 describe('Mini editor selection ownership', () => {
