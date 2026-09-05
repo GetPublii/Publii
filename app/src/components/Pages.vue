@@ -457,10 +457,12 @@
 <script>
 import Vue from 'vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
+import CollectionOrdering from './mixins/CollectionOrdering.js';
 
 export default {
     name: 'pages',
     mixins: [
+        CollectionOrdering,
         CollectionCheckboxes
     ],
     data () {
@@ -933,19 +935,6 @@ export default {
                 this.setFilter('');
             }, 0);
         },
-        ordering (field) {
-            if (field !== this.orderBy) {
-                this.orderBy = field;
-                this.order = 'DESC';
-            } else {
-                if (this.order === 'DESC') {
-                    this.order = 'ASC';
-                } else {
-                    this.order = 'DESC';
-                }
-            }
-            this.saveOrdering(this.orderBy, this.order);
-        },
         saveOrdering (orderBy, order) {
             this.orderBy = orderBy;
             this.order = order;
@@ -1259,6 +1248,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/collection-sorting.css";
 @import '../css/empty-states.css';
 
 .load-more-sentinel {
@@ -1274,37 +1264,6 @@ export default {
         .col-sortable-title {
             cursor: pointer;
         }
-    }
-}
-
-.order-ascending,
-.order-descending {
-    margin-left: 3px;
-    position: relative;
-    &:after {
-        border-top: solid 5px var(--icon-secondary-color);
-        border-left: solid 5px transparent;
-        border-right: solid 5px transparent;
-        content: "";
-        cursor: pointer;
-        display: inline-block;
-        height: 4px;
-        left: 0;
-        line-height: 1.1;
-        opacity: 1;
-        padding: 0;
-        position: relative;
-        text-align: center;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 8px;
-    }
-}
-
-.order-descending {
-    &:after {
-        border-top-color: transparent;
-        border-bottom: solid 5px var(--icon-secondary-color);
     }
 }
 
