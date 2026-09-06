@@ -17,7 +17,7 @@
     "build2": "./node_modules/.bin/electron app/",
     "notarize": "xcrun notarytool submit ./dist/$npm_config_file --keychain-profile 'Publii' --wait",
     "start": "node_modules/.bin/electron app/main.js --enable-logging",
-    "test": "npm run audit:design-system && node_modules/.bin/mocha \"app/back-end/**/*.spec.js\" \"app/src/helpers/specs/**/*.spec.js\" \"app/src/components/specs/**/*.spec.js\" --reporter dot",
+    "test": "npm run audit:design-system && node_modules/.bin/mocha \"build/scripts/specs/**/*.spec.js\" \"app/back-end/**/*.spec.js\" \"app/src/helpers/specs/**/*.spec.js\" \"app/src/components/specs/**/*.spec.js\" --reporter dot",
     "audit:design-system": "node build/scripts/audit-design-system.js",
     "prepare-editor": "npm run prepare-editor-css && npm run remove-vendor-dist-dir && npm run prepare-vendor-dist-dir && npm run copy-vendor-files",
     "remove-vendor-dist-dir": "rm -rf app/dist/vendor",

@@ -229,6 +229,25 @@ function collectDefinitionValues(content) {
     ]));
 }
 
+function resolveTokenValue(token, definitions) {
+    const visited = new Set();
+
+    while (definitions.has(token) && !visited.has(token)) {
+        visited.add(token);
+
+        const value = definitions.get(token).trim();
+        const reference = value.match(/^var\(\s*(--[a-zA-Z0-9_-]+)\s*\)$/);
+
+        if (!reference) {
+            return value;
+        }
+
+        token = reference[1];
+    }
+
+    return '';
+}
+
 function parseOklchLiteral(value) {
     const match = value.match(/^oklch\(\s*(\d+(?:\.\d+)?)%\s+(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)\s*\)$/);
 
@@ -593,6 +612,7 @@ function main() {
     }
 
     const tokenContents = new Map(tokenFiles.map((file) => [file, fs.readFileSync(file, 'utf8')]));
+    const globalValues = collectDefinitionValues(tokenContents.get(tokenFile));
     const contractTokenDefinitions = tokenFiles.flatMap((file) => collectDefinitions(tokenContents.get(file)));
     const globalTokens = new Set(contractTokenDefinitions);
     const allDefinitions = new Set(globalTokens);
@@ -701,6 +721,7 @@ function main() {
             const expectedAppAppearance = path.basename(appearanceFile, '.css');
             const appCommonRules = commonRules.filter((rule) => rule.appAppearance === appAppearance);
             const commonTokens = new Set(appCommonRules.flatMap((rule) => collectDefinitions(rule.body)));
+            const commonValues = collectDefinitionValues(appCommonRules.map((rule) => rule.body).join('\n'));
             const missingVisualTokens = appearanceVisualTokens.filter((token) => !commonTokens.has(token));
             const registeredAccents = appearanceRegistry.get(appAppearance) || [];
             const duplicateRegisteredAccents = registeredAccents.filter((accent, index) => registeredAccents.indexOf(accent) !== index);
@@ -778,10 +799,12 @@ function main() {
             information.push(`${appAppearance} private palettes use OKLCH: ${lightPalettes.size} light and ${darkPalettes.size} dark tokens`);
 
             for (const [scheme, values] of [['light', lightValues], ['dark', darkValues]]) {
+                const effectiveValues = new Map([...globalValues, ...commonValues, ...values]);
+
                 for (const token of statusColorTokens) {
                     if (!values.has(token)) {
                         errors.push(`${appAppearance} ${scheme} scheme is missing required status color: ${token}`);
-                    } else if (!values.get(token).startsWith('oklch(')) {
+                    } else if (!resolveTokenValue(token, effectiveValues).startsWith('oklch(')) {
                         errors.push(`${appAppearance} ${scheme} status color must use OKLCH: ${token}`);
                     }
                 }
@@ -958,4 +981,8 @@ function main() {
     console.log('\nAudit passed.');
 }
 
-main();
+if (require.main === module) {
+    main();
+}
+
+module.exports = { resolveTokenValue };
