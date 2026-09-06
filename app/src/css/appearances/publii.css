@@ -114,12 +114,12 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
     --color-warning: oklch(82% 0.167 86);
     --color-highlight: oklch(85% 0.174 87);
     --color-highlight-surface: oklch(98% 0.031 93);
-    --shadow-color: oklch(39% 0.018 245 / 25%);
-    --shadow-sm: 0 0 1px oklch(from var(--black) l c h / 6%), 0 2px 6px oklch(from var(--black) l c h / 3%);
-    --shadow-md: 0 2px 6px oklch(from var(--black) l c h / 15%);
-    --shadow-list-hover: 0 0 26px oklch(from var(--black) l c h / 7%);
+    --shadow-color: var(--black);
+    --shadow-sm: 0 0 1px oklch(from var(--shadow-color) l c h / 6%), 0 2px 6px oklch(from var(--shadow-color) l c h / 3%);
+    --shadow-md: 0 2px 10px -3px oklch(from var(--shadow-color) l c h / 10%), 0 4px 6px -4px oklch(from var(--shadow-color) l c h / 10%);
+    --shadow-list-hover: 0 0 26px oklch(from var(--shadow-color) l c h / 7%);
 
-    --overlay: oklch(from var(--black) l c h / 35%);
+    --overlay: oklch(from var(--shadow-color) l c h / 35%);
 
     --icon-primary-color: var(--palette-neutral-70);
     --icon-secondary-color: var(--palette-neutral-55);
@@ -301,12 +301,12 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --color-warning: oklch(82% 0.167 86);
     --color-highlight: oklch(85% 0.174 87);
     --color-highlight-surface: oklch(33% 0.019 281);
-    --shadow-color: oklch(25% 0.014 267 / 25%);
-    --shadow-sm: 0 2px 6px rgb(23 25 31);
-    --shadow-md: 0 2px 6px rgb(23 25 31);
-    --shadow-list-hover: 0 0 26px oklch(from var(--black) l c h / 7%);
+    --shadow-color: var(--black);
+    --shadow-sm: 0 0 1px oklch(from var(--shadow-color) l c h / 20%),0 2px 6px oklch(from var(--shadow-color) l c h / 15%);
+    --shadow-md:  0 10px 15px -3px oklch(from var(--shadow-color) l c h / 32%),0 4px 6px -4px oklch(from var(--shadow-color) l c h / 22%);
+    --shadow-list-hover: 0 0 26px oklch(from var(--shadow-color) l c h / 7%);
 
-    --overlay: rgba(28,29,35, .85);
+    --overlay: oklch(20% 0.0117 278 / 85%);
 
     --icon-primary-color: var(--palette-neutral-20);
     --icon-secondary-color: var(--palette-neutral-25);

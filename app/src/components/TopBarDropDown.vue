@@ -244,8 +244,9 @@ export default {
 
 .topbar-app-submenu {
     background: var(--popup-bg);
+    border: 1px solid var(--border-light-color);
     box-shadow: var(--shadow-md);
-    border-radius: var(--radius-base);
+    border-radius: calc(var(--radius-base) * 1.5);
     cursor: default;
     font-size: var(--font-size-ui-md);
     list-style-type: none;

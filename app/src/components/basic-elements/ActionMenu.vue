@@ -309,15 +309,12 @@ export default {
     display: inline-block;
     position: relative;
 
-    /* Lift the open menu above sibling rows and their invisible drop zones
-       (MenuItem.vue keeps its empty-list drop zones at z-index 10). */
     &.is-open {
         z-index: 20;
     }
 }
 
-/* Round icon button, same recipe as the row actions on the sites list:
-   white disc, muted icon that darkens and grows on hover */
+
 .action-menu-trigger {
     align-items: center;
     appearance: none;
@@ -332,7 +329,6 @@ export default {
     padding: 0;
     width: 3rem;
 
-    /* Size comes from the icon's customWidth/customHeight props */
     & > svg {
         fill: var(--icon-secondary-color);
         pointer-events: none;
@@ -368,14 +364,12 @@ export default {
 }
 
 .action-menu-list {
-    /* Same rounding and elevation as the application menu in the top bar.
-       Positioned against the viewport so scrolling containers never clip it;
-       it stays invisible until its place has been measured. */
     background: var(--popup-bg);
-    border-radius: var(--radius-base);
+    border: 1px solid var(--border-light-color);
+    border-radius: calc(var(--radius-base) * 1.5);
     box-shadow: var(--shadow-md);
     min-width: 16rem;
-    padding: var(--space-3) 0;
+    padding: var(--space-4) 0 var(--space-3);
     position: fixed;
     visibility: hidden;
 
@@ -384,7 +378,6 @@ export default {
     }
 }
 
-/* Item colours follow the bulk-actions dropdown on the Posts and Pages lists */
 .action-menu-item {
     align-items: center;
     appearance: none;
@@ -399,7 +392,7 @@ export default {
     gap: var(--space-3);
     line-height: var(--line-height-base);
     margin: 0;
-    padding: var(--space-2) var(--space-6);
+    padding: var(--space-3) var(--space-8);
     text-align: left;
     white-space: nowrap;
     width: 100%;
