@@ -20,6 +20,7 @@ import illustrationMapSource from './../../assets/svg/svg-map-empty-states.svg?r
 const AVAILABLE_ILLUSTRATIONS = [
     'backups',
     'block-editor',
+    'file-manager',
     'markdown-editor',
     'menus',
     'notifications-center',

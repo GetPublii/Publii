@@ -20,6 +20,14 @@ class FileManagerEvents {
         let self = this;
         this.app = appInstance;
 
+        const FileManager = require('../helpers/file-manager');
+        const operations = new FileManager(appInstance, this.getIcon.bind(this));
+        // Invoke replies belong to the requesting renderer and cannot be consumed
+        // by the shared file pickers used in post/page/theme editors.
+        for (const [channel, method] of Object.entries({ list: 'list', upload: 'upload', create: 'create', delete: 'remove' })) {
+            ipcMain.handle('app-file-manager:' + channel, (event, config) => operations[method](config));
+        }
+
         /*
          * List files in a specific directory
          */

@@ -243,16 +243,8 @@
 
     <!-- Folder icons  -->
 
-    <symbol id="folder-opened" viewBox="0 0 22 16">
-        <path d="M19.83,6H18V5.044a1.857,1.857,0,0,0-1.636-2.018H9.818L7.364,0H1.636A1.857,1.857,0,0,0,0,2.018V14l.016-.013A1.968,1.968,0,0,0,2.17,16h14.9a2.185,2.185,0,0,0,2.038-1.2l2.76-6.364C22.382,7.254,21.335,6,19.83,6ZM1.636.913h5.3L9.118,3.6l.271.335h6.974c.346,0,.732.454.732,1.105V6H4.93A2.185,2.185,0,0,0,2.892,7.2L.9,11.78V2.018C.9,1.366,1.29.913,1.636.913ZM20.95,8.042l-2.76,6.364A1.208,1.208,0,0,1,17.07,15H2.17A1.251,1.251,0,0,1,1.1,14.508a.545.545,0,0,1-.055-.549L3.81,7.595A1.208,1.208,0,0,1,4.93,7h14.9a1.251,1.251,0,0,1,1.065.492A.544.544,0,0,1,20.95,8.042Z"/>
-    </symbol>
-
-    <symbol id="folder-opened" viewBox="0 0 22 16">
-        <path d="M19.83,6H18V5.044a1.857,1.857,0,0,0-1.636-2.018H9.818L7.364,0H1.636A1.857,1.857,0,0,0,0,2.018V14l.016-.013A1.968,1.968,0,0,0,2.17,16h14.9a2.185,2.185,0,0,0,2.038-1.2l2.76-6.364C22.382,7.254,21.335,6,19.83,6ZM1.636.913h5.3L9.118,3.6l.271.335h6.974c.346,0,.732.454.732,1.105V6H4.93A2.185,2.185,0,0,0,2.892,7.2L.9,11.78V2.018C.9,1.366,1.29.913,1.636.913ZM20.95,8.042l-2.76,6.364A1.208,1.208,0,0,1,17.07,15H2.17A1.251,1.251,0,0,1,1.1,14.508a.545.545,0,0,1-.055-.549L3.81,7.595A1.208,1.208,0,0,1,4.93,7h14.9a1.251,1.251,0,0,1,1.065.492A.544.544,0,0,1,20.95,8.042Z"/>
-    </symbol>
-
-    <symbol id="folder" viewBox="0 0 22 16">
-        <path d="M7.93,1a1,1,0,0,1,.832.445l1.406,2.109.3.445H20a1,1,0,0,1,1,1v9a1,1,0,0,1-1,1H2a1,1,0,0,1-1-1V2A1,1,0,0,1,2,1H7.93m0-1H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H20a2,2,0,0,0,2-2V5a2,2,0,0,0-2-2H11L9.594.891A2,2,0,0,0,7.93,0Z"/>
+    <symbol id="folder"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+       <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
     </symbol>
 
     <!-- Preview window icons  -->
@@ -511,4 +503,29 @@
        <path d="M10.21,12l4.64-4.65a.49.49,0,0,0-.7-.7l-5,5a.48.48,0,0,0,0,.7l5,5a.48.48,0,0,0,.7,0,.48.48,0,0,0,0-.7Z"/>
     </symbol>
         
+    <symbol id="link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </symbol>
+    <symbol id="file-input" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1" />
+        <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+        <path d="M2 15h10" />
+        <path d="m9 18 3-3-3-3" />
+    </symbol>
+    <symbol id="clipboard-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+        <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+        <path d="M16 4h2a2 2 0 0 1 2 2v4" />
+        <path d="M21 14H11" />
+        <path d="m15 10-4 4 4 4" />
+    </symbol>
+    <symbol id="link-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 17H7A5 5 0 0 1 7 7h2" />
+        <path d="M15 7h2a5 5 0 1 1 0 10h-2" />
+        <line x1="8" x2="16" y1="12" y2="12" />
+    </symbol>
+    <symbol id="folder-opened-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" />
+    </symbol>
 </svg>

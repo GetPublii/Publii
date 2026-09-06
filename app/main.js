@@ -284,13 +284,17 @@ electronApp.on('ready', function () {
     });
 
     // Use Electron API to display files selection dialog
-    ipcMain.handle('app-main-process-select-files', (event, fieldName = false, filters = []) => {
+    ipcMain.handle('app-main-process-select-files', (event, fieldName = false, filters = [], options = {}) => {
         let win = BrowserWindow.fromWebContents(event.sender);
 
-        dialog.showOpenDialog(win, {
-            properties: ['openFile', 'multiSelections'],
+        const selection = dialog.showOpenDialog(win, {
+            properties: options.returnResult === true && options.multiple === false ? ['openFile'] : ['openFile', 'multiSelections'],
             filters: filters
-        }).then(selectedPaths => {
+        });
+        // Existing uploaders retain their event-based contract. FileManager opts
+        // into a direct result so opening another picker cannot start its queue.
+        if (options.returnResult === true) return selection;
+        selection.then(selectedPaths => {
             event.sender.send('app-files-selected', {
                 paths: selectedPaths,
                 fieldName: fieldName

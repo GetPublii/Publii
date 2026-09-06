@@ -2,7 +2,10 @@
     <div
         v-if="isVisible"
         class="overlay">
-        <div class="popup">
+        <div class="popup" ref="dialog"
+            :role="dialogLabel ? 'dialog' : null"
+            :aria-modal="dialogLabel ? 'true' : null"
+            :aria-label="dialogLabel || null">
             <p
                 :class="cssClasses"
                 v-pure-html="message">
@@ -13,6 +16,7 @@
                 :type="inputIsPassword ? 'password' : 'text'"
                 :value="defaultText"
                 :spellcheck="false"
+                :aria-label="dialogLabel || null"
                 :invalid="!!inputError"
                 :aria-describedby="inputError ? inputErrorID : ''"
                 @input="inputError = ''"
@@ -25,6 +29,15 @@
                 role="alert">
                 {{ inputError }}
             </p>
+
+            <div v-if="choices.length" class="confirmation-choices">
+                <label :for="choiceID">{{ choiceLabel }}</label>
+                <dropdown :id="choiceID" :items="choices" v-model="choice" :aria-label="choiceLabel" />
+                <label v-if="checkLabel" class="confirmation-check">
+                    <checkbox :value="choiceID + '-check'" :checked="checkValue" :onClick="() => { checkValue = !checkValue; }" />
+                    {{ checkLabel }}
+                </label>
+            </div>
 
             <div class="buttons">
                 <p-button
@@ -42,7 +55,8 @@
                     size="medium"
                     width="half"
                     square
-                    :onClick="onCancel">
+                    :onClick="onCancel"
+                    ref="cancelButton">
                     {{ cancelLabel }}
                 </p-button>
             </div>
@@ -56,6 +70,8 @@ export default {
     data () {
         return {
             isVisible: false,
+            dialogLabel: '',
+            choices: [], choice: '', choiceLabel: '', checkLabel: '', checkValue: false,
             hasInput: false,
             inputIsPassword: false,
             message: '',
@@ -78,6 +94,7 @@ export default {
                 'text-centered': this.textCentered
             };
         },
+        choiceID () { return 'confirm-choice-' + this._uid; },
         inputErrorID () {
             return 'confirm-input-error-' + this._uid;
         }
@@ -87,6 +104,13 @@ export default {
             document.body.classList.add('has-popup-visible');
 
             setTimeout(() => {
+                this.dialogLabel = config.dialogLabel || '';
+                this.choices = config.choices || [];
+                this.choice = config.choice || (this.choices[0] && this.choices[0].value) || '';
+                this.choiceLabel = config.choiceLabel || '';
+                this.checkLabel = config.checkLabel || '';
+                this.checkValue = false;
+                this.returnFocus = this.dialogLabel ? document.activeElement : null;
                 this.isVisible = true;
                 this.message = config.message;
                 this.textCentered = config.textCentered || false;
@@ -113,8 +137,11 @@ export default {
                 }
 
                 setTimeout(() => {
+                    if (!this.isVisible) return;
                     if (config.hasInput) {
                         this.$refs.input.$el.querySelector('input').focus();
+                    } else if (this.dialogLabel) {
+                        this.$refs[this.isDanger ? 'cancelButton' : 'okButton'].$el.focus();
                     }
                 }, 100);
             }, 0);
@@ -137,12 +164,15 @@ export default {
             this.isVisible = false;
             document.body.classList.remove('has-popup-visible');
 
-            if(this.hasInput) {
+            if (this.choices.length) {
+                this.okClick(this.choice, this.checkValue);
+            } else if(this.hasInput) {
                 this.okClick(this.$refs.input.content);
             } else {
                 this.okClick();
             }
 
+            this.restoreDialogFocus();
             return true;
         },
         onCancel () {
@@ -152,17 +182,51 @@ export default {
             }
 
             this.cancelClick();
+            if (!this.isVisible) this.restoreDialogFocus();
+        },
+        restoreDialogFocus () {
+            if (this.dialogLabel && this.returnFocus && this.returnFocus.isConnected) {
+                this.returnFocus.focus();
+            }
+            this.returnFocus = null;
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && !event.isComposing && this.isVisible) {
+            if (this.isVisible && this.dialogLabel) {
+                if (e.isComposing) return;
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    this.onCancel();
+                    return;
+                }
+                if (e.key === 'Tab') {
+                    const controls = Array.from(this.$refs.dialog.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), [href], [tabindex="0"]'));
+                    const first = controls[0];
+                    const last = controls[controls.length - 1];
+                    if (e.shiftKey && (document.activeElement === first || !this.$refs.dialog.contains(document.activeElement))) {
+                        e.preventDefault();
+                        if (last) last.focus();
+                    } else if (!e.shiftKey && (document.activeElement === last || !this.$refs.dialog.contains(document.activeElement))) {
+                        e.preventDefault();
+                        if (first) first.focus();
+                    }
+                    return;
+                }
+                // Native buttons handle Enter/Space themselves, including Cancel.
+                if (e.target.closest('button, select')) return;
+                if (e.code === 'Enter') e.preventDefault();
+            }
+            if (e.code === 'Enter' && !e.isComposing && this.isVisible) {
                 this.onEnterKey();
             }
         },
         onEnterKey () {
+            const managedDialog = !!this.dialogLabel;
             if (!this.onOk()) {
                 return;
             }
 
+            // A queued choice can open another dialog immediately after this one.
+            if (managedDialog) return;
             setTimeout(() => {
                 this.isVisible = false;
                 document.body.classList.remove('has-popup-visible');
@@ -202,6 +266,13 @@ export default {
     font-size: var(--font-size-ui-sm);
     margin: var(--space-2) 0 0;
     text-align: left;
+}
+
+.confirmation-check {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
 }
 
 .buttons {
