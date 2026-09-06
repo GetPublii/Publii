@@ -117,6 +117,7 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
     --shadow-color: var(--black);
     --shadow-sm: 0 0 1px oklch(from var(--shadow-color) l c h / 6%), 0 2px 6px oklch(from var(--shadow-color) l c h / 3%);
     --shadow-md: 0 2px 10px -3px oklch(from var(--shadow-color) l c h / 10%), 0 4px 6px -4px oklch(from var(--shadow-color) l c h / 10%);
+    --shadow-lg: 0 5px 25px -5px oklch(from var(--shadow-color) l c h / 16%), 0 8px 10px -6px oklch(from var(--shadow-color) l c h / 8%);
     --shadow-list-hover: 0 0 26px oklch(from var(--shadow-color) l c h / 7%);
 
     --overlay: oklch(from var(--shadow-color) l c h / 35%);
@@ -304,6 +305,7 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --shadow-color: var(--black);
     --shadow-sm: 0 0 1px oklch(from var(--shadow-color) l c h / 20%),0 2px 6px oklch(from var(--shadow-color) l c h / 15%);
     --shadow-md:  0 10px 15px -3px oklch(from var(--shadow-color) l c h / 32%),0 4px 6px -4px oklch(from var(--shadow-color) l c h / 22%);
+    --shadow-lg: 0 5px 25px -5px oklch(from var(--shadow-color) l c h / 42%), 0 8px 10px -6px oklch(from var(--shadow-color) l c h / 26%);
     --shadow-list-hover: 0 0 26px oklch(from var(--shadow-color) l c h / 7%);
 
     --overlay: oklch(20% 0.0117 278 / 85%);

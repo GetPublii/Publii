@@ -232,7 +232,7 @@
         align-items: center;
         background: var(--popup-bg);
         border-radius: var(--radius-base);
-        box-shadow: 0 5px 10px -5px var(--shadow-color), 4px -11px 26px -12px var(--shadow-color), 0 24px 50px 2px var(--shadow-color);
+        box-shadow: var(--shadow-lg);
         display: none;
         min-height: 44px;
         padding: 6px;
@@ -739,7 +739,7 @@ body .tox .tox-pop__dialog {
     background: var(--popup-bg);
     border: 1px solid var(--popup-bg);
     border-radius: 4px;
-    box-shadow: 0 5px 10px -5px var(--shadow-color), 4px -11px 26px -12px var(--shadow-color), 0 24px 50px 2px var(--shadow-color);
+    box-shadow: var(--shadow-lg);
 }
 body .tox .tox-statusbar a,
 body .tox .tox-statusbar__path-item,

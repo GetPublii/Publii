@@ -1,6 +1,16 @@
 <template>
     <div :class="cssClasses">
-        <slot />
+        <div v-if="appearance === 'drop-zone'">
+            <icon
+                class="drop-zone-upload-icon"
+                name="upload-file"
+                size="s"
+                non-interactive
+                aria-hidden="true"
+                focusable="false" />
+            <slot />
+        </div>
+        <slot v-else />
     </div>
 </template>
 
@@ -50,13 +60,33 @@ export default {
     }
 
     &.is-blue {
-        border: 3px solid var(--color-primary);
+        border: 3px solid transparent;
         background: oklch(from var(--color-primary) l c h / 17%);
+
+        &::before {
+            --drop-zone-dot: radial-gradient(circle 2px, var(--color-primary) 99%, transparent 100%);
+            background-image:
+                var(--drop-zone-dot),
+                var(--drop-zone-dot),
+                var(--drop-zone-dot),
+                var(--drop-zone-dot);
+            background-position: top, bottom, left, right;
+            background-repeat: round no-repeat, round no-repeat, no-repeat round, no-repeat round;
+            background-size: 10px 3px, 10px 3px, 3px 10px, 3px 10px;
+            border-radius: inherit;
+            content: '';
+            inset: -3px;
+            pointer-events: none;
+            position: absolute;
+        }
         
         & > div {
+            align-items: center;
+            display: flex;
+            gap: var(--space-4);
             box-shadow: 0 0 3px oklch(from var(--black) l c h / 20%);
             background: var(--color-primary);
-            border-radius: 3px;
+            border-radius: var(--radius-base);
             color: var(--white);
             font-size: var(--font-size-ui-md);
             font-weight: var(--font-weight-medium);
@@ -71,6 +101,11 @@ export default {
         }
     }
 }
+.drop-zone-upload-icon {
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
 .overlay-icon {
     font-size: 2rem;
     left: 50%;

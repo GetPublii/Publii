@@ -354,7 +354,7 @@ export default {
 .block-link-popup {
   background: var(--popup-bg);
   border-radius: var(--radius-base);
-  box-shadow: 0 0 32px var(--shadow-color);
+  box-shadow: var(--shadow-lg);
   padding: 4rem;
   transform: scale(.5);
   transition: all .24s cubic-bezier(0, 0, 0.25, 0.99);
