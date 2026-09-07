@@ -474,7 +474,6 @@
 	c0-0.55,0.45-1,1-1H30v-3.5c0-0.55,0.45-1,1-1s1,0.45,1,1V21h3.5C36.05,21,36.5,21.45,36.5,22z"/>
     </symbol>   
     
-    <!-- Search icons  (rememebr to add stroke color via CSS e.g. stroke: #000;-->
 
     <symbol id="close" viewBox="0 0 24 24"> 
          <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="8" y1="16" x2="16" y2="8"/>
@@ -499,12 +498,8 @@
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
     </symbol>
-    <symbol id="file-input" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1" />
-        <path d="M14 2v5a1 1 0 0 0 1 1h5" />
-        <path d="M2 15h10" />
-        <path d="m9 18 3-3-3-3" />
-    </symbol>
+    <symbol id="file-input" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-up"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/><symbol>
+
     <symbol id="clipboard-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
         <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
