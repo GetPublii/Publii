@@ -267,13 +267,75 @@
                         </li>
                     </ul>
 
-                    <a 
+                    <a
                         href="#"
-                        class="notification-action" 
+                        class="notification-action"
                         :class="{ 'is-disabled': !unreadPluginUpdates }"
                         @click.prevent="markAsRead('plugins')">
                         {{ $t('notifications.markAsRead') }}
                     </a>
+                </fields-group>
+
+                <fields-group
+                    :title="$t('notifications.discontinuedThemes')"
+                    v-if="discontinuedThemes.length > 0"
+                    class="notification is-discontinued">
+                    <p class="notification-discontinued-info">
+                        {{ $t('notifications.discontinuedThemesInfo') }}
+                    </p>
+
+                    <ul class="notification-list">
+                        <li
+                            v-for="(theme, index) in discontinuedThemes"
+                            :key="'discontinued-theme-' + index"
+                            class="notification-item is-discontinued-item">
+                            <div class="notification-item-content">
+                                <img
+                                    :src="$store.state.themesPath + '/' + theme.directory + '/thumbnail.png'"
+                                    alt=""
+                                    class="notification-item-icon"
+                                    height="52"
+                                    width="52" />
+
+                                <div class="notification-item-details">
+                                    <span class="notification-title">
+                                        {{ theme.name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </fields-group>
+
+                <fields-group
+                    :title="$t('notifications.discontinuedPlugins')"
+                    v-if="discontinuedPlugins.length > 0"
+                    class="notification is-discontinued">
+                    <p class="notification-discontinued-info">
+                        {{ $t('notifications.discontinuedPluginsInfo') }}
+                    </p>
+
+                    <ul class="notification-list">
+                        <li
+                            v-for="(plugin, index) in discontinuedPlugins"
+                            :key="'discontinued-plugin-' + index"
+                            class="notification-item is-discontinued-item">
+                            <div class="notification-item-content">
+                                <img
+                                    :src="$store.state.pluginsPath + '/' + plugin.directory + '/thumbnail.svg'"
+                                    alt=""
+                                    class="notification-item-icon"
+                                    height="52"
+                                    width="52" />
+
+                                <div class="notification-item-details">
+                                    <span class="notification-title">
+                                        {{ plugin.name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </fields-group>
             </template>
 
@@ -299,7 +361,7 @@
             </empty-state>
 
             <empty-state
-                v-if="notificationsStatus === 'accepted' && newsToDisplay.length === 0 && pluginUpdates.length === 0 && themeUpdates.length === 0 && !hasPubliiUpdate"
+                v-if="notificationsStatus === 'accepted' && newsToDisplay.length === 0 && pluginUpdates.length === 0 && themeUpdates.length === 0 && discontinuedThemes.length === 0 && discontinuedPlugins.length === 0 && !hasPubliiUpdate"
                 illustrationName="notifications-center"
                 illustrationWidth="344"
                 illustrationHeight="286"
@@ -445,6 +507,42 @@ export default {
             });
 
             return pluginUpdates;
+        },
+        discontinuedThemes () {
+            let discontinuedThemes = (this.notifications.discontinued && this.notifications.discontinued.themes) || {};
+            let installedThemes = this.$store.state.themes;
+            let results = [];
+
+            for (let theme of installedThemes) {
+                if (discontinuedThemes[theme.directory]) {
+                    results.push({
+                        name: discontinuedThemes[theme.directory].name || theme.name,
+                        directory: theme.directory
+                    });
+                }
+            }
+
+            results.sort((themeA, themeB) => themeA.name.localeCompare(themeB.name));
+
+            return results;
+        },
+        discontinuedPlugins () {
+            let discontinuedPlugins = (this.notifications.discontinued && this.notifications.discontinued.plugins) || {};
+            let installedPlugins = this.$store.state.plugins;
+            let results = [];
+
+            for (let plugin of installedPlugins) {
+                if (discontinuedPlugins[plugin.directory]) {
+                    results.push({
+                        name: discontinuedPlugins[plugin.directory].name || plugin.name,
+                        directory: plugin.directory
+                    });
+                }
+            }
+
+            results.sort((pluginA, pluginB) => pluginA.name.localeCompare(pluginB.name));
+
+            return results;
         },
         unreadPluginUpdates () {
             for (let update of this.pluginUpdates) {
@@ -719,6 +817,19 @@ export default {
                     margin-top: var(--space-3);
                     margin-left: 0;
                 }
+            }
+        }
+
+        &.is-discontinued {
+            background: linear-gradient(oklch(from var(--color-danger) l c h / 6.5%), oklch(from var(--color-danger) l c h / 6.5%)) var(--bg-secondary);
+
+            .notification-discontinued-info {
+                color: var(--text-light-color);
+                margin-bottom: var(--space-6);
+            }
+
+            .notification-item-content {
+                width: 100%;
             }
         }
     }
