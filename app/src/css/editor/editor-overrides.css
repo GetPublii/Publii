@@ -48,8 +48,9 @@
         }
 
         .tinymce-overlay {
-            border: 3px solid var(--color-primary);
-            background: oklch(from var(--color-primary) l c h / 17%);
+            border: 1px dashed var(--input-border-focus);
+            border-radius: var(--radius-base);
+            background: oklch(from var(--color-primary) l c h / 5%);
             display: none;
             height: 100%;
             left: 0;

@@ -367,7 +367,7 @@ export default {
 }
 
 .publii-block-gallery-item {
-  cursor: move;
+  cursor: grab;
   padding: 1rem;
   position: relative;
   width: calc(100% / 3);
@@ -427,7 +427,22 @@ export default {
   width: 100%;
 
   &.is-hovered {
-    border-color: var(--color-primary);
+    border-color: transparent;
+    box-shadow: none;
+
+    &::before {
+      background: oklch(from var(--color-primary) l c h / 5%);
+      border: 1px dashed var(--input-border-focus);
+      border-radius: var(--radius-base);
+      content: '';
+      inset: -2px;
+      pointer-events: none;
+      position: absolute;
+    }
+
+    & > .publii-block-gallery-uploader-inner {
+      position: relative;
+    }
   }
 }
 
@@ -515,8 +530,37 @@ export default {
 
 .publii-block-gallery-list-item {
   align-items: center;
+  cursor: grab;
   display: flex;
   margin: 2rem 0 2.5rem;
+}
+
+.publii-block-gallery-item.sortable-chosen,
+.publii-block-gallery-list-item.sortable-chosen {
+  cursor: grabbing;
+}
+
+.publii-block-gallery-item.sortable-ghost,
+.publii-block-gallery-list-item.sortable-ghost {
+  position: relative;
+
+  &::before {
+    background: oklch(from var(--color-primary) l c h / 5%);
+    border: 1px dashed var(--input-border-focus);
+    border-radius: var(--radius-base);
+    content: '';
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  & > * {
+    opacity: 0;
+  }
+}
+
+.publii-block-gallery-item.sortable-ghost::before {
+  inset: 1rem;
 }
 
 .publii-block-gallery-list-item-image {
@@ -540,6 +584,7 @@ export default {
   width: calc(100% - 140px);
 
   input {
+    cursor: text;
     display: block;
     width: 100%;       
 

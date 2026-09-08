@@ -523,7 +523,7 @@ export default {
 
     &.is-ghost {
         &::before { 
-            background-color: var(--collection-bg-hover);                
+            background-color: oklch(from var(--color-primary) l c h / 5%);
             border: 1px dashed var(--input-border-focus);
             border-radius: var(--radius-base);
             content: "";

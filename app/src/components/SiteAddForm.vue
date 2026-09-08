@@ -915,7 +915,6 @@ export default {
 
         .overlay.has-border {
             pointer-events: none;
-            border-radius: 3px;
         }
         &.restore-in-progress {
             position: relative;

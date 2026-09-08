@@ -55,31 +55,13 @@ export default {
     top: 0;
 
     &.has-border {
-        border: 3px dashed var(--color-border-subtle);
-        border-radius: 10px;
+        border: 1px dashed var(--input-border-focus);
+        border-radius: var(--radius-base);
     }
 
     &.is-blue {
-        border: 3px solid transparent;
-        background: oklch(from var(--color-primary) l c h / 17%);
+        background: oklch(from var(--color-primary) l c h / 5%);
 
-        &::before {
-            --drop-zone-dot: radial-gradient(circle 2px, var(--color-primary) 99%, transparent 100%);
-            background-image:
-                var(--drop-zone-dot),
-                var(--drop-zone-dot),
-                var(--drop-zone-dot),
-                var(--drop-zone-dot);
-            background-position: top, bottom, left, right;
-            background-repeat: round no-repeat, round no-repeat, no-repeat round, no-repeat round;
-            background-size: 10px 3px, 10px 3px, 3px 10px, 3px 10px;
-            border-radius: inherit;
-            content: '';
-            inset: -3px;
-            pointer-events: none;
-            position: absolute;
-        }
-        
         & > div {
             align-items: center;
             display: flex;

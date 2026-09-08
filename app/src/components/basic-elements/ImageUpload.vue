@@ -372,7 +372,22 @@ export default {
     }
 
     &.is-hovered {
-        border-color: var(--color-primary);
+        border-color: transparent;
+        box-shadow: none;
+
+        &::before {
+            background: oklch(from var(--color-primary) l c h / 5%);
+            border: 1px dashed var(--input-border-focus);
+            border-radius: var(--radius-base);
+            content: '';
+            inset: -2px;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        & > .upload-overlay {
+            position: relative;
+        }
     }
 
     &:not(.is-empty):not(.is-hovered) {
