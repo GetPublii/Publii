@@ -1,6 +1,8 @@
 <template>
     <div :class="cssClasses">
-        <div v-if="appearance === 'drop-zone'">
+        <div
+            v-if="appearance === 'drop-zone'"
+            :style="messageStyle">
             <span
                 v-if="loading"
                 class="drop-zone-loader"
@@ -23,6 +25,10 @@
 export default {
     name: 'overlay',
     props: {
+        centerInViewport: {
+            default: false,
+            type: Boolean
+        },
         loading: {
             default: false,
             type: Boolean
@@ -31,6 +37,84 @@ export default {
             default: 'default',
             type: String,
             validator: value => ['default', 'drop-zone'].includes(value)
+        }
+    },
+    data () {
+        return {
+            messageStyle: null
+        };
+    },
+    mounted () {
+        this.startPositionTracking();
+    },
+    beforeDestroy () {
+        this.stopPositionTracking();
+    },
+    watch: {
+        centerInViewport () {
+            this.stopPositionTracking();
+            this.startPositionTracking();
+        }
+    },
+    methods: {
+        startPositionTracking () {
+            if (!this.centerInViewport) {
+                return;
+            }
+
+            this._clippingParents = [];
+            this._positionObserver = new ResizeObserver(this.schedulePositionUpdate);
+            this._positionObserver.observe(this.$el);
+
+            for (let parent = this.$el.parentElement; parent; parent = parent.parentElement) {
+                if (/auto|scroll|hidden|clip/.test(getComputedStyle(parent).overflowY)) {
+                    this._clippingParents.push(parent);
+                }
+
+                this._positionObserver.observe(parent);
+            }
+
+            window.addEventListener('scroll', this.schedulePositionUpdate, true);
+            window.addEventListener('resize', this.schedulePositionUpdate);
+            this.updateMessagePosition();
+        },
+        stopPositionTracking () {
+            window.removeEventListener('scroll', this.schedulePositionUpdate, true);
+            window.removeEventListener('resize', this.schedulePositionUpdate);
+            cancelAnimationFrame(this._positionFrame);
+
+            if (this._positionObserver) {
+                this._positionObserver.disconnect();
+                this._positionObserver = null;
+            }
+
+            this._positionFrame = null;
+            this.messageStyle = null;
+        },
+        schedulePositionUpdate () {
+            if (!this._positionFrame) {
+                this._positionFrame = requestAnimationFrame(() => {
+                    this._positionFrame = null;
+                    this.updateMessagePosition();
+                });
+            }
+        },
+        updateMessagePosition () {
+            const rect = this.$el.getBoundingClientRect();
+            const contentTop = rect.top + this.$el.clientTop;
+            let visibleTop = Math.max(contentTop, 0);
+            let visibleBottom = Math.min(contentTop + this.$el.clientHeight, window.innerHeight);
+
+            for (const parent of this._clippingParents) {
+                const parentTop = parent.getBoundingClientRect().top + parent.clientTop;
+                visibleTop = Math.max(visibleTop, parentTop);
+                visibleBottom = Math.min(visibleBottom, parentTop + parent.clientHeight);
+            }
+
+            // Keep the label inside the visible intersection, while the scrim covers the full list.
+            this.messageStyle = visibleBottom > visibleTop ? {
+                top: ((visibleTop + visibleBottom) / 2 - contentTop) + 'px'
+            } : null;
         }
     },
     computed: {

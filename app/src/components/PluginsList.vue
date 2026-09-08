@@ -30,6 +30,7 @@
         <overlay
             v-if="pluginIsOver || installing"
             appearance="drop-zone"
+            center-in-viewport
             :loading="installationLoading"
             :role="installing ? 'status' : null"
             :aria-live="installing ? 'polite' : null"
