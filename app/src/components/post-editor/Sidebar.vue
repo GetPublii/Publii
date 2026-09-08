@@ -150,10 +150,9 @@
                                     v-model="$parent.postData.isFeatured" />
                                 <icon
                                     :title="$t('post.markAsFeatured')"
-                                    class="switcher-item-icon-helper"
+                                    class="switcher-item-icon-helper content-status-icon is-featured"
                                     name="featured-post"
-                                    size="xs"
-                                    strokeColor="color-helper-6" />
+                                    size="xs" />
                                 <span>
                                     {{ $t('post.markAsFeatured') }}
                                 </span>
@@ -169,10 +168,9 @@
                                 <icon
                                     aria-hidden="true"
                                     non-interactive
-                                    class="switcher-item-icon-helper"
+                                    class="switcher-item-icon-helper content-status-icon"
                                     name="hidden-post"
-                                    size="xs"
-                                    strokeColor="color-6" />
+                                    size="xs" />
                                 <span>
                                     {{ $t('post.hidePost') }}
                                 </span>
@@ -188,10 +186,9 @@
                                 <icon
                                     aria-hidden="true"
                                     non-interactive
-                                    class="switcher-item-icon-helper"
+                                    class="switcher-item-icon-helper content-status-icon is-excluded"
                                     name="excluded-post"
-                                    size="xs"
-                                    strokeColor="color-3"/>
+                                    size="xs" />
                                 <span>
                                     {{ $t('post.excludeFromHomepage') }}
                                 </span>
@@ -1000,6 +997,7 @@ export default {
 </script>
 
 <style>
+@import '../../css/content-status-icon.css';
 @import '../../css/options-sidebar.css';
 
 .post-editor {

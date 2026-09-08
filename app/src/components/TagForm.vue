@@ -74,12 +74,11 @@
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
                             <icon
-                                class="switcher-item-icon-helper"
+                                class="switcher-item-icon-helper content-status-icon"
                                 name="hidden-post"
                                 size="xs"
                                 aria-hidden="true"
-                                non-interactive
-                                strokeColor="color-6" />
+                                non-interactive />
                             <span>
                                 {{ $t('tag.hideTag') }}
                             </span>
@@ -699,6 +698,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../css/content-status-icon.css';
 @import '../css/options-sidebar.css';
 @import '../css/notifications.css';
 

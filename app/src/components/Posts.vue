@@ -229,7 +229,7 @@
                                 <icon
                                     size="xs"
                                     name="featured-post"
-                                    strokeColor="color-helper-6" />
+                                    class="content-status-icon is-featured" />
                                 {{ $t('post.markAsFeatured') }}
                             </li>
                             <li
@@ -238,7 +238,7 @@
                                 <icon
                                     size="xs"
                                     name="unfeatured-post" 
-                                    strokeColor="color-helper-6" />
+                                    class="content-status-icon is-featured" />
                                 {{ $t('post.markAsUnfeatured') }}
                             </li>
                             <li
@@ -247,7 +247,7 @@
                                 <icon
                                     size="xs"
                                     name="excluded-post"
-                                    strokeColor="color-3" />
+                                    class="content-status-icon is-excluded" />
                                 {{ $t('post.excludeFromHomepage') }}
                             </li>
                             <li
@@ -256,7 +256,7 @@
                                 <icon
                                     size="xs"
                                     name="included-post" 
-                                    strokeColor="color-3" />
+                                    class="content-status-icon is-excluded" />
                                 {{ $t('post.includeInHomepage') }}
                             </li>
                             <li
@@ -314,8 +314,7 @@
                                 v-if="item.isFeatured"
                                 size="xs"
                                 name="featured-post"
-                                strokeColor="color-helper-6"
-                                class="post-status-icon"
+                                class="post-status-icon content-status-icon is-featured"
                                 v-tooltip.hover="$t('post.thisPostIsFeatured')"
                                 aria-hidden="true"
                                 focusable="false" />
@@ -323,8 +322,7 @@
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
-                                strokeColor="color-7"
-                                class="post-status-icon"
+                                class="post-status-icon content-status-icon"
                                 v-tooltip.hover="$t('post.thisPostIsHidden')"
                                 aria-hidden="true"
                                 focusable="false" />
@@ -332,8 +330,7 @@
                                 v-if="item.isExcludedOnHomepage"
                                 name="excluded-post"
                                 size="xs"
-                                strokeColor="color-3"
-                                class="post-status-icon"
+                                class="post-status-icon content-status-icon is-excluded"
                                 v-tooltip.hover="$t('post.thisPostIsExcludedFromHomepage')"
                                 aria-hidden="true"
                                 focusable="false" />
@@ -341,8 +338,7 @@
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
-                                strokeColor="color-7"
-                                class="post-status-icon"
+                                class="post-status-icon content-status-icon"
                                 v-tooltip.hover="$t('post.thisPostIsADraft')"
                                 aria-hidden="true"
                                 focusable="false" />
@@ -977,6 +973,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
 @import '../css/empty-states.css';
 

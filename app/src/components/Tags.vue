@@ -130,8 +130,7 @@
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
-                                strokeColor="color-7"
-                                class="tag-status-icon"
+                                class="tag-status-icon content-status-icon"
                                 v-tooltip.hover="$t('tag.thisTagIsHidden')"
                                 aria-hidden="true"
                                 focusable="false" />
@@ -506,6 +505,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
 
 .load-more-sentinel {

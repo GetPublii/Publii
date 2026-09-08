@@ -274,8 +274,7 @@
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
-                                primaryColor="color-7"
-                                class="page-status-icon"
+                                class="page-status-icon content-status-icon"
                                 v-tooltip.hover="$t('page.thisPageIsADraft')"
                                 aria-hidden="true"
                                 focusable="false" />
@@ -1256,6 +1255,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
 @import '../css/empty-states.css';
 
