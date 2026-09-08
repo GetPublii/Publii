@@ -337,6 +337,14 @@
     },
     "file": {
         "manager": {
+            "copyURLsUnavailable": "Set a valid website address in Server settings to copy file URLs.",
+            "duplicatingProgress": "Duplicating file {current} of {total}…",
+            "duplicatedCount": "Copies created: {count}.",
+            "copyURLs": "Copy URLs",
+            "copyLocalPaths": "Copy local paths",
+            "urlsCopied": "File URLs copied: {count}. Newly added files become available after your next sync.",
+            "localPathsCopied": "Local paths copied: {count}.",
+            "bulkCopyError": "Could not copy the selected items to the clipboard. Please try again.",
             "chooseFile": "Choose file…",
             "replaceFormat": "To replace {filename}, choose a file with the {extension} extension. The original file has not been changed.",
             "replaceNoExtension": "To replace {filename}, choose a file without a filename extension. The original file has not been changed.",

@@ -337,6 +337,14 @@
     },
     "file": {
         "manager": {
+            "copyURLsUnavailable": "Ustaw poprawny adres witryny w ustawieniach serwera, aby kopiować adresy plików.",
+            "duplicatingProgress": "Duplikowanie pliku {current} z {total}…",
+            "duplicatedCount": "Utworzone kopie: {count}.",
+            "copyURLs": "Kopiuj adresy URL",
+            "copyLocalPaths": "Kopiuj lokalne ścieżki",
+            "urlsCopied": "Skopiowane adresy plików: {count}. Nowe pliki będą dostępne po następnej synchronizacji.",
+            "localPathsCopied": "Skopiowane lokalne ścieżki: {count}.",
+            "bulkCopyError": "Nie udało się skopiować zaznaczonych elementów do schowka. Spróbuj ponownie.",
             "chooseFile": "Wybierz plik…",
             "replaceFormat": "Aby zastąpić {filename}, wybierz plik z rozszerzeniem {extension}. Oryginalny plik nie został zmieniony.",
             "replaceNoExtension": "Aby zastąpić {filename}, wybierz plik bez rozszerzenia w nazwie. Oryginalny plik nie został zmieniony.",

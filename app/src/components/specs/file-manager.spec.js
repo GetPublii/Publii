@@ -32,7 +32,7 @@ function setup(locale='en-gb', platform='darwin') {
         invoke:async (channel, data, ...rest)=>{ calls.requests.push([channel, data, ...rest]); return channel === 'app-file-manager:list' ? {status:true,files:rows.slice()} : {status:true}; },
         getPathForFile:file=>file.path, shellOpenPath:async()=>'', shellShowItemInFolder:async name=>calls.folders.push(name)};
     const document = {body:{classList:{contains:()=>false}},createElement:()=>({style:{},textContent:'',get outerHTML(){return '<strong>'+this.textContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</strong>';}})};
-    const globals = {module:{exports:{}},...helpers,CollectionSortButton:{},mainProcessAPI:api,BackToTools:mixin('BackToTools'),CollectionCheckboxes:mixin('CollectionCheckboxes'),CollectionOrdering:mixin('CollectionOrdering'),
+    const globals = {module:{exports:{}},...helpers,CollectionSortButton:{},Tooltip:{},mainProcessAPI:api,BackToTools:mixin('BackToTools'),CollectionCheckboxes:mixin('CollectionCheckboxes'),CollectionOrdering:mixin('CollectionOrdering'),
         navigator:{clipboard:{writeText:async text=>calls.copies.push(text)}},document,
         window:{addEventListener:(...a)=>calls.listeners.push(a),removeEventListener:(...a)=>calls.unlisteners.push(a)}};
     vm.runInNewContext(source.script.content.replace(/^import .*;\s*$/gm,'').replace('export default','module.exports ='),globals);
@@ -177,7 +177,30 @@ describe('File Manager UI and IPC', () => {
         options.mounted.call(f); options.beforeDestroy.call(f); resolve({status:true,files:[file('late.pdf')]}); await tick();
         assert.equal(f.items[0].name,'a.pdf');
         assert.equal(calls.unlisteners[0][0],f.searchEvent); assert.equal(calls.unlisteners[0][1],f.filterFiles);
-        assert.equal(calls.unlisteners[1][0],'focus');
+        assert.equal(calls.unlisteners[1][0], 'document-body-clicked');
+        assert.equal(calls.unlisteners[1][1], f.closeBulkDropdown);
+        assert.equal(calls.unlisteners[2][0], 'focus');
+    });
+    it('opens the bulk menu from the keyboard and restores focus with Escape', async () => {
+        const { instance: f } = setup();
+        const focused = [];
+        const first = { focus: () => focused.push('first') };
+        const last = { focus: () => focused.push('last') };
+        f.$refs.bulkDropdown = {
+            querySelector: () => first,
+            querySelectorAll: () => [first, last]
+        };
+        f.$refs.bulkDropdownTrigger = { $el: { focus: () => focused.push('trigger') } };
+        f.openBulkDropdown({ type: 'keydown' });
+        await tick();
+        assert.equal(f.bulkDropdownVisible, true);
+        assert.deepEqual(focused, ['first']);
+
+        const event = { preventDefault () {}, stopPropagation () {} };
+        f.handleBulkDropdownKeydown({ ...event, key: 'End' });
+        f.handleBulkDropdownKeydown({ ...event, key: 'Escape' });
+        assert.equal(f.bulkDropdownVisible, false);
+        assert.deepEqual(focused, ['first', 'last', 'trigger']);
     });
     it('copies an encoded public URL with the site subdirectory intact',async()=>{
         const {instance:f,calls}=setup(); f.dirPath='media/files'; await f.copyURL(file('Zażółć #1%.pdf'));
@@ -245,6 +268,114 @@ describe('File Manager UI and IPC', () => {
         await f.duplicateFile(f.items[0]);
         assert.equal(f.busy,false); assert.equal(calls.emits.at(-1)[1].type,'warning'); assert.equal(calls.emits.at(-1)[1].message,f.errorMessage('space'));
     });
+    for (const locale of ['en-gb', 'pl']) {
+        it(`${locale}: copies selected URLs and paths in visible order, excluding folders`, async () => {
+            const { instance: f, calls } = setup(locale);
+            f.items = [file('space #.pdf'), file('a.pdf'), { ...file('folder'), isFile: false }];
+            f.selectedItems = ['space #.pdf', 'folder', 'a.pdf'];
+            f.dirPath = 'media/files';
+            await f.bulkCopyURLs();
+            await f.bulkCopyLocalPaths();
+
+            assert.equal(calls.copies[0], 'https://example.com/blog/media/files/a.pdf\nhttps://example.com/blog/media/files/space%20%23.pdf');
+            assert.equal(calls.copies[1], '/fixture/a.pdf\n/fixture/space #.pdf');
+            assert.equal(calls.emits.length, 2);
+            assert.equal(f.busy, false);
+            assert.equal(f.selectedItems.length, 3);
+        });
+    }
+    it('does not copy an empty or incomplete selection or copy while busy', async () => {
+        const { instance: f, calls } = setup();
+        await f.bulkCopyURLs();
+        await f.bulkCopyLocalPaths();
+        f.selectedItems = ['a.pdf', 'b.pdf'];
+        f.$store.state.currentSite.config.domain = '';
+        assert.equal(f.canCopySelectedURLs, false);
+        await f.bulkCopyURLs();
+        f.items[1].fullPath = '';
+        assert.equal(f.canCopySelectedPaths, false);
+        await f.bulkCopyLocalPaths();
+        f.items[1].fullPath = '/fixture/b.pdf';
+        f.operation = 'upload';
+        await f.bulkCopyLocalPaths();
+        assert.equal(calls.copies.length, 0);
+    });
+    it('unlocks after a rejected bulk clipboard write and reports one error', async () => {
+        const { instance: f, calls, clipboard } = setup();
+        f.selectedItems = ['a.pdf', 'b.pdf'];
+        clipboard.writeText = async () => {
+            throw new Error('Clipboard unavailable');
+        };
+        await f.bulkCopyURLs();
+        assert.equal(f.busy, false);
+        assert.equal(calls.emits.length, 1);
+        assert.equal(calls.emits[0][1].type, 'warning');
+    });
+    it('duplicates a fixed batch and selects only failed files for retry', async () => {
+        const { instance: f, calls, api } = setup();
+        f.selectedItems = ['b.pdf', 'a.pdf'];
+        api.invoke = async (channel, data) => {
+            calls.requests.push([channel, data]);
+            if (channel.endsWith(':list')) {
+                return { status: true, files: [file('a.pdf'), file('b.pdf'), file('a (2).pdf')] };
+            }
+            f.changeDirectory('media/files');
+            await f.bulkDuplicate();
+            return data.name === 'a.pdf'
+                ? { status: true, name: 'a (2).pdf' }
+                : { status: false, code: 'space' };
+        };
+        await f.bulkDuplicate();
+
+        const uploads = calls.requests.filter(([channel]) => channel.endsWith(':upload'));
+        assert.equal(uploads.length, 2);
+        assert.equal(uploads[0][1].name, 'a.pdf');
+        assert.ok(uploads.every(([, data]) => data.dirPath === 'root-files' && data.policy === 'keep-both'));
+        assert.equal(uploads[1][1].sourceRevision, 'revision-b.pdf');
+        assert.equal(f.completed, 2);
+        assert.equal(f.busy, false);
+        assert.deepEqual(Array.from(f.selectedItems), ['b.pdf']);
+        assert.equal(calls.emits.length, 1);
+        assert.equal(calls.emits[0][0], 'alert-display');
+        assert.ok(calls.emits[0][1].message.includes('Copies created: 1.'));
+    });
+    it('stops bulk duplication after the active file and preserves pending selection', async () => {
+        const { instance: f, calls, api, rows } = setup();
+        let finish;
+        f.selectedItems = ['a.pdf', 'b.pdf'];
+        api.invoke = (channel, data) => {
+            calls.requests.push([channel, data]);
+            if (channel.endsWith(':list')) {
+                return Promise.resolve({ status: true, files: rows });
+            }
+            return new Promise(resolve => {
+                finish = resolve;
+            });
+        };
+        const task = f.bulkDuplicate();
+        f.stopUpload();
+        finish({ status: true, name: 'a (2).pdf' });
+        await task;
+
+        assert.equal(calls.requests.filter(([channel]) => channel.endsWith(':upload')).length, 1);
+        assert.equal(f.completed, 1);
+        assert.equal(f.busy, false);
+        assert.deepEqual(Array.from(f.selectedItems), ['b.pdf']);
+    });
+    it('stops a bulk duplicate queue without stale feedback when the site changes', async () => {
+        const { instance: f, calls, api } = setup();
+        f.selectedItems = ['a.pdf', 'b.pdf'];
+        api.invoke = async (channel, data) => {
+            calls.requests.push([channel, data]);
+            f.$store.state.currentSite.config.name = 'other-site';
+            return { status: true, name: 'a (2).pdf' };
+        };
+        await f.bulkDuplicate();
+        assert.equal(calls.requests.length, 1);
+        assert.equal(calls.emits.length, 0);
+        assert.equal(f.busy, false);
+    });
+
     it('uses available SVG icons for every action, with Duplicate instead of Rename', () => {
         const {instance:f}=setup(); const actions=f.fileActions(f.items[0]).filter(item=>!item.separator);
         const map=read('app/src/assets/svg/svg-map.svg');

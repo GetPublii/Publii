@@ -82,7 +82,9 @@
                 role="status"
                 aria-live="polite">{{
                     operation === 'duplicate'
-                        ? $t('file.manager.duplicating')
+                        ? (total > 1
+                            ? $t('file.manager.duplicatingProgress', { current: Math.min(completed + 1, total), total: total })
+                            : $t('file.manager.duplicating'))
                         : $t('file.manager.progress', { done: completed, total: total })
                 }}</div>
             <progress-bar
@@ -93,7 +95,7 @@
                 :aria-valuemax="total"
                 aria-valuemin="0" />
             <p-button
-                v-if="operation === 'upload'"
+                v-if="operation === 'upload' || total > 1"
                 appearance="clean"
                 size="small"
                 :disabled="stopRequested"
@@ -143,7 +145,9 @@
                     </collection-cell>
                     <div
                         v-if="anyCheckboxIsSelected"
-                        class="tools">
+                        class="tools"
+                        role="group"
+                        :aria-label="$t('file.operations')">
                         <p-button
                             icon="trash"
                             appearance="light"
@@ -152,6 +156,66 @@
                             :onClick="bulkDelete">
                             {{ $t('ui.delete') }}
                         </p-button>
+                        <p-button
+                            icon="duplicate"
+                            appearance="light"
+                            size="small"
+                            :disabled="busy || isLoading"
+                            :onClick="bulkDuplicate">
+                            {{ $t('file.manager.duplicateFile') }}
+                        </p-button>
+                        <div
+                            class="dropdown-wrapper"
+                            @focusout="handleBulkDropdownFocusOut">
+                            <p-button
+                                ref="bulkDropdownTrigger"
+                                icon="more"
+                                appearance="light"
+                                size="small"
+                                :active="bulkDropdownVisible"
+                                :disabled="busy || isLoading"
+                                aria-haspopup="menu"
+                                :aria-expanded="bulkDropdownVisible ? 'true' : 'false'"
+                                :aria-controls="bulkDropdownVisible ? 'file-bulk-menu-' + _uid : null"
+                                @click.native.stop="toggleBulkDropdown"
+                                @keydown.native.down.prevent="openBulkDropdown"
+                                @keydown.native.esc.stop.prevent="closeBulkDropdown(true)">
+                                {{ $t('ui.more') }}
+                            </p-button>
+                            <div
+                                v-if="bulkDropdownVisible"
+                                :id="'file-bulk-menu-' + _uid"
+                                ref="bulkDropdown"
+                                class="dropdown"
+                                role="menu"
+                                @keydown="handleBulkDropdownKeydown">
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    tabindex="-1"
+                                    :aria-disabled="!canCopySelectedURLs ? 'true' : null"
+                                    v-tooltip="canCopySelectedURLs ? '' : $t('file.manager.copyURLsUnavailable')"
+                                    @click.stop="bulkCopyURLs">
+                                    <icon
+                                        size="xs"
+                                        name="link-2"
+                                        non-interactive />
+                                    {{ $t('file.manager.copyURLs') }}
+                                </button>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    tabindex="-1"
+                                    :disabled="!canCopySelectedPaths"
+                                    @click.stop="bulkCopyLocalPaths">
+                                    <icon
+                                        size="xs"
+                                        name="clipboard-copy"
+                                        non-interactive />
+                                    {{ $t('file.manager.copyLocalPaths') }}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </collection-header>
                 <collection-row
@@ -238,6 +302,7 @@
 
 <script>
 import BackToTools from './mixins/BackToTools.js';
+import Tooltip from '../helpers/tooltip.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
@@ -245,6 +310,9 @@ import { fileWebsiteURL, sortFiles } from '../helpers/file-manager.js';
 
 export default {
     name: 'file-manager',
+    directives: {
+        tooltip: Tooltip
+    },
     mixins: [BackToTools, CollectionCheckboxes],
     components: { CollectionSortButton },
     data () {
@@ -259,6 +327,7 @@ export default {
             isRefreshing: false,
             loadError: false,
             operation: '',
+            bulkDropdownVisible: false,
             fileIsOver: false,
             failures: [],
             total: 0,
@@ -307,11 +376,30 @@ export default {
         selectableFiles () {
             return this.filteredFiles.filter(item => item.isFile);
         },
+        selectedFiles () {
+            return this.selectableFiles.filter(file => this.selectedItems.includes(file.name));
+        },
+        canCopySelectedURLs () {
+            return this.selectedFiles.length > 0 && this.selectedFiles.every(file => this.websiteURL(file));
+        },
+        canCopySelectedPaths () {
+            return this.selectedFiles.length > 0 && this.selectedFiles.every(file => file.fullPath);
+        },
         allVisibleSelected () {
             return (
                 this.selectableFiles.length > 0 &&
                 this.selectableFiles.every(file => this.selectedItems.includes(file.name))
             );
+        }
+    },
+    watch: {
+        busy (value) {
+            if (value) {
+                this.closeBulkDropdown();
+            }
+        },
+        selectedItems () {
+            this.closeBulkDropdown();
         }
     },
     created () {
@@ -320,6 +408,7 @@ export default {
     },
     mounted () {
         this.$bus.$on(this.searchEvent, this.filterFiles);
+        this.$bus.$on('document-body-clicked', this.closeBulkDropdown);
         window.addEventListener('focus', this.refreshOnFocus);
         this.loadFiles();
     },
@@ -329,6 +418,7 @@ export default {
         this.stopRequested = true;
         this.resolveConflict('stop');
         this.$bus.$off(this.searchEvent, this.filterFiles);
+        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
         window.removeEventListener('focus', this.refreshOnFocus);
     },
     beforeRouteLeave (to, from, next) {
@@ -534,6 +624,169 @@ export default {
                 if (restoreFocus && !this._disposed && menu.$el.isConnected && document.activeElement === document.body)
                     menu.focusTrigger();
             });
+        },
+        async bulkDuplicate () {
+            if (this.busy || this.isLoading || !this.selectedFiles.length) {
+                return;
+            }
+
+            const context = this.context();
+            const files = this.selectedFiles.map(file => ({ ...file }));
+            const copiedNames = new Set();
+            this.operation = 'duplicate';
+            this.fileIsOver = false;
+            this.failures = [];
+            this.completed = 0;
+            this.total = files.length;
+            this.stopRequested = false;
+
+            try {
+                for (const file of files) {
+                    if (this.stopRequested || !this.currentContext(context)) {
+                        break;
+                    }
+
+                    const result = await this.request('upload', {
+                        ...context,
+                        source: file.fullPath,
+                        name: file.name,
+                        policy: 'keep-both',
+                        sourceRevision: file.revision
+                    });
+
+                    if (!this.currentContext(context)) {
+                        return;
+                    }
+
+                    if (result.status) {
+                        copiedNames.add(file.name);
+                    } else {
+                        this.failures.push({ name: file.name, code: result.code });
+                    }
+
+                    this.completed++;
+                }
+
+                if (!this.currentContext(context)) {
+                    return;
+                }
+
+                const remaining = this.total - this.completed;
+                const summary = [
+                    this.$t('file.manager.duplicatedCount', { count: copiedNames.size }),
+                    this.failures.length ? this.$t('file.manager.failedCount', { count: this.failures.length }) : '',
+                    remaining ? this.$t('file.manager.remainingCount', { count: remaining }) : ''
+                ].filter(Boolean).join(' ');
+
+                if (this.failures.length || remaining) {
+                    this.selectedItems = files.filter(file => !copiedNames.has(file.name)).map(file => file.name);
+                }
+
+                this.notify(summary, this.failures.length > 0, this.failures);
+                await this.loadFiles();
+            } finally {
+                this.operation = '';
+            }
+        },
+        toggleBulkDropdown (event) {
+            if (this.bulkDropdownVisible) {
+                this.closeBulkDropdown();
+            } else {
+                this.openBulkDropdown(event);
+            }
+        },
+        openBulkDropdown (event) {
+            if (this.busy || this.isLoading) {
+                return;
+            }
+
+            this.$bus.$emit('document-body-clicked');
+            this.bulkDropdownVisible = true;
+            if (event && (event.type === 'keydown' || event.detail === 0)) {
+                this.$nextTick(() => {
+                    const menu = this.$refs.bulkDropdown;
+                    const firstItem = menu && menu.querySelector('button:not(:disabled)');
+                    if (firstItem) {
+                        firstItem.focus();
+                    }
+                });
+            }
+        },
+        closeBulkDropdown (restoreFocus = false) {
+            this.bulkDropdownVisible = false;
+            if (restoreFocus === true && this.$refs.bulkDropdownTrigger) {
+                this.$refs.bulkDropdownTrigger.$el.focus();
+            }
+        },
+        handleBulkDropdownFocusOut (event) {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+                this.closeBulkDropdown();
+            }
+        },
+        handleBulkDropdownKeydown (event) {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                event.stopPropagation();
+                this.closeBulkDropdown(true);
+                return;
+            }
+
+            if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+                return;
+            }
+
+            event.preventDefault();
+            const items = Array.from(this.$refs.bulkDropdown.querySelectorAll('button:not(:disabled)'));
+            if (!items.length) {
+                return;
+            }
+
+            const current = items.indexOf(document.activeElement);
+            let next = event.key === 'ArrowUp' ? current - 1 : current + 1;
+            if (event.key === 'Home') {
+                next = 0;
+            } else if (event.key === 'End') {
+                next = items.length - 1;
+            }
+            items[(next + items.length) % items.length].focus();
+        },
+        bulkCopyURLs () {
+            if (this.busy || this.isLoading || !this.canCopySelectedURLs) {
+                return;
+            }
+
+            this.closeBulkDropdown(true);
+            return this.copySelectedFiles('url');
+        },
+        bulkCopyLocalPaths () {
+            this.closeBulkDropdown(true);
+            return this.copySelectedFiles('path');
+        },
+        async copySelectedFiles (kind) {
+            const canCopy = kind === 'url' ? this.canCopySelectedURLs : this.canCopySelectedPaths;
+            if (this.busy || this.isLoading || !canCopy) {
+                return;
+            }
+
+            const context = this.context();
+            const values = this.selectedFiles.map(file => kind === 'url' ? this.websiteURL(file) : file.fullPath);
+            this.operation = 'copy';
+
+            try {
+                await navigator.clipboard.writeText(values.join('\n'));
+                if (this.currentContext(context)) {
+                    this.notify(this.$t(
+                        kind === 'url' ? 'file.manager.urlsCopied' : 'file.manager.localPathsCopied',
+                        { count: values.length }
+                    ));
+                }
+            } catch (_) {
+                if (this.currentContext(context)) {
+                    this.notify(this.$t('file.manager.bulkCopyError'), true);
+                }
+            } finally {
+                this.operation = '';
+            }
         },
         websiteURL (file) {
             return fileWebsiteURL(this.$store.state.currentSite.config.domain, this.dirPath, file.name);
@@ -951,6 +1204,65 @@ export default {
         position: relative;
         display: flex;
         flex-direction: column;
+    }
+
+    .tools .dropdown-wrapper {
+        position: relative;
+
+        .dropdown {
+            background: var(--popup-bg);
+            border-radius: var(--radius-base);
+            box-shadow: var(--shadow-md);
+            left: 0;
+            padding: var(--space-4) 0;
+            position: absolute;
+            top: 4rem;
+            width: auto;
+            z-index: 1;
+
+            button {
+                background: none;
+                border: 0;
+                color: var(--text-light-color);
+                cursor: pointer;
+                display: block;
+                font-family: inherit;
+                font-size: var(--font-size-ui-md);
+                font-weight: var(--font-weight-medium);
+                padding: .8rem 2.4rem;
+                text-align: left;
+                white-space: nowrap;
+                width: 100%;
+
+                &:hover,
+                &:focus-visible {
+                    background: var(--color-surface-subtle);
+                    color: var(--text-primary-color);
+                }
+
+                &:focus-visible {
+                    outline: 2px solid var(--input-border-focus);
+                    outline-offset: -2px;
+                }
+
+                &:disabled,
+                &[aria-disabled="true"] {
+                    background: none;
+                    color: var(--text-light-color);
+                    cursor: not-allowed;
+                    opacity: .5;
+
+                    & > svg {
+                        fill: currentColor;
+                    }
+                }
+
+                & > svg {
+                    margin-right: 4px;
+                    vertical-align: text-bottom;
+                }
+            }
+        }
     }
 
     .file-list ::v-deep .collection-wrapper {
