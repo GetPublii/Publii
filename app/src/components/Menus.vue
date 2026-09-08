@@ -102,7 +102,8 @@
                             'menu-position': true,
                             'is-unassigned': !item.position
                         }"
-                        :title="item.position ? $t('menu.changePosition') : $t('menu.assignPosition')"
+                        v-tooltip="item.position ? $t('menu.changeAssignment') : ''"
+                        :aria-label="item.position ? null : $t('menu.assignPosition')"
                         @click="openMenuPositionPopup(item, index)">
                         <icon
                             v-if="!item.position"
@@ -125,6 +126,8 @@
                     <button
                         type="button"
                         class="menu-count"
+                        v-tooltip="menuIsOpened(index) ? $t('menu.collapseItems') : $t('menu.expandItems')"
+                        :aria-label="$t('menu.itemCount', { count: countMenuItems(item.items) })"
                         :aria-expanded="menuIsOpened(index) ? 'true' : 'false'"
                         :aria-controls="menuIsOpened(index) ? menuContentID(index) : null"
                         @click="toggleMenu(index)">
@@ -248,6 +251,7 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Draggable from 'vuedraggable';
 import Sortable from 'sortablejs';
 import MenuItem from './MenuItem.vue';
@@ -266,6 +270,9 @@ const NEST_THRESHOLD = 48;
 const UNNEST_THRESHOLD = 24;
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'menus',
     mixins: [
         CollectionCheckboxes

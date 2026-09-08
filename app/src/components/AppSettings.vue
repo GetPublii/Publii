@@ -156,6 +156,17 @@
                         id="wide-scrollbars"
                         v-model="wideScrollbars" />
                 </field>
+
+                <field
+                    id="show-tooltips"
+                    :label="$t('settings.showTooltips')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-tooltips"
+                        v-model="showTooltips"
+                        :accessibleLabel="$t('settings.showTooltips')" />
+                </field>
             </fields-group>
 
             <fields-group :title="$t('settings.filesLocation')">
@@ -439,6 +450,7 @@ export default {
             openDevToolsInMainWindow: false,
             devToolsMode: 'detach',
             wideScrollbars: false,
+            showTooltips: true,
             notificationsStatus: false,
             closeEditorOnSave: true,
             showModificationDate: true,
@@ -596,6 +608,7 @@ export default {
         this.locations.preview = this.$store.state.app.config.previewLocation;
         this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
+        this.showTooltips = this.$store.state.app.config.showTooltips !== false;
         this.notificationsStatus = this.$store.state.app.config.notificationsStatus === 'accepted';
         this.openDevToolsInMainWindow = this.$store.state.app.config.openDevToolsInMain;
         this.devToolsMode = this.$store.state.app.config.devToolsMode || 'detach';
@@ -672,6 +685,7 @@ export default {
                 backupsLocation: this.locations.backups.trim(),
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
+                showTooltips: this.showTooltips,
                 notificationsStatus: this.notificationsStatus ? 'accepted' : 'rejected',
                 closeEditorOnSave: this.closeEditorOnSave,
                 showModificationDate: this.showModificationDate,

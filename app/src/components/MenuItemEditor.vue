@@ -17,21 +17,27 @@
 
             <label
                 :class="{ 'is-invalid': errors.indexOf('label') > -1 }"
+                :for="'menu-item-label-' + _uid"
                 key="menu-item-editor-field-label">
                 <span>{{ $t('menu.label') }}</span>
 
-                 <span
-                    v-if="(type === 'tag' && tagPage) || (type === 'author' && authorPage) || (type === 'post' && postPage) || (type === 'page' && pagePage)" 
-                    @click.prevent.stop="setLabel(type)" 
+                <button
+                    v-if="(type === 'tag' && tagPage) || (type === 'author' && authorPage) || (type === 'post' && postPage) || (type === 'page' && pagePage)"
+                    v-tooltip="{ text: $t('menu.updateLabel.' + type), describe: false }"
+                    type="button"
                     class="options-sidebar-icon-button-suggestion"
-                    :title="$t('menu.updateLabel.' + type)">
+                    :aria-label="$t('menu.updateLabel.' + type)"
+                    @click.prevent.stop="setLabel(type)">
                     <icon
                         class="options-sidebar-icon"
                         size="s"
-                        name="pen-ai-suggestion"/>
-                </span>
+                        name="pen-ai-suggestion"
+                        aria-hidden="true"
+                        non-interactive />
+                </button>
 
                 <input
+                    :id="'menu-item-label-' + _uid"
                     v-model="label"
                     :spellcheck="$store.state.currentSite.config.spellchecking"
                     key="menu-item-editor-field-label-value"
@@ -222,9 +228,13 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'menu-item-editor',
     data () {
         return {
@@ -576,5 +586,19 @@ export default {
 .options-sidebar-buttons {
     border: none;
     padding-top: 1.8rem;
+}
+
+.options-sidebar-icon-button-suggestion {
+    appearance: none;
+    background: transparent;
+    border: none;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
 }
 </style>

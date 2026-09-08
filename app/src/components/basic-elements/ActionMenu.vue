@@ -14,7 +14,7 @@
             :aria-expanded="isOpen ? 'true' : 'false'"
             :aria-controls="isOpen ? menuID : null"
             :aria-label="triggerLabel"
-            :title="triggerLabel"
+            v-tooltip="{ text: tooltipLabel, disabled: disabled || isOpen, describe: false }"
             :disabled="disabled"
             @click.stop="toggle($event)"
             @keydown="handleTriggerKeydown">
@@ -71,7 +71,12 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
+
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'action-menu',
     props: {
         items: {
@@ -79,6 +84,10 @@ export default {
             type: Array
         },
         label: {
+            default: '',
+            type: String
+        },
+        tooltip: {
             default: '',
             type: String
         },
@@ -113,7 +122,10 @@ export default {
             return 'action-menu-' + this._uid;
         },
         triggerLabel () {
-            return this.label || this.$t('ui.otherOptions');
+            return this.label || this.tooltipLabel;
+        },
+        tooltipLabel () {
+            return this.tooltip || this.$t('ui.moreOptions');
         },
         visibleItems () {
             return this.items.filter(item => {

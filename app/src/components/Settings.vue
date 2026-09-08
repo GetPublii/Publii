@@ -130,6 +130,7 @@
 
                         <action-menu
                             :label="$t('theme.themeOptions')"
+                            :tooltip="$t('theme.themeOptions')"
                             :items="themeMenuItems"
                             :disabled="buttonsLocked" />
                     </div>

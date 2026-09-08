@@ -22,8 +22,8 @@
             v-if="!sourceCodeEditorVisible"
             id="post-preview-button"
             appearance="clean-inverse"
-            :disabled="!themeConfigured"
-            :title="themeConfigured ? $t('post.configureThemeBeforeGeneratingPreview') : ''"
+            :disabled-with-events="!themeConfigured"
+            v-tooltip="previewTooltip"
             @click.native="generatePostPreview">
             {{ $t('ui.preview') }}
         </p-button>
@@ -39,6 +39,9 @@
 
             <p-button
                 icon="settings"
+                v-tooltip="{ text: settingsToggleLabel, describe: false }"
+                :aria-label="settingsToggleLabel"
+                :aria-expanded="$parent.sidebarVisible ? 'true' : 'false'"
                 appearance="clean-inverse"
                 icon-only
                 :icon-tone="$parent.sidebarVisible ? 'primary' : 'default'"
@@ -73,14 +76,33 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 import ItemHelper from './ItemHelper';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'post-editor-top-bar',
     props: [
         'itemType'
     ],
     computed: {
+        settingsToggleLabel () {
+            const section = this.itemType === 'page' ? 'page' : 'post';
+            const action = this.$parent.sidebarVisible ? 'hideSettings' : 'showSettings';
+
+            return this.$t(`${section}.${action}`);
+        },
+        previewTooltip () {
+            if (!this.themeConfigured) {
+                const section = this.itemType === 'page' ? 'page' : 'post';
+
+                return this.$t(`${section}.configureThemeBeforeGeneratingPreview`);
+            }
+
+            return this.$t(this.itemType === 'page' ? 'page.previewThisPage' : 'post.previewThisPost');
+        },
         dropdownItems () {
             return [
                 {
@@ -222,6 +244,10 @@ export default {
             this.$parent.$refs['source-code-editor'].cancelChanges();
         },
         generatePostPreview () {
+            if (!this.themeConfigured) {
+                return;
+            }
+
             this.$parent.savePost('published', true);
         }
     },

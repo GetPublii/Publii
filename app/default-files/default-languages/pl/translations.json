@@ -93,7 +93,7 @@
         "filterOrSearchAuthors": "Filtruj lub wyszukaj autorów...",
         "gravatarEmailWarningMessage": "Podaj adres e-mail którego użyłeś/aś do zarejestrowania konta Gravatar.",
         "mainAuthor": "Główny autor",
-        "mainAuthorCannotBeRemoved": "To jest główny autor na tej stronie. Nie można go usnąć.",
+        "mainAuthorCannotBeRemoved": "Głównego autora nie można usunąć.",
         "newAuthorHasBeenCreated": "Nowy autor został utworzony",
         "noAuthorsMatchingYourCriteria": "Brak autorów spełniających Twoje kryteria.",
         "removeAuthorsMessage": "Na pewno chcesz usunąć wybranych autorów?",
@@ -461,8 +461,10 @@
         "uploadFiles": "Prześlij pliki"
     },
     "gdpr": {
+        "removeGroup": "Usuń grupę plików cookie",
         "addGroup": "Dodaj grupę",
         "embedConsents": {
+            "removeRule": "Usuń regułę zgody na osadzanie",
             "addRule": "Dodaj regułę",
             "groupButtonLabel": "Etykieta przycisku",
             "groupCookieGroup": "Grupa cookies",
@@ -516,7 +518,7 @@
         "goToLanguagesManager": "Idź do menadżera języków",
         "installLanguage": "Zainstaluj język",
         "isOutdated": "Nieaktualny",
-        "isOutdatedTitle": "Ta paczka językowa wspiera Publii do wersji v.{supportedVersion}, podczas gdy używasz Publii w wersji v.{currentVersion} - sprawdź dostępność aktualizacji",
+        "isOutdatedTitle": "Ten pakiet językowy obsługuje Publii do wersji {supportedVersion}. Używasz wersji {currentVersion}. Sprawdź dostępność aktualizacji pakietu.",
         "language": "Język:",
         "languageChangedMsg": "Język aplikacji został zmieniony",
         "languageChangeError": "Zmiana języka nie powiodła się - proszę spróbować ponownie.",
@@ -545,6 +547,10 @@
         "selectLinkType": "Wybierz rodzaj linka"
     },
     "menu": {
+        "changeAssignment": "Zmień przypisanie",
+        "expandItems": "Rozwiń pozycje menu",
+        "collapseItems": "Zwiń pozycje menu",
+        "itemCount": "Liczba pozycji menu: {count}",
         "addFirstMenuItem": "Dodaj pierwszy element menu",
         "addMenuItem": "Dodaj element menu",
         "addNewMenu": "Dodaj nowe menu",
@@ -572,8 +578,8 @@
         "items": "Elementy",
         "itemUnavailable": "Niedostępny",
         "label": "Etykieta",
-        "likedItemError": "Podlinkowany element nie jest renderowalny (pusty tag/strona autora), nie istnieje lub został usunięty.",
-        "likedItemIsADraft": "Podlinkowany element jest kopią roboczą.",
+        "likedItemError": "Cel linku jest niedostępny: mógł zostać usunięty, przeniesiony do kosza, ukryty lub pominięty jako pusta strona tagu lub autora.",
+        "likedItemIsADraft": "Link prowadzi do nieopublikowanego szkicu wpisu lub strony.",
         "menu": "Menu",
         "menuItemsRemoveMessage": "Na pewno chcesz usunąć wybrane elementy menu?",
         "menuItemIsHidden": "Ten element menu jest ukryty",
@@ -616,6 +622,12 @@
         "usedBy": "Używane przez inne menu:"
     },
     "notifications": {
+        "tooltipCount": {
+            "one": "Masz {count} powiadomienie",
+            "few": "Masz {count} powiadomienia",
+            "many": "Masz {count} powiadomień",
+            "other": "Masz {count} powiadomienia"
+        },
         "badgeNew": "Nowe",
         "latestVersion": "Najnowsza wersja",
         "currentVersion": "Zainstalowana wersja",
@@ -642,6 +654,9 @@
         "themeUpdatesAvailable": "Dostępne aktualizacje motywów"
     },
     "page": {
+        "previewThisPage": "Podgląd tej strony",
+        "showSettings": "Pokaż ustawienia strony",
+        "hideSettings": "Ukryj ustawienia strony",
         "addNewPage": "Dodaj nową stronę",
         "addPageTitle": "Dodaj tytuł strony",
         "all": "Wszystkie",
@@ -650,7 +665,7 @@
         "cleanUrlsDisabled": "Włącz opcję 'Ładne adresy URL' w ustawieniach strony, aby odblokować funkcję edycji hierarchii. Umożliwi to łatwe zarządzanie relacjami między stronami nadrzędnymi i podrzędnymi.",
         "convertToPost": "Konwertuj na wpis",
         "editHierarchy": "Edytuj hierarchię",
-        "configureThemeBeforeGeneratingPreview": "Musisz skonfigurować motyw dla tej witryny przed wygenerowaniem podglądu tej strony.",
+        "configureThemeBeforeGeneratingPreview": "Wybierz motyw, aby wyświetlić podgląd strony.",
         "currentDefaultTemplate": "Aktualnie domyślny szablon",
         "customPageTypes": "Własne rodzaje stron",
         "drafts": "Wersje robocze",
@@ -722,7 +737,7 @@
         "goToPluginsManager": "Idź do menadżera wtyczek",
         "installPlugin": "Zainstaluj wtyczkę",
         "isIncompatible": "Jest niekompatybilna",
-        "isIncompatibleTitle": "Ta wtyczka wspiera Publii od wersji v.{supportedVersion}, podczas gdy używasz Publii w wersji v.{currentVersion} - sprawdź dostępność aktualizacji Publii",
+        "isIncompatibleTitle": "Wymaga Publii w wersji {supportedVersion} lub nowszej. Używasz wersji {currentVersion}. Zaktualizuj Publii, aby używać tego pluginu.",
         "newVersionAvailable": "Dostępna jest nowa wersja",
         "plugin": "Wtyczka:",
         "plugins": "Wtyczki",
@@ -732,12 +747,15 @@
         "uploadPluginErrorMessage": "Wystąpił błąd podczas instalacji. Spróbuj ponownie."
     },
     "post": {
+        "previewThisPost": "Podgląd tego wpisu",
+        "showSettings": "Pokaż ustawienia wpisu",
+        "hideSettings": "Ukryj ustawienia wpisu",
         "addNewPost": "Dodaj nowy wpis",
         "addPostTitle": "Dodaj tytuł wpisu",
         "all": "Wszystkie",
         "changePostDate": "Zmień datę publikacji",
         "characters": "Znaki",
-        "configureThemeBeforeGeneratingPreview": "Musisz skonfigurować motyw dla tej witryny przed wygenerowaniem podglądu tego wpisu.",
+        "configureThemeBeforeGeneratingPreview": "Wybierz motyw, aby wyświetlić podgląd wpisu.",
         "convertToPage": "Konwertuj na stronę",
         "currentDefaultTemplate": "Aktualnie domyślny szablon",
         "customPostTypes": "Własne rodzaje wpisów",
@@ -788,7 +806,7 @@
         "postStatusChangeSuccessMessage": "Status wybranych wpisów został zmieniony",
         "postTemplate": "Szablon wpisu",
         "postWillNotAppearOnHomepageListMsg": "Wpis nie pojawi się na liście na stronie głównej",
-        "postWillNotAppearOnListMsg": "Wpis nie pojawi się na żadnych wygenerowanych listach wpisó, takich jak strony ze znacznikami lub autorami",
+        "postWillNotAppearOnListMsg": "Wpis nie pojawi się na żadnej generowanej liście wpisów, np. na stronach tagów lub autorów.",
         "publicationDate": "Data publikacji",
         "publish": "Opublikuj",
         "published": "Opublikowano",
@@ -832,6 +850,7 @@
         "selectThemeBeforeCreatingPreviewMsg": "Musisz wybrać motyw, zanim spróbujesz utworzyć podgląd swojej witryny. Przejdź do ustawień strony i wybierz motyw."
     },
     "repeater": {
+        "dragToReorder": "Przeciągnij, aby zmienić kolejność",
         "addItem": "Dodaj element",
         "duplicateItem": "Duplikuj element",
         "emptyState": "Kliknij przycisk aby dodać pierwszy element",
@@ -970,6 +989,7 @@
         "gConsentModeDefaultState": "Stan domyślny",
         "gConsentModeEnabled": "Włącz Google Consent Mode",
         "gConsentMode": {
+            "removeRule": "Usuń regułę zgody",
             "addGroup": "Dodaj ustawienia grupy cookies",
             "cookieGroup": "Grupa cookies",
             "description": "Ta sekcja pozwala na określenie domyślnego stanu Google Consent Mode oraz określenie sygnałów, które będa wysyłane w momencie gdy konkretna grupa plików cookies zostanie zaakceptowana przez użytkownika. Użyj tych opcji jeśli potrzebujesz kompatybilności z Google Consent Mode. Jeśli nie używasz Google Analytics, Google Ads lub podobnych narzędzi, najprawdopodobniej nie potrzebujesz włączać tych funkcji.",
@@ -1182,6 +1202,7 @@
         "useSiteGlobalSettings": "Użyj globalnych ustawień strony",
         "useTitlesAndTags": "Używaj tytułów i tagów",
         "useWideScrollbars": "Użyj szerszych pasków przewijania",
+        "showTooltips": "Pokazuj podpowiedzi",
         "versionParameter": "Parametr wersji",
         "versionParameterInfo": "Dodaj parametr wersji w adresach URL plików CSS/JS, aby pominąć pamięć podręczną przeglądarki. Ta opcja może spowodować, że podczas wdrażania konieczne będzie zsynchronizowanie większej liczby plików niż zwykle.",
         "vimeoNoTrack": "Włącz tryb 'Bez śledzenia' dla video z Vimeo",
@@ -1270,6 +1291,8 @@
         "yourThemeDoNotSupport": "Twój obecnie używany motyw nie wspiera wymaganej funkcji: {featureName}"
     },
     "sync": {
+        "visitWebsiteManualUnavailable": "Ta funkcja jest niedostępna przy ręcznym publikowaniu.",
+        "visitWebsiteMissingAddress": "Najpierw ustaw i zapisz adres strony w ustawieniach serwera.",
         "accessID": "ID dostępowe",
         "accessIDFieldCantBeEmpty": "Pole ID dostępowe nie może być puste",
         "acl": "ACL",
@@ -1424,6 +1447,7 @@
         "siteID": "ID strony",
         "siteIsInSync": "Strona zsynchronizowana",
         "syncFTPNoPasswordMsg": "Bez hasła nie można zsynchronizować witryny. Proszę spróbować ponownie",
+        "showSyncProgress": "Pokaż postęp synchronizacji",
         "syncInProgress": "Trwa synchronizacja",
         "syncInProgressMessage": "Podczas procesu synchronizacji nie możesz zmienić nazwy strony.",
         "syncYourWebsite": "Synchronizuj stronę",
@@ -1443,6 +1467,7 @@
         "usernameOrganization": "Nazwa użytkownika / organizacji",
         "viewLog": "Zobacz log",
         "visitWebsite": "Odwiedź stronę",
+        "clickToVisitYourWebsite": "Kliknij, aby odwiedzić swoją stronę",
         "visitYourWebsite": "Odwiedź swoją stronę",
         "websiteFilesPreparation": "Przygotowanie plików strony",
         "websiteFilesPreparationErrorAdditionalMessage": "Nie udało się przygotować plików strony: ",
@@ -1493,7 +1518,7 @@
         "tagPage": "Strona taga",
         "tagsListLink": "Link do listy tagów",
         "tagStatusChangeSuccessMessage": "Status wybranych tagów został zmieniony",
-        "tagWillNotAppearInGeneratedTagLists": "Tag nie pojawi się na żadnej z wygenerowanych list tagów takich jak strona wpisu lub taga.",
+        "tagWillNotAppearInGeneratedTagLists": "Ten tag zostanie pominięty na generowanych listach tagów, także na stronach wpisów i tagów.",
         "thisTagIsHidden": "Ten tag jest ukryty",
         "toUseThisOptionEnableIndexingTagPages": "Aby użyć tej opcji najpierw włącz, w ustawieniach SEO, indeksowanie stron tagów.",
         "url": "URL"
@@ -1729,8 +1754,8 @@
         "applyChanges": "Zatwierdź zmiany",
         "authors": "Autorzy",
         "backToTools": "Wróć do narzędzi",
-        "backToPages": "Strony",
-        "backToPosts": "Posty",
+        "backToPages": "Powrót do stron",
+        "backToPosts": "Powrót do wpisów",
         "basicInformation": "Informacje podstawowe",
         "beautifyCode": "Upiększ kod",
         "blogIndexLink": "Link do listy wpisów",
@@ -1780,6 +1805,8 @@
         "minimize": "Zminimalizuj",
         "more": "Więcej",
         "moreInformationOnPublii": "Więcej informacji o Publii",
+        "openApplicationMenu": "Otwórz menu aplikacji",
+        "openApplicationMenuWithNotificationSettings": "Otwórz menu aplikacji i ustawienia powiadomień",
         "moreItems": "Więcej elementów",
         "name": "Nazwa",
         "newWindow": "Nowym oknie",
@@ -1790,6 +1817,7 @@
         "notSet": "Nie ustawiono",
         "of": "z",
         "ok": "OK",
+        "moreOptions": "Więcej opcji",
         "otherOptions": "Inne opcje",
         "pages": "Strony",
         "pagesSupportNotEnabledMessage": "Twój obecny motyw nie obsługuje stron. Proszę wybierz motyw z wbudowaną obsługą stron lub zmodyfikuj obecnie używany. Szczegółowe informacje na temat implementacji obsługi stron w motywie znajdziesz po kliknięciu przycisku 'Więcej informacji'",

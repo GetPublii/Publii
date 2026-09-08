@@ -21,15 +21,17 @@
                 v-model="group.id"
                 :placeholder="$t('gdpr.groupID')" />
 
-            <a
-                href="#"
+            <button
+                type="button"
                 class="gdpr-group-btn delete"
-                tabindex="-1"
+                v-tooltip="{ text: $t('gdpr.removeGroup'), describe: false }"
+                :aria-label="$t('gdpr.removeGroup')"
                 @click.stop.prevent="removeGroup(index)">
                 <icon
                     name="trash"
+                    aria-hidden="true"
                     size="xs" />
-            </a>
+            </button>
 
             <text-area
                 v-model="group.description"
@@ -47,7 +49,11 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'gdpr-groups',
     props: ['value'],
     data () {
@@ -136,6 +142,10 @@ export default {
 }
 
 .gdpr-groups .gdpr-group-btn {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
     align-items: center;
     background: var(--color-surface-subtle);
     position: relative;
@@ -180,5 +190,9 @@ export default {
             }
         }
     }
+}
+.gdpr-groups .gdpr-group-btn:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

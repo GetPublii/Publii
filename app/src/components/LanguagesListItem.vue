@@ -13,39 +13,46 @@
                 alt="">
         </span>
 
-        <figcaption class="language-name">
+        <figcaption class="language-name extension-card-caption">
             <h3>
                 <span>{{ name }}</span>
-                <span class="language-version">
+                <span class="language-version extension-card-version">
                     {{ version }}
                 </span>
                 <span 
                     v-if="isOutdated"
                     class="language-is-outdated"
-                    :title="$t('langs.isOutdatedTitle', { supportedVersion: languageData.publiiSupport, currentVersion: this.$store.state.app.versionInfo.version })">
+                    tabindex="0"
+                    v-tooltip="$t('langs.isOutdatedTitle', { supportedVersion: languageData.publiiSupport, currentVersion: $store.state.app.versionInfo.version })">
                     {{ $t('langs.isOutdated') }}
                 </span>
              </h3>
-            <a
+            <button
                 v-if="type === 'installed' && !isActiveLanguage"
-                href="#"
-                class="language-delete"
-                :title="$t('langs.deleteLanguage')"
+                type="button"
+                class="language-delete extension-card-delete"
+                v-tooltip="{ text: $t('langs.deleteLanguage'), describe: false }"
+                :aria-label="$t('langs.deleteLanguage')"
                 @click.stop.prevent="deleteLanguage(name, directory)">
                     <icon
                         size="xs"
                         non-interactive
+                        aria-hidden="true"
                         name="trash" />
-            </a>
+            </button>
         </figcaption>
     </figure>
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 import compare from 'node-version-compare';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'languages-list-item',
     props: [
         'languageData'
@@ -150,6 +157,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/extension-card.css";
 
 .language {
     background-color: var(--bg-secondary);
@@ -206,40 +214,9 @@ export default {
     width: 100%;
 }
 
-.language-delete {
-    align-items: center;
-    background: var(--bg-primary);
-    border-radius: 50%;
-    height: 3rem;
-    display: inline-flex;
-    justify-content: center;
-    position: absolute;
-    right: 1.4rem;
-    text-align: center;
-    width: 3rem;
-
-    & > svg {
-         fill: var(--icon-secondary-color);
-         transform: scale(.9);
-         transition: var(--transition-default);
-    }
-
-    &:hover {
-         & > svg {
-            fill: var(--color-danger);
-            transform: scale(1);
-         }
-    }
-}
-
 .language-name {
-    align-items: center;
     background: var(--color-surface-subtle);
     border-radius: 0 0 4px 4px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 var(--space-8);
-    position: relative;
     text-align: left;
 
     & > h3 {
@@ -266,5 +243,10 @@ export default {
     color: var(--color-danger);
     margin: 0 var(--space-16) 0 var(--space-2);
     text-transform: uppercase;
+}
+
+.language-is-outdated:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

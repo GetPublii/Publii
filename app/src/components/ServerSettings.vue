@@ -22,7 +22,7 @@
                     slot="buttons"
                     appearance="outline"
                     :disabled-with-events="!siteIsOnline"
-                    :title="visitTitle">
+                    v-tooltip="visitTitle">
                     {{ $t('sync.visitWebsite') }}
                 </p-button>
 
@@ -1220,6 +1220,7 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 import Utils from './../helpers/utils.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
@@ -1227,6 +1228,9 @@ import s3RegionsList from './configs/s3Regions.js';
 import s3ACLs from './configs/s3ACLs.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'server-settings',
     data () {
         return {
@@ -1292,11 +1296,21 @@ export default {
             return !!this.$store.state.currentSite.config.syncDate;
         },
         visitTitle () {
-            if(this.siteIsOnline) {
-                return this.$t('sync.visitYourWebsite');
-            } else {
-                return this.$t('sync.afterInitialSyncSiteWillBeAvailableOnline');
+            if (this.siteIsOnline) {
+                return '';
             }
+
+            const config = this.$store.state.currentSite.config;
+
+            if (config.deployment.protocol === 'manual') {
+                return this.$t('sync.visitWebsiteManualUnavailable');
+            }
+
+            if (!config.domain) {
+                return this.$t('sync.visitWebsiteMissingAddress');
+            }
+
+            return this.$t('sync.afterInitialSyncSiteWillBeAvailableOnline');
         },
         sftpAuthMethodItems () {
             return [

@@ -18,6 +18,7 @@
                     :key="'tab-item-' + index"
                     :id="tabID(index)"
                     ref="tab-items"
+                    v-tooltip.focus="{ text: warningItems.indexOf(index) > -1 ? warningLabel : '', describe: false }"
                     role="tab"
                     :tabindex="index === activeIndex ? 0 : -1"
                     :aria-selected="index === activeIndex ? 'true' : 'false'"
@@ -37,6 +38,7 @@
                     </template>
                     <span
                         v-if="warningItems.indexOf(index) > -1"
+                        v-tooltip.hover="warningLabel"
                         class="tabs-warning"
                         aria-hidden="true">!</span>
                     <span
@@ -52,6 +54,7 @@
             v-if="isHorizontal && scrollable && canScrollBackward"
             type="button"
             class="tabs-scroll-control tabs-scroll-control-previous"
+            v-tooltip="{ text: $t('ui.showFirstTabs'), describe: false }"
             :aria-label="$t('ui.showFirstTabs')"
             @click.stop="scrollTabsToEdge('start')">
             <icon
@@ -66,6 +69,7 @@
             v-if="isHorizontal && scrollable && canScrollForward"
             type="button"
             class="tabs-scroll-control tabs-scroll-control-next"
+            v-tooltip="{ text: $t('ui.showLastTabs'), describe: false }"
             :aria-label="$t('ui.showLastTabs')"
             @click.stop="scrollTabsToEdge('end')">
             <icon
@@ -95,7 +99,11 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'tabs',
     props: {
         id: {

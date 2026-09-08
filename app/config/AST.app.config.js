@@ -12,6 +12,7 @@ const AstAppConfig = {
     timeFormat: 12,
     closeEditorOnSave: true,
     wideScrollbars: false,
+    showTooltips: true,
     showModificationDate: true,
     showModificationDateAsColumn: false,
     showPostSlugs: false,

@@ -122,6 +122,9 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
 
     --overlay: oklch(from var(--shadow-color) l c h / 35%);
 
+    --tooltip-bg: var(--bg-primary);
+    --tooltip-color: var(--text-primary-color);
+
     --icon-primary-color: var(--palette-neutral-70);
     --icon-secondary-color: var(--palette-neutral-55);
     --icon-tertiary-color:  var(--palette-neutral-70);
@@ -309,6 +312,9 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --shadow-list-hover: 0 0 26px oklch(from var(--shadow-color) l c h / 7%);
 
     --overlay: oklch(20% 0.0117 278 / 85%);
+
+    --tooltip-bg: var(--bg-primary);
+    --tooltip-color: var(--text-primary-color);
 
     --icon-primary-color: var(--palette-neutral-20);
     --icon-secondary-color: var(--palette-neutral-25);

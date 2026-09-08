@@ -304,6 +304,7 @@
                     variant="titles">
                     <h2 class="title">
                         <a
+                            v-tooltip.focus="postStatusDescription(item)"
                             href="#"
                             @click.prevent.stop="editPost(item.id, item.editor)">
 
@@ -314,25 +315,37 @@
                                 size="xs"
                                 name="featured-post"
                                 strokeColor="color-helper-6"
-                                :title="$t('post.thisPostIsFeatured')" />
+                                class="post-status-icon"
+                                v-tooltip.hover="$t('post.thisPostIsFeatured')"
+                                aria-hidden="true"
+                                focusable="false" />
                             <icon
                                 v-if="item.isHidden"
                                 size="xs"
                                 name="hidden-post"
                                 strokeColor="color-7"
-                                :title="$t('post.thisPostIsHidden')" />
+                                class="post-status-icon"
+                                v-tooltip.hover="$t('post.thisPostIsHidden')"
+                                aria-hidden="true"
+                                focusable="false" />
                             <icon
                                 v-if="item.isExcludedOnHomepage"
                                 name="excluded-post"
                                 size="xs"
                                 strokeColor="color-3"
-                                :title="$t('post.thisPostIsExcludedFromHomepage')" />
+                                class="post-status-icon"
+                                v-tooltip.hover="$t('post.thisPostIsExcludedFromHomepage')"
+                                aria-hidden="true"
+                                focusable="false" />
                             <icon
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
                                 strokeColor="color-7"
-                                :title="$t('post.thisPostIsADraft')" />
+                                class="post-status-icon"
+                                v-tooltip.hover="$t('post.thisPostIsADraft')"
+                                aria-hidden="true"
+                                focusable="false" />
                         </a>
                     </h2>
 
@@ -462,9 +475,13 @@
 <script>
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
+import Tooltip from '../helpers/tooltip.js';
 
 export default {
     name: 'posts',
+    directives: {
+        tooltip: Tooltip
+    },
     mixins: [
         CollectionOrdering,
         CollectionCheckboxes
@@ -641,6 +658,27 @@ export default {
         this.observeLoadMoreSentinel();
     },
     methods: {
+        postStatusDescription (item) {
+            const statuses = [];
+
+            if (item.isFeatured) {
+                statuses.push(this.$t('post.thisPostIsFeatured'));
+            }
+
+            if (item.isHidden) {
+                statuses.push(this.$t('post.thisPostIsHidden'));
+            }
+
+            if (item.isExcludedOnHomepage) {
+                statuses.push(this.$t('post.thisPostIsExcludedFromHomepage'));
+            }
+
+            if (item.isDraft) {
+                statuses.push(this.$t('post.thisPostIsADraft'));
+            }
+
+            return statuses.join('\n');
+        },
         observeLoadMoreSentinel () {
             this.loadMoreObserver.disconnect();
 
@@ -941,6 +979,16 @@ export default {
 <style scoped>
 @import "../css/collection-sorting.css";
 @import '../css/empty-states.css';
+
+/* Status icons inside links must receive hover despite the global SVG rule. */
+.title .post-status-icon {
+    pointer-events: bounding-box;
+}
+
+.title > a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
 
 .header {
     .col {

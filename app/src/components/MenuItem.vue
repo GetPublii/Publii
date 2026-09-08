@@ -9,7 +9,7 @@
             }">
             <span
                 class="menu-item-handle"
-                :title="$t('menu.dragToReorder')"
+                v-tooltip.hover="{ text: $t('menu.dragToReorder'), disabled: !!selectedItem || dragging }"
                 aria-hidden="true">
                 <icon
                     name="menu-dots"
@@ -21,7 +21,8 @@
             <button
                 type="button"
                 class="menu-item-label"
-                :title="itemTooltip"
+                v-tooltip="{ text: isInvalid || isDraft ? itemTooltip : '', disabled: !!selectedItem }"
+                :title="isInvalid || isDraft ? null : itemTooltip"
                 :disabled="!!selectedItem"
                 @click="editMenuItem">
                 {{ label }}
@@ -40,14 +41,14 @@
                 <span
                     v-if="isDraft"
                     class="menu-item-badge"
-                    :title="$t('menu.likedItemIsADraft')">
+                    v-tooltip.hover="$t('menu.likedItemIsADraft')">
                     {{ $t('menu.itemDraft') }}
                 </span>
 
                 <span
                     v-if="isInvalid"
                     class="menu-item-badge is-invalid"
-                    :title="$t('menu.likedItemError')">
+                    v-tooltip.hover="$t('menu.likedItemError')">
                     {{ $t('menu.itemUnavailable') }}
                 </span>
             </span>
@@ -169,10 +170,14 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Draggable from 'vuedraggable';
 import menuDragOptions, { keepItemOutOfItsAncestors } from './configs/menuDragOptions.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'menu-item',
     props: {
         editedID: {

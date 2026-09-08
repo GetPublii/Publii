@@ -5,23 +5,25 @@
             class="theme-thumbnail"
             alt="">
 
-        <figcaption class="theme-name">
+        <figcaption class="theme-name extension-card-caption">
             <h3>
                 {{ name }}
-                <span class="theme-version">
+                <span class="theme-version extension-card-version">
                     {{ version }}
                 </span>
              </h3>
-            <a
-                href="#"
-                class="theme-delete"
-                :title="$t('theme.deleteTheme')"
+            <button
+                type="button"
+                class="theme-delete extension-card-delete"
+                v-tooltip="{ text: $t('theme.deleteTheme'), describe: false }"
+                :aria-label="$t('theme.deleteTheme')"
                 @click.stop.prevent="deleteTheme(name, directory)">
                     <icon
                         size="xs"
                         non-interactive
+                        aria-hidden="true"
                         name="trash" />
-            </a>
+            </button>
 
             <span
                 v-if="hasUpdateAvailable"
@@ -39,10 +41,14 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import { mapGetters } from 'vuex';
 import VersionComparator from '../helpers/version-comparator';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'themes-list-item',
     props: [
         'themeData'
@@ -125,6 +131,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/extension-card.css";
 
 .theme {
     background-color: var(--bg-secondary);
@@ -146,39 +153,9 @@ export default {
     max-width: 100%;
 }
 
-.theme-delete {
-    align-items: center;
-    background: var(--bg-primary);
-    border-radius: 50%;
-    height: 3rem;
-    justify-content: center;
-    display: inline-flex;
-    position: absolute;
-    right: 2rem;
-    text-align: center;
-    width: 3rem;
-
-    & > svg {
-         fill: var(--icon-secondary-color);
-         transform: scale(.9);
-         transition: var(--transition-default);
-    }
-
-    &:hover {
-         & > svg {
-            fill: var(--color-danger);
-            transform: scale(1);
-         }
-    }
-}
-
 .theme-name {
-    align-items: center;
     background: var(--color-surface-subtle);
     border-radius: 0 0 4px 4px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 var(--space-8);
     text-align: left;
 
     & > h3 {
@@ -191,10 +168,8 @@ export default {
 
 .theme-version {
     color: var(--text-light-color);
-    display: block;
     font-size: var(--font-size-ui-xs);
     font-weight: var(--font-weight-regular);
-    margin: 0 var(--space-16) 0 auto;
 }
 
 .theme-new-version-available {

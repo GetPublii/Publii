@@ -31,7 +31,7 @@
         <a
             v-if="hasSyncDate && websiteUrl"
             :href="websiteUrl"
-            :title="$t('sync.visitYourWebsite')"
+            v-tooltip="$t('sync.clickToVisitYourWebsite')"
             target="_blank"
             class="sidebar-sync-date"
             rel="noreferrer noopener">
@@ -46,9 +46,13 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import SidebarIcons from './configs/sidebar-icons.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'sidebar-sync-button',
     data: function() {
         return {
@@ -478,5 +482,9 @@ export default {
     100% {
         transform: rotate(360deg);
     }
+}
+.sidebar-sync-date:focus-visible {
+    outline: 2px solid var(--sidebar-link-color);
+    outline-offset: 2px;
 }
 </style>

@@ -26,15 +26,17 @@
                 v-model="group.buttonLabel"
                 :placeholder="$t('gdpr.embedConsents.groupButtonLabel')" />
 
-            <a
-                href="#"
+            <button
+                type="button"
                 class="embed-consents-group-btn delete"
-                tabindex="-1"
+                v-tooltip="{ text: $t('gdpr.embedConsents.removeRule'), describe: false }"
+                :aria-label="$t('gdpr.embedConsents.removeRule')"
                 @click.stop.prevent="removeRule(index)">
                 <icon
                     name="trash"
+                    aria-hidden="true"
                     size="xs" />
-            </a>
+            </button>
 
             <text-area
                 v-model="group.text"
@@ -52,9 +54,13 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'embed-consents',
     props: [
         'value',
@@ -178,6 +184,10 @@ export default {
 }
 
 .embed-consents-groups .embed-consents-group-btn {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
     align-items: center;
     background: var(--color-surface-subtle);
     position: relative;
@@ -222,5 +232,9 @@ export default {
             }
         }
     }
+}
+.embed-consents-groups .embed-consents-group-btn:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

@@ -121,6 +121,7 @@
                 <collection-cell variant="titles">
                     <h2 class="title">
                         <a
+                            v-tooltip.focus="item.isHidden ? $t('tag.thisTagIsHidden') : ''"
                             href="#"
                             @click.prevent.stop="editTag(item)">
                             {{ item.name }}
@@ -130,7 +131,10 @@
                                 size="xs"
                                 name="hidden-post"
                                 strokeColor="color-7"
-                                :title="$t('tag.thisTagIsHidden')" />
+                                class="tag-status-icon"
+                                v-tooltip.hover="$t('tag.thisTagIsHidden')"
+                                aria-hidden="true"
+                                focusable="false" />
                         </a>
                     </h2>
 
@@ -200,11 +204,15 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import TagForm from './TagForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'tags',
     mixins: [
         CollectionOrdering,
@@ -534,5 +542,14 @@ export default {
     margin-left: 10px;
     position: relative;
     top: 2px;
+}
+/* Status icons inside links must receive hover despite the global SVG rule. */
+.title .tag-status-icon {
+    pointer-events: bounding-box;
+}
+
+.title > a:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

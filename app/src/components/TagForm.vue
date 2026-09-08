@@ -63,19 +63,24 @@
                                 :rows="4"></text-area>
                         </label>
 
-                        <label class="tag-settings-hidden">
+                        <label
+                            class="tag-settings-hidden"
+                            v-tooltip.focusin="{ text: $t('tag.tagWillNotAppearInGeneratedTagLists'), describe: false }">
                             <switcher
                                 :key="'is-hidden-tag-' + tagData.id"
                                 id="is-hidden"
+                                :accessible-label="$t('tag.hideTag')"
+                                :description="$t('tag.tagWillNotAppearInGeneratedTagLists')"
                                 v-model="tagData.additionalData.isHidden"
                                 @click.native="toggleHiddenStatus" />
                             <icon
-                                    :title="$t('post.hidePost')"
-                                    class="switcher-item-icon-helper"
-                                    name="hidden-post"
-                                    size="xs"
-                                    strokeColor="color-6" />
-                            <span :title="$t('tag.tagWillNotAppearInGeneratedTagLists')">
+                                class="switcher-item-icon-helper"
+                                name="hidden-post"
+                                size="xs"
+                                aria-hidden="true"
+                                non-interactive
+                                strokeColor="color-6" />
+                            <span>
                                 {{ $t('tag.hideTag') }}
                             </span>
                         </label>
@@ -177,7 +182,8 @@
                                     type="text">
                                 <p-button 
                                     :onClick="updateSlug" 
-                                    :title="$t('ui.updateSlug')"
+                                    v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
+                                    :aria-label="$t('ui.updateSlug')"
                                     icon="refresh"
                                     appearance="secondary">
                                 </p-button>
@@ -364,9 +370,13 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'tag-form-sidebar',
     props: [
         'formAnimation'

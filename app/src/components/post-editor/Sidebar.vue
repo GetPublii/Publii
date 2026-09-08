@@ -159,32 +159,40 @@
                                 </span>
                             </label>
 
-                            <label id="post-hidden-wrapper">
+                            <label
+                                id="post-hidden-wrapper"
+                                v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnListMsg'), describe: false }">
                                 <switcher
-                                    :title="$t('post.postWillNotAppearOnListMsg')"
+                                    :accessible-label="$t('post.hidePost')"
+                                    :description="$t('post.postWillNotAppearOnListMsg')"
                                     v-model="$parent.postData.isHidden" />
                                 <icon
-                                    :title="$t('post.hidePost')"
+                                    aria-hidden="true"
+                                    non-interactive
                                     class="switcher-item-icon-helper"
                                     name="hidden-post"
                                     size="xs"
                                     strokeColor="color-6" />
-                                <span :title="$t('post.postWillNotAppearOnListMsg')">
+                                <span>
                                     {{ $t('post.hidePost') }}
                                 </span>
                             </label>
 
-                            <label id="post-excluded-homepage-wrapper">
+                            <label
+                                id="post-excluded-homepage-wrapper"
+                                v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnHomepageListMsg'), describe: false }">
                                 <switcher
-                                    :title="$t('post.postWillNotAppearOnHomepageListMsg')"
+                                    :accessible-label="$t('post.excludeFromHomepage')"
+                                    :description="$t('post.postWillNotAppearOnHomepageListMsg')"
                                     v-model="$parent.postData.isExcludedOnHomepage" />
                                 <icon
-                                    :title="$t('post.excludeFromHomepage')"
+                                    aria-hidden="true"
+                                    non-interactive
                                     class="switcher-item-icon-helper"
                                     name="excluded-post"
                                     size="xs"
                                     strokeColor="color-3"/>
-                                <span :title="$t('post.postWillNotAppearOnHomepageListMsg')">
+                                <span>
                                     {{ $t('post.excludeFromHomepage') }}
                                 </span>
                             </label>
@@ -349,7 +357,8 @@
                                             @keyup="$parent.slugUpdated">
                                         <p-button 
                                             :onClick="updateSlug" 
-                                            :title="$t('ui.updateSlug')"
+                                            v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
+                                            :aria-label="$t('ui.updateSlug')"
                                             icon="refresh"
                                             appearance="secondary">
                                         </p-button>
@@ -558,9 +567,13 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'post-editor-sidebar',
     props: {
         'itemType': {
