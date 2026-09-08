@@ -14,6 +14,9 @@
                 <p-button
                     :onClick="installLanguage"
                     :disabled="installingExtension || installationPickerOpen"
+                    :loading="installingExtension"
+                    loading-layout="overlay"
+                    :aria-label="installingExtension ? $t('langs.installingLanguage') : $t('langs.installLanguage')"
                     slot="buttons" 
                     icon="upload-file">
                     {{ $t('langs.installLanguage') }}

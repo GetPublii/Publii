@@ -268,6 +268,13 @@ export default {
     text-align: left;
 }
 
+.confirmation-choices {
+    & > label:first-child {
+        display: block;
+        margin-bottom: var(--space-8);
+    }
+}
+
 .confirmation-check {
     display: flex;
     align-items: center;

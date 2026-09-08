@@ -14,6 +14,9 @@
                 <p-button
                     :onClick="installPlugin"
                     :disabled="installingExtension || installationPickerOpen"
+                    :loading="installingExtension"
+                    loading-layout="overlay"
+                    :aria-label="installingExtension ? $t('plugins.installingPlugin') : $t('plugins.installPlugin')"
                     slot="buttons" 
                     icon="upload-file">
                     {{ $t('plugins.installPlugin') }}

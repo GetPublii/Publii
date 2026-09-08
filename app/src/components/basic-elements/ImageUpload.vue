@@ -1,7 +1,8 @@
 <template>
     <div
         :id="anchor"
-        :class="wrapperCssClasses">
+        :class="wrapperCssClasses"
+        :aria-busy="isUploading ? 'true' : 'false'">
         <div
             :class="inputCssClasses"
             :data-path="filePath"
@@ -25,23 +26,27 @@
                     type="file"
                     class="upload-image-input"
                     spellcheck="false"
+                    :disabled="isUploading"
                     @change="valueChanged">
-
-                <div
-                    v-if="isUploading"
-                    class="upload-uploading-overlay">
-                    <div>
-                        <div class="loader"><span></span></div>
-                        {{ $t('ui.uploadInProgress') }}
-                    </div>
-                </div>
             </div>
+
+            <overlay
+                v-if="isUploading"
+                class="image-upload-progress"
+                appearance="drop-zone"
+                loading
+                role="status"
+                aria-live="polite"
+                aria-atomic="true">
+                <div>{{ $t('ui.uploadInProgress') }}</div>
+            </overlay>
         </div>
 
         <a
             v-if="!isEmpty"
             href="#"
             class="upload-remove"
+            :inert="isUploading ? '' : null"
             @click="remove">
             {{ $t('image.removeImage') }}
         </a>
@@ -160,6 +165,7 @@ export default {
             let cssClasses = {
                 'is-small': this.size === 'small',
                 'upload-image-wrapper': true,
+                'is-uploading': this.isUploading,
                 'is-empty': this.isEmpty
             };
 
@@ -177,6 +183,7 @@ export default {
                 'upload-image': true,
                 'is-empty': this.isEmpty,
                 'is-hovered': this.isHovered,
+                'is-uploading': this.isUploading,
                 'is-small': this.size === 'small'
             };
         },
@@ -228,7 +235,9 @@ export default {
         },
         dragOver (e) {
             this.stopEvents(e);
-            this.isHovered = true;
+            if (!this.isUploading) {
+                this.isHovered = true;
+            }
         },
         dragLeave (e) {
             this.stopEvents(e);
@@ -236,11 +245,19 @@ export default {
         },
         async drop (e) {
             this.stopEvents(e);
+            if (this.isUploading || !e.dataTransfer.files.length) {
+                return;
+            }
+
             let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]));
             this.uploadImage(sourcePath);
         },
         remove (e) {
             e.preventDefault();
+            if (this.isUploading) {
+                return;
+            }
+
             this.onBeforeRemove(this.filePath);
             this.filePath = '';
             this.$refs['input'].value = '';
@@ -248,7 +265,7 @@ export default {
             this.onRemove();
         },
         async valueChanged (e) {
-            if(!e.target.files.length) {
+            if (this.isUploading || !e.target.files.length) {
                 return;
             }
 
@@ -256,6 +273,11 @@ export default {
             this.uploadImage(sourcePath);
         },
         uploadImage (sourcePath) {
+            if (this.isUploading) {
+                return;
+            }
+
+            this.isHovered = false;
             this.isUploading = true;
 
             let uploadData = {
@@ -390,6 +412,19 @@ export default {
         }
     }
 
+    &.is-uploading {
+        border-color: transparent;
+        box-shadow: none;
+
+        & > .upload-overlay {
+            visibility: hidden;
+        }
+
+        &.is-empty > .image-upload-progress {
+            inset: -2px;
+        }
+    }
+
     &:not(.is-empty):not(.is-hovered) {
         background-color: transparent;
         background-position: center center;
@@ -407,6 +442,10 @@ export default {
 .upload-image-wrapper {
     display: block;
     padding: 0 0 40px 0;
+
+    &.is-uploading > .upload-remove {
+        visibility: hidden;
+    }
 
     &:not(.is-empty):not(.is-hovered) {
         background-color: var(--bg-secondary);
@@ -480,53 +519,8 @@ export default {
     }
 }
 
-.upload-uploading-overlay {
-    background: var(--color-surface-subtle);
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-
-    & > div {
-        color: var(--color-text-subtle)!important;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        width: 100%;
-    }
-
-    .loader {
-        display: block;
-        height: 2.8rem;
-        margin: 0 auto var(--space-4);
-        width: 2.8rem;
-
-        & > span {
-            animation: spin .9s infinite linear;
-            border-top: 2px solid oklch(from var(--color-primary) l c h / 20%);
-            border-right: 2px solid oklch(from var(--color-primary) l c h / 20%);
-            border-bottom: 2px solid oklch(from var(--color-primary) l c h / 20%);
-            border-left: 2px solid var(--color-primary);
-            border-radius: 50%;
-            display: block;
-            height: 2.5rem;
-            width: 2.5rem;
-
-            &::after {
-                border-radius: 50%;
-                content: "";
-                display: block;
-            }
-      }
-   }
-}
-
-@keyframes spin {
-   100% {
-      transform: rotate(360deg);
-   }
+.upload-image > .image-upload-progress.overlay::v-deep > div {
+    padding: var(--space-4) var(--space-6);
 }
 
 .settings-basic {

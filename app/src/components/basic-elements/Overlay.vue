@@ -161,6 +161,7 @@ export default {
             gap: var(--space-4);
             box-shadow: 0 0 3px oklch(from var(--black) l c h / 20%);
             background: var(--color-primary);
+            box-sizing: border-box;
             border-radius: var(--radius-base);
             color: var(--white);
             font-size: var(--font-size-ui-md);
@@ -168,17 +169,22 @@ export default {
             height: auto;
             left: 50%;
             line-height: var(--line-height-base);
-            padding: 1.4rem var(--space-12) 1.4rem var(--space-12);
+            max-width: calc(100% - 2 * var(--space-4));
+            padding: 1.4rem var(--space-12);
             position: absolute;
-            top: 50%; 
+            text-align: center;
+            top: 50%;
             transform: translateX(-50%) translateY(-50%);
-            width: auto;              
+            width: max-content;
+            overflow-wrap: anywhere;
         }
     }
 }
 .drop-zone-upload-icon {
     fill: currentColor;
     flex-shrink: 0;
+    height: 2rem;
+    width: 2rem;
 }
 
 .drop-zone-loader {

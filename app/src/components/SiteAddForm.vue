@@ -81,7 +81,8 @@
                             'backup': true, 
                             'backup-is-over': backupIsOver,
                             'restore-in-progress': restoreInProgress
-                        }">
+                        }"
+                        :aria-busy="restoreInProgress ? 'true' : 'false'">
                         <div class="backup-upload">
                             <icon
                                 customWidth="60"
@@ -96,13 +97,18 @@
                                     type="file"
                                     class="backup-upload-input"
                                     spellcheck="false"
+                                    :disabled="restoreInProgress"
                                     @change="valueChanged">
                         </div>
 
                         <overlay
-                            v-if="backupIsOver"
-                            appearance="drop-zone">
-                            <div>{{ $t('file.dropYourFileHere') }}</div>
+                            v-if="backupIsOver || restoreInProgress"
+                            appearance="drop-zone"
+                            :loading="restoreInProgress"
+                            :role="restoreInProgress ? 'status' : null"
+                            :aria-live="restoreInProgress ? 'polite' : null"
+                            :aria-atomic="restoreInProgress ? 'true' : null">
+                            <div>{{ $t(restoreInProgress ? 'file.restoringBackup' : 'file.dropYourFileHere') }}</div>
                         </overlay>
                     </div>
                 </div>
@@ -140,16 +146,12 @@
                                 spellcheck="false"
                                 :disabled="wordpressCheckInProgress"
                                 :aria-label="$t('tools.wpImport.selectWXRFileButton')"
+                                :aria-describedby="wordpressError ? 'site-create-wordpress-file-error' : null"
                                 @change="wordPressFileChanged">
 
                             <span
-                                v-if="wordpressCheckInProgress"
-                                role="status">
-                                {{ $t('tools.wpImport.checkingWXRFile') }}&hellip;
-                            </span>
-
-                            <span
                                 v-if="wordpressError"
+                                id="site-create-wordpress-file-error"
                                 class="site-create-field-error"
                                 role="alert">
                                 {{ wordpressError }}
@@ -157,9 +159,14 @@
                         </div>
 
                         <overlay
-                            v-if="wordpressFileIsOver"
-                            appearance="drop-zone">
-                            <div>{{ $t('file.dropYourFileHere') }}</div>
+                            v-if="wordpressFileIsOver || wordpressCheckInProgress"
+                            appearance="drop-zone"
+                            :loading="wordpressCheckInProgress"
+                            :role="wordpressCheckInProgress ? 'status' : null"
+                            :aria-live="wordpressCheckInProgress ? 'polite' : null"
+                            :aria-atomic="wordpressCheckInProgress ? 'true' : null">
+                            <div v-if="wordpressCheckInProgress">{{ $t('tools.wpImport.checkingWXRFile') }}&hellip;</div>
+                            <div v-else>{{ $t('file.dropYourFileHere') }}</div>
                         </overlay>
                     </div>
 
@@ -626,13 +633,19 @@ export default {
             this.onOk();
         },
         showOverlay (e) {
-            this.backupIsOver = true;
+            if (!this.restoreInProgress) {
+                this.backupIsOver = true;
+            }
         },
         hideOverlay (e) {
             this.backupIsOver = false;
         },
         async uploadBackup (e) {
             this.backupIsOver = false;
+
+            if (this.restoreInProgress || (typeof e !== 'string' && !e.dataTransfer.files.length)) {
+                return;
+            }
 
             if (typeof e === 'string') {
                 this.backupFile = e;
@@ -655,7 +668,7 @@ export default {
             });
         },
         async valueChanged (e) {
-            if (!e.target.files.length) {
+            if (this.restoreInProgress || !e.target.files.length) {
                 return;
             }
 
@@ -913,48 +926,21 @@ export default {
         margin-bottom: 46px;
         position: relative;
 
+        &.backup-is-over,
+        &.restore-in-progress {
+            border-color: transparent;
+        }
+
         .overlay.has-border {
+            inset: -2px;
             pointer-events: none;
         }
-        &.restore-in-progress {
-            position: relative;
-          
-            &::after {
-                border: 3px solid var(--color-primary);
-                background: oklch(from var(--color-primary) l c h / 17%);
-                content:"";
-                height: 100%;
-                left: 0;
-                position: absolute;
-                top: 0;
-                width: 100%;
-            }
 
-            &::before {
-                animation: spin .9s infinite linear;
-                border-top: 2px solid oklch(from var(--color-primary) l c h / 30%);
-                border-right: 2px solid oklch(from var(--color-primary) l c h / 30%);
-                border-bottom: 2px solid oklch(from var(--color-primary) l c h / 30%);
-                border-left: 2px solid var(--color-primary);
-                border-radius: 50%;
-                content:"";
-                display: inline-block;
-                height: 3rem;      
-                left: calc(50% - 1.5rem);
-                position: absolute;      
-                top: calc(50% - 1.5rem);      
-                vertical-align: middle;
-                width: 3rem
-            }
+        &.restore-in-progress {
             .backup-upload {
-                opacity: 0;
+                visibility: hidden;
             }
         }
-    }
-}
-@keyframes spin {
-    100% {
-        transform: rotate(360deg);
     }
 }
 .site-create-form {
@@ -1092,6 +1078,10 @@ export default {
     .icon {
         fill: var(--icon-primary-color);
         margin-bottom: var(--space-6);
+    }
+
+    & > .site-create-field-error {
+        margin-top: var(--space-8);
     }
 }
 .site-create .backup-upload-input {

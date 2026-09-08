@@ -434,11 +434,6 @@ export default {
       .publii-block-html > pre {
         background: var(--pre-bg-hover) !important;
       }
-      .publii-block-gallery-uploader-loader-overlay {
-        height: 250px;
-        top: 61px;
-        width: calc(100% - 64px) !important;
-      }
     }
 
     .publii-block-paragraph-block-selector {

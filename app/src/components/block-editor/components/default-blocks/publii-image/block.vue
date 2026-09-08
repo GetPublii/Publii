@@ -40,7 +40,7 @@
       ref="block">
       <div
         v-if="content.image === ''"
-        :class="{ 'publii-block-image-uploader': true, 'is-hovered': isHovered }"
+        :class="{ 'publii-block-image-uploader': true, 'is-hovered': isHovered, 'is-uploading': imageUploadInProgress }"
         @drag.stop.prevent
         @dragstart.stop.prevent
         @dragend.stop.prevent
@@ -62,10 +62,17 @@
             @click="filePickerCallback">
             {{ $t('file.selectFile') }}
           </button>
-          <span
-            v-if="imageUploadInProgress"
-            class="publii-block-image-uploader-loader"></span>
         </div>
+        <upload-overlay
+          v-if="imageUploadInProgress"
+          class="publii-block-image-upload-progress"
+          appearance="drop-zone"
+          loading
+          role="status"
+          aria-live="polite"
+          aria-atomic="true">
+          <div>{{ $t('ui.uploadInProgress') }}</div>
+        </upload-overlay>
       </div>
 
       <input
@@ -98,6 +105,7 @@
 </template>
 
 <script>
+import Overlay from '../../../../basic-elements/Overlay.vue';
 import Block from './../../Block.vue';
 import ConfigForm from './config-form.json';
 import ContentEditableImprovements from './../../helpers/ContentEditableImprovements.vue';
@@ -116,6 +124,7 @@ export default {
     LinkConfig
   ],
   components: {
+    'upload-overlay': Overlay,
     'icon': EditorIcon,
     'top-menu': TopMenuUI
   },
@@ -580,18 +589,17 @@ export default {
   }
 }
 
-.publii-block-image-uploader-loader {
-  animation: loader 1s linear infinite;
-  border: 3px solid var(--color-primary);
-  border-left-color: transparent;
-  border-radius: 50%;
-  display: block;
-  height: 32px;
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  width: 32px!important;
+.publii-block-image-uploader.is-uploading {
+  border-color: transparent;
+  box-shadow: none;
+
+  &::before {
+    content: none;
+  }
+
+  & > .publii-block-image-upload-progress {
+    inset: -2px;
+  }
 }
 
 .publii-block-image-uploader-inner {
@@ -637,13 +645,4 @@ export default {
   }
 }
 
-@keyframes loader {
-  from {
-    transform: translateX(-50%) translateY(-50%) rotate(0deg);
-  }
-
-  to {
-    transform: translateX(-50%) translateY(-50%) rotate(360deg);
-  }
-}
 </style>

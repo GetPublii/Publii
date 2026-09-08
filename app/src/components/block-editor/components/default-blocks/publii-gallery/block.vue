@@ -1,102 +1,110 @@
 <template>
   <div
-    :class="{ 'publii-block-gallery-wrapper': true, 'is-empty': isEmpty }"
+    :class="{ 'publii-block-gallery-wrapper': true, 'is-empty': isEmpty, 'is-uploading': imageUploadInProgress }"
     @dragover.stop.prevent="dragOver"
     @dragleave.stop.prevent="dragLeave"
     @drop.stop.prevent="drop"
     @click="resetDeleteConfirmation">
-    <draggable
-      v-if="content.images.length > 0 && view === 'preview'"
-      ref="block"
-      v-model="content.images"
-      handle="img"
-      :data-cols="config.columns"
-      :data-count="content.images.length"
-      @start="draggingInProgress = true"
-      @end="draggingInProgress = false"
-      :class="{ 'publii-block-gallery': true, 'is-wide': config.imageAlign === 'wide', 'is-full': config.imageAlign === 'full' }">
-      <div
-        v-for="(image, index) of content.images"
-        :key="'gallery-item-' + index"
-        class="publii-block-gallery-item">
-        <img
-          :src="image.src"
-          :height="image.height"
-          :width="image.width" />
-
-        <button
-          v-if="confirmDelete !== index"
-          class="publii-block-gallery-item-delete"
-          @click.stop.prevent="removeImage(index)">
-          <icon name="trash" />
-        </button>
-
-        <button
-          v-if="confirmDelete === index"
-          class="publii-block-gallery-item-delete is-active has-tooltip"
-          @click.stop.prevent="removeImage(index)">
-          <icon name="open-trash" />
-          <span class="ui-tooltip has-bigger-space">
-            {{ $t('editor.clickToConfirm') }}
-          </span>
-        </button>
-      </div>
-    </draggable>
-
-    <draggable
-      v-if="content.images.length > 0 && view === 'edit'"
-      v-model="content.images"
-      :data-cols="config.columns"
-      :data-count="content.images.length"
-      @start="draggingInProgress = true"
-      @end="draggingInProgress = false"
-      class="publii-block-gallery-list">
-      <div
-        v-for="(image, index) of content.images"
-        :key="'gallery-item-' + index"
-        class="publii-block-gallery-list-item">
-        <div class="publii-block-gallery-list-item-image">
+    <div
+      :class="{ 'publii-block-gallery-content': true, 'is-editing': view === 'edit' }">
+      <draggable
+        v-if="content.images.length > 0 && view === 'preview'"
+        ref="block"
+        v-model="content.images"
+        handle="img"
+        :data-cols="config.columns"
+        :data-count="content.images.length"
+        @start="startImageDrag"
+        @end="endImageDrag"
+        :class="{ 'publii-block-gallery': true, 'is-wide': config.imageAlign === 'wide', 'is-full': config.imageAlign === 'full' }">
+        <div
+          v-for="(image, index) of content.images"
+          :key="'gallery-item-' + index"
+          class="publii-block-gallery-item">
           <img
-            :src="image.thumbnailSrc"
+            :src="image.src"
             :height="image.height"
             :width="image.width" />
-        </div>
 
-        <div class="publii-block-gallery-list-item-config">
-          <input type="text" v-model="image.alt" :placeholder="$t('editor.enterAltText')"/>
-          <input type="text" v-model="image.caption" :placeholder="$t('editor.enterCaption')"/>
-        </div>
-      </div>
-    </draggable>
-
-    <div
-      v-if="(content.images.length === 0 || view === 'edit')"
-      :class="{ 'publii-block-gallery-form': true, 'is-visible': content.images.length === 0 }"
-      ref="block">
-      <div
-        :class="{ 'publii-block-gallery-uploader': true, 'is-hovered': isHovered }">
-        <div class="publii-block-gallery-uploader-inner">
-          <icon
-            v-if="!imageUploadInProgress"
-            name="blank-gallery"
-            height="62"
-            width="75" />
-          <span v-if="!imageUploadInProgress">
-            {{ $t('editor.dropToUploadYourPhotosOr') }}
-          </span>
           <button
-            v-if="!imageUploadInProgress"
-            @click="filePickerCallback">
-            {{ $t('editor.selectFiles') }}
+            v-if="confirmDelete !== index"
+            class="publii-block-gallery-item-delete"
+            @click.stop.prevent="removeImage(index)">
+            <icon name="trash" />
+          </button>
+
+          <button
+            v-if="confirmDelete === index"
+            class="publii-block-gallery-item-delete is-active has-tooltip"
+            @click.stop.prevent="removeImage(index)">
+            <icon name="open-trash" />
+            <span class="ui-tooltip has-bigger-space">
+              {{ $t('editor.clickToConfirm') }}
+            </span>
           </button>
         </div>
-      </div>
-    </div>
+      </draggable>
 
-    <div
-      v-if="imageUploadInProgress"
-      class="publii-block-gallery-uploader-loader-overlay">
-      <span class="publii-block-gallery-uploader-loader"></span>
+      <draggable
+        v-if="content.images.length > 0 && view === 'edit'"
+        v-model="content.images"
+        :data-cols="config.columns"
+        :data-count="content.images.length"
+        @start="startImageDrag"
+        @end="endImageDrag"
+        class="publii-block-gallery-list">
+        <div
+          v-for="(image, index) of content.images"
+          :key="'gallery-item-' + index"
+          class="publii-block-gallery-list-item">
+          <div class="publii-block-gallery-list-item-image">
+            <img
+              :src="image.thumbnailSrc"
+              :height="image.height"
+              :width="image.width" />
+          </div>
+
+          <div class="publii-block-gallery-list-item-config">
+            <input type="text" v-model="image.alt" :placeholder="$t('editor.enterAltText')"/>
+            <input type="text" v-model="image.caption" :placeholder="$t('editor.enterCaption')"/>
+          </div>
+        </div>
+      </draggable>
+
+      <div
+        v-if="(content.images.length === 0 || view === 'edit')"
+        :class="{ 'publii-block-gallery-form': true, 'is-visible': content.images.length === 0 }"
+        ref="block">
+        <div
+          :class="{ 'publii-block-gallery-uploader': true, 'is-hovered': isHovered }">
+          <div class="publii-block-gallery-uploader-inner">
+            <icon
+              v-if="!imageUploadInProgress"
+              name="blank-gallery"
+              height="62"
+              width="75" />
+            <span v-if="!imageUploadInProgress">
+              {{ $t('editor.dropToUploadYourPhotosOr') }}
+            </span>
+            <button
+              v-if="!imageUploadInProgress"
+              @click="filePickerCallback">
+              {{ $t('editor.selectFiles') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <upload-overlay
+        v-if="imageUploadInProgress"
+        class="publii-block-gallery-uploader-loader-overlay"
+        appearance="drop-zone"
+        loading
+        role="status"
+        aria-live="polite"
+        aria-atomic="true">
+        <div>{{ $t('ui.uploadInProgress') }}</div>
+      </upload-overlay>
     </div>
 
     <top-menu
@@ -107,6 +115,7 @@
 </template>
 
 <script>
+import Overlay from '../../../../basic-elements/Overlay.vue';
 import Draggable from 'vuedraggable';
 import Block from './../../Block.vue';
 import ConfigForm from './config-form.json';
@@ -122,6 +131,7 @@ export default {
     ContentEditableImprovements
   ],
   components: {
+    'upload-overlay': Overlay,
     'icon': EditorIcon,
     'top-menu': TopMenuUI,
     'draggable': Draggable
@@ -146,6 +156,7 @@ export default {
       isHovered: false,
       imageUploadInProgress: false,
       imagesQueue: [],
+      uploadedImages: [],
       imageUploader: null,
       view: 'preview',
       config: {
@@ -204,30 +215,46 @@ export default {
     this.setParentCssClasses(this.config.imageAlign);
   },
   methods: {
+    startImageDrag () {
+      this.draggingInProgress = true;
+      this.isHovered = false;
+    },
+    endImageDrag () {
+      this.draggingInProgress = false;
+      this.isHovered = false;
+    },
     dragOver (e) {
-      this.isHovered = true;
+      this.isHovered = !this.draggingInProgress &&
+        !this.imageUploadInProgress &&
+        !!e.dataTransfer &&
+        Array.from(e.dataTransfer.types).includes('Files');
     },
     dragLeave (e) {
       this.isHovered = false;
     },
     async drop (e) {
-      let files = e.dataTransfer.files;
+      this.isHovered = false;
 
-      if (!files[0]) {
-        this.imageUploadInProgress = false;
-      } else {
-        this.imagesQueue = [];
-
-        for (let i = 0; i < files.length; i++) {
-            this.imagesQueue.push(await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[i])));
-        }
-
-        this.imageUploadInProgress = true;
-        this.$parent.$el.setAttribute('style', 'height: ' + this.$parent.$el.clientHeight + 'px; overflow: hidden;');
-        this.uploadImage();
+      if (this.draggingInProgress || this.imageUploadInProgress) {
+        return;
       }
 
-      this.isHovered = false;
+      let files = e.dataTransfer.files;
+
+      if (!files.length) {
+        return;
+      }
+
+      this.imagesQueue = [];
+      this.uploadedImages = [];
+
+      for (let i = 0; i < files.length; i++) {
+        this.imagesQueue.push(await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[i])));
+      }
+
+      this.imageUploadInProgress = true;
+      this.$parent.$el.setAttribute('style', 'height: ' + this.$parent.$el.clientHeight + 'px; overflow: hidden;');
+      this.uploadImage();
     },
     initFakeFilePicker () {
       this.imageUploader = document.getElementById('post-editor-fake-multiple-images-uploader');
@@ -243,6 +270,7 @@ export default {
 
           if (this.imageUploader.files) {
             this.imagesQueue = [];
+            this.uploadedImages = [];
 
             for (let i = 0; i < this.imageUploader.files.length; i++) {
               this.imagesQueue.push(await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(this.imageUploader.files[i])));
@@ -281,7 +309,7 @@ export default {
           let sizeWidth = data.baseImage.size[0] || '';
           let sizeHeight = data.baseImage.size[1] || '';
 
-          this.content.images.push({
+          this.uploadedImages.push({
             src: data.baseImage.url,
             thumbnailSrc: thumbnailSrc,
             height: data.thumbnailDimensions ? data.thumbnailDimensions.height : sizeHeight,
@@ -295,6 +323,8 @@ export default {
         if (this.imagesQueue.length) {
           this.uploadImage();
         } else {
+          this.content.images.push(...this.uploadedImages);
+          this.uploadedImages = [];
           this.$parent.$el.removeAttribute('style');
           this.fileSelectionCallback = false;
           this.imageUploadInProgress = false;
@@ -446,40 +476,33 @@ export default {
   }
 }
 
-.publii-block-gallery-uploader-loader {
-  animation: loader 1s linear infinite;
-  border: 3px solid var(--color-primary);
-  border-left-color: transparent;
-  border-radius: 50%;
-  display: block;
-  height: 32px;
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  width: 32px!important;
+.publii-block-gallery-wrapper.is-uploading .publii-block-gallery-uploader {
+  border-color: transparent;
+  box-shadow: none;
+
+  &::before {
+    content: none;
+  }
 }
 
-.publii-block-gallery-uploader-loader-overlay {
-  background: var(--bg-primary);
-  border: 2px dashed var(--input-border-color);
-  border-radius: var(--radius-base);
-  bottom: 0;
-  padding: 6px;
-  position: absolute;
-  left: auto;
-  right: auto;
-  top: 0;
-  width: var(--editor-width);
-  z-index: 1;
+.publii-block-gallery-content {
+  position: relative;
 
-  &::after {
-    content: "";
-    background: var(--color-surface-subtle);
-    display: block;
-    height: 100%;
-    width: 100%;
+  &.is-editing {
+    display: flex;
+    flex-direction: column-reverse;
+
+    & > .publii-block-gallery-uploader-loader-overlay {
+      bottom: auto;
+      height: 250px;
+    }
   }
+}
+
+.publii-block-gallery-content > .publii-block-gallery-uploader-loader-overlay {
+  inset: 0;
+  width: auto;
+  z-index: 1;
 }
 
 .publii-block-gallery-uploader-inner {
@@ -634,13 +657,4 @@ export default {
   width: calc(100% / 8);
 }
 
-@keyframes loader {
-  from {
-    transform: translateX(-50%) translateY(-50%) rotate(0deg);
-  }
-
-  to {
-    transform: translateX(-50%) translateY(-50%) rotate(360deg);
-  }
-}
 </style>
