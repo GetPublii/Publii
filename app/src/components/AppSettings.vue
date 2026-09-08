@@ -82,6 +82,23 @@
                 </field>
 
                 <field
+                    id="auto-adjust-sidebar-width"
+                    :label="$t('settings.autoAdjustSidebarWidth')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="auto-adjust-sidebar-width"
+                        v-model="autoAdjustSidebarWidth"
+                        :accessibleLabel="$t('settings.autoAdjustSidebarWidth')"
+                        :description="$t('settings.autoAdjustSidebarWidthInfo')" />
+                    <span
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.autoAdjustSidebarWidthInfo') }}
+                    </span>
+                </field>
+
+                <field
                     id="notifications-center-enabled"
                     :label="$t('settings.notificationsCenterEnabled')"
                     :labelSeparated="false">
@@ -447,6 +464,7 @@ export default {
             timeFormatsSelected: '12',
             imageResizeEnginesSelected: 'sharp',
             uiZoomLevel: 1.0,
+            autoAdjustSidebarWidth: true,
             openDevToolsInMainWindow: false,
             devToolsMode: 'detach',
             wideScrollbars: false,
@@ -631,6 +649,7 @@ export default {
         this.experimentalFeatureAppFtpAlt = this.$store.state.app.config.experimentalFeatureAppFtpAlt;
         this.experimentalFileManagerInSidebar = this.$store.state.app.config.experimentalFileManagerInSidebar;
         this.uiZoomLevel = this.$store.state.app.config.uiZoomLevel;
+        this.autoAdjustSidebarWidth = this.$store.state.app.config.autoAdjustSidebarWidth !== false;
         this.theme = this.getAppTheme();
 
         Vue.nextTick(() => {
@@ -681,6 +700,7 @@ export default {
                 timeFormat: this.timeFormatsSelected,
                 resizeEngine: this.imageResizeEnginesSelected,
                 uiZoomLevel: this.uiZoomLevel,
+                autoAdjustSidebarWidth: this.autoAdjustSidebarWidth,
                 sitesLocation: this.locations.sites.trim(),
                 backupsLocation: this.locations.backups.trim(),
                 previewLocation: this.locations.preview.trim(),

@@ -871,6 +871,8 @@
         "appSettings": "Ustawienia aplikacji",
         "appSettingsSavedMsg": "Ustawienia aplikacji zostały pomyślnie zapisane.",
         "appSettingsSaveErrorMsg": "Wystąpił błąd podczas zapisywania ustawień aplikacji. Proszę spróbować ponownie.",
+        "autoAdjustSidebarWidth": "Automatycznie dopasowuj szerokość panelu bocznego",
+        "autoAdjustSidebarWidthInfo": "W mniejszych oknach panel będzie węższy, pozostawiając więcej miejsca na treść.",
         "appUIZoomLevel": "Dostosowanie skali interfejsu",
         "appUIZoomLevelInfo": "Dostosuj skalę interfejsu użytkownika, aby zwiększyć widoczność i komfort podczas zarządzania treścią. Ta opcja pozwala dostosować rozmiar interfejsu użytkownika do preferowanego rozmiaru, zapewniając, że tekst, ikony i inne elementy UI są łatwo czytelne i dostępne.",
         "ascending": "Rosnąco",

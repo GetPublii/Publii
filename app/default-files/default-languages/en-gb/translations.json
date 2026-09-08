@@ -869,6 +869,8 @@
         "appSettings": "App settings",
         "appSettingsSavedMsg": "App settings have been successfully saved.",
         "appSettingsSaveErrorMsg": "An error occurred during saving of the App Settings. Please try again.",
+        "autoAdjustSidebarWidth": "Automatically adjust sidebar width",
+        "autoAdjustSidebarWidthInfo": "Use a narrower sidebar in smaller windows to leave more room for content.",
         "appUIZoomLevel": "Interface scale",
         "appUIZoomLevelInfo": "Adjust the interface scale to enhance your visibility and comfort while managing your content. This option allows you to scale the user interface to your preferred size, ensuring that text, icons, and other UI elements are easily readable and accessible.",
         "ascending": "Ascending",

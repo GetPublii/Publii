@@ -194,4 +194,14 @@ export default {
     transition: var(--transition-default);
     bottom: 2px;
 }
+
+@media (max-width: 1600px) {
+    html[data-auto-adjust-sidebar-width="true"] .site-logo {
+        padding: 2.5rem var(--space-12) 0;
+    }
+
+    html[data-auto-adjust-sidebar-width="true"] .site-logo-icon-open {
+        right: var(--space-12);
+    }
+}
 </style>

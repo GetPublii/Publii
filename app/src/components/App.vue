@@ -100,6 +100,12 @@ export default {
         }
     },
     watch: {
+        '$store.state.app.config.autoAdjustSidebarWidth': {
+            immediate: true,
+            handler (value) {
+                document.documentElement.setAttribute('data-auto-adjust-sidebar-width', String(value !== false));
+            }
+        },
         '$store.state.app.config.showTooltips': {
             immediate: true,
             handler (value) {

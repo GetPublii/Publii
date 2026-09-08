@@ -43,3 +43,10 @@ html {
 html[data-is-osx-11-or-higher="true"] {
     --topbar-height: 2.6rem;
 }
+
+@media (max-width: 1600px) {
+    html[data-auto-adjust-sidebar-width="true"] {
+        --app-sidebar-width: 24rem;
+        --app-sidebar-margin: var(--space-6);
+    }
+}

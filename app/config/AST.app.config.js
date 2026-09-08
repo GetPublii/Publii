@@ -32,6 +32,7 @@ const AstAppConfig = {
     experimentalFeatureAppFtpAlt: false,
     experimentalFileManagerInSidebar: false,
     uiZoomLevel: 1.0,
+    autoAdjustSidebarWidth: true,
     notificationsStatus: false
 };
 
