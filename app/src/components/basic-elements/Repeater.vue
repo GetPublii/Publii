@@ -20,6 +20,8 @@
             ghostClass="is-ghost"
             handle=".move"
             class="publii-repeater"
+            @start="dragging = true"
+            @end="dragging = false"
             @change="listUpdated"
             v-model="content">
             <div 
@@ -28,7 +30,9 @@
                 class="publii-repeater-item">
                 <span 
                     v-if="content.length > 1"
-                    class="move">
+                    v-tooltip.hover="{ text: $t('repeater.dragToReorder'), disabled: dragging }"
+                    class="move"
+                    aria-hidden="true">
                     <icon
                         name="more"
                         size="xs" />
@@ -191,31 +195,34 @@
                 </template>
 
                 <div class="publii-repeater-item-ui">
-                    <a
-                        href="#"
+                    <button
+                        type="button"
                         :class="{ 
                             'publii-repeater-item-ui-btn': true,
                             'duplicate': true,
                             'is-disabled': maxCount !== -1 && content.length >= maxCount
                         }"
-                        :title="translation('duplicate')"
-                        tabindex="-1"
+                        v-tooltip="{ text: translation('duplicate'), disabled: maxCount !== -1 && content.length >= maxCount, describe: false }"
+                        :aria-label="translation('duplicate')"
+                        :disabled="maxCount !== -1 && content.length >= maxCount"
                         @click.stop.prevent="duplicateItem(index)">
                         <icon
                             name="duplicate"
-                            size="xs" />
-                    </a>
+                            size="xs"
+                            aria-hidden="true" />
+                    </button>
 
-                    <a
-                        href="#"
+                    <button
+                        type="button"
                         class="publii-repeater-item-ui-btn delete"
-                        :title="translation('remove')"
-                        tabindex="-1"
+                        v-tooltip="{ text: translation('remove'), describe: false }"
+                        :aria-label="translation('remove')"
                         @click.stop.prevent="removeItem(index)">
                         <icon
                             name="trash"
-                            size="xs" />
-                    </a>
+                            size="xs"
+                            aria-hidden="true" />
+                    </button>
                 </div>
             </div>
         </draggable>
@@ -231,10 +238,14 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 import Draggable from 'vuedraggable';
 import vSelect from 'vue-multiselect/dist/vue-multiselect.min.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'repeater',
     props: {
         structure: {
@@ -320,7 +331,8 @@ export default {
     data () {
         return {
             content: this.value,
-            filesList: ['']
+            filesList: [''],
+            dragging: false
         };
     },
     mounted () {
@@ -488,7 +500,7 @@ export default {
     width: calc(100% - 68px);
 
     .move {
-        cursor: move;
+        cursor: grab;
         left: -20px;
         position: absolute;
         width: 20px;
@@ -511,7 +523,7 @@ export default {
 
     &.is-ghost {
         &::before { 
-            background-color: var(--collection-bg-hover);                
+            background-color: oklch(from var(--color-primary) l c h / 5%);
             border: 1px dashed var(--input-border-focus);
             border-radius: var(--radius-base);
             content: "";
@@ -547,6 +559,10 @@ export default {
 }
 
 .publii-repeater-item-ui-btn {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
     align-items: center;
     background: var(--color-surface-subtle);
     position: relative;
@@ -662,5 +678,9 @@ export default {
 
 .publii-repeater-empty-state {
     margin-bottom: 1.2rem;
+}
+.publii-repeater-item-ui-btn:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

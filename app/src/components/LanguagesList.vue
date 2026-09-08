@@ -9,6 +9,7 @@
         @dragend.stop.prevent
         :class="{ 'languages': true, 'language-is-over': languageIsOver }">
         <div
+            :inert="installing ? '' : null"
             class="add-more-languages">
                 <a href="https://languages.getpublii.com/" target="_blank" rel="noopener noreferrer">
                     <icon
@@ -22,14 +23,20 @@
         </div>
 
         <language-item
+            :inert="installing ? '' : null"
             v-for="(language, index) in languages"
             :languageData="language"
             :key="'language-item-' + index" />
 
         <overlay
-            v-if="languageIsOver"
-            appearance="drop-zone">
-            <div>{{ $t('file.dropYourFileHere') }}</div>
+            v-if="languageIsOver || installing"
+            appearance="drop-zone"
+            center-in-viewport
+            :loading="installationLoading"
+            :role="installing ? 'status' : null"
+            :aria-live="installing ? 'polite' : null"
+            :aria-atomic="installing ? 'true' : null">
+            <div>{{ $t(installing ? 'langs.installingLanguage' : 'file.dropYourFileHere') }}</div>
         </overlay>
     </div>
 </template>
@@ -39,6 +46,16 @@ import LanguagesListItem from './LanguagesListItem';
 
 export default {
     name: 'languages-list',
+    props: {
+        installing: {
+            type: Boolean,
+            default: false
+        },
+        installationLoading: {
+            type: Boolean,
+            default: false
+        }
+    },
     data () {
         return {
             languageIsOver: false
@@ -67,21 +84,21 @@ export default {
     },
     methods: {
         showOverlay (e) {
-            this.languageIsOver = true;
+            if (!this.installing) {
+                this.languageIsOver = true;
+            }
         },
         hideOverlay (e) {
             if (e.target.classList.contains('languages')) {
                 this.languageIsOver = false;
             }
         },
-        async uploadLanguage (e) {
+        uploadLanguage (e) {
             this.languageIsOver = false;
 
-            mainProcessAPI.send('app-language-upload', {
-                sourcePath: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]))
-            });
-
-            mainProcessAPI.receiveOnce('app-language-uploaded', this.$parent.uploadedLanguage);
+            if (!this.installing && e.dataTransfer.files.length) {
+                this.$emit('install', e.dataTransfer.files[0]);
+            }
         }
     }
 }

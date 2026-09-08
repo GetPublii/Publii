@@ -4,6 +4,7 @@
             <p-header :title="$t('plugins.plugins')">
                 <p-button
                     :onClick="goBack"
+                    :disabled="installingExtension"
                     appearance="clean"
                     back
                     slot="buttons">
@@ -12,6 +13,10 @@
 
                 <p-button
                     :onClick="installPlugin"
+                    :disabled="installingExtension || installationPickerOpen"
+                    :loading="installingExtension"
+                    loading-layout="overlay"
+                    :aria-label="installingExtension ? $t('plugins.installingPlugin') : $t('plugins.installPlugin')"
                     slot="buttons" 
                     icon="upload-file">
                     {{ $t('plugins.installPlugin') }}
@@ -19,7 +24,10 @@
             </p-header>
 
             <div ref="content">
-                <plugins-list />
+                <plugins-list
+                    :installing="installingExtension"
+                    :installationLoading="installationLoading"
+                    @install="installDroppedExtension('plugin', $event)" />
             </div>
         </div>
     </section>
@@ -28,10 +36,12 @@
 <script>
 import PluginsList from './PluginsList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
+import ExtensionInstallation from './mixins/ExtensionInstallation';
 
 export default {
     name: 'app-plugins',
     mixins: [
+        ExtensionInstallation,
         GoToLastOpenedWebsite
     ],
     components: {
@@ -55,20 +65,8 @@ export default {
                 }
             }
         },
-        async installPlugin () {
-            await mainProcessAPI.invoke('app-main-process-select-file', 'file-select');
-
-            mainProcessAPI.receiveOnce('app-file-selected', (data) => {
-                if (data.path === undefined || !data.path.filePaths.length) {
-                    return;
-                }
-
-                mainProcessAPI.send('app-plugin-upload', {
-                    sourcePath: data.path.filePaths[0]
-                });
-
-                mainProcessAPI.receiveOnce('app-plugin-uploaded', this.uploadedPlugin);
-            });
+        installPlugin () {
+            return this.pickExtensionFile('plugin');
         },
         uploadedPlugin (data) {
             this.$store.commit('replaceAppPlugins', data.plugins);

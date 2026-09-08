@@ -1,5 +1,10 @@
 <template>
     <div
+        v-tooltip="switchDescription"
+        role="button"
+        tabindex="0"
+        @keydown.enter.prevent="toggle"
+        @keydown.space.prevent="toggle"
         @click="toggle"
         class="site-switch">
         <site-logo />
@@ -7,14 +12,21 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import SiteLogo from './SiteLogo';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'sites',
     components: {
         'site-logo': SiteLogo
     },
     computed: {
+        switchDescription () {
+            return this.$t(this.syncInProgress ? 'sync.showSyncProgress' : 'ui.selectWebsite');
+        },
         syncInProgress () {
             return this.$store.state.components.sidebar.syncInProgress;
         }
@@ -71,5 +83,9 @@ export default {
             fill: #5ab0f7;
         }
     }
+}
+.site-switch:focus-visible {
+    outline: 2px solid var(--sidebar-link-color);
+    outline-offset: -2px;
 }
 </style>

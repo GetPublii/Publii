@@ -2,16 +2,40 @@ const Image = require('./../../image.js');
 const normalizePath = require('normalize-path');
 const sizeOf = require('image-size');
 const fs = require('fs');
+const path = require('path');
+const validateImageUpload = require('../../helpers/validate-image-upload.js');
 
 let result = false;
 let appInstance = false;
 let imageData = false;
 let image = false;
 
-process.on('message', function(msg){
+process.on('message', async function(msg){
     if(msg.type == 'dependencies') {
         appInstance = msg.appInstance;
         imageData = msg.imageData;
+
+        const usesSharp = appInstance.appConfig?.resizeEngine !== 'jimp';
+        const imagesOnly = imageData.imagesOnly === true || imageData.imageType === 'galleryImages';
+
+        if (usesSharp && imagesOnly) {
+            try {
+                await validateImageUpload(imageData.path);
+            } catch (error) {
+                process.send({
+                    type: 'finished',
+                    result: {
+                        error: true,
+                        translation: 'core.images.invalidImageFile',
+                        file: typeof imageData.path === 'string' ? path.basename(imageData.path) : ''
+                    }
+                });
+
+                setTimeout(() => process.exit(), 1000);
+                return;
+            }
+        }
+
         image = new Image(appInstance, imageData);
         result = image.save(false);
     } else if(msg.type == 'start-regenerating') {

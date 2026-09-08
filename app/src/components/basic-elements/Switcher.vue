@@ -8,11 +8,16 @@
             :aria-checked="isChecked ? 'true' : 'false'"
             :aria-disabled="disabled ? 'true' : null"
             :aria-label="accessibleLabel || label || null"
+            :aria-describedby="description ? 'switcher-description-' + _uid : null"
             :tabindex="disabled ? -1 : 0"
             @click="toggle"
             @keydown.space.prevent="toggle"
             @keydown.enter.prevent="toggle"></span>
         {{ label }}
+        <span
+            v-if="description"
+            :id="'switcher-description-' + _uid"
+            hidden>{{ description }}</span>
     </span>
 </template>
 
@@ -28,6 +33,10 @@ export default {
             type: String
         },
         accessibleLabel: {
+            default: '',
+            type: String
+        },
+        description: {
             default: '',
             type: String
         },

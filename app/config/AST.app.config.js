@@ -12,6 +12,7 @@ const AstAppConfig = {
     timeFormat: 12,
     closeEditorOnSave: true,
     wideScrollbars: false,
+    showTooltips: true,
     showModificationDate: true,
     showModificationDateAsColumn: false,
     showPostSlugs: false,
@@ -31,6 +32,7 @@ const AstAppConfig = {
     experimentalFeatureAppFtpAlt: false,
     experimentalFileManagerInSidebar: false,
     uiZoomLevel: 1.0,
+    autoAdjustSidebarWidth: true,
     notificationsStatus: false
 };
 

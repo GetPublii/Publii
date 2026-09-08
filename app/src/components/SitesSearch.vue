@@ -3,7 +3,7 @@
         <text-input
             changeEventName="sites-list-filtered"
             v-model="value"
-            icon="magnifier-small"
+            icon="magnifier"
             size="small"
             ref="search-input"
             :spellcheck="false"

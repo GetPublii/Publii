@@ -82,6 +82,23 @@
                 </field>
 
                 <field
+                    id="auto-adjust-sidebar-width"
+                    :label="$t('settings.autoAdjustSidebarWidth')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="auto-adjust-sidebar-width"
+                        v-model="autoAdjustSidebarWidth"
+                        :accessibleLabel="$t('settings.autoAdjustSidebarWidth')"
+                        :description="$t('settings.autoAdjustSidebarWidthInfo')" />
+                    <span
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.autoAdjustSidebarWidthInfo') }}
+                    </span>
+                </field>
+
+                <field
                     id="notifications-center-enabled"
                     :label="$t('settings.notificationsCenterEnabled')"
                     :labelSeparated="false">
@@ -155,6 +172,17 @@
                         slot="field"
                         id="wide-scrollbars"
                         v-model="wideScrollbars" />
+                </field>
+
+                <field
+                    id="show-tooltips"
+                    :label="$t('settings.showTooltips')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-tooltips"
+                        v-model="showTooltips"
+                        :accessibleLabel="$t('settings.showTooltips')" />
                 </field>
             </fields-group>
 
@@ -436,9 +464,11 @@ export default {
             timeFormatsSelected: '12',
             imageResizeEnginesSelected: 'sharp',
             uiZoomLevel: 1.0,
+            autoAdjustSidebarWidth: true,
             openDevToolsInMainWindow: false,
             devToolsMode: 'detach',
             wideScrollbars: false,
+            showTooltips: true,
             notificationsStatus: false,
             closeEditorOnSave: true,
             showModificationDate: true,
@@ -596,6 +626,7 @@ export default {
         this.locations.preview = this.$store.state.app.config.previewLocation;
         this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
+        this.showTooltips = this.$store.state.app.config.showTooltips !== false;
         this.notificationsStatus = this.$store.state.app.config.notificationsStatus === 'accepted';
         this.openDevToolsInMainWindow = this.$store.state.app.config.openDevToolsInMain;
         this.devToolsMode = this.$store.state.app.config.devToolsMode || 'detach';
@@ -618,6 +649,7 @@ export default {
         this.experimentalFeatureAppFtpAlt = this.$store.state.app.config.experimentalFeatureAppFtpAlt;
         this.experimentalFileManagerInSidebar = this.$store.state.app.config.experimentalFileManagerInSidebar;
         this.uiZoomLevel = this.$store.state.app.config.uiZoomLevel;
+        this.autoAdjustSidebarWidth = this.$store.state.app.config.autoAdjustSidebarWidth !== false;
         this.theme = this.getAppTheme();
 
         Vue.nextTick(() => {
@@ -668,10 +700,12 @@ export default {
                 timeFormat: this.timeFormatsSelected,
                 resizeEngine: this.imageResizeEnginesSelected,
                 uiZoomLevel: this.uiZoomLevel,
+                autoAdjustSidebarWidth: this.autoAdjustSidebarWidth,
                 sitesLocation: this.locations.sites.trim(),
                 backupsLocation: this.locations.backups.trim(),
                 previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
+                showTooltips: this.showTooltips,
                 notificationsStatus: this.notificationsStatus ? 'accepted' : 'rejected',
                 closeEditorOnSave: this.closeEditorOnSave,
                 showModificationDate: this.showModificationDate,

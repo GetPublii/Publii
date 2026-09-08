@@ -315,9 +315,10 @@ export default {
     cursor: move;
    
     & > div {
-      background-color: transparent !important;
-      border: 1px dashed var(--input-border-focus);  
-      box-shadow: none; 
+      background-color: oklch(from var(--color-primary) l c h / 5%) !important;
+      border: 1px dashed var(--input-border-focus);
+      border-radius: var(--radius-base);
+      box-shadow: none;
       
       * {
         opacity: 0;

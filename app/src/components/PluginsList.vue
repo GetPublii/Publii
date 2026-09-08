@@ -9,6 +9,7 @@
         @dragend.stop.prevent
         :class="{ 'plugins': true, 'plugin-is-over': pluginIsOver }">
         <div
+            :inert="installing ? '' : null"
             class="add-more-plugins">
                 <a href="https://marketplace.getpublii.com/plugins/" target="_blank" rel="noopener noreferrer">
                     <icon
@@ -21,14 +22,20 @@
         </div>
 
         <plugin-item
+            :inert="installing ? '' : null"
             v-for="(plugin, index) in plugins"
             :pluginData="plugin"
             :key="'plugin-item-' + index" />
 
         <overlay
-            v-if="pluginIsOver"
-            appearance="drop-zone">
-            <div>{{ $t('file.dropYourFileHere') }}</div>
+            v-if="pluginIsOver || installing"
+            appearance="drop-zone"
+            center-in-viewport
+            :loading="installationLoading"
+            :role="installing ? 'status' : null"
+            :aria-live="installing ? 'polite' : null"
+            :aria-atomic="installing ? 'true' : null">
+            <div>{{ $t(installing ? 'plugins.installingPlugin' : 'file.dropYourFileHere') }}</div>
         </overlay>
     </div>
 </template>
@@ -38,6 +45,16 @@ import PluginsListItem from './PluginsListItem';
 
 export default {
     name: 'plugins-list',
+    props: {
+        installing: {
+            type: Boolean,
+            default: false
+        },
+        installationLoading: {
+            type: Boolean,
+            default: false
+        }
+    },
     data () {
         return {
             pluginIsOver: false
@@ -55,21 +72,21 @@ export default {
     },
     methods: {
         showOverlay (e) {
-            this.pluginIsOver = true;
+            if (!this.installing) {
+                this.pluginIsOver = true;
+            }
         },
         hideOverlay (e) {
             if (e.target.classList.contains('plugins')) {
                 this.pluginIsOver = false;
             }
         },
-        async uploadPlugin (e) {
+        uploadPlugin (e) {
             this.pluginIsOver = false;
 
-            mainProcessAPI.send('app-plugin-upload', {
-                sourcePath: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]))
-            });
-
-            mainProcessAPI.receiveOnce('app-plugin-uploaded', this.$parent.uploadedPlugin);
+            if (!this.installing && e.dataTransfer.files.length) {
+                this.$emit('install', e.dataTransfer.files[0]);
+            }
         }
     }
 }

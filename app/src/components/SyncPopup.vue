@@ -992,6 +992,9 @@ export default {
     transition: 0.5s cubic-bezier(.17,.67,.13,1.05) all;
 
     &.is-minimized {
+        --minimized-sync-width: 240px;
+        --minimized-sync-offset: 40px;
+
         animation: minimized-popup .25s linear .25s forwards;
         border-radius: 10px;
         box-shadow: 0 0 160px oklch(from var(--black) l c h / 20%);
@@ -1035,9 +1038,9 @@ export default {
                 border-radius: 3px;
                 background: none;
                 height: 50px;
-                width: 240px;
+                width: var(--minimized-sync-width);
                 opacity: 1;
-                transform: translate(40px, 0);
+                transform: translate(var(--minimized-sync-offset), 0);
             }
         }
 
@@ -1048,4 +1051,10 @@ export default {
     }
 }
 
+@media (max-width: 1600px) {
+    html[data-auto-adjust-sidebar-width="true"] .overlay.is-minimized {
+        --minimized-sync-width: calc(var(--app-sidebar-width) - 2 * var(--app-sidebar-margin));
+        --minimized-sync-offset: var(--app-sidebar-margin);
+    }
+}
 </style>

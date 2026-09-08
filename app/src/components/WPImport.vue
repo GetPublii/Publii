@@ -22,6 +22,13 @@
                 <p-button
                     :onClick="selectWXRFile"
                     :disabled="uploadDisabled"
+                    :loading="checkingFile || importInProgress"
+                    loading-layout="overlay"
+                    :aria-label="$t(
+                        importInProgress ? 'tools.wpImport.importingData' :
+                        checkingFile ? 'tools.wpImport.checkingWXRFile' :
+                        'tools.wpImport.selectWXRFileButton'
+                    )"
                     slot="buttons"
                     icon="upload-file">
                     {{ $t('tools.wpImport.selectWXRFileButton') }}
@@ -246,7 +253,7 @@
                             type="thin small" />
                     </field>
 
-                    <field>
+                    <field class="import-actions">
                         <div
                             slot="field"
                             class="result-wrapper">
@@ -254,6 +261,8 @@
                                 :onClick="importFile"
                                 :disabled="importInProgress"
                                 :loading="importInProgress"
+                                loading-layout="overlay"
+                                :aria-label="importInProgress ? $t('tools.wpImport.importingData') : $t('tools.wpImport.importData')"
                                 appearance="secondary"
                                 icon="download">
                                 {{ $t('tools.wpImport.importData') }}
@@ -748,8 +757,11 @@ export default {
 
     .import-config {
         &.is-inactive {
-            opacity: .5;
             pointer-events: none;
+
+            & > :not(.import-actions) {
+                opacity: .5;
+            }
         }
     }
 

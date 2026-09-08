@@ -150,41 +150,46 @@
                                     v-model="$parent.postData.isFeatured" />
                                 <icon
                                     :title="$t('post.markAsFeatured')"
-                                    class="switcher-item-icon-helper"
+                                    class="switcher-item-icon-helper content-status-icon is-featured"
                                     name="featured-post"
-                                    size="xs"
-                                    strokeColor="color-helper-6" />
+                                    size="xs" />
                                 <span>
                                     {{ $t('post.markAsFeatured') }}
                                 </span>
                             </label>
 
-                            <label id="post-hidden-wrapper">
+                            <label
+                                id="post-hidden-wrapper"
+                                v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnListMsg'), describe: false }">
                                 <switcher
-                                    :title="$t('post.postWillNotAppearOnListMsg')"
+                                    :accessible-label="$t('post.hidePost')"
+                                    :description="$t('post.postWillNotAppearOnListMsg')"
                                     v-model="$parent.postData.isHidden" />
                                 <icon
-                                    :title="$t('post.hidePost')"
-                                    class="switcher-item-icon-helper"
+                                    aria-hidden="true"
+                                    non-interactive
+                                    class="switcher-item-icon-helper content-status-icon"
                                     name="hidden-post"
-                                    size="xs"
-                                    strokeColor="color-6" />
-                                <span :title="$t('post.postWillNotAppearOnListMsg')">
+                                    size="xs" />
+                                <span>
                                     {{ $t('post.hidePost') }}
                                 </span>
                             </label>
 
-                            <label id="post-excluded-homepage-wrapper">
+                            <label
+                                id="post-excluded-homepage-wrapper"
+                                v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnHomepageListMsg'), describe: false }">
                                 <switcher
-                                    :title="$t('post.postWillNotAppearOnHomepageListMsg')"
+                                    :accessible-label="$t('post.excludeFromHomepage')"
+                                    :description="$t('post.postWillNotAppearOnHomepageListMsg')"
                                     v-model="$parent.postData.isExcludedOnHomepage" />
                                 <icon
-                                    :title="$t('post.excludeFromHomepage')"
-                                    class="switcher-item-icon-helper"
+                                    aria-hidden="true"
+                                    non-interactive
+                                    class="switcher-item-icon-helper content-status-icon is-excluded"
                                     name="excluded-post"
-                                    size="xs"
-                                    strokeColor="color-3"/>
-                                <span :title="$t('post.postWillNotAppearOnHomepageListMsg')">
+                                    size="xs" />
+                                <span>
                                     {{ $t('post.excludeFromHomepage') }}
                                 </span>
                             </label>
@@ -213,6 +218,7 @@
                         ref="image-content">
                         <image-upload
                             ref="featured-image"
+                            images-only
                             :item-id="$parent.postID"
                             v-model="$parent.postData.featuredImage.path"
                             imageType="featuredImages" />
@@ -349,7 +355,8 @@
                                             @keyup="$parent.slugUpdated">
                                         <p-button 
                                             :onClick="updateSlug" 
-                                            :title="$t('ui.updateSlug')"
+                                            v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
+                                            :aria-label="$t('ui.updateSlug')"
                                             icon="refresh"
                                             appearance="secondary">
                                         </p-button>
@@ -537,6 +544,7 @@
 
                                     <image-upload
                                         v-if="field.type === 'image'"
+                                        images-only
                                         slot="field"
                                         v-model="$parent.postData.viewOptions[field.name]"
                                         :item-id="$parent.postID"
@@ -558,9 +566,13 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'post-editor-sidebar',
     props: {
         'itemType': {
@@ -987,6 +999,7 @@ export default {
 </script>
 
 <style>
+@import '../../css/content-status-icon.css';
 @import '../../css/options-sidebar.css';
 
 .post-editor {

@@ -26,21 +26,29 @@
             type="submit"
             class="inline-name-editor-button is-confirm"
             :disabled="pending"
-            :title="saveLabel || $t('ui.save')"
+            v-tooltip="{ text: saveLabel || $t('ui.save'), disabled: pending, describe: false }"
             :aria-label="saveLabel || $t('ui.save')"
             @mousedown.prevent>
-            <icon name="success" size="xs" non-interactive />
+            <icon
+                name="success"
+                size="xs"
+                aria-hidden="true"
+                non-interactive />
         </button>
 
         <button
             type="button"
             class="inline-name-editor-button is-cancel"
             :disabled="pending"
-            :title="$t('ui.cancel')"
+            v-tooltip="{ text: $t('ui.cancel'), disabled: pending, describe: false }"
             :aria-label="$t('ui.cancel')"
             @mousedown.prevent
             @click="cancel">
-            <icon name="win-close" size="xxs" non-interactive />
+            <icon
+                name="win-close"
+                size="xxs"
+                aria-hidden="true"
+                non-interactive />
         </button>
 
         <p v-if="pending && pendingLabel" class="inline-name-editor-status" role="status">
@@ -53,7 +61,12 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
+
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'inline-name-editor',
     props: {
         value: { default: '', type: String },

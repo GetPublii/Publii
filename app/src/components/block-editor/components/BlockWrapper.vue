@@ -35,7 +35,7 @@
             v-model="blockFilterPhrase" 
             :placeholder="$t('editor.searchForABlock')" 
             ref="block-search-input"
-            icon="magnifier-small"/>
+            icon="magnifier"/>
         <div class="block-selector-list-wrapper">
             <button
                 v-for="(blockItem, index) of filteredBlocks"
@@ -408,8 +408,8 @@ export default {
 
   &.has-ui-opened {
     background: var(--popup-bg);
-    border-radius: var(--radius-base);
-    box-shadow: 0 0 32px var(--shadow-color);
+    border-radius: calc(var(--radius-base) * 1.5);
+    box-shadow: var(--shadow-lg);
     margin-top: -44px;
     opacity: 1;
     padding: 0 32px;
@@ -433,11 +433,6 @@ export default {
       .publii-block-code > pre,
       .publii-block-html > pre {
         background: var(--pre-bg-hover) !important;
-      }
-      .publii-block-gallery-uploader-loader-overlay {
-        height: 250px;
-        top: 61px;
-        width: calc(100% - 64px) !important;
       }
     }
 

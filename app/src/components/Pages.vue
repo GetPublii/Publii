@@ -260,6 +260,7 @@
                         'is-homepage': homepageID === item.id
                     }"> 
                         <a
+                            v-tooltip.focus="item.isDraft ? $t('page.thisPageIsADraft') : ''"
                             href="#"
                             @click.prevent.stop="editPage(item.id, item.editor)">
 
@@ -273,8 +274,10 @@
                                 v-if="item.isDraft"
                                 size="xs"
                                 name="draft-post"
-                                primaryColor="color-7"
-                                :title="$t('page.thisPageIsADraft')" />
+                                class="page-status-icon content-status-icon"
+                                v-tooltip.hover="$t('page.thisPageIsADraft')"
+                                aria-hidden="true"
+                                focusable="false" />
                         </a>
                     </h2>
 
@@ -455,11 +458,15 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'pages',
     mixins: [
         CollectionOrdering,
@@ -1248,6 +1255,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
 @import '../css/empty-states.css';
 
@@ -1509,5 +1517,14 @@ export default {
         margin-left: -4px;
         padding-left: 0;
     }
+}
+/* Status icons inside links must receive hover despite the global SVG rule. */
+.title .page-status-icon {
+    pointer-events: bounding-box;
+}
+
+.title > a:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

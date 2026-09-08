@@ -16,15 +16,17 @@
                 v-model="group.cookieGroup"
                 :items="availableCookieGroups" />
 
-            <a
-                href="#"
+            <button
+                type="button"
                 class="g-consent-mode-group-btn delete"
-                tabindex="-1"
+                v-tooltip="{ text: $t('settings.gConsentMode.removeRule'), describe: false }"
+                :aria-label="$t('settings.gConsentMode.removeRule')"
                 @click.stop.prevent="removeRule(index)">
                 <icon
                     name="trash"
+                    aria-hidden="true"
                     size="xs" />
-            </a>
+            </button>
 
             <div  
                 class="g-consent-mode-group-switchers">
@@ -75,9 +77,13 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'g-consent-mode-groups',
     props: [
         'value',
@@ -223,6 +229,10 @@ export default {
 }
 
 .g-consent-mode-group-btn {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
     align-items: center;
     background: var(--color-surface-subtle);
     position: relative;
@@ -267,5 +277,9 @@ export default {
             }
         }
     }
+}
+.g-consent-mode-group-btn:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

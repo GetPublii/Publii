@@ -1,0 +1,12 @@
+/* Shared colors for content status icons on lists, forms and bulk actions. */
+.content-status-icon {
+    color: var(--icon-secondary-color);
+
+    &.is-featured {
+        color: var(--color-warning);
+    }
+
+    &.is-excluded {
+        color: var(--color-danger);
+    }
+}

@@ -4,6 +4,7 @@
             <p-header :title="$t('theme.themes')">
                 <p-button
                     :onClick="goBack"
+                    :disabled="installingExtension"
                     appearance="clean"
                     back
                     slot="buttons">
@@ -12,6 +13,10 @@
 
                 <p-button
                     :onClick="installThemeFromFile"
+                    :disabled="installingExtension || installationPickerOpen"
+                    :loading="installingExtension"
+                    loading-layout="overlay"
+                    :aria-label="installingExtension ? $t('theme.installingTheme') : $t('theme.installTheme')"
                     slot="buttons"
                     icon="upload-file">
                     {{ $t('theme.installTheme') }}
@@ -19,7 +24,10 @@
             </p-header>
 
             <div ref="content">
-                <themes-list />
+                <themes-list
+                    :installing="installingExtension"
+                    :installationLoading="installationLoading"
+                    @install="installDroppedExtension('theme', $event)" />
             </div>
         </div>
     </section>
@@ -28,11 +36,13 @@
 <script>
 import ThemesList from './ThemesList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
+import ExtensionInstallation from './mixins/ExtensionInstallation';
 import ThemeUpload from './mixins/ThemeUpload';
 
 export default {
     name: 'app-themes',
     mixins: [
+        ExtensionInstallation,
         GoToLastOpenedWebsite,
         ThemeUpload
     ],
@@ -46,6 +56,9 @@ export default {
         this.$bus.$emit('sites-list-reset');
     },
     methods: {
+        installThemeFromFile () {
+            return this.pickExtensionFile('theme');
+        },
         goBack () {
             let lastOpened = localStorage.getItem('publii-last-opened-website');
             let sites = Object.keys(this.$store.state.sites);

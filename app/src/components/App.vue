@@ -29,6 +29,7 @@ import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
 import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
+import { setTooltipsEnabled } from '../helpers/tooltip';
 
 const GLOBAL_MENU_ROUTES = Object.freeze({
     'about': '/about/',
@@ -96,6 +97,20 @@ export default {
         },
         useWideScrollbars () {
             return this.$store.state.app.config.wideScrollbars;
+        }
+    },
+    watch: {
+        '$store.state.app.config.autoAdjustSidebarWidth': {
+            immediate: true,
+            handler (value) {
+                document.documentElement.setAttribute('data-auto-adjust-sidebar-width', String(value !== false));
+            }
+        },
+        '$store.state.app.config.showTooltips': {
+            immediate: true,
+            handler (value) {
+                setTooltipsEnabled(value);
+            }
         }
     },
     created () {

@@ -18,6 +18,7 @@ html {
     --layer-editor-toolbar: 100001;
     --layer-popup: 100002;
     --layer-toast: 100003;
+    --layer-tooltip: 100004;
     --layer-dialog: 100005;
     --layer-alert: 100006;
 
@@ -41,4 +42,11 @@ html {
 
 html[data-is-osx-11-or-higher="true"] {
     --topbar-height: 2.6rem;
+}
+
+@media (max-width: 1600px) {
+    html[data-auto-adjust-sidebar-width="true"] {
+        --app-sidebar-width: 24rem;
+        --app-sidebar-margin: var(--space-6);
+    }
 }

@@ -103,8 +103,8 @@ export default {
   align-items: center;
   background: var(--popup-bg);
   border: none;
-  border-radius: var(--radius-base);
-  box-shadow: 0 5px 10px -5px var(--shadow-color), 4px -11px 26px -12px var(--shadow-color), 0 24px 50px 2px var(--shadow-color);
+  border-radius: calc(var(--radius-base) * 1.5);
+  box-shadow: var(--shadow-lg);
   left: 50%;
   margin-top: 16px;
   min-height: 44px;
@@ -171,7 +171,7 @@ export default {
   &::before {
      content: "";
      background: var(--color-control-surface-hover);
-     border-radius: 3px;
+     border-radius: var(--radius-base);
      display: block;
      left: 50%;
      opacity: 0;

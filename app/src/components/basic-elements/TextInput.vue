@@ -205,7 +205,7 @@ export default {
     }
 
     svg {
-        fill: var(--icon-secondary-color);
+        color: var(--icon-secondary-color);
         left: 2rem;
         position: absolute;
         top: 50%;

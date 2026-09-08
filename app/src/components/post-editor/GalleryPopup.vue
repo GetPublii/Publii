@@ -139,6 +139,7 @@
 </template>
 
 <script>
+import { extensions as imageExtensions } from './../../../config/image-upload-formats.js';
 import Vue from 'vue';
 import Draggable from 'vuedraggable';
 
@@ -187,7 +188,7 @@ export default {
             await mainProcessAPI.invoke('app-main-process-select-files', false, [
                 {
                     name: 'Images',
-                    extensions: ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif', 'tiff']
+                    extensions: imageExtensions
                 }
             ]);
 
@@ -484,6 +485,24 @@ h1 {
     grid-template-columns: auto 1fr 15px;
     padding: 1rem 0;
 
+    &.is-ghost {
+        position: relative;
+
+        &::before {
+            background: oklch(from var(--color-primary) l c h / 5%);
+            border: 1px dashed var(--input-border-focus);
+            border-radius: var(--radius-base);
+            content: '';
+            inset: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        & > * {
+            opacity: 0;
+        }
+    }
+
     &:first-child {
 
         .gallery-popup-images-list-operations {
@@ -501,8 +520,12 @@ h1 {
         }
     }
 
+    &.is-chosen img {
+        cursor: grabbing;
+    }
+
     img {
-        cursor: move;
+        cursor: grab;
         max-height: 90px;
         width: 90px;
     }

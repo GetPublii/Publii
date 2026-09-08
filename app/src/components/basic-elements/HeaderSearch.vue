@@ -2,7 +2,7 @@
     <div :class="cssClasses">
         <icon
             size="xs"
-            name="magnifier-small"
+            name="magnifier"
             @click.native="open" />
 
         <input

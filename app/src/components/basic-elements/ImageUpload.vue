@@ -1,7 +1,8 @@
 <template>
     <div
         :id="anchor"
-        :class="wrapperCssClasses">
+        :class="wrapperCssClasses"
+        :aria-busy="isUploading ? 'true' : 'false'">
         <div
             :class="inputCssClasses"
             :data-path="filePath"
@@ -23,25 +24,30 @@
                 <input
                     ref="input"
                     type="file"
+                    :accept="imagesOnly ? imageAccept : null"
                     class="upload-image-input"
                     spellcheck="false"
+                    :disabled="isUploading"
                     @change="valueChanged">
-
-                <div
-                    v-if="isUploading"
-                    class="upload-uploading-overlay">
-                    <div>
-                        <div class="loader"><span></span></div>
-                        {{ $t('ui.uploadInProgress') }}
-                    </div>
-                </div>
             </div>
+
+            <overlay
+                v-if="isUploading"
+                class="image-upload-progress"
+                appearance="drop-zone"
+                loading
+                role="status"
+                aria-live="polite"
+                aria-atomic="true">
+                <div>{{ $t('ui.uploadInProgress') }}</div>
+            </overlay>
         </div>
 
         <a
             v-if="!isEmpty"
             href="#"
             class="upload-remove"
+            :inert="isUploading ? '' : null"
             @click="remove">
             {{ $t('image.removeImage') }}
         </a>
@@ -49,9 +55,15 @@
 </template>
 
 <script>
+import { accept as imageAccept } from './../../../config/image-upload-formats.js';
+
 export default {
     name: 'image-upload',
     props: {
+        imagesOnly: {
+            default: false,
+            type: Boolean
+        },
         value: {
             default: '',
             type: String
@@ -99,6 +111,7 @@ export default {
     },
     data () {
         return {
+            imageAccept,
             isEmpty: true,
             filePath: '',
             isUploading: false,
@@ -160,6 +173,7 @@ export default {
             let cssClasses = {
                 'is-small': this.size === 'small',
                 'upload-image-wrapper': true,
+                'is-uploading': this.isUploading,
                 'is-empty': this.isEmpty
             };
 
@@ -177,6 +191,7 @@ export default {
                 'upload-image': true,
                 'is-empty': this.isEmpty,
                 'is-hovered': this.isHovered,
+                'is-uploading': this.isUploading,
                 'is-small': this.size === 'small'
             };
         },
@@ -228,81 +243,138 @@ export default {
         },
         dragOver (e) {
             this.stopEvents(e);
-            this.isHovered = true;
+            this.isHovered = !this.isUploading &&
+                !!e.dataTransfer &&
+                Array.from(e.dataTransfer.types).includes('Files');
         },
         dragLeave (e) {
             this.stopEvents(e);
+
+            if (e.relatedTarget && e.currentTarget.contains(e.relatedTarget)) {
+                return;
+            }
+
             this.isHovered = false;
         },
-        async drop (e) {
+        drop (e) {
             this.stopEvents(e);
-            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]));
-            this.uploadImage(sourcePath);
+            this.isHovered = false;
+
+            if (this.isUploading || !e.dataTransfer.files.length) {
+                return;
+            }
+
+            return this.uploadImage(e.dataTransfer.files[0]);
         },
         remove (e) {
             e.preventDefault();
+            if (this.isUploading) {
+                return;
+            }
+
             this.onBeforeRemove(this.filePath);
             this.filePath = '';
             this.$refs['input'].value = '';
             this.isEmpty = true;
             this.onRemove();
         },
-        async valueChanged (e) {
-            if(!e.target.files.length) {
+        valueChanged (e) {
+            if (this.isUploading || !e.target.files.length) {
                 return;
             }
 
-            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.target.files[0]));
-            this.uploadImage(sourcePath);
+            return this.uploadImage(e.target.files[0]);
         },
-        uploadImage (sourcePath) {
+        async uploadImage (source) {
+            if (this.isUploading) {
+                return;
+            }
+
+            this.isHovered = false;
             this.isUploading = true;
+            let sourcePath = '';
 
-            let uploadData = {
-                id: 'website',
-                site: this.$store.state.currentSite.config.name,
-                path: sourcePath,
-                imageType: 'optionImages'
-            };
+            try {
+                sourcePath = typeof source === 'string' ? source : mainProcessAPI.getPathForFile(source);
+                sourcePath = await mainProcessAPI.normalizePath(sourcePath);
 
-            if (this.itemId && this.itemId === 'defaults') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = this.imageType;
-            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'tagImages';
-            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'authorImages';
-            } else if (this.imageType === 'pluginImages') {
-                uploadData.imageType = 'pluginImages';
-                uploadData.pluginDir = this.pluginDir;
-            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'contentImages') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'contentImages';
-            } else if ((this.itemId || this.itemId === 0)) {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'featuredImages';
-            } 
-
-            mainProcessAPI.send('app-image-upload', uploadData);
-
-            mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
-                if (data && data.error) {
-                    this.isUploading = false;
-                    this.isHovered = false;
-                    this.$bus.$emit('alert-display', {
-                        message: this.$t(data.translation || 'core.images.imageUnprocessable', { file: data.file || '' }),
-                        buttonStyle: 'danger'
-                    });
+                if (this._isDestroyed) {
                     return;
                 }
 
+                let uploadData = {
+                    id: 'website',
+                    site: this.$store.state.currentSite.config.name,
+                    path: sourcePath,
+                    imageType: 'optionImages',
+                    imagesOnly: this.imagesOnly
+                };
+
+                if (this.itemId && this.itemId === 'defaults') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = this.imageType;
+                } else if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'tagImages';
+                } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'authorImages';
+                } else if (this.imageType === 'pluginImages') {
+                    uploadData.imageType = 'pluginImages';
+                    uploadData.pluginDir = this.pluginDir;
+                } else if ((this.itemId || this.itemId === 0) && this.imageType === 'contentImages') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'contentImages';
+                } else if ((this.itemId || this.itemId === 0)) {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'featuredImages';
+                }
+
+                const data = await mainProcessAPI.invoke('app-image:upload', uploadData);
+
+                if (this._isDestroyed) {
+                    return;
+                }
+
+                if (!data || data.error || !data.baseImage?.newPath) {
+                    this.showUploadError(data, sourcePath);
+                    return;
+                }
+
+                const newPath = await mainProcessAPI.normalizePath(data.baseImage.newPath);
+
+                if (this._isDestroyed) {
+                    return;
+                }
+
+                if (typeof newPath !== 'string' || !newPath) {
+                    this.showUploadError(data, sourcePath);
+                    return;
+                }
+
+                this.filePath = newPath;
                 this.isEmpty = false;
-                this.isHovered = false;
-                this.filePath = await mainProcessAPI.normalizePath(data.baseImage.newPath);
                 this.isUploading = false;
                 this.onAdd();
+            } catch (error) {
+                if (!this._isDestroyed) {
+                    this.showUploadError(null, sourcePath);
+                }
+            } finally {
+                this.isUploading = false;
+                this.isHovered = false;
+
+                if (this.$refs.input) {
+                    this.$refs.input.value = '';
+                }
+            }
+        },
+        showUploadError (data, sourcePath) {
+            this.$bus.$emit('alert-display', {
+                message: this.$t(data?.translation || 'core.images.imageUnprocessable', {
+                    file: data?.file || sourcePath.split('/').pop() || ''
+                }),
+                buttonStyle: 'danger'
             });
         },
         async setImage (newPath, addMedia = false) {
@@ -372,19 +444,48 @@ export default {
     }
 
     &.is-hovered {
-        border-color: var(--color-primary);
+        border-color: transparent;
+        box-shadow: none;
+
+        &::before {
+            background: oklch(from var(--color-primary) l c h / 5%);
+            border: 1px dashed var(--input-border-focus);
+            border-radius: var(--radius-base);
+            content: '';
+            inset: -2px;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        & > .upload-overlay {
+            position: relative;
+        }
     }
 
-    &:not(.is-empty):not(.is-hovered) {
+    &.is-uploading {
+        border-color: transparent;
+        box-shadow: none;
+
+        & > .upload-overlay {
+            visibility: hidden;
+        }
+
+        & > .image-upload-progress {
+            inset: -2px;
+        }
+    }
+
+    &:not(.is-empty) {
         background-color: transparent;
         background-position: center center;
         background-repeat: no-repeat;
         background-size: contain;
-        border: none;
-        padding: 10rem;
+        border: 2px solid transparent;
+        height: 20rem;
+        padding: 0;
 
         &.is-small {
-            padding: 9rem;
+            height: 18rem;
         }
     }
 }
@@ -392,6 +493,10 @@ export default {
 .upload-image-wrapper {
     display: block;
     padding: 0 0 40px 0;
+
+    &.is-uploading > .upload-remove {
+        visibility: hidden;
+    }
 
     &:not(.is-empty):not(.is-hovered) {
         background-color: var(--bg-secondary);
@@ -465,53 +570,8 @@ export default {
     }
 }
 
-.upload-uploading-overlay {
-    background: var(--color-surface-subtle);
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-
-    & > div {
-        color: var(--color-text-subtle)!important;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        width: 100%;
-    }
-
-    .loader {
-        display: block;
-        height: 2.8rem;
-        margin: 0 auto var(--space-4);
-        width: 2.8rem;
-
-        & > span {
-            animation: spin .9s infinite linear;
-            border-top: 2px solid oklch(from var(--color-primary) l c h / 20%);
-            border-right: 2px solid oklch(from var(--color-primary) l c h / 20%);
-            border-bottom: 2px solid oklch(from var(--color-primary) l c h / 20%);
-            border-left: 2px solid var(--color-primary);
-            border-radius: 50%;
-            display: block;
-            height: 2.5rem;
-            width: 2.5rem;
-
-            &::after {
-                border-radius: 50%;
-                content: "";
-                display: block;
-            }
-      }
-   }
-}
-
-@keyframes spin {
-   100% {
-      transform: rotate(360deg);
-   }
+.upload-image > .image-upload-progress.overlay::v-deep > div {
+    padding: var(--space-4) var(--space-6);
 }
 
 .settings-basic {

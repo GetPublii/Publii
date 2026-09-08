@@ -9,7 +9,7 @@
             class="workspace-accent-option"
             :data-workspace-accent-preview="accent.value"
             :for="inputID(accent.value)"
-            :title="accent.label">
+            v-tooltip.focusin="{ text: accent.label, describe: false }">
             <input
                 :id="inputID(accent.value)"
                 type="radio"
@@ -34,12 +34,16 @@
 </template>
 
 <script>
+import Tooltip from '../../helpers/tooltip.js';
 import {
     DEFAULT_WORKSPACE_ACCENT,
     getSupportedWorkspaceAccents
 } from './../../helpers/app-appearance.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'workspace-accent-picker',
     props: {
         groupName: {

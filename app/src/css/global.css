@@ -55,9 +55,9 @@ h4 {
 
 h1 {
     color: var(--headings-color);
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: var(--font-weight-semibold);
-    letter-spacing: -.01em;
+    letter-spacing: -.015em;
 }
 
 h2 {

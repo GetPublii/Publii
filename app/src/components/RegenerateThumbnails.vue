@@ -28,7 +28,9 @@
                         :onClick="regenerate"
                         appearance="secondary"
                         :disabled="buttonBusy"
-                        :loading="buttonBusy">
+                        :loading="buttonBusy"
+                        loading-layout="overlay"
+                        :aria-label="buttonBusy ? $t('tools.thumbnails.regeneratingThumbnails') : $t('tools.thumbnails.regenerateThumbnails')">
                         {{ $t('tools.thumbnails.regenerateThumbnails') }}
                     </p-button>
 

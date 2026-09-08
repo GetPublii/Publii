@@ -207,7 +207,8 @@
                                     type="text">
                                 <p-button 
                                     :onClick="updateSlug" 
-                                    :title="$t('ui.updateSlug')"
+                                    v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
+                                    :aria-label="$t('ui.updateSlug')"
                                     icon="refresh"
                                     appearance="secondary">
                                 </p-button>
@@ -344,6 +345,7 @@
 
                                     <image-upload
                                         v-if="field.type === 'image'"
+                                        images-only
                                         class="author-view-settings"
                                         v-model="authorData.additionalData.viewConfig[field.name]"
                                         :item-id="authorData.id"
@@ -393,10 +395,14 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import Utils from './../helpers/utils';
 import Vue from 'vue';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'author-form-sidebar',
     props: [
         'formAnimation'

@@ -115,7 +115,8 @@ export default {
     align-items: center;
     color: var(--sidebar-preview-btn-color);
     display: flex;
-    padding: 2.5rem var(--space-16);
+    padding: 2.5rem var(--space-16) 0;
+    margin-bottom: 2.5rem;
     width: 100%;
     transition: var(--transition-default);
 
@@ -191,6 +192,16 @@ export default {
     width: 5px;
     text-align: center;
     transition: var(--transition-default);
-    top: calc(50% - 2px);
+    bottom: 2px;
+}
+
+@media (max-width: 1600px) {
+    html[data-auto-adjust-sidebar-width="true"] .site-logo {
+        padding: 2.5rem var(--space-12) 0;
+    }
+
+    html[data-auto-adjust-sidebar-width="true"] .site-logo-icon-open {
+        right: var(--space-12);
+    }
 }
 </style>

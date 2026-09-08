@@ -102,10 +102,12 @@
                     <span
                         v-if="item.id === 1"
                         class="main-author-icon"
-                        :title="$t('author.mainAuthorCannotBeRemoved')">
+                        v-tooltip.hover="$t('author.mainAuthorCannotBeRemoved')"
+                        aria-hidden="true">
                         <icon
                             size="s"
-                            name="padlock" />
+                            name="padlock"
+                            focusable="false" />
                     </span>
                 </collection-cell>
 
@@ -113,6 +115,7 @@
                     <h2 class="title">
                         <a
                             href="#"
+                            v-tooltip.focus="item.id === 1 ? $t('author.mainAuthorCannotBeRemoved') : ''"
                             @click.prevent.stop="editAuthor(item)">
                             {{ item.name }}
 
@@ -168,11 +171,15 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import AuthorForm from './AuthorForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'authors',
     mixins: [
         CollectionOrdering,
@@ -417,5 +424,9 @@ export default {
         font-size: 11px;
         margin-top: .2rem;
     }
+}
+.title > a:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
 }
 </style>

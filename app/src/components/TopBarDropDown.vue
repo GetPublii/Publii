@@ -1,40 +1,52 @@
 <template>
-      <div
-        @click="toggleSubmenu"
+    <div
         class="topbar-app-settings"
-        :title="$t('ui.moreItems')">
-        
-        <!-- Bell icon when updates available AND menu is closed -->
-        <span v-if="insideWebsiteUI && !submenuIsOpen && notificationsStatus === 'accepted' && notificationsCount > 0" 
-            class="topbar-app-settings-bell">
-            <icon
-                name="notification"
-                customWidth="22"
-                customHeight="22" />
-            <span class="topbar-app-settings-bell-badge">
-                {{ notificationsCount }}
+        @keydown.esc.stop="closeFromKeyboard">
+        <button
+            ref="trigger"
+            v-tooltip="triggerTooltip"
+            type="button"
+            class="topbar-app-settings-trigger"
+            :aria-label="triggerLabel"
+            :aria-expanded="submenuIsOpen ? 'true' : 'false'"
+            :aria-controls="'topbar-app-submenu-' + _uid"
+            @click="toggleSubmenu">
+            <span
+                v-if="hasNotificationUpdates"
+                class="topbar-app-settings-bell"
+                aria-hidden="true">
+                <icon
+                    name="notification"
+                    customWidth="22"
+                    customHeight="22" />
+                <span class="topbar-app-settings-bell-badge">
+                    {{ notificationsCount }}
+                </span>
             </span>
-        </span>
 
-        <span v-else-if="insideWebsiteUI && notificationsStatus === false && !submenuIsOpen" 
-            class="topbar-app-settings-bell">
-            <icon
-                name="notification"
-                customWidth="22"
-                customHeight="22" />
-            <span class="topbar-app-settings-bell-badge">
-                !
+            <span
+                v-else-if="hasNotificationPrompt"
+                class="topbar-app-settings-bell"
+                aria-hidden="true">
+                <icon
+                    name="notification"
+                    customWidth="22"
+                    customHeight="22" />
+                <span class="topbar-app-settings-bell-badge">!</span>
             </span>
-        </span>
 
-        <!-- Three dots icon when menu is open OR no updates -->
-        <span v-else
-            class="topbar-app-settings-icon"
-            :class="{ 'is-active': submenuIsOpen }">
-        </span>
+            <span
+                v-else
+                class="topbar-app-settings-icon"
+                :class="{ 'is-active': submenuIsOpen }"
+                aria-hidden="true">
+            </span>
+        </button>
 
         <ul
             ref="submenu"
+            :id="'topbar-app-submenu-' + _uid"
+            @click.stop="hideSubmenu"
             :class="cssClasses">
             <topbar-dropdown-item
                 :label="$t('settings.appSettings')"
@@ -85,10 +97,14 @@
 </template>
 
 <script>
+import Tooltip from '../helpers/tooltip.js';
 import { mapGetters } from 'vuex';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
 export default {
+    directives: {
+        tooltip: Tooltip
+    },
     name: 'topbar-dropdown',
     components: {
         'topbar-dropdown-item': TopBarDropDownItem
@@ -103,6 +119,50 @@ export default {
             'notificationsStatus', 
             'notificationsCount'
         ]),
+        hasNotificationUpdates () {
+            return this.insideWebsiteUI && !this.submenuIsOpen &&
+                this.notificationsStatus === 'accepted' && this.notificationsCount > 0;
+        },
+        hasNotificationPrompt () {
+            return this.insideWebsiteUI && !this.submenuIsOpen && this.notificationsStatus === false;
+        },
+        notificationCountText () {
+            const prefix = 'notifications.tooltipCount.';
+            const locale = this.$te(prefix + 'one') ? this.$i18n.locale : 'en';
+            let category;
+
+            try {
+                category = new Intl.PluralRules(locale).select(this.notificationsCount);
+            } catch (error) {
+                category = new Intl.PluralRules('en').select(this.notificationsCount);
+            }
+
+            if (!this.$te(prefix + category)) {
+                category = this.notificationsCount === 1 ? 'one' : 'other';
+            }
+
+            return this.$t(prefix + category, { count: this.notificationsCount });
+        },
+        triggerTooltip () {
+            const title = this.hasNotificationUpdates ? this.$t('ui.openApplicationMenu') : '';
+            let text = this.$t('ui.openApplicationMenu');
+
+            if (this.hasNotificationUpdates) {
+                text = this.notificationCountText;
+            } else if (this.hasNotificationPrompt) {
+                text = this.$t('ui.openApplicationMenuWithNotificationSettings');
+            }
+
+            return {
+                title,
+                text,
+                disabled: this.submenuIsOpen,
+                describe: false
+            };
+        },
+        triggerLabel () {
+            return [this.triggerTooltip.title, this.triggerTooltip.text].filter(Boolean).join('\n');
+        },
         cssClasses: function() {
             return {
                 'is-hidden': !this.submenuIsOpen,
@@ -128,6 +188,12 @@ export default {
         this.$bus.$on('document-body-clicked', this.hideSubmenu);
     },
     methods: {
+        closeFromKeyboard () {
+            if (this.submenuIsOpen) {
+                this.hideSubmenu();
+                this.$refs.trigger.focus();
+            }
+        },
         hideSubmenu () {
             this.submenuIsOpen = false;
         },
@@ -165,6 +231,27 @@ export default {
 
 }
 
+.topbar-app-settings-trigger {
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+}
+
 .topbar-app-settings-icon {
     background: currentColor;
     border-radius: 50%;
@@ -173,8 +260,8 @@ export default {
     margin-top: -2px;
     pointer-events: none;
     position: relative;
-    right: -1px;
-    top: 50%;
+    right: 0;
+    top: auto;
     width: 3px;
 
     &:after,
@@ -195,6 +282,7 @@ export default {
 }
 
 .topbar-app-settings-bell {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -244,8 +332,9 @@ export default {
 
 .topbar-app-submenu {
     background: var(--popup-bg);
+    border: 1px solid var(--border-light-color);
     box-shadow: var(--shadow-md);
-    border-radius: var(--radius-base);
+    border-radius: calc(var(--radius-base) * 1.5);
     cursor: default;
     font-size: var(--font-size-ui-md);
     list-style-type: none;
