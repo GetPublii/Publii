@@ -243,22 +243,28 @@ export default {
         },
         dragOver (e) {
             this.stopEvents(e);
-            if (!this.isUploading) {
-                this.isHovered = true;
-            }
+            this.isHovered = !this.isUploading &&
+                !!e.dataTransfer &&
+                Array.from(e.dataTransfer.types).includes('Files');
         },
         dragLeave (e) {
             this.stopEvents(e);
+
+            if (e.relatedTarget && e.currentTarget.contains(e.relatedTarget)) {
+                return;
+            }
+
             this.isHovered = false;
         },
-        async drop (e) {
+        drop (e) {
             this.stopEvents(e);
+            this.isHovered = false;
+
             if (this.isUploading || !e.dataTransfer.files.length) {
                 return;
             }
 
-            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]));
-            this.uploadImage(sourcePath);
+            return this.uploadImage(e.dataTransfer.files[0]);
         },
         remove (e) {
             e.preventDefault();
@@ -272,69 +278,103 @@ export default {
             this.isEmpty = true;
             this.onRemove();
         },
-        async valueChanged (e) {
+        valueChanged (e) {
             if (this.isUploading || !e.target.files.length) {
                 return;
             }
 
-            let sourcePath = await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.target.files[0]));
-            this.uploadImage(sourcePath);
+            return this.uploadImage(e.target.files[0]);
         },
-        uploadImage (sourcePath) {
+        async uploadImage (source) {
             if (this.isUploading) {
                 return;
             }
 
             this.isHovered = false;
             this.isUploading = true;
+            let sourcePath = '';
 
-            let uploadData = {
-                id: 'website',
-                site: this.$store.state.currentSite.config.name,
-                path: sourcePath,
-                imageType: 'optionImages',
-                imagesOnly: this.imagesOnly
-            };
+            try {
+                sourcePath = typeof source === 'string' ? source : mainProcessAPI.getPathForFile(source);
+                sourcePath = await mainProcessAPI.normalizePath(sourcePath);
 
-            if (this.itemId && this.itemId === 'defaults') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = this.imageType;
-            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'tagImages';
-            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'authorImages';
-            } else if (this.imageType === 'pluginImages') {
-                uploadData.imageType = 'pluginImages';
-                uploadData.pluginDir = this.pluginDir;
-            } else if ((this.itemId || this.itemId === 0) && this.imageType === 'contentImages') {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'contentImages';
-            } else if ((this.itemId || this.itemId === 0)) {
-                uploadData.id = this.itemId;
-                uploadData.imageType = 'featuredImages';
-            } 
-
-            mainProcessAPI.send('app-image-upload', uploadData);
-
-            mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
-                if (data && data.error) {
-                    this.$refs.input.value = '';
-                    this.isUploading = false;
-                    this.isHovered = false;
-                    this.$bus.$emit('alert-display', {
-                        message: this.$t(data.translation || 'core.images.imageUnprocessable', { file: data.file || '' }),
-                        buttonStyle: 'danger'
-                    });
+                if (this._isDestroyed) {
                     return;
                 }
 
+                let uploadData = {
+                    id: 'website',
+                    site: this.$store.state.currentSite.config.name,
+                    path: sourcePath,
+                    imageType: 'optionImages',
+                    imagesOnly: this.imagesOnly
+                };
+
+                if (this.itemId && this.itemId === 'defaults') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = this.imageType;
+                } else if ((this.itemId || this.itemId === 0) && this.imageType === 'tagImages') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'tagImages';
+                } else if ((this.itemId || this.itemId === 0) && this.imageType === 'authorImages') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'authorImages';
+                } else if (this.imageType === 'pluginImages') {
+                    uploadData.imageType = 'pluginImages';
+                    uploadData.pluginDir = this.pluginDir;
+                } else if ((this.itemId || this.itemId === 0) && this.imageType === 'contentImages') {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'contentImages';
+                } else if ((this.itemId || this.itemId === 0)) {
+                    uploadData.id = this.itemId;
+                    uploadData.imageType = 'featuredImages';
+                }
+
+                const data = await mainProcessAPI.invoke('app-image:upload', uploadData);
+
+                if (this._isDestroyed) {
+                    return;
+                }
+
+                if (!data || data.error || !data.baseImage?.newPath) {
+                    this.showUploadError(data, sourcePath);
+                    return;
+                }
+
+                const newPath = await mainProcessAPI.normalizePath(data.baseImage.newPath);
+
+                if (this._isDestroyed) {
+                    return;
+                }
+
+                if (typeof newPath !== 'string' || !newPath) {
+                    this.showUploadError(data, sourcePath);
+                    return;
+                }
+
+                this.filePath = newPath;
                 this.isEmpty = false;
-                this.isHovered = false;
-                this.filePath = await mainProcessAPI.normalizePath(data.baseImage.newPath);
                 this.isUploading = false;
                 this.onAdd();
+            } catch (error) {
+                if (!this._isDestroyed) {
+                    this.showUploadError(null, sourcePath);
+                }
+            } finally {
+                this.isUploading = false;
+                this.isHovered = false;
+
+                if (this.$refs.input) {
+                    this.$refs.input.value = '';
+                }
+            }
+        },
+        showUploadError (data, sourcePath) {
+            this.$bus.$emit('alert-display', {
+                message: this.$t(data?.translation || 'core.images.imageUnprocessable', {
+                    file: data?.file || sourcePath.split('/').pop() || ''
+                }),
+                buttonStyle: 'danger'
             });
         },
         async setImage (newPath, addMedia = false) {
@@ -430,21 +470,22 @@ export default {
             visibility: hidden;
         }
 
-        &.is-empty > .image-upload-progress {
+        & > .image-upload-progress {
             inset: -2px;
         }
     }
 
-    &:not(.is-empty):not(.is-hovered) {
+    &:not(.is-empty) {
         background-color: transparent;
         background-position: center center;
         background-repeat: no-repeat;
         background-size: contain;
-        border: none;
-        padding: 10rem;
+        border: 2px solid transparent;
+        height: 20rem;
+        padding: 0;
 
         &.is-small {
-            padding: 9rem;
+            height: 18rem;
         }
     }
 }

@@ -13,28 +13,17 @@ const { isValidDirSegment, resolveValidPath } = PathValidator;
 
 class ImageUploaderEvents {
     constructor(appInstance) {
-        // Upload
-        ipcMain.on('app-image-upload', function (event, imageData) {
-            let imageProcess = childProcess.fork(__dirname + '/../workers/thumbnails/post-images');
-            imageProcess.send({
-                type: 'dependencies',
-                appInstance: {
-                    appConfig: appInstance.appConfig,
-                    appDir: appInstance.appDir,
-                    sitesDir: appInstance.sitesDir
-                },
-                imageData: imageData
-            });
+        ipcMain.handle('app-image:upload', (event, imageData) => {
+            return this.uploadImage(appInstance, imageData);
+        });
 
-            imageProcess.on('message', function(data) {
-                if(data.type === 'image-copied') {
-                    imageProcess.send({
-                        type: 'start-regenerating'
-                    });
-                } else if(data.type === 'finished') {
-                    event.sender.send('app-image-uploaded', data.result);
-                }
-            });
+        // Retain the event API for existing editor and plugin integrations.
+        ipcMain.on('app-image-upload', async (event, imageData) => {
+            const result = await this.uploadImage(appInstance, imageData);
+
+            if (!event.sender.isDestroyed()) {
+                event.sender.send('app-image-uploaded', result);
+            }
         });
 
         // Remove
@@ -71,6 +60,63 @@ class ImageUploaderEvents {
 
             if (fs.existsSync(resolvedFilePath) && fs.statSync(resolvedFilePath).isFile()) {
                 fs.unlinkSync(resolvedFilePath);
+            }
+        });
+    }
+
+    uploadImage(appInstance, imageData) {
+        return new Promise(resolve => {
+            let imageProcess;
+            let finished = false;
+            const failure = {
+                error: true,
+                translation: 'core.images.imageUnprocessable',
+                file: typeof imageData?.path === 'string' ? path.basename(imageData.path) : ''
+            };
+            const finish = result => {
+                if (finished) {
+                    return;
+                }
+
+                finished = true;
+                resolve(result);
+            };
+
+            try {
+                imageProcess = childProcess.fork(__dirname + '/../workers/thumbnails/post-images');
+                imageProcess.on('error', () => finish(failure));
+                imageProcess.on('exit', () => finish(failure));
+                imageProcess.on('disconnect', () => finish(failure));
+                imageProcess.on('message', data => {
+                    if (finished || !data) {
+                        return;
+                    }
+
+                    if (data.type === 'image-copied') {
+                        imageProcess.send({ type: 'start-regenerating' }, error => {
+                            if (error) {
+                                finish(failure);
+                            }
+                        });
+                    } else if (data.type === 'finished') {
+                        finish(data.result || failure);
+                    }
+                });
+                imageProcess.send({
+                    type: 'dependencies',
+                    appInstance: {
+                        appConfig: appInstance.appConfig,
+                        appDir: appInstance.appDir,
+                        sitesDir: appInstance.sitesDir
+                    },
+                    imageData
+                }, error => {
+                    if (error) {
+                        finish(failure);
+                    }
+                });
+            } catch (error) {
+                finish(failure);
             }
         });
     }
