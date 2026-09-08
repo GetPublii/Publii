@@ -9,6 +9,7 @@
         @dragend.stop.prevent
         :class="{ 'themes': true, 'theme-is-over': themeIsOver }">
         <div
+            :inert="installing ? '' : null"
             class="add-more-theme">
                 <a href="https://marketplace.getpublii.com/" target="_blank" rel="noopener noreferrer">
                     <icon
@@ -22,14 +23,19 @@
         </div>
 
         <theme-item
+            :inert="installing ? '' : null"
             v-for="(theme, index) in themes"
             :themeData="theme"
             :key="'theme-item-' + index" />
 
         <overlay
-            v-if="themeIsOver"
-            appearance="drop-zone">
-            <div>{{ $t('theme.dropYourThemeHere') }}</div>
+            v-if="themeIsOver || installing"
+            appearance="drop-zone"
+            :loading="installationLoading"
+            :role="installing ? 'status' : null"
+            :aria-live="installing ? 'polite' : null"
+            :aria-atomic="installing ? 'true' : null">
+            <div>{{ $t(installing ? 'theme.installingTheme' : 'theme.dropYourThemeHere') }}</div>
         </overlay>
     </div>
 </template>
@@ -39,6 +45,16 @@ import ThemesListItem from './ThemesListItem';
 
 export default {
     name: 'themes-list',
+    props: {
+        installing: {
+            type: Boolean,
+            default: false
+        },
+        installationLoading: {
+            type: Boolean,
+            default: false
+        }
+    },
     data: function() {
         return {
             themeIsOver: false
@@ -54,21 +70,21 @@ export default {
     },
     methods: {
         showOverlay (e) {
-            this.themeIsOver = true;
+            if (!this.installing) {
+                this.themeIsOver = true;
+            }
         },
         hideOverlay (e) {
             if (e.target.classList.contains('themes')) {
                 this.themeIsOver = false;
             }
         },
-        async uploadTheme (e) {
+        uploadTheme (e) {
             this.themeIsOver = false;
 
-            mainProcessAPI.send('app-theme-upload', {
-                sourcePath: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(e.dataTransfer.files[0]))
-            });
-
-            mainProcessAPI.receiveOnce('app-theme-uploaded', this.$parent.uploadedTheme);
+            if (!this.installing && e.dataTransfer.files.length) {
+                this.$emit('install', e.dataTransfer.files[0]);
+            }
         }
     }
 }

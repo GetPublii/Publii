@@ -1,7 +1,12 @@
 <template>
     <div :class="cssClasses">
         <div v-if="appearance === 'drop-zone'">
+            <span
+                v-if="loading"
+                class="drop-zone-loader"
+                aria-hidden="true"></span>
             <icon
+                v-else
                 class="drop-zone-upload-icon"
                 name="upload-file"
                 size="s"
@@ -18,6 +23,10 @@
 export default {
     name: 'overlay',
     props: {
+        loading: {
+            default: false,
+            type: Boolean
+        },
         appearance: {
             default: 'default',
             type: String,
@@ -86,6 +95,29 @@ export default {
 .drop-zone-upload-icon {
     fill: currentColor;
     flex-shrink: 0;
+}
+
+.drop-zone-loader {
+    animation: drop-zone-spin .6s linear infinite;
+    border: 2px solid oklch(from var(--white) l c h / 30%);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    height: 2rem;
+    width: 2rem;
+}
+
+@keyframes drop-zone-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .drop-zone-loader {
+        animation: none;
+    }
 }
 
 .overlay-icon {

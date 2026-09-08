@@ -4,6 +4,7 @@
             <p-header :title="$t('langs.languages')">
                 <p-button
                     :onClick="goBack"
+                    :disabled="installingExtension"
                     appearance="clean"
                     back
                     slot="buttons">
@@ -12,6 +13,7 @@
 
                 <p-button
                     :onClick="installLanguage"
+                    :disabled="installingExtension || installationPickerOpen"
                     slot="buttons" 
                     icon="upload-file">
                     {{ $t('langs.installLanguage') }}
@@ -19,7 +21,10 @@
             </p-header>
 
             <div ref="content">
-                <languages-list />
+                <languages-list
+                    :installing="installingExtension"
+                    :installationLoading="installationLoading"
+                    @install="installDroppedExtension('language', $event)" />
             </div>
         </div>
     </section>
@@ -28,10 +33,12 @@
 <script>
 import LanguagesList from './LanguagesList';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
+import ExtensionInstallation from './mixins/ExtensionInstallation';
 
 export default {
     name: 'app-languages',
     mixins: [
+        ExtensionInstallation,
         GoToLastOpenedWebsite
     ],
     components: {
@@ -55,20 +62,8 @@ export default {
                 }
             }
         },
-        async installLanguage () {
-            await mainProcessAPI.invoke('app-main-process-select-file', 'file-select');
-
-            mainProcessAPI.receiveOnce('app-file-selected', (data) => {
-                if (data.path === undefined || !data.path.filePaths.length) {
-                    return;
-                }
-
-                mainProcessAPI.send('app-language-upload', {
-                    sourcePath: data.path.filePaths[0]
-                });
-
-                mainProcessAPI.receiveOnce('app-language-uploaded', this.uploadedLanguage);
-            });
+        installLanguage () {
+            return this.pickExtensionFile('language');
         },
         uploadedLanguage (data) {
             this.$store.commit('replaceAppLanguages', data.languages);
