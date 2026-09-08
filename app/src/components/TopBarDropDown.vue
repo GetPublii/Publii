@@ -260,7 +260,7 @@ export default {
     margin-top: -2px;
     pointer-events: none;
     position: relative;
-    right: -1px;
+    right: 0;
     top: auto;
     width: 3px;
 
