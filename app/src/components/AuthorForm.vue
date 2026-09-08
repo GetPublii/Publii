@@ -345,6 +345,7 @@
 
                                     <image-upload
                                         v-if="field.type === 'image'"
+                                        images-only
                                         class="author-view-settings"
                                         v-model="authorData.additionalData.viewConfig[field.name]"
                                         :item-id="authorData.id"

@@ -127,6 +127,7 @@
             "errorLoadingLicenseMsg": "Wystąpił błąd podczas ładowania licencji. Proszę spróbować ponownie..."
         },
         "images": {
+            "invalidImageFile": "„{file}” nie jest prawidłowym obrazem w obsługiwanym formacie. Wybierz plik JPG, PNG, WebP, AVIF, GIF, TIFF lub SVG.",
             "imageUnprocessable": "Nie udało się przetworzyć obrazu \"{file}\". Plik może być uszkodzony lub w nieobsługiwanym formacie.",
             "responsiveImagesDisabled": "Responsywne obrazy są wyłączone w ustawieniach witryny – wszystkie responsywne obrazy zostały usunięte."
         },

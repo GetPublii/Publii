@@ -319,6 +319,7 @@
 
                                     <image-upload
                                         v-if="field.type === 'image'"
+                                        images-only
                                         class="tag-view-settings"
                                         v-model="tagData.additionalData.viewConfig[field.name]"
                                         :item-id="tagData.id"

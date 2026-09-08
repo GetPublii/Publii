@@ -28,7 +28,25 @@ function writeBuffer(destinationPath, buffer) {
     });
 }
 
+async function validateImage(job) {
+    const pipeline = sharp(job.originalPath, { failOn: 'error' });
+    const metadata = await pipeline.metadata();
+    const format = metadata.format === 'heif' && metadata.compression === 'av1'
+        ? 'avif'
+        : metadata.format;
+
+    if (format !== job.expectedFormat || !(metadata.width > 0) || !(metadata.height > 0)) {
+        throw new Error('Invalid image contents');
+    }
+
+    await pipeline.stats();
+}
+
 function runJob(job) {
+    if (job.operation === 'validate-image') {
+        return validateImage(job);
+    }
+
     const {
         originalPath,
         destinationPath,

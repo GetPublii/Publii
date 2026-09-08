@@ -115,6 +115,7 @@
 </template>
 
 <script>
+import { accept as imageAccept } from './../../../../../../config/image-upload-formats.js';
 import Overlay from '../../../../basic-elements/Overlay.vue';
 import Draggable from 'vuedraggable';
 import Block from './../../Block.vue';
@@ -258,6 +259,7 @@ export default {
     },
     initFakeFilePicker () {
       this.imageUploader = document.getElementById('post-editor-fake-multiple-images-uploader');
+      this.imageUploader.accept = imageAccept;
       this.imageUploader.addEventListener('change', () => {
         if (!this.imageUploader.value) {
           return;
@@ -300,7 +302,7 @@ export default {
       mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
         if (data && data.error) {
           window.app.showMessage({
-            text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
+            text: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
             type: 'warning',
             lifeTime: 6
           });

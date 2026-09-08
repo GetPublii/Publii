@@ -139,6 +139,7 @@
 </template>
 
 <script>
+import { extensions as imageExtensions } from './../../../config/image-upload-formats.js';
 import Vue from 'vue';
 import Draggable from 'vuedraggable';
 
@@ -187,7 +188,7 @@ export default {
             await mainProcessAPI.invoke('app-main-process-select-files', false, [
                 {
                     name: 'Images',
-                    extensions: ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif', 'tiff']
+                    extensions: imageExtensions
                 }
             ]);
 

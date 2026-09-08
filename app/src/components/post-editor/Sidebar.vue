@@ -218,6 +218,7 @@
                         ref="image-content">
                         <image-upload
                             ref="featured-image"
+                            images-only
                             :item-id="$parent.postID"
                             v-model="$parent.postData.featuredImage.path"
                             imageType="featuredImages" />
@@ -543,6 +544,7 @@
 
                                     <image-upload
                                         v-if="field.type === 'image'"
+                                        images-only
                                         slot="field"
                                         v-model="$parent.postData.viewOptions[field.name]"
                                         :item-id="$parent.postID"

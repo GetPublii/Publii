@@ -24,6 +24,7 @@
                 <input
                     ref="input"
                     type="file"
+                    :accept="imagesOnly ? imageAccept : null"
                     class="upload-image-input"
                     spellcheck="false"
                     :disabled="isUploading"
@@ -54,9 +55,15 @@
 </template>
 
 <script>
+import { accept as imageAccept } from './../../../config/image-upload-formats.js';
+
 export default {
     name: 'image-upload',
     props: {
+        imagesOnly: {
+            default: false,
+            type: Boolean
+        },
         value: {
             default: '',
             type: String
@@ -104,6 +111,7 @@ export default {
     },
     data () {
         return {
+            imageAccept,
             isEmpty: true,
             filePath: '',
             isUploading: false,
@@ -284,7 +292,8 @@ export default {
                 id: 'website',
                 site: this.$store.state.currentSite.config.name,
                 path: sourcePath,
-                imageType: 'optionImages'
+                imageType: 'optionImages',
+                imagesOnly: this.imagesOnly
             };
 
             if (this.itemId && this.itemId === 'defaults') {
@@ -311,6 +320,7 @@ export default {
 
             mainProcessAPI.receiveOnce('app-image-uploaded', async (data) => {
                 if (data && data.error) {
+                    this.$refs.input.value = '';
                     this.isUploading = false;
                     this.isHovered = false;
                     this.$bus.$emit('alert-display', {

@@ -127,6 +127,7 @@
             "errorLoadingLicenseMsg": "An error occurred during loading of the license. Please try again."
         },
         "images": {
+            "invalidImageFile": "\"{file}\" is not a valid supported image. Choose a JPG, PNG, WebP, AVIF, GIF, TIFF or SVG file.",
             "imageUnprocessable": "Could not process image \"{file}\". The file may be corrupt or in an unsupported format.",
             "responsiveImagesDisabled": "Responsive images are disabled under site settings - all responsive images have been removed."
         },

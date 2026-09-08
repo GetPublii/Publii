@@ -94,6 +94,7 @@
                     <image-upload
                         slot="field"
                         v-model="basic.logo"
+                        images-only
                         :addMediaFolderPath="true"
                         imageType="optionImages" />
                 </field>
@@ -346,6 +347,7 @@
 
                                 <image-upload
                                     v-if="field.type === 'image'"
+                                    images-only
                                     slot="field"
                                     v-model="postView[field.name]"
                                     item-id="defaults"
@@ -426,6 +428,7 @@
 
                                 <image-upload
                                     v-if="field.type === 'image'"
+                                    images-only
                                     slot="field"
                                     v-model="pageView[field.name]"
                                     item-id="defaults"
@@ -489,6 +492,7 @@
 
                                 <image-upload
                                     v-if="field.type === 'image'"
+                                    images-only
                                     slot="field"
                                     v-model="tagView[field.name]"
                                     item-id="defaults"
@@ -552,6 +556,7 @@
 
                                 <image-upload
                                     v-if="field.type === 'image'"
+                                    images-only
                                     slot="field"
                                     v-model="authorView[field.name]"
                                     item-id="defaults"
