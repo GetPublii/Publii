@@ -222,7 +222,6 @@ export default {
     display: block;
     height: 5rem;
     order: 3;
-    padding: 0 0 0 var(--space-6);
     width: 35px;
 
     &:hover {
@@ -242,7 +241,7 @@ export default {
     font: inherit;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0 0 0 var(--space-6);
     text-align: left;
     width: 100%;
 

@@ -130,9 +130,10 @@
     <symbol id="trash" viewBox="0 0 16 16">
         <path d="M14.3,2.91H11.5V2.18A2.14,2.14,0,0,0,9.4,0H6.6A2.14,2.14,0,0,0,4.5,2.18v.73H1.7a.73.73,0,0,0,0,1.45h.7v9.46A2.14,2.14,0,0,0,4.5,16h7a2.14,2.14,0,0,0,2.1-2.18V4.36h.7a.73.73,0,0,0,0-1.45ZM5.9,2.18a.72.72,0,0,1,.7-.73H9.4a.72.72,0,0,1,.7.73v.73H5.9Zm6.3,11.64a.71.71,0,0,1-.7.72h-7a.71.71,0,0,1-.7-.72V4.36h8.4ZM7.3,7.27v4.37a.7.7,0,1,1-1.4,0V7.27a.7.7,0,1,1,1.4,0Zm2.8,0v4.37a.7.7,0,1,1-1.4,0V7.27a.7.7,0,1,1,1.4,0Z"/>
     </symbol>
-    
-    <symbol id="duplicate" viewBox="0 0 16 16">
-        <path d="M13.88,16H7.27a2.12,2.12,0,0,1-2.13-2.12V7.27A2.13,2.13,0,0,1,7.27,5.14h6.61A2.12,2.12,0,0,1,16,7.27v6.61A2.12,2.12,0,0,1,13.88,16ZM7.27,6.45a.81.81,0,0,0-.82.82v6.61a.81.81,0,0,0,.82.81h6.61a.81.81,0,0,0,.81-.81V7.27a.81.81,0,0,0-.81-.82ZM3.51,10.2a.65.65,0,0,0-.65-.65H2.12a.81.81,0,0,1-.81-.82V2.12a.81.81,0,0,1,.81-.81H8.73a.82.82,0,0,1,.82.81v.74a.65.65,0,0,0,.65.65.66.66,0,0,0,.66-.65V2.12A2.13,2.13,0,0,0,8.73,0H2.12A2.12,2.12,0,0,0,0,2.12V8.73a2.13,2.13,0,0,0,2.12,2.13h.74A.66.66,0,0,0,3.51,10.2Z"/>
+
+    <symbol id="duplicate"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+       <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+       <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
     </symbol>
     
     <symbol id="more" viewBox="0 0 3 16">
@@ -190,10 +191,18 @@
         <line x1="10" y1="14" x2="21" y2="3"></line>
     </symbol>
 
-    <symbol id="open-new-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/>
-        <path d="m21 3-9 9"/>
-        <path d="M15 3h6v6"/>
+   <symbol id="open-new-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 3H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-3"/>
+        <path d="M8 21h8"/>
+        <path d="M12 17v4"/>
+        <path d="m17 8 5-5"/>
+        <path d="M17 3h5v5"/>
+   </symbol>
+
+   <symbol id="open-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/>
+      <path d="m21 3-9 9"/>
+      <path d="M15 3h6v6"/>
     </symbol>
 
     <!-- Window icons  -->

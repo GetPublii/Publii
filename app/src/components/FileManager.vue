@@ -533,7 +533,7 @@ export default {
             return [
                 {
                     label: this.$t('file.manager.open'),
-                    icon: 'open-new-window',
+                    icon: 'open-file',
                     onClick: () => this.openFile(file)
                 },
                 {
