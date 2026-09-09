@@ -738,15 +738,14 @@ export default {
 
                 this.saved(newSettings, data);
             });
-
-            this.$bus.$emit('app-settings-saved', newSettings);
         },
         saved (newSettings, data) {
-            this.$store.commit('setSiteDir', newSettings.sitesLocation);
-            this.$store.commit('setAppConfig', newSettings);
-            mainProcessAPI.send('app-backup-set-location', newSettings.backupsLocation);
-
             if (data.status === true) {
+                this.$store.commit('setSiteDir', newSettings.sitesLocation);
+                this.$store.commit('setAppConfig', newSettings);
+                mainProcessAPI.send('app-backup-set-location', newSettings.backupsLocation);
+                this.$bus.$emit('app-settings-saved', newSettings);
+
                 this.$bus.$emit('message-display', {
                     message: this.$t('settings.appSettingsSavedMsg'),
                     type: 'success',

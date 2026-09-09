@@ -44,36 +44,39 @@ class AppEvents {
             }
 
             if (config.sitesLocation !== appInstance.appConfig.sitesLocation) {
-                let result = true;
-
                 if (appInstance.appConfig.sitesLocation) {
                     let appFilesHelper = new AppFiles(appInstance);
                     appInstance.closeAllDbs();
 
                     setTimeout(() => {
-                        if (config.changeSitesLocationWithoutCopying) {
-                            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
-                            appInstance.appConfig = config;
-                            appInstance.sitesDir = config.sitesLocation;
-                        } else {
-                            result = appFilesHelper.relocateSites(
-                                appInstance.appConfig.sitesLocation,
-                                config.sitesLocation,
-                                event
-                            );
+                        let result = false;
+
+                        try {
+                            if (config.changeSitesLocationWithoutCopying) {
+                                appFilesHelper.saveConfig(config);
+                                appInstance.sitesDir = config.sitesLocation;
+                                appInstance.app.sitesDir = config.sitesLocation;
+                                result = true;
+                            } else {
+                                result = appFilesHelper.relocateSites(
+                                    appInstance.appConfig.sitesLocation,
+                                    config.sitesLocation,
+                                    () => appFilesHelper.saveConfig(config)
+                                );
+                            }
 
                             if (result) {
-                                fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
                                 appInstance.appConfig = config;
-                                appInstance.sitesDir = config.sitesLocation;
                             }
+                        } catch (error) {
+                            console.log('Unable to change websites location:', error);
                         }
-        
+
                         appInstance.loadSites();
-                        
+
                         event.sender.send('app-config-saved', {
-                            status: true,
-                            message: 'success-save',
+                            status: result,
+                            message: result ? 'success-save' : 'error-save',
                             sites: appInstance.sites
                         });
                     }, 500);
