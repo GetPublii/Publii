@@ -168,41 +168,41 @@ export default {
             });
         },
         askForClone () {
-            this.isDuplicating = true;
+            if (this.isDuplicating || this.duplicateInProgress) {
+                return;
+            }
 
             this.$bus.$emit('confirm-display', {
+                dialogLabel: this.$t('site.duplicateWebsite'),
                 message: this.$t('site.specifyNameForWebsiteDuplicate'),
+                validate: name => this.validateCloneName(name),
                 okClick: this.cloneWebsite,
-                cancelClick: () => this.isDuplicating = false,
                 hasInput: true,
                 okLabel: this.$t('site.cloneWebsite')
             });
         },
+        validateCloneName (newName) {
+            const name = (newName || '').trim();
+
+            if (name === '') {
+                return this.$t('site.websiteNameRequired');
+            }
+
+            if (!this.checkIfNewNameIsFree(name)) {
+                return this.$t('site.websiteNameExists');
+            }
+
+            return true;
+        },
         cloneWebsite (newName) {
-            if (newName.replace(/\s/gmi, '').trim() === '') {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('site.websiteNameCantBeEmpty')
-                });
+            const name = (newName || '').trim();
 
-                this.isDuplicating = false;
+            if (this.isDuplicating || this.duplicateInProgress || this.validateCloneName(name) !== true) {
                 return;
             }
 
-            if (!this.checkIfNewNameIsFree(newName)) {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('site.websiteNameAlreadyInUseMsg')
-                });
-
-                this.isDuplicating = false;
-                return;
-            }
-
+            this.isDuplicating = true;
             this.$bus.$emit('sites-list-duplicate-in-progress', true);
-
-            mainProcessAPI.send('app-site-clone', {
-                catalogName: this.site,
-                siteName: newName
-            });
 
             mainProcessAPI.receiveOnce('app-site-cloned', (clonedWebsiteData) => {
                 this.$bus.$emit('sites-list-duplicate-in-progress', false);
@@ -224,6 +224,11 @@ export default {
                 });
 
                 this.$bus.$emit('sites-popup-hide');
+            });
+
+            mainProcessAPI.send('app-site-clone', {
+                catalogName: this.site,
+                siteName: name
             });
         },
         removeWebsite (name) {
@@ -258,7 +263,7 @@ export default {
             let keys = Object.keys(this.$store.state.sites);
 
             for (let i = 0; i < keys.length; i++) {
-                if (newName === this.$store.state.sites[keys[i]].displayName) {
+                if (newName === this.$store.state.sites[keys[i]].displayName.trim()) {
                     return false;
                 }
             }
