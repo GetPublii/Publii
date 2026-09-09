@@ -23,15 +23,28 @@
         <a
             href="#"
             :class="cssClasses"
+            v-tooltip="{
+                text: status,
+                disabled: !isSyncLabelTruncated,
+                describe: false,
+                offsetX: '75%'
+            }"
             @click.prevent.stop="syncWebsite"
         >
             <span v-pure-html="icon" class="sidebar-sync-link-icon"></span>
-            <span>{{ status }}</span>
+            <span
+                ref="syncLabel"
+                class="sidebar-sync-link-label">
+                {{ status }}
+            </span>
         </a>
         <a
             v-if="hasSyncDate && websiteUrl"
             :href="websiteUrl"
-            v-tooltip="$t('sync.clickToVisitYourWebsite')"
+            v-tooltip="{
+                text: $t('sync.clickToVisitYourWebsite'),
+                offsetX: '75%'
+            }"
             target="_blank"
             class="sidebar-sync-date"
             rel="noreferrer noopener">
@@ -57,7 +70,9 @@ export default {
     data: function() {
         return {
             icon: SidebarIcons.DEFAULT,
-            redirectTo: 'sync'
+            redirectTo: 'sync',
+            isSyncLabelTruncated: false,
+            currentYear: new Date().getFullYear()
         };
     },
     computed: {
@@ -120,13 +135,23 @@ export default {
             return !!(this.$store.state.currentSite.config.syncDate);
         },
         syncDate: function() {
-            let syncDate = this.$store.state.currentSite.config.syncDate;
+            const date = new Date(this.$store.state.currentSite.config.syncDate);
+            const language = this.$store.getters.languages.find(language => language.directory === this.$i18n.locale);
+            const locale = language && language.momentLocale ? language.momentLocale : 'en-gb';
+            const use24HourClock = this.$store.state.app.config.timeFormat == 24;
+            const options = {
+                day: 'numeric',
+                month: 'short',
+                hour: use24HourClock ? '2-digit' : 'numeric',
+                minute: '2-digit',
+                hourCycle: use24HourClock ? 'h23' : 'h12'
+            };
 
-            if(this.$store.state.app.config.timeFormat && this.$store.state.app.config.timeFormat == 24) {
-                return this.$moment(syncDate).format('MMM DD, YYYY HH:mm');
-            } else {
-                return this.$moment(syncDate).format('MMM DD, YYYY hh:mm A');
+            if (date.getFullYear() !== this.currentYear) {
+                options.year = 'numeric';
             }
+
+            return new Intl.DateTimeFormat(locale, options).format(date);
         },
         hasManualDeploy () {
             return this.$store.state.currentSite.config.deployment.protocol === 'manual';
@@ -138,17 +163,40 @@ export default {
             return this.$store.state.components.sidebar.syncInProgress;
         }
     },
+    watch: {
+        status () {
+            this.$nextTick(this.updateSyncLabelOverflow);
+        }
+    },
     mounted () {
+        this._syncLabelObserver = new ResizeObserver(this.updateSyncLabelOverflow);
+        this._syncLabelObserver.observe(this.$refs.syncLabel);
+        this.updateSyncLabelOverflow();
+        window.addEventListener('focus', this.updateCurrentYear);
+
         this.$bus.$on('app-menu-preview', this.renderPreview);
         this.$bus.$on('app-menu-generate-preview', this.renderFiles);
         this.$bus.$on('app-menu-sync', this.syncWebsite);
     },
     beforeDestroy () {
+        if (this._syncLabelObserver) {
+            this._syncLabelObserver.disconnect();
+        }
+
+        window.removeEventListener('focus', this.updateCurrentYear);
+
         this.$bus.$off('app-menu-preview', this.renderPreview);
         this.$bus.$off('app-menu-generate-preview', this.renderFiles);
         this.$bus.$off('app-menu-sync', this.syncWebsite);
     },
     methods: {
+        updateCurrentYear () {
+            this.currentYear = new Date().getFullYear();
+        },
+        updateSyncLabelOverflow () {
+            const label = this.$refs.syncLabel;
+            this.isSyncLabelTruncated = !!label && label.clientWidth > 0 && label.scrollWidth > label.clientWidth;
+        },
         renderPreview: async function() {
             if (!this.$store.state.currentSite.config.theme) {
                 let siteName = this.$store.state.currentSite.config.name;
@@ -276,7 +324,10 @@ export default {
     letter-spacing: -.025em;
     margin-top: 1.2rem;
     opacity: var(--sidebar-link-opacity);
+    overflow: hidden;
     text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &:hover {
         color: var(--sidebar-link-color-hover);
@@ -361,8 +412,16 @@ export default {
     }
 }
 
+.sidebar-sync-link-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .sidebar-sync-link-icon {
     display: block;
+    flex-shrink: 0;
     height: 100%;
     width: auto;
 }

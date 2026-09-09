@@ -21,11 +21,15 @@ export function setTooltipsEnabled (value) {
 
 function options (binding) {
     const value = typeof binding.value === 'string' ? { text: binding.value } : binding.value || {};
+    const offsetX = value.offsetX;
+    const isPercentageOffset = typeof offsetX === 'string' && /^-?\d+(?:\.\d+)?%$/.test(offsetX);
 
     return {
         text: typeof value.text === 'string' ? value.text.trim() : '',
         title: typeof value.title === 'string' ? value.title.trim() : '',
         disabled: value.disabled === true,
+        placement: ['top', 'bottom', 'left', 'right'].includes(value.placement) ? value.placement : 'auto',
+        offsetX: Number.isFinite(offsetX) || isPercentageOffset ? offsetX : 0,
         describe: value.describe !== false && !binding.modifiers.hover
     };
 }
@@ -121,7 +125,7 @@ function show (entry, keyboard = false) {
         view.placed = false;
         view.$nextTick(() => {
             if (active === entry && view.visible) {
-                view.place(entry.element);
+                view.place(entry.element, entry.options.placement, entry.options.offsetX);
             }
         });
     }, keyboard ? 0 : warm ? 100 : 500);
@@ -229,13 +233,16 @@ export default {
         if (active === entry && (entry.options.disabled || !entry.options.text || element.disabled)) {
             hide();
         } else if (active === entry && view && view.visible && (
-            previous.text !== entry.options.text || previous.title !== entry.options.title
+            previous.text !== entry.options.text ||
+            previous.title !== entry.options.title ||
+            previous.placement !== entry.options.placement ||
+            previous.offsetX !== entry.options.offsetX
         )) {
             view.text = entry.options.text;
             view.title = entry.options.title;
             view.$nextTick(() => {
                 if (active === entry) {
-                    view.place(element);
+                    view.place(element, entry.options.placement, entry.options.offsetX);
                 }
             });
         }

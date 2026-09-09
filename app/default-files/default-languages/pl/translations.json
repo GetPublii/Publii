@@ -1409,7 +1409,7 @@
         "htmlCacheControl": "Nagłówek Cache-Control dla plików HTML",
         "keyFile": "Plik klucza",
         "lastRendered": "Ostatnie renderowanie",
-        "lastSync": "Ostatnia synchronizacja",
+        "lastSync": "Ostatnia synchr.",
         "leaveBlankToUseDefaultOutputDirectory": "Pozostaw puste aby użyć domyślnego katalogu docelowego",
         "manualDeployment": "Wdrażanie ręczne",
         "manualOutputFieldCantBeEmpty": "Ręczny wybór wyjścia nie może być pusty",

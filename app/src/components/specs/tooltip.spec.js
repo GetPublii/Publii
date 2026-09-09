@@ -398,4 +398,159 @@ describe('Tooltip pilot', () => {
         assert.equal(parseFloat(test.views[0].position.left) + 180, 792);
         assert.equal(parseFloat(test.views[0].position.top), 30);
     });
+
+    it('places a tooltip to the right without covering its trigger and resets plain tooltips to auto', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Sync website', placement: 'right' });
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'right');
+        assert.equal(parseFloat(test.views[0].position.left), 128);
+        assert.equal(parseFloat(test.views[0].position.top), 95);
+
+        test.bind('Another action').fire('pointerenter');
+        test.advance(100);
+        assert.equal(test.views[0].placement, 'top');
+    });
+
+    it('flips a right-side tooltip to the left near the window edge', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Sync website', placement: 'right' });
+        target.rect = { left: 750, top: 100, bottom: 120, width: 20, height: 20 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'left');
+        assert.equal(parseFloat(test.views[0].position.left), 562);
+    });
+
+    it('keeps a bottom-edge date tooltip on the right and within the window', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Visit website', placement: 'right' });
+        target.rect = { left: 30, top: 575, bottom: 591, width: 220, height: 16 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'right');
+        assert.equal(parseFloat(test.views[0].position.left), 258);
+        assert.equal(parseFloat(test.views[0].position.top), 562);
+    });
+
+    it('falls back above when a narrow window has no room on either side', () => {
+        const test = setup();
+        test.document.documentElement.clientWidth = 300;
+        const target = test.bind({ text: 'Sync website', placement: 'right' });
+        target.rect = { left: 30, top: 500, bottom: 520, width: 240, height: 20 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'top');
+        assert.equal(parseFloat(test.views[0].position.left), 60);
+        assert.equal(parseFloat(test.views[0].position.top), 462);
+    });
+
+    it('supports all preferred sides and updates placement while visible', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Action', placement: 'bottom' });
+        target.rect = { left: 300, top: 200, bottom: 220, width: 20, height: 20 };
+        target.fire('focus');
+        test.advance(0);
+        assert.equal(test.views[0].placement, 'bottom');
+        assert.equal(parseFloat(test.views[0].position.top), 228);
+
+        for (const side of ['left', 'right', 'top']) {
+            test.directive.componentUpdated(target, {
+                value: { text: 'Action', placement: side },
+                modifiers: {}
+            });
+            assert.equal(test.views[0].placement, side);
+        }
+
+        test.directive.componentUpdated(target, {
+            value: { text: 'Action', placement: 'invalid' },
+            modifiers: {}
+        });
+        assert.equal(test.views[0].placement, 'top');
+    });
+
+    it('uses the least-overflowing side when no side fully fits', () => {
+        const test = setup();
+        test.document.documentElement = { clientWidth: 200, clientHeight: 100 };
+        const target = test.bind({ text: 'Action', placement: 'right' });
+        target.rect = { left: 85, top: 40, bottom: 60, width: 30, height: 20 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'top');
+        assert.equal(parseFloat(test.views[0].position.left), 10);
+        assert.equal(parseFloat(test.views[0].position.top), 8);
+    });
+
+    it('shifts above a trigger without moving to its side and updates the offset while visible', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Sync website', offsetX: 48 });
+        target.rect = { left: 30, top: 500, bottom: 550, width: 220, height: 50 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'top');
+        assert.equal(parseFloat(test.views[0].position.left), 98);
+        assert.equal(parseFloat(test.views[0].position.top), 462);
+
+        test.directive.componentUpdated(target, {
+            value: { text: 'Sync website', offsetX: 24 },
+            modifiers: {}
+        });
+        assert.equal(parseFloat(test.views[0].position.left), 74);
+
+        test.directive.componentUpdated(target, { value: 'Sync website', modifiers: {} });
+        assert.equal(parseFloat(test.views[0].position.left), 50);
+    });
+
+    it('preserves automatic vertical flipping and viewport bounds with a horizontal offset', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Visit website', offsetX: 48 });
+        target.rect = { left: 700, top: 2, bottom: 22, width: 80, height: 20 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'bottom');
+        assert.equal(parseFloat(test.views[0].position.left), 612);
+        assert.equal(parseFloat(test.views[0].position.top), 30);
+    });
+
+    it('keeps the tooltip left edge at the trigger centre for translations of different widths', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Sync', offsetX: '50%' });
+        target.rect = { left: 30, top: 500, bottom: 550, width: 220, height: 50 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'top');
+        assert.equal(parseFloat(test.views[0].position.left), 140);
+
+        for (const [text, width] of [
+            ['Sync website', 120],
+            ['Webseite synchronisieren', 260],
+            ['Synchronizuj stronę', 190]
+        ]) {
+            test.views[0].$el.rect.width = width;
+            test.directive.componentUpdated(target, {
+                value: { text, offsetX: '50%' },
+                modifiers: {}
+            });
+            assert.equal(parseFloat(test.views[0].position.left), 140);
+            assert.equal(test.views[0].placement, 'top');
+        }
+    });
+
+    it('clamps percentage offsets at the window edge and treats invalid offsets as zero', () => {
+        const test = setup();
+        const target = test.bind({ text: 'Visit website', offsetX: '50%' });
+        target.rect = { left: 700, top: 2, bottom: 22, width: 80, height: 20 };
+        target.fire('pointerenter');
+        test.advance(500);
+        assert.equal(test.views[0].placement, 'bottom');
+        assert.equal(parseFloat(test.views[0].position.left), 612);
+
+        target.rect = { left: 30, top: 500, bottom: 550, width: 220, height: 50 };
+        test.directive.componentUpdated(target, {
+            value: { text: 'Visit website', offsetX: 'invalid%' },
+            modifiers: {}
+        });
+        assert.equal(parseFloat(test.views[0].position.left), 50);
+    });
 });
