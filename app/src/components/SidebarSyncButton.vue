@@ -38,28 +38,31 @@
                 {{ status }}
             </span>
         </a>
-        <a
-            v-if="hasSyncDate && websiteUrl"
-            :href="websiteUrl"
+        <component
+            :is="websiteUrl ? 'a' : 'span'"
+            v-if="hasSyncDate"
+            :href="websiteUrl || null"
             v-tooltip="{
-                text: $t('sync.clickToVisitYourWebsite'),
+                text: websiteLinkTooltip,
+                disabled: !websiteUrl,
                 offsetX: '75%'
             }"
-            target="_blank"
+            :target="websiteUrl ? '_blank' : null"
             class="sidebar-sync-date"
-            rel="noreferrer noopener">
+            :rel="websiteUrl ? 'noreferrer noopener' : null">
                 <template v-if="!hasManualDeploy">
                     {{ $t('sync.lastSync') }}: <span>{{ syncDate }}</span>
                 </template>
                 <template v-if="hasManualDeploy">
                     {{ $t('sync.lastRendered') }}: <span>{{ syncDate }}</span>
                 </template>
-        </a>
+        </component>
     </div>
 </template>
 
 <script>
 import Tooltip from '../helpers/tooltip.js';
+import Utils from '../helpers/utils.js';
 import SidebarIcons from './configs/sidebar-icons.js';
 
 export default {
@@ -157,7 +160,24 @@ export default {
             return this.$store.state.currentSite.config.deployment.protocol === 'manual';
         },
         websiteUrl () {
-            return this.$store.state.currentSite.config.domain;
+            const config = this.$store.state.currentSite.config;
+
+            if (!config || (config.deployment && config.deployment.relativeUrls)) {
+                return '';
+            }
+
+            const domain = typeof config.domain === 'string' ? config.domain.trim() : '';
+            const address = domain.startsWith('//') ? 'https:' + domain : domain;
+            return Utils.getValidUrl(address) || '';
+        },
+        websiteLinkTooltip () {
+            if (!this.websiteUrl) {
+                return '';
+            }
+
+            return this.$t(this.websiteUrl.startsWith('file:')
+                ? 'sync.openLocalFileOrFolder'
+                : 'sync.clickToVisitYourWebsite');
         },
         syncInProgress () {
             return this.$store.state.components.sidebar.syncInProgress;
@@ -329,7 +349,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    &:hover {
+    &[href]:hover {
         color: var(--sidebar-link-color-hover);
         opacity: 1;
     }

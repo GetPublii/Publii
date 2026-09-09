@@ -111,7 +111,7 @@ describe('Synchronization popup and log viewer', () => {
             s.startUpload();
             calls.sends.length = 0;
             s.showError({ additionalMessage: 'Output unavailable' });
-            const prefix = protocol === 'manual' ? "Couldn't prepare website files" : 'An error occurred while connecting to the server';
+            const prefix = protocol === 'manual' ? "Couldn't prepare website files" : "Couldn't connect to the server";
             assert.equal(s.orbMessage, prefix + '.');
             assert.equal(s.orbPhase, 'error');
             assert.equal(calls.emits.at(-1)[1].message, prefix + ': Output unavailable');
@@ -135,7 +135,7 @@ describe('Synchronization popup and log viewer', () => {
         const { instance: s, calls } = setup('SyncPopup');
         s.$i18n.mergeLocaleMessage('en-gb', { testError: 'Cannot write {file}' });
         s.showError({ additionalMessage: { translation: 'testError', translationVars: { file: 'index.html' } } });
-        assert.equal(calls.emits[0][1].message, 'An error occurred while connecting to the server: Cannot write index.html');
+        assert.equal(calls.emits[0][1].message, "Couldn't connect to the server: Cannot write index.html");
     });
 
     for (const output of ['catalog', 'zip-archive', 'tar-archive']) {

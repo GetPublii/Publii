@@ -1457,6 +1457,7 @@
         "syncingWebsite": "Synchronisierung läuft...",
         "viewLog": "Log anzeigen",
         "clickToVisitYourWebsite": "Webseite öffnen",
+        "openLocalFileOrFolder": "Lokale Datei oder lokalen Ordner öffnen",
         "websiteFilesPreparation": "Vorbereitung der Website-Dateien",
         "websiteFilesPreparationErrorAdditionalMessage": "Website-Dateien konnten nicht vorbereitet werden: ",
         "websiteFilesPreparationErrorMessage": "Die Website-Dateien konnten nicht vorbereitet werden. Prüfen Sie das Ausgabeverzeichnis und versuchen Sie es erneut.",

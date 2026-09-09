@@ -1497,6 +1497,7 @@
         "viewLog": "View log",
         "visitWebsite": "Visit website",
         "clickToVisitYourWebsite": "Click to visit your website",
+        "openLocalFileOrFolder": "Open local file or folder",
         "visitYourWebsite": "Visit your website",
         "websiteFilesPreparation": "Website file preparation",
         "websiteFilesPreparationErrorAdditionalMessage": "Couldn't prepare website files: ",
