@@ -555,6 +555,7 @@ export default {
                     icon: 'link-2',
                     visible: file.isFile,
                     disabled: !this.websiteURL(file),
+                    disabledReason: this.$t('file.manager.copyURLsUnavailable'),
                     onClick: () => this.copyURL(file)
                 },
                 {

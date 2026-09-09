@@ -351,6 +351,7 @@ export default {
                     icon: 'trash',
                     intent: 'danger',
                     disabled: item.id === 1,
+                    disabledReason: this.$t('author.mainAuthorCannotBeRemoved'),
                     onClick: () => this.deleteAuthor(item)
                 }
             ];

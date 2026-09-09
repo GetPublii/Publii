@@ -12,7 +12,7 @@ const VueI18n = appRequire('vue-i18n');
 const compiler = appRequire('vue-template-compiler');
 Vue.use(VueI18n);
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
-const messages = Object.fromEntries(['en-gb','pl'].map(locale => [locale, JSON.parse(read('app/default-files/default-languages/' + locale + '/translations.json'))]));
+const messages = Object.fromEntries(['en-gb','pl','de'].map(locale => [locale, JSON.parse(read('app/default-files/default-languages/' + locale + '/translations.json'))]));
 const helperContext = {URL, Intl, exports:{}};
 vm.runInNewContext(read('app/src/helpers/file-manager.js').replace(/export function /g, 'function ') + '\nexports.fileWebsiteURL = fileWebsiteURL; exports.sortFiles = sortFiles;', helperContext);
 const helpers = helperContext.exports;
@@ -468,5 +468,84 @@ describe('Shared confirmation compatibility', () => {
         const options = confirm(); let accepted = false;
         options.methods.onEnterKey.call({dialogLabel:'Files',onOk(){accepted=true;return true;}});
         assert.equal(accepted,true);
+    });
+});
+
+describe('File row menu disabled action explanations', () => {
+    const parsedMenu = compiler.parseComponent(read('app/src/components/basic-elements/ActionMenu.vue'));
+    const compiledMenu = compiler.compile(parsedMenu.template.content);
+    const context = { module: { exports: {} }, Tooltip: {} };
+    vm.runInNewContext(
+        parsedMenu.script.content.replace(/^import .*;\s*$/gm, '').replace('export default', 'module.exports ='),
+        context
+    );
+
+    function menuFor(items, i18n) {
+        const instance = new Vue({
+            ...context.module.exports,
+            propsData: { items },
+            i18n,
+            render: new Function(compiledMenu.render),
+            staticRenderFns: compiledMenu.staticRenderFns.map(code => new Function(code))
+        });
+        instance.isOpen = true;
+        return instance;
+    }
+
+    function menuItems(instance) {
+        function nodes(node) {
+            return [node, ...(node.children || []).flatMap(nodes)];
+        }
+        return nodes(instance._render()).filter(node => node.data && node.data.attrs && node.data.attrs.role === 'menuitem');
+    }
+
+    it('compiles the shared menu template', () => {
+        assert.deepEqual(compiledMenu.errors, []);
+    });
+
+    for (const locale of ['en-gb', 'pl', 'de']) {
+        it(`${locale}: explains unavailable row URL copying and blocks activation`, () => {
+            const { instance: manager, calls } = setup(locale);
+            manager.$store.state.currentSite.config.domain = '/';
+            const action = manager.fileActions(file('a.pdf')).find(item => item.icon === 'link-2');
+            assert.equal(action.disabled, true);
+            assert.equal(action.disabledReason, messages[locale].file.manager.copyURLsUnavailable);
+
+            const menu = menuFor([action], manager.$i18n);
+            const node = menuItems(menu)[0];
+            assert.equal(node.data.attrs.disabled, false);
+            assert.equal(node.data.attrs['aria-disabled'], 'true');
+            assert.equal(node.data.attrs.tabindex, '-1');
+            assert.equal(node.data.directives[0].value, action.disabledReason);
+
+            let selections = 0;
+            menu.$on('select', () => selections++);
+            node.data.on.click({ stopPropagation () {}, detail: 1 });
+            node.data.on.click({ stopPropagation () {}, detail: 0 });
+            assert.equal(calls.copies.length, 0);
+            assert.equal(selections, 0);
+            assert.equal(menu.isOpen, true);
+
+            manager.$store.state.currentSite.config.domain = 'https://example.com/';
+            const enabledAction = manager.fileActions(file('a.pdf')).find(item => item.icon === 'link-2');
+            assert.equal(enabledAction.disabled, false);
+            menu.items = [enabledAction];
+            const enabledNode = menuItems(menu)[0];
+            assert.equal(enabledNode.data.attrs.disabled, false);
+            assert.equal(enabledNode.data.attrs['aria-disabled'], null);
+            assert.equal(enabledNode.data.directives[0].value, '');
+            let closed = false;
+            menu.close = () => { closed = true; };
+            enabledNode.data.on.click({ stopPropagation () {}, detail: 1 });
+            assert.equal(calls.copies.length, 1);
+            assert.equal(selections, 1);
+            assert.equal(closed, true);
+        });
+    }
+
+    it('preserves native disabling for other menu actions without explanations', () => {
+        const { instance: manager } = setup();
+        const menu = menuFor([{ label: 'Delete', disabled: true }], manager.$i18n);
+        assert.equal(menuItems(menu)[0].data.attrs.disabled, true);
     });
 });

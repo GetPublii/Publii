@@ -53,7 +53,9 @@
                     }"
                     role="menuitem"
                     tabindex="-1"
-                    :disabled="item.disabled === true"
+                    :disabled="item.disabled === true && !item.disabledReason"
+                    :aria-disabled="item.disabled === true ? 'true' : null"
+                    v-tooltip="item.disabled === true ? item.disabledReason : ''"
                     @click.stop="select(item, $event)">
                     <icon
                         v-if="item.icon"
@@ -434,7 +436,8 @@ export default {
         }
     }
 
-    &:disabled {
+    &:disabled,
+    &[aria-disabled="true"] {
         cursor: not-allowed;
         opacity: .5;
     }

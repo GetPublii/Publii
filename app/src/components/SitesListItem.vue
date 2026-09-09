@@ -84,6 +84,9 @@ export default {
                     icon: 'open-new-window',
                     visible: !!this.currentSiteName,
                     disabled: this.isCurrentSite,
+                    disabledReason: this.$t('site.websiteAlreadyOpenInCurrentWindow', {
+                        websiteName: this.displayName
+                    }),
                     onClick: () => this.openWebsiteInNewWindow()
                 },
                 {
