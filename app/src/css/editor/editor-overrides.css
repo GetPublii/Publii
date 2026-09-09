@@ -369,6 +369,10 @@ body {
              background: transparent;
         }
         
+        .tox-toolbar__group {
+            padding: 0 2px;
+        }
+
         .tox-toolbar-overlord {
             border-bottom: 1px solid var(--input-border-color);
             padding: 5px;
