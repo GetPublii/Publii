@@ -1143,6 +1143,8 @@ export default {
         reset () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('theme.settingsResetMessage'),
+                okLabel: this.$t('theme.resetSettingsConfirm'),
+                isDanger: true,
                 okClick: this.resetSettings
             });
         },

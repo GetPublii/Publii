@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import { mapGetters } from 'vuex';
 import VersionComparator from '../helpers/version-comparator';
@@ -110,7 +111,10 @@ export default {
     methods: {
         deletePlugin (pluginName, pluginDirectory) {
             let confirmConfig = {
-                message: this.$t('plugins.removePluginMessage', { pluginName }),
+                message: this.$t('plugins.removePluginMessage', {
+                    pluginName: escapeHTML(pluginName)
+                }),
+                okLabel: this.$t('plugins.deletePlugin'),
                 isDanger: true,
                 okClick: function() {
                     mainProcessAPI.send('app-plugin-delete', {

@@ -28,8 +28,14 @@ function component(file, globals = {}) {
     const source = compiler.parseComponent(read(file));
     const compiled = compiler.compile(source.template.content);
     assert.deepEqual(compiled.errors, []);
-    return { ...evaluate(source.script.content, globals),
-        render: new Function(compiled.render), staticRenderFns: compiled.staticRenderFns.map(code => new Function(code)) };
+    return {
+        ...evaluate(source.script.content, {
+            ...globals,
+            escapeHTML: evaluate(read('../helpers/escape-html.js'))
+        }),
+        render: new Function(compiled.render),
+        staticRenderFns: compiled.staticRenderFns.map(code => new Function(code))
+    };
 }
 function nodes(node) { return node ? [node, ...(node.children || []).flatMap(nodes)] : []; }
 function text(node) { return nodes(node).map(n => n.text || '').join('').trim(); }

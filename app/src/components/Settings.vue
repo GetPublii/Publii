@@ -2251,6 +2251,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Utils from './../helpers/utils.js';
 import {
     DEFAULT_WORKSPACE_ACCENT,
@@ -3102,7 +3103,9 @@ export default {
         },
         removeThemeFromSite (themeCopy) {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('theme.removeFromSiteMessage', { themeName: themeCopy.name }),
+                message: this.$t('theme.removeFromSiteMessage', {
+                    themeName: escapeHTML(themeCopy.name)
+                }),
                 okLabel: this.$t('theme.removeFromSiteConfirm'),
                 isDanger: true,
                 okClick: () => {

@@ -159,6 +159,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import InlineNameEditor from './basic-elements/InlineNameEditor.vue';
 import BackToTools from './mixins/BackToTools.js';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
@@ -236,9 +237,25 @@ export default {
             this.$router.push('/app-settings');
         },
         bulkDelete: function() {
-            if (this.backupActionsDisabled) return;
+            if (this.backupActionsDisabled) {
+                return;
+            }
+
+            const selectedBackups = this.items.filter(item => this.selectedItems.includes(item.id));
+
+            if (selectedBackups.length === 0) {
+                return;
+            }
+
+            const message = selectedBackups.length === 1
+                ? this.$t('file.deleteSingleBackupConfirmMsg', {
+                    filename: escapeHTML(selectedBackups[0].name)
+                })
+                : this.$t('file.deleteBackupsConfirmMsg');
+
             this.$bus.$emit('confirm-display', {
-                message: this.$t('file.deleteBackupsConfirmMsg'),
+                message,
+                okLabel: this.$t('file.deleteBackupsConfirmLabel'),
                 isDanger: true,
                 okClick: this.deleteSelected
             });

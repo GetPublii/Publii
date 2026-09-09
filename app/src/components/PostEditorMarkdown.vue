@@ -185,6 +185,8 @@ export default {
 
                 this.$bus.$emit('confirm-display', {
                     message: this.$t('core.sureYouWantQuit'),
+                    okLabel: this.$t('core.quitWithoutSaving'),
+                    cancelLabel: this.$t('ui.keepEditing'),
                     isDanger: true,
                     okClick: () => {
                         window.onbeforeunload = null;

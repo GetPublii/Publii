@@ -790,6 +790,7 @@ export default {
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('page.removePageMessage'),
+                okLabel: this.$t('page.deletePages'),
                 isDanger: true,
                 okClick: this.deleteSelected
             });

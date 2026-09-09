@@ -251,6 +251,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import Draggable from 'vuedraggable';
 import Sortable from 'sortablejs';
@@ -505,16 +506,31 @@ export default {
         },
         deleteMenu (index) {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('menu.menuRemoveMessage'),
+                message: this.$t('menu.menuRemoveMessage', {
+                    name: escapeHTML(this.items[index].name)
+                }),
+                okLabel: this.$t('menu.deleteMenu'),
                 isDanger: true,
                 okClick: () => this.deleteMenus([index], this.$t('menu.menuRemoveSuccessMessage'))
             });
         },
         bulkDelete () {
+            const selectedItems = this.getSelectedItems(false);
+
+            if (selectedItems.length === 0) {
+                return;
+            }
+
+            if (selectedItems.length === 1) {
+                this.deleteMenu(selectedItems[0]);
+                return;
+            }
+
             this.$bus.$emit('confirm-display', {
                 message: this.$t('menu.menusRemoveMessage'),
+                okLabel: this.$t('menu.deleteMenus'),
                 isDanger: true,
-                okClick: () => this.deleteMenus(this.getSelectedItems(false), this.$t('menu.menusRemoveSuccessMessage'))
+                okClick: () => this.deleteMenus(selectedItems, this.$t('menu.menusRemoveSuccessMessage'))
             });
         },
         deleteMenus (indexes, successMessage) {

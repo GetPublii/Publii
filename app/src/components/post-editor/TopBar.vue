@@ -204,6 +204,8 @@ export default {
 
             this.$bus.$emit('confirm-display', {
                 message: this.$t('ui.cancelWarningMsg'),
+                okLabel: this.$t('ui.discardChanges'),
+                cancelLabel: this.$t('ui.keepEditing'),
                 isDanger: true,
                 okClick: this.cleanUpItem
             });

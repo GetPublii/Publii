@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 export default {
     name: 'sites-list-item',
     props: [
@@ -155,7 +156,9 @@ export default {
         },
         askForRemove () {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('site.deleteWebsiteConfirmMsg'),
+                message: this.$t('site.deleteWebsiteConfirmMsg', {
+                    siteName: escapeHTML(this.displayName)
+                }),
                 okClick: this.removeWebsite.bind(this, this.site),
                 okLabel: this.$t('site.removeWebsite'),
                 isDanger: true

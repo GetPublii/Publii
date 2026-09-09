@@ -678,8 +678,9 @@ export default {
                     this.$bus.$emit('confirm-display', {
                         hasInput: false,
                         message: this.$t('settings.sitesLocationChangedConfirmMsg'),
+                        isDanger: true,
                         okClick: this.save,
-                        okLabel: this.$t('ui.ok'),
+                        okLabel: this.$t('settings.moveWebsitesConfirm'),
                         cancelLabel: this.$t('ui.cancel')
                     });
 

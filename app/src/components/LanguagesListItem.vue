@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 import compare from 'node-version-compare';
@@ -99,7 +100,10 @@ export default {
     methods: {
         deleteLanguage (languageName, languageDirectory) {
             let confirmConfig = {
-                message: this.$t('langs.removeLanguageMessage', { languageName }),
+                message: this.$t('langs.removeLanguageMessage', {
+                    languageName: escapeHTML(languageName)
+                }),
+                okLabel: this.$t('langs.deleteLanguage'),
                 isDanger: true,
                 okClick: function() {
                     mainProcessAPI.send('app-language-delete', {

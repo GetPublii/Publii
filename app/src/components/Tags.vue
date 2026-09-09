@@ -203,6 +203,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import TagForm from './TagForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
@@ -383,8 +384,21 @@ export default {
             }, 100);
         },
         bulkDelete () {
+            const selectedItems = this.getSelectedItems();
+
+            if (selectedItems.length === 0) {
+                return;
+            }
+
+            if (selectedItems.length === 1) {
+                const item = this.items.find(item => item.id === selectedItems[0]);
+                this.deleteTag(item);
+                return;
+            }
+
             this.$bus.$emit('confirm-display', {
                 message: this.$t('tag.removeTagMessage'),
+                okLabel: this.$t('tag.deleteTags'),
                 isDanger: true,
                 okClick: this.deleteSelected
             });
@@ -403,7 +417,10 @@ export default {
         },
         deleteTag (item) {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('tag.removeTagMessage'),
+                message: this.$t('tag.removeSingleTagMessage', {
+                    name: escapeHTML(item.name)
+                }),
+                okLabel: this.$t('tag.deleteTag'),
                 isDanger: true,
                 okClick: () => this.deleteTags([item.id])
             });

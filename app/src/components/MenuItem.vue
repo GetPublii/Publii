@@ -170,6 +170,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import Draggable from 'vuedraggable';
 import menuDragOptions, { keepItemOutOfItsAncestors } from './configs/menuDragOptions.js';
@@ -439,8 +440,15 @@ export default {
             this.$bus.$emit('save-new-menu-structure');
         },
         removeMenuItem () {
+            const messageKey = this.items.length > 0
+                ? 'menu.menuItemWithSubitemsRemoveMessage'
+                : 'menu.menuItemsRemoveMessage';
+
             this.$bus.$emit('confirm-display', {
-                message: this.$t('menu.menuItemsRemoveMessage'),
+                message: this.$t(messageKey, {
+                    name: escapeHTML(this.label)
+                }),
+                okLabel: this.$t('menu.deleteItem'),
                 isDanger: true,
                 okClick: this.removeSelectedMenuItem
             });

@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import { mapGetters } from 'vuex';
 import VersionComparator from '../helpers/version-comparator';
@@ -103,7 +104,10 @@ export default {
         },
         deleteTheme: function(themeName, themeDirectory) {
             let confirmConfig = {
-                message: this.$t('theme.removeThemeMessage', { themeName }),
+                message: this.$t('theme.removeThemeMessage', {
+                    themeName: escapeHTML(themeName)
+                }),
+                okLabel: this.$t('theme.deleteTheme'),
                 isDanger: true,
                 okClick: function() {
                     mainProcessAPI.send('app-theme-delete', {

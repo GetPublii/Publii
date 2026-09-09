@@ -171,6 +171,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import AuthorForm from './AuthorForm';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
@@ -301,8 +302,21 @@ export default {
             }, 100);
         },
         bulkDelete: function() {
+            const selectedItems = this.getSelectedItems().filter(id => id !== 1);
+
+            if (selectedItems.length === 0) {
+                return;
+            }
+
+            if (selectedItems.length === 1) {
+                const item = this.items.find(item => item.id === selectedItems[0]);
+                this.deleteAuthor(item);
+                return;
+            }
+
             this.$bus.$emit('confirm-display', {
                 message: this.$t('author.removeAuthorsMessage'),
+                okLabel: this.$t('author.deleteAuthors'),
                 isDanger: true,
                 okClick: this.deleteSelected
             });
@@ -312,7 +326,10 @@ export default {
         },
         deleteAuthor (item) {
             this.$bus.$emit('confirm-display', {
-                message: this.$t('author.removeAuthorsMessage'),
+                message: this.$t('author.removeSingleAuthorMessage', {
+                    name: escapeHTML(item.name)
+                }),
+                okLabel: this.$t('author.deleteAuthor'),
                 isDanger: true,
                 okClick: () => this.deleteAuthors([item.id])
             });

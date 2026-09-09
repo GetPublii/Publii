@@ -285,6 +285,7 @@
 </template>
 
 <script>
+import escapeHTML from '../helpers/escape-html.js';
 import defaultSiteConfig from './../../config/AST.currentSite.config';
 import Utils from './../helpers/utils.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
@@ -820,7 +821,9 @@ export default {
             mainProcessAPI.receiveOnce('app-site-website-catalog-availability-checked', (data) => {
                 if (data.catalogExists === true) {
                     this.$bus.$emit('confirm-display', {
-                        message: this.$t('site.restoreFromBackup.siteExistsWantOverride'),
+                        message: this.$t('site.restoreFromBackup.siteExistsWantOverride', {
+                            siteName: escapeHTML(siteName)
+                        }),
                         okClick: () => {
                             this.restoreWebsiteFromBackup(siteName);
                         },

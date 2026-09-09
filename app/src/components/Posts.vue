@@ -766,6 +766,7 @@ export default {
         bulkDelete () {
             this.$bus.$emit('confirm-display', {
                 message: this.$t('post.removePostMessage'),
+                okLabel: this.$t('post.deletePosts'),
                 isDanger: true,
                 okClick: this.deleteSelected
             });
