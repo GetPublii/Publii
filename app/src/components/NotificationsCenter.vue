@@ -122,6 +122,7 @@
                             <p-button 
                                 appearance="secondary"
                                 :onClick="() => openLink(notifications.publii.links.download)" 
+                                size="small"
                                 icon="download">
                                 {{ $t('notifications.downloadUpdate') }}
                             </p-button>
@@ -190,6 +191,7 @@
                                 <p-button
                                     appearance="secondary"
                                     :onClick="() => openLink(theme.links.download)"
+                                    size="small"
                                     icon="download">
                                     {{ $t('notifications.downloadUpdate') }}
                                 </p-button>
@@ -260,6 +262,7 @@
                                 <p-button
                                     appearance="secondary"
                                     :onClick="() =>openLink(plugin.links.download)"
+                                    size="small"
                                     icon="download">
                                     {{ $t('notifications.downloadUpdate') }}
                                 </p-button>
