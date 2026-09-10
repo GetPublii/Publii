@@ -563,12 +563,11 @@ class AppEvents {
          * Set notifications center state
          */
         ipcMain.on('app-set-notifications-center-state', function(event, state) {
-            let appConfig = fs.readFileSync(appInstance.appConfigPath, 'utf8');
-
             try {
-                appConfig = JSON.parse(appConfig);
+                let appConfig = JSON.parse(fs.readFileSync(appInstance.appConfigPath, 'utf8'));
                 appConfig.notificationsStatus = state;
                 fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+                appInstance.appConfig.notificationsStatus = state;
             } catch (e) {
                 console.log('(!) App was unable to save the notifications center state');
             }

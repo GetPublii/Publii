@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import VersionComparator from '../helpers/version-comparator';
+import getExtensionNotifications from '../helpers/extension-notifications';
 import TopBarAppBar from './TopBarAppBar';
 import TopBarDropDown from './TopBarDropDown';
 
@@ -120,32 +120,18 @@ export default {
                 }
             }
 
-            // Check if there are any updates for themes
-            let installedThemes = this.$store.state.themes;
-            let availableThemes = notificationsData.themes || {};
+            // Count each extension once, including unread notices about discontinued support.
+            for (const type of ['theme', 'plugin']) {
+                const collection = type + 's';
+                const notifications = getExtensionNotifications({
+                    type: type.toUpperCase(),
+                    installed: this.$store.state[collection],
+                    available: notificationsData[collection],
+                    discontinued: notificationsData.discontinued && notificationsData.discontinued[collection],
+                    readNotificationIDs: notificationsReadStatus
+                });
 
-            for (let theme of installedThemes) {
-                if (availableThemes[theme.directory]) {
-                    let result = VersionComparator(availableThemes[theme.directory].version, theme.version);
-                    
-                    if (result === 1 && notificationsReadStatus.indexOf('THEME-' + theme.directory + '-' + availableThemes[theme.directory].version) === -1) {
-                        updatesCount++;
-                    }
-                }
-            }
-
-            // Check if there are any updates for plugins
-            let installedPlugins = this.$store.state.plugins;
-            let availablePlugins = notificationsData.plugins || {};
-
-            for (let plugin of installedPlugins) {    
-                if (availablePlugins[plugin.directory]) {
-                    let result = VersionComparator(availablePlugins[plugin.directory].version, plugin.version);
-                    
-                    if (result === 1 && notificationsReadStatus.indexOf('PLUGIN-' + plugin.directory + '-' + availablePlugins[plugin.directory].version) === -1) {
-                        updatesCount++;
-                    }
-                }
+                updatesCount += notifications.filter(notification => notification.isUnread).length;
             }
 
             this.$store.commit('setNotificationsCount', updatesCount);

@@ -679,21 +679,20 @@
         "notifications": "Benachrichtigungen",
         "noUpdatesTitle": "Keine Updates verfügbar",
         "noUpdatesDescription": "Sie verwenden die neueste Version von Publii und Erweiterungen.",
-        "pluginUpdatesAvailable": "Plugin Updates sind verfügbar",
+        "pluginUpdatesAndNotices": "Plugin-Updates und Hinweise",
         "publiiUpdateAvailable": "Publii Update ist verfügbar",
         "rejectConsentConfirm": "Durch den Widerruf Ihrer Einwilligung erhalten Sie keine Benachrichtigungen mehr über neue Versionen von Publii, dessen Erweiterungen (Themes und Plugins) oder andere wichtige Updates.",
         "viewDetails": "Details anzeigen",
         "readMore": "Weiterlesen",
         "rejectConsent": "Nicht jetzt",
-        "themeUpdatesAvailable": "Theme-Updates verfügbar",
-        "discontinuedPluginsInfo": "Diese Plugins werden nicht mehr weiterentwickelt oder unterstützt. Wir empfehlen dringend, nach Alternativen zu suchen.",
-        "discontinuedThemesInfo": "Diese Themes werden nicht mehr weiterentwickelt oder unterstützt. Wir empfehlen dringend, nach Alternativen zu suchen.",
+        "themeUpdatesAndNotices": "Theme-Updates und Hinweise",
+        "discontinuedPluginInfo": "Dieses Publii-Plugin wird nicht mehr weiterentwickelt oder unterstützt. Ziehe eine Alternative in Betracht.",
+        "discontinuedThemeInfo": "Dieses Theme wird nicht mehr weiterentwickelt oder unterstützt. Ziehe eine Alternative in Betracht.",
         "tooltipCount": {
             "one": "Sie haben {count} Benachrichtigung",
             "other": "Sie haben {count} Benachrichtigungen"
         },
-        "discontinuedPlugins": "Nicht mehr weiterentwickelte Plugins",
-        "discontinuedThemes": "Nicht mehr weiterentwickelte Themes"
+        "badgeDiscontinued": "Support eingestellt"
     },
     "plugins": {
         "addPluginSuccessMessage": "Plugin wurde hinzugefügt",

@@ -138,31 +138,48 @@
                     </a>
                 </fields-group>
 
-                <fields-group :title="$t('notifications.themeUpdatesAvailable')"
-                    v-if="themeUpdates.length > 0"
+                <fields-group
+                    :title="$t('notifications.themeUpdatesAndNotices')"
+                    v-if="themeNotifications.length > 0"
                     class="notification">
                     <ul class="notification-list">
-                        <li 
-                            v-for="(theme, index) in themeUpdates" 
-                            :key="index" 
+                        <li
+                            v-for="theme in themeNotifications"
+                            :key="theme.directory"
                             :class="{
                                 'notification-item': true,
-                                'is-theme-update': true,
-                                'is-read': isRead('THEME-' + theme.directory + '-' + theme.version)
+                                'is-extension-notification': true,
+                                'is-theme-update': theme.hasUpdate,
+                                'is-read': !theme.isUnread
                             }">
                             <div class="notification-item-content">
-                                <img 
-                                    :src="$store.state.themesPath + '/' + theme.directory + '/thumbnail.png'" 
+                                <img
+                                    :src="$store.state.themesPath + '/' + theme.directory + '/thumbnail.png'"
                                     alt=""
                                     class="notification-item-icon"
                                     height="52"
                                     width="52" />
 
                                 <div class="notification-item-details">
-                                    <div class="notification-item-name" :data-new-badge="$t('notifications.badgeNew')">
-                                       <span>{{ theme.name }}</span>
+                                    <div
+                                        class="notification-item-name"
+                                        :data-new-badge="$t('notifications.badgeNew')">
+                                        <span>{{ theme.name }}</span>
+                                        <span
+                                            v-if="theme.isDiscontinued"
+                                            class="notification-discontinued-badge">
+                                            <span aria-hidden="true">!</span>
+                                            {{ $t('notifications.badgeDiscontinued') }}
+                                        </span>
                                     </div>
-                                    <div class="notification-item-versions">
+                                    <p
+                                        v-if="theme.isDiscontinued"
+                                        class="notification-discontinued-info">
+                                        {{ theme.discontinuedText || $t('notifications.discontinuedThemeInfo') }}
+                                    </p>
+                                    <div
+                                        v-if="theme.hasUpdate"
+                                        class="notification-item-versions">
                                         <span class="notification-item-version">
                                             {{ $t('notifications.latestVersion') }}: v.{{ theme.version }}
                                         </span>
@@ -179,7 +196,7 @@
                                             {{ $t('notifications.viewDetails') }}
                                         </p-button>
                                     </div>
-                                    <div 
+                                    <div
                                         v-if="theme.description"
                                         class="notification-item-desc">
                                         <p v-html="theme.description"></p>
@@ -187,7 +204,9 @@
                                 </div>
                             </div>
 
-                            <div class="notification-item-actions">
+                            <div
+                                v-if="theme.hasUpdate && theme.links.download"
+                                class="notification-item-actions">
                                 <p-button
                                     appearance="secondary"
                                     :onClick="() => openLink(theme.links.download)"
@@ -199,41 +218,57 @@
                         </li>
                     </ul>
 
-                    <a 
-                        href="#"
-                        class="notification-action" 
-                        :class="{ 'is-disabled': !unreadThemeUpdates }"
-                        @click.prevent="markAsRead('themes')">
+                    <button
+                        type="button"
+                        class="notification-action"
+                        :disabled="!unreadThemeNotifications"
+                        @click="markAsRead('themes')">
                         {{ $t('notifications.markAsRead') }}
-                    </a>
+                    </button>
                 </fields-group>
 
-                <fields-group 
-                    :title="$t('notifications.pluginUpdatesAvailable')"
-                    v-if="pluginUpdates.length > 0" 
+                <fields-group
+                    :title="$t('notifications.pluginUpdatesAndNotices')"
+                    v-if="pluginNotifications.length > 0"
                     class="notification">
                     <ul class="notification-list">
-                        <li 
-                            v-for="(plugin, index) in pluginUpdates" 
-                            :key="index" 
+                        <li
+                            v-for="plugin in pluginNotifications"
+                            :key="plugin.directory"
                             :class="{
                                 'notification-item': true,
-                                'is-plugin-update': true,
-                                'is-read': isRead('PLUGIN-' + plugin.directory + '-' + plugin.version)
+                                'is-extension-notification': true,
+                                'is-plugin-update': plugin.hasUpdate,
+                                'is-read': !plugin.isUnread
                             }">
                             <div class="notification-item-content">
-                                <img 
-                                    :src="$store.state.pluginsPath + '/' + plugin.directory + '/thumbnail.svg'" 
+                                <img
+                                    :src="$store.state.pluginsPath + '/' + plugin.directory + '/thumbnail.svg'"
                                     alt=""
                                     class="notification-item-icon"
                                     height="52"
                                     width="52" />
 
                                 <div class="notification-item-details">
-                                    <div class="notification-item-name" :data-new-badge="$t('notifications.badgeNew')">
-                                       <span>{{ plugin.name }}</span>
+                                    <div
+                                        class="notification-item-name"
+                                        :data-new-badge="$t('notifications.badgeNew')">
+                                        <span>{{ plugin.name }}</span>
+                                        <span
+                                            v-if="plugin.isDiscontinued"
+                                            class="notification-discontinued-badge">
+                                            <span aria-hidden="true">!</span>
+                                            {{ $t('notifications.badgeDiscontinued') }}
+                                        </span>
                                     </div>
-                                    <div class="notification-item-versions">
+                                    <p
+                                        v-if="plugin.isDiscontinued"
+                                        class="notification-discontinued-info">
+                                        {{ plugin.discontinuedText || $t('notifications.discontinuedPluginInfo') }}
+                                    </p>
+                                    <div
+                                        v-if="plugin.hasUpdate"
+                                        class="notification-item-versions">
                                         <span class="notification-item-version">
                                             {{ $t('notifications.latestVersion') }}: v.{{ plugin.version }}
                                         </span>
@@ -250,7 +285,7 @@
                                             {{ $t('notifications.viewDetails') }}
                                         </p-button>
                                     </div>
-                                    <div 
+                                    <div
                                         v-if="plugin.description"
                                         class="notification-item-desc">
                                         <p v-html="plugin.description"></p>
@@ -258,10 +293,12 @@
                                 </div>
                             </div>
 
-                            <div class="notification-item-actions">
+                            <div
+                                v-if="plugin.hasUpdate && plugin.links.download"
+                                class="notification-item-actions">
                                 <p-button
                                     appearance="secondary"
-                                    :onClick="() =>openLink(plugin.links.download)"
+                                    :onClick="() => openLink(plugin.links.download)"
                                     size="small"
                                     icon="download">
                                     {{ $t('notifications.downloadUpdate') }}
@@ -270,75 +307,13 @@
                         </li>
                     </ul>
 
-                    <a
-                        href="#"
+                    <button
+                        type="button"
                         class="notification-action"
-                        :class="{ 'is-disabled': !unreadPluginUpdates }"
-                        @click.prevent="markAsRead('plugins')">
+                        :disabled="!unreadPluginNotifications"
+                        @click="markAsRead('plugins')">
                         {{ $t('notifications.markAsRead') }}
-                    </a>
-                </fields-group>
-
-                <fields-group
-                    :title="$t('notifications.discontinuedThemes')"
-                    v-if="discontinuedThemes.length > 0"
-                    class="notification is-discontinued">
-                    <p class="notification-discontinued-info">
-                        {{ $t('notifications.discontinuedThemesInfo') }}
-                    </p>
-
-                    <ul class="notification-list">
-                        <li
-                            v-for="(theme, index) in discontinuedThemes"
-                            :key="'discontinued-theme-' + index"
-                            class="notification-item is-discontinued-item">
-                            <div class="notification-item-content">
-                                <img
-                                    :src="$store.state.themesPath + '/' + theme.directory + '/thumbnail.png'"
-                                    alt=""
-                                    class="notification-item-icon"
-                                    height="52"
-                                    width="52" />
-
-                                <div class="notification-item-details">
-                                    <span class="notification-title">
-                                        {{ theme.name }}
-                                    </span>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </fields-group>
-
-                <fields-group
-                    :title="$t('notifications.discontinuedPlugins')"
-                    v-if="discontinuedPlugins.length > 0"
-                    class="notification is-discontinued">
-                    <p class="notification-discontinued-info">
-                        {{ $t('notifications.discontinuedPluginsInfo') }}
-                    </p>
-
-                    <ul class="notification-list">
-                        <li
-                            v-for="(plugin, index) in discontinuedPlugins"
-                            :key="'discontinued-plugin-' + index"
-                            class="notification-item is-discontinued-item">
-                            <div class="notification-item-content">
-                                <img
-                                    :src="$store.state.pluginsPath + '/' + plugin.directory + '/thumbnail.svg'"
-                                    alt=""
-                                    class="notification-item-icon"
-                                    height="52"
-                                    width="52" />
-
-                                <div class="notification-item-details">
-                                    <span class="notification-title">
-                                        {{ plugin.name }}
-                                    </span>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                    </button>
                 </fields-group>
             </template>
 
@@ -364,7 +339,7 @@
             </empty-state>
 
             <empty-state
-                v-if="notificationsStatus === 'accepted' && newsToDisplay.length === 0 && pluginUpdates.length === 0 && themeUpdates.length === 0 && discontinuedThemes.length === 0 && discontinuedPlugins.length === 0 && !hasPubliiUpdate"
+                v-if="notificationsStatus === 'accepted' && newsToDisplay.length === 0 && pluginNotifications.length === 0 && themeNotifications.length === 0 && !hasPubliiUpdate"
                 illustrationName="notifications-center"
                 illustrationWidth="344"
                 illustrationHeight="286"
@@ -389,7 +364,7 @@
 </template>
 
 <script>
-import VersionComparator from '../helpers/version-comparator';
+import getExtensionNotifications from '../helpers/extension-notifications';
 import { mapGetters } from 'vuex';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -441,129 +416,29 @@ export default {
 
             return newsToDisplay;
         },
-        themeUpdates () {
-            let themeUpdates = [];
-            let installedThemes = this.$store.state.themes;
-            let availableThemes = this.notifications.themes || {};
-
-            for (let theme of installedThemes) {
-                if (availableThemes[theme.directory]) {
-                    let result = VersionComparator(availableThemes[theme.directory].version, theme.version);
-                    
-                    if (result === 1) {
-                        let themeData = {
-                            ...availableThemes[theme.directory],
-                            currentVersion: theme.version,
-                            directory: theme.directory
-                        };
-
-                        themeUpdates.push(themeData);
-                    }
-                }
-            }
-
-            themeUpdates.sort((themeA, themeB) => {
-                let isUnread = (theme) => this.readedNotifications.indexOf('THEME-' + theme.directory + '-' + theme.version) === -1;
-                let unreadA = isUnread(themeA);
-                let unreadB = isUnread(themeB);
-
-                if (unreadA !== unreadB) {
-                    return unreadA ? -1 : 1;
-                }
-
-                return themeA.directory.localeCompare(themeB.directory);
+        themeNotifications () {
+            return getExtensionNotifications({
+                type: 'THEME',
+                installed: this.$store.state.themes,
+                available: this.notifications.themes,
+                discontinued: this.notifications.discontinued && this.notifications.discontinued.themes,
+                readNotificationIDs: this.readedNotifications
             });
-
-            return themeUpdates
         },
-        pluginUpdates () {
-            let pluginUpdates = [];
-            let installedPlugins = this.$store.state.plugins;
-            let availablePlugins = this.notifications.plugins || {};
-
-            for (let plugin of installedPlugins) {    
-                if (availablePlugins[plugin.directory]) {
-                    let result = VersionComparator(availablePlugins[plugin.directory].version, plugin.version);
-                    
-                    if (result === 1) {
-                        let pluginData = {
-                            ...availablePlugins[plugin.directory],
-                            currentVersion: plugin.version,
-                            directory: plugin.directory
-                        };
-
-                        pluginUpdates.push(pluginData);
-                    }
-                }
-            }
-
-            pluginUpdates.sort((pluginA, pluginB) => {
-                let isUnread = (plugin) => this.readedNotifications.indexOf('PLUGIN-' + plugin.directory + '-' + plugin.version) === -1;
-                let unreadA = isUnread(pluginA);
-                let unreadB = isUnread(pluginB);
-
-                if (unreadA !== unreadB) {
-                    return unreadA ? -1 : 1;
-                }
-
-                return pluginA.directory.localeCompare(pluginB.directory);
+        unreadThemeNotifications () {
+            return this.themeNotifications.some(notification => notification.isUnread);
+        },
+        pluginNotifications () {
+            return getExtensionNotifications({
+                type: 'PLUGIN',
+                installed: this.$store.state.plugins,
+                available: this.notifications.plugins,
+                discontinued: this.notifications.discontinued && this.notifications.discontinued.plugins,
+                readNotificationIDs: this.readedNotifications
             });
-
-            return pluginUpdates;
         },
-        discontinuedThemes () {
-            let discontinuedThemes = (this.notifications.discontinued && this.notifications.discontinued.themes) || {};
-            let installedThemes = this.$store.state.themes;
-            let results = [];
-
-            for (let theme of installedThemes) {
-                if (discontinuedThemes[theme.directory]) {
-                    results.push({
-                        name: discontinuedThemes[theme.directory].name || theme.name,
-                        directory: theme.directory
-                    });
-                }
-            }
-
-            results.sort((themeA, themeB) => themeA.name.localeCompare(themeB.name));
-
-            return results;
-        },
-        discontinuedPlugins () {
-            let discontinuedPlugins = (this.notifications.discontinued && this.notifications.discontinued.plugins) || {};
-            let installedPlugins = this.$store.state.plugins;
-            let results = [];
-
-            for (let plugin of installedPlugins) {
-                if (discontinuedPlugins[plugin.directory]) {
-                    results.push({
-                        name: discontinuedPlugins[plugin.directory].name || plugin.name,
-                        directory: plugin.directory
-                    });
-                }
-            }
-
-            results.sort((pluginA, pluginB) => pluginA.name.localeCompare(pluginB.name));
-
-            return results;
-        },
-        unreadPluginUpdates () {
-            for (let update of this.pluginUpdates) {
-                if (this.readedNotifications.indexOf('PLUGIN-' + update.directory + '-' + update.version) === -1) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-        unreadThemeUpdates () {
-            for (let update of this.themeUpdates) {
-                if (this.readedNotifications.indexOf('THEME-' + update.directory + '-' + update.version) === -1) {
-                    return true;
-                }
-            }
-
-            return false;
+        unreadPluginNotifications () {
+            return this.pluginNotifications.some(notification => notification.isUnread);
         },
         unreadPubliiNotification () {
             return this.readedNotifications.indexOf('PUBLII-' + this.notifications.publii.version + '-' + this.notifications.publii.build) === -1;
@@ -624,20 +499,16 @@ export default {
                         notificationsReadStatus.push(news.id);
                     }
                 }
-            } else if (typeToMark === 'plugins') {
-                for (let plugin of this.pluginUpdates) {
-                    let id = 'PLUGIN-' + plugin.directory + '-' + plugin.version;
+            } else if (typeToMark === 'plugins' || typeToMark === 'themes') {
+                const notifications = typeToMark === 'plugins'
+                    ? this.pluginNotifications
+                    : this.themeNotifications;
 
-                    if (notificationsReadStatus.indexOf(id) === -1) {
-                        notificationsReadStatus.push(id);
-                    }
-                }
-            } else if (typeToMark === 'themes') {
-                for (let theme of this.themeUpdates) {
-                    let id = 'THEME-' + theme.directory + '-' + theme.version;
-                    
-                    if (notificationsReadStatus.indexOf(id) === -1) {
-                        notificationsReadStatus.push(id);
+                for (const notification of notifications) {
+                    for (const id of notification.notificationIDs) {
+                        if (notificationsReadStatus.indexOf(id) === -1) {
+                            notificationsReadStatus.push(id);
+                        }
                     }
                 }
             }
@@ -684,9 +555,27 @@ export default {
                 color: var(--link-primary-color-hover);
             }
 
-            &.is-disabled {
+            &.is-disabled,
+            &:disabled {
                 pointer-events: none;
                 opacity: 0.5;
+            }
+        }
+
+        button.notification-action {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 0;
+
+            &:focus-visible {
+                outline: 2px solid var(--color-primary);
+                outline-offset: var(--space-1);
+            }
+
+            &:disabled {
+                cursor: default;
             }
         }
 
@@ -703,18 +592,8 @@ export default {
             &:not(.is-read) {
                 .notification-item-name {
                     &::after {
-                        content: attr(data-new-badge); 
-                        display: inline-flex;
-                        margin-left: var(--space-3);
-                        padding: 1px 5px;
-                        border-radius: 4px;
+                        content: attr(data-new-badge);
                         background: var(--color-success);
-                        color: var(--white);
-                        font-size: 1rem;
-                        font-weight: var(--font-weight-bold);
-                        position: relative;
-                        top: -8px;
-                        text-transform: uppercase;
                     }
                 }
             }
@@ -740,9 +619,14 @@ export default {
         }
 
         .notification-item-name {
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
             font-size: 1.5rem;
             font-weight: var(--font-weight-bold);
+            gap: var(--space-3);
             margin-bottom: var(--space-1);
+            overflow-wrap: anywhere;
             width: 100%;
         }
         .notification-item-versions {
@@ -823,17 +707,42 @@ export default {
             }
         }
 
-        &.is-discontinued {
-            background: linear-gradient(oklch(from var(--color-danger) l c h / 6.5%), oklch(from var(--color-danger) l c h / 6.5%)) var(--bg-secondary);
-
-            .notification-discontinued-info {
-                color: var(--text-light-color);
-                margin-bottom: var(--space-6);
+        .is-extension-notification {
+            .notification-item-content,
+            .notification-item-details {
+                min-width: 0;
             }
 
-            .notification-item-content {
-                width: 100%;
+            .notification-item-icon {
+                flex-shrink: 0;
             }
+
+            .notification-item-versions {
+                flex-wrap: wrap;
+                row-gap: var(--space-1);
+            }
+        }
+
+        .notification-item-name::after,
+        .notification-discontinued-badge {
+            align-items: center;
+            border-radius: var(--radius-base);
+            color: var(--white);
+            display: inline-flex;
+            flex-shrink: 0;
+            font-size: var(--font-size-ui-xs);
+            font-weight: var(--font-weight-semibold);
+            gap: var(--space-1);
+            padding: 0 var(--space-2);
+        }
+
+        .notification-discontinued-badge {
+            background: var(--color-danger);
+        }
+
+        .notification-discontinued-info {
+            color: var(--text-light-color);
+            margin: 0 0 var(--space-1);
         }
     }
 }

@@ -19,8 +19,10 @@
                     name="notification"
                     customWidth="22"
                     customHeight="22" />
-                <span class="topbar-app-settings-bell-badge">
-                    {{ notificationsCount }}
+                <span
+                    class="topbar-app-settings-bell-badge"
+                    :class="{ 'is-exclamation': notificationBellBadgeValue === '!' }">
+                    {{ notificationBellBadgeValue }}
                 </span>
             </span>
 
@@ -32,7 +34,7 @@
                     name="notification"
                     customWidth="22"
                     customHeight="22" />
-                <span class="topbar-app-settings-bell-badge">!</span>
+                <span class="topbar-app-settings-bell-badge is-exclamation">!</span>
             </span>
 
             <span
@@ -98,6 +100,7 @@
 
 <script>
 import Tooltip from '../helpers/tooltip.js';
+import getExtensionNotifications from '../helpers/extension-notifications';
 import { mapGetters } from 'vuex';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
@@ -125,6 +128,24 @@ export default {
         },
         hasNotificationPrompt () {
             return this.insideWebsiteUI && !this.submenuIsOpen && this.notificationsStatus === false;
+        },
+        notificationBellBadgeValue () {
+            const notifications = this.$store.state.app.notifications;
+            const readNotificationIDs = this.$store.state.app.notificationsReadStatus.split(';');
+            const hasUnreadDiscontinuedNotice = ['theme', 'plugin'].some(type => {
+                const collection = type + 's';
+                const extensionNotifications = getExtensionNotifications({
+                    type: type.toUpperCase(),
+                    installed: this.$store.state[collection],
+                    available: notifications[collection],
+                    discontinued: notifications.discontinued && notifications.discontinued[collection],
+                    readNotificationIDs
+                });
+
+                return extensionNotifications.some(notification => notification.isDiscontinuedUnread);
+            });
+
+            return hasUnreadDiscontinuedNotice ? '!' : this.notificationsCount;
         },
         notificationCountText () {
             const prefix = 'notifications.tooltipCount.';
@@ -297,25 +318,29 @@ export default {
 }
 
 .topbar-app-settings-bell-badge {
-     align-items: center;
-     aspect-ratio: 1/1;
-     background: var(--color-danger);
-     border: 2px solid var(--bg-site);
-     border-radius: 50%;
-     color: white;
-     display: flex;
-     font-size: 1rem;
-     font-weight: var(--font-weight-medium);
-     height: 20px;
-     justify-content: center;
-     min-height: 20px;
-     min-width: 20px;
-     padding: 0 4px; 
-     position: absolute;
-     right: 0;
-     top: 5px;
-     width: auto;   
- }
+    align-items: center;
+    aspect-ratio: 1/1;
+    background: var(--color-danger);
+    border: 2px solid var(--bg-site);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    height: 20px;
+    justify-content: center;
+    min-height: 20px;
+    min-width: 20px;
+    padding: 0 4px;
+    position: absolute;
+    right: 0;
+    top: 5px;
+    width: auto;
+
+    &.is-exclamation {
+        font-weight: var(--font-weight-bold);
+    }
+}
 
 .topbar-app-settings {
     -webkit-app-region: no-drag; /* Make the buttons clickable again */
