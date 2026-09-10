@@ -276,6 +276,7 @@
                         slot="field"
                         id="relative-urls"
                         key="relative-urls"
+                        ref="relative-urls-setting"
                         v-model="deploymentSettings.relativeUrls"
                         @click.native="toggleDomainName" />
                     <template slot="second-label">
@@ -1341,9 +1342,23 @@ export default {
         setTimeout(() => {
             this.setPortValue();
             this.isLoaded = true;
+            this.$nextTick(this.focusLinkedSetting);
         }, 0);
     },
     methods: {
+        focusLinkedSetting () {
+            if (this._isDestroyed || this.$route.query.focus !== 'relative-urls') {
+                return;
+            }
+
+            const setting = this.$refs['relative-urls-setting'];
+            const control = setting && setting.$el.querySelector('[role="switch"]');
+
+            if (control) {
+                control.focus({ preventScroll: true });
+                control.scrollIntoView({ block: 'nearest' });
+            }
+        },
         setPortValue () {
             if (['', '21', '22', '990'].indexOf(this.deploymentSettings.port) === -1) {
                 return;

@@ -194,6 +194,7 @@
                             id="no-index-this-page"
                             :label="$t('settings.noIndexWebsite')">
                             <switcher
+                                ref="indexing-setting"
                                 slot="field"
                                 v-model="advanced.noIndexThisPage" />
                             <small
@@ -1085,15 +1086,43 @@
                     </div>
 
                     <div slot="tab-2">
-                        <field
+                        <div
                             v-if="advanced.noIndexThisPage"
-                            :label="$t('settings.toViewSitemapEnableIndexingInfo')"
-                            :labelFullWidth="true" />
+                            class="msg msg-icon msg-info settings-dependency-notice">
+                            <icon
+                                name="info"
+                                customWidth="28"
+                                customHeight="28"
+                                non-interactive
+                                aria-hidden="true" />
+                            <p>
+                                {{ $t('settings.toViewSitemapEnableIndexingInfo', { option: $t('settings.noIndexWebsite') }) }}
+                                <a
+                                    href="#"
+                                    @click.prevent="openIndexingSettings">
+                                    {{ $t('settings.openSEOSettings') }}
+                                </a>
+                            </p>
+                        </div>
 
-                        <field
+                        <div
                             v-if="siteUsesRelativeUrls"
-                            :label="$t('settings.sitemapRelativeUrlsInfo')"
-                            :labelFullWidth="true" />
+                            class="msg msg-icon msg-info settings-dependency-notice">
+                            <icon
+                                name="info"
+                                customWidth="28"
+                                customHeight="28"
+                                non-interactive
+                                aria-hidden="true" />
+                            <p>
+                                {{ $t('settings.sitemapRelativeUrlsInfo', { option: $t('sync.useRelativeURLs') }) }}
+                                <router-link
+                                    :to="serverSettingsNoticeRoute"
+                                    @click.native.capture="rememberSettingsDraft">
+                                    {{ $t('settings.openServerSettings') }}
+                                </router-link>
+                            </p>
+                        </div>
 
                         <field
                             v-if="!advanced.noIndexThisPage && !siteUsesRelativeUrls"
@@ -1163,6 +1192,25 @@
                     </div>
 
                     <div slot="tab-3">
+                        <div
+                            v-if="siteUsesRelativeUrls"
+                            class="msg msg-icon msg-info settings-dependency-notice">
+                            <icon
+                                name="info"
+                                customWidth="28"
+                                customHeight="28"
+                                non-interactive
+                                aria-hidden="true" />
+                            <p>
+                                {{ $t('settings.openGraphRelativeUrlsInfo', { option: $t('sync.useRelativeURLs') }) }}
+                                <router-link
+                                    :to="serverSettingsNoticeRoute"
+                                    @click.native.capture="rememberSettingsDraft">
+                                    {{ $t('settings.openServerSettings') }}
+                                </router-link>
+                            </p>
+                        </div>
+
                         <field
                             id="open-graph-enabled"
                             :label="$t('settings.generateOpenGraphTags')">
@@ -1213,6 +1261,25 @@
                     </div>
 
                     <div slot="tab-4">
+                        <div
+                            v-if="siteUsesRelativeUrls"
+                            class="msg msg-icon msg-info settings-dependency-notice">
+                            <icon
+                                name="info"
+                                customWidth="28"
+                                customHeight="28"
+                                non-interactive
+                                aria-hidden="true" />
+                            <p>
+                                {{ $t('settings.twitterCardsRelativeUrlsInfo', { option: $t('sync.useRelativeURLs') }) }}
+                                <router-link
+                                    :to="serverSettingsNoticeRoute"
+                                    @click.native.capture="rememberSettingsDraft">
+                                    {{ $t('settings.openServerSettings') }}
+                                </router-link>
+                            </p>
+                        </div>
+
                         <field
                             id="twitter-cards-enabled"
                             :label="$t('settings.generateTwitterCards')">
@@ -1920,10 +1987,24 @@
                     </div>
 
                     <div slot="tab-7">
-                        <field
+                        <div
                             v-if="siteUsesRelativeUrls"
-                            :label="$t('settings.feedsRelativeUrlsInfo')"
-                            :labelFullWidth="true" />
+                            class="msg msg-icon msg-info settings-dependency-notice">
+                            <icon
+                                name="info"
+                                customWidth="28"
+                                customHeight="28"
+                                non-interactive
+                                aria-hidden="true" />
+                            <p>
+                                {{ $t('settings.feedsRelativeUrlsInfo', { option: $t('sync.useRelativeURLs') }) }}
+                                <router-link
+                                    :to="serverSettingsNoticeRoute"
+                                    @click.native.capture="rememberSettingsDraft">
+                                    {{ $t('settings.openServerSettings') }}
+                                </router-link>
+                            </p>
+                        </div>
 
                         <field
                             v-if="!siteUsesRelativeUrls"
@@ -2265,6 +2346,8 @@ import ThemesDropdown from './basic-elements/ThemesDropdown';
 import ThemeUpload from './mixins/ThemeUpload';
 import WorkspaceAccentPicker from './basic-elements/WorkspaceAccentPicker';
 
+const serverNavigationDrafts = new Map();
+
 export default {
     name: 'site-settings',
     mixins: [
@@ -2297,6 +2380,12 @@ export default {
         };
     },
     computed: {
+        serverSettingsNoticeRoute () {
+            return {
+                path: '/site/' + this.$route.params.name + '/settings/server',
+                query: { focus: 'relative-urls' }
+            };
+        },
         currentThemeHasSupportedFeaturesList () {
             return this.$store.state.currentSite.themeSettings.supportedFeatures;
         },
@@ -2667,6 +2756,7 @@ export default {
         }
 
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
+        this.restoreSettingsDraft();
     },
     watch: {
         workspaceAccent (newValue, oldValue) {
@@ -2695,6 +2785,44 @@ export default {
         }
     },
     methods: {
+        rememberSettingsDraft () {
+            const config = this.$store.state.currentSite.config;
+            const draft = {
+                logo: { icon: this.$refs['logo-creator'].getActiveIcon() },
+                workspaceAccent: this.workspaceAccent,
+                language: this.language,
+                customLanguage: this.customLanguage,
+                spellchecking: this.spellchecking,
+                name: this.name,
+                description: this.description,
+                uuid: this.uuid,
+                theme: this.theme,
+                advanced: this.advanced
+            };
+
+            serverNavigationDrafts.set(config.uuid || config.name, JSON.parse(JSON.stringify(draft)));
+        },
+        restoreSettingsDraft () {
+            const config = this.$store.state.currentSite.config;
+            const key = config.uuid || config.name;
+            const draft = serverNavigationDrafts.get(key);
+
+            if (draft) {
+                Object.assign(this, draft);
+                serverNavigationDrafts.delete(key);
+            }
+        },
+        openIndexingSettings () {
+            this.$refs['advanced-tabs'].toggle(this.advancedTabs[0], 0);
+            this.$nextTick(() => {
+                const control = this.$refs['indexing-setting'].$el.querySelector('[role="switch"]');
+
+                if (control) {
+                    control.focus({ preventScroll: true });
+                    control.scrollIntoView({ block: 'nearest' });
+                }
+            });
+        },
         checkBeforeSave (showPreview, renderingType, renderFiles) {
             if (
                 this.$store.state.currentSite.config.theme && (
@@ -3176,6 +3304,10 @@ export default {
     margin: 0 auto;
     max-width: var(--wrapper-width);
     user-select: none;
+
+    .tabs .tab .settings-dependency-notice:first-child {
+        margin-top: 0;
+    }
 
     .multiple-checkboxes {
         label {
