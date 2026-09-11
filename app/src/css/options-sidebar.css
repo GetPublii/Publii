@@ -246,10 +246,10 @@
     line-height: 1.1;
     padding: 0;
     position: absolute;
-    right: 3.5rem;
+    right: 3rem;
     text-align: center;
     transition: var(--transition-default);
-    top: 3rem;
+    top: 2.7rem;
     width: 3rem;
 
     &:active,
