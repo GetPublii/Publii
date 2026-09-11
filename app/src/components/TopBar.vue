@@ -162,7 +162,7 @@ export default {
         display: flex;             
         padding: 0;
         position: absolute;
-        right: 0;
+        right: .5rem;
         top: var(--topbar-height);
         width: 40px;
         z-index: 102;

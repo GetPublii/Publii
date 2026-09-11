@@ -40,7 +40,6 @@
             <span
                 v-else
                 class="topbar-app-settings-icon"
-                :class="{ 'is-active': submenuIsOpen }"
                 aria-hidden="true">
             </span>
         </button>
@@ -234,21 +233,14 @@ export default {
 
 <style scoped>
 
-.topbar {
-}
-
 .topbar-app-settings {
+    -webkit-app-region: no-drag;
     color: var(--icon-secondary-color);
-    cursor: pointer;
     display: block;
+    font-weight: var(--font-weight-medium);
     height: 5rem;
     order: 3;
     width: 35px;
-
-    &:hover {
-        color: var(--icon-tertiary-color);
-    }
-
 }
 
 .topbar-app-settings-trigger {
@@ -261,14 +253,19 @@ export default {
     display: flex;
     font: inherit;
     height: 100%;
+    justify-content: center;
     margin: 0;
-    padding: 0 0 0 var(--space-6);
+    padding: 0;
     text-align: left;
     width: 100%;
 
+    &:hover {
+        color: var(--icon-tertiary-color);
+    }
+
     &:focus-visible {
         outline: 2px solid var(--input-border-focus);
-        outline-offset: 2px;
+        outline-offset: -2px;
     }
 }
 
@@ -277,16 +274,13 @@ export default {
     border-radius: 50%;
     display: block;
     height: 3px;
-    margin-top: -2px;
     pointer-events: none;
     position: relative;
-    right: 0;
-    top: auto;
     width: 3px;
 
     &:after,
     &:before {
-        background: currentcolor;
+        background: currentColor;
         border-radius: 50%;
         content: "";
         display: block;
@@ -302,19 +296,14 @@ export default {
 }
 
 .topbar-app-settings-bell {
-    flex-shrink: 0;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
+    display: flex;
+    flex-shrink: 0;
     height: 100%;
-    width: 35px;
-    margin-left: -1.7rem;
-
-
-    svg {
-        color: var(--icon-secondary-color);
-    }
+    justify-content: center;
+    pointer-events: none;
+    position: relative;
+    width: 100%;
 }
 
 .topbar-app-settings-bell-badge {
@@ -338,19 +327,8 @@ export default {
     width: auto;
 
     &.is-exclamation {
+        font-size: var(--font-size-ui-xs);
         font-weight: var(--font-weight-bold);
-    }
-}
-
-.topbar-app-settings {
-    -webkit-app-region: no-drag; /* Make the buttons clickable again */
-    font-weight: var(--font-weight-medium);
-
-    & > svg {
-        height: 2.4rem;
-        position: relative;
-        top: .6rem;
-        width: 2.4rem;
     }
 }
 
