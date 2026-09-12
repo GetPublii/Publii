@@ -286,7 +286,6 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getCurrentAppAppearance: () => this.$root.getCurrentAppAppearance(),
                 getCurrentWorkspaceAccent: () => this.$root.getCurrentWorkspaceAccent(),
                 reportPossibleDataLoss: () => this.$bus.$emit('post-editor-possible-data-loss'),
-                writersPanelOpen: () => this.$bus.$emit('writers-panel-open'),
                 writersPanelRefresh: () => this.$bus.$emit('writers-panel-refresh'),
                 sourceCodeEditorShow: (content, editor) => this.$bus.$emit('source-code-editor-show', content, editor),
                 updateLinkEditor: (data) => this.$bus.$emit('update-link-editor', data),

@@ -344,11 +344,6 @@ class EditorBridge {
                 let clickedElement = e.path ? e.path[0] : e.srcElement;
                 let showPopup = false;
 
-                if(localStorage.getItem('publii-writers-panel') === null) {
-                    localStorage.setItem('publii-writers-panel', 'opened');
-                    window.app.writersPanelOpen();
-                }
-
                 if(clickedElement.tagName === 'FIGCAPTION') {
                     return;
                 }

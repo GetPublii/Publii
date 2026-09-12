@@ -34,7 +34,6 @@ html {
     --editor-font-size: 20px;
     --editor-font-family: var(--font-family-sans);
     --editor-width: 39em;
-    --writers-panel-width: 185px;
 
     /* Runtime bridge written by application settings. */
     --ui-zoom-level: 100%;

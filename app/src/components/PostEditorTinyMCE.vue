@@ -7,7 +7,6 @@
         <div class="post-editor-wrapper">
             <div :class="{
                 'post-editor-form': true,
-                'writers-panel-open': writersPanelOpen,
                 'sidebar-open': sidebarVisible
             }">
                 <div>
@@ -33,19 +32,7 @@
                 </div>
             </div>
 
-            <writers-panel 
-                :isVisible="writersPanelOpen" />
-
-            <p-button
-                id="post-stats-button"
-                appearance="clean-inverse"
-                size="small"
-                icon="stats"
-                :title="$t('editor.togglePostStatsPanel')"
-                @click.native="togglePostStats">
-                <template v-if="!writersPanelOpen">{{ $t('editor.viewStats') }}</template>
-                <template v-else>{{ $t('editor.hideStats') }}</template>
-            </p-button>
+            <writers-panel />
 
             <sidebar 
                 :isVisible="sidebarVisible"
@@ -106,7 +93,6 @@ export default {
         return {
             postID: this.$route.params.post_id || 0,
             newPost: true,
-            writersPanelOpen: localStorage.getItem('publii-writers-panel') === 'opened',
             postSlugEdited: false,
             possibleDataLoss: false,
             unwatchDataLoss: null,
@@ -359,15 +345,6 @@ export default {
 
             this.loadPostData();
             this.possibleDataLoss = false;
-        },
-        togglePostStats () {
-            if (this.writersPanelOpen) {
-                this.writersPanelOpen = false;
-                localStorage.setItem('publii-writers-panel', 'closed');
-            } else {
-                this.writersPanelOpen = true;
-                localStorage.setItem('publii-writers-panel', 'opened');
-            }
         },
         pasteTitle (e) {
             let text = (e.originalEvent || e).clipboardData.getData('text/plain').replace(/\n/gmi, '');
