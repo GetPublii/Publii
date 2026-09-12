@@ -214,6 +214,7 @@ export default {
     },
     beforeDestroy () {
         mainProcessAPI.stopReceiveAll('app-files-selected');
+        this.$bus.$off('posts-filter-value-changed');
     },
     methods: {
         loadFiles () {
@@ -388,9 +389,6 @@ export default {
 
             return selectedItems;
         }
-    },
-    beforeDestroy () {
-        this.$bus.$off('posts-filter-value-changed');
     }
 }
 </script>
