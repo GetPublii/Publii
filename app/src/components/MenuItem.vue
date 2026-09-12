@@ -792,11 +792,12 @@ export default {
     }
 
     /* Invisible "drop here to nest" zone below an item without children.
-       It is indented like real children, sits over the gap to the next row,
-       and only takes pointer events while a drag is in progress. */
+       Keep it beyond the handle and SortableJS's empty-list tolerance, aligned
+       with NEST_THRESHOLD in Menus.vue. It covers the gap to the next row and
+       only takes pointer events while a drag is in progress. */
     &:empty {
         bottom: calc(-1 * (var(--space-2) + var(--space-1)));
-        left: var(--space-8);
+        left: 48px;
         min-height: calc(var(--space-2) + var(--space-1));
         pointer-events: none;
         position: absolute;
