@@ -767,7 +767,6 @@ export default {
 </script>
 
 <style scoped>
-@import '../css/options-sidebar.css';
 @import '../css/notifications.css';
 
 .options-sidebar {

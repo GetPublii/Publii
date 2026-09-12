@@ -49,7 +49,7 @@
         }
     }
 
-    .msg {
+    .options-sidebar-container & .msg {
         font-size: var(--font-size-ui-sm);
     }
 
@@ -71,6 +71,7 @@
 
 .options-sidebar-container {
     background: var(--option-sidebar-bg);
+    border-left: 1px solid var(--border-light-color);
     box-shadow: var(--shadow-sm);
     height: 100%;
     overflow: auto;
@@ -126,7 +127,7 @@
     }
 }
 
-.options-sidebar-item-slug {
+.options-sidebar-container .options-sidebar .options-sidebar-item-slug {
     position: relative;
 
     input {
@@ -226,7 +227,7 @@
     }
 }
 
-.options-sidebar-preview-button {
+.options-sidebar-container .options-sidebar .options-sidebar-preview-button {
     display: inline-flex;
 
     & > span {
@@ -269,10 +270,14 @@
     gap: 0.625rem;
     padding: var(--space-8) 0 0 0;
 
-    & > .button{
+    .options-sidebar & > .button {
         flex-grow: 1;
         justify-content: center;
         margin-left: 0;
         text-align: center;
+    }
+
+    .options-sidebar & > .button + .button {
+        margin-left: 0;
     }
 }

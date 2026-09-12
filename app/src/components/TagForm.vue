@@ -700,7 +700,6 @@ export default {
 
 <style scoped>
 @import '../css/content-status-icon.css';
-@import '../css/options-sidebar.css';
 @import '../css/notifications.css';
 
 .tag-settings {

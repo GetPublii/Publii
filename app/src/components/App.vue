@@ -403,6 +403,7 @@ export default {
 @import '../css/appearances/publii.css';
 @import '../css/global.css';
 @import '../css/forms.css';
+@import '../css/options-sidebar.css';
 @import '../css/scope-fix.css';
 @import '../css/codemirror.css';
 

@@ -575,7 +575,6 @@ export default {
 </script>
 
 <style scoped>
-@import '../css/options-sidebar.css';
 
 .options-sidebar {
     h2 {

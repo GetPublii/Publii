@@ -1000,7 +1000,6 @@ export default {
 
 <style>
 @import '../../css/content-status-icon.css';
-@import '../../css/options-sidebar.css';
 
 .post-editor {
 }
@@ -1025,7 +1024,7 @@ export default {
         position: fixed;
         top: var(--topbar-height);
         right: 0;
-        width: var(--options-sidebar-width);
+        width: calc(var(--options-sidebar-width) - 1px);
         z-index: 1;
     }
 
