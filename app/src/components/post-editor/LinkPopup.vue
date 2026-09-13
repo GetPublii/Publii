@@ -235,6 +235,8 @@
 </template>
 
 <script>
+import escapeHTML from './../../helpers/escape-html.js';
+
 export default {
     name: 'link-popup',
     props: {
@@ -527,7 +529,7 @@ export default {
             }
 
             if (titleContent && titleContent[1]) {
-                this.title = titleContent[1];
+                this.title = tinymce.html.Entities.decode(titleContent[1]);
             }
 
             if (classContent && classContent[1]) {
@@ -629,7 +631,7 @@ export default {
             }
 
             if (this.title.trim() !== '') {
-                response.title = ' title="' + this.title + '"';
+                response.title = ' title="' + escapeHTML(this.title) + '"';
             }
 
             if (this.cssClass.trim() !== '') {

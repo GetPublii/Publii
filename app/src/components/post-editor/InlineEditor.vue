@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import getEditorToolbarPosition from './../../helpers/get-editor-toolbar-position.js';
 export default {
     name: 'inline-editor',
     data () {
@@ -144,38 +145,17 @@ export default {
                 let range = sel.getRangeAt(0);
                 let rect = range.getBoundingClientRect();
 
-                $(this.$refs.toolbar).css({
-                    display: 'flex',
-                    left: this.calculateLeft(rect) + "px",
-                    top: this.calculateTop(rect) + "px"
-                });
-
+                const toolbar = $(this.$refs.toolbar);
+                toolbar.css('display', 'flex');
                 this.updateLinkButtons();
+                toolbar.css(this.calculatePosition(rect));
             } else {
                 $(this.$refs.toolbar).css('display', 'none');
             }
         },
 
-        calculateTop(rect) {
-            let iframe = $('#post-editor_ifr');
-            return (rect.top - 60) + iframe.offset().top;
-        },
-
-        calculateLeft(rect) {
-            let iframe = $('#post-editor_ifr');
-            let toolbar = $('#inline-toolbar');
-            let halfWidth = toolbar.outerWidth() / 2;
-            let base = (rect.left + (rect.width / 2) - halfWidth) + iframe.offset().left;
-
-            if(base <= 10) {
-                return 10;
-            }
-
-            if(base >= window.outerWidth - (base + 10)) {
-                return window.outerWidth - (base + 10);
-            }
-
-            return base;
+        calculatePosition(rect) {
+            return getEditorToolbarPosition(rect, $('#inline-toolbar'));
         },
 
         updateLinkButtons() {

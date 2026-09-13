@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import getEditorToolbarPosition from './../../helpers/get-editor-toolbar-position.js';
 import Utils from './../../helpers/utils.js';
 
 export default {
@@ -139,11 +140,9 @@ export default {
                 let range = selection.getRangeAt(0);
                 let rect = range.getBoundingClientRect();
 
-                $('#link-toolbar').css({
-                    display: 'flex',
-                    left: this.calculateLeft(rect) + "px",
-                    top: (this.calculateTop(rect) + 10) + "px"
-                });
+                const toolbar = $('#link-toolbar');
+                toolbar.css('display', 'flex');
+                toolbar.css(this.calculatePosition(rect));
 
                 let url = link.outerHTML.match(/href="(.*?)"/);
                 let previewButton = $('#link-toolbar-preview')
@@ -162,26 +161,8 @@ export default {
             }
         },
 
-        calculateTop(rect) {
-            let iframe = $('#post-editor_ifr');
-            return (rect.top - 60) + iframe.offset().top;
-        },
-
-        calculateLeft(rect) {
-            let iframe = $('#post-editor_ifr');
-            let toolbar = $('#link-toolbar');
-            let halfWidth = toolbar.outerWidth() / 2;
-            let base = (rect.left + (rect.width / 2) - halfWidth) + iframe.offset().left;
-
-            if(base <= 10) {
-                return 10;
-            }
-
-            if(base >= window.outerWidth - (base + 10)) {
-                return window.outerWidth - (base + 10);
-            }
-
-            return base;
+        calculatePosition(rect) {
+            return getEditorToolbarPosition(rect, $('#link-toolbar'));
         },
     },
     beforeDestroy () {

@@ -336,16 +336,11 @@ export default {
                 output = '&nbsp;';
             }
 
-            $(this.galleryElement).attr('data-columns', this.columns);
-            $(this.galleryElement).removeClass('gallery-wrapper--wide').removeClass('gallery-wrapper--full');
-
-            if (this.layout !== '') {
-                $(this.galleryElement).addClass(this.layout);
-            }
-
             return {
                 gallery: this.galleryElement,
-                html: output
+                html: output,
+                columns: this.columns,
+                layout: this.layout
             };
         }
     },

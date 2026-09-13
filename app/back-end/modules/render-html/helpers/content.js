@@ -3,6 +3,7 @@
  * the URLs and slugs
  */
 
+const wrapIframes = require('./../../../../shared/iframe-wrapper');
 const slug = require('./../../../helpers/slug');
 const path = require('path');
 const MarkdownToHtml = require('./../text-renderers/markdown');
@@ -107,18 +108,8 @@ class ContentHelper {
         // Remove double slashes from the gallery URLs (if they appears)
         preparedText = preparedText.replace(/\/\/gallery\/$/gmi, '/gallery/');
 
-        // Remove paragraphs around <iframe>'s
-        preparedText = preparedText.replace(/\<p\>\<iframe/gmi, '<iframe');
-        preparedText = preparedText.replace(/\<\/iframe\>\<\/p\>/gmi, '</iframe>');
-
-        // Wrap iframes into <div class="post__iframe">
-        preparedText = preparedText.replace(/(?<!<figure[\s\S]*?class="post__video">[\s\S]*?)(<iframe.*?>[\s\S]*?<\/iframe>)/gmi, function(matches) {
-            if (matches.indexOf('data-responsive="false"') > -1) {
-                return matches;
-            }
-
-            return '<div class="post__iframe">' + matches + '</div>';
-        });
+        // Keep editor wrappers and support older content without wrapping twice.
+        preparedText = wrapIframes(preparedText);
 
         // Remove CDATA sections inside scripts added by TinyMCE
         preparedText = preparedText.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');

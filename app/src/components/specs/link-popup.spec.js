@@ -12,13 +12,17 @@ const repo = path.resolve(__dirname, '../../../..');
 const appRequire = createRequire(path.join(repo, 'app/package.json'));
 const Vue = appRequire('vue');
 const compiler = appRequire('vue-template-compiler');
+const escapeContext = { module: { exports: {} } };
+const escapeSource = fs.readFileSync(path.join(repo, 'app/src/helpers/escape-html.js'), 'utf8');
+vm.runInNewContext(escapeSource.replace('export default', 'module.exports ='), escapeContext);
+const escapeHTML = escapeContext.module.exports;
 
 function loadComponent(name, globals = {}) {
     const source = fs.readFileSync(path.join(repo, 'app/src/components', name + '.vue'), 'utf8');
     const parsed = compiler.parseComponent(source);
     const compiled = compiler.compile(parsed.template.content);
     assert.deepEqual(compiled.errors, []);
-    const context = { module: { exports: {} }, ...globals };
+    const context = { module: { exports: {} }, escapeHTML, ...globals };
     vm.runInNewContext(parsed.script.content.replace(/^import .*;\s*$/gm, '').replace('export default', 'module.exports ='), context);
     return {
         ...context.module.exports,
@@ -145,6 +149,31 @@ describe('Shared link popup', () => {
         p.type = 'post'; p.post = 12; p.setLink();
         assert.equal(result.text, 'Published post');
     });
+    it('escapes titles in the HTML response used by every WYSIWYG link toolbar', () => {
+        const { instance: p, inserted, events } = popup(false);
+        p.open({ selection: 'the' });
+        p.external = 'aasd';
+        p.title = '"guide" & <details>';
+        p.setLink();
+
+        assert.equal(events[0].title, ' title="&quot;guide&quot; &amp; &lt;details&gt;"');
+        assert.deepEqual(inserted, [
+            '<a href="aasd" title="&quot;guide&quot; &amp; &lt;details&gt;">the</a>'
+        ]);
+    });
+
+    it('preserves literal entity text in a title', () => {
+        const { instance: p, inserted } = popup(false);
+        p.open({ selection: 'Example' });
+        p.external = 'https://example.test';
+        p.title = 'Use &quot; in HTML';
+        p.setLink();
+
+        assert.deepEqual(inserted, [
+            '<a href="https://example.test" title="Use &amp;quot; in HTML">Example</a>'
+        ]);
+    });
+
     it('preserves raw attribute values and clears state after cancel', () => {
         const { instance: p, events } = popup();
         const title = 'A "quote" & more';

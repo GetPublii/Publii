@@ -1,6 +1,7 @@
 import EditorConfig from './../configs/postEditor.config.js';
 import { applyAppAppearance } from './../../helpers/app-appearance';
 import Utils from './../../helpers/utils';
+import wrapIframes from './../../../shared/iframe-wrapper';
 
 class EditorBridge {
     constructor(itemID, itemType = 'post') {
@@ -146,6 +147,99 @@ class EditorBridge {
         });
     }
 
+    setupMediaDoubleClick (editor) {
+        editor.on('dblclick', event => {
+            const target = event.target;
+            const media = target.closest('[data-mce-object="iframe"], [data-mce-object="video"], [data-mce-object="audio"]');
+
+            if (media) {
+                event.preventDefault();
+                editor.selection.select(media);
+                editor.execCommand('mceMedia');
+                return;
+            }
+
+            if (target.tagName === 'IMG' && !target.hasAttribute('data-mce-object') && !target.hasAttribute('data-mce-placeholder')) {
+                const figure = target.closest('figure');
+
+                if (figure && figure.getAttribute('contenteditable') === 'false') {
+                    figure.removeAttribute('contenteditable');
+                    setTimeout(() => figure.setAttribute('contenteditable', 'false'), 100);
+                }
+
+                editor.execCommand('mceImage');
+            }
+        });
+    }
+
+    setupIframeWrappers (editor) {
+        const unwrapOptOutIframes = root => {
+            Array.from(root.querySelectorAll('div.post__iframe')).reverse().forEach(wrapper => {
+                const embed = wrapper.firstElementChild;
+                const isOptOut = embed && (
+                    (embed.tagName === 'IFRAME' && embed.getAttribute('data-responsive') === 'false') ||
+                    (embed.getAttribute('data-mce-object') === 'iframe' && embed.getAttribute('data-mce-p-data-responsive') === 'false')
+                );
+                const hasCustomAttributes = Array.from(wrapper.attributes).some(attribute => {
+                    return attribute.name !== 'class' && !attribute.name.startsWith('data-mce-');
+                });
+                const containsOnlyEmbed = Array.from(wrapper.childNodes).every(node => {
+                    return node === embed || (node.nodeType === 3 && node.textContent.trim() === '');
+                });
+
+                if (wrapper.className.trim() === 'post__iframe' && !hasCustomAttributes && isOptOut && containsOnlyEmbed) {
+                    editor.dom.remove(wrapper, true);
+                }
+            });
+        };
+
+        // Normalize source HTML before TinyMCE turns media into editable
+        // placeholders. This also covers insertion, paste and source editing.
+        editor.on('BeforeSetContent', event => {
+            if (event.format === 'raw') {
+                return;
+            }
+
+            // The media dialog replaces the selected placeholder, keeping its
+            // parent wrapper. Normalizing that fragment would nest a new div.
+            const selected = editor.selection.getNode();
+
+            if (
+                event.selection &&
+                selected.getAttribute('data-mce-object') === 'iframe' &&
+                selected.closest('.post__iframe, .post__video')
+            ) {
+                return;
+            }
+
+            event.content = wrapIframes(event.content);
+        });
+
+        // Media-dialog updates replace the placeholder but retain its parent.
+        editor.on('SetContent', event => {
+            if (event.format !== 'raw') {
+                unwrapOptOutIframes(editor.getBody());
+            }
+        });
+
+        // TinyMCE can leave an empty block after deleting its media placeholder.
+        // Clean the serialization clone while leaving the editing caret alone.
+        editor.on('PreProcess', event => {
+            unwrapOptOutIframes(event.node);
+            event.node.querySelectorAll('div.post__iframe').forEach(wrapper => {
+                const hasCustomAttributes = Array.from(wrapper.attributes).some(attribute => {
+                    return attribute.name !== 'class' && !attribute.name.startsWith('data-mce-');
+                });
+                const isEmpty = wrapper.textContent.trim() === '' &&
+                    Array.from(wrapper.children).every(child => child.tagName === 'BR');
+
+                if (wrapper.className === 'post__iframe' && !hasCustomAttributes && isEmpty) {
+                    wrapper.remove();
+                }
+            });
+        });
+    }
+
     normalizeImageFigures () {
         if (!this.tinymceEditor || !this.tinymceEditor.getBody || !this.tinymceEditor.getBody()) {
             return;
@@ -190,6 +284,8 @@ class EditorBridge {
         this.tinymceEditor = editor;
         this.addEditorButtons();
         this.setupImageFigureClassTranslation(editor);
+        this.setupIframeWrappers(editor);
+        this.setupMediaDoubleClick(editor);
 
         editor.on('init', async () => {
             $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
@@ -252,20 +348,6 @@ class EditorBridge {
                     }
                 }
             }, true);
-
-            // DblClick on IMG opens the dialog
-            iframe.contentWindow.window.document.body.addEventListener("dblclick", function (e) {
-                if (e.target.tagName === 'IMG' && !e.target.hasAttribute('data-mce-object') && !e.target.hasAttribute('data-mce-placeholder')) {
-                    const figure = e.target.closest('figure');
-
-                    if (figure && figure.getAttribute('contenteditable') === 'false') {
-                        figure.removeAttribute('contenteditable');
-                        setTimeout(() => figure.setAttribute('contenteditable', 'false'), 100);
-                    }
-
-                    tinymce.activeEditor.execCommand('mceImage');
-                }
-            }, false);
 
             // Support for dark mode
             let iframeDocument = iframe.contentWindow.window.document;
@@ -536,9 +618,41 @@ class EditorBridge {
     galleryPopupUpdated (response) {
         this.hideToolbarsOnCopyOrScroll();
 
-        if(response) {
-            response.gallery.innerHTML = response.html;
-            response.gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
+        const editor = this.tinymceEditor;
+
+        if (!response || !editor || !editor.getBody() || !editor.getBody().contains(response.gallery)) {
+            return;
+        }
+
+        const gallery = response.gallery;
+        const updatedGallery = gallery.cloneNode(false);
+        updatedGallery.setAttribute('data-columns', response.columns);
+        updatedGallery.classList.remove('gallery-wrapper--wide', 'gallery-wrapper--full');
+
+        if (response.layout !== '') {
+            updatedGallery.classList.add(response.layout);
+        }
+
+        updatedGallery.innerHTML = response.html;
+        updatedGallery.setAttribute('data-is-empty', response.html === '&nbsp;');
+        editor.focus();
+
+        // Ignore unchanged content even when TinyMCE adds internal image attributes.
+        if (editor.serializer.serialize(gallery) === editor.serializer.serialize(updatedGallery)) {
+            return;
+        }
+
+        const undoLevel = editor.undoManager.transact(() => {
+            gallery.setAttribute('data-columns', response.columns);
+            gallery.className = updatedGallery.className;
+            gallery.innerHTML = response.html;
+            gallery.setAttribute('data-is-empty', response.html === '&nbsp;');
+        });
+
+        editor.nodeChanged();
+
+        if (undoLevel) {
+            window.app.reportPossibleDataLoss();
         }
     }
 

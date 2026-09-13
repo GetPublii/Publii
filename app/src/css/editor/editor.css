@@ -106,7 +106,8 @@ hr {
 }
 
 figure,
-.gallery {
+.gallery,
+.post__iframe {
     margin-top: 2.0571rem;
     margin-bottom: 2.0571rem;
 }
@@ -493,9 +494,14 @@ select[multiple] {
         width: 100%;
     }
 }
+/* Keep media clicks in the editor so a double-click can open media settings. */
+.mce-content-body .mce-preview-object[data-mce-object="iframe"] > .mce-shim,
+.mce-content-body .mce-preview-object[data-mce-object="video"] > .mce-shim,
+.mce-content-body .mce-preview-object[data-mce-object="audio"] > .mce-shim {
+    display: block;
+}
+
 .post__video {
-    background: var(--color-surface-subtle);
-    border: 2px dashed var(--input-border-color);
     position: relative;
 
     & > img.mce-object {
@@ -980,8 +986,11 @@ figure[class*="post__image"] img[class*="post__image"] {
     margin: 0 !important;
     display: block !important;
 }
-/* Fix misleading cursor on figure with image */
+/* Fix misleading cursor on images and media that can be edited by double-click. */
 .mce-content-body figure[contentEditable=false][data-mce-selected],
-.mce-content-body figure[contentEditable=false][data-mce-selected] img {
+.mce-content-body img:not([data-mce-object]):not([data-mce-placeholder]),
+.mce-content-body [data-mce-object="iframe"],
+.mce-content-body [data-mce-object="video"],
+.mce-content-body [data-mce-object="audio"] {
     cursor: pointer !important;
 }
