@@ -487,11 +487,6 @@ export default {
             renderLimit: 100
         };
     },
-    watch: {
-        filterValue () {
-            this.renderLimit = 100;
-        }
-    },
     computed: {
         items () {
             let items = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order);
@@ -624,6 +619,11 @@ export default {
             }
             
             return false;
+        }
+    },
+    watch: {
+        filterValue () {
+            this.renderLimit = 100;
         }
     },
     created () {

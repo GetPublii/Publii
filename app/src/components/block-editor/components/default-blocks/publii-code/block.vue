@@ -60,11 +60,6 @@ export default {
       ]
     };
   },
-  watch: {
-    'config.language': function (newValue) {
-      localStorage.setItem('block-editor-last-selected-language', newValue);
-    }
-  },
   computed: {
     availableLanguages () {
       return [
@@ -133,6 +128,11 @@ export default {
         'yaml',
         'xml'
       ]
+    }
+  },
+  watch: {
+    'config.language': function (newValue) {
+      localStorage.setItem('block-editor-last-selected-language', newValue);
     }
   },
   beforeCreate () {

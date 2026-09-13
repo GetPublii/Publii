@@ -113,6 +113,11 @@ export default {
         'editedItemIndex',
         'menus'
     ],
+    data () {
+        return {
+            configuration: {}
+        };
+    },
     computed: {
         configurationIsValid () {
             let positions = Object.keys(this.configuration);
@@ -160,11 +165,6 @@ export default {
 
             return menus;
         }
-    },
-    data () {
-        return {
-            configuration: {}
-        };
     },
     watch: {
         configuration: {

@@ -2734,6 +2734,20 @@ export default {
             return this.$store.state.components.sidebar.syncInProgress;
         }
     },
+    watch: {
+        workspaceAccent (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.$root.applyWorkspaceAccent(newValue);
+            }
+        },
+        'advanced.urls.cleanUrls': function (newValue, oldValue) {
+            if (newValue === false && oldValue === true) {
+                this.advanced.urls.postsPrefix = '';
+                this.advanced.urls.tagsPrefixAfterPostsPrefix = false;
+                this.advanced.urls.authorsPrefixAfterPostsPrefix = false;
+            }
+        }
+    },
     beforeMount () {
         this.logo.icon = this.$store.state.currentSite.config.logo.icon;
         this.workspaceAccent = normalizeWorkspaceAccent(
@@ -2757,20 +2771,6 @@ export default {
 
         this.advanced = Object.assign({}, this.advanced, this.$store.state.currentSite.config.advanced);
         this.restoreSettingsDraft();
-    },
-    watch: {
-        workspaceAccent (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                this.$root.applyWorkspaceAccent(newValue);
-            }
-        },
-        'advanced.urls.cleanUrls': function (newValue, oldValue) {
-            if (newValue === false && oldValue === true) {
-                this.advanced.urls.postsPrefix = '';
-                this.advanced.urls.tagsPrefixAfterPostsPrefix = false;
-                this.advanced.urls.authorsPrefixAfterPostsPrefix = false;
-            }
-        }
     },
     async mounted () {
         setTimeout(() => {

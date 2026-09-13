@@ -155,44 +155,6 @@ export default {
     'inline-menu': InlineMenuUI,
     'top-menu': TopMenuUI
   },
-  computed: {
-    isEmpty () {
-      let cells = [
-        ...(this.content.headers || []),
-        ...[].concat(...(this.content.rows || []))
-      ];
-
-      return cells.every(cell => cell === '' || cell === '<br>');
-    },
-    columnsCount () {
-      if (this.content.rows.length) {
-        return this.content.rows[0].length;
-      }
-
-      return this.content.headers.length;
-    },
-    resizeHandles () {
-      return this.colHandles.filter(handle => handle.index > 0 && handle.index < this.columnsCount);
-    },
-    visibleRowHandles () {
-      if (!this.hasActiveCell) {
-        return [];
-      }
-
-      if (this.currentIsHeader) {
-        return this.rowHandles.filter(handle => handle.index === 0);
-      }
-
-      return this.rowHandles.filter(handle => handle.index === this.currentRow || handle.index === this.currentRow + 1);
-    },
-    visibleColHandles () {
-      if (!this.hasActiveCell) {
-        return [];
-      }
-
-      return this.colHandles.filter(handle => handle.index === this.currentCol || handle.index === this.currentCol + 1);
-    }
-  },
   data () {
     return {
       config: {
@@ -253,6 +215,44 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    isEmpty () {
+      let cells = [
+        ...(this.content.headers || []),
+        ...[].concat(...(this.content.rows || []))
+      ];
+
+      return cells.every(cell => cell === '' || cell === '<br>');
+    },
+    columnsCount () {
+      if (this.content.rows.length) {
+        return this.content.rows[0].length;
+      }
+
+      return this.content.headers.length;
+    },
+    resizeHandles () {
+      return this.colHandles.filter(handle => handle.index > 0 && handle.index < this.columnsCount);
+    },
+    visibleRowHandles () {
+      if (!this.hasActiveCell) {
+        return [];
+      }
+
+      if (this.currentIsHeader) {
+        return this.rowHandles.filter(handle => handle.index === 0);
+      }
+
+      return this.rowHandles.filter(handle => handle.index === this.currentRow || handle.index === this.currentRow + 1);
+    },
+    visibleColHandles () {
+      if (!this.hasActiveCell) {
+        return [];
+      }
+
+      return this.colHandles.filter(handle => handle.index === this.currentCol || handle.index === this.currentCol + 1);
+    }
   },
   beforeCreate () {
     this.configForm = ConfigForm;

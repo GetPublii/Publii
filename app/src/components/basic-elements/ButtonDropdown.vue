@@ -119,6 +119,12 @@ export default {
             type: Boolean
         }
     },
+    data () {
+        return {
+            value: '',
+            dropdownVisible: false
+        };
+    },
     computed: {
         filteredItems () {
             return this.items.filter(item => item.isVisible());
@@ -148,12 +154,6 @@ export default {
         menuID () {
             return 'btn-dropdown-menu-' + this._uid;
         }
-    },
-    data () {
-        return {
-            value: '',
-            dropdownVisible: false
-        };
     },
     mounted () {
         if (this.localStorageKey) {

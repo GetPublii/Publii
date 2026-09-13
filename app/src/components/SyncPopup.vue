@@ -228,13 +228,6 @@ import Utils from './../helpers/utils.js';
 
 export default {
     name: 'sync-popup',
-    watch: {
-        'isVisible': function (newValue) {
-            if (newValue === false) {
-                this.$store.commit('setSyncStatus', false);
-            }
-        }
-    },
     data () {
         return {
             isVisible: false,
@@ -395,6 +388,13 @@ export default {
             }
 
             return false;
+        }
+    },
+    watch: {
+        'isVisible': function (newValue) {
+            if (newValue === false) {
+                this.$store.commit('setSyncStatus', false);
+            }
         }
     },
     mounted: function() {

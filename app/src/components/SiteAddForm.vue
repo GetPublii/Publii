@@ -295,12 +295,12 @@ import WorkspaceAccentPicker from './basic-elements/WorkspaceAccentPicker';
 
 export default {
     name: 'site-add-form',
-    components: {
-        'workspace-accent-picker': WorkspaceAccentPicker
-    },
     mixins: [
         GoToLastOpenedWebsite
     ],
+    components: {
+        'workspace-accent-picker': WorkspaceAccentPicker
+    },
     data () {
         return {
             siteName: '',

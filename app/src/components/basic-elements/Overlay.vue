@@ -44,17 +44,23 @@ export default {
             messageStyle: null
         };
     },
-    mounted () {
-        this.startPositionTracking();
-    },
-    beforeDestroy () {
-        this.stopPositionTracking();
+    computed: {
+        cssClasses: function() {
+            return {
+                'overlay': true,
+                'has-border': this.appearance === 'drop-zone',
+                'is-blue': this.appearance === 'drop-zone'
+            };
+        }
     },
     watch: {
         centerInViewport () {
             this.stopPositionTracking();
             this.startPositionTracking();
         }
+    },
+    mounted () {
+        this.startPositionTracking();
     },
     methods: {
         startPositionTracking () {
@@ -117,14 +123,8 @@ export default {
             } : null;
         }
     },
-    computed: {
-        cssClasses: function() {
-            return {
-                'overlay': true,
-                'has-border': this.appearance === 'drop-zone',
-                'is-blue': this.appearance === 'drop-zone'
-            };
-        }
+    beforeDestroy () {
+        this.stopPositionTracking();
     }
 }
 </script>

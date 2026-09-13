@@ -21,6 +21,15 @@ export default {
     name: String,
     value: String
   },
+  watch: {
+    value(val) {
+      if (val === this.easymde.value()) {
+        return;
+      }
+
+      this.easymde.value(val);
+    },
+  },
   mounted() {
     let configs = Object.assign({
       element: this.$refs['editor-textarea'],
@@ -34,15 +43,6 @@ export default {
 
     this.easymde = new EasyMDE(configs);
     this.initEvents();
-  },
-  watch: {
-    value(val) {
-      if (val === this.easymde.value()) {
-        return;
-      }
-
-      this.easymde.value(val);
-    },
   },
   activated() {
     let editor = this.easymde;

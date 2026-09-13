@@ -46,6 +46,11 @@ export default {
             type: String
         }
     },
+    data: function() {
+        return {
+            content: this.value
+        };
+    },
     computed: {
         cssClasses () {
             let cssClasses = {
@@ -61,11 +66,6 @@ export default {
 
             return cssClasses;
         }
-    },
-    data: function() {
-        return {
-            content: this.value
-        };
     },
     watch: {
         value (newValue, oldValue) { 

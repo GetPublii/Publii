@@ -105,6 +105,11 @@ export default {
     'icon': EditorIcon,
     'vue-select': vSelect
   },
+  data () {
+    return {
+      confirmDelete: false
+    };
+  },
   computed: {
     filteredConfig () {
       return this.config.filter(uiElement => typeof uiElement.isVisible === 'undefined' || uiElement.isVisible());
@@ -140,11 +145,6 @@ export default {
         this.confirmDelete = false;
       }
     }
-  },
-  data () {
-    return {
-      confirmDelete: false
-    };
   },
   methods: {
     makeConversion (outputType, convertCallback) {

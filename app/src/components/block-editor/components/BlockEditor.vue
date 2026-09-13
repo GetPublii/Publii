@@ -84,18 +84,6 @@ export default {
     'publii-toc': PubliiToc,
     'publii-quote': PubliiQuote
   },
-  computed: {
-    hasReadMore () {
-      return this.content.filter(block => block.type === 'publii-readmore').length > 0;
-    },
-    simplifiedContent () {
-      return this.content.map((block, index) => ({ 
-        id: block.id, 
-        type: block.type,
-        isFirstAndEmpty: index === 0 && !block.content
-      }));
-    }
-  },
   data () {
     return {
       editorInstance: this,
@@ -129,6 +117,18 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    hasReadMore () {
+      return this.content.filter(block => block.type === 'publii-readmore').length > 0;
+    },
+    simplifiedContent () {
+      return this.content.map((block, index) => ({ 
+        id: block.id, 
+        type: block.type,
+        isFirstAndEmpty: index === 0 && !block.content
+      }));
+    }
   },
   watch: {
     content: {

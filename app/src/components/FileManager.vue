@@ -309,10 +309,10 @@ import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 import { fileWebsiteURL, sortFiles } from '../helpers/file-manager.js';
 
 export default {
-    name: 'file-manager',
     directives: {
         tooltip: Tooltip
     },
+    name: 'file-manager',
     mixins: [BackToTools, CollectionCheckboxes],
     components: { CollectionSortButton },
     data () {
@@ -411,18 +411,6 @@ export default {
         this.$bus.$on('document-body-clicked', this.closeBulkDropdown);
         window.addEventListener('focus', this.refreshOnFocus);
         this.loadFiles();
-    },
-    beforeDestroy () {
-        this._disposed = true;
-        this._readID++;
-        this.stopRequested = true;
-        this.resolveConflict('stop');
-        this.$bus.$off(this.searchEvent, this.filterFiles);
-        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
-        window.removeEventListener('focus', this.refreshOnFocus);
-    },
-    beforeRouteLeave (to, from, next) {
-        next(!this.busy);
     },
     methods: {
         context () {
@@ -1105,6 +1093,18 @@ export default {
                 this.notify(this.errorMessage('failed'), true);
             }
         }
+    },
+    beforeDestroy () {
+        this._disposed = true;
+        this._readID++;
+        this.stopRequested = true;
+        this.resolveConflict('stop');
+        this.$bus.$off(this.searchEvent, this.filterFiles);
+        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
+        window.removeEventListener('focus', this.refreshOnFocus);
+    },
+    beforeRouteLeave (to, from, next) {
+        next(!this.busy);
     }
 };
 </script>

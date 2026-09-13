@@ -168,11 +168,11 @@ import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 
 export default {
     name: 'backups',
-    components: { InlineNameEditor, CollectionSortButton },
     mixins: [
         BackToTools,
         CollectionCheckboxes
     ],
+    components: { InlineNameEditor, CollectionSortButton },
     data: function() {
         return {
             isLoading: true,

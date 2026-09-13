@@ -37,12 +37,6 @@
 <script>
 export default {
     name: 'text-input',
-    data: function() {
-        return {
-            content: '',
-            fieldType: ''
-        };
-    },
     props: {
         'id': {
             default: '',
@@ -133,6 +127,12 @@ export default {
             default: '',
             type: String
         }
+    },
+    data: function() {
+        return {
+            content: '',
+            fieldType: ''
+        };
     },
     computed: {
         cssClasses: function() {

@@ -232,20 +232,6 @@ export default {
             renderLimit: 100
         };
     },
-    watch: {
-        filterValue () {
-            this.renderLimit = 100;
-        },
-        editorVisible (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                this.formAnimation = true;
-
-                setTimeout(() => {
-                    this.formAnimation = false;
-                }, 500);
-            }
-        }
-    },
     computed: {
         items: function() {
             return this.$store.getters.siteTags(this.filterValue, this.orderBy, this.order).map(item => {
@@ -294,6 +280,20 @@ export default {
         },
         showTagSlugs () {
             return this.$store.state.app.config.showPostSlugs;
+        }
+    },
+    watch: {
+        filterValue () {
+            this.renderLimit = 100;
+        },
+        editorVisible (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.formAnimation = true;
+
+                setTimeout(() => {
+                    this.formAnimation = false;
+                }, 500);
+            }
         }
     },
     created () {

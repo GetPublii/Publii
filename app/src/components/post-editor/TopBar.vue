@@ -87,6 +87,11 @@ export default {
     props: [
         'itemType'
     ],
+    data () {
+        return {
+            sourceCodeEditorVisible: false
+        };
+    },
     computed: {
         settingsToggleLabel () {
             const section = this.itemType === 'page' ? 'page' : 'post';
@@ -137,11 +142,6 @@ export default {
         themeConfigured () {
             return !!this.$store.state.currentSite.config.theme;
         }
-    },
-    data () {
-        return {
-            sourceCodeEditorVisible: false
-        };
     },
     mounted () {
         this.$bus.$on('source-code-editor-show', () => {

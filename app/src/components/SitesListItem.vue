@@ -55,6 +55,11 @@ export default {
         'site',
         'duplicateInProgress'
     ],
+    data () {
+        return {
+            isDuplicating: false
+        };
+    },
     computed: {
         description: function() {
             return this.$store.state.sites[this.site].description;
@@ -107,11 +112,6 @@ export default {
                 }
             ];
         }
-    },
-    data () {
-        return {
-            isDuplicating: false
-        };
     },
     methods: {
         handlePrimaryClick (event) {

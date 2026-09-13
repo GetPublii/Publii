@@ -199,17 +199,6 @@ export default {
             order: 'DESC'
         };
     },
-    watch: {
-        editorVisible (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                this.formAnimation = true;
-
-                setTimeout(() => {
-                    this.formAnimation = false;
-                }, 500);
-            }
-        }
-    },
     computed: {
         items: function() {
             return this.$store.getters.siteAuthors(this.filterValue, this.orderBy, this.order);
@@ -219,6 +208,17 @@ export default {
         },
         showAuthorSlugs () {
             return this.$store.state.app.config.showPostSlugs;
+        }
+    },
+    watch: {
+        editorVisible (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.formAnimation = true;
+
+                setTimeout(() => {
+                    this.formAnimation = false;
+                }, 500);
+            }
         }
     },
     beforeMount () {

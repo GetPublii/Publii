@@ -13,6 +13,13 @@ export default {
     'inputConfig',
     'editor'
   ],
+  data () {
+    return {
+      caretIsAtStart: false,
+      caretIsAtEnd: false,
+      textIsHighlighted: false
+    };
+  },
   computed: {
     isEmpty () {
       if (typeof this.content === 'string') {
@@ -38,13 +45,6 @@ export default {
 
       return true;
     }
-  },
-  data () {
-    return {
-      caretIsAtStart: false,
-      caretIsAtEnd: false,
-      textIsHighlighted: false
-    };
   },
   mounted () {
     this.config = Utils.deepMerge(this.config, this.inputConfig);

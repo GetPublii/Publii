@@ -53,9 +53,6 @@ export default {
             return this.$store.state.app.versionInfo.build;
         }
     },
-    beforeDestroy: function() {
-        mainProcessAPI.stopReceiveAll('app-license-accepted');
-    },
     methods: {
         showLicense: function(e) {
             e.preventDefault();
@@ -69,6 +66,9 @@ export default {
                 self.$bus.$emit('license-accepted');
             });
         }
+    },
+    beforeDestroy: function() {
+        mainProcessAPI.stopReceiveAll('app-license-accepted');
     }
 }
 </script>

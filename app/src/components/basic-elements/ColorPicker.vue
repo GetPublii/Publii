@@ -26,9 +26,6 @@ import { Chrome } from 'vue-color';
 
 export default {
     name: 'color-picker',
-    components: {
-        'chrome-picker': Chrome
-    },
     props: {
         value: {
             default: '',
@@ -47,6 +44,16 @@ export default {
             type: String
         }
     },
+    components: {
+        'chrome-picker': Chrome
+    },
+    data () {
+        return {
+            content: '',
+            pickerContent: '',
+            pickerVisible: false
+        };
+    },
     computed: {
         cssClasses () {
             let cssClasses = { 
@@ -63,13 +70,6 @@ export default {
 
             return cssClasses;
         }
-    },
-    data () {
-        return {
-            content: '',
-            pickerContent: '',
-            pickerVisible: false
-        };
     },
     watch: {
         value (newValue) {

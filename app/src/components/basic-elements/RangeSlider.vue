@@ -24,11 +24,6 @@
 <script>
 export default {
     name: 'text-input',
-    data: function() {
-        return {
-            content: ''
-        };
-    },
     props: {
         'readonly': {
             default: false,
@@ -66,6 +61,11 @@ export default {
             default: false,
             type: [Boolean, Function]
         }
+    },
+    data: function() {
+        return {
+            content: ''
+        };
     },
     watch: {
         value (newValue) { 
