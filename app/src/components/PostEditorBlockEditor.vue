@@ -16,6 +16,7 @@
             </div>
 
             <p-button
+                v-show="!helpPanelOpen"
                 id="post-help-button"
                 appearance="clean-inverse"
                 size="small"
@@ -34,7 +35,8 @@
             <date-popup 
                 :itemType="itemType" />
             <help-panel-block-editor 
-                :isOpen="helpPanelOpen" />
+                :isOpen="helpPanelOpen"
+                @close="closeHelp" />
         </div>
     </div>
 </template>
@@ -341,6 +343,12 @@ export default {
 
             this.loadPostData();
             this.possibleDataLoss = false;
+        },
+        closeHelp () {
+            this.helpPanelOpen = false;
+            this.$nextTick(() => {
+                this.$el.querySelector('#post-help-button').focus();
+            });
         },
         toggleHelp () {
             this.helpPanelOpen = !this.helpPanelOpen;

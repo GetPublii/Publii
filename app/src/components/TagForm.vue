@@ -1,380 +1,390 @@
 <template>
     <div
-        :key="'tag-view-' + tagData.id"
         :data-animate="formAnimation ? 'true' : 'false'"
         class="options-sidebar-container">
-        <div class="options-sidebar">
-            <h2>
-                <template v-if="tagData.id">{{ $t('tag.editTag') }}</template>
-                <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
-            </h2>
-
-            <span
-                class="options-sidebar-close"
-                name="sidebar-close"
-                @click.prevent="close()">
-                &times;
-            </span>
-
-             <div
-                v-if="!currentThemeHasSupportForTagPages"
-                slot="note"
-                class="msg msg-small msg-icon msg-alert">
-                <icon name="warning" size="m" />
-                <p>{{ $t('settings.themeDoesNotSupportTagPages') }}</p>
-            </div>
-
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
-                    @click="openItem('basic')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-status"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
-                </div>
-
-                <div
-                    class="tag-settings"
-                    style="max-height: none;"
-                    ref="basic-content-wrapper">
-                    <div
-                        class="tag-settings-content"
-                        ref="basic-content">
-                        <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                            <span>{{ $t('ui.name') }}:</span>
-                            <input
-                                v-model="tagData.name"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
-                                @keyup="cleanError('name')"
-                                type="text">
-                        </label>
-
-                        <label>
-                            <span>{{ $t('ui.description') }}:</span>
-                            <text-area
-                                v-model="tagData.description"
-                                :wysiwyg="true"
-                                :miniEditorMode="true"
-                                internal-links
-                                :simplifiedToolbar="true"
-                                :rows="4"></text-area>
-                        </label>
-
-                        <label
-                            class="tag-settings-hidden"
-                            v-tooltip.focusin="{ text: $t('tag.tagWillNotAppearInGeneratedTagLists'), describe: false }">
-                            <switcher
-                                :key="'is-hidden-tag-' + tagData.id"
-                                id="is-hidden"
-                                :accessible-label="$t('tag.hideTag')"
-                                :description="$t('tag.tagWillNotAppearInGeneratedTagLists')"
-                                v-model="tagData.additionalData.isHidden"
-                                @click.native="toggleHiddenStatus" />
-                            <icon
-                                class="switcher-item-icon-helper content-status-icon"
-                                name="hidden-post"
-                                size="xs"
-                                aria-hidden="true"
-                                non-interactive />
-                            <span>
-                                {{ $t('tag.hideTag') }}
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
-                    @click="openItem('image')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-image"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.featuredImage') }}</span>
-                </div>
-
-                <div
-                    class="tag-settings"
-                    ref="image-content-wrapper">
-                    <div
-                        class="tag-settings-content"
-                        ref="image-content">
-                        <div
-                            v-if="!currentThemeHasSupportForTagImages"
-                            slot="note"
-                            class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />
-                            <p>{{ $t('tag.noSupportFoFeaturedImagesForTags') }}</p>
-                        </div>
-                        <label>
-                            <image-upload
-                                slot="field"
-                                size="small"
-                                id="featured-image"
-                                :item-id="tagData.id"
-                                ref="tag-featured-image"
-                                imageType="tagImages"
-                                :onRemove="() => { hasFeaturedImage = false }"
-                                :onAdd="() => { hasFeaturedImage = true } "
-                                v-model="tagData.additionalData.featuredImage" />
-
-
-                            <div
-                                v-if="hasFeaturedImage"
-                                class="image-uploader-settings-form">
-                                <label>{{ $t('ui.alternativeText') }}
-                                    <text-input
-                                        ref="featured-image-alt"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="tagData.additionalData.featuredImageAlt" />
-                                </label>
-
-                                <label>{{ $t('ui.caption') }}
-                                    <text-input
-                                        ref="featured-image-caption"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="tagData.additionalData.featuredImageCaption" />
-                                </label>
-
-                                <label>{{ $t('ui.credits') }}
-                                    <text-input
-                                        ref="featured-image-credits"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="tagData.additionalData.featuredImageCredits" />
-                                </label>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
-                    @click="openItem('seo')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-seo"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
-                </div>
-
-                <div
-                    class="tag-settings"
-                    ref="seo-content-wrapper">
-                    <div
-                        class="tag-settings-content"
-                        ref="seo-content">
-                        <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                            <span>{{ $t('ui.slug') }}:</span>
-                            <div class="options-sidebar-item-slug">
-                                <input
-                                    v-model="tagData.slug"
-                                    @keyup="cleanError('slug')"
-                                    spellcheck="false"
-                                    type="text">
-                                <p-button 
-                                    :onClick="updateSlug" 
-                                    v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
-                                    :aria-label="$t('ui.updateSlug')"
-                                    icon="refresh"
-                                    appearance="secondary">
-                                </p-button>
-                            </div>
-                        </label>
-
-                        <label class="with-char-counter">
-                            <span>{{ $t('ui.pageTitle') }}:</span>
-                            <text-input
-                                v-model="tagData.additionalData.metaTitle"
-                                type="text"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
-                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
-                                :charCounter="true"
-                                :preferredCount="70" />
-                        </label>
-
-                        <label class="with-char-counter">
-                            <span>{{ $t('ui.metaDescription') }}:</span>
-                            <text-area
-                                v-model="tagData.additionalData.metaDescription"
-                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
-                                :charCounter="true"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
-                                :preferredCount="160"></text-area>
-                        </label>
-
-                        <label>
-                            {{ $t('ui.metaRobotsIndex') }}:
-                            <dropdown
-                                v-if="!tagData.additionalData.canonicalUrl"
-                                id="tag-meta-robots"
-                                v-model="tagData.additionalData.metaRobots"
-                                :items="metaRobotsOptions">
-                            </dropdown>
-                            <div v-else>
-                                <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
-                            </div>
-                        </label>
-
-                        <label>
-                            {{ $t('ui.canonicalURL') }}:
-                            <input
-                                type="text"
-                                v-model="tagData.additionalData.canonicalUrl"
-                                spellcheck="false"
-                                :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
-                    @click="openItem('other')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-options"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
-                </div>
-
-                <div
-                    class="tag-settings"
-                    ref="other-content-wrapper">
-                    <div
-                        class="tag-settings-content"
-                        ref="other-content">
-                        <label>
-                            <span>{{ $t('ui.customTemplate') }}:</span>
-                            <dropdown
-                                v-if="currentThemeHasTagTemplates"
-                                ref="template"
-                                id="template"
-                                v-model="tagData.additionalData.template"
-                                :items="tagTemplates"></dropdown>
-
-                            <text-input
-                                v-if="!currentThemeHasTagTemplates"
-                                slot="field"
-                                id="template"
-                                :spellcheck="false"
-                                :placeholder="$t('ui.notAvailableInYourTheme')"
-                                :disabled="true"
-                                :readonly="true" />
-                        </label>
-
-                        <template v-if="dataSet">
-                            <template v-for="(field, index) of tagViewThemeSettings">
-                                <separator
-                                    v-if="displayField(field) && field.type === 'separator'"
-                                    :label="field.label"
-                                    :is-line="true"
-                                    :key="'tag-view-field-' + index"
-                                    :note="field.note" />
-
-                                <label
-                                    v-if="displayField(field) && field.type !== 'separator'"
-                                    :key="'tag-view-field-' + index">
-                                    {{ field.label }}
-
-                                    <dropdown
-                                        v-if="!field.type || field.type === 'select'"
-                                        :id="field.name + '-select'"
-                                        class="tag-view-settings"
-                                        v-model="tagData.additionalData.viewConfig[field.name]"
-                                        :items="generateItems(field.options)">
-                                        <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
-                                    </dropdown>
-
-                                    <text-input
-                                        v-if="field.type === 'text' || field.type === 'number'"
-                                        :type="field.type"
-                                        class="tag-view-settings"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        :placeholder="fieldPlaceholder(field)"
-                                        v-model="tagData.additionalData.viewConfig[field.name]" />
-
-                                    <text-area
-                                        v-if="field.type === 'textarea'"
-                                        class="tag-view-settings"
-                                        :placeholder="fieldPlaceholder(field)"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="tagData.additionalData.viewConfig[field.name]" />
-
-                                    <color-picker
-                                        v-if="field.type === 'colorpicker'"
-                                        class="tag-view-settings"
-                                        v-model="tagData.additionalData.viewConfig[field.name]"
-                                        :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
-                                    </color-picker>
-
-                                    <image-upload
-                                        v-if="field.type === 'image'"
-                                        images-only
-                                        class="tag-view-settings"
-                                        v-model="tagData.additionalData.viewConfig[field.name]"
-                                        :item-id="tagData.id"
-                                        imageType="tagImages" />
-
-                                    <small
-                                        v-if="field.note"
-                                        class="note">
-                                        {{ field.note }}
-                                    </small>
-                                </label>
-                            </template>
-                        </template>
-                    </div>
-                </div>
-            </div>
-
-            <div class="options-sidebar-buttons">
-                <p-button
-                    appearance="secondary"
-                    @click.native="save(false)">
-                    <template v-if="tagData.id">{{ $t('ui.saveChanges') }}</template>
+        <div
+            :key="'tag-view-' + tagData.id"
+            class="options-sidebar">
+            <div class="options-sidebar-heading">
+                <h2>
+                    <template v-if="tagData.id">{{ $t('tag.editTag') }}</template>
                     <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
-                </p-button>
+                </h2>
 
-                <p-button
-                    :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
-                    intent="primary"
-                    class="options-sidebar-preview-button"
-                    @click.native="saveAndPreview">
-                    {{ $t('ui.saveAndPreview') }}
-                    <span>
-                        <icon
-                            size="s"
-                            name="quick-preview"/>
-                    </span>
-                </p-button>
-
-                <p-button
-                    @click.native="close"
-                    appearance="outline">
-                    {{ $t('ui.cancel') }}
-                </p-button>
+                <span
+                    class="options-sidebar-close"
+                    name="sidebar-close"
+                    @click.prevent="close()">
+                    &times;
+                </span>
             </div>
 
+            <div
+                ref="sidebarContent"
+                v-sidebar-scroll-fade
+                class="options-sidebar-content">
+                <div
+                    v-if="!currentThemeHasSupportForTagPages"
+                    slot="note"
+                    class="msg msg-small msg-icon msg-alert">
+                    <icon name="warning" size="m" />
+                    <p>{{ $t('settings.themeDoesNotSupportTagPages') }}</p>
+                </div>
+
+                <div class="options-sidebar-item">
+                    <div
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
+                        @click="openItem('basic')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-status"/>
+
+                        <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
+                    </div>
+
+                    <div
+                        class="tag-settings"
+                        style="max-height: none;"
+                        ref="basic-content-wrapper">
+                        <div
+                            class="tag-settings-content"
+                            ref="basic-content">
+                            <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
+                                <span>{{ $t('ui.name') }}:</span>
+                                <input
+                                    v-model="tagData.name"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    @keyup="cleanError('name')"
+                                    type="text">
+                            </label>
+
+                            <label>
+                                <span>{{ $t('ui.description') }}:</span>
+                                <text-area
+                                    v-model="tagData.description"
+                                    :wysiwyg="true"
+                                    :miniEditorMode="true"
+                                    internal-links
+                                    :simplifiedToolbar="true"
+                                    :rows="4"></text-area>
+                            </label>
+
+                            <label
+                                class="tag-settings-hidden"
+                                v-tooltip.focusin="{ text: $t('tag.tagWillNotAppearInGeneratedTagLists'), describe: false }">
+                                <switcher
+                                    :key="'is-hidden-tag-' + tagData.id"
+                                    id="is-hidden"
+                                    :accessible-label="$t('tag.hideTag')"
+                                    :description="$t('tag.tagWillNotAppearInGeneratedTagLists')"
+                                    v-model="tagData.additionalData.isHidden"
+                                    @click.native="toggleHiddenStatus" />
+                                <icon
+                                    class="switcher-item-icon-helper content-status-icon"
+                                    name="hidden-post"
+                                    size="xs"
+                                    aria-hidden="true"
+                                    non-interactive />
+                                <span>
+                                    {{ $t('tag.hideTag') }}
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-item">
+                    <div
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
+                        @click="openItem('image')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-image"/>
+
+                        <span class="options-sidebar-label">{{ $t('ui.featuredImage') }}</span>
+                    </div>
+
+                    <div
+                        class="tag-settings"
+                        ref="image-content-wrapper">
+                        <div
+                            class="tag-settings-content"
+                            ref="image-content">
+                            <div
+                                v-if="!currentThemeHasSupportForTagImages"
+                                slot="note"
+                                class="msg msg-small msg-icon msg-alert"><icon name="warning" size="m" />
+                                <p>{{ $t('tag.noSupportFoFeaturedImagesForTags') }}</p>
+                            </div>
+                            <label>
+                                <image-upload
+                                    slot="field"
+                                    size="small"
+                                    id="featured-image"
+                                    :item-id="tagData.id"
+                                    ref="tag-featured-image"
+                                    imageType="tagImages"
+                                    :onRemove="() => { hasFeaturedImage = false }"
+                                    :onAdd="() => { hasFeaturedImage = true } "
+                                    v-model="tagData.additionalData.featuredImage" />
+
+
+                                <div
+                                    v-if="hasFeaturedImage"
+                                    class="image-uploader-settings-form">
+                                    <label>{{ $t('ui.alternativeText') }}
+                                        <text-input
+                                            ref="featured-image-alt"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="tagData.additionalData.featuredImageAlt" />
+                                    </label>
+
+                                    <label>{{ $t('ui.caption') }}
+                                        <text-input
+                                            ref="featured-image-caption"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="tagData.additionalData.featuredImageCaption" />
+                                    </label>
+
+                                    <label>{{ $t('ui.credits') }}
+                                        <text-input
+                                            ref="featured-image-credits"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="tagData.additionalData.featuredImageCredits" />
+                                    </label>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-item">
+                    <div
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
+                        @click="openItem('seo')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-seo"/>
+
+                        <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
+                    </div>
+
+                    <div
+                        class="tag-settings"
+                        ref="seo-content-wrapper">
+                        <div
+                            class="tag-settings-content"
+                            ref="seo-content">
+                            <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
+                                <span>{{ $t('ui.slug') }}:</span>
+                                <div class="options-sidebar-item-slug">
+                                    <input
+                                        v-model="tagData.slug"
+                                        @keyup="cleanError('slug')"
+                                        spellcheck="false"
+                                        type="text">
+                                    <p-button
+                                        :onClick="updateSlug"
+                                        v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
+                                        :aria-label="$t('ui.updateSlug')"
+                                        icon="refresh"
+                                        appearance="secondary">
+                                    </p-button>
+                                </div>
+                            </label>
+
+                            <label class="with-char-counter">
+                                <span>{{ $t('ui.pageTitle') }}:</span>
+                                <text-input
+                                    v-model="tagData.additionalData.metaTitle"
+                                    type="text"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                    :charCounter="true"
+                                    :preferredCount="70" />
+                            </label>
+
+                            <label class="with-char-counter">
+                                <span>{{ $t('ui.metaDescription') }}:</span>
+                                <text-area
+                                    v-model="tagData.additionalData.metaDescription"
+                                    :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                    :charCounter="true"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    :preferredCount="160"></text-area>
+                            </label>
+
+                            <label>
+                                {{ $t('ui.metaRobotsIndex') }}:
+                                <dropdown
+                                    v-if="!tagData.additionalData.canonicalUrl"
+                                    id="tag-meta-robots"
+                                    v-model="tagData.additionalData.metaRobots"
+                                    :items="metaRobotsOptions">
+                                </dropdown>
+                                <div v-else>
+                                    <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
+                                </div>
+                            </label>
+
+                            <label>
+                                {{ $t('ui.canonicalURL') }}:
+                                <input
+                                    type="text"
+                                    v-model="tagData.additionalData.canonicalUrl"
+                                    spellcheck="false"
+                                    :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-item">
+                    <div
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
+                        @click="openItem('other')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-options"/>
+
+                        <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
+                    </div>
+
+                    <div
+                        class="tag-settings"
+                        ref="other-content-wrapper">
+                        <div
+                            class="tag-settings-content"
+                            ref="other-content">
+                            <label>
+                                <span>{{ $t('ui.customTemplate') }}:</span>
+                                <dropdown
+                                    v-if="currentThemeHasTagTemplates"
+                                    ref="template"
+                                    id="template"
+                                    v-model="tagData.additionalData.template"
+                                    :items="tagTemplates"></dropdown>
+
+                                <text-input
+                                    v-if="!currentThemeHasTagTemplates"
+                                    slot="field"
+                                    id="template"
+                                    :spellcheck="false"
+                                    :placeholder="$t('ui.notAvailableInYourTheme')"
+                                    :disabled="true"
+                                    :readonly="true" />
+                            </label>
+
+                            <template v-if="dataSet">
+                                <template v-for="(field, index) of tagViewThemeSettings">
+                                    <separator
+                                        v-if="displayField(field) && field.type === 'separator'"
+                                        :label="field.label"
+                                        :is-line="true"
+                                        :key="'tag-view-field-' + index"
+                                        :note="field.note" />
+
+                                    <label
+                                        v-if="displayField(field) && field.type !== 'separator'"
+                                        :key="'tag-view-field-' + index">
+                                        {{ field.label }}
+
+                                        <dropdown
+                                            v-if="!field.type || field.type === 'select'"
+                                            :id="field.name + '-select'"
+                                            class="tag-view-settings"
+                                            v-model="tagData.additionalData.viewConfig[field.name]"
+                                            :items="generateItems(field.options)">
+                                            <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
+                                        </dropdown>
+
+                                        <text-input
+                                            v-if="field.type === 'text' || field.type === 'number'"
+                                            :type="field.type"
+                                            class="tag-view-settings"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            :placeholder="fieldPlaceholder(field)"
+                                            v-model="tagData.additionalData.viewConfig[field.name]" />
+
+                                        <text-area
+                                            v-if="field.type === 'textarea'"
+                                            class="tag-view-settings"
+                                            :placeholder="fieldPlaceholder(field)"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="tagData.additionalData.viewConfig[field.name]" />
+
+                                        <color-picker
+                                            v-if="field.type === 'colorpicker'"
+                                            class="tag-view-settings"
+                                            v-model="tagData.additionalData.viewConfig[field.name]"
+                                            :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
+                                        </color-picker>
+
+                                        <image-upload
+                                            v-if="field.type === 'image'"
+                                            images-only
+                                            class="tag-view-settings"
+                                            v-model="tagData.additionalData.viewConfig[field.name]"
+                                            :item-id="tagData.id"
+                                            imageType="tagImages" />
+
+                                        <small
+                                            v-if="field.note"
+                                            class="note">
+                                            {{ field.note }}
+                                        </small>
+                                    </label>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-buttons">
+                    <p-button
+                        appearance="secondary"
+                        @click.native="save(false)">
+                        <template v-if="tagData.id">{{ $t('ui.saveChanges') }}</template>
+                        <template v-if="!tagData.id">{{ $t('tag.addNewTag') }}</template>
+                    </p-button>
+
+                    <p-button
+                        :disabled="!tagData.id || currentTagIsHidden || !currentThemeHasSupportForTagPages"
+                        intent="primary"
+                        class="options-sidebar-preview-button"
+                        @click.native="saveAndPreview">
+                        {{ $t('ui.saveAndPreview') }}
+                        <span>
+                            <icon
+                                size="s"
+                                name="quick-preview"/>
+                        </span>
+                    </p-button>
+
+                    <p-button
+                        @click.native="close"
+                        appearance="outline">
+                        {{ $t('ui.cancel') }}
+                    </p-button>
+                </div>
+
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import SidebarScrollFade from '../helpers/sidebar-scroll-fade.js';
 import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
     directives: {
+        sidebarScrollFade: SidebarScrollFade,
         tooltip: Tooltip
     },
     name: 'tag-form-sidebar',
@@ -407,6 +417,13 @@ export default {
                 }
             }
         };
+    },
+    watch: {
+        'tagData.id' () {
+            this.$nextTick(() => {
+                this.$refs.sidebarContent.scrollTop = 0;
+            });
+        }
     },
     computed: {
         currentThemeHasSupportForTagImages () {

@@ -3,236 +3,244 @@
         :key="'menu-item-view-' + id"
         class="options-sidebar-container">
         <div class="options-sidebar">
-            <h2>
-                <template v-if="menuItemID !== ''">{{ $t('menu.editMenuItem') }}</template>
-                <template v-if="menuItemID === ''">{{ $t('menu.addNewMenuItem') }}</template>
-            </h2>
+            <div class="options-sidebar-heading">
+                <h2>
+                    <template v-if="menuItemID !== ''">{{ $t('menu.editMenuItem') }}</template>
+                    <template v-if="menuItemID === ''">{{ $t('menu.addNewMenuItem') }}</template>
+                </h2>
 
-            <span
-                class="options-sidebar-close"
-                name="sidebar-close"
-                @click.prevent="hide()">
-                &times;
-            </span>
-
-            <label
-                :class="{ 'is-invalid': errors.indexOf('label') > -1 }"
-                :for="'menu-item-label-' + _uid"
-                key="menu-item-editor-field-label">
-                <span>{{ $t('menu.label') }}</span>
-
-                <button
-                    v-if="(type === 'tag' && tagPage) || (type === 'author' && authorPage) || (type === 'post' && postPage) || (type === 'page' && pagePage)"
-                    v-tooltip="{ text: $t('menu.updateLabel.' + type), describe: false }"
-                    type="button"
-                    class="options-sidebar-icon-button-suggestion"
-                    :aria-label="$t('menu.updateLabel.' + type)"
-                    @click.prevent.stop="setLabel(type)">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="pen-ai-suggestion"
-                        aria-hidden="true"
-                        non-interactive />
-                </button>
-
-                <input
-                    :id="'menu-item-label-' + _uid"
-                    v-model="label"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    key="menu-item-editor-field-label-value"
-                    @keyup="cleanError('label')"
-                    type="text">
-            </label>
-
-            <label
-                :class="{ 'is-invalid': errors.indexOf('type') > -1 }"
-                key="menu-item-editor-field-type">
-                <span>{{ $t('menu.type') }}</span>
-                <v-select
-                    v-model="type"
-                    @click.native="cleanError('type')"
-                    :options="linkTypes"
-                    :searchable="false"
-                    :custom-label="customTypeLabels"
-                    :show-labels="false"
-                    :placeholder="$t('menu.selectItemType')"></v-select>
-            </label>
-
-            <label
-                v-if="type === 'internal'"
-                :class="{ 'is-invalid': errors.indexOf('internalLink') > -1 }"
-                key="menu-item-editor-field-internal">
-                <span>{{ $t('menu.internalLink') }}</span>
-                <input
-                    v-model="internalLink"
-                    @keyup="cleanError('internalLink')"
-                    spellcheck="false"
-                    type="text" />
-            </label>
-
-            <label
-                v-if="type === 'external'"
-                :class="{ 'is-invalid': errors.indexOf('externalLink') > -1 }"
-                key="menu-item-editor-field-external">
-                <span>{{ $t('menu.externalURL') }}</span>
-                <input
-                    v-model="externalLink"
-                    @keyup="cleanError('externalLink')"
-                    spellcheck="false"
-                    type="text" />
-            </label>
-
-            <label
-                v-if="type === 'tag'"
-                :class="{ 'is-invalid': errors.indexOf('tagPage') > -1 }"
-                key="menu-item-editor-field-tag">
-                <span>
-                    {{ $t('tag.tagPage') }}
+                <span
+                    class="options-sidebar-close"
+                    name="sidebar-close"
+                    @click.prevent="hide()">
+                    &times;
                 </span>
+            </div>
 
-                <v-select
-                    ref="tagPagesSelect"
-                    :options="tagPages"
-                    :options-limit="100"
-                    @click.native="cleanError('tagPage')"
-                    v-model="tagPage"
-                    :custom-label="customTagLabels"
-                    :close-on-select="true"
-                    :show-labels="false"
-                    @select="closeDropdown('tagPagesSelect')"
-                    :placeholder="$t('tag.selectTagPage')"></v-select>
-            </label>
+            <div
+                v-sidebar-scroll-fade
+                class="options-sidebar-content">
+                <label
+                    :class="{ 'is-invalid': errors.indexOf('label') > -1 }"
+                    :for="'menu-item-label-' + _uid"
+                    key="menu-item-editor-field-label">
+                    <span>{{ $t('menu.label') }}</span>
 
-            <label
-                v-if="type === 'author'"
-                :class="{ 'is-invalid': errors.indexOf('authorPage') > -1 }"
-                key="menu-item-editor-field-author">
-                <span>
-                    {{ $t('author.authorPage') }}
-                </span>
+                    <button
+                        v-if="(type === 'tag' && tagPage) || (type === 'author' && authorPage) || (type === 'post' && postPage) || (type === 'page' && pagePage)"
+                        v-tooltip="{ text: $t('menu.updateLabel.' + type), describe: false }"
+                        type="button"
+                        class="options-sidebar-icon-button-suggestion"
+                        :aria-label="$t('menu.updateLabel.' + type)"
+                        @click.prevent.stop="setLabel(type)">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="pen-ai-suggestion"
+                            aria-hidden="true"
+                            non-interactive />
+                    </button>
 
-                <v-select
-                    ref="authorPagesSelect"
-                    :options="authorPages"
-                    :options-limit="100"
-                    @click.native="cleanError('authorPage')"
-                    v-model="authorPage"
-                    :custom-label="customAuthorsLabels"
-                    :close-on-select="true"
-                    :show-labels="false"
-                    @select="closeDropdown('authorPagesSelect')"
-                    :placeholder="$t('author.selectAuthorPage')"></v-select>
-            </label>
+                    <input
+                        :id="'menu-item-label-' + _uid"
+                        v-model="label"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                        key="menu-item-editor-field-label-value"
+                        @keyup="cleanError('label')"
+                        type="text">
+                </label>
 
-            <label
-                v-if="type === 'post'"
-                :class="{ 'is-invalid': errors.indexOf('postPage') > -1 }"
-                key="menu-item-editor-field-post">
-                <span>
-                    {{ $t('post.postPage') }}
-                </span>
+                <label
+                    :class="{ 'is-invalid': errors.indexOf('type') > -1 }"
+                    key="menu-item-editor-field-type">
+                    <span>{{ $t('menu.type') }}</span>
+                    <v-select
+                        v-model="type"
+                        @click.native="cleanError('type')"
+                        :options="linkTypes"
+                        :searchable="false"
+                        :custom-label="customTypeLabels"
+                        :show-labels="false"
+                        :placeholder="$t('menu.selectItemType')"></v-select>
+                </label>
 
-                <v-select
-                    ref="postPagesSelect"
-                    :options="postPages"
-                    :options-limit="100"
-                    @click.native="cleanError('postPage')"
-                    v-model="postPage"
-                    :custom-label="customPostLabels"
-                    :close-on-select="true"
-                    :show-labels="false"
-                    @select="closeDropdown('postPagesSelect')"
-                    :placeholder="$t('post.selectPostPage')"></v-select>
-            </label>
+                <label
+                    v-if="type === 'internal'"
+                    :class="{ 'is-invalid': errors.indexOf('internalLink') > -1 }"
+                    key="menu-item-editor-field-internal">
+                    <span>{{ $t('menu.internalLink') }}</span>
+                    <input
+                        v-model="internalLink"
+                        @keyup="cleanError('internalLink')"
+                        spellcheck="false"
+                        type="text" />
+                </label>
 
-            <label
-                v-if="type === 'page'"
-                :class="{ 'is-invalid': errors.indexOf('pagePage') > -1 }"
-                key="menu-item-editor-field-post">
-                <span>
-                    {{ $t('page.page') }}
-                </span>
+                <label
+                    v-if="type === 'external'"
+                    :class="{ 'is-invalid': errors.indexOf('externalLink') > -1 }"
+                    key="menu-item-editor-field-external">
+                    <span>{{ $t('menu.externalURL') }}</span>
+                    <input
+                        v-model="externalLink"
+                        @keyup="cleanError('externalLink')"
+                        spellcheck="false"
+                        type="text" />
+                </label>
 
-                <v-select
-                    ref="pagePagesSelect"
-                    :options="pagePages"
-                    :options-limit="100"
-                    @click.native="cleanError('pagePage')"
-                    v-model="pagePage"
-                    :custom-label="customPageLabels"
-                    :close-on-select="true"
-                    :show-labels="false"
-                    @select="closeDropdown('pagePagesSelect')"
-                    :placeholder="$t('page.selectPage')"></v-select>
-            </label>
+                <label
+                    v-if="type === 'tag'"
+                    :class="{ 'is-invalid': errors.indexOf('tagPage') > -1 }"
+                    key="menu-item-editor-field-tag">
+                    <span>
+                        {{ $t('tag.tagPage') }}
+                    </span>
 
-            <label key="menu-item-editor-field-title">
-                <span>{{ $t('link.linkTitleAttribute') }}</span>
-                <input
-                    v-model="title"
-                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                    type="text" />
-            </label>
+                    <v-select
+                        ref="tagPagesSelect"
+                        :options="tagPages"
+                        :options-limit="100"
+                        @click.native="cleanError('tagPage')"
+                        v-model="tagPage"
+                        :custom-label="customTagLabels"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        @select="closeDropdown('tagPagesSelect')"
+                        :placeholder="$t('tag.selectTagPage')"></v-select>
+                </label>
 
-            <label key="menu-item-editor-field-cssclass">
-                <span>{{ $t('menu.classCSS') }}</span>
-                <input
-                    v-model="cssClass"
-                    spellcheck="false"
-                    type="text" />
-            </label>
+                <label
+                    v-if="type === 'author'"
+                    :class="{ 'is-invalid': errors.indexOf('authorPage') > -1 }"
+                    key="menu-item-editor-field-author">
+                    <span>
+                        {{ $t('author.authorPage') }}
+                    </span>
 
-            <label key="menu-item-editor-field-target">
-                <span>{{ $t('ui.linkTarget') }}:</span>
-                <v-select
-                    v-model="target"
-                    :options="linkTargets"
-                    :searchable="false"
-                    :custom-label="customTargetLabels"
-                    :show-labels="false"
-                    :placeholder="$t('menu.selectLinkTarget')"></v-select>
-            </label>
+                    <v-select
+                        ref="authorPagesSelect"
+                        :options="authorPages"
+                        :options-limit="100"
+                        @click.native="cleanError('authorPage')"
+                        v-model="authorPage"
+                        :custom-label="customAuthorsLabels"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        @select="closeDropdown('authorPagesSelect')"
+                        :placeholder="$t('author.selectAuthorPage')"></v-select>
+                </label>
 
-            <label key="menu-item-editor-field-rel">
-                <span>{{ $t('link.linkRelAttribute') }}:</span>
-                <input
-                    v-model="rel"
-                    spellcheck="false"
-                    type="text" />
-            </label>
+                <label
+                    v-if="type === 'post'"
+                    :class="{ 'is-invalid': errors.indexOf('postPage') > -1 }"
+                    key="menu-item-editor-field-post">
+                    <span>
+                        {{ $t('post.postPage') }}
+                    </span>
 
-            <div class="options-sidebar-buttons">
-                <p-button
-                    v-if="menuItemID !== ''"
-                    intent="primary"
-                    @click.native="editMenuItem">
-                    {{ $t('ui.saveChanges') }}
-                </p-button>
+                    <v-select
+                        ref="postPagesSelect"
+                        :options="postPages"
+                        :options-limit="100"
+                        @click.native="cleanError('postPage')"
+                        v-model="postPage"
+                        :custom-label="customPostLabels"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        @select="closeDropdown('postPagesSelect')"
+                        :placeholder="$t('post.selectPostPage')"></v-select>
+                </label>
 
-                <p-button
-                    v-if="menuItemID === ''"
-                    intent="primary"
-                    @click.native="addMenuItem">
-                    {{ $t('menu.addMenuItem') }}
-                </p-button>
+                <label
+                    v-if="type === 'page'"
+                    :class="{ 'is-invalid': errors.indexOf('pagePage') > -1 }"
+                    key="menu-item-editor-field-post">
+                    <span>
+                        {{ $t('page.page') }}
+                    </span>
 
-                <p-button
-                    @click.native="hide()"
-                    appearance="outline">
-                    {{ $t('ui.cancel') }}
-                </p-button>
+                    <v-select
+                        ref="pagePagesSelect"
+                        :options="pagePages"
+                        :options-limit="100"
+                        @click.native="cleanError('pagePage')"
+                        v-model="pagePage"
+                        :custom-label="customPageLabels"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        @select="closeDropdown('pagePagesSelect')"
+                        :placeholder="$t('page.selectPage')"></v-select>
+                </label>
+
+                <label key="menu-item-editor-field-title">
+                    <span>{{ $t('link.linkTitleAttribute') }}</span>
+                    <input
+                        v-model="title"
+                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                        type="text" />
+                </label>
+
+                <label key="menu-item-editor-field-cssclass">
+                    <span>{{ $t('menu.classCSS') }}</span>
+                    <input
+                        v-model="cssClass"
+                        spellcheck="false"
+                        type="text" />
+                </label>
+
+                <label key="menu-item-editor-field-target">
+                    <span>{{ $t('ui.linkTarget') }}:</span>
+                    <v-select
+                        v-model="target"
+                        :options="linkTargets"
+                        :searchable="false"
+                        :custom-label="customTargetLabels"
+                        :show-labels="false"
+                        :placeholder="$t('menu.selectLinkTarget')"></v-select>
+                </label>
+
+                <label key="menu-item-editor-field-rel">
+                    <span>{{ $t('link.linkRelAttribute') }}:</span>
+                    <input
+                        v-model="rel"
+                        spellcheck="false"
+                        type="text" />
+                </label>
+
+                <div class="options-sidebar-buttons">
+                    <p-button
+                        v-if="menuItemID !== ''"
+                        intent="primary"
+                        @click.native="editMenuItem">
+                        {{ $t('ui.saveChanges') }}
+                    </p-button>
+
+                    <p-button
+                        v-if="menuItemID === ''"
+                        intent="primary"
+                        @click.native="addMenuItem">
+                        {{ $t('menu.addMenuItem') }}
+                    </p-button>
+
+                    <p-button
+                        @click.native="hide()"
+                        appearance="outline">
+                        {{ $t('ui.cancel') }}
+                    </p-button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import SidebarScrollFade from '../helpers/sidebar-scroll-fade.js';
 import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
     directives: {
+        sidebarScrollFade: SidebarScrollFade,
         tooltip: Tooltip
     },
     name: 'menu-item-editor',
@@ -575,12 +583,6 @@ export default {
 </script>
 
 <style scoped>
-
-.options-sidebar {
-    h2 {
-        margin-bottom: 1.2rem;
-    }
-}
 
 .options-sidebar-buttons {
     border: none;

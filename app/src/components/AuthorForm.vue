@@ -1,406 +1,416 @@
 <template>
     <div
-        :key="'author-view-' + authorData.id"
         :data-animate="formAnimation ? 'true' : 'false'"
         class="options-sidebar-container">
-        <div class="options-sidebar">
-            <h2>
-                <template v-if="authorData.id">{{ $t('author.editAuthor') }}</template>
-                <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
-            </h2>
+        <div
+            :key="'author-view-' + authorData.id"
+            class="options-sidebar">
+            <div class="options-sidebar-heading">
+                <h2>
+                    <template v-if="authorData.id">{{ $t('author.editAuthor') }}</template>
+                    <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
+                </h2>
 
-           <span
-                class="options-sidebar-close"
-                name="sidebar-close"
-                @click.prevent="close()">
-                &times;
-            </span>
+                <span
+                    class="options-sidebar-close"
+                    name="sidebar-close"
+                    @click.prevent="close()">
+                    &times;
+                </span>
+            </div>
 
             <div
-                v-if="!currentThemeHasSupportForAuthorPages"
-                slot="note"
-                class="msg msg-small msg-icon msg-alert">
-                <icon name="warning" size="m" />
-                <p>{{ $t('settings.themeDoesNotSupportAuthorPages') }}</p>
-            </div>
-
-            <div class="options-sidebar-item">
+                ref="sidebarContent"
+                v-sidebar-scroll-fade
+                class="options-sidebar-content">
                 <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
-                    @click="openItem('basic')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-status"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
+                    v-if="!currentThemeHasSupportForAuthorPages"
+                    slot="note"
+                    class="msg msg-small msg-icon msg-alert">
+                    <icon name="warning" size="m" />
+                    <p>{{ $t('settings.themeDoesNotSupportAuthorPages') }}</p>
                 </div>
 
-                <div
-                    class="author-settings"
-                    style="max-height: none;"
-                    ref="basic-content-wrapper">
+                <div class="options-sidebar-item">
                     <div
-                        class="author-settings-content"
-                        ref="basic-content">
-                        <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
-                            <span>{{ $t('ui.name') }}:</span>
-                            <input
-                                v-model="authorData.name"
-                                @keyup="cleanError('name')"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
-                                type="text">
-                        </label>
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
+                        @click="openItem('basic')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-status"/>
 
-                        <label>
-                            <span>{{ $t('ui.description') }}:</span>
-                            <text-area
-                                v-model="authorData.description"
-                                :wysiwyg="true"
-                                :miniEditorMode="true"
-                                internal-links
-                                :simplifiedToolbar="true"
-                                :rows="4"></text-area>
-                        </label>
-
-                        <label :class="{ 'is-invalid': errors.indexOf('email') > -1 }">
-                            <span>{{ $t('author.eMail') }}:</span>
-                            <input
-                                v-model="authorData.email"
-                                @keyup="emailChanged"
-                                spellcheck="false"
-                                type="text">
-                        </label>
-
-                        <label>
-                            <span>{{ $t('author.website') }}:</span>
-                            <input
-                                v-model="authorData.website"
-                                spellcheck="false"
-                                type="text">
-                        </label>
+                        <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
                     </div>
-                </div>
-            </div>
 
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
-                    @click="openItem('image')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-image"/>
-
-                    <span class="options-sidebar-label">{{ $t('author.avatarAndFeaturedImage') }}</span>
-                </div>
-
-                <div
-                    class="author-settings"
-                    ref="image-content-wrapper">
                     <div
-                        class="author-settings-content"
-                        ref="image-content">
-                        <label>
-                            <span>{{ $t('author.avatar') }}:</span>
-                            <image-upload
-                                slot="field"
-                                size="small"
-                                id="author"
-                                ref="author-avatar"
-                                :onRemove="avatarRemoved"
-                                imageType="authorImages"
-                                v-model="authorData.avatar" />
-                        </label>
-                        <div                               
-                            slot="note"
-                            class="msg msg-small msg-icon msg-info">
-                            <icon name="info" size="m" />
-                            <p>{{ $t('author.whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer') }}</p>
-                        </div>
-                        <label class="use-gravatar">
-                            <switcher
-                                slot="field"
-                                id="use-gravatar"
-                                @click.native="toggleGravatar"
-                                v-model="authorData.useGravatar" />
-                            <span
-                                v-pure-html="$t('author.useGravatarMessage')">
-                            </span>
-                        </label>
-                        <div>
-                            <label class="no-margin">{{ $t('ui.featuredImage') }}:</label>
-                            <div
-                                v-if="!currentThemeHasSupportForAuthorImages"
-                                slot="note"
-                                class="msg msg-small msg-icon msg-alert">
-                                <icon name="warning" size="m" />
-                                <p>{{ $t('author.themeDoesNotSupportFeaturedImagesForAuthors') }}</p>
-                            </div>
+                        class="author-settings"
+                        style="max-height: none;"
+                        ref="basic-content-wrapper">
+                        <div
+                            class="author-settings-content"
+                            ref="basic-content">
+                            <label :class="{ 'is-invalid': errors.indexOf('name') > -1 }">
+                                <span>{{ $t('ui.name') }}:</span>
+                                <input
+                                    v-model="authorData.name"
+                                    @keyup="cleanError('name')"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    type="text">
+                            </label>
+
                             <label>
-                                <image-upload
-                                    slot="field"
-                                    size="small"
-                                    id="featured-image"
-                                    :item-id="authorData.id"
-                                    ref="author-featured-image"
-                                    imageType="authorImages"
-                                    :onRemove="() => { hasFeaturedImage = false }"
-                                    :onAdd="() => { hasFeaturedImage = true } "
-                                    v-model="authorData.additionalData.featuredImage" />
+                                <span>{{ $t('ui.description') }}:</span>
+                                <text-area
+                                    v-model="authorData.description"
+                                    :wysiwyg="true"
+                                    :miniEditorMode="true"
+                                    internal-links
+                                    :simplifiedToolbar="true"
+                                    :rows="4"></text-area>
+                            </label>
 
-                                <div
-                                    v-if="hasFeaturedImage"
-                                    class="image-uploader-settings-form">
-                                    <label>{{ $t('ui.alternativeText') }}
-                                        <text-input
-                                            ref="featured-image-alt"
-                                            :spellcheck="$store.state.currentSite.config.spellchecking"
-                                            v-model="authorData.additionalData.featuredImageAlt" />
-                                    </label>
+                            <label :class="{ 'is-invalid': errors.indexOf('email') > -1 }">
+                                <span>{{ $t('author.eMail') }}:</span>
+                                <input
+                                    v-model="authorData.email"
+                                    @keyup="emailChanged"
+                                    spellcheck="false"
+                                    type="text">
+                            </label>
 
-                                    <label>{{ $t('ui.caption') }}
-                                        <text-input
-                                            ref="featured-image-caption"
-                                            :spellcheck="$store.state.currentSite.config.spellchecking"
-                                            v-model="authorData.additionalData.featuredImageCaption" />
-                                    </label>
-
-                                    <label>{{ $t('ui.credits') }}
-                                        <text-input
-                                            ref="featured-image-credits"
-                                            :spellcheck="$store.state.currentSite.config.spellchecking"
-                                            v-model="authorData.additionalData.featuredImageCredits" />
-                                    </label>
-                                </div>
+                            <label>
+                                <span>{{ $t('author.website') }}:</span>
+                                <input
+                                    v-model="authorData.website"
+                                    spellcheck="false"
+                                    type="text">
                             </label>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
-                    @click="openItem('seo')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-seo"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
-                </div>
-
-                <div
-                    class="author-settings"
-                    ref="seo-content-wrapper">
+                <div class="options-sidebar-item">
                     <div
-                        class="author-settings-content"
-                        ref="seo-content">
-                        <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
-                            <span>{{ $t('ui.slug') }}:</span>
-                            <div class="options-sidebar-item-slug">
-                                <input
-                                    v-model="authorData.username"
-                                    @keyup="cleanError('slug')"
-                                    spellcheck="false"
-                                    type="text">
-                                <p-button 
-                                    :onClick="updateSlug" 
-                                    v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
-                                    :aria-label="$t('ui.updateSlug')"
-                                    icon="refresh"
-                                    appearance="secondary">
-                                </p-button>
-                            </div>
-                        </label>
-
-                        <label class="with-char-counter">
-                            <span>{{ $t('ui.pageTitle') }}:</span>
-                            <text-input
-                                v-model="authorData.metaTitle"
-                                type="text"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
-                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
-                                :charCounter="true"
-                                :preferredCount="70" />
-                        </label>
-
-                        <label class="with-char-counter">
-                            <span>{{ $t('ui.metaDescription') }}:</span>
-                            <text-area
-                                v-model="authorData.metaDescription"
-                                :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
-                                :charCounter="true"
-                                :spellcheck="$store.state.currentSite.config.spellchecking"
-                                :preferredCount="160"></text-area>
-                        </label>
-
-                        <label>
-                            {{ $t('ui.metaRobotsIndex') }}:
-                            <dropdown
-                                v-if="!authorData.additionalData.canonicalUrl"
-                                id="tag-meta-robots"
-                                v-model="authorData.additionalData.metaRobots"
-                                :items="metaRobotsOptions">
-                            </dropdown>
-                            <div v-else>
-                                <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
-                            </div>
-                        </label>
-
-                        <label>
-                            {{ $t('ui.canonicalURL') }}:
-                            <input
-                                type="text"
-                                v-model="authorData.additionalData.canonicalUrl"
-                                spellcheck="false"
-                                :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
-                    @click="openItem('other')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-options"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
-                </div>
-
-                <div
-                    class="author-settings"
-                    ref="other-content-wrapper">
-                    <div
-                        class="author-settings-content"
-                        ref="other-content">
-                        <label>
-                            <span>{{ $t('ui.customTemplate') }}:</span>
-                            <dropdown
-                                v-if="currentThemeHasAuthorTemplates"
-                                ref="template"
-                                id="template"
-                                v-model="authorData.template"
-                                :items="authorTemplates"></dropdown>
-
-                            <text-input
-                                v-if="!currentThemeHasAuthorTemplates"
-                                slot="field"
-                                id="template"
-                                :placeholder="$t('ui.notAvailableInYourTheme')"
-                                :spellcheck="false"
-                                :disabled="true"
-                                :readonly="true" />
-                        </label>
-
-                        <template v-if="dataSet">
-                            <template v-for="(field, index) of authorViewThemeSettings">
-                                <separator 
-                                    v-if="displayField(field) && field.type === 'separator'"
-                                    :label="field.label"
-                                    :is-line="true"
-                                    :key="'author-view-field-' + index"
-                                    :note="field.note" />
-
-                                <label
-                                    v-if="displayField(field) && field.type !== 'separator'"
-                                    :key="'author-view-field-' + index">
-                                    {{ field.label }}
-
-                                    <dropdown
-                                        v-if="!field.type || field.type === 'select'"
-                                        :id="field.name + '-select'"
-                                        class="author-view-settings"
-                                        v-model="authorData.additionalData.viewConfig[field.name]"
-                                        :items="generateItems(field.options)">
-                                        <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
-                                    </dropdown>
-
-                                    <text-input
-                                        v-if="field.type === 'text' || field.type === 'number'"
-                                        :type="field.type"
-                                        class="author-view-settings"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        :placeholder="fieldPlaceholder(field)"
-                                        v-model="authorData.additionalData.viewConfig[field.name]" />
-
-                                    <text-area
-                                        v-if="field.type === 'textarea'"
-                                        class="author-view-settings"
-                                        :placeholder="fieldPlaceholder(field)"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="authorData.additionalData.viewConfig[field.name]" />
-
-                                    <color-picker
-                                        v-if="field.type === 'colorpicker'"
-                                        class="author-view-settings"
-                                        v-model="authorData.additionalData.viewConfig[field.name]"
-                                        :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
-                                    </color-picker>
-
-                                    <image-upload
-                                        v-if="field.type === 'image'"
-                                        images-only
-                                        class="author-view-settings"
-                                        v-model="authorData.additionalData.viewConfig[field.name]"
-                                        :item-id="authorData.id"
-                                        imageType="authorImages" />
-
-                                    <small
-                                        v-if="field.note"
-                                        class="note">
-                                        {{ field.note }}
-                                    </small>
-                                </label>
-                            </template>
-                        </template>
-                    </div>
-                </div>
-            </div>
-
-            <div class="options-sidebar-buttons">
-                <p-button
-                    appearance="secondary"
-                    @click.native="save(false)">
-                    <template v-if="authorData.id">{{ $t('ui.saveChanges') }}</template>
-                    <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
-                </p-button>
-
-                <p-button
-                    :disabled="!authorData.id || !currentThemeHasSupportForAuthorPages"
-                    intent="primary"
-                    class="options-sidebar-preview-button"
-                    @click.native="saveAndPreview">
-                    {{ $t('ui.saveAndPreview') }}
-                    <span>
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
+                        @click="openItem('image')">
                         <icon
+                            class="options-sidebar-icon"
                             size="s"
-                            name="quick-preview"/>
-                    </span>
-                </p-button>
+                            name="sidebar-image"/>
 
-                <p-button
-                    @click.native="close"
-                    appearance="outline">
-                    {{ $t('ui.cancel') }}
-                </p-button>
+                        <span class="options-sidebar-label">{{ $t('author.avatarAndFeaturedImage') }}</span>
+                    </div>
+
+                    <div
+                        class="author-settings"
+                        ref="image-content-wrapper">
+                        <div
+                            class="author-settings-content"
+                            ref="image-content">
+                            <label>
+                                <span>{{ $t('author.avatar') }}:</span>
+                                <image-upload
+                                    slot="field"
+                                    size="small"
+                                    id="author"
+                                    ref="author-avatar"
+                                    :onRemove="avatarRemoved"
+                                    imageType="authorImages"
+                                    v-model="authorData.avatar" />
+                            </label>
+                            <div
+                                slot="note"
+                                class="msg msg-small msg-icon msg-info">
+                                <icon name="info" size="m" />
+                                <p>{{ $t('author.whenYouUseGravatarYourSiteVisitorsWillQueryAThirdPartyServer') }}</p>
+                            </div>
+                            <label class="use-gravatar">
+                                <switcher
+                                    slot="field"
+                                    id="use-gravatar"
+                                    @click.native="toggleGravatar"
+                                    v-model="authorData.useGravatar" />
+                                <span
+                                    v-pure-html="$t('author.useGravatarMessage')">
+                                </span>
+                            </label>
+                            <div>
+                                <label class="no-margin">{{ $t('ui.featuredImage') }}:</label>
+                                <div
+                                    v-if="!currentThemeHasSupportForAuthorImages"
+                                    slot="note"
+                                    class="msg msg-small msg-icon msg-alert">
+                                    <icon name="warning" size="m" />
+                                    <p>{{ $t('author.themeDoesNotSupportFeaturedImagesForAuthors') }}</p>
+                                </div>
+                                <label>
+                                    <image-upload
+                                        slot="field"
+                                        size="small"
+                                        id="featured-image"
+                                        :item-id="authorData.id"
+                                        ref="author-featured-image"
+                                        imageType="authorImages"
+                                        :onRemove="() => { hasFeaturedImage = false }"
+                                        :onAdd="() => { hasFeaturedImage = true } "
+                                        v-model="authorData.additionalData.featuredImage" />
+
+                                    <div
+                                        v-if="hasFeaturedImage"
+                                        class="image-uploader-settings-form">
+                                        <label>{{ $t('ui.alternativeText') }}
+                                            <text-input
+                                                ref="featured-image-alt"
+                                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                                v-model="authorData.additionalData.featuredImageAlt" />
+                                        </label>
+
+                                        <label>{{ $t('ui.caption') }}
+                                            <text-input
+                                                ref="featured-image-caption"
+                                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                                v-model="authorData.additionalData.featuredImageCaption" />
+                                        </label>
+
+                                        <label>{{ $t('ui.credits') }}
+                                            <text-input
+                                                ref="featured-image-credits"
+                                                :spellcheck="$store.state.currentSite.config.spellchecking"
+                                                v-model="authorData.additionalData.featuredImageCredits" />
+                                        </label>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-item">
+                    <div
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
+                        @click="openItem('seo')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-seo"/>
+
+                        <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
+                    </div>
+
+                    <div
+                        class="author-settings"
+                        ref="seo-content-wrapper">
+                        <div
+                            class="author-settings-content"
+                            ref="seo-content">
+                            <label :class="{ 'is-invalid': errors.indexOf('slug') > -1 }">
+                                <span>{{ $t('ui.slug') }}:</span>
+                                <div class="options-sidebar-item-slug">
+                                    <input
+                                        v-model="authorData.username"
+                                        @keyup="cleanError('slug')"
+                                        spellcheck="false"
+                                        type="text">
+                                    <p-button
+                                        :onClick="updateSlug"
+                                        v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
+                                        :aria-label="$t('ui.updateSlug')"
+                                        icon="refresh"
+                                        appearance="secondary">
+                                    </p-button>
+                                </div>
+                            </label>
+
+                            <label class="with-char-counter">
+                                <span>{{ $t('ui.pageTitle') }}:</span>
+                                <text-input
+                                    v-model="authorData.metaTitle"
+                                    type="text"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                    :charCounter="true"
+                                    :preferredCount="70" />
+                            </label>
+
+                            <label class="with-char-counter">
+                                <span>{{ $t('ui.metaDescription') }}:</span>
+                                <text-area
+                                    v-model="authorData.metaDescription"
+                                    :placeholder="$t('ui.leaveBlankToUseDefaultPageTitle')"
+                                    :charCounter="true"
+                                    :spellcheck="$store.state.currentSite.config.spellchecking"
+                                    :preferredCount="160"></text-area>
+                            </label>
+
+                            <label>
+                                {{ $t('ui.metaRobotsIndex') }}:
+                                <dropdown
+                                    v-if="!authorData.additionalData.canonicalUrl"
+                                    id="tag-meta-robots"
+                                    v-model="authorData.additionalData.metaRobots"
+                                    :items="metaRobotsOptions">
+                                </dropdown>
+                                <div v-else>
+                                    <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
+                                </div>
+                            </label>
+
+                            <label>
+                                {{ $t('ui.canonicalURL') }}:
+                                <input
+                                    type="text"
+                                    v-model="authorData.additionalData.canonicalUrl"
+                                    spellcheck="false"
+                                    :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-item">
+                    <div
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
+                        @click="openItem('other')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-options"/>
+
+                        <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
+                    </div>
+
+                    <div
+                        class="author-settings"
+                        ref="other-content-wrapper">
+                        <div
+                            class="author-settings-content"
+                            ref="other-content">
+                            <label>
+                                <span>{{ $t('ui.customTemplate') }}:</span>
+                                <dropdown
+                                    v-if="currentThemeHasAuthorTemplates"
+                                    ref="template"
+                                    id="template"
+                                    v-model="authorData.template"
+                                    :items="authorTemplates"></dropdown>
+
+                                <text-input
+                                    v-if="!currentThemeHasAuthorTemplates"
+                                    slot="field"
+                                    id="template"
+                                    :placeholder="$t('ui.notAvailableInYourTheme')"
+                                    :spellcheck="false"
+                                    :disabled="true"
+                                    :readonly="true" />
+                            </label>
+
+                            <template v-if="dataSet">
+                                <template v-for="(field, index) of authorViewThemeSettings">
+                                    <separator
+                                        v-if="displayField(field) && field.type === 'separator'"
+                                        :label="field.label"
+                                        :is-line="true"
+                                        :key="'author-view-field-' + index"
+                                        :note="field.note" />
+
+                                    <label
+                                        v-if="displayField(field) && field.type !== 'separator'"
+                                        :key="'author-view-field-' + index">
+                                        {{ field.label }}
+
+                                        <dropdown
+                                            v-if="!field.type || field.type === 'select'"
+                                            :id="field.name + '-select'"
+                                            class="author-view-settings"
+                                            v-model="authorData.additionalData.viewConfig[field.name]"
+                                            :items="generateItems(field.options)">
+                                            <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
+                                        </dropdown>
+
+                                        <text-input
+                                            v-if="field.type === 'text' || field.type === 'number'"
+                                            :type="field.type"
+                                            class="author-view-settings"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            :placeholder="fieldPlaceholder(field)"
+                                            v-model="authorData.additionalData.viewConfig[field.name]" />
+
+                                        <text-area
+                                            v-if="field.type === 'textarea'"
+                                            class="author-view-settings"
+                                            :placeholder="fieldPlaceholder(field)"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="authorData.additionalData.viewConfig[field.name]" />
+
+                                        <color-picker
+                                            v-if="field.type === 'colorpicker'"
+                                            class="author-view-settings"
+                                            v-model="authorData.additionalData.viewConfig[field.name]"
+                                            :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
+                                        </color-picker>
+
+                                        <image-upload
+                                            v-if="field.type === 'image'"
+                                            images-only
+                                            class="author-view-settings"
+                                            v-model="authorData.additionalData.viewConfig[field.name]"
+                                            :item-id="authorData.id"
+                                            imageType="authorImages" />
+
+                                        <small
+                                            v-if="field.note"
+                                            class="note">
+                                            {{ field.note }}
+                                        </small>
+                                    </label>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-buttons">
+                    <p-button
+                        appearance="secondary"
+                        @click.native="save(false)">
+                        <template v-if="authorData.id">{{ $t('ui.saveChanges') }}</template>
+                        <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
+                    </p-button>
+
+                    <p-button
+                        :disabled="!authorData.id || !currentThemeHasSupportForAuthorPages"
+                        intent="primary"
+                        class="options-sidebar-preview-button"
+                        @click.native="saveAndPreview">
+                        {{ $t('ui.saveAndPreview') }}
+                        <span>
+                            <icon
+                                size="s"
+                                name="quick-preview"/>
+                        </span>
+                    </p-button>
+
+                    <p-button
+                        @click.native="close"
+                        appearance="outline">
+                        {{ $t('ui.cancel') }}
+                    </p-button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import SidebarScrollFade from '../helpers/sidebar-scroll-fade.js';
 import Tooltip from '../helpers/tooltip.js';
 import Utils from './../helpers/utils';
 import Vue from 'vue';
 
 export default {
     directives: {
+        sidebarScrollFade: SidebarScrollFade,
         tooltip: Tooltip
     },
     name: 'author-form-sidebar',
@@ -435,6 +445,13 @@ export default {
                 }
             }
         };
+    },
+    watch: {
+        'authorData.id' () {
+            this.$nextTick(() => {
+                this.$refs.sidebarContent.scrollTop = 0;
+            });
+        }
     },
     computed: {
         currentThemeHasSupportForAuthorImages () {

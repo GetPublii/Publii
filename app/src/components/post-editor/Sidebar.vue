@@ -1,315 +1,200 @@
 <template>
-    <div :class="{ 
-        'options-sidebar-container': true, 
-        'post-editor-sidebar': true, 
-        'is-visible': isVisible 
+    <div :class="{
+        'options-sidebar-container': true,
+        'post-editor-sidebar': true,
+        'is-visible': isVisible
     }">
         <div class="options-sidebar">
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'status' }"
-                    class="is-first"
-                    @click="openItem('status')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-status"/>
-
-                    <span class="options-sidebar-label">{{ $t('post.status') }}</span>
-                </div>
-
-                <div
-                    class="post-editor-settings"
-                    style="max-height: none;"
-                    ref="status-content-wrapper">
+            <div
+                v-sidebar-scroll-fade
+                class="options-sidebar-content">
+                <div class="options-sidebar-item">
                     <div
-                        class="post-editor-settings-content"
-                        ref="status-content">
-                        <div
-                            v-if="isEdit"
-                            class="post-info">
-                            <dl>
-                                <dt v-if="itemType === 'post'">{{ $t('post.postState') }}</dt>
-                                <dt v-if="itemType === 'page'">{{ $t('page.pageState') }}</dt>
-                                <dd id="post-status">
-                                    {{ filteredStatus }}
-                                </dd>
-                            </dl>
-
-                            <dl>
-                                <dt>{{ $t('author.author') }}</dt>
-                                <dd>
-                                    <a
-                                        href="#"
-                                        @click.prevent="changeAuthor">
-                                        {{ authorName }}
-                                    </a>
-                                </dd>
-                            </dl>
-
-                            <dl>
-                                <dt>{{ $t('post.published') }}</dt>
-                                <dd>
-                                    <a
-                                        href="#"
-                                        @click.prevent="changeDate">
-                                        {{ $parent.postData.creationDate.text }}
-                                    </a>
-                                </dd>
-                            </dl>
-
-                            <dl>
-                                <dt>{{ $t('post.updatedOn') }}</dt>
-                                <dd id="post-date-modified">
-                                    {{ $parent.postData.modificationDate.text }}
-                                </dd>
-                            </dl>
-
-                            <dl 
-                                v-if="itemType === 'page' && pagesStructureLoaded"
-                                class="page-parent-page-wrapper">
-                                <dt>{{ $t('page.parentPage') }}</dt>
-                                <dd id="page-parent-page">
-                                    <dropdown
-                                        key="page-parent-dropdown"
-                                        id="page-parent-page-dropdown"
-                                        :value="parentPage"
-                                        :onChange="changeParentPage"
-                                        :items="flatPagesList"></dropdown>
-                                </dd>
-                            </dl>
-                        </div>
-
-                        <div
-                            v-if="!isEdit"
-                            class="post-info post-info--nogrid">
-
-                            <dl>
-                                <dt v-if="itemType === 'post'">{{ $t('post.postAuthor') }}</dt>
-                                <dt v-if="itemType === 'page'">{{ $t('page.pageAuthor') }}</dt>
-                                <dd>
-                                    <dropdown
-                                        id="post-author-id"
-                                        v-model="$parent.postData.author"
-                                        :items="authors"></dropdown>
-                                </dd>
-                            </dl>
-
-                            <dl class="post-date">
-                                <dt>{{ $t('post.published') }}</dt>
-                                <dd>
-                                    <a
-                                        href="#"
-                                        @click.prevent="changeDate">
-
-                                        <template v-if="!$parent.postData.creationDate.text">
-                                            <template v-if="itemType === 'post'">
-                                                {{ $t('post.setCustomPostDate') }}
-                                            </template>
-                                            <template v-if="itemType === 'page'">
-                                                {{ $t('page.setCustomPageDate') }}
-                                            </template>
-                                        </template>
-
-                                        <template v-if="$parent.postData.creationDate.text">
-                                            {{ $t('post.changePostDate') }}
-
-                                            <small>
-                                                ({{ $parent.postData.creationDate.text }})
-                                            </small>
-
-                                            <span
-                                                class="post-date-reset"
-                                                @click.stop.prevent="resetCreationDate()">
-                                                &times;
-                                            </span>
-
-                                        </template>
-                                    </a>
-                                </dd>
-                            </dl>
-
-                            <dl v-if="itemType === 'page' && pagesStructureLoaded">
-                                <dt>{{ $t('page.parentPage') }}</dt>
-                                <dd id="page-parent-page">
-                                    <dropdown
-                                        key="page-parent-dropdown"
-                                        id="page-parent-page-dropdown"
-                                        :value="parentPage"
-                                        :onChange="changeParentPage"
-                                        :items="flatPagesList"></dropdown>
-                                </dd>
-                            </dl>
-                        </div>
-
-                        <div 
-                            v-if="itemType === 'post'"
-                            class="post-action">
-                            <label id="post-featured-wrapper">
-                                <switcher
-                                    v-model="$parent.postData.isFeatured" />
-                                <icon
-                                    :title="$t('post.markAsFeatured')"
-                                    class="switcher-item-icon-helper content-status-icon is-featured"
-                                    name="featured-post"
-                                    size="xs" />
-                                <span>
-                                    {{ $t('post.markAsFeatured') }}
-                                </span>
-                            </label>
-
-                            <label
-                                id="post-hidden-wrapper"
-                                v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnListMsg'), describe: false }">
-                                <switcher
-                                    :accessible-label="$t('post.hidePost')"
-                                    :description="$t('post.postWillNotAppearOnListMsg')"
-                                    v-model="$parent.postData.isHidden" />
-                                <icon
-                                    aria-hidden="true"
-                                    non-interactive
-                                    class="switcher-item-icon-helper content-status-icon"
-                                    name="hidden-post"
-                                    size="xs" />
-                                <span>
-                                    {{ $t('post.hidePost') }}
-                                </span>
-                            </label>
-
-                            <label
-                                id="post-excluded-homepage-wrapper"
-                                v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnHomepageListMsg'), describe: false }">
-                                <switcher
-                                    :accessible-label="$t('post.excludeFromHomepage')"
-                                    :description="$t('post.postWillNotAppearOnHomepageListMsg')"
-                                    v-model="$parent.postData.isExcludedOnHomepage" />
-                                <icon
-                                    aria-hidden="true"
-                                    non-interactive
-                                    class="switcher-item-icon-helper content-status-icon is-excluded"
-                                    name="excluded-post"
-                                    size="xs" />
-                                <span>
-                                    {{ $t('post.excludeFromHomepage') }}
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
-                    @click="openItem('image')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-image"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.featuredImage') }}</span>
-                </div>
-
-                <div
-                    class="post-editor-settings"
-                    ref="image-content-wrapper">
-                    <div
-                        class="post-editor-settings-content"
-                        ref="image-content">
-                        <image-upload
-                            ref="featured-image"
-                            images-only
-                            :item-id="$parent.postID"
-                            v-model="$parent.postData.featuredImage.path"
-                            imageType="featuredImages" />
-
-                        <div
-                            v-if="$parent.postData.featuredImage.path"
-                            class="image-uploader-settings-form">
-                            <label>{{ $t('ui.alternativeText') }}
-                                <text-input
-                                    ref="featured-image-alt"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    v-model="$parent.postData.featuredImage.alt" />
-                            </label>
-
-                            <label>{{ $t('ui.caption') }}
-                                <text-input
-                                    ref="featured-image-caption"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    v-model="$parent.postData.featuredImage.caption" />
-                            </label>
-
-                            <label>{{ $t('ui.credits') }}
-                                <text-input
-                                    ref="featured-image-credits"
-                                    :spellcheck="$store.state.currentSite.config.spellchecking"
-                                    v-model="$parent.postData.featuredImage.credits" />
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div 
-                    v-if="itemType === 'post'"
-                    class="options-sidebar-item">
-                    <div
-                        :class="{ 
-                            'options-sidebar-header': true, 
-                            'is-open': openedItem === 'tags' 
-                        }"
-                        @click="openItem('tags')">
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'status' }"
+                        class="is-first"
+                        @click="openItem('status')">
                         <icon
                             class="options-sidebar-icon"
                             size="s"
-                            name="sidebar-tags"/>
+                            name="sidebar-status"/>
 
-                        <span class="options-sidebar-label">{{ $t('ui.tags') }}</span>
+                        <span class="options-sidebar-label">{{ $t('post.status') }}</span>
                     </div>
 
                     <div
                         class="post-editor-settings"
-                        ref="tags-content-wrapper">
+                        style="max-height: none;"
+                        ref="status-content-wrapper">
                         <div
-                            class="post-editor-settings-content post-editor-settings-content-tags"
-                            ref="tags-content">
-                            <div class="post-tags">
-                                <label id="post-tags-wrapper">
-                                    <v-select
-                                        v-model="$parent.postData.tags"
-                                        :tag-placeholder="$t('tag.addThisAsNewTag')"
-                                        :options="availableTags"
-                                        :options-limit="100"
-                                        :searchable="true"
-                                        :show-labels="false"
-                                        placeholder=""
-                                        :multiple="true"
-                                        :taggable="true"
-                                        @remove="removeTag"
-                                        @tag="addTag"></v-select>
+                            class="post-editor-settings-content"
+                            ref="status-content">
+                            <div
+                                v-if="isEdit"
+                                class="post-info">
+                                <dl>
+                                    <dt v-if="itemType === 'post'">{{ $t('post.postState') }}</dt>
+                                    <dt v-if="itemType === 'page'">{{ $t('page.pageState') }}</dt>
+                                    <dd id="post-status">
+                                        {{ filteredStatus }}
+                                    </dd>
+                                </dl>
 
-                                    <small
-                                        v-if="tagIsRestricted"
-                                        class="post-tags-error">
-                                        {{ $t('tag.tagIsNotAllowed') }}
-                                    </small>
-                                </label>
+                                <dl>
+                                    <dt>{{ $t('author.author') }}</dt>
+                                    <dd>
+                                        <a
+                                            href="#"
+                                            @click.prevent="changeAuthor">
+                                            {{ authorName }}
+                                        </a>
+                                    </dd>
+                                </dl>
+
+                                <dl>
+                                    <dt>{{ $t('post.published') }}</dt>
+                                    <dd>
+                                        <a
+                                            href="#"
+                                            @click.prevent="changeDate">
+                                            {{ $parent.postData.creationDate.text }}
+                                        </a>
+                                    </dd>
+                                </dl>
+
+                                <dl>
+                                    <dt>{{ $t('post.updatedOn') }}</dt>
+                                    <dd id="post-date-modified">
+                                        {{ $parent.postData.modificationDate.text }}
+                                    </dd>
+                                </dl>
+
+                                <dl
+                                    v-if="itemType === 'page' && pagesStructureLoaded"
+                                    class="page-parent-page-wrapper">
+                                    <dt>{{ $t('page.parentPage') }}</dt>
+                                    <dd id="page-parent-page">
+                                        <dropdown
+                                            key="page-parent-dropdown"
+                                            id="page-parent-page-dropdown"
+                                            :value="parentPage"
+                                            :onChange="changeParentPage"
+                                            :items="flatPagesList"></dropdown>
+                                    </dd>
+                                </dl>
                             </div>
 
                             <div
-                                v-if="$parent.postData.tags.length > 1"
-                                class="post-main-tag">
-                                <label>
-                                    {{ $t('tag.mainTag') }}:
-                                    <dropdown
-                                        id="post-main-tag"
-                                        v-model="$parent.postData.mainTag"
-                                        :items="tagsForDropdown">
-                                    </dropdown>
+                                v-if="!isEdit"
+                                class="post-info post-info--nogrid">
 
-                                    <small class="note">
-                                        {{ $t('tag.noMainTagForPostMsg') }}
-                                    </small>
+                                <dl>
+                                    <dt v-if="itemType === 'post'">{{ $t('post.postAuthor') }}</dt>
+                                    <dt v-if="itemType === 'page'">{{ $t('page.pageAuthor') }}</dt>
+                                    <dd>
+                                        <dropdown
+                                            id="post-author-id"
+                                            v-model="$parent.postData.author"
+                                            :items="authors"></dropdown>
+                                    </dd>
+                                </dl>
+
+                                <dl class="post-date">
+                                    <dt>{{ $t('post.published') }}</dt>
+                                    <dd>
+                                        <a
+                                            href="#"
+                                            @click.prevent="changeDate">
+
+                                            <template v-if="!$parent.postData.creationDate.text">
+                                                <template v-if="itemType === 'post'">
+                                                    {{ $t('post.setCustomPostDate') }}
+                                                </template>
+                                                <template v-if="itemType === 'page'">
+                                                    {{ $t('page.setCustomPageDate') }}
+                                                </template>
+                                            </template>
+
+                                            <template v-if="$parent.postData.creationDate.text">
+                                                {{ $t('post.changePostDate') }}
+
+                                                <small>
+                                                    ({{ $parent.postData.creationDate.text }})
+                                                </small>
+
+                                                <span
+                                                    class="post-date-reset"
+                                                    @click.stop.prevent="resetCreationDate()">
+                                                    &times;
+                                                </span>
+
+                                            </template>
+                                        </a>
+                                    </dd>
+                                </dl>
+
+                                <dl v-if="itemType === 'page' && pagesStructureLoaded">
+                                    <dt>{{ $t('page.parentPage') }}</dt>
+                                    <dd id="page-parent-page">
+                                        <dropdown
+                                            key="page-parent-dropdown"
+                                            id="page-parent-page-dropdown"
+                                            :value="parentPage"
+                                            :onChange="changeParentPage"
+                                            :items="flatPagesList"></dropdown>
+                                    </dd>
+                                </dl>
+                            </div>
+
+                            <div
+                                v-if="itemType === 'post'"
+                                class="post-action">
+                                <label id="post-featured-wrapper">
+                                    <switcher
+                                        v-model="$parent.postData.isFeatured" />
+                                    <icon
+                                        :title="$t('post.markAsFeatured')"
+                                        class="switcher-item-icon-helper content-status-icon is-featured"
+                                        name="featured-post"
+                                        size="xs" />
+                                    <span>
+                                        {{ $t('post.markAsFeatured') }}
+                                    </span>
+                                </label>
+
+                                <label
+                                    id="post-hidden-wrapper"
+                                    v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnListMsg'), describe: false }">
+                                    <switcher
+                                        :accessible-label="$t('post.hidePost')"
+                                        :description="$t('post.postWillNotAppearOnListMsg')"
+                                        v-model="$parent.postData.isHidden" />
+                                    <icon
+                                        aria-hidden="true"
+                                        non-interactive
+                                        class="switcher-item-icon-helper content-status-icon"
+                                        name="hidden-post"
+                                        size="xs" />
+                                    <span>
+                                        {{ $t('post.hidePost') }}
+                                    </span>
+                                </label>
+
+                                <label
+                                    id="post-excluded-homepage-wrapper"
+                                    v-tooltip.focusin="{ text: $t('post.postWillNotAppearOnHomepageListMsg'), describe: false }">
+                                    <switcher
+                                        :accessible-label="$t('post.excludeFromHomepage')"
+                                        :description="$t('post.postWillNotAppearOnHomepageListMsg')"
+                                        v-model="$parent.postData.isExcludedOnHomepage" />
+                                    <icon
+                                        aria-hidden="true"
+                                        non-interactive
+                                        class="switcher-item-icon-helper content-status-icon is-excluded"
+                                        name="excluded-post"
+                                        size="xs" />
+                                    <span>
+                                        {{ $t('post.excludeFromHomepage') }}
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -318,245 +203,364 @@
 
                 <div class="options-sidebar-item">
                     <div
-                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
-                        @click="openItem('seo')">
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
+                        @click="openItem('image')">
                         <icon
                             class="options-sidebar-icon"
                             size="s"
-                            name="sidebar-seo"/>
+                            name="sidebar-image"/>
 
-                        <span class="options-sidebar-label">
-                            {{ $t('ui.seo') }}
-
-                            <span
-                                v-if="$parent.postData.slug.length > 250"
-                                class="options-sidebar-label-warning">
-                                <template v-if="itemType === 'post'">{{ $t('post.postSlugTooLong') }}</template>
-                                <template v-if="itemType === 'page'">{{ $t('page.pageSlugTooLong') }}</template>
-                            </span>
-                        </span>
+                        <span class="options-sidebar-label">{{ $t('ui.featuredImage') }}</span>
                     </div>
 
                     <div
                         class="post-editor-settings"
-                        ref="seo-content-wrapper">
+                        ref="image-content-wrapper">
                         <div
                             class="post-editor-settings-content"
-                            ref="seo-content">
-                            <div class="post-seo">
-                                <label>
-                                    <template v-if="itemType === 'post'">{{ $t('post.postSlug') }}:</template>
-                                    <template v-if="itemType === 'page'">{{ $t('page.pageSlug') }}:</template>
-                                    <div class="options-sidebar-item-slug">
-                                        <input
-                                            type="text"
-                                            v-model="$parent.postData.slug"
-                                            spellcheck="false"
-                                            @keyup="$parent.slugUpdated">
-                                        <p-button 
-                                            :onClick="updateSlug" 
-                                            v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
-                                            :aria-label="$t('ui.updateSlug')"
-                                            icon="refresh"
-                                            appearance="secondary">
-                                        </p-button>
-                                    </div>
-                                    <small
-                                        v-if="$parent.postData.slug.length > 250"
-                                        class="note is-warning">
-                                        {{ $t('post.postSlugLengthWarning') }}
-                                    </small>
-                                </label>
+                            ref="image-content">
+                            <image-upload
+                                ref="featured-image"
+                                images-only
+                                :item-id="$parent.postID"
+                                v-model="$parent.postData.featuredImage.path"
+                                imageType="featuredImages" />
 
-                                <label class="with-char-counter">
-                                    {{ $t('settings.pageTitle') }}:
+                            <div
+                                v-if="$parent.postData.featuredImage.path"
+                                class="image-uploader-settings-form">
+                                <label>{{ $t('ui.alternativeText') }}
                                     <text-input
-                                        type="text"
-                                        v-model="$parent.postData.metaTitle"
+                                        ref="featured-image-alt"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        :placeholder="$t('settings.leaveBlankToUseDefaultPageTitle')"
-                                        :charCounter="true"
-                                        :preferredCount="70" />
-                                    <small class="note">
-                                        <template v-if="itemType === 'post'">{{ $t('settings.postPageTitleVariables') }}:</template>
-                                        <template v-if="itemType === 'page'">{{ $t('settings.pageTitleVariables') }}:</template>
-                                    </small>
+                                        v-model="$parent.postData.featuredImage.alt" />
                                 </label>
 
-                                <label class="with-char-counter">
-                                    {{ $t('ui.metaDescription') }}:
-                                    <text-area
-                                        v-model="$parent.postData.metaDescription"
-                                        :charCounter="true"
+                                <label>{{ $t('ui.caption') }}
+                                    <text-input
+                                        ref="featured-image-caption"
                                         :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        :preferredCount="160"></text-area>
-                                    <small class="note">
-                                        <template v-if="itemType === 'post'">{{ $t('settings.postPageTitleVariables') }}:</template>
-                                        <template v-if="itemType === 'page'">{{ $t('settings.pageTitleVariables') }}:</template>
-                                    </small>
+                                        v-model="$parent.postData.featuredImage.caption" />
                                 </label>
 
-                                <label>
-                                    {{ $t('ui.metaRobotsIndex') }}:
-                                    <dropdown
-                                        v-if="!$parent.postData.canonicalUrl"
-                                        id="post-meta-robots"
-                                        v-model="$parent.postData.metaRobots"
-                                        :items="metaRobotsOptions">
-                                    </dropdown>
-                                    <div v-else>
-                                        <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
-                                    </div>
-                                </label>
-
-                                <label>
-                                    {{ $t('ui.canonicalURL') }}:
-                                    <input
-                                        type="text"
-                                        v-model="$parent.postData.canonicalUrl"
-                                        spellcheck="false"
-                                        :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
+                                <label>{{ $t('ui.credits') }}
+                                    <text-input
+                                        ref="featured-image-credits"
+                                        :spellcheck="$store.state.currentSite.config.spellchecking"
+                                        v-model="$parent.postData.featuredImage.credits" />
                                 </label>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="options-sidebar-item">
-                <div
-                    :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
-                    @click="openItem('other')">
-                    <icon
-                        class="options-sidebar-icon"
-                        size="s"
-                        name="sidebar-options"/>
-
-                    <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
-                </div>
-
-                <div
-                    class="post-editor-settings"
-                    ref="other-content-wrapper">
                     <div
-                        class="post-editor-settings-content"
-                        ref="other-content">
-                        <div class="post-other" id="post-view-settings">
-                            <label id="post-template-wrapper">
-                                <template v-if="itemType === 'post'">
-                                    {{ $t('post.postTemplate') }}:
-                                </template>
-                                <template v-if="itemType === 'page'">
-                                    {{ $t('page.pageTemplate') }}:
-                                </template>
+                        v-if="itemType === 'post'"
+                        class="options-sidebar-item">
+                        <div
+                            :class="{
+                                'options-sidebar-header': true,
+                                'is-open': openedItem === 'tags'
+                            }"
+                            @click="openItem('tags')">
+                            <icon
+                                class="options-sidebar-icon"
+                                size="s"
+                                name="sidebar-tags"/>
 
-                                <dropdown
-                                    :items="itemType === 'post' ? postTemplates : pageTemplates"
-                                    :disabled="!hasTemplates"
-                                    v-model="$parent.postData.template"
-                                    id="post-template">
-                                    <option
-                                        v-if="hasTemplates"
-                                        value="*"
-                                        :selected="$parent.postData.template === '*'"
-                                        slot="first-choice">
-                                        {{ $t('settings.useGlobalConfiguration') }}
-                                    </option>
-                                    <option
-                                        v-if="hasTemplates"
-                                        value=""
-                                        :selected="$parent.postData.template === ''"
-                                        slot="first-choice">
-                                        {{ $t('theme.defaultTemplate') }}
-                                    </option>
-                                    <option
-                                        v-if="!hasTemplates"
-                                        value=""
-                                        slot="first-choice">
-                                        {{ $t('ui.notAvailableInYourTheme') }}
-                                    </option>
-                                </dropdown>
+                            <span class="options-sidebar-label">{{ $t('ui.tags') }}</span>
+                        </div>
 
-                                <template v-if="itemType === 'post'">
-                                    <small
-                                        v-if="$parent.postData.template === '*'"
-                                        slot="note">
-                                        {{ $t('post.currentDefaultTemplate') }}:
-                                        <strong>
-                                            {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
-                                        </strong>
-                                    </small>
-                                </template>
-                                <template v-else-if="itemType === 'page'">
-                                    <small
-                                        v-if="$parent.postData.template === '*'"
-                                        slot="note">
-                                        {{ $t('page.currentDefaultTemplate') }}:
-                                        <strong>
-                                            {{ $store.state.currentSite.themeSettings.pageTemplates[$store.state.currentSite.themeSettings.defaultTemplates.page] }}
-                                        </strong>
-                                    </small>
-                                </template>
-                            </label>
+                        <div
+                            class="post-editor-settings"
+                            ref="tags-content-wrapper">
+                            <div
+                                class="post-editor-settings-content post-editor-settings-content-tags"
+                                ref="tags-content">
+                                <div class="post-tags">
+                                    <label id="post-tags-wrapper">
+                                        <v-select
+                                            v-model="$parent.postData.tags"
+                                            :tag-placeholder="$t('tag.addThisAsNewTag')"
+                                            :options="availableTags"
+                                            :options-limit="100"
+                                            :searchable="true"
+                                            :show-labels="false"
+                                            placeholder=""
+                                            :multiple="true"
+                                            :taggable="true"
+                                            @remove="removeTag"
+                                            @tag="addTag"></v-select>
 
-                            <template v-for="(field, index) of viewThemeSettings">
-                                <separator
-                                    v-if="displayField(field) && field.type === 'separator'"
-                                    :label="field.label"
-                                    :is-line="true"
-                                    :note="field.note" />
+                                        <small
+                                            v-if="tagIsRestricted"
+                                            class="post-tags-error">
+                                            {{ $t('tag.tagIsNotAllowed') }}
+                                        </small>
+                                    </label>
+                                </div>
 
-                                <label
-                                    v-if="displayField(field) && field.type !== 'separator'"
-                                    :key="'post-view-field-' + index">
-                                    {{ field.label }}
+                                <div
+                                    v-if="$parent.postData.tags.length > 1"
+                                    class="post-main-tag">
+                                    <label>
+                                        {{ $t('tag.mainTag') }}:
+                                        <dropdown
+                                            id="post-main-tag"
+                                            v-model="$parent.postData.mainTag"
+                                            :items="tagsForDropdown">
+                                        </dropdown>
+
+                                        <small class="note">
+                                            {{ $t('tag.noMainTagForPostMsg') }}
+                                        </small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="options-sidebar-item">
+                        <div
+                            :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
+                            @click="openItem('seo')">
+                            <icon
+                                class="options-sidebar-icon"
+                                size="s"
+                                name="sidebar-seo"/>
+
+                            <span class="options-sidebar-label">
+                                {{ $t('ui.seo') }}
+
+                                <span
+                                    v-if="$parent.postData.slug.length > 250"
+                                    class="options-sidebar-label-warning">
+                                    <template v-if="itemType === 'post'">{{ $t('post.postSlugTooLong') }}</template>
+                                    <template v-if="itemType === 'page'">{{ $t('page.pageSlugTooLong') }}</template>
+                                </span>
+                            </span>
+                        </div>
+
+                        <div
+                            class="post-editor-settings"
+                            ref="seo-content-wrapper">
+                            <div
+                                class="post-editor-settings-content"
+                                ref="seo-content">
+                                <div class="post-seo">
+                                    <label>
+                                        <template v-if="itemType === 'post'">{{ $t('post.postSlug') }}:</template>
+                                        <template v-if="itemType === 'page'">{{ $t('page.pageSlug') }}:</template>
+                                        <div class="options-sidebar-item-slug">
+                                            <input
+                                                type="text"
+                                                v-model="$parent.postData.slug"
+                                                spellcheck="false"
+                                                @keyup="$parent.slugUpdated">
+                                            <p-button
+                                                :onClick="updateSlug"
+                                                v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
+                                                :aria-label="$t('ui.updateSlug')"
+                                                icon="refresh"
+                                                appearance="secondary">
+                                            </p-button>
+                                        </div>
+                                        <small
+                                            v-if="$parent.postData.slug.length > 250"
+                                            class="note is-warning">
+                                            {{ $t('post.postSlugLengthWarning') }}
+                                        </small>
+                                    </label>
+
+                                    <label class="with-char-counter">
+                                        {{ $t('settings.pageTitle') }}:
+                                        <text-input
+                                            type="text"
+                                            v-model="$parent.postData.metaTitle"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            :placeholder="$t('settings.leaveBlankToUseDefaultPageTitle')"
+                                            :charCounter="true"
+                                            :preferredCount="70" />
+                                        <small class="note">
+                                            <template v-if="itemType === 'post'">{{ $t('settings.postPageTitleVariables') }}:</template>
+                                            <template v-if="itemType === 'page'">{{ $t('settings.pageTitleVariables') }}:</template>
+                                        </small>
+                                    </label>
+
+                                    <label class="with-char-counter">
+                                        {{ $t('ui.metaDescription') }}:
+                                        <text-area
+                                            v-model="$parent.postData.metaDescription"
+                                            :charCounter="true"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            :preferredCount="160"></text-area>
+                                        <small class="note">
+                                            <template v-if="itemType === 'post'">{{ $t('settings.postPageTitleVariables') }}:</template>
+                                            <template v-if="itemType === 'page'">{{ $t('settings.pageTitleVariables') }}:</template>
+                                        </small>
+                                    </label>
+
+                                    <label>
+                                        {{ $t('ui.metaRobotsIndex') }}:
+                                        <dropdown
+                                            v-if="!$parent.postData.canonicalUrl"
+                                            id="post-meta-robots"
+                                            v-model="$parent.postData.metaRobots"
+                                            :items="metaRobotsOptions">
+                                        </dropdown>
+                                        <div v-else>
+                                            <small>{{ $t('ui.ifCanonicalUrlIsSetMetaRobotsTagIsIgnored') }}</small>
+                                        </div>
+                                    </label>
+
+                                    <label>
+                                        {{ $t('ui.canonicalURL') }}:
+                                        <input
+                                            type="text"
+                                            v-model="$parent.postData.canonicalUrl"
+                                            spellcheck="false"
+                                            :placeholder="$t('tag.leaveBlankToUseDefaultTagPageURL')" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-sidebar-item">
+                    <div
+                        :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
+                        @click="openItem('other')">
+                        <icon
+                            class="options-sidebar-icon"
+                            size="s"
+                            name="sidebar-options"/>
+
+                        <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
+                    </div>
+
+                    <div
+                        class="post-editor-settings"
+                        ref="other-content-wrapper">
+                        <div
+                            class="post-editor-settings-content"
+                            ref="other-content">
+                            <div class="post-other" id="post-view-settings">
+                                <label id="post-template-wrapper">
+                                    <template v-if="itemType === 'post'">
+                                        {{ $t('post.postTemplate') }}:
+                                    </template>
+                                    <template v-if="itemType === 'page'">
+                                        {{ $t('page.pageTemplate') }}:
+                                    </template>
 
                                     <dropdown
-                                        v-if="!field.type || field.type === 'select'"
-                                        :id="field.name + '-select'"
-                                        class="post-view-settings"
-                                        v-model="$parent.postData.viewOptions[field.name]"
-                                        :items="generateItems(field.options)">
-                                        <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
+                                        :items="itemType === 'post' ? postTemplates : pageTemplates"
+                                        :disabled="!hasTemplates"
+                                        v-model="$parent.postData.template"
+                                        id="post-template">
+                                        <option
+                                            v-if="hasTemplates"
+                                            value="*"
+                                            :selected="$parent.postData.template === '*'"
+                                            slot="first-choice">
+                                            {{ $t('settings.useGlobalConfiguration') }}
+                                        </option>
+                                        <option
+                                            v-if="hasTemplates"
+                                            value=""
+                                            :selected="$parent.postData.template === ''"
+                                            slot="first-choice">
+                                            {{ $t('theme.defaultTemplate') }}
+                                        </option>
+                                        <option
+                                            v-if="!hasTemplates"
+                                            value=""
+                                            slot="first-choice">
+                                            {{ $t('ui.notAvailableInYourTheme') }}
+                                        </option>
                                     </dropdown>
 
-                                    <text-input
-                                        v-if="field.type === 'text' || field.type === 'number'"
-                                        :type="field.type"
-                                        class="post-view-settings"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        :placeholder="fieldPlaceholder(field)"
-                                        v-model="$parent.postData.viewOptions[field.name]" />
-
-                                    <text-area
-                                        v-if="field.type === 'textarea'"
-                                        class="post-view-settings"
-                                        :placeholder="fieldPlaceholder(field)"
-                                        :spellcheck="$store.state.currentSite.config.spellchecking"
-                                        v-model="$parent.postData.viewOptions[field.name]" />
-
-                                    <color-picker
-                                        v-if="field.type === 'colorpicker'"
-                                        class="post-view-settings"
-                                        v-model="$parent.postData.viewOptions[field.name]"
-                                        :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
-                                    </color-picker>
-
-                                    <image-upload
-                                        v-if="field.type === 'image'"
-                                        images-only
-                                        slot="field"
-                                        v-model="$parent.postData.viewOptions[field.name]"
-                                        :item-id="$parent.postID"
-                                        imageType="contentImages" />
-
-                                    <small
-                                        v-if="field.note"
-                                        class="note">
-                                        {{ field.note }}
-                                    </small>
+                                    <template v-if="itemType === 'post'">
+                                        <small
+                                            v-if="$parent.postData.template === '*'"
+                                            slot="note">
+                                            {{ $t('post.currentDefaultTemplate') }}:
+                                            <strong>
+                                                {{ $store.state.currentSite.themeSettings.postTemplates[$store.state.currentSite.themeSettings.defaultTemplates.post] }}
+                                            </strong>
+                                        </small>
+                                    </template>
+                                    <template v-else-if="itemType === 'page'">
+                                        <small
+                                            v-if="$parent.postData.template === '*'"
+                                            slot="note">
+                                            {{ $t('page.currentDefaultTemplate') }}:
+                                            <strong>
+                                                {{ $store.state.currentSite.themeSettings.pageTemplates[$store.state.currentSite.themeSettings.defaultTemplates.page] }}
+                                            </strong>
+                                        </small>
+                                    </template>
                                 </label>
-                            </template>
+
+                                <template v-for="(field, index) of viewThemeSettings">
+                                    <separator
+                                        v-if="displayField(field) && field.type === 'separator'"
+                                        :label="field.label"
+                                        :is-line="true"
+                                        :note="field.note" />
+
+                                    <label
+                                        v-if="displayField(field) && field.type !== 'separator'"
+                                        :key="'post-view-field-' + index">
+                                        {{ field.label }}
+
+                                        <dropdown
+                                            v-if="!field.type || field.type === 'select'"
+                                            :id="field.name + '-select'"
+                                            class="post-view-settings"
+                                            v-model="$parent.postData.viewOptions[field.name]"
+                                            :items="generateItems(field.options)">
+                                            <option slot="first-choice" value="">{{ $t('settings.useGlobalConfiguration') }}</option>
+                                        </dropdown>
+
+                                        <text-input
+                                            v-if="field.type === 'text' || field.type === 'number'"
+                                            :type="field.type"
+                                            class="post-view-settings"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            :placeholder="fieldPlaceholder(field)"
+                                            v-model="$parent.postData.viewOptions[field.name]" />
+
+                                        <text-area
+                                            v-if="field.type === 'textarea'"
+                                            class="post-view-settings"
+                                            :placeholder="fieldPlaceholder(field)"
+                                            :spellcheck="$store.state.currentSite.config.spellchecking"
+                                            v-model="$parent.postData.viewOptions[field.name]" />
+
+                                        <color-picker
+                                            v-if="field.type === 'colorpicker'"
+                                            class="post-view-settings"
+                                            v-model="$parent.postData.viewOptions[field.name]"
+                                            :outputFormat="field.outputFormat ? field.outputFormat : 'RGBAorHEX'">
+                                        </color-picker>
+
+                                        <image-upload
+                                            v-if="field.type === 'image'"
+                                            images-only
+                                            slot="field"
+                                            v-model="$parent.postData.viewOptions[field.name]"
+                                            :item-id="$parent.postID"
+                                            imageType="contentImages" />
+
+                                        <small
+                                            v-if="field.note"
+                                            class="note">
+                                            {{ field.note }}
+                                        </small>
+                                    </label>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -566,11 +570,13 @@
 </template>
 
 <script>
+import SidebarScrollFade from '../../helpers/sidebar-scroll-fade.js';
 import Tooltip from '../../helpers/tooltip.js';
 import Vue from 'vue';
 
 export default {
     directives: {
+        sidebarScrollFade: SidebarScrollFade,
         tooltip: Tooltip
     },
     name: 'post-editor-sidebar',
@@ -1005,31 +1011,14 @@ export default {
 }
 
 .post-editor-sidebar {
-    box-shadow: var(--shadow-md);
-    height: calc(100vh - var(--topbar-height));
     opacity: 0;
     pointer-events: none;
-    top: var(--topbar-height);
+    top: 9.2rem;
     z-index: var(--layer-overlay);
 
     &.is-visible {
         opacity: 1;
         pointer-events: auto;
-    }
-
-    &:before {
-        background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
-        content: "";
-        height: 8rem;
-        position: fixed;
-        top: var(--topbar-height);
-        right: 0;
-        width: calc(var(--options-sidebar-width) - 1px);
-        z-index: 1;
-    }
-
-    .options-sidebar {
-        padding-top: 8rem;
     }
 
     .post-info {
@@ -1202,12 +1191,7 @@ export default {
 
 body[data-os="linux"] {
     .post-editor-sidebar {
-        height: 100vh;
-        top: 0;
-
-        &:before {
-            top: 0;
-        }
+        top: 5.6rem;
     }
 }
 

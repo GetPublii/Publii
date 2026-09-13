@@ -1,53 +1,20 @@
 .help-panel {
-    background: var(--option-sidebar-bg);
-    border-left: 1px solid var(--input-border-color);
+    bottom: 0;
     display: none;
-    height: calc(100vh - var(--topbar-height));
-    overflow: auto;
-    position: absolute;
+    padding: var(--space-6);
+    position: fixed;
     right: 0;
-    top: var(--topbar-height);    
-    width: 44.2rem;
+    top: 9.2rem;
+    width: var(--options-sidebar-width);
     z-index: var(--layer-panel);
-    
-     &::before {
-            background: linear-gradient(to bottom, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
-            content: "";
-            height: 10rem;
-            position: fixed;
-            top: var(--topbar-height);
-            right: 0;
-            width: 44.1rem;
-            z-index: 1;
-        }
-    
-     &::after {
-            background: linear-gradient(to top, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
-            content: "";
-            height: 6rem;
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            width: 44.1rem;
-            z-index: 1;
-        }
-    
+
     &.is-visible {
         display: block;
     }
-
-    & > div {
-        font-size: 14px;
-        padding:  8rem 3.6rem;
-         
-    }     
 }
 
-.help-panel-header {
-        border-bottom: 1px solid var(--input-border-color); 
-        font-size: 1.8rem;
-        margin: -3.6rem 0 var(--space-8);
-        padding: calc(var(--space-4) + 0.6vw) 0 2.25rem;
+body[data-os="linux"] .help-panel {
+    top: 5.6rem;
 }
 
 .help-panel-desc {
@@ -64,6 +31,7 @@
 .help-panel-table {
     border-collapse: collapse;   
     margin-top: .6rem;
+    width: 100%;
     
     &.col-3 {
         td {
@@ -82,7 +50,7 @@
         border-right: 1px solid var(--input-border-color); 
         padding: 12px 14px;
         vertical-align: top;
-        white-space: nowrap;
+        white-space: normal;
         width: 50%;
         
         &:last-child {

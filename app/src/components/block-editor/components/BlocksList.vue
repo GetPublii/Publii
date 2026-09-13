@@ -1,95 +1,109 @@
 <template>
-  <aside 
+  <aside
     :class="{ 'blocks-list': true, 'is-opened': isOpened }"
     @click="deactivateItem()">
-    <button 
+    <button
       v-if="!isOpened"
+      ref="openButton"
       class="clean-invert icon small blocks-list-open"
       @click.prevent="openList">
-      <icon name="open-bulk-edition" /> 
+      <icon name="open-bulk-edition" />
       {{ $t('editor.viewBulkEdit') }}
     </button>
 
-    <button 
+    <button
       v-if="isOpened"
+      ref="closeButton"
       class="clean-invert icon small blocks-list-close"
       @click.prevent="closeList">
-      <icon name="open-bulk-edition" /> 
+      <icon name="open-bulk-edition" />
       {{ $t('editor.hideBulkEdit') }}
     </button>
-    
-    <draggable
-      tag="ol"
-      group="block-editor-items"
-      chosenClass="is-chosen"
-      ghostClass="is-ghost"
-      :class="{ 'blocks-list-items': true }"
-      v-model="preparedContent"
-      v-bind="{
-          animation: 0,
-          forceFallback: true
-      }">
-      <li 
-        v-for="(item, index) of preparedContent"
-        :class="{
-          'blocks-list-item': true, 
-          'is-active': activeItem === item.id
-        }"
-        :key="'blocks-list-item-' + item.id + '-' + index"
-        @click.stop="activateItem(item.id)">
-        <div>
-          <span class="blocks-list-item-icon">
-            <icon :name="item.icon" />
-          </span>
-          <span>{{ item.label }}</span>
 
-          <button
-            :class="{ 
-              'blocks-list-item-bulk-duplicate': true, 
-              'is-disabled': item.icon === 'readmore'
+    <div
+      v-show="isOpened"
+      class="sidebar-panel blocks-list-popover">
+      <div
+        v-sidebar-scroll-fade
+        class="sidebar-panel-content">
+        <draggable
+          tag="ol"
+          group="block-editor-items"
+          chosenClass="is-chosen"
+          ghostClass="is-ghost"
+          :class="{ 'blocks-list-items': true }"
+          v-model="preparedContent"
+          v-bind="{
+              animation: 0,
+              forceFallback: true
+          }">
+          <li
+            v-for="(item, index) of preparedContent"
+            :class="{
+              'blocks-list-item': true,
+              'is-active': activeItem === item.id
             }"
-            tabindex="-1"
-            :disabled="item.icon === 'readmore'"
-            @click.stop="duplicateBlock(item.id)">
-            <icon   
-              name="duplicate" 
-              customWidth="16" 
-              customHeight="16"/>
-          </button>
+            :key="'blocks-list-item-' + item.id + '-' + index"
+            @click.stop="activateItem(item.id)">
+            <div>
+              <span class="blocks-list-item-icon">
+                <icon :name="item.icon" />
+              </span>
+              <span>{{ item.label }}</span>
 
-          <button
-            :class="{ 
-              'blocks-list-item-bulk-delete': true,
-              'is-active': confirmDelete === item.id,
-              'has-tooltip': confirmDelete === item.id,
-              'is-disabled': index === 0 && firstBlockDeleteIsDisabled
-            }"
-            tabindex="-1"
-            :disabled="index === 0 && firstBlockDeleteIsDisabled"
-            @click.stop="deleteBlock(item.id)">
-            <icon 
-              :name="confirmDelete === item.id ? 'open-trash' : 'trash'" 
-              customWidth="16" 
-              customHeight="16"/>
-            <span 
-              v-if="confirmDelete === item.id"
-              class="ui-tooltip has-bigger-space">
-              {{ $t('editor.clickToConfirm') }}
-            </span>
-          </button>
-        </div>
-      </li>
-    </draggable>
+              <button
+                :class="{
+                  'blocks-list-item-bulk-duplicate': true,
+                  'is-disabled': item.icon === 'readmore'
+                }"
+                tabindex="-1"
+                :disabled="item.icon === 'readmore'"
+                @click.stop="duplicateBlock(item.id)">
+                <icon
+                  name="duplicate"
+                  customWidth="16"
+                  customHeight="16"/>
+              </button>
+
+              <button
+                :class="{
+                  'blocks-list-item-bulk-delete': true,
+                  'is-active': confirmDelete === item.id,
+                  'has-tooltip': confirmDelete === item.id,
+                  'is-disabled': index === 0 && firstBlockDeleteIsDisabled
+                }"
+                tabindex="-1"
+                :disabled="index === 0 && firstBlockDeleteIsDisabled"
+                @click.stop="deleteBlock(item.id)">
+                <icon
+                  :name="confirmDelete === item.id ? 'open-trash' : 'trash'"
+                  customWidth="16"
+                  customHeight="16"/>
+                <span
+                  v-if="confirmDelete === item.id"
+                  class="ui-tooltip has-bigger-space">
+                  {{ $t('editor.clickToConfirm') }}
+                </span>
+              </button>
+            </div>
+          </li>
+        </draggable>
+      </div>
+    </div>
   </aside>
 </template>
 
 <script>
+import SidebarScrollFade from '../../../helpers/sidebar-scroll-fade';
 import AvailableBlocks from '../available-blocks.json';
 import Draggable from 'vuedraggable';
 import Icon from '../components/elements/EditorIcon.vue';
 
 export default {
   name: 'BlocksList',
+  directives: {
+    sidebarScrollFade: SidebarScrollFade
+  },
   props: [
     'content'
   ],
@@ -152,9 +166,15 @@ export default {
   methods: {
     openList () {
       this.isOpened = true;
+      this.$nextTick(() => {
+        this.$refs.closeButton.focus();
+      });
     },
     closeList () {
       this.isOpened = false;
+      this.$nextTick(() => {
+        this.$refs.openButton.focus();
+      });
     },
     activateItem (id) {
       this.activeItem = id;
@@ -225,28 +245,22 @@ export default {
   z-index: 1;
 
   &.is-opened {
-    background: var(--option-sidebar-bg);
-    bottom: 0;
-    border-right: 1px solid var(--input-border-color);
-    height: calc(100vh - var(--topbar-height));
-    left: 0;
-    overflow: auto;
-    position: fixed;
-    top: var(--topbar-height);
-    width: 300px;
-    z-index: 1000000;
-
-    &::before {
-      background: linear-gradient(to top, var(--option-sidebar-bg) 0%,var(--option-sidebar-bg) 75%,transparent 100%);
-      content: "";
-      bottom: 0;
-      left: -1px;
-      height: 6rem;
-      position: fixed;
-      width: inherit;
-      z-index: 1;
-    }
+    z-index: var(--layer-editor-help);
   }
+}
+
+.blocks-list .blocks-list-popover {
+  bottom: calc(5rem + var(--space-2));
+  height: auto;
+  left: 1.8rem;
+  max-width: calc(100vw - 3.6rem);
+  position: fixed;
+  top: calc(9.2rem + var(--space-6));
+  width: 30rem;
+}
+
+body[data-os="linux"] .blocks-list .blocks-list-popover {
+  top: calc(5.6rem + var(--space-6));
 }
 
 .blocks-list-open,
@@ -280,16 +294,9 @@ export default {
   }
 }
 
-.blocks-list-close {
-  bottom: .4rem;
-  left: 1.8rem;
-  position: fixed;
-  text-align: center; 
-}
-
 .blocks-list-items {
   list-style-type: none;
-  margin: 2rem 2rem 6rem;
+  margin: 0;
   padding: 0;
 }
 
