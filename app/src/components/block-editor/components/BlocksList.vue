@@ -295,7 +295,7 @@ export default {
 
 .blocks-list-item {
   border-radius: calc(var(--radius-base) / 2);
-  cursor: pointer;
+  cursor: grab;
   font-size: 14px;
   font-weight: var(--font-weight-medium);
   margin: 0;
@@ -311,9 +311,12 @@ export default {
     }
   }
 
+  &.is-chosen,
   &.is-ghost {
-    cursor: move;
-   
+    cursor: grabbing;
+  }
+
+  &.is-ghost {
     & > div {
       background-color: oklch(from var(--color-primary) l c h / 5%) !important;
       border: 1px dashed var(--input-border-focus);
@@ -398,6 +401,7 @@ export default {
 }
 
 .blocks-list-item-bulk-delete {
+  &.is-active,
   &:hover {
     & > svg {
       color: var(--color-danger);
