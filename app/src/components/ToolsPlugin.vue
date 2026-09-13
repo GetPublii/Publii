@@ -493,6 +493,23 @@ export default {
         'supported-features-check': SupportedFeaturesCheck,
         'repeater': Repeater
     },
+    data () {
+        return {
+            pluginName: '',
+            pluginPath: '',
+            settings: [],
+            settingsValues: {},
+            buttonsLocked: false,
+            hasMessage: false,
+            hasPluginCustomOptions: false,
+            messageInOptions: null,
+            requiredFeatures: null,
+            pluginStandardOptionsVisible: true,
+            pluginSettingsDisplay: 'fieldsets',
+            pluginSettingsTabsLabel: '',
+            previewNotRequired: false
+        };
+    },
     computed: {
         settingsGroups () {
             let groups = [];
@@ -547,23 +564,6 @@ export default {
         siteHasTheme () {
             return !!this.$store.state.currentSite.config.theme;
         }
-    },
-    data () {
-        return {
-            pluginName: '',
-            pluginPath: '',
-            settings: [],
-            settingsValues: {},
-            buttonsLocked: false,
-            hasMessage: false,
-            hasPluginCustomOptions: false,
-            messageInOptions: null,
-            requiredFeatures: null,
-            pluginStandardOptionsVisible: true,
-            pluginSettingsDisplay: 'fieldsets',
-            pluginSettingsTabsLabel: '',
-            previewNotRequired: false
-        };
     },
     async mounted () {
         this.loadPluginConfig(this.$route.params.pluginname, this.$route.params.name);

@@ -66,6 +66,11 @@ export default {
         'value',
         'cookieGroups'
     ],
+    data () {
+        return {
+            content: []
+        };
+    },
     computed: {
         availableCookieGroups () {
             if (!this.cookieGroups) {
@@ -83,11 +88,6 @@ export default {
                 value: group.id
             })));
         }
-    },
-    data () {
-        return {
-            content: []
-        };
     },
     watch: {
         value (newValue) {

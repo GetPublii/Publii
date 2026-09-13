@@ -109,6 +109,21 @@ export default {
   components: {
     'icon': Icon
   },
+  data () {
+    return {
+      customCssClasses: [],
+      isHovered: false,
+      isSelected: false,
+      isActivated: false,
+      uiOpened: false,
+      moveTimeout: false,
+      // new block UI
+      blockFilterPhrase: '',
+      newBlockUIActiveIndex: 0,
+      newBlockUIListVisible: false,
+      blockContentIsEmpty: false
+    };
+  },
   computed: {
     availableBlocks () {
         return AvailableBlocks;
@@ -139,21 +154,6 @@ export default {
 
       return blocks;
     }
-  },
-  data () {
-    return {
-      customCssClasses: [],
-      isHovered: false,
-      isSelected: false,
-      isActivated: false,
-      uiOpened: false,
-      moveTimeout: false,
-      // new block UI
-      blockFilterPhrase: '',
-      newBlockUIActiveIndex: 0,
-      newBlockUIListVisible: false,
-      blockContentIsEmpty: false
-    };
   },
   watch: {
     uiOpened (newState, oldState) {

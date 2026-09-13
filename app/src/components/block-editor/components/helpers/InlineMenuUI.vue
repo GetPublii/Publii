@@ -72,16 +72,16 @@ export default {
   components: {
     'icon': EditorIcon
   },
-  computed: {
-    showInlineMenu () {
-      return this.$parent.$parent.isSelected && this.$parent.textIsHighlighted && !this.$parent.$parent.uiOpened;
-    }
-  },
   data () {
     return {
       left: '',
       top: ''
     };
+  },
+  computed: {
+    showInlineMenu () {
+      return this.$parent.$parent.isSelected && this.$parent.textIsHighlighted && !this.$parent.$parent.uiOpened;
+    }
   },
   methods: {
     setPosition (left, top) {

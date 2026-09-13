@@ -110,10 +110,10 @@ import countTextStatistics from './../../helpers/text-statistics';
 import Tooltip from './../../helpers/tooltip';
 
 export default {
-    name: 'post-editor-writers-panel',
     directives: {
         tooltip: Tooltip
     },
+    name: 'post-editor-writers-panel',
     data () {
         return {
             isOpen: false,

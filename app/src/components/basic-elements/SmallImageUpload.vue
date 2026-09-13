@@ -59,6 +59,13 @@ export default {
             type: String
         }
     },
+    data () {
+        return {
+            isEmpty: true,
+            fileName: '',
+            isUploading: false
+        }
+    },
     computed: {
         cssClasses () {
             let cssClasses = { 
@@ -74,13 +81,6 @@ export default {
             }
 
             return cssClasses;
-        }
-    },
-    data () {
-        return {
-            isEmpty: true,
-            fileName: '',
-            isUploading: false
         }
     },
     watch: {

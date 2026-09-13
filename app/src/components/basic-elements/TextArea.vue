@@ -32,7 +32,6 @@ import { createMiniEditorLinkSession } from './../../helpers/mini-editor-link';
 
 export default {
     name: 'text-area',
-    components: { 'link-popup': LinkPopup },
     props: {
         id: {
             default: 't-editor',
@@ -91,6 +90,13 @@ export default {
             type: String
         }
     },
+    components: { 'link-popup': LinkPopup },
+    data: function() {
+        return {
+            editorID: this.id,
+            content: this.value
+        };
+    },
     computed: {
         cssClasses () {
             let cssClasses = { 
@@ -108,11 +114,13 @@ export default {
             return cssClasses;
         }
     },
-    data: function() {
-        return {
-            editorID: this.id,
-            content: this.value
-        };
+    watch: {
+        value: function (newValue, oldValue) {
+            this.content = newValue;
+        },
+        content: function(newValue) {
+            this.$emit('input', this.content);
+        }
     },
     async mounted () {
         setTimeout(async () => {
@@ -158,14 +166,6 @@ export default {
                 }
             });
         }, 0);
-    },
-    watch: {
-        value: function (newValue, oldValue) {
-            this.content = newValue;
-        },
-        content: function(newValue) {
-            this.$emit('input', this.content);
-        }
     },
     methods: {
         async initWysiwyg () {

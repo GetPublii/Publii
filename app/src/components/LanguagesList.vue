@@ -56,13 +56,13 @@ export default {
             default: false
         }
     },
+    components: {
+        'language-item': LanguagesListItem
+    },
     data () {
         return {
             languageIsOver: false
         };
-    },
-    components: {
-        'language-item': LanguagesListItem
     },
     computed: {
         languages () {

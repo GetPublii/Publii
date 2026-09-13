@@ -118,47 +118,6 @@ export default {
             isHovered: false
         }
     },
-    watch: {
-        value: async function (newValue, oldValue) {
-            if (newValue && typeof newValue === 'string') {
-                if (newValue.indexOf('https://') === 0 || newValue.indexOf('http://') === 0) {
-                    this.filePath = newValue;
-                } else {
-                    this.filePath = await this.mediaPath + newValue;
-                }
-
-                this.isEmpty = false;
-            }
-        },
-        filePath: function(newValue) {
-            if (newValue === '') {
-                this.$emit('input', '');
-            } else {
-                if (newValue.indexOf('http://') === 0 || newValue.indexOf('https://') === 0) {
-                    this.$emit('input', newValue);
-                } else {
-                    if (this.addMediaFolderPath) {
-                        this.$emit('input', 'media/website/' + newValue.split('/').pop());
-                    } else {
-                        this.$emit('input', newValue.split('/').pop());
-                    }
-                }
-            }
-        }
-    },
-    mounted () {
-        setTimeout(async () => {
-            if (this.value && typeof this.value === 'string') {
-                if (this.value.indexOf('https://') === 0 || this.value.indexOf('http://') === 0) {
-                    this.filePath = this.value;
-                } else {
-                    this.filePath = await this.mediaPath + this.value;
-                }
-
-                this.isEmpty = false;
-            }
-        }, 0);
-    },
     computed: {
         labelText () {
             let label = this.$t('image.dropToUploadPhotoOr');
@@ -235,6 +194,47 @@ export default {
 
             return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/website/';
         }
+    },
+    watch: {
+        value: async function (newValue, oldValue) {
+            if (newValue && typeof newValue === 'string') {
+                if (newValue.indexOf('https://') === 0 || newValue.indexOf('http://') === 0) {
+                    this.filePath = newValue;
+                } else {
+                    this.filePath = await this.mediaPath + newValue;
+                }
+
+                this.isEmpty = false;
+            }
+        },
+        filePath: function(newValue) {
+            if (newValue === '') {
+                this.$emit('input', '');
+            } else {
+                if (newValue.indexOf('http://') === 0 || newValue.indexOf('https://') === 0) {
+                    this.$emit('input', newValue);
+                } else {
+                    if (this.addMediaFolderPath) {
+                        this.$emit('input', 'media/website/' + newValue.split('/').pop());
+                    } else {
+                        this.$emit('input', newValue.split('/').pop());
+                    }
+                }
+            }
+        }
+    },
+    mounted () {
+        setTimeout(async () => {
+            if (this.value && typeof this.value === 'string') {
+                if (this.value.indexOf('https://') === 0 || this.value.indexOf('http://') === 0) {
+                    this.filePath = this.value;
+                } else {
+                    this.filePath = await this.mediaPath + this.value;
+                }
+
+                this.isEmpty = false;
+            }
+        }, 0);
     },
     methods: {
         stopEvents (e) {

@@ -198,17 +198,6 @@ export default {
         this.$bus.$on('app-menu-generate-preview', this.renderFiles);
         this.$bus.$on('app-menu-sync', this.syncWebsite);
     },
-    beforeDestroy () {
-        if (this._syncLabelObserver) {
-            this._syncLabelObserver.disconnect();
-        }
-
-        window.removeEventListener('focus', this.updateCurrentYear);
-
-        this.$bus.$off('app-menu-preview', this.renderPreview);
-        this.$bus.$off('app-menu-generate-preview', this.renderFiles);
-        this.$bus.$off('app-menu-sync', this.syncWebsite);
-    },
     methods: {
         updateCurrentYear () {
             this.currentYear = new Date().getFullYear();
@@ -316,6 +305,17 @@ export default {
 
             return true;
         }
+    },
+    beforeDestroy () {
+        if (this._syncLabelObserver) {
+            this._syncLabelObserver.disconnect();
+        }
+
+        window.removeEventListener('focus', this.updateCurrentYear);
+
+        this.$bus.$off('app-menu-preview', this.renderPreview);
+        this.$bus.$off('app-menu-generate-preview', this.renderFiles);
+        this.$bus.$off('app-menu-sync', this.syncWebsite);
     }
 }
 </script>

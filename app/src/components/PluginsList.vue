@@ -55,13 +55,13 @@ export default {
             default: false
         }
     },
+    components: {
+        'plugin-item': PluginsListItem
+    },
     data () {
         return {
             pluginIsOver: false
         };
-    },
-    components: {
-        'plugin-item': PluginsListItem
     },
     computed: {
         plugins () {

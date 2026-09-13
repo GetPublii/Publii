@@ -60,15 +60,6 @@ export default {
     mixins: [
         BackToTools
     ],
-    watch: {
-        filterValue (newValue) {
-            setTimeout(() => {
-                if (newValue === 'normal') {
-                    this.$refs.codemirrorNormal.editor.refresh();
-                }
-            }, 0);
-        }
-    },
     data: function() {
         return {
             buttonsLocked: false,
@@ -120,6 +111,15 @@ export default {
                     onClick: this.saveAndRender.bind(this, 'homepage')
                 }
             ];
+        }
+    },
+    watch: {
+        filterValue (newValue) {
+            setTimeout(() => {
+                if (newValue === 'normal') {
+                    this.$refs.codemirrorNormal.editor.refresh();
+                }
+            }, 0);
         }
     },
     mounted: function() {

@@ -97,6 +97,13 @@ export default {
     'draggable': Draggable,
     'icon': Icon
   },
+  data () {
+    return {
+      activeItem: false,
+      confirmDelete: false,
+      isOpened: false
+    };
+  },
   computed: {
     availableBlocks () {
       let blocks = {};
@@ -138,13 +145,6 @@ export default {
         this.$bus.$emit('block-editor-items-reorder', reorderedIDs);
       }
     }
-  },
-  data () {
-    return {
-      activeItem: false,
-      confirmDelete: false,
-      isOpened: false
-    };
   },
   mounted () {
     this.$bus.$on('block-editor-block-selected', this.activateItemWithoutEffect);

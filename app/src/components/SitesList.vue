@@ -22,6 +22,9 @@ import SitesListItem from './SitesListItem';
 
 export default {
     name: 'sites-list',
+    components: {
+        'sites-list-item': SitesListItem
+    },
     data: function() {
         return {
             filterValue: '',
@@ -53,9 +56,6 @@ export default {
         this.$bus.$on('sites-list-duplicate-in-progress', (inProgress) => {
             this.siteDuplicateInProgress = inProgress;
         });
-    },
-    components: {
-        'sites-list-item': SitesListItem
     },
     beforeDestroy () {
         this.$bus.$off('sites-list-filtered');

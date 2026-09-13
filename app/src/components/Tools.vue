@@ -47,6 +47,11 @@ import Vue from 'vue';
 
 export default {
     name: 'tools',
+    data () {
+        return {
+            pluginsStatus: {}
+        }
+    },
     computed: {
         ...mapGetters([
             'sitePlugins'
@@ -101,11 +106,6 @@ export default {
             }));
 
             return coreItems.concat(pluginItems);
-        }
-    },
-    data () {
-        return {
-            pluginsStatus: {}
         }
     },
     mounted () {

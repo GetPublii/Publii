@@ -309,10 +309,10 @@ import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 import { fileWebsiteURL, sortFiles } from '../helpers/file-manager.js';
 
 export default {
-    name: 'file-manager',
     directives: {
         tooltip: Tooltip
     },
+    name: 'file-manager',
     mixins: [BackToTools, CollectionCheckboxes],
     components: { CollectionSortButton },
     data () {

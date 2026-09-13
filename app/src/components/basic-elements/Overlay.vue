@@ -39,6 +39,11 @@ export default {
             validator: value => ['default', 'drop-zone'].includes(value)
         }
     },
+    data () {
+        return {
+            messageStyle: null
+        };
+    },
     computed: {
         cssClasses: function() {
             return {
@@ -48,19 +53,14 @@ export default {
             };
         }
     },
-    data () {
-        return {
-            messageStyle: null
-        };
-    },
-    mounted () {
-        this.startPositionTracking();
-    },
     watch: {
         centerInViewport () {
             this.stopPositionTracking();
             this.startPositionTracking();
         }
+    },
+    mounted () {
+        this.startPositionTracking();
     },
     methods: {
         startPositionTracking () {

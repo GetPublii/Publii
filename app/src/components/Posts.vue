@@ -474,10 +474,10 @@ import CollectionOrdering from './mixins/CollectionOrdering.js';
 import Tooltip from '../helpers/tooltip.js';
 
 export default {
-    name: 'posts',
     directives: {
         tooltip: Tooltip
     },
+    name: 'posts',
     mixins: [
         CollectionOrdering,
         CollectionCheckboxes
@@ -492,11 +492,6 @@ export default {
             order: 'DESC',
             renderLimit: 100
         };
-    },
-    watch: {
-        filterValue () {
-            this.renderLimit = 100;
-        }
     },
     computed: {
         items () {
@@ -597,6 +592,11 @@ export default {
         },
         showPostSlugs () {
             return this.$store.state.app.config.showPostSlugs;
+        }
+    },
+    watch: {
+        filterValue () {
+            this.renderLimit = 100;
         }
     },
     created () {

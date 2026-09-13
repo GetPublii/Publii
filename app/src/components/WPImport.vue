@@ -381,10 +381,6 @@ export default {
             ]
         };
     },
-    mounted: function() {
-        this.loadStoredImportReport();
-        this.loadOnboardingImport();
-    },
     computed: {
         importConfigCssClasses: function() {
             return {
@@ -444,6 +440,10 @@ export default {
 
             return this.$t('tools.wpImport.seoDetectedMultiple', { providers: labels.join(', ') }) + ' ';
         }
+    },
+    mounted: function() {
+        this.loadStoredImportReport();
+        this.loadOnboardingImport();
     },
     methods: {
         loadOnboardingImport: function() {

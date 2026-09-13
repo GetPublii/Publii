@@ -10,6 +10,7 @@
 import SassColors from './../../helpers/sass-colors.js';
 
 export default {
+    name: 'icon',
     props: {
         'name': {
             default: '',
@@ -49,7 +50,6 @@ export default {
             type: String
         }
     },
-    name: 'icon',
     computed: {
         cssClasses: function() {
             let classes = {

@@ -113,6 +113,11 @@ export default {
             type: String
         }
     },
+    data: function() {
+        return {
+            selectedValue: this.value
+        };
+    },
     computed: {
         cssClasses () {
             let cssClasses = {
@@ -129,11 +134,6 @@ export default {
 
             return cssClasses;
         }
-    },
-    data: function() {
-        return {
-            selectedValue: this.value
-        };
     },
     watch: {
         value (newValue, oldValue) {

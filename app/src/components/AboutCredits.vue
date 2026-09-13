@@ -37,15 +37,15 @@ export default {
     components: {
         'credits-list': AboutCreditsList
     },
-    computed: {
-        ...mapGetters([
-            'appVersion'
-        ])
-    },
     data: function() {
         return {
             licenses
         };
+    },
+    computed: {
+        ...mapGetters([
+            'appVersion'
+        ])
     },
     mounted () {
         this.$bus.$emit('sites-list-reset');

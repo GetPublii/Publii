@@ -40,11 +40,6 @@ export default {
     'inline-menu': InlineMenuUI,
     'top-menu': TopMenuUI
   },
-  computed: {
-    isEmpty () {
-      return this.content === '<li></li>';
-    }
-  },
   data () {
     return {
       config: {
@@ -77,6 +72,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    isEmpty () {
+      return this.content === '<li></li>';
+    }
   },
   beforeCreate () {
     this.configForm = ConfigForm;

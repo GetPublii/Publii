@@ -297,6 +297,13 @@ export default {
         'draggable': Draggable,
         'vue-select': vSelect
     },
+    data () {
+        return {
+            content: this.value,
+            filesList: [''],
+            dragging: false
+        };
+    },
     computed: {
         cssClasses () {
             let cssClasses = {};
@@ -328,12 +335,16 @@ export default {
             return this.itemConfig.filter(item => item.type === 'file-dropdown').length > 0;
         }
     },
-    data () {
-        return {
-            content: this.value,
-            filesList: [''],
-            dragging: false
-        };
+    watch: {
+        value (newValue, oldValue) {
+            this.content = newValue;
+        },
+        content: {
+            handler () {
+                this.$emit('input', this.content);
+            },
+            deep: true
+        }
     },
     mounted () {
         this.content = this.value;
@@ -356,17 +367,6 @@ export default {
                     this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
                 });
             });
-        }
-    },
-    watch: {
-        value (newValue, oldValue) {
-            this.content = newValue;
-        },
-        content: {
-            handler () {
-                this.$emit('input', this.content);
-            },
-            deep: true
         }
     },
     methods: {

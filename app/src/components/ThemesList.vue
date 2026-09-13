@@ -56,13 +56,13 @@ export default {
             default: false
         }
     },
+    components: {
+        'theme-item': ThemesListItem
+    },
     data: function() {
         return {
             themeIsOver: false
         };
-    },
-    components: {
-        'theme-item': ThemesListItem
     },
     computed: {
         themes () {

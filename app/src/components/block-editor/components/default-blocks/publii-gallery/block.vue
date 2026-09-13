@@ -137,19 +137,6 @@ export default {
     'top-menu': TopMenuUI,
     'draggable': Draggable
   },
-  watch: {
-    '$parent.uiOpened': function (newValue) {
-      if (!this.content.images.length) {
-        return;
-      }
-
-      if (newValue) {
-        this.view = 'edit';
-      } else {
-        this.view = 'preview';
-      }
-    }
-  },
   data () {
     return {
       confirmDelete: false,
@@ -205,6 +192,19 @@ export default {
   computed: {
     isInsidePublii () {
       return !!window.process;
+    }
+  },
+  watch: {
+    '$parent.uiOpened': function (newValue) {
+      if (!this.content.images.length) {
+        return;
+      }
+
+      if (newValue) {
+        this.view = 'edit';
+      } else {
+        this.view = 'preview';
+      }
     }
   },
   beforeCreate () {

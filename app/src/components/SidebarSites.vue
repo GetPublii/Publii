@@ -23,6 +23,11 @@ export default {
     components: {
         'site-logo': SiteLogo
     },
+    data () {
+        return {
+            submenuIsOpen: false
+        };
+    },
     computed: {
         switchDescription () {
             return this.$t(this.syncInProgress ? 'sync.showSyncProgress' : 'ui.selectWebsite');
@@ -30,11 +35,6 @@ export default {
         syncInProgress () {
             return this.$store.state.components.sidebar.syncInProgress;
         }
-    },
-    data () {
-        return {
-            submenuIsOpen: false
-        };
     },
     methods: {
         toggle (e) {

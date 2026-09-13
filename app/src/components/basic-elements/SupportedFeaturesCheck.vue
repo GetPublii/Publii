@@ -22,11 +22,6 @@ export default {
             default: () => ([])
         }
     },
-    computed: {
-        unavailableFeatures () {
-            return this.featuresToCheck.filter(feature => !this.isSupported(feature));
-        }
-    },
     data () {
         return {
             featureNames: {
@@ -41,6 +36,11 @@ export default {
                 tagsList: this.$t('supportedFeatures.featureNames.tagsList'),
                 tagPages: this.$t('supportedFeatures.featureNames.tagPages')
             }
+        }
+    },
+    computed: {
+        unavailableFeatures () {
+            return this.featuresToCheck.filter(feature => !this.isSupported(feature));
         }
     },
     methods: {
