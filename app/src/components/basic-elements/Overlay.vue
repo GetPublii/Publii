@@ -39,6 +39,15 @@ export default {
             validator: value => ['default', 'drop-zone'].includes(value)
         }
     },
+    computed: {
+        cssClasses: function() {
+            return {
+                'overlay': true,
+                'has-border': this.appearance === 'drop-zone',
+                'is-blue': this.appearance === 'drop-zone'
+            };
+        }
+    },
     data () {
         return {
             messageStyle: null
@@ -46,9 +55,6 @@ export default {
     },
     mounted () {
         this.startPositionTracking();
-    },
-    beforeDestroy () {
-        this.stopPositionTracking();
     },
     watch: {
         centerInViewport () {
@@ -117,14 +123,8 @@ export default {
             } : null;
         }
     },
-    computed: {
-        cssClasses: function() {
-            return {
-                'overlay': true,
-                'has-border': this.appearance === 'drop-zone',
-                'is-blue': this.appearance === 'drop-zone'
-            };
-        }
+    beforeDestroy () {
+        this.stopPositionTracking();
     }
 }
 </script>

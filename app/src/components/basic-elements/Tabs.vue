@@ -172,11 +172,6 @@ export default {
             window.addEventListener('resize', this.resizeHandler);
         }
     },
-    beforeDestroy () {
-        if (this.resizeHandler) {
-            window.removeEventListener('resize', this.resizeHandler);
-        }
-    },
     methods: {
         tabID (index) {
             return 'tabs-' + this._uid + '-tab-' + index;
@@ -387,6 +382,11 @@ export default {
                 left: targetScroll,
                 behavior: animate && !reduceMotion ? 'smooth' : 'auto'
             });
+        }
+    },
+    beforeDestroy () {
+        if (this.resizeHandler) {
+            window.removeEventListener('resize', this.resizeHandler);
         }
     }
 }

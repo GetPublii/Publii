@@ -412,18 +412,6 @@ export default {
         window.addEventListener('focus', this.refreshOnFocus);
         this.loadFiles();
     },
-    beforeDestroy () {
-        this._disposed = true;
-        this._readID++;
-        this.stopRequested = true;
-        this.resolveConflict('stop');
-        this.$bus.$off(this.searchEvent, this.filterFiles);
-        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
-        window.removeEventListener('focus', this.refreshOnFocus);
-    },
-    beforeRouteLeave (to, from, next) {
-        next(!this.busy);
-    },
     methods: {
         context () {
             return { siteName: this.$store.state.currentSite.config.name, dirPath: this.dirPath };
@@ -1105,6 +1093,18 @@ export default {
                 this.notify(this.errorMessage('failed'), true);
             }
         }
+    },
+    beforeDestroy () {
+        this._disposed = true;
+        this._readID++;
+        this.stopRequested = true;
+        this.resolveConflict('stop');
+        this.$bus.$off(this.searchEvent, this.filterFiles);
+        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
+        window.removeEventListener('focus', this.refreshOnFocus);
+    },
+    beforeRouteLeave (to, from, next) {
+        next(!this.busy);
     }
 };
 </script>

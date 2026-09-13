@@ -57,9 +57,6 @@ export default {
         this.$bus.$on('log-viewer-editor-loaded', this.onEditorLoaded);
         this.loadFilesList();
     },
-    beforeDestroy () {
-        this.$bus.$off('log-viewer-editor-loaded', this.onEditorLoaded);
-    },
     methods: {
         onEditorLoaded () {
             this.editorReady = true;
@@ -116,6 +113,9 @@ export default {
         loadSelectedFile () {
             this.loadFile(this.selectedFile);
         }
+    },
+    beforeDestroy () {
+        this.$bus.$off('log-viewer-editor-loaded', this.onEditorLoaded);
     }
 }
 </script>
