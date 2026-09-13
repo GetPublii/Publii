@@ -85,6 +85,73 @@ class EditorBridge {
     }
 
     setupImageFigureClassTranslation (editor) {
+        editor.on('OpenWindow', event => {
+            const dialog = event.dialog;
+
+            if (!dialog || !dialog.getData || !dialog.setData) {
+                return;
+            }
+
+            const data = dialog.getData();
+
+            if (typeof data.classes !== 'string' || typeof data.caption !== 'boolean' || !data.src) {
+                return;
+            }
+
+            const selected = editor.selection.getNode();
+            const figure = selected.closest('figure.image');
+            const image = figure ? figure.querySelector('img') : selected;
+
+            if (!image || image.tagName !== 'IMG' || image.hasAttribute('data-mce-object') || image.hasAttribute('data-mce-placeholder')) {
+                return;
+            }
+
+            const classes = new Set(image.classList);
+            const options = editor.getParam('image_class_list', []);
+            let matchingOption;
+            let matchingClassCount = -1;
+
+            // The native list requires an exact class string. Match configured
+            // options by their tokens so custom classes do not select None.
+            options.forEach(option => {
+                const optionClasses = (option.value || '').split(/\s+/).filter(Boolean);
+
+                if (optionClasses.length > matchingClassCount && optionClasses.every(className => classes.has(className))) {
+                    matchingOption = option;
+                    matchingClassCount = optionClasses.length;
+                }
+            });
+
+            if (matchingOption) {
+                dialog.setData({ classes: matchingOption.value });
+            }
+        });
+
+        editor.on('BeforeExecCommand', event => {
+            if (event.command !== 'mceUpdateImage' || !event.value) {
+                return;
+            }
+
+            const selected = editor.selection.getNode();
+            const figure = selected.closest('figure.image');
+            const image = figure ? figure.querySelector('img') : selected;
+
+            if (!image || image.tagName !== 'IMG' || image.hasAttribute('data-mce-object') || image.hasAttribute('data-mce-placeholder')) {
+                return;
+            }
+
+            const imageClasses = Array.from(image.classList);
+            const figureClasses = figure ? Array.from(figure.classList) : [];
+            const customClasses = imageClasses.concat(figureClasses).filter(className => {
+                return className !== 'image' && !className.startsWith('post__image');
+            });
+            const selectedClasses = (event.value.class || '').split(/\s+/).filter(Boolean);
+
+            // Preserve custom classes before the native image command replaces
+            // the class attribute, within the command's existing undo step.
+            event.value.class = Array.from(new Set(selectedClasses.concat(customClasses))).join(' ');
+        });
+
         editor.on('SetContent', () => {
             this.normalizeImageFigures();
         });
@@ -267,8 +334,10 @@ class EditorBridge {
             let figureOtherClasses = figureClasses.filter(cls => cls !== 'image' && cls.indexOf('post__image') !== 0);
             let imgOtherClasses = imgClasses.filter(cls => cls.indexOf('post__image') !== 0 && cls !== 'image');
 
-            figure.className = ['image'].concat(postClasses, figureOtherClasses).join(' ');
-            img.className = postClasses.concat(imgOtherClasses).join(' ');
+            const customClasses = Array.from(new Set(figureOtherClasses.concat(imgOtherClasses)));
+
+            figure.className = ['image'].concat(postClasses, customClasses).join(' ');
+            img.className = postClasses.join(' ');
             figure.setAttribute('contenteditable', 'false');
 
             let figcaption = figure.querySelector('figcaption');
