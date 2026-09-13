@@ -564,7 +564,7 @@ body .tox-tinymce {
     border-radius: var(--radius-base);
 }
 body .tox-tinymce-aux {
-    z-index: 999999;
+    z-index: var(--layer-dialog);
 }
 body .tox .tox-dialog-wrap__backdrop {
     background-color: var(--overlay);

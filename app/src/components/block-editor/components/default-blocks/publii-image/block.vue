@@ -106,6 +106,7 @@
 
 <script>
 import Overlay from '../../../../basic-elements/Overlay.vue';
+import { accept as imageAccept } from './../../../../../../config/image-upload-formats.js';
 import Block from './../../Block.vue';
 import ConfigForm from './config-form.json';
 import ContentEditableImprovements from './../../helpers/ContentEditableImprovements.vue';
@@ -227,17 +228,17 @@ export default {
           id: this.editor.config.postID,
           site: siteName,
           path: await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[0])),
-          imageType: 'contentImages'
+          imageType: 'contentImages',
+          imagesOnly: true
         });
 
         mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
           if (data && data.error) {
             this.imageUploadInProgress = false;
             this.isHovered = false;
-            window.app.showMessage({
-              text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
-              type: 'warning',
-              lifeTime: 6
+            window.app.showAlert({
+              message: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
+              buttonStyle: 'danger'
             });
             return;
           }
@@ -259,6 +260,7 @@ export default {
     },
     initFakeFilePicker () {
       let imageUploader = document.getElementById('post-editor-fake-image-uploader');
+      imageUploader.accept = imageAccept;
 
       imageUploader.addEventListener('change', () => {
         if (!imageUploader.value) {
@@ -286,7 +288,8 @@ export default {
             id: this.editor.config.postID,
             site: window.app.getSiteName(),
             path: filePath,
-            imageType: 'contentImages'
+            imageType: 'contentImages',
+            imagesOnly: true
           });
 
           // eslint-disable-next-line
@@ -294,10 +297,9 @@ export default {
             if (data && data.error) {
               this.fileSelectionCallback = false;
               this.imageUploadInProgress = false;
-              window.app.showMessage({
-                text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
-                type: 'warning',
-                lifeTime: 6
+              window.app.showAlert({
+                message: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
+                buttonStyle: 'danger'
               });
               return;
             }

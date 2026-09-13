@@ -301,10 +301,9 @@ export default {
       // eslint-disable-next-line
       mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
         if (data && data.error) {
-          window.app.showMessage({
-            text: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
-            type: 'warning',
-            lifeTime: 6
+          window.app.showAlert({
+            message: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
+            buttonStyle: 'danger'
           });
         } else {
           let thumbnailSrc = data.thumbnailDimensions ? data.thumbnailPath[0] : data.thumbnailPath;

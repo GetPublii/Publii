@@ -1,4 +1,5 @@
 import EditorConfig from './../configs/postEditor.config.js';
+import { accept as imageAccept } from './../../../config/image-upload-formats.js';
 import { applyAppAppearance } from './../../helpers/app-appearance';
 import Utils from './../../helpers/utils';
 import wrapIframes from './../../../shared/iframe-wrapper';
@@ -600,15 +601,15 @@ class EditorBridge {
                             id: this.itemID,
                             site: window.app.getSiteName(),
                             path: filePath,
-                            imageType: 'contentImages'
+                            imageType: 'contentImages',
+                            imagesOnly: true
                         });
 
                         mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
                             if (data && data.error) {
-                                window.app.showMessage({
-                                    text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
-                                    type: 'warning',
-                                    lifeTime: 6
+                                window.app.showAlert({
+                                    message: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
+                                    buttonStyle: 'danger'
                                 });
                                 return;
                             }
@@ -817,7 +818,7 @@ class EditorBridge {
         // Provide image and alt text for the image dialog
         if (meta.filetype == 'image') {
             this.callbackForTinyMCE = callback;
-            $('#post-editor-fake-image-uploader').trigger('click');
+            $('#post-editor-fake-image-uploader').attr('accept', imageAccept).trigger('click');
         } else {
             this.callbackForTinyMCE = false;
         }
@@ -1017,7 +1018,8 @@ class EditorBridge {
         mainProcessAPI.send('app-image-upload', {
             "id": this.itemID,
             "site": siteName,
-            "path": await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[0]))
+            "path": await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(files[0])),
+            "imagesOnly": true
         });
 
         this.contentImageUploading = true;
@@ -1029,10 +1031,9 @@ class EditorBridge {
                 $('.tinymce-overlay').html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
                 this.contentImageUploading = false;
 
-                window.app.showMessage({
-                    text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
-                    type: 'warning',
-                    lifeTime: 6
+                window.app.showAlert({
+                    message: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
+                    buttonStyle: 'danger'
                 });
                 return;
             }

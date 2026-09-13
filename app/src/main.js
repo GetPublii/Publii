@@ -300,6 +300,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 translate: (phraseKey) => this.$t(phraseKey),
                 overridedCssVariables: () => this.overridedCssVariables,
                 showMessage: (messageConfig) => this.showMessage(messageConfig),
+                showAlert: (alertConfig) => this.$bus.$emit('alert-display', alertConfig),
                 getCurrentSitePosts: () => window.structuredClone(this.$store.state.currentSite.posts),
                 getCurrentSitePages: () => window.structuredClone(this.$store.state.currentSite.pages),
                 getCurrentSiteTags: () => window.structuredClone(this.$store.state.currentSite.tags),
