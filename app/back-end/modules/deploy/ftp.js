@@ -17,6 +17,10 @@ class FTP {
         this.econnresetCounter = 0;
         this.softUploadErrors = {};
         this.hardUploadErrors = [];
+        this.deploymentFinished = false;
+        this.deploymentAborted = false;
+        this.errorReported = false;
+        this.lastError = false;
     }
 
     async initConnection() {
@@ -63,6 +67,22 @@ class FTP {
             message: 'app-uploading-progress',
             value: {
                 progress: 6,
+                message: {
+                    translation: 'sync.preparingFiles'
+                },
+                operations: false
+            }
+        });
+
+        this.deployment.setInput();
+        this.deployment.setOutput();
+        this.deployment.prepareLocalFilesList();
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress: 7,
                 operations: false
             }
         });
@@ -82,24 +102,12 @@ class FTP {
                 message: 'app-connection-success'
             });
 
-            self.deployment.setInput();
-            self.deployment.setOutput();
-            self.deployment.prepareLocalFilesList();
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 7,
-                    operations: false
-                }
-            });
-
             self.downloadFilesList();
         });
 
         this.connection.on('error', function(err) {
             console.log(`[${ new Date().toUTCString() }] FTP ERROR: ${err}`);
+            self.lastError = err;
 
             if(typeof err === "string" && err.indexOf('ECONNRESET') > -1) {
                 self.econnresetCounter++;
@@ -111,6 +119,7 @@ class FTP {
 
             if(waitForTimeout) {
                 waitForTimeout = false;
+                self.errorReported = true;
                 self.connection.destroy();
 
                 process.send({
@@ -130,6 +139,23 @@ class FTP {
         this.connection.on('close', function(err) {
             console.log(`[${ new Date().toUTCString() }] FTP CONNECTION CLOSED: ${err}`);
 
+            if (!self.deploymentFinished && !self.deploymentAborted && !self.errorReported) {
+                self.errorReported = true;
+                let additionalMessage = 'The server has unexpectedly closed the connection during synchronization - it can be caused by the idle timeout settings on the server.';
+
+                if (self.lastError) {
+                    additionalMessage += ' Last error: ' + stripTags((self.lastError.message || self.lastError).toString());
+                }
+
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-connection-error',
+                    value: {
+                        additionalMessage: additionalMessage
+                    }
+                });
+            }
+
             setTimeout(function () {
                 process.kill(process.pid, 'SIGTERM');
             }, 1000);
@@ -137,6 +163,7 @@ class FTP {
 
         setTimeout(function() {
             if(waitForTimeout === true) {
+                self.errorReported = true;
                 self.connection.destroy();
                 console.log(`[${ new Date().toUTCString() }] Request timeout...`);
 
@@ -205,6 +232,7 @@ class FTP {
             normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),
             normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
             function(err) {
+                self.deploymentFinished = true;
                 console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
 
                 if (err) {

@@ -16,6 +16,10 @@ process.on('message', function(msg){
     }
 
     if ((msg.type === 'abort' || msg.type === 'cancel-sync') && deploymentInstance) {
+        if (deploymentInstance.client) {
+            deploymentInstance.client.deploymentAborted = true;
+        }
+
         if(
             deploymentInstance.siteConfig.deployment.protocol === 'sftp' ||
             deploymentInstance.siteConfig.deployment.protocol === 'sftp+key'

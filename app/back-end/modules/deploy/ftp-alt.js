@@ -17,10 +17,14 @@ class FTPAlt {
         this.connection = false;
         this.softUploadErrors = {};
         this.hardUploadErrors = [];
+        this.deploymentAborted = false;
+        this.errorReported = false;
+        this.connectionBusy = false;
+        this.keepAliveInterval = false;
+        this.keepAlivePromise = null;
     }
 
     async initConnection() {
-        let waitForTimeout = true;
         let ftpPassword = this.deployment.siteConfig.deployment.password;
         let account = slug(this.deployment.siteConfig.name);
         let secureConnection = false;
@@ -61,21 +65,11 @@ class FTPAlt {
             message: 'app-uploading-progress',
             value: {
                 progress: 6,
+                message: {
+                    translation: 'sync.preparingFiles'
+                },
                 operations: false
             }
-        });
-
-        process.send({
-            type: 'web-contents',
-            message: 'app-connection-in-progress'
-        });
-
-        await this.connection.access(connectionParams);
-        waitForTimeout = false;
-
-        process.send({
-            type: 'web-contents',
-            message: 'app-connection-success'
         });
 
         this.deployment.setInput();
@@ -91,31 +85,104 @@ class FTPAlt {
             }
         });
 
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-in-progress'
+        });
+
+        try {
+            await this.connection.access(connectionParams);
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] FTP CONNECTION ERROR: ${err}`);
+            this.errorReported = true;
+            this.connection.close();
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: stripTags((err.message).toString())
+                }
+            });
+
+            setTimeout(function () {
+                process.kill(process.pid, 'SIGTERM');
+            }, 1000);
+
+            return;
+        }
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-success'
+        });
+
+        this.startKeepAlive();
         this.downloadFilesList();
+    }
 
-        setTimeout(function() {
-            if (waitForTimeout === true) {
-                this.connection.close();
-                console.log(`[${ new Date().toUTCString() }] Request timeout...`);
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error'
-                });
-
-                setTimeout(function () {
-                    process.kill(process.pid, 'SIGTERM');
-                }, 1000);
+    startKeepAlive () {
+        this.keepAliveInterval = setInterval(() => {
+            if (this.connectionBusy || this.keepAlivePromise || !this.connection || this.connection.closed) {
+                return;
             }
-        }, 20000);
+
+            this.keepAlivePromise = this.connection.send('NOOP').catch(err => {
+                console.log(`[${ new Date().toUTCString() }] KEEP-ALIVE NOOP ERROR: ${err}`);
+            }).finally(() => {
+                this.keepAlivePromise = null;
+            });
+        }, 10000);
+    }
+
+    stopKeepAlive () {
+        if (this.keepAliveInterval) {
+            clearInterval(this.keepAliveInterval);
+            this.keepAliveInterval = false;
+        }
+    }
+
+    async acquireConnection () {
+        this.connectionBusy = true;
+
+        if (this.keepAlivePromise) {
+            await this.keepAlivePromise;
+        }
+    }
+
+    releaseConnection () {
+        this.connectionBusy = false;
+    }
+
+    handleConnectionLost (err) {
+        this.stopKeepAlive();
+        console.log(`[${ new Date().toUTCString() }] FTP CONNECTION LOST: ${err}`);
+
+        if (!this.deploymentAborted && !this.errorReported) {
+            this.errorReported = true;
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: 'The server has unexpectedly closed the connection during synchronization - it can be caused by the idle timeout settings on the server. Last error: ' + stripTags((err.message || err).toString())
+                }
+            });
+        }
+
+        setTimeout(function () {
+            process.kill(process.pid, 'SIGTERM');
+        }, 1000);
     }
 
     async downloadFilesList() {
         try {
+            await this.acquireConnection();
             await this.connection.downloadTo(
-                normalizePath(path.join(this.deployment.configDir, 'remote-files.json')), 
+                normalizePath(path.join(this.deployment.configDir, 'remote-files.json')),
                 normalizePath(path.join(this.deployment.outputDir, 'files.publii.json'))
             );
+            this.releaseConnection();
             let fileToCompare = FileHelper.readFileSync(normalizePath(path.join(this.deployment.configDir, 'remote-files.json')));
             this.deployment.checkLocalListWithRemoteList(fileToCompare);
             console.log(`[${ new Date().toUTCString() }] <- files.publii.json`);
@@ -128,6 +195,13 @@ class FTPAlt {
                 }
             });
         } catch (err) {
+            this.releaseConnection();
+
+            if (this.connection.closed) {
+                this.handleConnectionLost(err);
+                return;
+            }
+
             console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING files-remote.json`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
             this.deployment.compareFilesList(false);
@@ -144,7 +218,10 @@ class FTPAlt {
             }
         });
 
+        this.stopKeepAlive();
+
         try {
+            await this.acquireConnection();
             await this.connection.uploadFrom(
                 normalizePath(path.join(this.deployment.inputDir, 'files.publii.json')),
                 normalizePath(path.join(this.deployment.outputDir, 'files.publii.json')),
@@ -153,6 +230,13 @@ class FTPAlt {
             console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
         } catch (err) {
             console.log(`[${ new Date().toUTCString() }] ${err}`);
+
+            if (this.connection.closed) {
+                this.handleConnectionLost(err);
+                return;
+            }
+        } finally {
+            this.releaseConnection();
         }
 
         this.connection.close();
@@ -183,8 +267,17 @@ class FTPAlt {
 
     async uploadFile(input, output) {
         try {
-            await this.connection.uploadFrom(input, output)
+            await this.acquireConnection();
+            await this.connection.uploadFrom(input, output);
+            this.releaseConnection();
         } catch (err) {
+            this.releaseConnection();
+
+            if (this.connection.closed) {
+                this.handleConnectionLost(err);
+                return;
+            }
+
             console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${output}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
 
@@ -219,8 +312,17 @@ class FTPAlt {
 
     async uploadDirectory(input, output) {
         try {
+            await this.acquireConnection();
             await this.connection.ensureDir(output);
+            this.releaseConnection();
         } catch (err) {
+            this.releaseConnection();
+
+            if (this.connection.closed) {
+                this.handleConnectionLost(err);
+                return;
+            }
+
             console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD DIR: ${output}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
 
@@ -253,8 +355,17 @@ class FTPAlt {
                 rootPath = '/';
             }
 
+            await this.acquireConnection();
             await this.connection.cd(rootPath);
+            this.releaseConnection();
         } catch (err) {
+            this.releaseConnection();
+
+            if (this.connection.closed) {
+                this.handleConnectionLost(err);
+                return;
+            }
+
             console.log(`[${ new Date().toUTCString() }] CD error ${err.message}`);
         }
 
@@ -267,11 +378,20 @@ class FTPAlt {
 
     async removeFile(input) {
         try {
+            await this.acquireConnection();
             await this.connection.remove(input);
+            this.releaseConnection();
             console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
         } catch (err) {
+            this.releaseConnection();
+
+            if (this.connection.closed) {
+                this.handleConnectionLost(err);
+                return;
+            }
+
             console.log(`[${ new Date().toUTCString() }] ERROR REMOVE FILE: ${input}`);
-            console.log(`[${ new Date().toUTCString() }] ${err}`);            
+            console.log(`[${ new Date().toUTCString() }] ${err}`);
         }
 
         this.deployment.currentOperationNumber++;
@@ -282,9 +402,18 @@ class FTPAlt {
 
     async removeDirectory(input) {
         try {
+            await this.acquireConnection();
             await this.connection.removeDir(input);
+            this.releaseConnection();
             console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
         } catch (err) {
+            this.releaseConnection();
+
+            if (this.connection.closed) {
+                this.handleConnectionLost(err);
+                return;
+            }
+
             console.log(`[${ new Date().toUTCString() }] ERROR REMOVE DIR: ${input}`);
             console.log(`[${ new Date().toUTCString() }] ${err}`);
         }

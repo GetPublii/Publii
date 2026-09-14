@@ -53,39 +53,42 @@ class SFTP {
             connectionSettings.privateKey = FileHelper.readFileSync(keyPath);
         }
 
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress: 6,
+                message: {
+                    translation: 'sync.preparingFiles'
+                },
+                operations: false
+            }
+        });
+
+        this.deployment.setInput();
+        this.deployment.setOutput();
+        this.deployment.prepareLocalFilesList();
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress: 7,
+                operations: false
+            }
+        });
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-in-progress'
+        });
+
         this.connection.connect(connectionSettings).then(() => {
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 6,
-                    operations: false
-                }
-            });
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-in-progress'
-            });
-
             waitForTimeout = false;
 
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-success'
-            });
-
-            this.deployment.setInput();
-            this.deployment.setOutput();
-            this.deployment.prepareLocalFilesList();
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 7,
-                    operations: false
-                }
             });
 
             this.downloadFilesList();
