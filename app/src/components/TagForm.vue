@@ -476,29 +476,24 @@ export default {
             this.tagData.name = params.name || '';
             this.tagData.slug = params.slug || '';
             this.tagData.description = params.description || '';
-            this.tagData.additionalData = {};
-
-            if (typeof params.additionalData.viewConfig === 'object') {
-                this.tagData.additionalData.viewConfig = params.additionalData.viewConfig;
-            } else {
-                this.tagData.additionalData.viewConfig = {};
-            }
-
-            this.tagData.additionalData.featuredImage = params.additionalData.featuredImage || '';
-            this.tagData.additionalData.featuredImageAlt = params.additionalData.featuredImageAlt || '';
-            this.tagData.additionalData.featuredImageCaption = params.additionalData.featuredImageCaption || '';
-            this.tagData.additionalData.featuredImageCredits = params.additionalData.featuredImageCredits || '';
-            this.tagData.additionalData.isHidden = params.additionalData.isHidden || false;
-            this.tagData.additionalData.metaTitle = params.additionalData.metaTitle || '';
-            this.tagData.additionalData.metaDescription = params.additionalData.metaDescription || '';
-            this.tagData.additionalData.metaRobots = params.additionalData.metaRobots || '';
-            this.tagData.additionalData.canonicalUrl = params.additionalData.canonicalUrl || '';
-            this.tagData.additionalData.template = params.additionalData.template || '';
+            this.tagData.additionalData = {
+                viewConfig: typeof params.additionalData.viewConfig === 'object'
+                    ? params.additionalData.viewConfig
+                    : {},
+                featuredImage: params.additionalData.featuredImage || '',
+                featuredImageAlt: params.additionalData.featuredImageAlt || '',
+                featuredImageCaption: params.additionalData.featuredImageCaption || '',
+                featuredImageCredits: params.additionalData.featuredImageCredits || '',
+                isHidden: params.additionalData.isHidden || false,
+                metaTitle: params.additionalData.metaTitle || '',
+                metaDescription: params.additionalData.metaDescription || '',
+                metaRobots: params.additionalData.metaRobots || '',
+                canonicalUrl: params.additionalData.canonicalUrl || '',
+                template: params.additionalData.template || ''
+            };
             this.currentTagIsHidden = !!this.tagData.additionalData.isHidden;
 
-            if (this.tagData.additionalData && this.tagData.additionalData.featuredImage) {
-                this.hasFeaturedImage = true;
-            }
+            this.hasFeaturedImage = !!this.tagData.additionalData.featuredImage;
 
             Vue.nextTick(() => {
                 this.dataSet = true;

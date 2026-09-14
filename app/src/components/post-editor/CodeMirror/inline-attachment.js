@@ -130,7 +130,9 @@
     mainProcessAPI.send('app-image-upload', {
         'id': postID,
         'site': window.app.getSiteName(),
-        'path': await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(file))
+        'path': await mainProcessAPI.normalizePath(await mainProcessAPI.getPathForFile(file)),
+        'imageType': 'contentImages',
+        'imagesOnly': true
     });
 
     mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
@@ -140,7 +142,7 @@
             this.editor.setValue(cleaned);
 
             window.app.showMessage({
-                text: window.app.translate('core.images.imageUnprocessable').replace('{file}', data.file || ''),
+                text: window.app.translate(data.translation || 'core.images.imageUnprocessable').replace('{file}', data.file || ''),
                 type: 'warning',
                 lifeTime: 6
             });

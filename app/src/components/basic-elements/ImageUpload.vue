@@ -61,7 +61,7 @@ export default {
     name: 'image-upload',
     props: {
         imagesOnly: {
-            default: false,
+            default: true,
             type: Boolean
         },
         value: {
@@ -114,6 +114,7 @@ export default {
             imageAccept,
             isEmpty: true,
             filePath: '',
+            previewVersion: 0,
             isUploading: false,
             isHovered: false
         }
@@ -165,6 +166,14 @@ export default {
 
             return false;
         },
+        imageValue () {
+            if (!this.filePath || /^https?:\/\//.test(this.filePath)) {
+                return this.filePath;
+            }
+
+            const filename = this.filePath.split('/').pop();
+            return this.addMediaFolderPath ? 'media/website/' + filename : filename;
+        },
         async mediaPath () {
             if (this.itemId && this.imageType === 'tagImages') {
                 return await mainProcessAPI.normalizePath(this.$store.state.currentSite.siteDir) + '/input/media/tags/' + this.itemId + '/';
@@ -196,47 +205,57 @@ export default {
         }
     },
     watch: {
-        value: async function (newValue, oldValue) {
-            if (newValue && typeof newValue === 'string') {
-                if (newValue.indexOf('https://') === 0 || newValue.indexOf('http://') === 0) {
-                    this.filePath = newValue;
-                } else {
-                    this.filePath = await this.mediaPath + newValue;
-                }
-
-                this.isEmpty = false;
-            }
+        value: function (newValue) {
+            this.syncValue(newValue);
         },
-        filePath: function(newValue) {
-            if (newValue === '') {
-                this.$emit('input', '');
-            } else {
-                if (newValue.indexOf('http://') === 0 || newValue.indexOf('https://') === 0) {
-                    this.$emit('input', newValue);
-                } else {
-                    if (this.addMediaFolderPath) {
-                        this.$emit('input', 'media/website/' + newValue.split('/').pop());
-                    } else {
-                        this.$emit('input', newValue.split('/').pop());
-                    }
-                }
-            }
+        mediaPath: function () {
+            this.syncValue(this.value, true);
         }
     },
     mounted () {
-        setTimeout(async () => {
-            if (this.value && typeof this.value === 'string') {
-                if (this.value.indexOf('https://') === 0 || this.value.indexOf('http://') === 0) {
-                    this.filePath = this.value;
-                } else {
-                    this.filePath = await this.mediaPath + this.value;
-                }
+        const version = this.previewVersion;
 
-                this.isEmpty = false;
+        setTimeout(() => {
+            if (!this._isDestroyed && this.previewVersion === version && this.value) {
+                this.syncValue(this.value);
             }
         }, 0);
     },
     methods: {
+        async syncValue (newValue, force = false) {
+            newValue = typeof newValue === 'string' ? newValue : '';
+
+            if (!force && newValue === this.imageValue) {
+                return;
+            }
+
+            const version = ++this.previewVersion;
+            const mediaPath = this.mediaPath;
+            let nextPath = newValue;
+
+            if (newValue && !/^https?:\/\//.test(newValue)) {
+                nextPath = await mediaPath + newValue;
+            }
+
+            if (!this.isCurrentPreview(version, mediaPath) || (this.value || '') !== newValue) {
+                return;
+            }
+
+            this.applyImage(nextPath);
+        },
+        isCurrentPreview (version, mediaPath) {
+            return !this._isDestroyed &&
+                this.previewVersion === version &&
+                this.mediaPath === mediaPath;
+        },
+        applyImage (newPath, emitInput = false) {
+            this.filePath = newPath;
+            this.isEmpty = !newPath;
+
+            if (emitInput) {
+                this.$emit('input', this.imageValue);
+            }
+        },
         stopEvents (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -273,9 +292,9 @@ export default {
             }
 
             this.onBeforeRemove(this.filePath);
-            this.filePath = '';
-            this.$refs['input'].value = '';
-            this.isEmpty = true;
+            this.previewVersion++;
+            this.applyImage('', true);
+            this.$refs.input.value = '';
             this.onRemove();
         },
         valueChanged (e) {
@@ -292,13 +311,15 @@ export default {
 
             this.isHovered = false;
             this.isUploading = true;
+            const version = ++this.previewVersion;
+            const mediaPath = this.mediaPath;
             let sourcePath = '';
 
             try {
                 sourcePath = typeof source === 'string' ? source : mainProcessAPI.getPathForFile(source);
                 sourcePath = await mainProcessAPI.normalizePath(sourcePath);
 
-                if (this._isDestroyed) {
+                if (!this.isCurrentPreview(version, mediaPath)) {
                     return;
                 }
 
@@ -332,7 +353,7 @@ export default {
 
                 const data = await mainProcessAPI.invoke('app-image:upload', uploadData);
 
-                if (this._isDestroyed) {
+                if (!this.isCurrentPreview(version, mediaPath)) {
                     return;
                 }
 
@@ -343,7 +364,7 @@ export default {
 
                 const newPath = await mainProcessAPI.normalizePath(data.baseImage.newPath);
 
-                if (this._isDestroyed) {
+                if (!this.isCurrentPreview(version, mediaPath)) {
                     return;
                 }
 
@@ -352,12 +373,11 @@ export default {
                     return;
                 }
 
-                this.filePath = newPath;
-                this.isEmpty = false;
+                this.applyImage(newPath, true);
                 this.isUploading = false;
                 this.onAdd();
             } catch (error) {
-                if (!this._isDestroyed) {
+                if (this.isCurrentPreview(version, mediaPath)) {
                     this.showUploadError(null, sourcePath);
                 }
             } finally {
@@ -378,16 +398,12 @@ export default {
             });
         },
         async setImage (newPath, addMedia = false) {
-            this.filePath = newPath;
+            const version = ++this.previewVersion;
+            const mediaPath = this.mediaPath;
+            const nextPath = addMedia && newPath ? await mediaPath + newPath : newPath;
 
-            if (addMedia) {
-                this.filePath = await this.mediaPath + newPath;
-            }
-
-            if (newPath !== '') {
-                this.isEmpty = false;
-            } else {
-                this.isEmpty = true;
+            if (this.isCurrentPreview(version, mediaPath)) {
+                this.applyImage(nextPath, true);
             }
         }
     }

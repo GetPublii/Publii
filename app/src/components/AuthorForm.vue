@@ -511,24 +511,19 @@ export default {
             this.authorData.metaDescription = params.metaDescription || '';
             this.authorData.template = params.template || '';
             this.authorData.visibleIndexingOptions = params.visibleIndexingOptions || false;
-            this.authorData.additionalData = {};
+            this.authorData.additionalData = {
+                viewConfig: typeof params.additionalData.viewConfig === 'object'
+                    ? params.additionalData.viewConfig
+                    : {},
+                featuredImage: params.additionalData.featuredImage || '',
+                featuredImageAlt: params.additionalData.featuredImageAlt || '',
+                featuredImageCaption: params.additionalData.featuredImageCaption || '',
+                featuredImageCredits: params.additionalData.featuredImageCredits || '',
+                metaRobots: params.additionalData.metaRobots || '',
+                canonicalUrl: params.additionalData.canonicalUrl || ''
+            };
 
-            if (typeof params.additionalData.viewConfig === 'object') {
-                this.authorData.additionalData.viewConfig = params.additionalData.viewConfig;
-            } else {
-                this.authorData.additionalData.viewConfig = {};
-            }
-
-            this.authorData.additionalData.featuredImage = params.additionalData.featuredImage || '';
-            this.authorData.additionalData.featuredImageAlt = params.additionalData.featuredImageAlt || '';
-            this.authorData.additionalData.featuredImageCaption = params.additionalData.featuredImageCaption || '';
-            this.authorData.additionalData.featuredImageCredits = params.additionalData.featuredImageCredits || '';
-            this.authorData.additionalData.metaRobots = params.additionalData.metaRobots || '';
-            this.authorData.additionalData.canonicalUrl = params.additionalData.canonicalUrl || '';
-
-            if (this.authorData.additionalData && this.authorData.additionalData.featuredImage) {
-                this.hasFeaturedImage = true;
-            }
+            this.hasFeaturedImage = !!this.authorData.additionalData.featuredImage;
 
             Vue.nextTick(() => {
                 this.dataSet = true;
