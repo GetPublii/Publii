@@ -721,7 +721,7 @@ export default {
 }
 
 .tag-settings-content {
-    padding: 0 0 var(--space-4);
+    padding: 0 0 var(--space-12);
 
     .image-uploader {
         margin-top: 0;

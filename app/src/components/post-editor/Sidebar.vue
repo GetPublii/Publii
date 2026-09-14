@@ -1178,7 +1178,7 @@ export default {
 }
 
 .post-editor-sidebar .post-editor-settings-content {
-    padding: 0 0 1rem;
+    padding: 0 0 var(--space-12);
 
     .image-uploader {
         margin-top: 0;
