@@ -153,6 +153,7 @@ export default {
             let cssClasses = {
                 'is-small': this.size === 'small',
                 'upload-image-wrapper': true,
+                'is-hovered': this.isHovered,
                 'is-uploading': this.isUploading,
                 'is-empty': this.isEmpty
             };
@@ -498,6 +499,10 @@ export default {
         border: 2px solid transparent;
         height: 20rem;
 
+        &.is-uploading {
+            border: 1px solid var(--input-border-color);
+        }
+
         &.is-small {
             height: 18rem;
         }
@@ -512,7 +517,7 @@ export default {
         visibility: hidden;
     }
 
-    &:not(.is-empty):not(.is-hovered) {
+    &:not(.is-empty):not(.is-hovered):not(.is-uploading) {
         background-color: var(--bg-secondary);
         background-clip: content-box;
         background-image:
