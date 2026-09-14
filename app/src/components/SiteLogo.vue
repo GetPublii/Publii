@@ -119,6 +119,7 @@ export default {
     margin-bottom: 2.5rem;
     width: 100%;
     transition: var(--transition-default);
+    transition-property: color;
 
     &:active,
     &:focus,
@@ -163,7 +164,7 @@ export default {
     overflow: hidden;
     position: relative;
     text-overflow: ellipsis;
-    transition: all .3s ease-out;
+    transition: color .3s ease-out;
     white-space: nowrap;
 
     & > span {
@@ -192,6 +193,7 @@ export default {
     width: 5px;
     text-align: center;
     transition: var(--transition-default);
+    transition-property: border-color, opacity;
     bottom: 2px;
 }
 
