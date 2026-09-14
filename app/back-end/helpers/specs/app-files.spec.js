@@ -239,4 +239,22 @@ describe('Website relocation data safety', function () {
         assert.equal(database(base, 'external'), 'external');
         assert.equal(fs.lstatSync(path.join(source, 'linked')).isSymbolicLink(), true);
     });
+
+    it('refuses a website with an internal link before copying anything', function () {
+        fs.outputFileSync(path.join(base, 'shared', 'theme.css'), 'shared data');
+        const link = path.join(source, 'beta', 'input', 'shared');
+        fs.symlinkSync(path.join(base, 'shared'), link, 'junction');
+
+        let copies = 0;
+        fs.copySync = () => {
+            copies++;
+        };
+
+        assert.equal(relocate(), false);
+        assert.equal(copies, 0);
+        assertOriginals();
+        assert.equal(fs.readFileSync(path.join(base, 'shared', 'theme.css'), 'utf8'), 'shared data');
+        assert.equal(fs.lstatSync(link).isSymbolicLink(), true);
+        assert.deepEqual(fs.readdirSync(destination), ['keep.txt']);
+    });
 });

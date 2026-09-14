@@ -35,10 +35,16 @@ class AppFilesHelper {
                 return Utils.dirExists(sitePath) && this.checkIfDirectoryIsSite(sitePath);
             });
 
-            // Refuse every collision before starting to copy any website.
+            // Refuse every collision and symbolic link before starting to copy any website.
             for (const site of sitesToMove) {
                 if (fs.lstatSync(path.join(oldPath, site)).isSymbolicLink()) {
                     throw new Error('Cannot relocate a symbolic link to a website: ' + site);
+                }
+
+                const symbolicLink = this.findSymbolicLink(path.join(oldPath, site));
+
+                if (symbolicLink) {
+                    throw new Error('Cannot relocate a website containing a symbolic link: ' + symbolicLink);
                 }
 
                 try {
@@ -81,6 +87,31 @@ class AppFilesHelper {
         // roll it back: some originals may already have been removed.
         this.removeDirectories(sitesToMove.map(site => path.join(oldLocation, site)));
         return true;
+    }
+
+    /**
+     * Copying preserves symbolic links verbatim, so a link with a target inside
+     * the relocated tree would lose its data once the originals are removed.
+     */
+    findSymbolicLink(directory) {
+        for (const entry of fs.readdirSync(directory)) {
+            const entryPath = path.join(directory, entry);
+            const entryStats = fs.lstatSync(entryPath);
+
+            if (entryStats.isSymbolicLink()) {
+                return entryPath;
+            }
+
+            if (entryStats.isDirectory()) {
+                const symbolicLink = this.findSymbolicLink(entryPath);
+
+                if (symbolicLink) {
+                    return symbolicLink;
+                }
+            }
+        }
+
+        return null;
     }
 
     pathsOverlap(first, second) {
