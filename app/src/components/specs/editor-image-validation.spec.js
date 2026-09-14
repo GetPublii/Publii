@@ -237,6 +237,14 @@ function createHarness() {
         bridge.setupEditor({}, {
             on: (event, callback) => events.set(event, callback),
             once() {},
+            getBody: () => ({}),
+            focus() {},
+            selection: {
+                getBookmark: () => ({}),
+                moveToBookmark() {}
+            },
+            insertContent: html => inserted.push(html),
+            getContentAreaContainer: () => ({}),
             getContainer: () => ({
                 querySelector: () => ({ appendChild() {} })
             }),

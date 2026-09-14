@@ -47,19 +47,20 @@
             display: none;
         }
 
+        .tox-edit-area {
+            position: relative;
+        }
+
         .tinymce-overlay {
             border: 1px dashed var(--input-border-focus);
             border-radius: var(--radius-base);
             background: oklch(from var(--color-primary) l c h / 5%);
             display: none;
-            height: 100%;
-            left: 0;
+            inset: 0;
             opacity: 1;
             position: absolute;
             text-align: center;
-            top: 0;
-            width: 100%;
-            z-index: 10000;
+            z-index: 1;
 
             & > div {
                 box-shadow: 0 0 3px rgba(black, .2);
@@ -91,6 +92,10 @@
             .tinymce-overlay {
                 display: block;
             }
+        }
+
+        &.is-hovered:not(.is-loading-image) .tinymce-overlay {
+            backdrop-filter: blur(2px);
         }
 
         &.is-loading-image .tinymce-overlay {

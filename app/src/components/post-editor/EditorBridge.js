@@ -362,7 +362,6 @@ class EditorBridge {
         editor.on('remove', () => this.hideImageUploadProgress());
 
         editor.on('init', async () => {
-            $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
             $('.tox-tinymce').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
 
@@ -971,65 +970,90 @@ class EditorBridge {
     }
 
     initEditorDragNDropImages(editor) {
-        let editorArea = $('.tox-tinymce');
-        let postEditor = $('.post-editor');
-        let hoverState = false;
-        let tinymceOverlay = $('.tinymce-overlay');
+        const editorArea = editor.getContainer();
+        const contentArea = editor.getContentAreaContainer();
+        const iframeWindow = editor.getWin();
+        $(contentArea).append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
+        const listeners = [];
+        let leaveTimer = null;
 
-        postEditor.on('dragover', () => {
-            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
-                hoverState = true;
-                editorArea.addClass('is-hovered');
+        const listen = (target, event, callback, capture = false) => {
+            target.addEventListener(event, callback, capture);
+            listeners.push(() => target.removeEventListener(event, callback, capture));
+        };
+        const hasFiles = event => Array.from(event.dataTransfer?.types || []).includes('Files');
+        const hide = () => {
+            clearTimeout(leaveTimer);
+            editorArea.classList.remove('is-hovered');
+        };
+        const canUpload = () => !this.postEditorInnerDragging &&
+            !this.contentImageUploading && !$('.popup.gallery-popup').length;
+        const dragOver = event => {
+            if (this.postEditorInnerDragging || !hasFiles(event)) {
+                return;
             }
-        });
 
-        tinymceOverlay.on('dragover', e => {
-            if(!this.postEditorInnerDragging && !$('.popup.gallery-popup').length) {
-                hoverState = true;
-                editorArea.addClass('is-hovered');
+            event.preventDefault();
+            event.stopPropagation();
+            clearTimeout(leaveTimer);
+            event.dataTransfer.dropEffect = canUpload() ? 'copy' : 'none';
+            editorArea.classList.toggle('is-hovered', canUpload());
+        };
+        const dragLeave = event => {
+            if (event.relatedTarget && event.currentTarget.contains?.(event.relatedTarget)) {
+                return;
             }
-        });
 
-        postEditor.on('dragleave', () => {
-            hoverState = false;
-
-            setTimeout(() => {
-                if(!hoverState) {
-                    editorArea.removeClass('is-hovered');
-                }
-            }, 250);
-        });
-
-        document.getElementById('post-editor_ifr').contentWindow.addEventListener("dragover", e => {
-            if(!this.postEditorInnerDragging) {
-                e.preventDefault();
-                e.stopPropagation();
-                editorArea.addClass('is-hovered');
+            clearTimeout(leaveTimer);
+            leaveTimer = setTimeout(hide, 80);
+        };
+        const drop = event => {
+            if (this.postEditorInnerDragging || !hasFiles(event)) {
+                return;
             }
-        }, false);
 
-        document.getElementById('post-editor_ifr').contentWindow.addEventListener('mousedown', () => {
+            event.preventDefault();
+            event.stopPropagation();
+            hide();
+
+            if (canUpload()) {
+                this.editorFileSelect({ originalEvent: event });
+            }
+        };
+        const rejectOutsideContent = event => {
+            if (this.postEditorInnerDragging || !hasFiles(event)) {
+                return;
+            }
+
+            // Do not upload or navigate to a file dropped on the toolbar/status bar.
+            event.preventDefault();
+            event.stopPropagation();
+            event.dataTransfer.dropEffect = 'none';
+            hide();
+        };
+
+        listen(contentArea, 'dragover', dragOver);
+        listen(contentArea, 'dragleave', dragLeave);
+        listen(contentArea, 'drop', drop);
+        listen(iframeWindow, 'dragover', dragOver, true);
+        listen(iframeWindow, 'dragleave', dragLeave);
+        listen(iframeWindow, 'drop', drop, true);
+        listen(iframeWindow, 'dragstart', () => {
             this.postEditorInnerDragging = true;
+            hide();
         });
+        listen(iframeWindow, 'dragend', () => {
+            this.postEditorInnerDragging = false;
+            hide();
+        });
+        listen(editorArea, 'dragover', rejectOutsideContent);
+        listen(editorArea, 'drop', rejectOutsideContent);
 
-        document.getElementById('post-editor_ifr').contentWindow.addEventListener('mouseup', () => {
+        editor.on('remove', () => {
+            clearTimeout(leaveTimer);
+            listeners.forEach(removeListener => removeListener());
             this.postEditorInnerDragging = false;
         });
-
-        document.getElementById('post-editor_ifr').contentWindow.addEventListener('mouseout', () => {
-            this.postEditorInnerDragging = false;
-        });
-
-        editorArea.on('dragover', this.fileDragOver.bind(this));
-        editorArea.on('drop', this.editorFileSelect.bind(this));
-    }
-
-    fileDragOver (e) {
-        if(!this.postEditorInnerDragging) {
-            e.originalEvent.stopPropagation();
-            e.originalEvent.preventDefault();
-            e.originalEvent.dataTransfer.dropEffect = 'copy';
-        }
     }
 
     showImageUploadProgress () {
@@ -1067,21 +1091,26 @@ class EditorBridge {
 
         let files = e.originalEvent.dataTransfer.files;
         let siteName = window.app.getSiteName();
+        const editor = this.tinymceEditor;
+        const editorArea = $(editor.getContainer());
+        const overlay = $(editor.getContainer().querySelector('.tinymce-overlay'));
 
-        if(this.postEditorInnerDragging) {
+        if (this.postEditorInnerDragging || this.contentImageUploading) {
             return;
         }
 
         if(!files[0]) {
-            $('.tox-tinymce').removeClass('is-hovered');
-            $('.tox-tinymce').removeClass('is-loading-image');
-            $('.tinymce-overlay').text('Drag your image here');
+            editorArea.removeClass('is-hovered');
+            editorArea.removeClass('is-loading-image');
+            overlay.text('Drag your image here');
 
             this.contentImageUploading = false;
             return;
         }
 
-        $('.tox-tinymce').addClass('is-loading-image');
+        const bookmark = editor.selection.getBookmark(2, true);
+        this.contentImageUploading = true;
+        editorArea.addClass('is-loading-image');
         this.showImageUploadProgress();
 
         mainProcessAPI.send('app-image-upload', {
@@ -1091,14 +1120,17 @@ class EditorBridge {
             "imagesOnly": true
         });
 
-        this.contentImageUploading = true;
-
         mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+            if (this.tinymceEditor !== editor || !editor.getBody()) {
+                this.contentImageUploading = false;
+                return;
+            }
+
             this.hideImageUploadProgress();
             if (data && data.error) {
-                $('.tox-tinymce').removeClass('is-hovered');
-                $('.tox-tinymce').removeClass('is-loading-image');
-                $('.tinymce-overlay').html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
+                editorArea.removeClass('is-hovered');
+                editorArea.removeClass('is-loading-image');
+                overlay.html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
                 this.contentImageUploading = false;
 
                 window.app.showAlert({
@@ -1108,15 +1140,18 @@ class EditorBridge {
                 return;
             }
 
+            editor.focus();
+            editor.selection.moveToBookmark(bookmark);
+
             if(data.baseImage && data.baseImage.size && data.baseImage.size[0] && data.baseImage.size[1]) {
-                tinymce.activeEditor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
+                editor.insertContent('<p><img alt="" class="post__image" height="' + data.baseImage.size[1] + '" width="' + data.baseImage.size[0] + '" src="' + data.baseImage.url + '"/></p>');
             } else {
-                tinymce.activeEditor.insertContent('<p><img alt="" src="' + data.url + '" class="post__image" /></p>');
+                editor.insertContent('<p><img alt="" src="' + data.url + '" class="post__image" /></p>');
             }
 
-            $('.tox-tinymce').removeClass('is-hovered');
-            $('.tox-tinymce').removeClass('is-loading-image');
-            $('.tinymce-overlay').html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
+            editorArea.removeClass('is-hovered');
+            editorArea.removeClass('is-loading-image');
+            overlay.html('<div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div>');
 
             this.contentImageUploading = false;
         });
