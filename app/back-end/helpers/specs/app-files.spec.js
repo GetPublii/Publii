@@ -89,7 +89,7 @@ describe('Website relocation data safety', function () {
             saved = true;
         });
 
-        assert.equal(result, true);
+        assert.deepEqual(result, { status: true });
         assert.equal(saved, true);
         assert.equal(application.sitesDir, destination);
         assert.equal(application.app.sitesDir, destination);
@@ -117,7 +117,10 @@ describe('Website relocation data safety', function () {
                 copies++;
             };
 
-            assert.equal(relocate(), false);
+            const result = relocate();
+            assert.equal(result.status, false);
+            assert.equal(result.reason, 'destination-exists');
+            assert.equal(result.detail, 'beta');
             assert.equal(copies, 0);
             assertOriginals();
             assert.equal(fs.existsSync(path.join(destination, 'alpha')), false);
@@ -142,7 +145,7 @@ describe('Website relocation data safety', function () {
             originalCopy(from, to, options);
         };
 
-        assert.equal(relocate(), false);
+        assert.equal(relocate().status, false);
         assertOriginals();
         assert.deepEqual(fs.readdirSync(destination), ['keep.txt']);
     });
@@ -157,7 +160,7 @@ describe('Website relocation data safety', function () {
             return originalMkdir(directory, options);
         };
 
-        assert.equal(relocate(), false);
+        assert.equal(relocate().status, false);
         assertOriginals();
         assert.equal(fs.readFileSync(path.join(destination, 'beta', 'external.txt'), 'utf8'), 'keep this');
         assert.equal(fs.existsSync(path.join(destination, 'alpha')), false);
@@ -180,7 +183,7 @@ describe('Website relocation data safety', function () {
                 };
             }
 
-            assert.equal(relocate(), false);
+            assert.equal(relocate().status, false);
             assertOriginals();
             assert.deepEqual(fs.readdirSync(destination), ['keep.txt']);
             assert.deepEqual(fs.readdirSync(base).sort(), ['app-config.json', 'destination', 'source']);
@@ -196,7 +199,7 @@ describe('Website relocation data safety', function () {
             originalRemove(directory);
         };
 
-        assert.equal(relocate(), true);
+        assert.equal(relocate().status, true);
         assert.equal(fs.existsSync(path.join(source, 'alpha')), false);
         assert.equal(database(source, 'beta'), 'beta');
         assert.equal(database(destination, 'alpha'), 'alpha');
@@ -213,7 +216,7 @@ describe('Website relocation data safety', function () {
             throw new Error('Simulated cleanup failure');
         };
 
-        assert.equal(relocate(), false);
+        assert.equal(relocate().status, false);
         assertOriginals();
     });
 
@@ -223,10 +226,21 @@ describe('Website relocation data safety', function () {
         fs.ensureDirSync(nested);
         fs.symlinkSync(source, alias, 'junction');
 
-        for (const target of [path.join(base, 'missing'), source, nested, base, alias]) {
-            assert.equal(helper.relocateSites(source, target, () => {
+        const rejected = [
+            [path.join(base, 'missing'), 'location-missing'],
+            [source, 'locations-overlap'],
+            [nested, 'locations-overlap'],
+            [base, 'locations-overlap'],
+            [alias, 'locations-overlap']
+        ];
+
+        for (const [target, reason] of rejected) {
+            const result = helper.relocateSites(source, target, () => {
                 assert.fail('Must not save an invalid location');
-            }), false, target);
+            });
+
+            assert.equal(result.status, false, target);
+            assert.equal(result.reason, reason, target);
             assertOriginals();
         }
     });
@@ -234,7 +248,10 @@ describe('Website relocation data safety', function () {
     it('refuses a linked website without deleting the link or its target', function () {
         createSite(base, 'external');
         fs.symlinkSync(path.join(base, 'external'), path.join(source, 'linked'), 'junction');
-        assert.equal(relocate(), false);
+        const result = relocate();
+        assert.equal(result.status, false);
+        assert.equal(result.reason, 'website-symlink');
+        assert.equal(result.detail, 'linked');
         assertOriginals();
         assert.equal(database(base, 'external'), 'external');
         assert.equal(fs.lstatSync(path.join(source, 'linked')).isSymbolicLink(), true);
@@ -250,7 +267,10 @@ describe('Website relocation data safety', function () {
             copies++;
         };
 
-        assert.equal(relocate(), false);
+        const result = relocate();
+        assert.equal(result.status, false);
+        assert.equal(result.reason, 'website-symlink');
+        assert.equal(result.detail, path.join('beta', 'input', 'shared'));
         assert.equal(copies, 0);
         assertOriginals();
         assert.equal(fs.readFileSync(path.join(base, 'shared', 'theme.css'), 'utf8'), 'shared data');

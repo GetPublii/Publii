@@ -100,6 +100,8 @@ describe('Website location settings IPC', function () {
         assert.equal(replies[0].channel, 'app-config-saved');
         assert.equal(replies[0].payload.status, false);
         assert.equal(replies[0].payload.message, 'error-save');
+        assert.equal(replies[0].payload.reason, 'destination-exists');
+        assert.equal(replies[0].payload.reasonDetail, 'demo');
         assert.equal(fs.readFileSync(path.join(destination, 'demo', 'keep.txt'), 'utf8'), 'existing');
     });
 
@@ -134,6 +136,7 @@ describe('Website location settings IPC', function () {
         assert.equal(application.app.sitesDir, original);
         assert.equal(replies.length, 1);
         assert.equal(replies[0].payload.status, false);
+        assert.equal(replies[0].payload.reason, null);
         assert.deepEqual(reloads, [original]);
         assert.equal(fs.readFileSync(path.join(original, 'demo', 'input', 'db.sqlite'), 'utf8'), 'original');
         assert.deepEqual(fs.readdirSync(path.join(base, 'destination')), []);

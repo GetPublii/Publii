@@ -29,7 +29,7 @@ function createHarness() {
                 events.push(args);
             }
         },
-        $t: key => key,
+        $t: (key, params) => params && params.detail !== undefined ? key + ':' + params.detail : key,
         theme: 'system',
         buttonsLocked: true
     };
@@ -50,6 +50,30 @@ describe('App settings save result', function () {
         assert.equal(harness.events.some(([name]) => name === 'app-settings-saved'), false);
         assert.equal(harness.events.find(([name]) => name === 'message-display')[1].type, 'warning');
         assert.equal(harness.component.buttonsLocked, false);
+    });
+
+    it('shows an alert with the escaped refusal reason instead of the generic toast', function () {
+        const harness = createHarness();
+        harness.saved.call(harness.component, {
+            sitesLocation: '/failed-destination'
+        }, { status: false, reason: 'destination-exists', reasonDetail: '<b>demo</b>' });
+
+        assert.equal(harness.commits.some(([name]) => name === 'setSiteDir' || name === 'setAppConfig'), false);
+        assert.equal(harness.events.some(([name]) => name === 'message-display'), false);
+        const alert = harness.events.find(([name]) => name === 'alert-display')[1];
+        assert.equal(alert.message, 'settings.sitesLocationErrorExists:&#60;b&#62;demo&#60;/b&#62;');
+        assert.equal(alert.okLabel, 'ui.iUnderstand');
+        assert.equal(harness.component.buttonsLocked, false);
+    });
+
+    it('falls back to the generic toast for an unknown failure reason', function () {
+        const harness = createHarness();
+        harness.saved.call(harness.component, {
+            sitesLocation: '/failed-destination'
+        }, { status: false, reason: 'unexpected' });
+
+        assert.equal(harness.events.some(([name]) => name === 'alert-display'), false);
+        assert.equal(harness.events.find(([name]) => name === 'message-display')[1].type, 'warning');
     });
 
     it('updates the active location and notifies lists after a successful save', function () {

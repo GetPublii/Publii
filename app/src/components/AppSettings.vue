@@ -753,11 +753,28 @@ export default {
                     lifeTime: 3
                 });
             } else {
-                this.$bus.$emit('message-display', {
-                    message: this.$t('settings.appSettingsSaveErrorMsg'),
-                    type: 'warning',
-                    lifeTime: 3
-                });
+                let relocationAlerts = {
+                    'location-missing': 'settings.sitesLocationErrorMissing',
+                    'locations-overlap': 'settings.sitesLocationErrorOverlap',
+                    'website-symlink': 'settings.sitesLocationErrorSymlink',
+                    'destination-exists': 'settings.sitesLocationErrorExists'
+                };
+
+                if (data.reason && relocationAlerts[data.reason]) {
+                    // The alert renders HTML, so the file name must be escaped.
+                    let detail = String(data.reasonDetail || '').replace(/[&<>"']/g, character => '&#' + character.charCodeAt(0) + ';');
+
+                    this.$bus.$emit('alert-display', {
+                        message: this.$t(relocationAlerts[data.reason], { detail }),
+                        okLabel: this.$t('ui.iUnderstand')
+                    });
+                } else {
+                    this.$bus.$emit('message-display', {
+                        message: this.$t('settings.appSettingsSaveErrorMsg'),
+                        type: 'warning',
+                        lifeTime: 3
+                    });
+                }
             }
 
             this.$store.commit('setAppTheme', this.theme);

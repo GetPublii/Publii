@@ -50,6 +50,8 @@ class AppEvents {
 
                     setTimeout(() => {
                         let result = false;
+                        let reason = null;
+                        let reasonDetail = null;
 
                         try {
                             if (config.changeSitesLocationWithoutCopying) {
@@ -58,11 +60,14 @@ class AppEvents {
                                 appInstance.app.sitesDir = config.sitesLocation;
                                 result = true;
                             } else {
-                                result = appFilesHelper.relocateSites(
+                                const relocation = appFilesHelper.relocateSites(
                                     appInstance.appConfig.sitesLocation,
                                     config.sitesLocation,
                                     () => appFilesHelper.saveConfig(config)
                                 );
+                                result = relocation.status;
+                                reason = relocation.reason || null;
+                                reasonDetail = relocation.detail || null;
                             }
 
                             if (result) {
@@ -77,6 +82,8 @@ class AppEvents {
                         event.sender.send('app-config-saved', {
                             status: result,
                             message: result ? 'success-save' : 'error-save',
+                            reason: reason,
+                            reasonDetail: reasonDetail,
                             sites: appInstance.sites
                         });
                     }, 500);

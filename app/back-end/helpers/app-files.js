@@ -13,6 +13,7 @@ class AppFilesHelper {
     /**
      * Copy all sites, persist the new location, then remove the originals.
      * Before persistence succeeds, rollback only directories created here.
+     * The reason and detail describe a refusal in terms the UI can present.
      */
     relocateSites(oldLocation, newLocation, saveConfig) {
         let createdDirectories = [];
@@ -20,14 +21,14 @@ class AppFilesHelper {
 
         try {
             if (!Utils.dirExists(oldLocation) || !Utils.dirExists(newLocation)) {
-                return false;
+                return { status: false, reason: 'location-missing' };
             }
 
             const oldPath = fs.realpathSync(oldLocation);
             const newPath = fs.realpathSync(newLocation);
 
             if (this.pathsOverlap(oldPath, newPath)) {
-                return false;
+                return { status: false, reason: 'locations-overlap' };
             }
 
             sitesToMove = fs.readdirSync(oldPath).filter(site => {
@@ -38,13 +39,13 @@ class AppFilesHelper {
             // Refuse every collision and symbolic link before starting to copy any website.
             for (const site of sitesToMove) {
                 if (fs.lstatSync(path.join(oldPath, site)).isSymbolicLink()) {
-                    throw new Error('Cannot relocate a symbolic link to a website: ' + site);
+                    throw this.relocationError('Cannot relocate a symbolic link to a website: ' + site, 'website-symlink', site);
                 }
 
                 const symbolicLink = this.findSymbolicLink(path.join(oldPath, site));
 
                 if (symbolicLink) {
-                    throw new Error('Cannot relocate a website containing a symbolic link: ' + symbolicLink);
+                    throw this.relocationError('Cannot relocate a website containing a symbolic link: ' + symbolicLink, 'website-symlink', path.relative(oldPath, symbolicLink));
                 }
 
                 try {
@@ -57,7 +58,7 @@ class AppFilesHelper {
                     throw error;
                 }
 
-                throw new Error('Website destination already exists: ' + site);
+                throw this.relocationError('Website destination already exists: ' + site, 'destination-exists', site);
             }
 
             for (const site of sitesToMove) {
@@ -77,7 +78,7 @@ class AppFilesHelper {
         } catch (error) {
             console.log('Unable to relocate websites:', error);
             this.removeDirectories(createdDirectories);
-            return false;
+            return { status: false, reason: error.reason || null, detail: error.detail || null };
         }
 
         this.application.sitesDir = newLocation;
@@ -86,7 +87,14 @@ class AppFilesHelper {
         // The new location is complete and persisted. A cleanup failure must never
         // roll it back: some originals may already have been removed.
         this.removeDirectories(sitesToMove.map(site => path.join(oldLocation, site)));
-        return true;
+        return { status: true };
+    }
+
+    relocationError(message, reason, detail) {
+        const error = new Error(message);
+        error.reason = reason;
+        error.detail = detail;
+        return error;
     }
 
     /**
