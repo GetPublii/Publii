@@ -159,6 +159,10 @@ export default {
  */
 
 .button {
+    --button-control-height: var(--button-height);
+    --button-control-padding: var(--button-padding-inline);
+    --button-control-icon-size: var(--button-icon-size);
+
     /* Native <button> reset: keep the inheritance of the former inline span and
        ignore global element rules such as vendor `.buttons button` margins. */
     appearance: none;
@@ -173,20 +177,19 @@ export default {
     font-size: var(--font-size-ui-sm);
     font-family: var(--font-family-sans);
     font-weight: var(--font-weight-medium);
-    height: 4.4rem;
+    height: var(--button-control-height);
     letter-spacing: inherit;
-    line-height: 4.3rem;
+    line-height: var(--line-height-base);
     margin: 0;
-    /* Chromium centres <button> content vertically; the bottom padding equals
-       height minus line-height, so the line box stays pinned to the top exactly
-       like the former inline span. */
-    padding: 0 1.3rem .1rem;
+    /* Native buttons centre the line box independently of the control height. */
+    padding: 0 var(--button-control-padding);
     position: relative;
     text-align: inherit;
     text-indent: inherit;
     text-shadow: inherit;
     text-transform: inherit;
     transition: var(--transition-default);
+    transition-property: background-color, border-color, box-shadow, color, fill, opacity;
     user-select: none;
     white-space: nowrap;
     word-spacing: inherit;
@@ -207,7 +210,9 @@ export default {
     & > svg {
         display: inline-block;
         fill: var(--white);
-        left: 1.8rem;
+        height: var(--button-control-icon-size);
+        left: var(--button-control-padding);
+        width: var(--button-control-icon-size);
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
@@ -378,13 +383,17 @@ export default {
 }
 
 .button-bottom {
+    --button-control-height: var(--button-height-large);
+    --button-control-padding: var(--space-8);
+
+    align-items: center;
     background: var(--button-primary-bg);
     border-radius: 0 0 3px 3px;
-    display: block;
+    display: inline-flex;
     font-size: var(--font-size-ui-sm);
-    height: 5.6rem;
-    line-height: 5.6rem;
-    padding: 0 var(--space-8);
+    gap: var(--button-icon-gap);
+    justify-content: center;
+    padding: 0 var(--button-control-padding);
     text-align: center;
     width: 100%;
 
@@ -400,10 +409,9 @@ export default {
     }
 
     & > svg {
-        left: -1rem!important;
-        margin-top: -.5rem;
-        position: relative;
-        top: 4px;
+        flex-shrink: 0;
+        left: auto !important;
+        position: static;
         transform: none;
     }
 
@@ -428,19 +436,20 @@ export default {
 }
 
 .button-medium {
+    --button-control-height: var(--button-height-large);
+    --button-control-padding: var(--space-8);
+
     font-size: var(--font-size-ui-sm);
     font-weight: var(--font-weight-medium);
-    height: 5.6rem;
-    line-height: 5.5rem;
-    padding: 0 var(--space-8) .1rem;
 }
 
 .button-small {
+    --button-control-height: var(--button-height-small);
+    --button-control-padding: var(--button-padding-inline-small);
+    --button-control-icon-size: var(--button-icon-size-small);
+
     font-size: var(--font-size-ui-sm);
     font-weight: var(--font-weight-regular);
-    height: 3.8rem;
-    line-height: 3.8rem;
-    padding: 0 1.4rem;
 }
 
 .button-quarter-width {
@@ -462,26 +471,18 @@ export default {
 }
 
 .button-icon {
-    padding-left: 4.3rem;
-    padding-right: 1.3rem;
+    padding-left: calc(var(--button-control-padding) + var(--button-control-icon-size) + var(--button-icon-gap));
+    padding-right: var(--button-control-padding);
 
-    & > svg {
-        left: 1.2rem;
-    }
-
-    &.button-small {
-        padding-left: 3.8rem;
-
-        & > svg {
-            height: 16px;
-            width: 16px;
-        }
+    &.button-bottom {
+        padding-left: var(--button-control-padding);
     }
 
     &.button-outline {
         & > svg {
             fill: var(--icon-primary-color);
             transition: var(--transition-default);
+            transition-property: background-color, border-color, box-shadow, color, fill, opacity;
         }
 
         &:active,
@@ -501,14 +502,20 @@ export default {
         }
     }
 
+    &.button-only-icon > svg,
+    &.button-only-icon-color > svg {
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
     &.button-only-icon {
         padding: 0;
-        width: 48px;
+        width: var(--button-control-height);
     }
 
     &.button-only-icon-color {
         padding: 0;
-        width: 48px;
+        width: var(--button-control-height);
 
          & > svg {
             fill: var(--color-primary);
@@ -518,26 +525,23 @@ export default {
 }
 
 .button-preloader {
+    min-width: var(--button-control-height);
+
     .preloader {
         animation: rotate .6s infinite linear;
         border: .2rem solid var(--input-border-color);
         border-top: .2rem solid var(--color-border-strong);
         border-radius: 50%;
-        clear: both;
         display: block;
-        height: 2rem;
-        margin: 1.3rem auto;
-        width: 2rem
+        height: var(--button-control-icon-size);
+        inset: 0;
+        margin: auto;
+        position: absolute;
+        width: var(--button-control-icon-size);
     }
 
     & > svg {
         display: none;
-    }
-
-    &.button-small {
-        .preloader {
-            margin-top: var(--space-4);
-        }
     }
 }
 
@@ -570,11 +574,11 @@ export default {
     background: var(--bg-primary);
     color: var(--text-light-color);
     font-weight: var(--font-weight-medium);
-    padding-left: 3.8rem;
 
     & > svg {
         fill: var(--icon-secondary-color);
         transition: var(--transition-default);
+        transition-property: background-color, border-color, box-shadow, color, fill, opacity;
     }
 
     &:active,

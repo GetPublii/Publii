@@ -597,12 +597,13 @@ body .tox .tox-dialog__footer-end {
         font-size: var(--font-size-ui-md);
         font-family: var(--font-family-sans);
         font-weight: var(--font-weight-medium);
-        height: 5.6rem;
-        line-height: 5.5rem;
+        height: var(--button-height-large);
+        line-height: var(--line-height-base);
         margin: 0 !important;
-        padding: 0 2rem;
+        padding: 0 var(--space-8);
         position: relative;
         transition: var(--transition-default);
+        transition-property: background-color, border-color, box-shadow, color, opacity;
         user-select: none;
         white-space: nowrap;
 

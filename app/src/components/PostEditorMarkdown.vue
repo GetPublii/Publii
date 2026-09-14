@@ -503,7 +503,7 @@ export default {
     align-items: center;
     bottom: .4rem;
     display: flex;
-    height: 4.4;
+    height: 4.4rem;
     line-height: 4.3rem;
     position: absolute;
     right: 1.8rem;

@@ -203,13 +203,18 @@ body[data-os="linux"] .options-sidebar-container:not(.post-editor-sidebar) {
     .button {
         border-radius: var(--radius-base);
         bottom: 0;
-        height: calc(100% - 4px);
-        margin: 2px;
+        height: calc(100% - 8px);
+        margin: 4px;
         padding: 0;
         position: absolute;
         right: 0;
         top: 0;
-        width: 43px;
+        width: 37px;
+
+        & > svg {
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     }
 }
 
@@ -309,6 +314,7 @@ body[data-os="linux"] .options-sidebar-container:not(.post-editor-sidebar) {
 }
 
 .options-sidebar-container .options-sidebar .options-sidebar-preview-button {
+    align-items: center;
     display: inline-flex;
 
     & > span {

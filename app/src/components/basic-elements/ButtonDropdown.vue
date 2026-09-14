@@ -313,24 +313,27 @@ export default {
     display: inline-flex;
     font-size: var(--font-size-ui-sm);
     font-weight: var(--font-weight-medium);
-    height: 4.4rem;
-    line-height: 4.3rem;
+    height: var(--button-height);
+    line-height: var(--line-height-base);
     padding: 0;
     position: relative;
     text-align: left;
     transition: var(--transition-default);
+    transition-property: background-color, border-color, box-shadow, color, fill, opacity;
     user-select: none;
     white-space: nowrap;
     width: auto;
 
     &.has-icon {
         .button-trigger {
-            padding-left: 4.3rem;
+            padding-left: calc(var(--button-padding-inline) + var(--button-icon-size) + var(--button-icon-gap));
 
             & > svg {
                 display: inline-block;
                 fill: var(--white);
-                left: 1.4rem;
+                height: var(--button-icon-size);
+                left: var(--button-padding-inline);
+                width: var(--button-icon-size);
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -391,11 +394,11 @@ export default {
 
     &.has-icon-preview {
         .button-trigger {
-            padding-right: 8.4rem;
+            padding-right: calc(2 * var(--button-height));
         }
 
         .button-dropdown-item {
-            padding: .2rem var(--space-16) .2rem var(--space-8);
+            padding-right: var(--button-height);
         }
     }
 
@@ -407,7 +410,7 @@ export default {
 
         .button-dropdown {
             border-radius: var(--radius-base);
-            bottom: 5.3rem;
+            bottom: calc(100% + .9rem);
             box-shadow: 0 -1px 5px oklch(from var(--black) l c h / 12.5%);
             top: unset;
         }
@@ -445,18 +448,15 @@ export default {
 .button-trigger {
     border-radius: var(--radius-base);
     display: block;
-    height: 4.4rem;
+    height: var(--button-height);
     left: 0;
-    /* Chromium centres <button> content vertically; the bottom padding equals
-       height minus the inherited 4.3rem line height, so the label stays where
-       the former span drew it. */
-    padding-bottom: .1rem;
-    padding-left: 1.3rem;
-    padding-right: 6rem;
+    padding-left: var(--button-padding-inline);
+    padding-right: calc(var(--button-height) + var(--button-padding-inline));
     position: relative;
     text-align: left;
     top: 0;
     transition: var(--transition-default);
+    transition-property: background-color, border-color, box-shadow, color, fill, opacity;
 
     &:focus-visible,
     &:hover {
@@ -471,8 +471,8 @@ export default {
     justify-content: center;
     position: absolute;
     top: 0;
-    right: 4.4rem;
-    width: 4.2rem;
+    right: var(--button-height);
+    width: var(--button-height);
 
     .icon {
         color: var(--white)
@@ -489,7 +489,8 @@ export default {
     right: 0;
     top: 0;
     transition: var(--transition-default);
-    width: 4.4rem;
+    transition-property: background-color, border-color, box-shadow, color, fill, opacity;
+    width: var(--button-height);
 
     &::before {
         content: "";
@@ -500,6 +501,7 @@ export default {
         position: absolute;
         top: 0;
         transition: var(--transition-default);
+        transition-property: background-color, border-color, box-shadow, color, fill, opacity;
         width: 100%;
     }
 
@@ -533,19 +535,22 @@ export default {
     position: absolute;
     right: 0;
     text-align: left;
-    top: 5.3rem;
+    top: calc(100% + .9rem);
     min-width: 100%;
     z-index: 10;
 }
 
 .button-dropdown-item {
+    align-items: center;
     border-top: 1px solid var(--border-light-color);
     color: var(--text-primary-color);
-    display: block;
-    padding: .2rem var(--space-8);
+    display: flex;
+    min-height: var(--button-height);
+    padding: .6rem var(--button-padding-inline-large);
     position: relative;
     text-align: left;
     transition: var(--transition-default);
+    transition-property: background-color, border-color, box-shadow, color, fill, opacity;
     width: 100%;
 
     &:focus-visible,
@@ -575,11 +580,12 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
-    width: 4.4rem;
+    width: var(--button-height);
 
     .icon {
         color: var(--icon-secondary-color);
         transition: var(--transition-default);
+        transition-property: background-color, border-color, box-shadow, color, fill, opacity;
     }
 }
 </style>

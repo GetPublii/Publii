@@ -477,10 +477,11 @@ export default {
     cursor: pointer;
     font-size: 15px;
     font-weight: var(--font-weight-medium);
-    line-height: 1;
+    height: var(--button-height-large);
+    line-height: var(--line-height-base);
     width: 50%;
-    padding: 18px;
-    transition: all .25s ease-out;
+    padding: 0 var(--space-8);
+    transition: background-color .25s ease-out, border-color .25s ease-out, color .25s ease-out;
 
     &:hover {
       background: var(--button-primary-bg-hover);

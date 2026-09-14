@@ -369,14 +369,16 @@ export default {
     font-size: var(--font-size-ui-md);
     font-weight: var(--font-weight-medium);
     justify-content: center;
-    padding: 1.4rem var(--space-4);
+    min-height: var(--button-height-sidebar);
+    transition-property: background-color, border-color, color, opacity;
+    padding: .6rem var(--button-padding-inline);
     position: relative;
 
     /* sync cloud icon */
     .sidebar-sync-icon {
-        height: 2.2rem;
+        height: calc(var(--button-height-sidebar) / 2 - .2rem);
         display: inherit;
-        width: 3rem;
+        width: calc((var(--button-height-sidebar) / 2 - .2rem) * 30 / 22);
 
         path {
             stroke: var(--white);
@@ -412,8 +414,8 @@ export default {
     /* interjection mark icon */
     .sidebar-interjection-icon {
         display: block;
-        height: 2.3rem;
-        width: 2.4rem;
+        height: calc(var(--button-height-sidebar) / 2 - .1rem);
+        width: calc((var(--button-height-sidebar) / 2 - .1rem) * 24 / 23);
 
         path {
             stroke: var(--white);
@@ -490,14 +492,18 @@ export default {
 }
 
 .sidebar-preview-link {
+    align-items: center;
     border: 2px solid var(--sidebar-preview-btn-border-color);
     border-radius: var(--radius-base);
     color: var(--sidebar-preview-btn-color) !important;
-    display: block;
+    display: flex;
     font-size: var(--font-size-ui-md);
     font-weight: var(--font-weight-medium);
+    justify-content: center;
     margin-bottom: var(--space-4);
-    padding: 1.2rem var(--space-4);
+    min-height: var(--button-height-sidebar);
+    transition-property: background-color, border-color, color, opacity;
+    padding: .6rem var(--button-padding-inline);
     text-align: center;
 
     & > span {

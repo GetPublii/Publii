@@ -29,6 +29,18 @@ html {
     --app-sidebar-width: 28rem;
     --app-sidebar-margin: var(--space-12);
 
+    /* Shared action sizing, independent of the selected appearance. */
+    --button-height: 4.2rem;
+    --button-height-small: 3.6rem;
+    --button-height-large: 5.2rem;
+    --button-height-sidebar: 4.8rem;
+    --button-padding-inline: 1.3rem;
+    --button-padding-inline-small: 1.4rem;
+    --button-padding-inline-large: var(--space-8);
+    --button-icon-size: 2rem;
+    --button-icon-size-small: 1.6rem;
+    --button-icon-gap: var(--space-4);
+
     /* Editor compatibility; editor normalization is intentionally deferred. */
     --editor-heading-letter-spacing: -0.03rem;
     --editor-font-size: 20px;
@@ -44,6 +56,17 @@ html[data-is-osx-11-or-higher="true"] {
 }
 
 @media (max-width: 1600px) {
+    html {
+        --button-height: 3.8rem;
+        --button-height-small: 3.2rem;
+        --button-height-large: 5rem;
+        --button-height-sidebar: 4.4rem;
+        --button-padding-inline: 1.1rem;
+        --button-padding-inline-small: 1.2rem;
+        --button-padding-inline-large: 1.8rem;
+        --button-icon-gap: .8rem;
+    }
+
     html[data-auto-adjust-sidebar-width="true"] {
         --app-sidebar-width: 24rem;
         --app-sidebar-margin: var(--space-6);

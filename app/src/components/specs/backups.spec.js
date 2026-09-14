@@ -30,6 +30,8 @@ function component(file, globals = {}) {
     assert.deepEqual(compiled.errors, []);
     return {
         ...evaluate(source.script.content, {
+            // These tests render VNodes without mounting DOM tooltip hooks.
+            Tooltip: {},
             ...globals,
             escapeHTML: evaluate(read('../helpers/escape-html.js'))
         }),
