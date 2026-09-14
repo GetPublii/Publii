@@ -494,6 +494,10 @@
         "state": "Stan"
     },
     "image": {
+        "chooseFile": "Wybierz plik",
+        "dropImageHere": "Upuść tutaj obraz",
+        "dropFeaturedImageHere": "Upuść tutaj obrazek wyróżniony",
+        "dropImagesHere": "Przeciągnij tutaj obrazy, aby dodać je do galerii.",
         "addImages": "Dodaj obrazy",
         "align": "Wyrównanie",
         "centeredImage": "Obraz wyśrodkowany",

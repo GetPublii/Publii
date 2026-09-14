@@ -40,7 +40,7 @@
       ref="block">
       <div
         v-if="content.image === ''"
-        :class="{ 'publii-block-image-uploader': true, 'is-hovered': isHovered, 'is-uploading': imageUploadInProgress }"
+        :class="{ 'publii-block-image-uploader': true, 'publii-block-media-uploader': true, 'is-hovered': isHovered, 'is-uploading': imageUploadInProgress }"
         @drag.stop.prevent
         @dragstart.stop.prevent
         @dragend.stop.prevent
@@ -48,31 +48,34 @@
         @dragenter.stop.prevent
         @dragleave.stop.prevent="dragLeave"
         @drop.stop.prevent="drop">
-        <div class="publii-block-image-uploader-inner">
-          <icon
-            v-if="!imageUploadInProgress"
-            name="blank-image"
-            height="62"
-            width="75" />
-          <span v-if="!imageUploadInProgress">
-            {{ $t('editor.dropToUploadYourPhotoOr') }}
-          </span>
+        <div class="publii-block-media-uploader-inner">
           <button
-            v-if="!imageUploadInProgress"
-            @click="filePickerCallback">
-            {{ $t('file.selectFile') }}
+            type="button"
+            class="publii-block-media-upload-target"
+            :disabled="imageUploadInProgress"
+            :aria-label="$t('image.chooseFile')"
+            @click.prevent="filePickerCallback">
+            <icon
+              class="publii-block-media-upload-image"
+              name="blank-image"
+              aria-hidden="true"
+              focusable="false" />
+            <span>{{ $t('image.dropImageHere') }}</span>
           </button>
+          <p-button
+            class="publii-block-media-upload-choose"
+            appearance="clean"
+            size="small"
+            :disabled="imageUploadInProgress"
+            :onClick="filePickerCallback">
+            <span aria-hidden="true">+</span>
+            {{ $t('image.chooseFile') }}
+          </p-button>
         </div>
-        <upload-overlay
+        <upload-progress
           v-if="imageUploadInProgress"
           class="publii-block-image-upload-progress"
-          appearance="drop-zone"
-          loading
-          role="status"
-          aria-live="polite"
-          aria-atomic="true">
-          <div>{{ $t('ui.uploadInProgress') }}</div>
-        </upload-overlay>
+          overlay />
       </div>
 
       <input
@@ -105,7 +108,9 @@
 </template>
 
 <script>
-import Overlay from '../../../../basic-elements/Overlay.vue';
+import PButton from '../../../../basic-elements/Button.vue';
+import UploadProgress from '../../../../basic-elements/UploadProgress.vue';
+import '../../../assets/media-uploader.css';
 import { accept as imageAccept } from './../../../../../../config/image-upload-formats.js';
 import Block from './../../Block.vue';
 import ConfigForm from './config-form.json';
@@ -125,7 +130,8 @@ export default {
     LinkConfig
   ],
   components: {
-    'upload-overlay': Overlay,
+    'p-button': PButton,
+    'upload-progress': UploadProgress,
     'icon': EditorIcon,
     'top-menu': TopMenuUI
   },
@@ -562,89 +568,5 @@ export default {
   }
 }
 
-.publii-block-image-uploader {       
-  border: 2px dashed var(--input-border-color);
-  border-radius: var(--radius-base);
-  height: 250px;
-  margin: 0 0 16px 0;
-  padding: 6px;
-  position: relative;
-  width: 100%;
-
-  &.is-hovered {
-    border-color: transparent;
-    box-shadow: none;
-
-    &::before {
-      background: oklch(from var(--color-primary) l c h / 5%);
-      border: 1px dashed var(--input-border-focus);
-      border-radius: var(--radius-base);
-      content: '';
-      inset: -2px;
-      pointer-events: none;
-      position: absolute;
-    }
-
-    & > .publii-block-image-uploader-inner {
-      position: relative;
-    }
-  }
-}
-
-.publii-block-image-uploader.is-uploading {
-  border-color: transparent;
-  box-shadow: none;
-
-  &::before {
-    content: none;
-  }
-
-  & > .publii-block-image-upload-progress {
-    inset: -2px;
-  }
-}
-
-.publii-block-image-uploader-inner {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  font-family: var(--font-family-sans);
-  justify-content: center;
-  height: 234px;
-  padding: 2rem;
-  width: 100%;
-
-  svg {
-    fill: var(--icon-quaternary-color);
-  }
-
-  span {
-    display: block;
-    font-size: var(--font-size-ui-md);
-    text-align: center;
-    width: 100%;
-  }
-
-  button {
-    background: var(--button-secondary-bg);
-    border: 1px solid var(--button-secondary-bg);
-    border-radius: var(--radius-base);
-    color: var(--button-secondary-color);
-    cursor: pointer;
-    font-weight: var(--font-weight-medium);
-    font-size: 15px;
-    padding: .5rem 2rem;
-    text-align: center;
-    outline: none;
-
-    &:active,
-    &:focus,
-    &:hover {
-      background: var(--button-secondary-bg-hover);
-      border-color: var(--button-secondary-bg-hover);
-      color: var(--button-secondary-color-hover);
-    }
-  }
-}
 
 </style>

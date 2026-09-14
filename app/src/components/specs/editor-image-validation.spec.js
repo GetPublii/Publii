@@ -10,6 +10,7 @@ function createHarness() {
     const alerts = [];
     const inserted = [];
     const timers = [];
+    const progressViews = [];
     const events = new Map();
     const inputs = new Map();
     let openedPopups = 0;
@@ -44,8 +45,25 @@ function createHarness() {
     const context = {
         module: { exports: {} },
         imageAccept,
+        imageExtensions: ['jpg', 'png', 'svg'],
         Block: {},
-        Overlay: {},
+        UploadProgress: {},
+        PButton: {},
+        Vue: class {
+            constructor(options) {
+                this.options = options;
+                this.destroyed = false;
+                this.removed = false;
+                this.$el = { remove: () => { this.removed = true; } };
+                progressViews.push(this);
+            }
+            $mount() {
+                return this;
+            }
+            $destroy() {
+                this.destroyed = true;
+            }
+        },
         Draggable: {},
         ConfigForm: {},
         ContentEditableImprovements: {},
@@ -120,7 +138,16 @@ function createHarness() {
                 assert.equal(channel, 'app-image-upload');
                 requests.push(data);
             },
+            async invoke(channel) {
+                assert.equal(channel, 'app-main-process-select-files');
+            },
+            stopReceiveAll() {},
             receiveOnce(channel, callback) {
+                if (channel === 'app-files-selected') {
+                    events.set(channel, callback);
+                    return;
+                }
+
                 assert.equal(channel, 'app-image-uploaded');
                 replies.push(callback);
             }
@@ -166,6 +193,27 @@ function createHarness() {
         return component;
     }
 
+    function loadGalleryPopup() {
+        const source = fs.readFileSync(path.join(__dirname, '../post-editor/GalleryPopup.vue'), 'utf8')
+            .match(/<script>([\s\S]*?)<\/script>/)[1]
+            .replace(/^import .*;\s*$/gm, '')
+            .replace('export default', 'module.exports =');
+        vm.runInNewContext(source, context);
+        const options = context.module.exports;
+        const popup = {
+            ...options.data(),
+            $store: { state: { currentSite: { config: { name: 'test-site' } } } },
+            $t: key => key,
+            $bus: { $emit: (event, alert) => alerts.push(alert) }
+        };
+
+        for (const [name, method] of Object.entries(options.methods)) {
+            popup[name] = method.bind(popup);
+        }
+
+        return popup;
+    }
+
     async function loadBridge() {
         const source = fs.readFileSync(path.join(__dirname, '../post-editor/EditorBridge.js'), 'utf8')
             .replace(/^import .*;\s*$/gm, '')
@@ -189,6 +237,9 @@ function createHarness() {
         bridge.setupEditor({}, {
             on: (event, callback) => events.set(event, callback),
             once() {},
+            getContainer: () => ({
+                querySelector: () => ({ appendChild() {} })
+            }),
             ui: { registry: { addButton() {} } }
         });
         await events.get('init')();
@@ -197,10 +248,14 @@ function createHarness() {
 
     return {
         requests,
+        progressViews,
+        removeEditor: () => events.get('remove')(),
         alerts,
         inserted,
         getInput,
         loadComponent,
+        loadGalleryPopup,
+        selectFiles: paths => events.get('app-files-selected')({ paths: { filePaths: paths } }),
         loadBridge,
         popups: () => openedPopups,
         reply: data => replies.shift()(data),
@@ -320,5 +375,91 @@ describe('Block gallery validation integration', function () {
         assert.equal(gallery.imageUploadInProgress, false);
         assert.equal(harness.alerts[0].message, 'core.images.invalidImageFile: invalid.jpg');
         assert.equal(harness.alerts[0].buttonStyle, 'danger');
+    });
+});
+
+describe('WYSIWYG upload progress lifecycle', function () {
+    it('removes the progress view after an upload error', async function () {
+        const harness = createHarness();
+        const bridge = await harness.loadBridge();
+        await bridge.editorFileSelect({ originalEvent: dropEvent() });
+        assert.equal(harness.progressViews.length, 1);
+        harness.reply({ error: true });
+        assert.equal(harness.progressViews[0].destroyed, true);
+        assert.equal(harness.progressViews[0].removed, true);
+        assert.equal(bridge.imageUploadProgressView, null);
+    });
+
+    it('removes the progress view after success and when the editor closes', async function () {
+        const harness = createHarness();
+        const bridge = await harness.loadBridge();
+        await bridge.editorFileSelect({ originalEvent: dropEvent() });
+        harness.reply(imageResult());
+        assert.equal(harness.progressViews[0].destroyed, true);
+        assert.equal(harness.progressViews[0].removed, true);
+        bridge.showImageUploadProgress();
+        harness.removeEditor();
+        assert.equal(harness.progressViews[1].destroyed, true);
+        assert.equal(harness.progressViews[1].removed, true);
+        assert.equal(bridge.imageUploadProgressView, null);
+    });
+});
+
+describe('Gallery popup file drop', function () {
+    it('uploads multiple files through gallery validation and continues after a rejection', function () {
+        const harness = createHarness();
+        const popup = harness.loadGalleryPopup();
+        popup.dropImages(dropEvent([{ path: '/source/bad.svg' }, { path: '/source/photo.png' }]));
+        assert.equal(popup.isUploading, true);
+        assert.equal(popup.imagesToUpload, 2);
+        assert.equal(harness.requests[0].imageType, 'galleryImages');
+        assert.equal(harness.requests[0].path, '/source/bad.svg');
+        popup.dropImages(dropEvent());
+        assert.equal(harness.requests.length, 1, 'Busy upload must not start a second queue');
+        harness.reply({ error: true, translation: 'core.images.invalidImageFile', file: 'bad.svg' });
+        assert.equal(harness.alerts.length, 1);
+        assert.equal(harness.requests[1].path, '/source/photo.png');
+        harness.reply(imageResult());
+        assert.equal(popup.images.length, 1);
+        assert.equal(popup.uploadProgress, 2);
+        assert.equal(popup.isUploading, false);
+    });
+
+    it('uses the same queue when files are selected with the button', async function () {
+        const harness = createHarness();
+        const popup = harness.loadGalleryPopup();
+        const paths = ['/source/photo.png'];
+        await popup.addImages();
+        harness.selectFiles(paths);
+        assert.equal(popup.isUploading, true);
+        assert.equal(harness.requests[0].imageType, 'galleryImages');
+        assert.deepEqual(paths, ['/source/photo.png'], 'The source file list must stay intact');
+        harness.reply(imageResult());
+        assert.equal(popup.isUploading, false);
+    });
+
+    it('does not intercept internal image reordering or other non-file drags', function () {
+        const popup = createHarness().loadGalleryPopup();
+        const event = {
+            dataTransfer: { types: ['text/html'], files: [] },
+            preventDefault: () => assert.fail('Internal drag was intercepted'),
+            stopPropagation: () => assert.fail('Internal drag was intercepted')
+        };
+        popup.dragOverImages(event);
+        popup.dropImages(event);
+        assert.equal(popup.isHovered, false);
+    });
+
+    it('highlights only file drops and rejects another drop while uploading', function () {
+        const popup = createHarness().loadGalleryPopup();
+        const event = dropEvent();
+        event.dataTransfer.types = ['Files'];
+        popup.dragOverImages(event);
+        assert.equal(popup.isHovered, true);
+        assert.equal(event.dataTransfer.dropEffect, 'copy');
+        popup.isUploading = true;
+        popup.dragOverImages(event);
+        assert.equal(popup.isHovered, false);
+        assert.equal(event.dataTransfer.dropEffect, 'none');
     });
 });

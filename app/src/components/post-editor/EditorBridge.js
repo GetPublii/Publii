@@ -1,3 +1,5 @@
+import Vue from 'vue';
+import UploadProgress from '../basic-elements/UploadProgress.vue';
 import EditorConfig from './../configs/postEditor.config.js';
 import { accept as imageAccept } from './../../../config/image-upload-formats.js';
 import { applyAppAppearance } from './../../helpers/app-appearance';
@@ -14,6 +16,7 @@ class EditorBridge {
         this.callbackForTinyMCE = false;
         this.postEditorInnerDragging = false;
         this.contentImageUploading = false;
+        this.imageUploadProgressView = null;
         this.init();
     }
 
@@ -356,6 +359,7 @@ class EditorBridge {
         this.setupImageFigureClassTranslation(editor);
         this.setupIframeWrappers(editor);
         this.setupMediaDoubleClick(editor);
+        editor.on('remove', () => this.hideImageUploadProgress());
 
         editor.on('init', async () => {
             $('.tox-tinymce').append($('<div class="tinymce-overlay"><div><svg class="upload-icon" width="24" height="24" viewbox="0 0 24 24"> <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/></svg>Drag image here</div></div>'));
@@ -992,6 +996,35 @@ class EditorBridge {
         }
     }
 
+    showImageUploadProgress () {
+        this.hideImageUploadProgress();
+        const overlay = this.tinymceEditor.getContainer().querySelector('.tinymce-overlay');
+
+        if (!overlay) {
+            return;
+        }
+
+        const message = window.app.translate('ui.uploadInProgress');
+        this.imageUploadProgressView = new Vue({
+            render: createElement => createElement(UploadProgress, {
+                class: 'tinymce-upload-progress',
+                props: { message }
+            })
+        }).$mount();
+        overlay.appendChild(this.imageUploadProgressView.$el);
+    }
+
+    hideImageUploadProgress () {
+        if (!this.imageUploadProgressView) {
+            return;
+        }
+
+        const element = this.imageUploadProgressView.$el;
+        this.imageUploadProgressView.$destroy();
+        element.remove();
+        this.imageUploadProgressView = null;
+    }
+
     async editorFileSelect (e) {
         e.originalEvent.stopPropagation();
         e.originalEvent.preventDefault();
@@ -1013,7 +1046,7 @@ class EditorBridge {
         }
 
         $('.tox-tinymce').addClass('is-loading-image');
-        $('.tinymce-overlay').html('<div><div class="loader"><span></span></div> ' + 'Upload in progress</div>');
+        this.showImageUploadProgress();
 
         mainProcessAPI.send('app-image-upload', {
             "id": this.itemID,
@@ -1025,6 +1058,7 @@ class EditorBridge {
         this.contentImageUploading = true;
 
         mainProcessAPI.receiveOnce('app-image-uploaded', (data) => {
+            this.hideImageUploadProgress();
             if (data && data.error) {
                 $('.tox-tinymce').removeClass('is-hovered');
                 $('.tox-tinymce').removeClass('is-loading-image');

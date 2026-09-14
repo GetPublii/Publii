@@ -85,37 +85,27 @@
                 width: 2.4rem;
                 vertical-align: middle;
             }
-
-            .loader {
-                display: inline-block;
-                height: 2.4rem;
-                margin-right: 2rem;
-                width: 2.4rem;
-
-                & > span {
-                    animation: spin .9s infinite linear;
-                    border-top: 2px solid oklch(from var(--white) l c h / 20%);
-                    border-right: 2px solid oklch(from var(--white) l c h / 20%);
-                    border-bottom: 2px solid oklch(from var(--white) l c h / 20%);
-                    border-left: 2px solid var(--white);
-                    border-radius: 50%;
-                    display: inline-block;
-                    height: 2.1rem;                    
-                    vertical-align: middle;
-                    width: 2.1rem;
-
-                    &::after {
-                        border-radius: 50%;
-                        content: "";
-                        display: block;
-                    }
-                }
-            }
         }
 
         &.is-hovered {
             .tinymce-overlay {
                 display: block;
+            }
+        }
+
+        &.is-loading-image .tinymce-overlay {
+            background: var(--bg-primary);
+            display: block;
+
+            > div:not(.tinymce-upload-progress) {
+                display: none;
+            }
+
+            > .tinymce-upload-progress {
+                background: transparent;
+                box-shadow: none;
+                font-weight: var(--font-weight-regular);
+                padding: var(--space-6);
             }
         }
 

@@ -1,0 +1,86 @@
+.publii-block-media-uploader {
+    background: var(--bg-primary);
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--radius-base);
+    margin: 0 0 var(--space-6);
+    position: relative;
+    width: 100%;
+
+    &:not(.is-uploading):hover {
+        background: var(--collection-bg-hover);
+    }
+
+    &.is-hovered:not(.is-uploading) {
+        border: 1px dashed var(--input-border-focus);
+
+        &::before {
+            background: oklch(from var(--color-primary) l c h / 5%);
+            border-radius: var(--radius-base);
+            content: '';
+            inset: 0;
+            pointer-events: none;
+            position: absolute;
+            z-index: 1;
+        }
+    }
+
+    &.is-uploading .publii-block-media-uploader-inner {
+        visibility: hidden;
+    }
+
+    & > .upload-progress.is-overlay {
+        inset: 0;
+    }
+}
+
+.publii-block-media-uploader-inner {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    justify-content: center;
+    min-height: 20rem;
+    padding: var(--space-12) var(--space-8);
+}
+
+.publii-block-media-upload-target {
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-base);
+    color: var(--text-light-color);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
+    gap: var(--space-6);
+    justify-content: center;
+    line-height: var(--line-height-base);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    width: 100%;
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 4px;
+    }
+}
+
+.publii-block-media-upload-image {
+    display: block;
+    fill: var(--icon-quaternary-color);
+    flex-shrink: 0;
+    height: 4.6rem;
+    max-width: 100%;
+    width: calc(4.6rem * 180 / 148);
+}
+
+.publii-block-media-uploader .publii-block-media-upload-choose.button {
+    height: 2.8rem;
+    line-height: 2.8rem;
+    max-width: 100%;
+}

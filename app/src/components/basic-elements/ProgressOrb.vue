@@ -34,35 +34,37 @@
                     :style="ringStyle" />
             </svg>
 
-            <svg
-                class="progress-orb-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                focusable="false">
-                <path
-                    class="progress-orb-icon-cloud"
-                    :d="cloudPath" />
-                <path
-                    class="progress-orb-icon-trace"
-                    pathLength="100"
-                    :d="cloudPath" />
-                <g class="progress-orb-icon-arrow">
-                    <path d="M12 13v8" />
-                    <path d="m8 17 4-4 4 4" />
-                </g>
-                <path
-                    class="progress-orb-icon-check"
-                    pathLength="100"
-                    d="m17 15-5.5 5.5L9 18" />
-                <g class="progress-orb-icon-alert">
-                    <path d="M12 13v5" />
-                    <path d="M12 21h.01" />
-                </g>
-            </svg>
+            <slot name="icon">
+                <svg
+                    class="progress-orb-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    focusable="false">
+                    <path
+                        class="progress-orb-icon-cloud"
+                        :d="cloudPath" />
+                    <path
+                        class="progress-orb-icon-trace"
+                        pathLength="100"
+                        :d="cloudPath" />
+                    <g class="progress-orb-icon-arrow">
+                        <path d="M12 13v8" />
+                        <path d="m8 17 4-4 4 4" />
+                    </g>
+                    <path
+                        class="progress-orb-icon-check"
+                        pathLength="100"
+                        d="m17 15-5.5 5.5L9 18" />
+                    <g class="progress-orb-icon-alert">
+                        <path d="M12 13v5" />
+                        <path d="M12 21h.01" />
+                    </g>
+                </svg>
+            </slot>
         </div>
 
         <p class="progress-orb-message">

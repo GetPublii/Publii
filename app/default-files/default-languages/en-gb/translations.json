@@ -494,6 +494,10 @@
         "state": "State"
     },
     "image": {
+        "chooseFile": "Choose file",
+        "dropImageHere": "Drop your image here",
+        "dropFeaturedImageHere": "Drop featured image here",
+        "dropImagesHere": "Drop images here to add them to the gallery.",
         "addImages": "Add images",
         "align": "Align",
         "centeredImage": "Centred image",

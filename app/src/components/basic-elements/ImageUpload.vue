@@ -15,32 +15,46 @@
             @dragleave="dragLeave"
             @drop="drop">
             <div class="upload-overlay">
-                <icon
-                    name="blank-image"
-                    customWidth="75"
-                    customHeight="62" />
-
-               <div> {{ labelText }}</div>
-                <input
-                    ref="input"
-                    type="file"
-                    :accept="imagesOnly ? imageAccept : null"
-                    class="upload-image-input"
-                    spellcheck="false"
+                <button
+                    type="button"
+                    class="upload-target"
+                    :aria-label="$t('image.chooseFile')"
                     :disabled="isUploading"
-                    @change="valueChanged">
+                    @click.prevent="chooseFile">
+                    <icon
+                        class="upload-placeholder-image"
+                        name="blank-image"
+                        non-interactive
+                        aria-hidden="true"
+                        focusable="false" />
+                    <span class="upload-label">{{ labelText }}</span>
+                </button>
+
+                <p-button
+                    class="upload-choose"
+                    appearance="clean"
+                    size="small"
+                    :disabled="isUploading"
+                    :onClick="chooseFile">
+                    <span aria-hidden="true">+</span>
+                    {{ $t('image.chooseFile') }}
+                </p-button>
             </div>
 
-            <overlay
+            <input
+                ref="input"
+                type="file"
+                :accept="imagesOnly ? imageAccept : null"
+                class="upload-image-input"
+                :aria-label="$t('image.chooseFile')"
+                :disabled="isUploading"
+                hidden
+                @change="valueChanged">
+
+            <upload-progress
                 v-if="isUploading"
                 class="image-upload-progress"
-                appearance="drop-zone"
-                loading
-                role="status"
-                aria-live="polite"
-                aria-atomic="true">
-                <div>{{ $t('ui.uploadInProgress') }}</div>
-            </overlay>
+                overlay />
         </div>
 
         <a
@@ -55,10 +69,16 @@
 </template>
 
 <script>
+import PButton from './Button.vue';
+import UploadProgress from './UploadProgress.vue';
 import { accept as imageAccept } from './../../../config/image-upload-formats.js';
 
 export default {
     name: 'image-upload',
+    components: {
+        PButton,
+        UploadProgress
+    },
     props: {
         imagesOnly: {
             default: true,
@@ -121,10 +141,10 @@ export default {
     },
     computed: {
         labelText () {
-            let label = this.$t('image.dropToUploadPhotoOr');
+            let label = this.$t('image.dropImageHere');
 
             if ((this.itemId || this.itemId === 0) && this.imageType !== 'tagImages' && this.imageType !== 'authorImages') {
-                label = this.$t('image.dropFeaturedImageOr');
+                label = this.$t('image.dropFeaturedImageHere');
             }
 
             return label;
@@ -254,6 +274,13 @@ export default {
 
             if (emitInput) {
                 this.$emit('input', this.imageValue);
+            }
+        },
+        chooseFile (event) {
+            event?.preventDefault();
+
+            if (!this.isUploading) {
+                this.$refs.input.click();
             }
         },
         stopEvents (e) {
@@ -411,94 +438,65 @@ export default {
 </script>
 
 <style scoped>
-
-.upload {
-}
-
 .upload-image {
     background-clip: padding-box;
     background-position: center;
     background-repeat: no-repeat;
-    border: 2px dashed var(--input-border-color);
+    border: 1px solid var(--input-border-color);
     border-radius: var(--radius-base);
-    color: var(--color-text-subtle);
+    color: var(--text-light-color);
     display: block;
     font-size: var(--font-size-ui-md);
     font-weight: var(--font-weight-regular);
     line-height: var(--line-height-base);
-    margin: 0 0 -40px 0;
-    text-align: center;
-    padding: var(--space-12) 5rem;
+    margin: 0 0 calc(-1 * var(--space-16));
+    padding: 0;
     position: relative;
+    text-align: center;
     width: 100%;
 
-    &.is-small {
-    }
-
     &.is-empty {
-        box-shadow: inset 0 0 0 5px var(--bg-primary);
+        background-color: var(--bg-primary);
         container-type: inline-size;
 
+        &:not(.is-uploading):hover {
+            background-color: var(--collection-bg-hover);
+        }
+
         .upload-overlay {
-            display: block;
-        }
-
-        @container (max-width: 200px) {
-            .upload-overlay svg {
-                display: none;
-            }
-        }
-
-        @container (max-width: 160px) {
-            .upload-overlay div {
-                display: none;
-            }
-            .upload-image-input {
-                margin-top: 0 !important;
-            }
+            display: flex;
         }
     }
 
-    &.is-hovered {
-        border-color: transparent;
-        box-shadow: none;
+    &.is-hovered:not(.is-uploading) {
+        border: 1px dashed var(--input-border-focus);
 
         &::before {
             background: oklch(from var(--color-primary) l c h / 5%);
-            border: 1px dashed var(--input-border-focus);
             border-radius: var(--radius-base);
             content: '';
-            inset: -2px;
+            inset: 0;
             pointer-events: none;
             position: absolute;
-        }
-
-        & > .upload-overlay {
-            position: relative;
+            z-index: 1;
         }
     }
 
     &.is-uploading {
-        border-color: transparent;
-        box-shadow: none;
-
         & > .upload-overlay {
             visibility: hidden;
         }
 
         & > .image-upload-progress {
-            inset: -2px;
+            inset: 0;
         }
     }
 
     &:not(.is-empty) {
         background-color: transparent;
-        background-position: center center;
-        background-repeat: no-repeat;
         background-size: contain;
         border: 2px solid transparent;
         height: 20rem;
-        padding: 0;
 
         &.is-small {
             height: 18rem;
@@ -508,7 +506,7 @@ export default {
 
 .upload-image-wrapper {
     display: block;
-    padding: 0 0 40px 0;
+    padding: 0 0 var(--space-16);
 
     &.is-uploading > .upload-remove {
         visibility: hidden;
@@ -517,56 +515,77 @@ export default {
     &:not(.is-empty):not(.is-hovered) {
         background-color: var(--bg-secondary);
         background-clip: content-box;
-        background-image:   linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa),
-                                    linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa);
-        background-size:36px 36px;
-        background-position:0 0, 18px 18px;
+        background-image:
+            linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa),
+            linear-gradient(45deg, #aaa 25%, transparent 25%, transparent 75%, #aaa 75%, #aaa);
+        background-size: 20px 20px;
+        background-position: 0 0, 10px 10px;
     }
 }
 
 .upload-image-input {
-    clear: both;
-    color: transparent; /* hack to remove the phrase "no file selected" from the file input */
-    display: block;
-    line-height: 1.6!important;
-    margin: var(--space-8) auto 0 auto!important;
+    display: none;
+}
 
-    span {
-            display: none;
-        }
+.upload-overlay {
+    align-items: center;
+    display: none;
+    flex-direction: column;
+    gap: var(--space-2);
+    justify-content: center;
+    min-height: 20rem;
+    padding: var(--space-12) var(--space-8);
+}
 
-    &::-webkit-file-upload-button {
-        -webkit-appearance: none;
-        background: var(--button-secondary-bg);
-        border: 1px solid var(--button-secondary-bg);
-        border-radius: var(--radius-base);
-        color: var(--button-secondary-color);
-        cursor: pointer;
-        display: inline-block;
-        font-size: var(--font-size-ui-md);
-        font-weight: var(--font-weight-medium);
-        left: 50%;
-        padding: var(--space-3) var(--space-6);
-        position: relative;
-        transform: translate(-50%, 0);
-        outline: none;
-        
-        &:hover {
-            background: var(--button-secondary-bg-hover);
-            border-color: var(--button-secondary-bg-hover);
-            color: var(--button-secondary-color-hover);
-        }
+.upload-target {
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-base);
+    color: var(--text-light-color);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    font-family: inherit;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
+    gap: var(--space-6);
+    justify-content: center;
+    line-height: var(--line-height-base);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 4px;
     }
+}
+
+.upload-placeholder-image {
+    display: block;
+    fill: var(--icon-quaternary-color);
+    flex-shrink: 0;
+    height: 4.6rem;
+    max-width: 100%;
+    width: calc(4.6rem * 180 / 148);
+}
+
+.upload-choose {
+    height: 2.8rem;
+    line-height: 2.8rem;
+    max-width: 100%;
 }
 
 .upload-remove {
     color: var(--color-danger);
     display: block;
-    font-size: 13px;
-    margin: 10px 0;
+    font-size: var(--font-size-ui-sm);
+    margin: var(--space-4) 0;
     position: relative;
     text-align: center;
-    top: 40px;
+    top: var(--space-16);
     width: 100%;
 
     &.is-hidden {
@@ -574,26 +593,32 @@ export default {
     }
 }
 
-.upload-overlay {
-    color: var(--color-text-subtle);
-    display: none;
-
-    svg {
-        display: block;
-        fill: var(--icon-quaternary-color);
-        margin: 0 auto var(--space-6);
-
+@container (max-width: 200px) {
+    .upload-image .upload-overlay {
+        min-height: 20rem;
+        padding: var(--space-6) var(--space-4);
     }
 }
 
-.upload-image > .image-upload-progress.overlay::v-deep > div {
-    padding: var(--space-4) var(--space-6);
+@container (max-width: 160px) {
+    .upload-image .upload-label {
+        display: none;
+    }
+
+    .upload-image .upload-overlay {
+        min-height: 15rem;
+    }
+
+    .upload-image .image-upload-progress {
+        --upload-progress-size: 4rem;
+        --upload-progress-message-gap: var(--space-2);
+    }
 }
 
 .settings-basic {
     .upload {
         display: block;
-        margin-bottom: 40px;
+        margin-bottom: var(--space-16);
     }
 }
 </style>

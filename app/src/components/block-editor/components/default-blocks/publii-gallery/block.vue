@@ -76,35 +76,41 @@
         :class="{ 'publii-block-gallery-form': true, 'is-visible': content.images.length === 0 }"
         ref="block">
         <div
-          :class="{ 'publii-block-gallery-uploader': true, 'is-hovered': isHovered }">
-          <div class="publii-block-gallery-uploader-inner">
-            <icon
-              v-if="!imageUploadInProgress"
-              name="blank-gallery"
-              height="62"
-              width="75" />
-            <span v-if="!imageUploadInProgress">
-              {{ $t('editor.dropToUploadYourPhotosOr') }}
-            </span>
+          :class="{ 'publii-block-gallery-uploader': true, 'publii-block-media-uploader': true, 'is-hovered': isHovered, 'is-uploading': imageUploadInProgress }">
+          <div class="publii-block-media-uploader-inner">
             <button
-              v-if="!imageUploadInProgress"
-              @click="filePickerCallback">
-              {{ $t('editor.selectFiles') }}
+              type="button"
+              class="publii-block-media-upload-target"
+              :disabled="imageUploadInProgress"
+              :aria-label="$t('editor.selectFiles')"
+              @click.prevent="filePickerCallback">
+              <icon
+                class="publii-block-media-upload-image"
+                name="blank-gallery"
+                aria-hidden="true"
+                focusable="false" />
+              <span>{{ $t('image.dropImagesHere') }}</span>
             </button>
+            <p-button
+              class="publii-block-media-upload-choose"
+              appearance="clean"
+              size="small"
+              :disabled="imageUploadInProgress"
+              :onClick="filePickerCallback">
+              <span aria-hidden="true">+</span>
+              {{ $t('editor.selectFiles') }}
+            </p-button>
           </div>
+          <upload-progress
+            v-if="imageUploadInProgress"
+            overlay />
         </div>
       </div>
 
-      <upload-overlay
-        v-if="imageUploadInProgress"
+      <upload-progress
+        v-if="imageUploadInProgress && content.images.length > 0 && view === 'preview'"
         class="publii-block-gallery-uploader-loader-overlay"
-        appearance="drop-zone"
-        loading
-        role="status"
-        aria-live="polite"
-        aria-atomic="true">
-        <div>{{ $t('ui.uploadInProgress') }}</div>
-      </upload-overlay>
+        overlay />
     </div>
 
     <top-menu
@@ -116,7 +122,9 @@
 
 <script>
 import { accept as imageAccept } from './../../../../../../config/image-upload-formats.js';
-import Overlay from '../../../../basic-elements/Overlay.vue';
+import PButton from '../../../../basic-elements/Button.vue';
+import UploadProgress from '../../../../basic-elements/UploadProgress.vue';
+import '../../../assets/media-uploader.css';
 import Draggable from 'vuedraggable';
 import Block from './../../Block.vue';
 import ConfigForm from './config-form.json';
@@ -132,7 +140,8 @@ export default {
     ContentEditableImprovements
   ],
   components: {
-    'upload-overlay': Overlay,
+    'p-button': PButton,
+    'upload-progress': UploadProgress,
     'icon': EditorIcon,
     'top-menu': TopMenuUI,
     'draggable': Draggable
@@ -448,106 +457,20 @@ export default {
   }
 }
 
-.publii-block-gallery-uploader {
-  border: 2px dashed var(--input-border-color);
-  border-radius: var(--radius-base);
-  height: 250px;
-  margin: 0 0 16px 0;
-  padding: 6px;
-  position: relative;
-  width: 100%;
-
-  &.is-hovered {
-    border-color: transparent;
-    box-shadow: none;
-
-    &::before {
-      background: oklch(from var(--color-primary) l c h / 5%);
-      border: 1px dashed var(--input-border-focus);
-      border-radius: var(--radius-base);
-      content: '';
-      inset: -2px;
-      pointer-events: none;
-      position: absolute;
-    }
-
-    & > .publii-block-gallery-uploader-inner {
-      position: relative;
-    }
-  }
-}
-
-.publii-block-gallery-wrapper.is-uploading .publii-block-gallery-uploader {
-  border-color: transparent;
-  box-shadow: none;
-
-  &::before {
-    content: none;
-  }
-}
-
 .publii-block-gallery-content {
   position: relative;
 
   &.is-editing {
     display: flex;
     flex-direction: column-reverse;
-
-    & > .publii-block-gallery-uploader-loader-overlay {
-      bottom: auto;
-      height: 250px;
-    }
   }
 }
 
-.publii-block-gallery-content > .publii-block-gallery-uploader-loader-overlay {
+.publii-block-gallery-wrapper .publii-block-gallery-content > .publii-block-gallery-uploader-loader-overlay.is-overlay {
   inset: 0;
   width: auto;
   z-index: 1;
 }
-
-.publii-block-gallery-uploader-inner {
-   align-items: center;
-   display: flex;
-   flex-wrap: wrap;
-   font-family: var(--font-family-sans);
-   justify-content: center;
-   height: 234px;
-   padding: 2rem;
-   width: 100%;
-
-   svg {
-     fill: var(--icon-quaternary-color);
-   }
-
-   span {
-     display: block;
-     font-size: var(--font-size-ui-md);
-     text-align: center;
-     width: 100%;
-   }
-
-   button {
-     background: var(--button-secondary-bg);
-     border: 1px solid var(--button-secondary-bg);
-     border-radius: var(--radius-base);
-     color: var(--button-secondary-color);
-     cursor: pointer;
-     font-weight: var(--font-weight-medium);
-     font-size: 15px;
-     padding: .5rem 2rem;
-     text-align: center;
-     outline: none;
-
-     &:active,
-     &:focus,
-     &:hover {
-       background: var(--button-secondary-bg-hover);
-       border-color: var(--button-secondary-bg-hover);
-       color: var(--button-secondary-color-hover);
-     }
-   }
- }
 
 .publii-block-gallery-list {
 }

@@ -500,6 +500,10 @@
         "removeGroup": "Cookie-Gruppe entfernen"
     },
     "image": {
+        "chooseFile": "Datei auswählen",
+        "dropImageHere": "Bild hier ablegen",
+        "dropFeaturedImageHere": "Beitragsbild hier ablegen",
+        "dropImagesHere": "Bilder hier ablegen, um sie zur Galerie hinzuzufügen.",
         "addImages": "Bilder hinzufügen",
         "align": "Ausrichtung",
         "centeredImage": "Zentriertes Bild",
