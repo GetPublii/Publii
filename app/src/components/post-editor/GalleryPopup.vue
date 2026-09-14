@@ -181,7 +181,7 @@ export default {
             this.imagesToUpload = 0;
             this.parseInputElement();
 
-            if (!this.images.length) {
+            if (!this.images.length && config.autoSelectFiles !== false) {
                 await this.addImages();
             }
         });

@@ -673,9 +673,7 @@ class EditorBridge {
         editor.ui.registry.addButton('gallery', {
             icon: 'gallery',
             tooltip: window.app.translate('editor.insertGallery'),
-            onAction: function () {
-                editor.insertContent('<div class="gallery" data-is-empty="true" contenteditable="false" data-translation="' + window.app.translate('image.addImages') + '"></div>');
-            }
+            onAction: () => this.openNewGalleryPopup(editor)
         });
     }
 
@@ -689,12 +687,45 @@ class EditorBridge {
         ].join('');
     }
 
-    galleryPopupUpdated (response) {
+    openNewGalleryPopup (editor) {
+        const bookmark = editor.selection.getBookmark(2, true);
+        const gallery = editor.getDoc().createElement('div');
+        gallery.className = 'gallery';
+        gallery.setAttribute('contenteditable', 'false');
+        gallery.setAttribute('data-translation', window.app.translate('image.addImages'));
+
+        // Keep the draft outside the editor until the gallery is confirmed.
+        window.app.galleryPopupUpdated(response => {
+            if (this.tinymceEditor !== editor || !editor.getBody()) {
+                return;
+            }
+
+            editor.focus();
+            editor.selection.moveToBookmark(bookmark);
+
+            if (response && response.gallery === gallery && response.html !== '&nbsp;' && response.html.trim() !== '') {
+                this.galleryPopupUpdated(response, gallery);
+            }
+        });
+        window.app.updateGalleryPopup({
+            postID: this.itemID,
+            galleryElement: gallery,
+            autoSelectFiles: false
+        });
+    }
+
+    galleryPopupUpdated (response, newGallery = null) {
         this.hideToolbarsOnCopyOrScroll();
 
         const editor = this.tinymceEditor;
 
-        if (!response || !editor || !editor.getBody() || !editor.getBody().contains(response.gallery)) {
+        if (!response || !editor || !editor.getBody()) {
+            return;
+        }
+
+        const isNewGallery = newGallery !== null && response.gallery === newGallery;
+
+        if (!isNewGallery && !editor.getBody().contains(response.gallery)) {
             return;
         }
 
@@ -712,11 +743,16 @@ class EditorBridge {
         editor.focus();
 
         // Ignore unchanged content even when TinyMCE adds internal image attributes.
-        if (editor.serializer.serialize(gallery) === editor.serializer.serialize(updatedGallery)) {
+        if (!isNewGallery && editor.serializer.serialize(gallery) === editor.serializer.serialize(updatedGallery)) {
             return;
         }
 
         const undoLevel = editor.undoManager.transact(() => {
+            if (isNewGallery) {
+                editor.insertContent(editor.serializer.serialize(updatedGallery));
+                return;
+            }
+
             gallery.setAttribute('data-columns', response.columns);
             gallery.className = updatedGallery.className;
             gallery.innerHTML = response.html;
