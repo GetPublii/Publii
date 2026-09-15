@@ -205,6 +205,7 @@ export default {
                 preview_styles: false,
                 resize: true,
                 menubar: false,
+                branding: false,
                 body_id: 'tinymce',
                 xss_sanitization: false,
                 paste_as_text: true,

@@ -19,8 +19,8 @@ export default {
     preview_styles: false,
     resize: false,
     menubar: false,
-    // Keep the TinyMCE iframe body id - Publii and theme editor.css files
-    // target body#tinymce (HugeRTE defaults to "hugerte")
+    branding: false,
+    // Keep the TinyMCE iframe body id - Publii and theme editor.css files target body#tinymce (HugeRTE defaults to "hugerte")
     body_id: 'tinymce',
     xss_sanitization: false,
     paste_as_text: false,
