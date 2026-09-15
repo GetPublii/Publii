@@ -125,7 +125,7 @@ class FeaturedImageItem {
                     let filename = path.parse(url).name;
                     let extension = path.parse(url).ext;
 
-                    if (useWebp) {
+                    if (useWebp && ['.jpg', '.jpeg', '.png'].includes(extension.toLowerCase())) {
                         extension = '.webp';
                     }
 

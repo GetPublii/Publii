@@ -508,12 +508,7 @@ class RendererContextPostPreview extends RendererContext {
             preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
                 if(
                     ContentHelper.getContentImageSrcset(url, self.themeConfig, useWebp) !== false &&
-                    !(
-                        url.toLowerCase().indexOf('.jpg') === -1 &&
-                        url.toLowerCase().indexOf('.jpeg') === -1 &&
-                        url.toLowerCase().indexOf('.png') === -1 && 
-                        url.toLowerCase().indexOf('.webp') === -1
-                    ) &&
+                    ContentHelper._isImage(url) &&
                     url.toLowerCase().indexOf('/gallery/') === -1
                 ) {
                     if(ContentHelper.getContentImageSizes(self.themeConfig)) {

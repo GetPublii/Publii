@@ -1,9 +1,10 @@
 /*
- * Builds a Jimp instance with WebP (WASM) support.
+ * Builds a Jimp instance with WebP and AVIF (WASM) support.
  */
 
 const fs = require('fs');
 const path = require('path');
+const avifFormat = require('./jimp-avif.js');
 
 let customJimpPromise = null;
 
@@ -63,7 +64,7 @@ async function buildJimp() {
     });
 
     return createJimp({
-        formats: [...defaultFormats, webpFormat],
+        formats: [...defaultFormats, webpFormat, avifFormat],
         plugins: defaultPlugins
     });
 }

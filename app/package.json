@@ -28,6 +28,7 @@
     "@aws-sdk/client-s3": "3.1054.0",
     "@gitbeaker/rest": "43.8.0",
     "@google-cloud/storage": "7.19.0",
+    "@jsquash/avif": "2.1.1",
     "@jsquash/webp": "1.5.0",
     "@napi-rs/keyring": "1.3.0",
     "@octokit/rest": "22.0.0",

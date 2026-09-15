@@ -375,6 +375,8 @@ class Image extends Model {
                 outputFormat = 'png';
             } else if (extLower === '.webp' || (forceWebp && shouldBeChangedToWebp)) {
                 outputFormat = 'webp';
+            } else if (extLower === '.avif') {
+                outputFormat = 'avif';
             }
 
             let job = {
@@ -473,6 +475,8 @@ class Image extends Model {
             writeOptions = webpLossless
                 ? { lossless: 1 }
                 : { quality: imagesQuality, alphaQuality: alphaQuality };
+        } else if (format === 'avif') {
+            writeOptions = { quality: imagesQuality, alphaQuality: alphaQuality };
         } else if (format === 'png') {
             writeOptions = {};
         } else {
@@ -519,9 +523,9 @@ class Image extends Model {
      * Check if the image has supported image extension
      */
     allowedImageExtension(extension) {
-        let allowedExtensions = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG', '.webp', '.WEBP'];
+        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
 
-        return allowedExtensions.indexOf(extension) > -1;
+        return allowedExtensions.includes(extension.toLowerCase());
     }
 
     /*

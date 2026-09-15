@@ -64,7 +64,7 @@ process.on('message', async function(msg){
                 let thumbnailDimensions = false;
 
                 try {
-                    thumbnailDimensions = sizeOf(result.url);
+                    thumbnailDimensions = sizeOf(result.newPath);
                 } catch(e) {
                     thumbnailDimensions = false;
                 }

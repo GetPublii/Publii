@@ -54,7 +54,6 @@ function runJob(job) {
         width,
         height,
         crop,
-        forceWebp,
         imagesQuality,
         alphaQuality,
         webpLossless
@@ -75,19 +74,21 @@ function runJob(job) {
 
     let pipeline = sharp(originalPath);
 
-    if (format === 'webp' || forceWebp) {
+    if (format === 'webp' || format === 'avif') {
         pipeline = pipeline.autoOrient();
     }
 
     pipeline = pipeline.withMetadata().resize(width, height, resizeOptions);
 
-    if (format === 'webp' || forceWebp) {
+    if (format === 'webp') {
         let webpConfig = webpLossless
             ? { lossless: true }
             : { quality: imagesQuality, alphaQuality: alphaQuality };
         pipeline = pipeline.webp(webpConfig);
     } else if (format === 'jpeg') {
         pipeline = pipeline.jpeg({ quality: imagesQuality });
+    } else if (format === 'avif') {
+        pipeline = pipeline.avif({ quality: imagesQuality });
     }
 
     return pipeline.toBuffer().then(buffer => writeBuffer(destinationPath, buffer));

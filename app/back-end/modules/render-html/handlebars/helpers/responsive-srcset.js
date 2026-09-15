@@ -76,7 +76,7 @@ function returnSrcSetAttribute (url, type, group) {
             useWebp = true;
         }
 
-        if (useWebp) {
+        if (useWebp && ['.jpg', '.jpeg', '.png'].includes(filenameExtension.toLowerCase())) {
             filenameExtension = '.webp';
         }
 
