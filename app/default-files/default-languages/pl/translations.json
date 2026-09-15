@@ -874,6 +874,9 @@
         "publiiLicenseAgreementInfo": "Oprogramowanie jest udostępniane na licencji GNU GPL w wersji 3.<br>Klikając „Akceptuj”, zgadzasz się na warunki licencji:"
     },
     "rendering": {
+        "startingPreview": "Uruchamianie podglądu…",
+        "previewReady": "Podgląd gotowy",
+        "preparingPreview": "Przygotowywanie podglądu…",
         "errorDuringPreviewCreatingMsg": "Nie udało się utworzyć podglądu.",
         "rendering": "Renderowanie...",
         "renderingErrorText": "Nie udało się wygenerować plików witryny.",

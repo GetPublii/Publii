@@ -872,6 +872,9 @@
         "publiiLicenseAgreementInfo": "This software is licensed under GNU GPL version 3.<br>By clicking “Accept” you agree to the"
     },
     "rendering": {
+        "startingPreview": "Starting preview…",
+        "previewReady": "Preview ready",
+        "preparingPreview": "Preparing preview…",
         "errorDuringPreviewCreatingMsg": "Couldn't create the preview.",
         "rendering": "Rendering...",
         "renderingErrorText": "Couldn't generate the website files.",

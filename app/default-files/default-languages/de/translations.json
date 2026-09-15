@@ -815,6 +815,9 @@
         "publiiLicenseAgreementInfo": "Diese Software steht unter der GNU GPL Version 3.<br>Indem Sie auf „Akzeptieren“ klicken, stimmen Sie den Lizenzbedingungen zu:"
     },
     "rendering": {
+        "startingPreview": "Vorschau wird gestartet…",
+        "previewReady": "Vorschau ist bereit",
+        "preparingPreview": "Vorschau wird vorbereitet…",
         "errorDuringPreviewCreatingMsg": "Beim Erstellen der Vorschau ist ein Fehler aufgetreten.",
         "rendering": "Rendern...",
         "renderingErrorText": "Beim Rendern der Webseite ist ein Fehler aufgetreten.",

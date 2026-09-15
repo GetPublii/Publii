@@ -1,16 +1,47 @@
 <template>
     <div class="overlay" v-if="isVisible">
         <div class="popup">
-            <h1>{{ $t('rendering.rendering') }}</h1>
-            <p class="popup-info">
-                {{ $t('rendering.renderingPleaseWait') }}
-            </p>
-
-            <progress-bar
-                v-if="!isPostPreview && !isHomepagePreview"
-                :intent="progressIntent"
+            <progress-orb
+                class="preview-orb"
+                :phase="progressIntent === 'success' ? 'success' : 'rendering'"
                 :progress="progress"
-                :message="messageFromRenderer" />
+                :indeterminate="isPartialPreview && progressIntent !== 'success'"
+                role="progressbar"
+                :aria-label="$t('rendering.preparingPreview')"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                :aria-valuenow="isPartialPreview && progressIntent !== 'success' ? null : progress">
+                <template #icon>
+                    <svg
+                        class="preview-orb-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        focusable="false">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M3 9h18M9 9v12" />
+                    </svg>
+                </template>
+            </progress-orb>
+
+            <div class="heading">
+                <div class="preview-heading">
+                    <h1>{{ $t('rendering.preparingPreview') }}</h1>
+                    <span
+                        v-if="!isPartialPreview"
+                        class="preview-progress-percent">
+                        {{ progress }}%
+                    </span>
+                </div>
+                <p
+                    class="preview-progress-message"
+                    :title="previewMessage">
+                    {{ previewMessage }}
+                </p>
+            </div>
         </div>
     </div>
 </template>
@@ -28,14 +59,32 @@ export default {
             isTagPreview: false,
             isAuthorPreview: false,
             messageFromRenderer: '',
+            previewTitle: '',
             progress: 0,
             progressIntent: 'default'
         };
+    },
+    computed: {
+        isPartialPreview () {
+            return this.isPostPreview || this.isHomepagePreview || this.isTagPreview || this.isAuthorPreview;
+        },
+        previewMessage () {
+            if (this.progressIntent === 'success') {
+                return this.$t('rendering.previewReady');
+            }
+
+            if (this.isPartialPreview && this.previewTitle) {
+                return this.previewTitle;
+            }
+
+            return this.messageFromRenderer || this.$t('rendering.startingPreview');
+        }
     },
     mounted: function() {
         this.$bus.$on('rendering-popup-display', (config) => {
             this.isVisible = true;
             this.messageFromRenderer = '';
+            this.previewTitle = config && config.postData && typeof config.postData.title === 'string' ? config.postData.title : '';
             this.progress = 0;
             this.progressIntent = 'default';
             this.isPostPreview = false;
@@ -116,11 +165,14 @@ export default {
                 console.log('RECEIVE', data);
                 if (data.status === true) {
                     if (mode === 'post' || mode === 'page' || mode === 'home' || mode === 'tag' || mode === 'author') {
+                        this.progress = 100;
+                        this.progressIntent = 'success';
                         setTimeout(() => {
                             this.isVisible = false;
                         }, 500);
                     }
                 } else {
+                    this.isVisible = false;
                     this.$bus.$emit('alert-display', {
                         message: this.$t('rendering.errorDuringPreviewCreatingMsg')
                     });
@@ -132,7 +184,7 @@ export default {
             mainProcessAPI.receiveOnce('app-preview-render-error', this.renderError);
         },
         renderingProgress: function(data) {
-            this.messageFromRenderer = data.message + ' - ' + data.progress + '%';
+            this.messageFromRenderer = data.message;
             this.progress = data.progress;
 
             if(this.progress === 100) {
@@ -179,12 +231,92 @@ export default {
 @import '../css/popup-common.css';
 
 .popup {
-    padding: var(--space-16) var(--space-16) var(--space-4) var(--space-16);
-    width: 60rem
+    align-items: center;
+    display: flex;
+    gap: 2.6rem;
+    max-height: calc(100% - var(--space-8));
+    max-width: calc(100% - var(--space-8));
+    overflow-y: auto;
+    padding: 2.8rem var(--space-12);
+    width: 48rem;
 }
 
-.popup-info {
-    margin: -1.5rem 0 var(--space-16);
+.heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.preview-heading {
+    align-items: baseline;
+    display: flex;
+    gap: 1.6rem;
+    justify-content: space-between;
+
+    h1 {
+        font-weight: var(--font-weight-semibold);
+        line-height: 1.4;
+        margin: 0;
+        overflow-wrap: anywhere;
+        text-align: left;
+    }
+}
+
+.preview-progress-percent {
+    flex-shrink: 0;
+    font-size: var(--font-size-ui-sm);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--font-weight-medium);
+    min-width: 4ch;
+    text-align: right;
+}
+
+.preview-progress-message {
+    color: var(--text-light-color);
+    font-size: var(--font-size-ui-sm);
+    line-height: 1.5;
+    margin: .6rem 0 0;
+    min-height: 2rem;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.popup .preview-orb {
+    --progress-orb-size: 6.4rem;
+    --progress-orb-energy: .8;
+    flex-shrink: 0;
+    margin: 0;
+
+    &::v-deep .progress-orb-message {
+        display: none;
+    }
+
+    &.is-indeterminate::v-deep .progress-orb-ring {
+        animation-duration: 3s;
+    }
+}
+
+@media (max-width: 480px) {
+    .popup {
+        gap: 1.8rem;
+        padding: 2.4rem var(--space-8);
+    }
+
+    .preview-heading {
+        gap: var(--space-4);
+    }
+}
+
+.preview-orb-icon {
+    color: var(--progress-orb-color);
+    height: 36%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: color .5s ease;
+    width: 36%;
 }
 
 .message {
