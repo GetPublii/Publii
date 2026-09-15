@@ -282,6 +282,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 wysiwygAdditionalValidElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygAdditionalValidElements,
                 wysiwygCustomElements: () => this.$store.state.currentSite.config.advanced.editors.wysiwygCustomElements,
                 tinymceCustomConfig: () => this.$store.state.app.customConfig.tinymce,
+                tinymceCustomConfigSource: () => this.$store.state.app.customConfig.editorOverrideSource,
                 getCurrentAppTheme: () => this.$root.getCurrentAppTheme(),
                 getCurrentAppAppearance: () => this.$root.getCurrentAppAppearance(),
                 getCurrentWorkspaceAccent: () => this.$root.getCurrentWorkspaceAccent(),

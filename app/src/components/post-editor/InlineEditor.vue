@@ -98,10 +98,10 @@ export default {
                 let linkHTMLEnd = `</a>`;
 
                 if (linkHTMLContent === '') {
-                    linkHTMLContent = tinymce.activeEditor.selection.getContent();
+                    linkHTMLContent = hugerte.activeEditor.selection.getContent();
                 }
 
-                tinymce.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
+                hugerte.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
 
                 setTimeout(() => {
                     this.updateLinkButtons();
@@ -118,18 +118,18 @@ export default {
         },
 
         toggle (format) {
-            tinymce.activeEditor.formatter.toggle(format);
+            hugerte.activeEditor.formatter.toggle(format);
         },
 
         addLink () {
             this.$bus.$emit('init-link-popup', {
                 postID: this.postID,
-                selection: tinymce.activeEditor.selection.getContent()
+                selection: hugerte.activeEditor.selection.getContent()
             });
         },
 
         unLink () {
-            tinymce.activeEditor.execCommand('Unlink', false);
+            hugerte.activeEditor.execCommand('Unlink', false);
 
             setTimeout(() => {
                 this.updateLinkButtons();
@@ -159,7 +159,7 @@ export default {
         },
 
         updateLinkButtons() {
-            let selectedContent = tinymce.activeEditor.selection.getContent();
+            let selectedContent = hugerte.activeEditor.selection.getContent();
 
             if(this.textContainsLink(selectedContent)) {
                 $('#inline-toolbar-url').css('display', 'none');

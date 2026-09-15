@@ -28,7 +28,7 @@ export default {
         }
     },
     beforeDestroy () {
-        tinymce.remove();
+        hugerte.remove();
     }
 };
 </script>

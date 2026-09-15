@@ -29,7 +29,7 @@
 }
 
 .post-editor {
-    .tox-tinymce {
+    .tox-hugerte {
         border: none;
         opacity: 0;
         transition: opacity .25s ease-out;
@@ -112,11 +112,6 @@
                 font-weight: var(--font-weight-regular);
                 padding: var(--space-6);
             }
-        }
-
-        .tox-tbtn,
-        .tox-panel {
-            /* background: var(--color-surface-subtle); */
         }
         
         .tox-tbtn {
@@ -554,11 +549,11 @@ body {
         }  
     }
 }
-body .tox-tinymce {
+body .tox-hugerte {
     border-color: var(--input-border-color);
     border-radius: var(--radius-base);
 }
-body .tox-tinymce-aux {
+body .tox-hugerte-aux {
     z-index: var(--layer-dialog);
 }
 body .tox .tox-dialog-wrap__backdrop {

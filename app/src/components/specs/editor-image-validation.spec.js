@@ -152,7 +152,7 @@ function createHarness() {
                 replies.push(callback);
             }
         },
-        tinymce: {
+        hugerte: {
             activeEditor: {
                 insertContent: value => inserted.push(value)
             }

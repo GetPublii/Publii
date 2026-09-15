@@ -136,31 +136,31 @@ export default {
 
             this.$bus.$on('theme-settings-before-save', () => {
                 if (this.wysiwyg) {
-                    tinymce.triggerSave();
+                    hugerte.triggerSave();
 
                     setTimeout(() => {
-                        this.content = tinymce.get(this.editorID).getContent()
+                        this.content = hugerte.get(this.editorID).getContent()
                     }, 250);
                 }
             });
 
             this.$bus.$on('view-settings-before-save', () => {
                 if (this.wysiwyg) {
-                    tinymce.triggerSave();
+                    hugerte.triggerSave();
 
                     setTimeout(() => {
-                        this.content = tinymce.get(this.editorID).getContent();
+                        this.content = hugerte.get(this.editorID).getContent();
                     }, 250);
                 }
             });
 
             this.$bus.$on('plugin-settings-before-save', () => {
                 if (this.wysiwyg) {
-                    tinymce.triggerSave();
+                    hugerte.triggerSave();
 
                     setTimeout(() => {
-                        if (this.editorID && tinymce.get(this.editorID)) {
-                            this.content = tinymce.get(this.editorID).getContent();
+                        if (this.editorID && hugerte.get(this.editorID)) {
+                            this.content = hugerte.get(this.editorID).getContent();
                         }
                     }, 250);
                 }
@@ -171,20 +171,20 @@ export default {
         async initWysiwyg () {
             let self = this;
             let customFormats = this.loadCustomFormatsFromTheme();
-            let pluginsList = "autolink link lists paste code";
-            let firstToolbarStructure = "bold italic link unlink forecolor blockquote alignleft aligncenter alignright bullist numlist formatselect removeformat code";
+            let pluginsList = "autolink link lists code";
+            let firstToolbarStructure = "bold italic link unlink forecolor blockquote alignleft aligncenter alignright bullist numlist blocks removeformat code";
             let secondToolbarStructure = "";
 
             if (customFormats.length) {
-                secondToolbarStructure = "styleselect formatselect removeformat undo redo code";
+                secondToolbarStructure = "styles blocks removeformat undo redo code";
             }
 
             if (this.$store.state.wysiwygTranslation) {
-                tinymce.addI18n('custom', this.$store.state.wysiwygTranslation);
+                hugerte.addI18n('custom', this.$store.state.wysiwygTranslation);
             }
 
             if (this.simplifiedToolbar) {
-                pluginsList = "autolink link paste code";
+                pluginsList = "autolink link code";
                 firstToolbarStructure = "bold italic link unlink forecolor alignleft aligncenter alignright removeformat code";
                 secondToolbarStructure = "";
             }
@@ -193,9 +193,9 @@ export default {
                 firstToolbarStructure = firstToolbarStructure.replace(/\blink\b/, 'publiilink');
             }
 
-            tinymce.init({
+            hugerte.init({
                 selector: 'textarea[data-id="' + this.editorID + '"]',
-                language: this.$store.state.wysiwygTranslation ? 'en' : 'custom',
+                language: this.$store.state.wysiwygTranslation ? 'custom' : 'en',
                 content_css: this.getTinyMCECSSFiles(),
                 plugins: pluginsList,
                 toolbar1: firstToolbarStructure,
@@ -205,9 +205,8 @@ export default {
                 preview_styles: false,
                 resize: true,
                 menubar: false,
-                forced_root_block: "",
-                force_br_newlines: false,
-                force_p_newlines: true,
+                body_id: 'tinymce',
+                xss_sanitization: false,
                 paste_as_text: true,
                 element_format : 'html',
                 fix_list_elements : true,
@@ -283,7 +282,7 @@ export default {
         },
         removeEditor () {
             this._linkSession = null;
-            let editorToRemove = tinymce.get(this.editorID);
+            let editorToRemove = hugerte.get(this.editorID);
 
             if (editorToRemove) {
                 editorToRemove.remove();
@@ -382,7 +381,7 @@ export default {
     beforeDestroy () {
         this._linkSession = null;
         if (this.wysiwyg) {
-            let editorToRemove = tinymce.get(this.editorID);
+            let editorToRemove = hugerte.get(this.editorID);
 
             if (editorToRemove) {
                 editorToRemove.remove();

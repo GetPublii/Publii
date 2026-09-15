@@ -529,7 +529,7 @@ export default {
             }
 
             if (titleContent && titleContent[1]) {
-                this.title = tinymce.html.Entities.decode(titleContent[1]);
+                this.title = hugerte.html.Entities.decode(titleContent[1]);
             }
 
             if (classContent && classContent[1]) {
@@ -718,10 +718,10 @@ export default {
                 let linkHTMLEnd = `</a>`;
 
                 if (linkHTMLContent === '') {
-                    linkHTMLContent = tinymce.activeEditor.selection.getContent();
+                    linkHTMLContent = hugerte.activeEditor.selection.getContent();
                 }
 
-                tinymce.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
+                hugerte.activeEditor.selection.setContent(linkHTMLStart + linkHTMLContent + linkHTMLEnd);
             }
         },
         setEasyMdeInstance (instance) {

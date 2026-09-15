@@ -78,14 +78,14 @@ export default {
                 }
 
                 let linkHTML = `<a href="${response.url}"${response.title}${response.cssClass}${response.target}${relAttr}${downloadAttr}>${response.text}</a>`;
-                tinymce.activeEditor.selection.setContent(linkHTML);
+                hugerte.activeEditor.selection.setContent(linkHTML);
             } else {
                 let sel = this.win.getSelection();
                 sel.removeAllRanges();
             }
 
             $('#link-toolbar').css('display', 'none');
-            tinymce.activeEditor.selection.collapse();
+            hugerte.activeEditor.selection.collapse();
         });
     },
     methods: {
@@ -95,7 +95,7 @@ export default {
         },
 
         showLinkPopup () {
-            let selectedNode = tinymce.activeEditor.selection.getNode();
+            let selectedNode = hugerte.activeEditor.selection.getNode();
 
             if (selectedNode.tagName === 'IMG' && selectedNode.parentNode && selectedNode.parentNode.tagName === 'A') {
                 this.$bus.$emit('init-link-popup', {
@@ -105,13 +105,13 @@ export default {
             } else {
                 this.$bus.$emit('init-link-popup', {
                     postID: this.postID,
-                    selection: tinymce.activeEditor.selection.getContent()
+                    selection: hugerte.activeEditor.selection.getContent()
                 });
             }
         },
 
         showPreview () {
-            let selectedText = tinymce.activeEditor.selection.getContent();
+            let selectedText = hugerte.activeEditor.selection.getContent();
             let link = selectedText.match(/href="(.*?)"/);
 
             if (link && link[1] && link[1].indexOf('#INTERNAL_LINK#') === -1) {
@@ -126,9 +126,9 @@ export default {
         },
 
         unlink () {
-            tinymce.activeEditor.execCommand('Unlink', false);
+            hugerte.activeEditor.execCommand('Unlink', false);
             $('#link-toolbar').css('display', 'none');
-            tinymce.activeEditor.selection.collapse();
+            hugerte.activeEditor.selection.collapse();
         },
 
         update(selection, link) {

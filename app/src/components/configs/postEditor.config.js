@@ -2,9 +2,9 @@ export default {
     selector: '#post-editor',
     file_picker_types: 'image',
     contextmenu: false,
-    plugins: "advlist autolink autosave codesample link image lists hr pagebreak searchreplace media table paste autoresize emoticons textpattern toc",
+    plugins: "advlist autolink autosave codesample link image lists pagebreak searchreplace media table autoresize emoticons toc",
     toolbar1: "bold italic underline strikethrough forecolor publiilink unlink emoticons blockquote alignleft aligncenter alignright bullist numlist image gallery media table toc",
-    toolbar2: "styleselect formatselect codesample searchreplace hr readmore undo redo restoredraft removeformat sourcecode",
+    toolbar2: "styles blocks codesample searchreplace hr readmore undo redo restoredraft removeformat sourcecode",
     toolbar3: "",
     icons: "publii",
     block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Address=address;Pre=pre;Code=code;Blockquote=blockquote',
@@ -19,9 +19,10 @@ export default {
     preview_styles: false,
     resize: false,
     menubar: false,
-    forced_root_block : "",
-    force_br_newlines : false,
-    force_p_newlines : true,
+    // Keep the TinyMCE iframe body id - Publii and theme editor.css files
+    // target body#tinymce (HugeRTE defaults to "hugerte")
+    body_id: 'tinymce',
+    xss_sanitization: false,
     paste_as_text: false,
     keep_styles: false,
     image_class_list: [
@@ -48,37 +49,39 @@ export default {
         return '<figure class="post__video"><iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' +
             (data.allowfullscreen ? ' allowFullscreen="1"' : '') + '></iframe></figure>';
     },
-    media_url_resolver: function (data, resolve) {
-        let patterns = [
-            { regex: /youtu\.be\/([\w\-_\?&=.]+)/i, w: 560, h: 314, url: 'www.youtube.com/embed/$1', allowFullscreen: true },
-            { regex: /youtube\.com(.+)v=([^&]+)(&([a-z0-9&=\-_]+))?/i, w: 560, h: 314, url: 'www.youtube.com/embed/$2?$4', allowFullscreen: true },
-            { regex: /youtube.com\/embed\/([a-z0-9\?&=\-_]+)/i, w: 560, h: 314, url: 'www.youtube.com/embed/$1', allowFullscreen: true },
-            { regex: /vimeo\.com\/([0-9]+)/, w: 425, h: 350, url: 'player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc', allowFullscreen: true },
-            { regex: /vimeo\.com\/(.*)\/([0-9]+)/, w: 425, h: 350, url: 'player.vimeo.com/video/$2?title=0&amp;byline=0', allowFullscreen: true },
-            { regex: /dailymotion\.com\/video\/([^_]+)/, w: 480, h: 270, url: 'www.dailymotion.com/embed/video/$1', allowFullscreen: true },
-            { regex: /dai\.ly\/([^_]+)/, w: 480, h: 270, url: 'www.dailymotion.com/embed/video/$1', allowFullscreen: true }
-        ];
-        let pattern = patterns.find(p => p.regex.test(data.url));
+    media_url_resolver: function (data) {
+        return new Promise(resolve => {
+            let patterns = [
+                { regex: /youtu\.be\/([\w\-_\?&=.]+)/i, w: 560, h: 314, url: 'www.youtube.com/embed/$1', allowFullscreen: true },
+                { regex: /youtube\.com(.+)v=([^&]+)(&([a-z0-9&=\-_]+))?/i, w: 560, h: 314, url: 'www.youtube.com/embed/$2?$4', allowFullscreen: true },
+                { regex: /youtube.com\/embed\/([a-z0-9\?&=\-_]+)/i, w: 560, h: 314, url: 'www.youtube.com/embed/$1', allowFullscreen: true },
+                { regex: /vimeo\.com\/([0-9]+)/, w: 425, h: 350, url: 'player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc', allowFullscreen: true },
+                { regex: /vimeo\.com\/(.*)\/([0-9]+)/, w: 425, h: 350, url: 'player.vimeo.com/video/$2?title=0&amp;byline=0', allowFullscreen: true },
+                { regex: /dailymotion\.com\/video\/([^_]+)/, w: 480, h: 270, url: 'www.dailymotion.com/embed/video/$1', allowFullscreen: true },
+                { regex: /dai\.ly\/([^_]+)/, w: 480, h: 270, url: 'www.dailymotion.com/embed/video/$1', allowFullscreen: true }
+            ];
+            let pattern = patterns.find(p => p.regex.test(data.url));
 
-        if (!pattern) {
-            resolve({ html: '' });
-            return;
-        }
+            if (!pattern) {
+                resolve({ html: '' });
+                return;
+            }
 
-        let match = pattern.regex.exec(data.url);
-        let protocolMatch = data.url.match(/^(https?:\/\/|www\.)(.+)$/i);
-        let protocol = protocolMatch && protocolMatch[1] && protocolMatch[1].toLowerCase() !== 'www.' ? protocolMatch[1] : 'https://';
-        let embedUrl = protocol + pattern.url;
+            let match = pattern.regex.exec(data.url);
+            let protocolMatch = data.url.match(/^(https?:\/\/|www\.)(.+)$/i);
+            let protocol = protocolMatch && protocolMatch[1] && protocolMatch[1].toLowerCase() !== 'www.' ? protocolMatch[1] : 'https://';
+            let embedUrl = protocol + pattern.url;
 
-        for (let i = 0; i < match.length; i++) {
-            embedUrl = embedUrl.replace('$' + i, () => match[i] || '');
-        }
+            for (let i = 0; i < match.length; i++) {
+                embedUrl = embedUrl.replace('$' + i, () => match[i] || '');
+            }
 
-        embedUrl = embedUrl.replace(/\?$/, '').replace(/"/g, '&quot;');
+            embedUrl = embedUrl.replace(/\?$/, '').replace(/"/g, '&quot;');
 
-        resolve({
-            html: '<figure class="post__video"><iframe src="' + embedUrl + '" width="' + pattern.w + '" height="' + pattern.h + '"' +
-                (pattern.allowFullscreen ? ' allowFullscreen="1"' : '') + '></iframe></figure>'
+            resolve({
+                html: '<figure class="post__video"><iframe src="' + embedUrl + '" width="' + pattern.w + '" height="' + pattern.h + '"' +
+                    (pattern.allowFullscreen ? ' allowFullscreen="1"' : '') + '></iframe></figure>'
+            });
         });
     },
     codesample_languages: [
@@ -157,7 +160,7 @@ export default {
     entity_encoding: "raw",
     allow_script_urls: true,
     convert_urls: false,
-    textpattern_patterns: [
+    text_patterns: [
         {start: '*', end: '*', format: 'italic'},
         {start: '**', end: '**', format: 'bold'},
         {start: '##', format: 'h2'},

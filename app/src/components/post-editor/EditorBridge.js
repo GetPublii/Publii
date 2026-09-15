@@ -5,6 +5,8 @@ import { accept as imageAccept } from './../../../config/image-upload-formats.js
 import { applyAppAppearance } from './../../helpers/app-appearance';
 import Utils from './../../helpers/utils';
 import wrapIframes from './../../../shared/iframe-wrapper';
+import registerTocPlugin from './plugins/toc.js';
+import normalizeLegacyEditorConfig from './legacy-editor-config.js';
 
 class EditorBridge {
     constructor(itemID, itemType = 'post') {
@@ -22,13 +24,40 @@ class EditorBridge {
 
     updateItemID (newItemID) {
         this.itemID = newItemID;
+        this.migrateLegacyAutosaveDraft();
         this.updateAutosavePrefix();
         let contentToUpdate = this.tinymceEditor.getContent().replace(/media\/posts\/temp/gmi, 'media/posts/' + this.itemID + '/');
         this.tinymceEditor.setContent(contentToUpdate);
     }
 
     getAutosavePrefix () {
+        return 'wysiwyg-autosave-' + this.itemID + '-';
+    }
+
+    getLegacyAutosavePrefix () {
         return 'tinymce-autosave-' + this.itemID + '-';
+    }
+
+    // Move drafts stored under the legacy "tinymce-autosave-" prefix to the
+    // current "wysiwyg-autosave-" one. Legacy prefix support will be removed
+    // in a future Publii release.
+    migrateLegacyAutosaveDraft () {
+        ['draft', 'time'].forEach(suffix => {
+            let legacyKey = this.getLegacyAutosavePrefix() + suffix;
+            let legacyValue = localStorage.getItem(legacyKey);
+
+            if (legacyValue === null) {
+                return;
+            }
+
+            let currentKey = this.getAutosavePrefix() + suffix;
+
+            if (localStorage.getItem(currentKey) === null) {
+                localStorage.setItem(currentKey, legacyValue);
+            }
+
+            localStorage.removeItem(legacyKey);
+        });
     }
 
     updateAutosavePrefix () {
@@ -44,6 +73,9 @@ class EditorBridge {
     }
 
     init() {
+        registerTocPlugin();
+        this.migrateLegacyAutosaveDraft();
+
         let customFormats = this.loadCustomFormatsFromTheme();
         let editorConfig = Object.assign({}, EditorConfig, {
             setup: this.setupEditor.bind(this, customFormats),
@@ -67,21 +99,33 @@ class EditorBridge {
 
         // Remove style selector when there is no custom styles from the theme
         if(customFormats.length === 0) {
-            editorConfig.toolbar2 = editorConfig.toolbar2.replace('styleselect', '');
+            editorConfig.toolbar2 = editorConfig.toolbar2.replace('styles ', '');
         }
 
-        editorConfig = Utils.deepMerge(editorConfig, window.app.tinymceCustomConfig());
+        let appLevelOverride = window.app.tinymceCustomConfig();
+
+        if (appLevelOverride && Object.keys(appLevelOverride).length) {
+            let appLevelOverrideSource = window.app.tinymceCustomConfigSource ? window.app.tinymceCustomConfigSource() : false;
+
+            if (appLevelOverrideSource === 'tinymce.override.json') {
+                console.warn('[DEPRECATED] config/tinymce.override.json — rename the file to wysiwyg.override.json; support for the old file name will be removed in a future Publii release.');
+            }
+
+            appLevelOverride = normalizeLegacyEditorConfig(appLevelOverride, appLevelOverrideSource ? 'config/' + appLevelOverrideSource : 'app-level editor override');
+        }
+
+        editorConfig = Utils.deepMerge(editorConfig, appLevelOverride);
 
         if(this.customThemeEditorConfig) {
             editorConfig = Utils.deepMerge(editorConfig, this.customThemeEditorConfig);
         }
 
         if (window.app.getWysiwygTranslation()) {
-            tinymce.addI18n('custom', window.app.getWysiwygTranslation());
+            hugerte.addI18n('custom', window.app.getWysiwygTranslation());
             editorConfig.language = 'custom';
         }
 
-        tinymce.init(editorConfig);
+        hugerte.init(editorConfig);
     }
 
     focus () {
@@ -362,7 +406,7 @@ class EditorBridge {
         editor.on('remove', () => this.hideImageUploadProgress());
 
         editor.on('init', async () => {
-            $('.tox-tinymce').addClass('is-loaded');
+            $('.tox-hugerte').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
 
             // Scroll the editor to bottom in order to avoid issues
@@ -776,20 +820,42 @@ class EditorBridge {
     }
 
     getCustomThemeEditorConfig () {
-        // Add custom editor config
+        // Add custom editor config: wysiwyg.override.json with a legacy
+        // fallback to tinymce.override.json
         let customEditorConfig = false;
 
         if (window.app.hasPostEditorConfigOverride()) {
-            let configOverridePath = this.extensionsPath() + 'tinymce.override.json';
+            let configSource = 'wysiwyg.override.json';
 
             jQuery.ajax({
-                url: configOverridePath,
+                url: this.extensionsPath() + configSource,
                 dataType: 'json',
                 async: false,
                 success: function(json) {
                     customEditorConfig = json;
                 }
             });
+
+            if (customEditorConfig === false) {
+                configSource = 'tinymce.override.json';
+
+                jQuery.ajax({
+                    url: this.extensionsPath() + configSource,
+                    dataType: 'json',
+                    async: false,
+                    success: function(json) {
+                        customEditorConfig = json;
+                    }
+                });
+
+                if (customEditorConfig !== false) {
+                    console.warn('[DEPRECATED] Theme file tinymce.override.json — rename it to wysiwyg.override.json; support for the old file name will be removed in a future Publii release.');
+                }
+            }
+
+            if (customEditorConfig !== false) {
+                customEditorConfig = normalizeLegacyEditorConfig(customEditorConfig, 'theme ' + configSource);
+            }
         }
 
         return customEditorConfig;
@@ -868,7 +934,7 @@ class EditorBridge {
             icon: 'link',
             tooltip: window.app.translate('link.insertEditLink'),
             onAction: () => {
-                let selectedNode = tinymce.activeEditor.selection.getNode();
+                let selectedNode = hugerte.activeEditor.selection.getNode();
 
                 if (selectedNode.tagName === 'IMG' && selectedNode.parentNode && selectedNode.parentNode.tagName === 'A') {
                     window.app.initLinkPopup({
@@ -878,7 +944,7 @@ class EditorBridge {
                 } else {
                     window.app.initLinkPopup({
                         postID: this.itemID,
-                        selection: tinymce.activeEditor.selection.getContent()
+                        selection: hugerte.activeEditor.selection.getContent()
                     });
                 }
             }

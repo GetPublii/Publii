@@ -265,7 +265,7 @@ export default {
                 return;
             }
 
-            tinymce.triggerSave();
+            hugerte.triggerSave();
             let postData = await ItemHelper.prepareItemData(newPostStatus, this.postID, this.$store, this.postData, this.itemType);
 
             if(!preview) {
@@ -357,12 +357,22 @@ export default {
                 this.$store.state.currentSite.themeSettings.extensions &&
                 this.$store.state.currentSite.themeSettings.extensions.postEditorCustomScript
             ) {
-                let customEditorScriptPath = this.extensionsPath + 'tinymce.script.js';
-
+                // Load wysiwyg.script.js with a legacy fallback to tinymce.script.js
                 if (!document.querySelector('#custom-post-editor-script')) {
                     let customEditorScript = document.createElement('script');
                     customEditorScript.id = 'custom-post-editor-script';
-                    customEditorScript.src = customEditorScriptPath;
+                    customEditorScript.src = this.extensionsPath + 'wysiwyg.script.js';
+                    customEditorScript.onerror = () => {
+                        customEditorScript.remove();
+
+                        let legacyEditorScript = document.createElement('script');
+                        legacyEditorScript.id = 'custom-post-editor-script';
+                        legacyEditorScript.src = this.extensionsPath + 'tinymce.script.js';
+                        legacyEditorScript.onload = () => {
+                            console.warn('[DEPRECATED] Theme file tinymce.script.js — rename it to wysiwyg.script.js; support for the old file name will be removed in a future Publii release.');
+                        };
+                        document.body.appendChild(legacyEditorScript);
+                    };
                     document.body.appendChild(customEditorScript);
                 }
             }

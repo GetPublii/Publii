@@ -54,12 +54,14 @@ class App {
         this.app.appDir = this.appDir;
         this.initPath = path.join(this.appDir, 'config', 'window-config.json');
         this.appConfigPath = path.join(this.appDir, 'config', 'app-config.json');
+        this.wysiwygOverridedConfigPath = path.join(this.appDir, 'config', 'wysiwyg.override.json');
         this.tinymceOverridedConfigPath = path.join(this.appDir, 'config', 'tinymce.override.json');
         this.versionData = JSON.parse(FileHelper.readFileSync(__dirname + '/builddata.json', 'utf8'));
         this.versionData.os = os.platform() === 'darwin' ? 'mac' : os.platform() === 'linux' ? 'linux' : 'win';
         this.windowBounds = null;
         this.appConfig = null;
         this.tinymceOverridedConfig = {};
+        this.tinymceOverridedConfigSource = false;
         this.sites = {};
         this.sitesDir = null;
         this.app.sitesDir = null;
@@ -573,10 +575,17 @@ class App {
 
     // Load additional config data
     loadAdditionalConfig () {
-        // Try to get TinyMCE overrided config
+        // Try to get the WYSIWYG editor overrided config - wysiwyg.override.json
+        // with a legacy fallback to tinymce.override.json
         try {
-            this.tinymceOverridedConfig = JSON.parse(FileHelper.readFileSync(this.tinymceOverridedConfigPath, 'utf8'));
-        } catch (e) {}
+            this.tinymceOverridedConfig = JSON.parse(FileHelper.readFileSync(this.wysiwygOverridedConfigPath, 'utf8'));
+            this.tinymceOverridedConfigSource = 'wysiwyg.override.json';
+        } catch (e) {
+            try {
+                this.tinymceOverridedConfig = JSON.parse(FileHelper.readFileSync(this.tinymceOverridedConfigPath, 'utf8'));
+                this.tinymceOverridedConfigSource = 'tinymce.override.json';
+            } catch (err) {}
+        }
 
         if (this.appConfig.sitesLocation) {
             this.sitesDir = this.appConfig.sitesLocation;
@@ -698,7 +707,8 @@ class App {
                 version: this.versionData,
                 config: this.appConfig,
                 customConfig: {
-                    tinymce: this.tinymceOverridedConfig
+                    tinymce: this.tinymceOverridedConfig,
+                    editorOverrideSource: this.tinymceOverridedConfigSource
                 },
                 currentLanguage: {
                     name: this.currentLanguageName,

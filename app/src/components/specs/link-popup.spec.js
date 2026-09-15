@@ -39,7 +39,7 @@ function popup(local = true, markdown = false) {
         mainProcessAPI: { send() {}, receiveOnce: (name, cb) => { callbacks[name] = cb; } },
         document: { body },
         $: () => ({ css: () => 'none' }),
-        tinymce: { activeEditor: { selection: { setContent: html => inserted.push(html) } } }
+        hugerte: { activeEditor: { selection: { setContent: html => inserted.push(html) } } }
     });
     const instance = new Vue({ ...definition, propsData: { local, markdown } });
     instance.$bus = bus;
@@ -350,7 +350,7 @@ describe('Mini editor opt-in', () => {
                 let configuration;
                 const definition = loadComponent('basic-elements/TextArea', {
                     Vue, LinkPopup: {}, Utils: { debouncedFunction: callback => callback },
-                    tinymce: { init: config => { configuration = config; } }
+                    hugerte: { init: config => { configuration = config; } }
                 });
                 const p = new Vue({ ...definition, propsData: { internalLinks, simplifiedToolbar } });
                 p.$store = { state: { currentSite: { config: {} } } };
