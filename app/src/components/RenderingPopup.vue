@@ -273,7 +273,7 @@ export default {
 .preview-progress-message {
     color: var(--text-light-color);
     font-size: var(--font-size-ui-sm);
-    line-height: 1.5;
+    line-height: var(--line-height-base);
     margin: .6rem 0 0;
     min-height: 2rem;
     overflow: hidden;
