@@ -14,8 +14,8 @@
     "tinycolorpicker": {
         "url": "http://www.dematte.at/tinyColorPicker/"
     },
-    "tinymce": {
-        "url": "https://www.tiny.cloud/"
+    "hugerte": {
+        "url": "https://hugerte.org/"
     },
     "libvips": {
         "url": "https://github.com/jcupitt/libvips"
@@ -34,9 +34,6 @@
     },
     "select2": {
         "url": "https://select2.github.io/"
-    },
-    "node-slug": {
-        "url": "https://github.com/dodo/node-slug"
     },
     "feathericons": {
         "url": "https://feathericons.com"
