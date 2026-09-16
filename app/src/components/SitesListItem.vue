@@ -236,7 +236,12 @@ export default {
                 site: name
             });
 
-            mainProcessAPI.receiveOnce('app-site-deleted', () => {
+            mainProcessAPI.receiveOnce('app-site-deleted', (result) => {
+                if (!result || result.status !== true) {
+                    this.showRemoveError(name, result);
+                    return;
+                }
+
                 this.$store.commit('removeWebsite', name);
                 let sites = Object.keys(this.$store.state.sites);
 
@@ -257,6 +262,28 @@ export default {
                     type: 'success',
                     lifeTime: 3
                 });
+            });
+        },
+        showRemoveError (name, result) {
+            // The website is open in another window - offer switching to it instead
+            if (result && result.error === 'site-already-open') {
+                this.$bus.$emit('confirm-display', {
+                    message: this.$t('site.deleteWebsiteOpenInAnotherWindow', {
+                        siteName: escapeHTML(this.displayName)
+                    }),
+                    okLabel: this.$t('site.goToWindowWithSite'),
+                    cancelLabel: this.$t('ui.cancel'),
+                    okClick: () => {
+                        mainProcessAPI.send('app-focus-window-with-site', name);
+                    }
+                });
+                return;
+            }
+
+            this.$bus.$emit('message-display', {
+                message: this.$t('site.deleteWebsiteErrorMsg'),
+                type: 'warning',
+                lifeTime: 3
             });
         },
         checkIfNewNameIsFree (newName) {

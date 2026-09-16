@@ -1290,6 +1290,8 @@
         "deleteWebsite": "Delete website",
         "deleteWebsiteConfirmMsg": "Remove “{siteName}” from Publii? Its local folder will be moved to your system’s trash and its saved server credentials will be deleted. The published website will remain online.",
         "deleteWebsiteCSuccessMsg": "Website has been removed.",
+        "deleteWebsiteErrorMsg": "Couldn't remove the website. Please try again.",
+        "deleteWebsiteOpenInAnotherWindow": "“{siteName}” is open in another window. Close it there before removing it.",
         "deleteWebsiteSuccessMsg": "Website has been removed. Switched to: ",
         "duplicateWebsite": "Duplicate website",
         "erroOcurredDuringSiteDatabaseCreationInfo": "Couldn't create the website database. Check your antivirus software and try again. You may also need to remove the incomplete website folder from Publii's sites directory.",

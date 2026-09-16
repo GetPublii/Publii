@@ -1292,6 +1292,8 @@
         "deleteWebsite": "Usuń stronę internetową",
         "deleteWebsiteConfirmMsg": "Usunąć witrynę „{siteName}” z Publii? Jej lokalny folder zostanie przeniesiony do kosza systemowego, a zapisane dane logowania do serwera zostaną usunięte. Opublikowana witryna pozostanie dostępna w internecie.",
         "deleteWebsiteCSuccessMsg": "Witryna została usunięta.",
+        "deleteWebsiteErrorMsg": "Nie udało się usunąć witryny. Spróbuj ponownie.",
+        "deleteWebsiteOpenInAnotherWindow": "Witryna „{siteName}” jest otwarta w innym oknie. Zamknij ją tam przed usunięciem.",
         "deleteWebsiteSuccessMsg": "Witryna została usunięta. Przełączono na: ",
         "duplicateWebsite": "Duplikuj stronę internetową",
         "erroOcurredDuringSiteDatabaseCreationInfo": "Nie udało się utworzyć bazy danych witryny. Sprawdź ustawienia programu antywirusowego i spróbuj ponownie. Może być też konieczne usunięcie niekompletnego folderu witryny z katalogu witryn Publii.",

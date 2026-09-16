@@ -48,6 +48,19 @@ describe('Publii window manager', function() {
         assert.strictEqual(win.focused, true);
     });
 
+    it('should forget the website of a window which deleted it', function() {
+        let manager = new PubliiWindowManager({ closeDbForSite () {} });
+        let win = createWindow(12);
+
+        manager.registerWindow(win);
+        manager.setWindowSite(win.webContents.id, 'my-website');
+        manager.clearWindowSite(win.webContents.id);
+
+        assert.strictEqual(manager.getSiteForWindow(win.webContents.id), null);
+        assert.strictEqual(manager.isSiteLockedByOther('my-website', 99), false);
+        assert.strictEqual(manager.focusWindowBySite('my-website'), false);
+    });
+
     it('should release a reserved website when its window is destroyed', function() {
         let closedSite = '';
         let manager = new PubliiWindowManager({

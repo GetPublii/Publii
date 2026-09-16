@@ -438,20 +438,6 @@ class SiteEvents {
         });
 
         /*
-         * Refresh website data
-         */
-        ipcMain.on('app-site-refresh', function (event, config) {
-            let result = appInstance.switchSite(config.site, event.sender.id);
-
-            if (!config || !self.siteDirExists(appInstance, config.site)) {
-                event.sender.send('app-site-refreshed', { status: false });
-                return;
-            }
-            
-            event.sender.send('app-site-refreshed', result);
-        });
-
-        /*
          * Save site theme config
          */
         ipcMain.on('app-site-theme-config-save', function (event, data) {
@@ -602,7 +588,13 @@ class SiteEvents {
             if (!config ||
                 !PathValidator.isValidDirSegment(config.site) ||
                 !Object.prototype.hasOwnProperty.call(appInstance.sites, config.site)) {
-                event.sender.send('app-site-deleted', false);
+                event.sender.send('app-site-deleted', { status: false });
+                return;
+            }
+
+            // A website which is open in another window cannot be removed
+            if (appInstance.windowManager && appInstance.windowManager.isSiteLockedByOther(config.site, event.sender.id)) {
+                event.sender.send('app-site-deleted', { status: false, error: 'site-already-open' });
                 return;
             }
 
@@ -617,7 +609,13 @@ class SiteEvents {
 
             Site.delete(appInstance, config.site);
             delete appInstance.sites[config.site];
-            event.sender.send('app-site-deleted', true);
+
+            // Release the lock of the deleting window, so the name can be reused right away
+            if (appInstance.windowManager && appInstance.windowManager.getSiteForWindow(event.sender.id) === config.site) {
+                appInstance.windowManager.clearWindowSite(event.sender.id);
+            }
+
+            event.sender.send('app-site-deleted', { status: true });
             appInstance.notifySitesListChanged(event.sender.id);
         });
 

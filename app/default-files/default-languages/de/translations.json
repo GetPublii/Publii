@@ -1236,6 +1236,8 @@
         "deleteWebsite": "Webseite löschen",
         "deleteWebsiteConfirmMsg": "Möchten Sie die Webseite „{siteName}“ aus Publii entfernen? Ihr lokaler Ordner wird in den Papierkorb des Betriebssystems verschoben und ihre gespeicherten Server-Zugangsdaten werden gelöscht. Die veröffentlichte Webseite bleibt online.",
         "deleteWebsiteCSuccessMsg": "Webseite wurde gelöscht.",
+        "deleteWebsiteErrorMsg": "Die Webseite konnte nicht entfernt werden. Bitte versuchen Sie es erneut.",
+        "deleteWebsiteOpenInAnotherWindow": "„{siteName}“ ist in einem anderen Fenster geöffnet. Schließen Sie sie dort, bevor Sie sie entfernen.",
         "deleteWebsiteSuccessMsg": "Webseite wurde gelöscht. Gewechselt zu:",
         "duplicateWebsite": "Webseite duplizieren",
         "erroOcurredDuringSiteDatabaseCreationInfo": "Beim Erstellen der Seiten-Datenbank ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Antivirensoftware und versuchen Sie es erneut. Möglicherweise müssen Sie auch den Ordner der ungültigen Webseite aus dem Publii-Seitenverzeichnis entfernen.",

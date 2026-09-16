@@ -60,6 +60,17 @@ class PubliiWindowManager {
         return this.windowSites.get(webContentsId) || null;
     }
 
+    // Forget the website of a window (i.e. after the window deleted it), so its name is free again
+    clearWindowSite (webContentsId) {
+        const siteName = this.windowSites.get(webContentsId);
+
+        if (siteName && this.siteLocks.get(siteName) === webContentsId) {
+            this.siteLocks.delete(siteName);
+        }
+
+        this.windowSites.delete(webContentsId);
+    }
+
     renameSiteLock (oldSiteName, newSiteName, webContentsId) {
         this.siteLocks.delete(oldSiteName);
 
