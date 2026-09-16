@@ -45,6 +45,7 @@ export default {
         state.plugins = initialData.plugins;
         state.pluginsPath = initialData.pluginsPath;
         state.sites = initialData.sites;
+        state.app.sitesLocationMissing = initialData.sitesLocationMissing === true;
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
         state.dirs = initialData.dirs;
@@ -211,6 +212,9 @@ export default {
     },
     setSites (state, sites) {
         state.sites = Object.assign({}, sites);
+    },
+    setSitesLocationMissing (state, isMissing) {
+        state.app.sitesLocationMissing = isMissing === true;
     },
     setNewThemeConfig (state, data) {
         state.currentSite.config.theme = data.themeName;

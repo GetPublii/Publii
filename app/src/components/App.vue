@@ -14,6 +14,7 @@
         <rendering-popup />
         <regenerate-thumbnails-popup />
         <error-popup />
+        <sites-location-popup />
         <sites-popup />
         <sync-popup />
     </div>
@@ -29,6 +30,7 @@ import RegenerateThumbnailsPopup from './RegenerateThumbnailsPopup';
 import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
+import SitesLocationPopup from './SitesLocationPopup';
 import { setTooltipsEnabled } from '../helpers/tooltip';
 
 const GLOBAL_MENU_ROUTES = Object.freeze({
@@ -74,6 +76,7 @@ export default {
         'rendering-popup': RenderingPopup,
         'regenerate-thumbnails-popup': RegenerateThumbnailsPopup,
         'error-popup': ErrorPopup,
+        'sites-location-popup': SitesLocationPopup,
         'sites-popup': SitesPopup,
         'sync-popup': SyncPopup
     },
@@ -126,7 +129,10 @@ export default {
         this.integrateTopBar();
         this.setupApplicationMenu();
 
-        if (this.initialData.isNewWindow) {
+        if (this.initialData.isNewWindow && this.$store.state.app.sitesLocationMissing) {
+            this.$router.push('/site/!/posts');
+            this.$nextTick(() => this.$bus.$emit('sites-location-popup-show'));
+        } else if (this.initialData.isNewWindow) {
             // Secondary window: skip splash screen
             if (this.initialData.initialSite && this.siteNames.indexOf(this.initialData.initialSite) > -1) {
                 this.$router.push(`/site/${this.initialData.initialSite}/posts`);
@@ -140,10 +146,11 @@ export default {
             }
         } else if (this.$store.state.app.config.licenseAccepted) {
             // Primary window: normal 2-second splash screen
-            setTimeout(() => this.showInitialScreen(), 2000);
+            setTimeout(() => this.startApplication(), 2000);
         }
 
-        this.$bus.$on('license-accepted', this.showInitialScreen);
+        this.$bus.$on('license-accepted', this.startApplication);
+        this.$bus.$on('sites-location-restored', this.showInitialScreen);
     },
     methods: {
         // Block drag'n'drop redirects
@@ -166,6 +173,16 @@ export default {
         setState () {
             this.$store.commit('init', this.initialData);
             document.documentElement.style.setProperty('--ui-zoom-level', parseInt(this.$store.state.app.config.uiZoomLevel * 100.0, 10) + '%');
+        },
+
+        // Leave the splash screen, unless the sites folder has to be resolved first
+        startApplication () {
+            if (this.$store.state.app.sitesLocationMissing) {
+                this.$bus.$emit('sites-location-popup-show');
+                return;
+            }
+
+            this.showInitialScreen();
         },
 
         // Show site screen when there is only one website
@@ -386,6 +403,7 @@ export default {
     },
     beforeDestroy () {
         this.$bus.$off('license-accepted');
+        this.$bus.$off('sites-location-restored');
         mainProcessAPI.stopReceiveAll('app-license-accepted');
         mainProcessAPI.stopReceiveAll('app-menu-command');
 

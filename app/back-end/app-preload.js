@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-save-color-theme',
             'app-license-load',
             'app-config-save',
+            'app-sites-location-retry',
             'app-backup-set-location',
             'app-theme-upload',
             'app-author-save',
@@ -148,6 +149,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
         const validChannels = [
             'app-license-loaded',
             'app-config-saved',
+            'app-sites-location-retried',
             'app-file-selected',
             'app-theme-uploaded',
             'app-author-saved',

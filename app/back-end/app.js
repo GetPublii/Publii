@@ -65,6 +65,7 @@ class App {
         this.sites = {};
         this.sitesDir = null;
         this.app.sitesDir = null;
+        this.sitesLocationMissing = false;
         this.dbMap = new Map();
         this.windowManager = new PubliiWindowManager(this);
         this.pluginsAPI = new PluginsAPI();
@@ -82,14 +83,7 @@ class App {
 
         this.loadAdditionalConfig();
         this.checkThemes();
-
-        let loadingSitesResult = this.loadSites();
-
-        if (!loadingSitesResult) {
-            this.app.quit();
-            return;
-        }
-
+        this.loadSites();
         this.loadThemes();
         this.loadLanguages();
         this.loadPlugins();
@@ -372,11 +366,12 @@ class App {
 
     // Load websites
     loadSites() {
-        if (!fs.existsSync(this.sitesDir)) {
-            dialog.showErrorBox('Publii cannot find your sites folder.', 'Please check if the directory ' + this.sitesDir + ' exists or create it manually, then reopen the application.');
+        if (!Utils.dirExists(this.sitesDir)) {
+            this.sitesLocationMissing = true;
             return false;
         }
 
+        this.sitesLocationMissing = false;
         let files = fs.readdirSync(this.sitesDir);
         this.sites = {};
 
@@ -599,6 +594,13 @@ class App {
         this.pluginsHelper = new Plugins(this.appDir, this.sitesDir);
     }
 
+    setSitesDir (sitesLocation) {
+        this.sitesDir = sitesLocation;
+        this.app.sitesDir = sitesLocation;
+        this.appConfig.sitesLocation = sitesLocation;
+        this.pluginsHelper = new Plugins(this.appDir, this.sitesDir);
+    }
+
     // Check permissions errors
     hasPermissionsErrors (error) {
         if (error.code === 'EACCES') {
@@ -730,6 +732,7 @@ class App {
                 plugins: this.plugins,
                 pluginsPath: this.pluginsPath,
                 sites: this.sites,
+                sitesLocationMissing: this.sitesLocationMissing === true,
                 themes: this.themes,
                 themesPath: this.themesPath,
                 dirs: this.dirPaths,

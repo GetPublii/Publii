@@ -63,6 +63,7 @@ export default {
 
             mainProcessAPI.send('app-license-accept', true);
             mainProcessAPI.receiveOnce('app-license-accepted', function(data) {
+                self.$store.commit('setAppConfig', { licenseAccepted: true });
                 self.$bus.$emit('license-accepted');
             });
         }

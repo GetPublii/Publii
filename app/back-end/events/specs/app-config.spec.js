@@ -4,6 +4,7 @@ const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
 const AppFiles = require('../../helpers/app-files.js');
+const UtilsHelper = require('../../helpers/utils.js');
 
 describe('Website location settings IPC', function () {
     let base;
@@ -58,6 +59,10 @@ describe('Website location settings IPC', function () {
 
                 if (name === '../helpers/app-files.js') {
                     return AppFiles;
+                }
+
+                if (name === '../helpers/utils.js') {
+                    return UtilsHelper;
                 }
 
                 if (name === 'fs-extra' || name === 'path') {
@@ -126,6 +131,24 @@ describe('Website location settings IPC', function () {
             assert.equal(fs.existsSync(path.join(config.sitesLocation, 'demo')), !withoutCopying);
         });
     }
+
+    it('refuses a missing folder when changing the location without copying', function () {
+        const oldConfig = application.appConfig;
+        const missing = path.join(base, 'missing');
+        save({ sitesLocation: missing, changeSitesLocationWithoutCopying: true });
+
+        assert.equal(closed, 1);
+        assert.equal(application.appConfig, oldConfig);
+        assert.equal(application.sitesDir, oldConfig.sitesLocation);
+        assert.equal(application.app.sitesDir, oldConfig.sitesLocation);
+        assert.deepEqual(reloads, [oldConfig.sitesLocation]);
+        assert.deepEqual(fs.readJsonSync(application.appConfigPath), oldConfig);
+        assert.equal(replies.length, 1);
+        assert.equal(replies[0].payload.status, false);
+        assert.equal(replies[0].payload.message, 'error-save');
+        assert.equal(replies[0].payload.reason, 'location-missing');
+        assert.equal(fs.existsSync(missing), false);
+    });
 
     it('reports a settings save failure without switching the active directory', function () {
         const original = application.sitesDir;

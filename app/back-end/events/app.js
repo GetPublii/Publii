@@ -28,9 +28,9 @@ class AppEvents {
         /*
          * Save licence acceptance
          */
-        ipcMain.on('app-license-accept', function(event, config) {
-            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify({licenseAccepted: true}, null, 4));
-            appInstance.appConfig = config;
+        ipcMain.on('app-license-accept', function (event) {
+            appInstance.appConfig.licenseAccepted = true;
+            fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appInstance.appConfig, null, 4));
 
             event.sender.send('app-license-accepted', true);
         });
@@ -55,10 +55,14 @@ class AppEvents {
 
                         try {
                             if (config.changeSitesLocationWithoutCopying) {
-                                appFilesHelper.saveConfig(config);
-                                appInstance.sitesDir = config.sitesLocation;
-                                appInstance.app.sitesDir = config.sitesLocation;
-                                result = true;
+                                if (UtilsHelper.dirExists(config.sitesLocation)) {
+                                    appFilesHelper.saveConfig(config);
+                                    appInstance.sitesDir = config.sitesLocation;
+                                    appInstance.app.sitesDir = config.sitesLocation;
+                                    result = true;
+                                } else {
+                                    reason = 'location-missing';
+                                }
                             } else {
                                 const relocation = appFilesHelper.relocateSites(
                                     appInstance.appConfig.sitesLocation,
@@ -99,6 +103,52 @@ class AppEvents {
 
             fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
             appInstance.appConfig = config;
+        });
+
+        /*
+         * Retry loading websites when the sites folder was not found at startup,
+         * optionally switching to a different folder (no files are moved)
+         */
+        ipcMain.on('app-sites-location-retry', function (event, data) {
+            let requestedLocation = data && typeof data.sitesLocation === 'string' ? data.sitesLocation.trim() : '';
+            let reply = payload => event.sender.send('app-sites-location-retried', payload);
+
+            if (requestedLocation !== '' && requestedLocation !== appInstance.sitesDir) {
+                if (!UtilsHelper.dirExists(requestedLocation)) {
+                    reply({
+                        status: false,
+                        reason: 'location-missing',
+                        checkedLocation: requestedLocation
+                    });
+                    return;
+                }
+
+                let previousLocation = appInstance.sitesDir;
+
+                try {
+                    appInstance.setSitesDir(requestedLocation);
+                    new AppFiles(appInstance).saveConfig(appInstance.appConfig);
+                } catch (error) {
+                    console.log('Unable to change websites location:', error);
+                    appInstance.setSitesDir(previousLocation);
+                    reply({
+                        status: false,
+                        reason: 'config-save-error',
+                        checkedLocation: requestedLocation
+                    });
+                    return;
+                }
+            }
+
+            let status = appInstance.loadSites();
+
+            reply({
+                status: status,
+                reason: status ? null : 'location-missing',
+                checkedLocation: appInstance.sitesDir,
+                sitesLocation: appInstance.sitesDir,
+                sites: appInstance.sites
+            });
         });
 
         /*
