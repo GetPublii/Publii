@@ -250,30 +250,24 @@ export default {
       }, 500);
     },
     parseLink () {
-      if (this.link.url === '') {
-        this.linkType = 'external';
-        return;
-      }
+      const url = this.link.url;
+      this.linkType = 'external';
 
-      if (this.link.url.indexOf('#INTERNAL_LINK#') > -1) {
-        if (this.link.url.indexOf('post') > -1) {
-          this.linkType = 'post';
-          this.linkSelectedPost = parseInt(this.link.url.split('/').pop(), 10);
-        } else if (this.link.url.indexOf('page') > -1) {
-          this.linkType = 'page';
-          this.linkSelectedPage = parseInt(this.link.url.split('/').pop(), 10);
-        } else if (this.link.url.indexOf('tag') > -1) {
-          this.linkType = 'tag';
-          this.linkSelectedTag = parseInt(this.link.url.split('/').pop(), 10);
-        } else if (this.link.url.indexOf('author') > -1) {
-          this.linkType = 'author';
-          this.linkSelectedAuthor = parseInt(this.link.url.split('/').pop(), 10);
-        } else if (this.link.url.indexOf('file') > -1) {
-          this.linkType = 'file';
-          this.linkSelectedFile = this.link.url.replace('#INTERNAL_LINK#/file/', '');
-        }
-      } else {
-        this.linkType = 'external';
+      if (url.indexOf('#INTERNAL_LINK#/post/') === 0) {
+        this.linkType = 'post';
+        this.linkSelectedPost = parseInt(url.replace('#INTERNAL_LINK#/post/', ''), 10);
+      } else if (url.indexOf('#INTERNAL_LINK#/page/') === 0) {
+        this.linkType = 'page';
+        this.linkSelectedPage = parseInt(url.replace('#INTERNAL_LINK#/page/', ''), 10);
+      } else if (url.indexOf('#INTERNAL_LINK#/tag/') === 0) {
+        this.linkType = 'tag';
+        this.linkSelectedTag = parseInt(url.replace('#INTERNAL_LINK#/tag/', ''), 10);
+      } else if (url.indexOf('#INTERNAL_LINK#/author/') === 0) {
+        this.linkType = 'author';
+        this.linkSelectedAuthor = url.replace('#INTERNAL_LINK#/author/', '');
+      } else if (url.indexOf('#INTERNAL_LINK#/file/') === 0) {
+        this.linkType = 'file';
+        this.linkSelectedFile = url.replace('#INTERNAL_LINK#/file/', '');
       }
     },
     setLinkType (type) {

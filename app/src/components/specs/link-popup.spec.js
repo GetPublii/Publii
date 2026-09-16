@@ -386,3 +386,42 @@ describe('Mini editor opt-in', () => {
         }
     }
 });
+
+describe('Block editor link popup', () => {
+    function blockPopup(url) {
+        const definition = loadComponent('block-editor/components/BlockLinkPopup', { Switcher: {}, LinkHelpers: {}, vSelect: {} });
+        const instance = new Vue({ ...definition });
+        instance.show('block-1', { url, title: '', cssClass: '' });
+        return instance;
+    }
+
+    it('restores the author username when editing an author link', () => {
+        const p = blockPopup('#INTERNAL_LINK#/author/anna-nowak');
+        assert.equal(p.linkType, 'author');
+        assert.equal(p.linkSelectedAuthor, 'anna-nowak');
+        assert.equal(p.prepareLink(), '#INTERNAL_LINK#/author/anna-nowak');
+    });
+
+    it('detects the link type by the full marker prefix', () => {
+        const cases = {
+            '#INTERNAL_LINK#/post/12': ['post', 'linkSelectedPost', 12],
+            '#INTERNAL_LINK#/page/21': ['page', 'linkSelectedPage', 21],
+            '#INTERNAL_LINK#/tag/7': ['tag', 'linkSelectedTag', 7],
+            '#INTERNAL_LINK#/file/media/files/post-tag-page.pdf': ['file', 'linkSelectedFile', 'media/files/post-tag-page.pdf']
+        };
+        for (const [url, [type, field, value]] of Object.entries(cases)) {
+            const p = blockPopup(url);
+            assert.equal(p.linkType, type, url);
+            assert.equal(p[field], value, url);
+            assert.equal(p.prepareLink(), url);
+        }
+    });
+
+    it('keeps markers without a dedicated field and external URLs unchanged', () => {
+        for (const url of ['#INTERNAL_LINK#/frontpage/1', '#INTERNAL_LINK#/tags/1', 'https://example.test/post/12', '']) {
+            const p = blockPopup(url);
+            assert.equal(p.linkType, 'external', url);
+            assert.equal(p.prepareLink(), url, url);
+        }
+    });
+});
