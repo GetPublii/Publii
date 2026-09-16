@@ -250,8 +250,10 @@ export default {
         width: 4.4rem;
 
         > svg {
+            height: 16px;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 16px;
         }
     }
 }
