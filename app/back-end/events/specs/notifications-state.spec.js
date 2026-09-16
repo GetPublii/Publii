@@ -113,7 +113,7 @@ describe('Notification center settings persistence', function () {
             appConfigPath: path.join(base, 'app-config.json'),
             initPath: path.join(base, 'window-config.json'),
             basedir: base,
-            windowManager: { getAllWindows: () => [] },
+            windowManager: { getAllWindows: () => [], releaseViewLocksForWindow () {} },
             initWindow() {
                 this.mainWindow = this._createWindow({});
                 this.mainWindow.webContents.emit('did-finish-load');

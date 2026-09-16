@@ -46,6 +46,7 @@ export default {
         state.pluginsPath = initialData.pluginsPath;
         state.sites = initialData.sites;
         state.app.sitesLocationMissing = initialData.sitesLocationMissing === true;
+        state.app.skipSplashScreen = initialData.skipSplashScreen === true;
         state.themes = initialData.themes;
         state.themesPath = initialData.themesPath;
         state.dirs = initialData.dirs;

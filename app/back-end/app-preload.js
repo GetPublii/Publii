@@ -108,6 +108,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-pages-hierarchy-update',
             'app-content-fields-update',
             'app-focus-window-with-site',
+            'app-focus-window-with-view',
+            'app-view-unlock',
             'app-menu-state'
         ];
 
@@ -270,7 +272,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-plugins-api:read-theme-file',
             'app-plugins-api:delete-config-file',
             'app-plugins-api:delete-language-file',
-            'app-open-new-window'
+            'app-open-new-window',
+            'app-view-lock'
         ];
 
         if (validCommands.includes(command)) {

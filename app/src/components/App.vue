@@ -60,6 +60,14 @@ const SITE_MENU_ROUTES = Object.freeze({
     'tools-wordpress-import': 'tools/wp-importer'
 });
 
+// Views which can be open in a single window only (route name -> view ID used by the main process)
+const EXCLUSIVE_VIEWS = Object.freeze({
+    'AppLanguages': 'app-languages',
+    'AppPlugins': 'app-plugins',
+    'AppSettings': 'app-settings',
+    'AppThemes': 'app-themes'
+});
+
 const RECENT_SITES_STORAGE_KEY = 'publii-recent-websites';
 const LAST_OPENED_SITE_STORAGE_KEY = 'publii-last-opened-website';
 const MAX_RECENT_SITES = 5;
@@ -117,6 +125,9 @@ export default {
         }
     },
     created () {
+        // Initialize the store before the first render, so child views see the real config from the start
+        this.setState();
+
         let notificationsReadStatus = localStorage.getItem('publii-notifications-readed') || '';
         notificationsReadStatus = notificationsReadStatus.replace(/[^a-z0-9\-_;\.]/gmi, '');
         this.$store.commit('setNotificationsReadStatus', notificationsReadStatus);
@@ -125,9 +136,9 @@ export default {
         // Setup app
         this.disableDragNDrop();
         await this.setEnvironmentInfo();
-        this.setState();
         this.integrateTopBar();
         this.setupApplicationMenu();
+        this.setupExclusiveViews();
 
         if (this.initialData.isNewWindow && this.$store.state.app.sitesLocationMissing) {
             this.$router.push('/site/!/posts');
@@ -145,8 +156,13 @@ export default {
                 }
             }
         } else if (this.$store.state.app.config.licenseAccepted) {
-            // Primary window: normal 2-second splash screen
-            setTimeout(() => this.startApplication(), 2000);
+            if (this.initialData.skipSplashScreen) {
+                // Reopened primary window: the app is already running, go straight to the initial screen
+                this.startApplication();
+            } else {
+                // Primary window: normal 2-second splash screen
+                setTimeout(() => this.startApplication(), 2000);
+            }
         }
 
         this.$bus.$on('license-accepted', this.startApplication);
@@ -241,6 +257,49 @@ export default {
                 this.syncApplicationMenuState,
                 { immediate: true }
             );
+        },
+        setupExclusiveViews () {
+            this.exclusiveViewsUnregister = [
+                this.$router.beforeResolve(this.acquireExclusiveView),
+                this.$router.afterEach(this.releaseExclusiveView)
+            ];
+        },
+        // Reserve the target view in the main process before entering it - or point the user to the window which has it
+        async acquireExclusiveView (to, from, next) {
+            let viewId = EXCLUSIVE_VIEWS[to.name];
+
+            if (!viewId || viewId === EXCLUSIVE_VIEWS[from.name]) {
+                next();
+                return;
+            }
+
+            let result = null;
+
+            try {
+                result = await mainProcessAPI.invoke('app-view-lock', viewId);
+            } catch (error) {
+                // The lock is a convenience only - never block the navigation when the main process is unreachable
+            }
+
+            if (result && result.status === false && result.error === 'view-already-open') {
+                next(false);
+                this.$bus.$emit('confirm-display', {
+                    message: this.$t('ui.screenAlreadyOpenInAnotherWindow'),
+                    okLabel: this.$t('ui.goToThatWindow'),
+                    cancelLabel: this.$t('ui.cancel'),
+                    okClick: () => mainProcessAPI.send('app-focus-window-with-view', viewId)
+                });
+                return;
+            }
+
+            next();
+        },
+        releaseExclusiveView (to, from) {
+            let viewId = EXCLUSIVE_VIEWS[from.name];
+
+            if (viewId && viewId !== EXCLUSIVE_VIEWS[to.name]) {
+                mainProcessAPI.send('app-view-unlock', viewId);
+            }
         },
         getRecentSiteNames (activeSiteName = '') {
             let storedSiteNames = [];
@@ -409,6 +468,10 @@ export default {
 
         if (this.applicationMenuStateUnwatch) {
             this.applicationMenuStateUnwatch();
+        }
+
+        if (this.exclusiveViewsUnregister) {
+            this.exclusiveViewsUnregister.forEach(unregister => unregister());
         }
     }
 }

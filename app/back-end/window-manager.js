@@ -4,6 +4,7 @@ class PubliiWindowManager {
         this.windows = new Map();      // webContentsId -> BrowserWindow
         this.windowSites = new Map();  // webContentsId -> siteName
         this.siteLocks = new Map();    // siteName -> webContentsId
+        this.viewLocks = new Map();    // viewId (i.e. 'app-settings') -> webContentsId
     }
 
     registerWindow (win) {
@@ -23,6 +24,7 @@ class PubliiWindowManager {
             this.appInstance.closeDbForSite(siteName);
         }
 
+        this.releaseViewLocksForWindow(webContentsId);
         this.windows.delete(webContentsId);
     }
 
@@ -60,15 +62,50 @@ class PubliiWindowManager {
     }
 
     focusWindowBySite (siteName) {
-        const webContentsId = this.siteLocks.get(siteName);
+        return this._focusWindow(this.siteLocks.get(siteName));
+    }
 
-        if (webContentsId !== undefined) {
-            const win = this.windows.get(webContentsId);
+    // Reserve an exclusive view for a window; fails when another window already owns it
+    lockView (viewId, webContentsId) {
+        const owner = this.viewLocks.get(viewId);
 
-            if (win && !win.isDestroyed()) {
-                win.focus();
-                return true;
+        if (owner !== undefined && owner !== webContentsId) {
+            return false;
+        }
+
+        this.viewLocks.set(viewId, webContentsId);
+        return true;
+    }
+
+    // Only the owner can release its exclusive view
+    unlockView (viewId, webContentsId) {
+        if (this.viewLocks.get(viewId) === webContentsId) {
+            this.viewLocks.delete(viewId);
+        }
+    }
+
+    releaseViewLocksForWindow (webContentsId) {
+        for (const [viewId, owner] of this.viewLocks) {
+            if (owner === webContentsId) {
+                this.viewLocks.delete(viewId);
             }
+        }
+    }
+
+    focusWindowByView (viewId) {
+        return this._focusWindow(this.viewLocks.get(viewId));
+    }
+
+    _focusWindow (webContentsId) {
+        if (webContentsId === undefined) {
+            return false;
+        }
+
+        const win = this.windows.get(webContentsId);
+
+        if (win && !win.isDestroyed()) {
+            win.focus();
+            return true;
         }
 
         return false;

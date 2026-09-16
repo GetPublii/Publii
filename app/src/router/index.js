@@ -32,7 +32,7 @@ const AppPlugins = () => import('../components/AppPlugins');
 const ThemeSettings = () => import('../components/ThemeSettings');
 const NotificationsCenter = () => import('../components/NotificationsCenter');
 
-// Avoid NavigationDuplicated errors
+// Avoid NavigationDuplicated errors and noise from navigations cancelled by guards (i.e. exclusive views)
 const originalPush = Router.prototype.push;
 
 Router.prototype.push = function push (location, onResolve, onReject) {
@@ -41,7 +41,10 @@ Router.prototype.push = function push (location, onResolve, onReject) {
     }
 
     return originalPush.call(this, location).catch(error => {
-        if (error.name !== 'NavigationDuplicated') {
+        if (
+            error.name !== 'NavigationDuplicated' &&
+            !Router.isNavigationFailure(error, Router.NavigationFailureType.aborted)
+        ) {
             throw error;
         }
     });

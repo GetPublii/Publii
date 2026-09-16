@@ -656,7 +656,7 @@ class App {
     }
 
     // Create and configure a single BrowserWindow; returns the window
-    _createWindow (windowParams, isNewWindow = false, initialSite = '') {
+    _createWindow (windowParams, { isNewWindow = false, initialSite = '', skipSplashScreen = isNewWindow } = {}) {
         let win = new BrowserWindow(windowParams);
         win.loadURL('file:///' + this.basedir + '/dist/index.html');
 
@@ -705,6 +705,9 @@ class App {
         });
 
         win.webContents.on('did-finish-load', () => {
+            // A (re)loaded renderer starts from scratch, so it cannot hold any exclusive view
+            this.windowManager.releaseViewLocksForWindow(win.webContents.id);
+
             let appData = {
                 version: this.versionData,
                 config: this.appConfig,
@@ -738,7 +741,8 @@ class App {
                 dirs: this.dirPaths,
                 vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked')),
                 isNewWindow: isNewWindow,
-                initialSite: initialSite
+                initialSite: initialSite,
+                skipSplashScreen: skipSplashScreen
             };
             
             win.webContents.send('app-data-loaded', appData);
@@ -780,7 +784,7 @@ class App {
     }
 
     // Create the first (main) window
-    initWindow () {
+    initWindow (skipSplashScreen = false) {
         let bounds = Object.assign({}, this.windowBounds);
 
         // Detect case when Publii was displayed on external display which is now unavailable
@@ -802,17 +806,18 @@ class App {
             bounds.y = 0;
         }
 
-        this.mainWindow = this._createWindow(this._buildWindowParams(bounds));
+        this.mainWindow = this._createWindow(this._buildWindowParams(bounds), { skipSplashScreen });
         this.windowManager.registerWindow(this.mainWindow);
     }
 
     // Restore the primary window after the application is reactivated on macOS
+    // (the app is already running, so the splash screen is skipped)
     reopenMainWindow () {
         if (this.windowManager.getAllWindows().length > 0) {
             return { status: false, error: 'window-already-open' };
         }
 
-        this.initWindow();
+        this.initWindow(true);
         return { status: true };
     }
 
@@ -832,7 +837,7 @@ class App {
             return { status: false, error: 'site-already-open' };
         }
 
-        let win = this._createWindow(this._buildWindowParams(), true, siteName);
+        let win = this._createWindow(this._buildWindowParams(), { isNewWindow: true, initialSite: siteName });
         this.windowManager.registerWindow(win);
 
         if (siteName !== '') {
@@ -848,6 +853,37 @@ class App {
         this.initializeCustomIpcMainEvents();
 
         ipcMain.handle('app-open-new-window', (event, siteName = '') => this.openNewWindow(siteName));
+        ipcMain.handle('app-view-lock', (event, viewId) => this.lockViewForWindow(viewId, event.sender.id));
+
+        ipcMain.on('app-view-unlock', (event, viewId) => {
+            if (this._isValidViewId(viewId)) {
+                this.windowManager.unlockView(viewId, event.sender.id);
+            }
+        });
+
+        ipcMain.on('app-focus-window-with-view', (event, viewId) => {
+            if (this._isValidViewId(viewId)) {
+                this.windowManager.focusWindowByView(viewId);
+            }
+        });
+    }
+
+    // Reserve an exclusive view (i.e. app settings) for the requesting window
+    lockViewForWindow (viewId, webContentsId) {
+        if (!this._isValidViewId(viewId)) {
+            return { status: false, error: 'invalid-view' };
+        }
+
+        if (!this.windowManager.lockView(viewId, webContentsId)) {
+            return { status: false, error: 'view-already-open' };
+        }
+
+        return { status: true };
+    }
+
+    // Check if the view identifier received from a renderer is safe to use
+    _isValidViewId (viewId) {
+        return typeof viewId === 'string' && /^[a-z0-9-]{1,64}$/.test(viewId);
     }
 
     // Initializes all custom events for IPC Main thread
