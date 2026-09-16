@@ -228,7 +228,7 @@ export default {
 
         mainProcessAPI.receiveOnce('app-authors-loaded', (data) => {
             this.$store.commit('setAuthors', data.authors);
-            this.$store.commit('setPostsAuthors', data.postsAuthors);
+            this.$store.commit('setPostAuthors', data.postsAuthors);
         });
     },
     mounted: function() {
