@@ -325,7 +325,7 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --bg-secondary: var(--palette-neutral-50);
     --bg-site: var(--palette-neutral-60);
 
-    --border-light-color: var(--palette-neutral-48);
+    --border-light-color: var(--palette-neutral-46);
 
     /* Form controls */
     --input-bg: var(--palette-neutral-55);
