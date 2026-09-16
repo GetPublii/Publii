@@ -410,12 +410,30 @@ export default {
     z-index: 2
 }
 
+.post-editor-wysiwyg .post-editor-form {
+    padding-bottom: var(--space-6);
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+    }
+
+    .tox-hugerte {
+        flex: 1;
+        height: auto !important;
+        min-height: 0;
+    }
+}
+
 .post-editor-form {
     #post-title {
         border: none;
         box-shadow: none;
         color: var(--headings-color);
         display: block;
+        flex-shrink: 0;
         font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         font-size: 3.6rem;
         font-weight: var(--font-weight-bold);
@@ -440,7 +458,7 @@ export default {
     }
 
     #post-editor_ifr {
-        height: calc( 100vh - 30rem )!important;
+        height: 100% !important;
     }
 }
 
@@ -457,12 +475,6 @@ export default {
  */
 
 body[data-os="win"] {
-    .post-editor-form {
-        #post-editor_ifr {
-            height: calc( 100vh - 31rem )!important;
-        }
-    }
-
     .post-editor {
         #inline-toolbar {
             padding-top: 0;
@@ -481,11 +493,4 @@ body[data-os="win"] {
     }
 }
 
-body[data-os="linux"] {
-    .post-editor-form {
-        #post-editor_ifr {
-            height: calc( 100vh - 26.8rem )!important;
-        }
-    }
-}
 </style>
