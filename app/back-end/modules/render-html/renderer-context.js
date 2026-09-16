@@ -353,9 +353,9 @@ class RendererContext {
         this.context = {
             context: contextItems,
             config: URLHelper.prepareSettingsImages(this.siteConfig.domain, {
-                basic: JSON.parse(JSON.stringify(this.themeConfig.config)),
-                site: JSON.parse(JSON.stringify(this.siteConfig.advanced)),
-                custom: JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(this.themeConfig.customConfig), this.renderer, true))
+                basic: ContentHelper.setInternalLinksInObject(this.themeConfig.config, this.renderer),
+                site: ContentHelper.setInternalLinksInObject(this.siteConfig.advanced, this.renderer),
+                custom: ContentHelper.setInternalLinksInObject(this.themeConfig.customConfig, this.renderer)
             }),
             website: {
                 url: fullURL,
@@ -400,11 +400,11 @@ class RendererContext {
         };
 
         if (context === 'post' && itemConfig) {
-            this.context.config.post = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer, true));
+            this.context.config.post = ContentHelper.setInternalLinksInObject(itemConfig, this.renderer);
         }
 
         if (context === 'page' && itemConfig) {
-            this.context.config.page = JSON.parse(ContentHelper.setInternalLinks(JSON.stringify(itemConfig), this.renderer, true));
+            this.context.config.page = ContentHelper.setInternalLinksInObject(itemConfig, this.renderer);
         }
 
         this.renderer.globalContext = this.context;
@@ -441,7 +441,7 @@ class RendererContext {
             baseCode += this.renderer.plugins.runInsertions(optionName, this.renderer, context);
         }
 
-        return baseCode.trim();
+        return ContentHelper.setInternalLinks(baseCode.trim(), this.renderer);
     }
 
     getCustomHTMLCodeObject (object, context) {
@@ -466,7 +466,7 @@ class RendererContext {
                 code = this.renderer.plugins.runModifiers('customHTML.' + key, this.renderer, code, context);
             }
 
-            object[key] = code.trim();
+            object[key] = ContentHelper.setInternalLinks(code.trim(), this.renderer);
         }
 
         return object;

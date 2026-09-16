@@ -11,6 +11,7 @@ const normalizePath = require('normalize-path');
 const DBUtils = require('./../../helpers/db.utils.js');
 const Database = require('better-sqlite3');
 const URLHelper = require('./helpers/url.js');
+const ContentHelper = require('./helpers/content.js');
 const FilesHelper = require('./helpers/files.js');
 const ViewSettingsHelper = require('./helpers/view-settings.js');
 const Themes = require('../../themes.js');
@@ -1929,10 +1930,10 @@ class Renderer {
         if (UtilsHelper.fileExists(themeVariablesPath)) {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(themeVariablesPath);
-                let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
-                let pageConfig = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
-                let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
-                let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
+                let customConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.customConfig, this);
+                let pageConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.pageConfig, this);
+                let postConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.postConfig, this);
+                let commonConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.config, this);
                 return generateOverride(customConfig, postConfig, commonConfig, pageConfig);
             } catch(e) {
                 this.errorLog.push({
@@ -1985,10 +1986,10 @@ class Renderer {
         if (UtilsHelper.fileExists(overridePath)) {
             try {
                 let generateOverride = UtilsHelper.requireWithNoCache(overridePath);
-                let customConfig = JSON.parse(JSON.stringify(this.themeConfig.customConfig));
-                let pageConfig = JSON.parse(JSON.stringify(this.themeConfig.pageConfig));
-                let postConfig = JSON.parse(JSON.stringify(this.themeConfig.postConfig));
-                let commonConfig = JSON.parse(JSON.stringify(this.themeConfig.config));
+                let customConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.customConfig, this);
+                let pageConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.pageConfig, this);
+                let postConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.postConfig, this);
+                let commonConfig = ContentHelper.setInternalLinksInObject(this.themeConfig.config, this);
                 return generateOverride(customConfig, postConfig, commonConfig, pageConfig);
             } catch(e) {
                 this.errorLog.push({
