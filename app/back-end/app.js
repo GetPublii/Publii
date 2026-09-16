@@ -911,6 +911,11 @@ class App {
         this.sites[siteCatalog] = siteData;
     }
 
+    // Keep the sites list of the other windows in sync after a site was created, cloned, changed or deleted
+    notifySitesListChanged (exceptWebContentsId = null) {
+        this.windowManager.broadcast('app-sites-updated', this.sites, exceptWebContentsId);
+    }
+
     // Restore zoom level for a specific window
     _setZoomLevel (win) {
         let zoom = parseFloat(this.appConfig.uiZoomLevel);

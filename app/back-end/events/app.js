@@ -90,6 +90,7 @@ class AppEvents {
                             reasonDetail: reasonDetail,
                             sites: appInstance.sites
                         });
+                        appInstance.notifySitesListChanged(event.sender.id);
                     }, 500);
 
                     return;
@@ -149,6 +150,7 @@ class AppEvents {
                 sitesLocation: appInstance.sitesDir,
                 sites: appInstance.sites
             });
+            appInstance.notifySitesListChanged(event.sender.id);
         });
 
         /*

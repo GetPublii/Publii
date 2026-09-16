@@ -139,6 +139,7 @@ export default {
         this.integrateTopBar();
         this.setupApplicationMenu();
         this.setupExclusiveViews();
+        this.setupSitesSync();
 
         if (this.initialData.isNewWindow && this.$store.state.app.sitesLocationMissing) {
             this.$router.push('/site/!/posts');
@@ -257,6 +258,12 @@ export default {
                 this.syncApplicationMenuState,
                 { immediate: true }
             );
+        },
+        // Keep the sites list in sync with sites created, cloned, changed or deleted in other windows
+        setupSitesSync () {
+            mainProcessAPI.receive('app-sites-updated', sites => {
+                this.$store.commit('setSites', sites);
+            });
         },
         setupExclusiveViews () {
             this.exclusiveViewsUnregister = [
@@ -465,6 +472,7 @@ export default {
         this.$bus.$off('sites-location-restored');
         mainProcessAPI.stopReceiveAll('app-license-accepted');
         mainProcessAPI.stopReceiveAll('app-menu-command');
+        mainProcessAPI.stopReceiveAll('app-sites-updated');
 
         if (this.applicationMenuStateUnwatch) {
             this.applicationMenuStateUnwatch();

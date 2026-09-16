@@ -125,6 +125,17 @@ class PubliiWindowManager {
         return false;
     }
 
+    // Send a message to every open window, optionally skipping one of them (i.e. the sender)
+    broadcast (channel, payload, exceptWebContentsId = null) {
+        for (const [webContentsId, win] of this.windows) {
+            if (webContentsId === exceptWebContentsId || win.isDestroyed() || win.webContents.isDestroyed()) {
+                continue;
+            }
+
+            win.webContents.send(channel, payload);
+        }
+    }
+
     getMainWindow () {
         return this.windows.values().next().value || null;
     }

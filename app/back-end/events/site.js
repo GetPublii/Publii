@@ -45,6 +45,8 @@ class SiteEvents {
             let language = this.getSiteLanguage(appInstance, config.siteName);
             this.setSpellcheckerLanguage(event.sender, language);
             event.sender.send('app-site-reloaded', result);
+            // A site restored from a backup shows up in the list only now
+            appInstance.notifySitesListChanged(event.sender.id);
         });
 
         /*
@@ -369,6 +371,8 @@ class SiteEvents {
                 newThemeConfig: newThemeConfig,
                 thumbnailsRegenerateRequired: thumbnailsRegenerateRequired
             });
+            // Other windows list this site by its (possibly renamed) catalog, display name and logo
+            appInstance.notifySitesListChanged(event.sender.id);
         });
 
         /*
@@ -551,6 +555,7 @@ class SiteEvents {
             };
 
             event.sender.send('app-site-created', result);
+            appInstance.notifySitesListChanged(event.sender.id);
         });
 
         /*
@@ -613,6 +618,7 @@ class SiteEvents {
             Site.delete(appInstance, config.site);
             delete appInstance.sites[config.site];
             event.sender.send('app-site-deleted', true);
+            appInstance.notifySitesListChanged(event.sender.id);
         });
 
         /*
@@ -628,6 +634,7 @@ class SiteEvents {
 
             let clonedWebsiteData = Site.clone(appInstance, config.catalogName, config.siteName);
             event.sender.send('app-site-cloned', clonedWebsiteData);
+            appInstance.notifySitesListChanged(event.sender.id);
         });
 
         /*

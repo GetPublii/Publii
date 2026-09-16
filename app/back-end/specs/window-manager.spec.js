@@ -4,12 +4,20 @@ const PubliiWindowManager = require('../window-manager.js');
 function createWindow (id) {
     let listeners = {};
 
-    return {
+    let win = {
         focused: false,
+        received: [],
         webContents: {
             id,
+            destroyed: false,
             on (eventName, callback) {
                 listeners[eventName] = callback;
+            },
+            isDestroyed () {
+                return this.destroyed;
+            },
+            send (channel, payload) {
+                win.received.push({ channel, payload });
             }
         },
         emitWebContents (eventName) {
@@ -24,6 +32,8 @@ function createWindow (id) {
             return false;
         }
     };
+
+    return win;
 }
 
 describe('Publii window manager', function() {
@@ -128,5 +138,23 @@ describe('Publii window manager', function() {
 
         assert.deepStrictEqual(cleanedWindows, [26]);
         assert.strictEqual(manager.getAllWindows().length, 0);
+    });
+
+    it('should broadcast a message to every other live window', function() {
+        let manager = new PubliiWindowManager({ closeDbForSite () {} });
+        let sender = createWindow(30);
+        let other = createWindow(31);
+        let closed = createWindow(32);
+
+        manager.registerWindow(sender);
+        manager.registerWindow(other);
+        manager.registerWindow(closed);
+        closed.webContents.destroyed = true;
+
+        manager.broadcast('app-sites-updated', { 'my-website': {} }, sender.webContents.id);
+
+        assert.deepStrictEqual(sender.received, []);
+        assert.deepStrictEqual(other.received, [{ channel: 'app-sites-updated', payload: { 'my-website': {} } }]);
+        assert.deepStrictEqual(closed.received, []);
     });
 });

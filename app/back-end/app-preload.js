@@ -137,11 +137,12 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'block-editor-undo',
             'block-editor-redo',
             'app-menu-command',
+            'app-sites-updated',
             'no-remote-files'
         ];
 
         if (validChannels.includes(channel)) {
-            // Strip event as it includes `sender` 
+            // Strip event as it includes `sender`
             ipcRenderer.on(channel, (event, ...args) => func(...args));
         } else {
             console.info('Event: ', channel, ' is not supported in receive');
@@ -315,7 +316,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-show-search-form',
             'block-editor-undo',
             'block-editor-redo',
-            'app-menu-command'
+            'app-menu-command',
+            'app-sites-updated'
         ];
 
         if (validChannels.includes(channel)) {
