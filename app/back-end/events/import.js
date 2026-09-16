@@ -5,6 +5,7 @@ const Import = require('../modules/import/import.js');
 const WordPressImportReport = require('../modules/import/wordpress-import-report.js');
 const childProcess = require('child_process');
 const PathValidator = require('../helpers/path-validator.js');
+const { createSafeSender } = require('../helpers/ipc.helper.js');
 
 const { isValidDirSegment } = PathValidator;
 
@@ -35,7 +36,8 @@ class ImportEvents {
                 return;
             }
 
-            self.checkFile(config.siteName, config.filePath, event.sender);
+            // The import workers cannot be aborted, so replies are dropped once the window is closed
+            self.checkFile(config.siteName, config.filePath, createSafeSender(event.sender));
         });
 
         ipcMain.on('app-wxr-import', function(event, config) {
@@ -48,7 +50,7 @@ class ImportEvents {
                 return;
             }
 
-            self.importFile(appInstance, config, event.sender);
+            self.importFile(appInstance, config, createSafeSender(event.sender));
         });
 
         ipcMain.handle('app-wxr-report-load', function(event, siteName) {

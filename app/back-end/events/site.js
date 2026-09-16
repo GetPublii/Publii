@@ -12,6 +12,11 @@ const UtilsHelper = require('../helpers/utils.js');
 const normalizePath = require('normalize-path');
 const URLHelper = require('../modules/render-html/helpers/url.js');
 const PathValidator = require('../helpers/path-validator.js');
+const {
+    createSafeSender,
+    trackWorkerProcess,
+    abortWindowWorkerProcess
+} = require('../helpers/ipc.helper.js');
 
 /*
  * Events for the IPC communication regarding single sites
@@ -21,6 +26,11 @@ class SiteEvents {
     constructor(appInstance) {
         let self = this;
         this.regenerateProcesses = new Map(); // webContentsId -> process
+
+        // Workers must not outlive the window which started them
+        if (appInstance.windowManager && typeof appInstance.windowManager.onWindowDestroyed === 'function') {
+            appInstance.windowManager.onWindowDestroyed(webContentsId => abortWindowWorkerProcess(self.regenerateProcesses, webContentsId));
+        }
 
         /*
          * Reload site config and data
@@ -552,17 +562,12 @@ class SiteEvents {
             }
 
             let site = new Site(appInstance, config, true);
-            let regenerateProcess = site.regenerateThumbnails(event.sender);
-            self.regenerateProcesses.set(event.sender.id, regenerateProcess);
+            let regenerateProcess = site.regenerateThumbnails(createSafeSender(event.sender));
+            trackWorkerProcess(self.regenerateProcesses, event.sender.id, regenerateProcess);
         });
 
         ipcMain.on('app-site-abort-regenerate-thumbnails', function(event) {
-            let regenerateProcess = self.regenerateProcesses.get(event.sender.id);
-
-            if (regenerateProcess) {
-                regenerateProcess.send({ type: 'abort' });
-                self.regenerateProcesses.delete(event.sender.id);
-            }
+            abortWindowWorkerProcess(self.regenerateProcesses, event.sender.id);
         });
 
         /*
@@ -582,7 +587,7 @@ class SiteEvents {
             }
 
             let site = new Site(appInstance, config, true);
-            site.regenerateThumbnailsIsRequired(event.sender);
+            site.regenerateThumbnailsIsRequired(createSafeSender(event.sender));
         });
 
         /*

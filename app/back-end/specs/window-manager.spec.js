@@ -105,4 +105,28 @@ describe('Publii window manager', function() {
         assert.strictEqual(manager.lockView('app-settings', second.webContents.id), true);
         assert.strictEqual(manager.lockView('app-plugins', second.webContents.id), true);
     });
+
+    it('should run cleanup listeners for a destroyed window', function() {
+        let manager = new PubliiWindowManager({ closeDbForSite () {} });
+        let win = createWindow(26);
+        let cleanedWindows = [];
+        let originalLog = console.log;
+
+        manager.registerWindow(win);
+        manager.onWindowDestroyed(() => {
+            throw new Error('listener failure');
+        });
+        manager.onWindowDestroyed(webContentsId => cleanedWindows.push(webContentsId));
+
+        console.log = () => {};
+
+        try {
+            win.emitWebContents('destroyed');
+        } finally {
+            console.log = originalLog;
+        }
+
+        assert.deepStrictEqual(cleanedWindows, [26]);
+        assert.strictEqual(manager.getAllWindows().length, 0);
+    });
 });

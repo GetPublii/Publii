@@ -3,6 +3,11 @@ const ipcMain = require('electron').ipcMain;
 const Deployment = require('../modules/deploy/deployment.js');
 const childProcess = require('child_process');
 const stripTags = require('striptags');
+const {
+    createSafeSender,
+    trackWorkerProcess,
+    abortWindowWorkerProcess
+} = require('../helpers/ipc.helper.js');
 
 class DeployEvents {
     constructor(appInstance) {
@@ -11,9 +16,14 @@ class DeployEvents {
         this.deploymentProcesses = new Map(); // webContentsId -> process
         this.rendererProcesses = new Map();   // webContentsId -> process
 
+        // Workers must not outlive the window which started them
+        if (appInstance.windowManager && typeof appInstance.windowManager.onWindowDestroyed === 'function') {
+            appInstance.windowManager.onWindowDestroyed(webContentsId => this.abortWindowProcesses(webContentsId));
+        }
+
         ipcMain.on('app-deploy-render', function (event, siteData) {
             if(siteData.site && siteData.theme) {
-                self.renderSite(siteData.site, event);
+                self.renderSite(siteData.site, createSafeSender(event.sender));
             } else {
                 event.sender.send('app-deploy-rendered', {
                     status: false
@@ -22,24 +32,13 @@ class DeployEvents {
         });
 
         ipcMain.on('app-deploy-render-abort', function(event) {
-            let rendererProcess = self.rendererProcesses.get(event.sender.id);
-
-            if(rendererProcess) {
-                try {
-                    rendererProcess.send({ type: 'abort' });
-                } catch(e) {
-                    console.log(e);
-                }
-
-                self.rendererProcesses.delete(event.sender.id);
-            }
-
+            abortWindowWorkerProcess(self.rendererProcesses, event.sender.id);
             event.sender.send('app-deploy-aborted', true);
         });
 
         ipcMain.on('app-deploy-upload', function(event, siteData) {
             if(siteData.site) {
-                self.deploySite(siteData.site, siteData.password, event.sender);
+                self.deploySite(siteData.site, siteData.password, createSafeSender(event.sender));
             } else {
                 event.sender.send('app-deploy-uploaded', {
                     status: false
@@ -48,18 +47,7 @@ class DeployEvents {
         });
 
         ipcMain.on('app-deploy-abort', function(event) {
-            let deploymentProcess = self.deploymentProcesses.get(event.sender.id);
-
-            if(deploymentProcess) {
-                try {
-                    deploymentProcess.send({ type: 'abort' });
-                } catch(e) {
-                    console.log(e);
-                }
-
-                self.deploymentProcesses.delete(event.sender.id);
-            }
-
+            abortWindowWorkerProcess(self.deploymentProcesses, event.sender.id);
             event.sender.send('app-deploy-aborted', true);
         });
 
@@ -79,14 +67,20 @@ class DeployEvents {
 
         ipcMain.on('app-deploy-test', async (event, data) => {
             try {
-                await this.testConnection(data.deploymentConfig, data.siteName, data.uuid, event.sender);
+                await this.testConnection(data.deploymentConfig, data.siteName, data.uuid, createSafeSender(event.sender));
             } catch (err) {
                 console.log('Test connection error:', err);
             }
         });
     }
 
-    renderSite(site, event) {
+    // Abort the workers started by a window which has just been closed
+    abortWindowProcesses (webContentsId) {
+        abortWindowWorkerProcess(this.rendererProcesses, webContentsId);
+        abortWindowWorkerProcess(this.deploymentProcesses, webContentsId);
+    }
+
+    renderSite(site, sender) {
         let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
             stdio: [
                 null,
@@ -96,7 +90,7 @@ class DeployEvents {
             ]
         });
 
-        this.rendererProcesses.set(event.sender.id, rendererProcess);
+        trackWorkerProcess(this.rendererProcesses, sender.id, rendererProcess);
 
         rendererProcess.send({
             type: 'dependencies',
@@ -116,7 +110,7 @@ class DeployEvents {
         rendererProcess.on('message', function(data) {
             if(data.type === 'app-rendering-results') {
                 if(data.result === true) {
-                    event.sender.send('app-deploy-rendered', {
+                    sender.send('app-deploy-rendered', {
                         status: true
                     });
                 } else {
@@ -135,7 +129,7 @@ class DeployEvents {
                         errorDesc = data.result[0].message + "\n\n" + data.result[0].desc;
                     }
 
-                    event.sender.send('app-deploy-render-error', {
+                    sender.send('app-deploy-render-error', {
                         message: [{
                             message: errorTitle,
                             desc: stripTags((errorDesc).toString())
@@ -143,7 +137,7 @@ class DeployEvents {
                     });
                 }
             } else {
-                event.sender.send(data.type, {
+                sender.send(data.type, {
                     progress: data.progress,
                     message: stripTags((data.message).toString())
                 });
@@ -162,7 +156,7 @@ class DeployEvents {
             ]
         });
 
-        this.deploymentProcesses.set(sender.id, deploymentProcess);
+        trackWorkerProcess(this.deploymentProcesses, sender.id, deploymentProcess);
 
         if(password !== false) {
             deploymentConfig.deployment.password = password;

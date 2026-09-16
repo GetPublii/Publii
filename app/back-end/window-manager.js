@@ -5,6 +5,7 @@ class PubliiWindowManager {
         this.windowSites = new Map();  // webContentsId -> siteName
         this.siteLocks = new Map();    // siteName -> webContentsId
         this.viewLocks = new Map();    // viewId (i.e. 'app-settings') -> webContentsId
+        this.destroyedListeners = [];  // callbacks run with the webContentsId of every closed window
     }
 
     registerWindow (win) {
@@ -26,6 +27,19 @@ class PubliiWindowManager {
 
         this.releaseViewLocksForWindow(webContentsId);
         this.windows.delete(webContentsId);
+
+        for (const listener of this.destroyedListeners) {
+            try {
+                listener(webContentsId);
+            } catch (error) {
+                console.log('[WindowManager] Window cleanup listener failed:', error);
+            }
+        }
+    }
+
+    // Register a cleanup callback (i.e. aborting workers) run for every closed window
+    onWindowDestroyed (callback) {
+        this.destroyedListeners.push(callback);
     }
 
     setWindowSite (webContentsId, siteName) {

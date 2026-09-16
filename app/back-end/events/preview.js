@@ -7,6 +7,11 @@ const childProcess = require('child_process');
 const UtilsHelper = require('../helpers/utils.js');
 const stripTags = require('striptags');
 const PathValidator = require('../helpers/path-validator.js');
+const {
+    createSafeSender,
+    trackWorkerProcess,
+    abortWindowWorkerProcess
+} = require('../helpers/ipc.helper.js');
 
 const { isValidDirSegment } = PathValidator;
 
@@ -19,6 +24,12 @@ class PreviewEvents {
     constructor(appInstance) {
         let self = this;
         this.app = appInstance;
+        this.rendererProcesses = new Map(); // webContentsId -> process
+
+        // Workers must not outlive the window which started them
+        if (appInstance.windowManager && typeof appInstance.windowManager.onWindowDestroyed === 'function') {
+            appInstance.windowManager.onWindowDestroyed(webContentsId => abortWindowWorkerProcess(this.rendererProcesses, webContentsId));
+        }
 
         ipcMain.on('app-preview-render', function (event, siteData) {
             if (!siteData ||
@@ -50,7 +61,7 @@ class PreviewEvents {
                     showPreview = siteData.showPreview;
                 }
 
-                self.renderSite(siteData.site, itemID, postData, mode, event, showPreview);
+                self.renderSite(siteData.site, itemID, postData, mode, createSafeSender(event.sender), showPreview);
             } else {
                 event.sender.send('app-preview-rendered', {
                     status: false
@@ -63,11 +74,13 @@ class PreviewEvents {
      * Renders website
      *
      * @param site
-     * @param pageToRender
+     * @param itemID
      * @param postData
-     * @param event
+     * @param mode
+     * @param sender - safe sender of the window which requested the preview
+     * @param showPreview
      */
-    renderSite(site, itemID, postData, mode, event, showPreview) {
+    renderSite(site, itemID, postData, mode, sender, showPreview) {
         let self = this;
         let previewMode = true;
         let resultsRetrieved = false;
@@ -79,6 +92,8 @@ class PreviewEvents {
                 'ipc'
             ]
         });
+
+        trackWorkerProcess(this.rendererProcesses, sender.id, rendererProcess);
 
         rendererProcess.on('disconnect', function(data) {
             setTimeout(function() {
@@ -98,7 +113,7 @@ class PreviewEvents {
                         errorDesc = stripTags((data.result[0].message + "\n\n" + data.result[0].desc).toString());
                     }
 
-                    event.sender.send('app-preview-render-error', {
+                    sender.send('app-preview-render-error', {
                         message: [{
                             message: errorTitle,
                             desc: errorDesc
@@ -125,11 +140,11 @@ class PreviewEvents {
 
             if(data.type === 'app-rendering-results') {
                 if(data.result === true) {
-                    event.sender.send('app-preview-rendered', {
+                    sender.send('app-preview-rendered', {
                         status: true
                     });
 
-                    if (showPreview) {
+                    if (showPreview && !sender.isDestroyed()) {
                         self.showPreview(site, mode);
                     }
                 } else {
@@ -148,7 +163,7 @@ class PreviewEvents {
                         errorDesc = stripTags((data.result[0].message + "\n\n" + data.result[0].desc).toString());
                     }
 
-                    event.sender.send('app-preview-render-error', {
+                    sender.send('app-preview-render-error', {
                         message: [{
                             message: errorTitle,
                             desc: errorDesc
@@ -156,7 +171,7 @@ class PreviewEvents {
                     });
                 }
             } else {
-                event.sender.send(data.type, {
+                sender.send(data.type, {
                     progress: data.progress,
                     message: stripTags((data.message).toString())
                 });
