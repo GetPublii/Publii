@@ -1159,6 +1159,7 @@
         "postPrefixInfo": "Ten prefiks jest dodawany w adresie URL przed slugiem wpisu, np. https://example.com/PREFIKS_POSTA/post-slug. Jest wymagany do stronicowania wpisów, gdy <a href=\"#\" data-internal-link=\"SEO\">wybrana strona pełni funkcję strony głównej</a>. Kolejne strony z wpisami mają wtedy adresy https://example.com/PREFIKS_POSTA/page/X. Jeśli włączysz też opcję umieszczania prefiksu tagów po prefiksie wpisów, adresy tagów będą miały postać https://example.com/PREFIKS_POSTA/PREFIKS_TAGA/tag-slug.",
         "postsPrefix": "Prefiks wpisów",
         "postTitle": "Tytuł wpisu",
+        "previewLocationRemovedMsg": "Niestandardowa lokalizacja podglądów nie jest już obsługiwana. Podglądy są teraz zawsze zapisywane w katalogu danej witryny, więc wybrany wcześniej folder <strong>{location}</strong> nie będzie już używany. Jego zawartość możesz usunąć ręcznie.",
         "privacyPolicyLinkLabel": "Etykieta linka polityki prywatności",
         "privacyPolicyPage": "Wybierz stronę",
         "privacyPolicyPageURL": "Wpisz adres URL strony",

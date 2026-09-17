@@ -1096,6 +1096,7 @@
         "postsOrderBy": "Beiträge sortieren nach:",
         "postsOrdering": "Beitragsreihenfolge:",
         "postsPrefix": "Präfix für Beiträge",
+        "previewLocationRemovedMsg": "Das benutzerdefinierte Vorschau-Verzeichnis wird nicht mehr unterstützt. Vorschauen werden jetzt immer im Ordner der jeweiligen Webseite gespeichert, daher wird der zuvor gewählte Ordner <strong>{location}</strong> nicht mehr verwendet. Sie können dessen Inhalt manuell entfernen.",
         "privacyPolicyLinkLabel": "Link-Beschriftung Datenschutzrichtlinie",
         "privacyPolicyPage": "Seite wählen",
         "privacyPolicyPageURL": "Externe URL eingeben",

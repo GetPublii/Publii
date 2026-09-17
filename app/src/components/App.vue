@@ -32,6 +32,7 @@ import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
 import SitesLocationPopup from './SitesLocationPopup';
 import { setTooltipsEnabled } from '../helpers/tooltip';
+import escapeHTML from '../helpers/escape-html.js';
 
 const GLOBAL_MENU_ROUTES = Object.freeze({
     'about': '/about/',
@@ -221,6 +222,25 @@ export default {
             }
 
             this.showWebsite(siteToDisplay);
+            this.showRemovedPreviewLocationNotice();
+        },
+
+        // Inform once that the custom preview location configured in an older version is no longer used
+        showRemovedPreviewLocationNotice () {
+            let removedLocation = this.initialData.removedPreviewLocation;
+
+            if (!removedLocation || this.removedPreviewLocationNoticeShown) {
+                return;
+            }
+
+            this.removedPreviewLocationNoticeShown = true;
+            this.$bus.$emit('alert-display', {
+                // The alert renders HTML, so the path must be escaped
+                message: this.$t('settings.previewLocationRemovedMsg', {
+                    location: escapeHTML(removedLocation)
+                }),
+                okLabel: this.$t('ui.iUnderstand')
+            });
         },
 
         // Show specific website

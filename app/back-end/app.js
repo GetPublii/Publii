@@ -66,6 +66,7 @@ class App {
         this.sitesDir = null;
         this.app.sitesDir = null;
         this.sitesLocationMissing = false;
+        this.removedPreviewLocation = '';
         this.dbMap = new Map();
         this.windowManager = new PubliiWindowManager(this);
         this.pluginsAPI = new PluginsAPI();
@@ -546,8 +547,7 @@ class App {
         try {
             this.appConfig = JSON.parse(FileHelper.readFileSync(this.appConfigPath, 'utf8'));
             this.appConfig = Utils.mergeObjects(JSON.parse(JSON.stringify(defaultAstAppConfig)), this.appConfig);
-            // The custom preview location was removed in v.0.48 - previews always go to the website's own directory
-            delete this.appConfig.previewLocation;
+            this.removeLegacyPreviewLocation();
         } catch (e) {
             if (this.hasPermissionsErrors(e)) {
                 return false;
@@ -568,6 +568,37 @@ class App {
         }
 
         return true;
+    }
+
+    // The custom preview location was removed in v.0.48 - previews always go to the website's own directory.
+    // Users who had it configured are informed once that their folder is no longer used.
+    removeLegacyPreviewLocation () {
+        if (!Object.prototype.hasOwnProperty.call(this.appConfig, 'previewLocation')) {
+            return;
+        }
+
+        let legacyLocation = typeof this.appConfig.previewLocation === 'string' ? this.appConfig.previewLocation.trim() : '';
+        delete this.appConfig.previewLocation;
+
+        if (legacyLocation === '') {
+            return;
+        }
+
+        this.removedPreviewLocation = legacyLocation;
+
+        // Save the config right away, so the notice is not repeated on the next launch
+        try {
+            fs.writeFileSync(this.appConfigPath, JSON.stringify(this.appConfig, null, 4), {'flags': 'w'});
+        } catch (error) {
+            console.log('Unable to remove the legacy preview location from the app config:', error);
+        }
+    }
+
+    // The notice about the removed preview location is handed over only once - to the first loaded window
+    consumeRemovedPreviewLocation () {
+        let removedLocation = this.removedPreviewLocation || '';
+        this.removedPreviewLocation = '';
+        return removedLocation;
     }
 
     // Load additional config data
@@ -744,7 +775,8 @@ class App {
                 vendorPath: normalizePath(path.join(__dirname, '..', 'default-files', 'vendor').replace('app.asar', 'app.asar.unpacked')),
                 isNewWindow: isNewWindow,
                 initialSite: initialSite,
-                skipSplashScreen: skipSplashScreen
+                skipSplashScreen: skipSplashScreen,
+                removedPreviewLocation: this.consumeRemovedPreviewLocation()
             };
             
             win.webContents.send('app-data-loaded', appData);

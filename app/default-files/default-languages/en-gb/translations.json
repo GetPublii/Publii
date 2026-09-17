@@ -1158,6 +1158,7 @@
         "postPrefixInfo": "This prefix is added before the post slug in the URL, for example, https://example.com/POSTS_PREFIX/post-slug. It is required for post pagination when you use a <a href=\"#\" data-internal-link=\"SEO\">page as the homepage</a>. Pagination URLs then use https://example.com/POSTS_PREFIX/page/X. If you also enable the option to put the tag prefix after the post prefix, tag URLs use https://example.com/POSTS_PREFIX/TAG_PREFIX/tag-slug.",
         "postsPrefix": "Post prefix",
         "postTitle": "Post title",
+        "previewLocationRemovedMsg": "The custom preview location is no longer supported. Previews are now always stored in the folder of each website, so the previously selected folder <strong>{location}</strong> will not be used anymore. You can remove its contents manually.",
         "privacyPolicyLinkLabel": "Privacy policy link label",
         "privacyPolicyPage": "Select page",
         "privacyPolicyPageURL": "Enter external URL",

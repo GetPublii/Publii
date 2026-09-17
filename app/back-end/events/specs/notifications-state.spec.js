@@ -171,6 +171,39 @@ describe('Notification center settings persistence', function () {
         assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, 'rejected');
     });
 
+    it('drops the legacy preview location and reports it to the first window only', function () {
+        fs.writeJsonSync(application.appConfigPath, Object.assign({}, application.appConfig, {
+            previewLocation: '  /custom/preview  '
+        }));
+
+        application.loadConfig();
+
+        assert.equal('previewLocation' in application.appConfig, false);
+        assert.equal('previewLocation' in fs.readJsonSync(application.appConfigPath), false);
+
+        application.initWindow();
+        assert.equal(application.mainWindow.initialData.removedPreviewLocation, '/custom/preview');
+
+        application.initWindow();
+        assert.equal(application.mainWindow.initialData.removedPreviewLocation, '');
+
+        application.loadConfig();
+        application.initWindow();
+        assert.equal(application.mainWindow.initialData.removedPreviewLocation, '');
+    });
+
+    it('ignores an empty legacy preview location', function () {
+        fs.writeJsonSync(application.appConfigPath, Object.assign({}, application.appConfig, {
+            previewLocation: ''
+        }));
+
+        application.loadConfig();
+        application.initWindow();
+
+        assert.equal('previewLocation' in application.appConfig, false);
+        assert.equal(application.mainWindow.initialData.removedPreviewLocation, '');
+    });
+
     it('refuses to move the websites while other windows are open', function () {
         let replies = [];
         let databasesClosed = false;
