@@ -3,10 +3,19 @@ const PubliiWindowManager = require('../window-manager.js');
 
 function createWindow (id) {
     let listeners = {};
+    let windowListeners = {};
 
     let win = {
         focused: false,
         received: [],
+        on (eventName, callback) {
+            windowListeners[eventName] = callback;
+        },
+        emitWindow (eventName) {
+            if (windowListeners[eventName]) {
+                windowListeners[eventName]();
+            }
+        },
         webContents: {
             id,
             destroyed: false,
@@ -151,6 +160,22 @@ describe('Publii window manager', function() {
 
         assert.deepStrictEqual(cleanedWindows, [26]);
         assert.strictEqual(manager.getAllWindows().length, 0);
+    });
+
+    it('should run focus listeners with the focused window only', function() {
+        let manager = new PubliiWindowManager({ closeDbForSite () {} });
+        let first = createWindow(27);
+        let second = createWindow(28);
+        let focusedWindows = [];
+
+        manager.registerWindow(first);
+        manager.registerWindow(second);
+        manager.onWindowFocused(webContentsId => focusedWindows.push(webContentsId));
+
+        second.emitWindow('focus');
+        first.emitWindow('focus');
+
+        assert.deepStrictEqual(focusedWindows, [28, 27]);
     });
 
     it('should broadcast a message to every other live window', function() {

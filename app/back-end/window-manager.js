@@ -6,13 +6,19 @@ class PubliiWindowManager {
         this.siteLocks = new Map();    // siteName -> webContentsId
         this.viewLocks = new Map();    // viewId (i.e. 'app-settings') -> webContentsId
         this.destroyedListeners = [];  // callbacks run with the webContentsId of every closed window
+        this.focusedListeners = [];    // callbacks run with the webContentsId of every window which gets focus
     }
 
     registerWindow (win) {
-        this.windows.set(win.webContents.id, win);
+        const webContentsId = win.webContents.id;
+        this.windows.set(webContentsId, win);
 
         win.webContents.on('destroyed', () => {
-            this._onWindowDestroyed(win.webContents.id);
+            this._onWindowDestroyed(webContentsId);
+        });
+
+        win.on('focus', () => {
+            this._runListeners(this.focusedListeners, webContentsId);
         });
     }
 
@@ -28,11 +34,16 @@ class PubliiWindowManager {
         this.releaseViewLocksForWindow(webContentsId);
         this.windows.delete(webContentsId);
 
-        for (const listener of this.destroyedListeners) {
+        this._runListeners(this.destroyedListeners, webContentsId);
+    }
+
+    // A failing listener must not stop the other ones
+    _runListeners (listeners, webContentsId) {
+        for (const listener of listeners) {
             try {
                 listener(webContentsId);
             } catch (error) {
-                console.log('[WindowManager] Window cleanup listener failed:', error);
+                console.log('[WindowManager] Window listener failed:', error);
             }
         }
     }
@@ -40,6 +51,11 @@ class PubliiWindowManager {
     // Register a cleanup callback (i.e. aborting workers) run for every closed window
     onWindowDestroyed (callback) {
         this.destroyedListeners.push(callback);
+    }
+
+    // Register a callback run for every window which gets focus (i.e. to take over session-wide settings)
+    onWindowFocused (callback) {
+        this.focusedListeners.push(callback);
     }
 
     setWindowSite (webContentsId, siteName) {

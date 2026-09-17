@@ -17,6 +17,7 @@ const {
     trackWorkerProcess,
     abortWindowWorkerProcess
 } = require('../helpers/ipc.helper.js');
+const { resolveSpellcheckerLanguage } = require('../helpers/spellchecker-language.js');
 
 /*
  * Events for the IPC communication regarding single sites
@@ -26,6 +27,12 @@ class SiteEvents {
     constructor(appInstance) {
         let self = this;
         this.regenerateProcesses = new Map(); // webContentsId -> process
+        this.appliedSpellcheckerLanguage = null;
+
+        // Windows with websites in different languages take over the shared spellchecker when they get focus
+        if (appInstance.windowManager && typeof appInstance.windowManager.onWindowFocused === 'function') {
+            appInstance.windowManager.onWindowFocused(webContentsId => this.applySpellcheckerLanguageForWindow(appInstance, webContentsId));
+        }
 
         // Workers and unpacked backups must not outlive the window which started them
         if (appInstance.windowManager && typeof appInstance.windowManager.onWindowDestroyed === 'function') {
@@ -832,32 +839,44 @@ class SiteEvents {
             return;
         }
 
-        let availableLanguages = webContents.session.availableSpellCheckerLanguages;
-        language = language.toLocaleLowerCase();
-        language = language.split('-');
+        let languageToUse = resolveSpellcheckerLanguage(language, webContents.session.availableSpellCheckerLanguages);
 
-        if (language[1]) {
-            language = language[0] + '-' + language[1].toLocaleUpperCase();
-        } else {
-            language = language[0];
-        }
-
-        if (availableLanguages.indexOf(language) > -1) {
-            webContents.session.setSpellCheckerLanguages([language]);
-            console.log('Set spellchecker to:', language);
+        if (!languageToUse) {
+            console.log('(!) Unable to set spellchecker to use selected language - ' + language);
             return;
         }
 
-        language = language.split('-');
-        language = language[0];
-
-        if (availableLanguages.indexOf(language) > -1) {
-            webContents.session.setSpellCheckerLanguages([language]);
-            console.log('Set spellchecker to:', language);
+        // The language is applied again on every window focus, so skip the calls which change nothing
+        if (languageToUse === this.appliedSpellcheckerLanguage) {
             return;
         }
 
-        console.log('(!) Unable to set spellchecker to use selected language - ' + language);
+        webContents.session.setSpellCheckerLanguages([languageToUse]);
+        this.appliedSpellcheckerLanguage = languageToUse;
+        console.log('Set spellchecker to:', languageToUse);
+    }
+
+    /**
+     * The spellchecker language belongs to the session shared by all windows,
+     * so it has to follow the website of the window which is currently in use
+     */
+    applySpellcheckerLanguageForWindow (appInstance, webContentsId) {
+        if (process.platform === 'darwin') {
+            return;
+        }
+
+        let win = appInstance.windowManager.getWindow(webContentsId);
+        let siteName = appInstance.windowManager.getSiteForWindow(webContentsId);
+
+        if (!win || win.isDestroyed() || !siteName) {
+            return;
+        }
+
+        try {
+            this.setSpellcheckerLanguage(win.webContents, this.getSiteLanguage(appInstance, siteName));
+        } catch (error) {
+            console.log('(!) Unable to set the spellchecker language for the focused window:', error);
+        }
     }
 
     removeGitConfigDirectory (appInstance, siteName) {
