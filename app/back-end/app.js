@@ -92,12 +92,6 @@ class App {
         this.initWindowEvents();
     }
 
-    // Backward-compat getter: returns the first open DB or false
-    get db () {
-        if (this.dbMap.size === 0) return false;
-        return this.dbMap.values().next().value;
-    }
-
     getDbForSite (siteName) {
         return this.dbMap.get(siteName) || false;
     }

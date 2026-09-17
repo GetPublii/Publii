@@ -28,12 +28,23 @@ class Import {
 
     /**
      * Creates DB instance for the importer
+     *
+     * The importer runs in a worker on a plain copy of the app data. That copy becomes the import context:
+     * it keeps the database connection and serves it through the same API as the App instance,
+     * so the models created by the parser do not need any import-specific fallback.
      */
     connectWithDB() {
         if(!this.appInstance) {
             return;
         }
 
+        // Replacing getDbForSite on the real App instance would break every open window
+        if (typeof this.appInstance.closeDbForSite === 'function') {
+            throw new Error('The importer expects a plain copy of the app data, not the App instance.');
+        }
+
+        const importContext = this.appInstance;
+        const importedSite = this.siteName;
         const dbPath = path.join(this.appInstance.sitesDir, this.siteName, 'input', 'db.sqlite');
 
         if (this.appInstance.db) {
@@ -45,6 +56,7 @@ class Import {
         }
 
         this.appInstance.db = new DBUtils(new Database(dbPath));
+        this.appInstance.getDbForSite = siteName => (siteName === importedSite ? importContext.db : false);
     }
 
     /**

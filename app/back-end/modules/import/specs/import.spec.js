@@ -292,6 +292,34 @@ describeWithDatabase('WordPress WXR import', function() {
         fs.rmSync(temporaryDir, { recursive: true, force: true });
     });
 
+    it('serves the importer database through the app API used by the models', function() {
+        new Import(appInstance, 'test-site', wxrFile);
+
+        assert.strictEqual(typeof appInstance.getDbForSite, 'function');
+        assert.strictEqual(appInstance.getDbForSite('test-site'), appInstance.db);
+        assert.strictEqual(appInstance.getDbForSite('other-site'), false);
+
+        // A second importer replaces the connection and the API must follow it
+        let previousDatabase = appInstance.db;
+        new Import(appInstance, 'test-site', wxrFile);
+
+        assert.notStrictEqual(appInstance.db, previousDatabase);
+        assert.strictEqual(appInstance.getDbForSite('test-site'), appInstance.db);
+    });
+
+    it('refuses to work on the real application instance', function() {
+        let application = {
+            sitesDir: temporaryDir,
+            getDbForSite () {
+                return 'database of another window';
+            },
+            closeDbForSite () {}
+        };
+
+        assert.throws(() => new Import(application, 'test-site', wxrFile), /plain copy of the app data/);
+        assert.strictEqual(application.getDbForSite('test-site'), 'database of another window');
+    });
+
     it('exposes WordPress site details for the first-run import flow', function() {
         let wxrContent = fs.readFileSync(wxrFile, 'utf8').replace(
             '<channel>',

@@ -15,7 +15,8 @@ class Model {
     constructor(appInstance, data) {
         this.application = appInstance;
         this.site = data.site;
-        this.db = (typeof this.application.getDbForSite === 'function' ? this.application.getDbForSite(this.site) : false) || this.application.db;
+        // Workers which only process files (i.e. thumbnails) pass plain app data without any database access
+        this.db = typeof this.application.getDbForSite === 'function' ? this.application.getDbForSite(this.site) : false;
         this.appDir = this.application.appDir;
         this.siteDir = path.join(this.application.sitesDir, this.site);
         this.dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
