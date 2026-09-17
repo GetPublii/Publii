@@ -3,6 +3,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { EventEmitter } = require('node:events');
+const { createRequire } = require('node:module');
+const requireFromImageUploader = createRequire(path.resolve(__dirname, '../image-uploader.js'));
 
 function createHarness() {
     const invokeHandlers = new Map();
@@ -40,7 +42,7 @@ function createHarness() {
                 return {};
             }
 
-            return require(name);
+            return requireFromImageUploader(name);
         }
     };
     const source = fs.readFileSync(path.resolve(__dirname, '../image-uploader.js'), 'utf8');

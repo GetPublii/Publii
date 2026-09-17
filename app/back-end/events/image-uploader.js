@@ -4,6 +4,7 @@ const ipcMain = require('electron').ipcMain;
 const Image = require('../image.js');
 const childProcess = require('child_process');
 const PathValidator = require('../helpers/path-validator.js');
+const ImageConversion = require('../../shared/image-conversion.js');
 
 const { isValidDirSegment, resolveValidPath } = PathValidator;
 
@@ -13,6 +14,19 @@ const { isValidDirSegment, resolveValidPath } = PathValidator;
 
 class ImageUploaderEvents {
     constructor(appInstance) {
+        ipcMain.handle('app-image:convert-gallery-thumbnails', (event, imageData) => {
+            if (!imageData ||
+                typeof imageData.text !== 'string' ||
+                !isValidDirSegment(imageData.site) ||
+                !Object.prototype.hasOwnProperty.call(appInstance.sites, imageData.site)) {
+                throw new Error('Invalid gallery conversion request');
+            }
+
+            const conversion = ImageConversion.createContext(appInstance.sites[imageData.site].advanced);
+
+            return ImageConversion.convertGalleryThumbnails(imageData.text, conversion);
+        });
+
         ipcMain.handle('app-image:upload', (event, imageData) => {
             return this.uploadImage(appInstance, imageData);
         });

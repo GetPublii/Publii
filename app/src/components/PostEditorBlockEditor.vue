@@ -243,9 +243,9 @@ export default {
             });
 
             // Load post data
-            mainProcessAPI.receiveOnce(responseType, (data) => {
+            mainProcessAPI.receiveOnce(responseType, async (data) => {
                 if (data !== false && this.postID !== 0) {
-                    let loadedPostData = ItemHelper.loadItemData(data, this.$store, this.$moment, this.itemType);
+                    let loadedPostData = await ItemHelper.loadItemData(data, this.$store, this.$moment, this.itemType);
                     this.postData = Utils.deepMerge(this.postData, loadedPostData);
                     this.$bus.$emit('block-editor-set-post-text', this.postData.text);
                     this.$bus.$emit('block-editor-set-post-title', this.postData.title);

@@ -1,5 +1,3 @@
-import ImageConversion from '../../../shared/image-conversion.js';
-
 class ItemHelper {
     static async prepareItemData (newStatus, itemID, $store, itemData, itemType = 'post') {
         let finalStatus = newStatus;
@@ -126,7 +124,7 @@ class ItemHelper {
         return preparedData;
     }
 
-    static loadItemData (data, $store, $moment, itemType = 'post') {
+    static async loadItemData (data, $store, $moment, itemType = 'post') {
         let itemData = {
             title: '',
             text: '',
@@ -171,7 +169,7 @@ class ItemHelper {
         let mediaPath = ItemHelper.getMediaPath($store, data[itemType + 's'][0].id, itemType);
         let preparedText = data[itemType + 's'][0].text;
         preparedText = preparedText.split('#DOMAIN_NAME#').join('file:///' + mediaPath);
-        preparedText = ItemHelper.setWebpCompatibility($store, preparedText);
+        preparedText = await ItemHelper.setWebpCompatibility($store, preparedText);
         itemData.text = preparedText;
 
         // Set tags
@@ -279,8 +277,14 @@ class ItemHelper {
     }
 
     static setWebpCompatibility ($store, text) {
-        const conversion = ImageConversion.createContext($store.state.currentSite.config.advanced);
-        return ImageConversion.convertGalleryThumbnails(text, conversion);
+        if (!/gallery__item/i.test(text)) {
+            return text;
+        }
+
+        return mainProcessAPI.invoke('app-image:convert-gallery-thumbnails', {
+            site: $store.state.currentSite.config.name,
+            text
+        });
     }
 
     static isWebpImage (url) {

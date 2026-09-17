@@ -253,6 +253,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-file-manager:list',
             'app-file-manager:upload',
             'app-image:upload',
+            'app-image:convert-gallery-thumbnails',
             'app-file-manager:create',
             'app-file-manager:delete',
             'publii-get-spellchecker-language',
