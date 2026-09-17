@@ -687,6 +687,7 @@ class App {
     // Create and configure a single BrowserWindow; returns the window
     _createWindow (windowParams, { isNewWindow = false, initialSite = '', skipSplashScreen = isNewWindow } = {}) {
         let win = new BrowserWindow(windowParams);
+        this._dropMessagesToClosedWindow(win.webContents);
         win.loadURL('file:///' + this.basedir + '/dist/index.html');
 
         // Keyboard shortcut listener
@@ -830,6 +831,21 @@ class App {
         });
 
         return win;
+    }
+
+    // Many IPC handlers reply after asynchronous work (workers, timers, awaited operations). When the window
+    // is closed in the meantime, sending to its destroyed webContents throws in the main process. The reply
+    // has no receiver anyway, so it is dropped here - once, for every handler which uses event.sender.send.
+    _dropMessagesToClosedWindow (webContents) {
+        const sendToRenderer = webContents.send.bind(webContents);
+
+        webContents.send = (channel, ...args) => {
+            if (webContents.isDestroyed()) {
+                return;
+            }
+
+            sendToRenderer(channel, ...args);
+        };
     }
 
     // Create the first (main) window

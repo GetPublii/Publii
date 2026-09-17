@@ -24,6 +24,7 @@ describe('Notification center settings persistence', function () {
                 this.webContents = new EventEmitter();
                 this.webContents.setWindowOpenHandler = () => {};
                 this.webContents.setZoomFactor = () => {};
+                this.webContents.isDestroyed = () => false;
                 this.webContents.send = (channel, data) => {
                     if (channel === 'app-data-loaded') {
                         this.initialData = JSON.parse(JSON.stringify(data));
@@ -169,6 +170,20 @@ describe('Notification center settings persistence', function () {
 
         assert.equal(application.appConfig.notificationsStatus, 'rejected');
         assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, 'rejected');
+    });
+
+    it('drops messages sent to a window which has been closed in the meantime', function () {
+        let win = application._createWindow({});
+
+        win.webContents.send('app-data-loaded', { delivered: 'before closing' });
+        assert.deepEqual(win.initialData, { delivered: 'before closing' });
+
+        win.webContents.isDestroyed = () => true;
+
+        assert.doesNotThrow(() => {
+            win.webContents.send('app-data-loaded', { delivered: 'after closing' });
+        });
+        assert.deepEqual(win.initialData, { delivered: 'before closing' });
     });
 
     it('closes only the window with unsaved changes unless it has blocked quitting the app', function () {
