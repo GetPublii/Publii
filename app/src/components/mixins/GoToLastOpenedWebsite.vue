@@ -2,18 +2,19 @@
 export default {
     name: 'go-to-last-opened-website',
     methods: {
-        goBack () {
-            let lastOpened = localStorage.getItem('publii-last-opened-website');
+        async goBack () {
+            let currentSiteName = this.$store.state.currentSite.config.name;
             let sites = Object.keys(this.$store.state.sites);
 
-            if (sites.indexOf(lastOpened) > -1) {
-                this.$router.push('/site/' + lastOpened + '/posts/');
-            } else {
-                if (sites.length > 0) {
-                    this.$router.push('/site/' + sites[0] + '/posts/');
-                } else {
-                    this.$router.push('/site/!/posts/');
-                }
+            // The active website belongs to this window; localStorage is shared by all windows.
+            if (sites.indexOf(currentSiteName) > -1) {
+                return this.$router.push('/site/' + currentSiteName + '/posts/');
+            }
+
+            await this.$router.push('/site/!/posts/');
+
+            if (sites.length > 0) {
+                this.$nextTick(() => this.$bus.$emit('sites-popup-show'));
             }
         }
     }
