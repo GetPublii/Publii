@@ -124,6 +124,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-data-loaded',
             'app-deploy-render-error',
             'app-theme-mode:changed',
+            'app-theme-updated',
             'app-files-selected',
             'app-site-regenerate-thumbnails-progress',
             'app-rendering-progress',

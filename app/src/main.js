@@ -349,12 +349,25 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 this.applyCurrentAppAppearance(document, currentTheme);
                 this.$bus.$on('app-theme-change', this.toggleTheme);
 
+                // The native theme has changed. Only the "system" theme depends on it - an explicit theme
+                // must not be re-applied here, as that would override a choice just made in another window
                 mainProcessAPI.receive('app-theme-mode:changed', () => {
-                    if (this.skipThemeChangeEvents) {
+                    if (this.skipThemeChangeEvents || this.$store.state.app.theme !== 'system') {
                         return;
                     }
 
-                    this.$bus.$emit('app-theme-change');
+                    this.refreshCurrentAppAppearance();
+                });
+
+                // The theme has been changed in another window, which has already switched the native theme
+                mainProcessAPI.receive('app-theme-updated', theme => {
+                    if (['system', 'dark', 'default'].indexOf(theme) === -1) {
+                        return;
+                    }
+
+                    this.$store.commit('setAppTheme', theme);
+                    this.$store.commit('setAppConfig', { appTheme: theme });
+                    this.refreshCurrentAppAppearance();
                 });
             },
             async getCurrentAppTheme () {
@@ -426,6 +439,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 }
 
                 this.$store.commit('setAppTheme', currentTheme);
+                this.$store.commit('setAppConfig', { appTheme: currentTheme });
                 localStorage.setItem('publii-theme', currentTheme);
                 mainProcessAPI.send('app-save-color-theme', currentTheme);
 

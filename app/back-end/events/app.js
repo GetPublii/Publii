@@ -186,14 +186,25 @@ class AppEvents {
          * Save app color theme config
          */
         ipcMain.on('app-save-color-theme', function (event, theme) {
+            if (['system', 'dark', 'default'].indexOf(theme) === -1) {
+                return;
+            }
+
             let appConfig = FileHelper.readFileSync(appInstance.appConfigPath, 'utf8');
 
             try {
                 appConfig = JSON.parse(appConfig);
                 appConfig.appTheme = theme;
                 fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+                // New windows take their background color from the in-memory config
+                appInstance.appConfig.appTheme = theme;
             } catch (e) {
                 console.log('(!) App was unable to save the color theme');
+            }
+
+            // Other windows must follow this choice instead of re-applying their previous theme
+            if (appInstance.windowManager) {
+                appInstance.windowManager.broadcast('app-theme-updated', theme, event.sender.id);
             }
         });
 

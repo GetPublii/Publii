@@ -262,6 +262,21 @@ describe('Notification center settings persistence', function () {
         assert.equal(ownWindow.webContents.zoomFactor, undefined);
     });
 
+    it('saves the color theme and hands it over to the other windows', function () {
+        let broadcasts = [];
+
+        application.windowManager.broadcast = (channel, payload, exceptWebContentsId) => {
+            broadcasts.push({ channel, payload, exceptWebContentsId });
+        };
+
+        handlers.get('app-save-color-theme')({ sender: { id: 1 } }, 'dark');
+        handlers.get('app-save-color-theme')({ sender: { id: 1 } }, 'not-a-theme');
+
+        assert.equal(application.appConfig.appTheme, 'dark');
+        assert.equal(fs.readJsonSync(application.appConfigPath).appTheme, 'dark');
+        assert.deepEqual(broadcasts, [{ channel: 'app-theme-updated', payload: 'dark', exceptWebContentsId: 1 }]);
+    });
+
     it('does not broadcast the config when saving it fails', function () {
         let broadcasts = 0;
 
