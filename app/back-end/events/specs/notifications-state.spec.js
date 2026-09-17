@@ -171,6 +171,45 @@ describe('Notification center settings persistence', function () {
         assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, 'rejected');
     });
 
+    it('closes only the window with unsaved changes unless it has blocked quitting the app', function () {
+        let quits = 0;
+        let closes = 0;
+        let win = application._createWindow({});
+
+        win.webContents.id = 7;
+        win.isDestroyed = () => false;
+        win.close = () => {
+            closes++;
+        };
+        application.app = {
+            quit () {
+                quits++;
+            }
+        };
+        application.quitRequested = false;
+        application.windowsBlockingQuit = new Set();
+        application.windowManager.getWindow = () => win;
+
+        // Closing the window itself (i.e. Cmd+W)
+        win.webContents.emit('will-prevent-unload');
+        application.closeWindowAfterConfirmation(win.webContents);
+        assert.deepEqual([closes, quits], [1, 0]);
+
+        // Quitting the app blocked by this window
+        application.quitRequested = true;
+        win.webContents.emit('will-prevent-unload');
+        assert.equal(application.quitRequested, false);
+        application.closeWindowAfterConfirmation(win.webContents);
+        assert.deepEqual([closes, quits], [1, 1]);
+
+        // A quit cancelled by the user must not turn the next window close into quitting
+        application.quitRequested = true;
+        win.webContents.emit('will-prevent-unload');
+        win.webContents.emit('will-prevent-unload');
+        application.closeWindowAfterConfirmation(win.webContents);
+        assert.deepEqual([closes, quits], [2, 1]);
+    });
+
     it('saves the window position only for the primary window', function () {
         let primaryWindow = application._createWindow({});
         let secondaryWindow = application._createWindow({}, { isNewWindow: true });

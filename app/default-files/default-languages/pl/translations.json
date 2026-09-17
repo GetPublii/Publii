@@ -158,7 +158,7 @@
             "noImagesToRegenerate": "Brak obrazów do regeneracji",
             "noThemeSelected": "Nie wybrano motywu"
         },
-        "sureYouWantQuit": "Zamknąć Publii bez zapisywania? Niezapisane zmiany zostaną utracone.",
+        "sureYouWantQuit": "Zamknąć bez zapisywania? Niezapisane zmiany zostaną utracone.",
         "wpImport": {
             "authorsProgressInfo": "Importowanie autorów ({progress} / {total})",
             "imageDownloadError": "Nie udało się pobrać obrazu: {image}",

@@ -147,6 +147,10 @@ class PubliiWindowManager {
         }
     }
 
+    getWindow (webContentsId) {
+        return this.windows.get(webContentsId) || null;
+    }
+
     getMainWindow () {
         return this.windows.values().next().value || null;
     }

@@ -475,7 +475,8 @@ describeWithDatabase('WordPress WXR import', function() {
         let galleryDir = path.join(siteDir, 'input', 'media', 'posts', '99', 'gallery');
         let imagePath = path.join(galleryDir, 'imported.png');
         fs.mkdirSync(galleryDir, { recursive: true });
-        fs.copyFileSync(path.join(appInstance.appDir, 'dist', 'logo.png'), imagePath);
+        // A tracked source image - files in app/dist are build output and may not exist
+        fs.copyFileSync(path.join(appInstance.appDir, 'src', 'assets', 'logo.png'), imagePath);
 
         let thumbnail = await importer.parser.createGalleryThumbnail({ postID: 99 }, imagePath);
 

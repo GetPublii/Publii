@@ -146,7 +146,7 @@ export default {
                     isDanger: true,
                     okClick: () => {
                         window.onbeforeunload = null;
-                        mainProcessAPI.send('app-close', true);
+                        mainProcessAPI.send('app-window-close-confirmed');
                     }
                 });
             }

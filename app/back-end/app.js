@@ -67,6 +67,8 @@ class App {
         this.app.sitesDir = null;
         this.sitesLocationMissing = false;
         this.removedPreviewLocation = '';
+        this.quitRequested = false;
+        this.windowsBlockingQuit = new Set(); // webContentsId of windows which refused to unload during quitting
         this.dbMap = new Map();
         this.windowManager = new PubliiWindowManager(this);
         this.pluginsAPI = new PluginsAPI();
@@ -731,6 +733,19 @@ class App {
             }
         });
 
+        // A page (i.e. an editor with unsaved changes) refused to unload and asks the user what to do.
+        // Remember what it has interrupted: quitting the app or just closing this window. Every attempt
+        // overwrites the previous one, so a cancelled quit cannot turn a later window close into quitting.
+        win.webContents.on('will-prevent-unload', () => {
+            if (this.quitRequested) {
+                this.windowsBlockingQuit.add(win.webContents.id);
+            } else {
+                this.windowsBlockingQuit.delete(win.webContents.id);
+            }
+
+            this.quitRequested = false;
+        });
+
         win.webContents.on('did-finish-load', () => {
             // A (re)loaded renderer starts from scratch, so it cannot hold any exclusive view
             this.windowManager.releaseViewLocksForWindow(win.webContents.id);
@@ -889,6 +904,13 @@ class App {
         ipcMain.handle('app-open-new-window', (event, siteName = '') => this.openNewWindow(siteName));
         ipcMain.handle('app-view-lock', (event, viewId) => this.lockViewForWindow(viewId, event.sender.id));
 
+        // Closing a window with unsaved changes must not quit the app - unless the user asked for quitting
+        this.app.on('before-quit', () => {
+            this.quitRequested = true;
+        });
+        this.windowManager.onWindowDestroyed(webContentsId => this.windowsBlockingQuit.delete(webContentsId));
+        ipcMain.on('app-window-close-confirmed', event => this.closeWindowAfterConfirmation(event.sender));
+
         ipcMain.on('app-view-unlock', (event, viewId) => {
             if (this._isValidViewId(viewId)) {
                 this.windowManager.unlockView(viewId, event.sender.id);
@@ -900,6 +922,21 @@ class App {
                 this.windowManager.focusWindowByView(viewId);
             }
         });
+    }
+
+    // The user agreed to lose unsaved changes, so finish what the window has interrupted:
+    // quitting the whole app or closing just this window
+    closeWindowAfterConfirmation (webContents) {
+        if (this.windowsBlockingQuit.delete(webContents.id)) {
+            this.app.quit();
+            return;
+        }
+
+        let win = this.windowManager.getWindow(webContents.id);
+
+        if (win && !win.isDestroyed()) {
+            win.close();
+        }
     }
 
     // Reserve an exclusive view (i.e. app settings) for the requesting window

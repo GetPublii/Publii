@@ -86,7 +86,7 @@
             "noImagesToRegenerate": "Es sind keine Bilder zum Regenerieren vorhanden",
             "noThemeSelected": "Kein Theme ausgewählt"
         },
-        "sureYouWantQuit": "Möchten Sie Publii ohne Speichern beenden? Alle ungespeicherten Änderungen gehen verloren.",
+        "sureYouWantQuit": "Möchten Sie ohne Speichern schließen? Alle ungespeicherten Änderungen gehen verloren.",
         "wpImport": {
             "authorsProgressInfo": "Autoren importieren ({progress} / {total})",
             "imageDownloadError": "Beim Herunterladen des Bildes ist ein Fehler aufgetreten: {image}",
@@ -96,7 +96,7 @@
             "tagsProgressInfo": "Tags importieren ({progress} / {total})",
             "menusProgressInfo": "Navigationsmenüs werden importiert ({progress} / {total})"
             },
-        "quitWithoutSaving": "Ohne Speichern beenden"
+        "quitWithoutSaving": "Ohne Speichern schließen"
     },
     "customHTML": {
         "tabs": {

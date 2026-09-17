@@ -158,7 +158,7 @@
             "noImagesToRegenerate": "There are no images to regenerate",
             "noThemeSelected": "No theme selected"
         },
-        "sureYouWantQuit": "Quit Publii without saving? Any unsaved changes will be lost.",
+        "sureYouWantQuit": "Close without saving? Any unsaved changes will be lost.",
         "wpImport": {
             "authorsProgressInfo": "Importing authors ({progress} / {total})",
             "imageDownloadError": "Couldn't download the image: {image}",
@@ -168,7 +168,7 @@
             "postsProgressInfo": "Importing posts ({progress} / {total})",
             "tagsProgressInfo": "Importing tags ({progress} / {total})"
         },
-        "quitWithoutSaving": "Quit without saving"
+        "quitWithoutSaving": "Close without saving"
     },
     "customHTML": {
         "tabs": {

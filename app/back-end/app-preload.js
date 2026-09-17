@@ -110,6 +110,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-focus-window-with-site',
             'app-focus-window-with-view',
             'app-view-unlock',
+            'app-window-close-confirmed',
             'app-menu-state'
         ];
 

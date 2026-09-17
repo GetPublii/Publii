@@ -14,6 +14,7 @@ describe('Website location settings IPC', function () {
     let replies;
     let reloads;
     let notifications;
+    let configNotifications;
     let closed;
     let originalLog;
 
@@ -26,6 +27,7 @@ describe('Website location settings IPC', function () {
         replies = [];
         reloads = [];
         notifications = [];
+        configNotifications = [];
         closed = 0;
         originalLog = console.log;
         console.log = () => {};
@@ -38,6 +40,12 @@ describe('Website location settings IPC', function () {
                 notifications.push({
                     exceptWebContentsId,
                     sites: this.sites
+                });
+            },
+            notifyAppConfigChanged(exceptWebContentsId) {
+                configNotifications.push({
+                    exceptWebContentsId,
+                    config: this.appConfig
                 });
             },
             closeAllDbs() {
@@ -124,6 +132,7 @@ describe('Website location settings IPC', function () {
                 sites: { location: oldConfig.sitesLocation }
             }
         ]);
+        assert.deepEqual(configNotifications, []);
     });
 
     for (const withoutCopying of [false, true]) {
@@ -151,6 +160,13 @@ describe('Website location settings IPC', function () {
                     sites: { location: config.sitesLocation }
                 }
             ]);
+            // Other windows get the saved config, so they neither use nor save the previous location
+            assert.deepEqual(configNotifications, [
+                {
+                    exceptWebContentsId: senderId,
+                    config: config
+                }
+            ]);
         });
     }
 
@@ -176,6 +192,7 @@ describe('Website location settings IPC', function () {
                 sites: { location: oldConfig.sitesLocation }
             }
         ]);
+        assert.deepEqual(configNotifications, []);
     });
 
     it('reports a settings save failure without switching the active directory', function () {
@@ -197,5 +214,6 @@ describe('Website location settings IPC', function () {
                 sites: { location: original }
             }
         ]);
+        assert.deepEqual(configNotifications, []);
     });
 });
