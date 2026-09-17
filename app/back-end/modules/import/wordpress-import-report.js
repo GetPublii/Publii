@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const PathValidator = require('../../helpers/path-validator.js');
+const SiteLogs = require('../../helpers/site-logs.js');
 
 const { isValidDirSegment } = PathValidator;
 const REPORT_FILE = 'import-report-wordpress.log';
@@ -30,7 +31,13 @@ class WordPressImportReport {
             return false;
         }
 
-        let logsDir = this.app.app.getPath('logs');
+        // The report is stored with the other logs of the website, so every website keeps its own one
+        let logsDir = SiteLogs.getDirectory(this.app, siteName, false);
+
+        if (!logsDir) {
+            return false;
+        }
+
         let reportPath = path.join(logsDir, REPORT_FILE);
         let temporaryPath = reportPath + '.tmp';
         let siteConfig = this.app.sites && this.app.sites[siteName] ? this.app.sites[siteName] : {};
@@ -89,9 +96,14 @@ class WordPressImportReport {
             return null;
         }
 
-        let reportPath = path.join(this.app.app.getPath('logs'), REPORT_FILE);
+        // Older versions kept a single report for all websites directly in the logs directory
+        let siteLogsDir = SiteLogs.getDirectory(this.app, siteName, false);
+        let reportPath = [
+            siteLogsDir ? path.join(siteLogsDir, REPORT_FILE) : null,
+            path.join(SiteLogs.getRootDirectory(this.app), REPORT_FILE)
+        ].find(filePath => filePath && fs.existsSync(filePath));
 
-        if (!fs.existsSync(reportPath)) {
+        if (!reportPath) {
             return null;
         }
 

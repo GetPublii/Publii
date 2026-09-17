@@ -1,10 +1,10 @@
-const fs = require('fs-extra');
 const ipcMain = require('electron').ipcMain;
 const Deployment = require('../modules/deploy/deployment.js');
-const childProcess = require('child_process');
 const stripTags = require('striptags');
+const SiteLogs = require('../helpers/site-logs.js');
 const {
     createSafeSender,
+    forkWorkerWithLogs,
     trackWorkerProcess,
     abortWindowWorkerProcess
 } = require('../helpers/ipc.helper.js');
@@ -81,14 +81,11 @@ class DeployEvents {
     }
 
     renderSite(site, sender) {
-        let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
-            stdio: [
-                null,
-                fs.openSync(this.app.app.getPath('logs') + "/rendering-deployment-process.log", "w"),
-                fs.openSync(this.app.app.getPath('logs') + "/rendering-deployment-errors.log", "w"),
-                'ipc'
-            ]
-        });
+        let rendererProcess = forkWorkerWithLogs(
+            __dirname + '/../workers/renderer/preview',
+            SiteLogs.getWorkerLogsDirectory(this.app, site),
+            'rendering-deployment'
+        );
 
         trackWorkerProcess(this.rendererProcesses, sender.id, rendererProcess);
 
@@ -146,14 +143,11 @@ class DeployEvents {
 
     deploySite(site, password, sender) {
         let deploymentConfig = this.app.sites[site];
-        let deploymentProcess = childProcess.fork(__dirname + '/../workers/deploy/deployment', {
-            stdio: [
-                null,
-                fs.openSync(this.app.app.getPath('logs') + "/deployment-process.log", "w"),
-                fs.openSync(this.app.app.getPath('logs') + "/deployment-errors.log", "w"),
-                'ipc'
-            ]
-        });
+        let deploymentProcess = forkWorkerWithLogs(
+            __dirname + '/../workers/deploy/deployment',
+            SiteLogs.getWorkerLogsDirectory(this.app, site),
+            'deployment'
+        );
 
         trackWorkerProcess(this.deploymentProcesses, sender.id, deploymentProcess);
 

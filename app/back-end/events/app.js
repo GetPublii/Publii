@@ -8,6 +8,7 @@ const Plugins = require('../plugins.js');
 const AppFiles = require('../helpers/app-files.js');
 const PathValidator = require('../helpers/path-validator.js');
 const UtilsHelper = require('../helpers/utils.js');
+const SiteLogs = require('../helpers/site-logs.js');
 const ZipHelper = require('./../helpers/zip.helper.js');
 
 const { isValidDirSegment } = PathValidator;
@@ -617,34 +618,32 @@ class AppEvents {
         /*
          * Load log files list
          */
-        ipcMain.on('app-log-files-load', function(event) {
-            let logPath = appInstance.app.getPath('logs');
-            let files = fs.readdirSync(logPath).filter(function(file) {
-                return file.substr(-4) === '.txt' || file.substr(-4) === '.log';
-            });
+        ipcMain.on('app-log-files-load', function(event, siteName) {
+            // Logs of the given website and the general logs of the app - never logs of other websites
+            let logs = SiteLogs.list(appInstance, siteName);
 
             event.sender.send('app-log-files-loaded', {
-                files: files
+                files: logs.site.concat(logs.app),
+                siteFiles: logs.site,
+                appFiles: logs.app
             });
         });
 
         /*
          * Load specific log file
          */
-        ipcMain.on('app-log-file-load', function(event, filename) {
-            let logPath = appInstance.app.getPath('logs');
-            let logFiles = fs.readdirSync(logPath).filter(function(file) {
-                return file.substr(-4) === '.txt' || file.substr(-4) === '.log';
-            });
+        ipcMain.on('app-log-file-load', function(event, request) {
+            let siteName = request && typeof request === 'object' ? request.site : '';
+            let filename = request && typeof request === 'object' ? request.filename : request;
+            let filePath = SiteLogs.resolveFile(appInstance, siteName, filename);
 
-            if (logFiles.indexOf(filename) === -1) {
+            if (!filePath) {
                 event.sender.send('app-log-file-loaded', {
                     fileContent: 'File not found!'
                 });
                 return;
             }
 
-            let filePath = path.join(logPath, filename);
             let fileContent = FileHelper.readFileSync(filePath, 'utf8');
 
             event.sender.send('app-log-file-loaded', {

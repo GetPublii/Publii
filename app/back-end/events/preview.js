@@ -1,13 +1,13 @@
-const fs = require('fs');
 const path = require('path');
 const electron = require('electron');
 const shell = electron.shell;
 const ipcMain = electron.ipcMain;
-const childProcess = require('child_process');
 const stripTags = require('striptags');
 const PathValidator = require('../helpers/path-validator.js');
+const SiteLogs = require('../helpers/site-logs.js');
 const {
     createSafeSender,
+    forkWorkerWithLogs,
     trackWorkerProcess,
     abortWindowWorkerProcess
 } = require('../helpers/ipc.helper.js');
@@ -83,14 +83,11 @@ class PreviewEvents {
         let self = this;
         let previewMode = true;
         let resultsRetrieved = false;
-        let rendererProcess = childProcess.fork(__dirname + '/../workers/renderer/preview', {
-            stdio: [
-                null,
-                fs.openSync(this.app.app.getPath('logs') + "/rendering-process.log", "w"),
-                fs.openSync(this.app.app.getPath('logs') + "/rendering-errors.log", "w"),
-                'ipc'
-            ]
-        });
+        let rendererProcess = forkWorkerWithLogs(
+            __dirname + '/../workers/renderer/preview',
+            SiteLogs.getWorkerLogsDirectory(this.app, site),
+            'rendering'
+        );
 
         trackWorkerProcess(this.rendererProcesses, sender.id, rendererProcess);
 

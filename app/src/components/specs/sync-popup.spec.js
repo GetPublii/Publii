@@ -346,7 +346,12 @@ describe('Synchronization popup and log viewer', () => {
             s.$refs.codemirror.editor = { setValue: value => { result.content = value; }, refresh: () => {} };
             result.busListeners['log-viewer-editor-loaded']();
         };
-        result.files = () => result.listeners['app-log-files-loaded']({ files: ['deployment-process.log', 'other.log'] });
+        // The main process returns logs of the current website separately from the general logs of the app
+        result.files = () => result.listeners['app-log-files-loaded']({
+            files: ['deployment-process.log', 'other.log'],
+            siteFiles: ['deployment-process.log'],
+            appFiles: ['other.log']
+        });
         return result;
     }
 
@@ -387,7 +392,7 @@ describe('Synchronization popup and log viewer', () => {
         v.listeners['app-log-file-loaded']({ fileContent: 'Other log' });
         assert.equal(v.content, 'Other log');
         v.instance.loadSelectedFile();
-        assert.equal(v.calls.sends.at(-1)[1], 'other.log');
+        assert.deepEqual(JSON.parse(JSON.stringify(v.calls.sends.at(-1)[1])), { site: 'demo', filename: 'other.log' });
         v.listeners['app-log-file-loaded']({ fileContent: '' });
         assert.equal(v.content, v.instance.$t('tools.logFileEmpty'));
         v.instance.loadFile('');
@@ -395,7 +400,19 @@ describe('Synchronization popup and log viewer', () => {
         v.instance.$route.query.file = 'deployment-process.log';
         v.component.watch['$route.query.file'].call(v.instance);
         assert.equal(v.instance.selectedFile, 'deployment-process.log');
-        assert.equal(v.calls.sends.at(-1)[1], 'deployment-process.log');
+        assert.equal(v.calls.sends.at(-1)[1].filename, 'deployment-process.log');
+    });
+
+    it('log viewer asks for logs of the current website and groups them apart from the application logs', () => {
+        const v = logViewer();
+        v.ready();
+        assert.deepEqual(v.calls.sends.find(c => c[0] === 'app-log-files-load'), ['app-log-files-load', 'demo']);
+        v.files();
+        const groups = JSON.parse(JSON.stringify(v.instance.files.groups));
+        assert.equal(v.instance.files.hasGroups, true);
+        assert.deepEqual(groups[v.instance.$t('tools.websiteLogs')], { 'deployment-process.log': { label: 'deployment-process.log' } });
+        assert.deepEqual(groups[v.instance.$t('tools.applicationLogs')], { 'other.log': { label: 'other.log' } });
+        assert.deepEqual(Object.keys(groups.ungrouped), ['']);
     });
 
     it('popup translations exist in both bundled languages and fall back for other languages', () => {

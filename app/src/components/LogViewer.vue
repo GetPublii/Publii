@@ -44,9 +44,15 @@ export default {
     data () {
         return {
             files: {},
+            availableFiles: [],
             selectedFile: '',
             editorReady: false
         };
+    },
+    computed: {
+        siteName () {
+            return this.$store.state.currentSite.config.name;
+        }
     },
     watch: {
         '$route.query.file' () {
@@ -66,7 +72,7 @@ export default {
             let filename = this.$route.query.file;
 
             if (!this.editorReady || typeof filename !== 'string' || filename === '' ||
-                !Object.prototype.hasOwnProperty.call(this.files, filename)) {
+                this.availableFiles.indexOf(filename) === -1) {
                 return;
             }
 
@@ -74,19 +80,35 @@ export default {
             this.loadFile(filename);
         },
         loadFilesList () {
-            mainProcessAPI.send('app-log-files-load');
+            // The main process returns only logs of this website and the general logs of the app
+            mainProcessAPI.send('app-log-files-load', this.siteName);
 
             mainProcessAPI.receiveOnce('app-log-files-loaded', (data) => {
-                let items = {};
-                items[""] = this.$t('tools.selectFileToLoad');
-
-                if(data.files.length) {
-                    for(let file of data.files) {
-                        items[file] = file;
+                let siteFiles = Array.isArray(data.siteFiles) ? data.siteFiles : [];
+                let appFiles = Array.isArray(data.appFiles) ? data.appFiles : [];
+                let toItems = files => files.reduce((items, file) => {
+                    items[file] = { label: file };
+                    return items;
+                }, {});
+                let groups = {
+                    ungrouped: {
+                        '': { label: this.$t('tools.selectFileToLoad') }
                     }
+                };
+
+                if (siteFiles.length) {
+                    groups[this.$t('tools.websiteLogs')] = toItems(siteFiles);
                 }
 
-                this.files = items;
+                if (appFiles.length) {
+                    groups[this.$t('tools.applicationLogs')] = toItems(appFiles);
+                }
+
+                this.availableFiles = siteFiles.concat(appFiles);
+                this.files = {
+                    hasGroups: true,
+                    groups: groups
+                };
                 this.loadRequestedFile();
             });
         },
@@ -96,7 +118,10 @@ export default {
                 return;
             }
 
-            mainProcessAPI.send('app-log-file-load', filename);
+            mainProcessAPI.send('app-log-file-load', {
+                site: this.siteName,
+                filename: filename
+            });
 
             mainProcessAPI.receiveOnce('app-log-file-loaded', (data) => {
                 if(typeof data.fileContent === 'string') {

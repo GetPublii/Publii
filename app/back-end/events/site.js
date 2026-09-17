@@ -18,6 +18,7 @@ const {
     abortWindowWorkerProcess
 } = require('../helpers/ipc.helper.js');
 const { resolveSpellcheckerLanguage } = require('../helpers/spellchecker-language.js');
+const SiteLogs = require('../helpers/site-logs.js');
 
 /*
  * Events for the IPC communication regarding single sites
@@ -116,6 +117,13 @@ class SiteEvents {
 
                     if (appInstance.windowManager) {
                         appInstance.windowManager.renameSiteLock(config.site, config.settings.name, event.sender.id);
+                    }
+
+                    // Logs of websites without UUID are stored under the name of the website
+                    try {
+                        SiteLogs.rename(appInstance, config.site, config.settings.name, config.settings.uuid);
+                    } catch (error) {
+                        console.log('(!) Unable to move logs of the renamed website:', error);
                     }
 
                     // Rename also the backups directory
@@ -621,6 +629,14 @@ class SiteEvents {
             await passwordSafeStorage.deleteAllPasswords(account);
 
             Site.delete(appInstance, config.site);
+
+            // The logs directory is found through the sites list, so it has to be removed first
+            try {
+                SiteLogs.remove(appInstance, config.site);
+            } catch (error) {
+                console.log('(!) Unable to remove logs of the deleted website:', error);
+            }
+
             delete appInstance.sites[config.site];
 
             // Release the lock of the deleting window, so the name can be reused right away

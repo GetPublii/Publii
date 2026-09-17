@@ -1,6 +1,10 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 const {
     createSafeSender,
+    forkWorkerWithLogs,
     trackWorkerProcess,
     abortWorkerProcess,
     abortWindowWorkerProcess
@@ -112,6 +116,67 @@ describe('IPC helper', function () {
         abortWorkerProcess(workerProcess, 10);
 
         assert.deepEqual(workerProcess.messages, []);
+    });
+
+    describe('worker logs', function () {
+        let directory;
+        let workerPath;
+
+        function readLog (name) {
+            return fs.readFileSync(path.join(directory, name), 'utf8');
+        }
+
+        function runWorker (text, delay = 0) {
+            let workerProcess = forkWorkerWithLogs(workerPath, directory, 'rendering');
+            let finished = new Promise(resolve => workerProcess.once('exit', resolve));
+
+            workerProcess.send({ text, delay });
+            return finished;
+        }
+
+        beforeEach(function () {
+            directory = fs.mkdtempSync(path.join(os.tmpdir(), 'publii-worker-logs-'));
+            workerPath = path.join(directory, 'worker.js');
+            fs.writeFileSync(workerPath, `
+                process.on('message', message => {
+                    console.log(message.text);
+                    console.error('error: ' + message.text);
+                    setTimeout(() => process.exit(0), message.delay);
+                });
+            `);
+        });
+
+        afterEach(function () {
+            fs.rmSync(directory, { recursive: true, force: true });
+        });
+
+        it('should start the logs from scratch for a single worker', async function () {
+            fs.writeFileSync(path.join(directory, 'rendering-process.log'), 'previous run\n');
+            fs.writeFileSync(path.join(directory, 'rendering-errors.log'), 'previous error\n');
+
+            await runWorker('first');
+
+            assert.equal(readLog('rendering-process.log'), 'first\n');
+            assert.equal(readLog('rendering-errors.log'), 'error: first\n');
+        });
+
+        it('should keep the output of workers which run in parallel', async function () {
+            await Promise.all([
+                runWorker('window A', 150),
+                runWorker('window B')
+            ]);
+
+            let processLog = readLog('rendering-process.log').trim().split('\n').sort();
+            let errorsLog = readLog('rendering-errors.log').trim().split('\n').sort();
+
+            assert.deepEqual(processLog, ['window A', 'window B']);
+            assert.deepEqual(errorsLog, ['error: window A', 'error: window B']);
+
+            // Once all of them are finished, the next run starts with empty logs again
+            await runWorker('next run');
+
+            assert.equal(readLog('rendering-process.log'), 'next run\n');
+        });
     });
 
     it('should abort and forget the worker of a window', function () {

@@ -50,7 +50,8 @@ describe('WordPress import report persistence', function() {
 
         assert.strictEqual(reportStore.save('test-site', summary), true);
 
-        let reportPath = path.join(logsDir, 'import-report-wordpress.log');
+        // The report lives among the logs of the website, which are identified by its UUID
+        let reportPath = path.join(logsDir, 'sites', 'uuid-test-site', 'import-report-wordpress.log');
         let storedPayload = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
         let loadedPayload = reportStore.load('test-site');
 
@@ -96,7 +97,7 @@ describe('WordPress import report persistence', function() {
         assert.strictEqual(data.summary.report.warnings.length, 1);
     });
 
-    it('keeps only the most recent WordPress import report', function() {
+    it('keeps the most recent WordPress import report of every website', function() {
         let firstSummary = {
             report: {
                 generatedAt: '2026-08-30T10:00:00.000Z'
@@ -107,17 +108,56 @@ describe('WordPress import report persistence', function() {
                 generatedAt: '2026-08-30T11:00:00.000Z'
             }
         };
+        let thirdSummary = {
+            report: {
+                generatedAt: '2026-08-30T12:00:00.000Z'
+            }
+        };
 
         assert.strictEqual(reportStore.save('test-site', firstSummary), true);
         assert.strictEqual(reportStore.save('second-site', secondSummary), true);
-        assert.strictEqual(reportStore.load('test-site'), null);
-        assert.deepStrictEqual(
-            reportStore.load('second-site').summary,
-            secondSummary
-        );
+        assert.deepStrictEqual(reportStore.load('test-site').summary, firstSummary);
+        assert.deepStrictEqual(reportStore.load('second-site').summary, secondSummary);
+
+        assert.strictEqual(reportStore.save('test-site', thirdSummary), true);
+        assert.deepStrictEqual(reportStore.load('test-site').summary, thirdSummary);
+        assert.deepStrictEqual(reportStore.load('second-site').summary, secondSummary);
+    });
+
+    it('still loads a report stored for all websites by an older version', function() {
+        let legacyPayload = {
+            schemaVersion: 1,
+            importer: 'wordpress',
+            siteName: 'test-site',
+            siteUUID: 'uuid-test-site',
+            generatedAt: '2026-08-30T10:00:00.000Z',
+            summary: {
+                report: {
+                    generatedAt: '2026-08-30T10:00:00.000Z'
+                }
+            }
+        };
+
+        fs.writeFileSync(path.join(logsDir, 'import-report-wordpress.log'), JSON.stringify(legacyPayload), 'utf8');
+
+        assert.deepStrictEqual(reportStore.load('test-site').summary, legacyPayload.summary);
+        assert.strictEqual(reportStore.load('second-site'), null);
+    });
+
+    it('does not store a report for a website which is not on the sites list', function() {
+        fs.ensureDirSync(path.join(sitesDir, 'unlisted-site'));
+
+        assert.strictEqual(reportStore.save('unlisted-site', { report: {} }), false);
     });
 
     it('ignores malformed report files', function() {
+        let siteLogsDir = path.join(logsDir, 'sites', 'uuid-test-site');
+
+        fs.ensureDirSync(siteLogsDir);
+        fs.writeFileSync(path.join(siteLogsDir, 'import-report-wordpress.log'), '{broken', 'utf8');
+        assert.strictEqual(reportStore.load('test-site'), null);
+
+        fs.removeSync(siteLogsDir);
         fs.writeFileSync(path.join(logsDir, 'import-report-wordpress.log'), '{broken', 'utf8');
         assert.strictEqual(reportStore.load('test-site'), null);
     });

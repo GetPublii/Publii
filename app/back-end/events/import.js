@@ -3,9 +3,9 @@ const path = require('path');
 const ipcMain = require('electron').ipcMain;
 const Import = require('../modules/import/import.js');
 const WordPressImportReport = require('../modules/import/wordpress-import-report.js');
-const childProcess = require('child_process');
 const PathValidator = require('../helpers/path-validator.js');
-const { createSafeSender } = require('../helpers/ipc.helper.js');
+const SiteLogs = require('../helpers/site-logs.js');
+const { createSafeSender, forkWorkerWithLogs } = require('../helpers/ipc.helper.js');
 
 const { isValidDirSegment } = PathValidator;
 
@@ -128,18 +128,12 @@ class ImportEvents {
      * @param filePath
      */
     checkFile(siteName, filePath, sender) {
-        let stdoutFd = fs.openSync(this.app.app.getPath('logs') + "/import-check-process.log", "w");
-        let stderrFd = fs.openSync(this.app.app.getPath('logs') + "/import-check-errors.log", "w");
-        let importProcess;
-
-        try {
-            importProcess = childProcess.fork(__dirname + '/../workers/import/check', {
-                stdio: [null, stdoutFd, stderrFd, 'ipc']
-            });
-        } finally {
-            fs.closeSync(stdoutFd);
-            fs.closeSync(stderrFd);
-        }
+        // Checking a file is possible before any website exists, so these logs are general ones
+        let importProcess = forkWorkerWithLogs(
+            __dirname + '/../workers/import/check',
+            SiteLogs.getRootDirectory(this.app),
+            'import-check'
+        );
 
         let completed = false;
         let sendFailure = data => {
@@ -184,19 +178,12 @@ class ImportEvents {
      * @param config
      */
     importFile(appInstance, config, sender) {
-        let stdoutFd = fs.openSync(this.app.app.getPath('logs') + "/import-process.log", "w");
-        let stderrFd = fs.openSync(this.app.app.getPath('logs') + "/import-errors.log", "w");
         let reportStore = this.reportStore;
-        let importProcess;
-
-        try {
-            importProcess = childProcess.fork(__dirname + '/../workers/import/import', {
-                stdio: [null, stdoutFd, stderrFd, 'ipc']
-            });
-        } finally {
-            fs.closeSync(stdoutFd);
-            fs.closeSync(stderrFd);
-        }
+        let importProcess = forkWorkerWithLogs(
+            __dirname + '/../workers/import/import',
+            SiteLogs.getWorkerLogsDirectory(this.app, config.siteName),
+            'import'
+        );
 
         let completed = false;
         let sendFailure = message => {
