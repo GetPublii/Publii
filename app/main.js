@@ -354,7 +354,7 @@ electronApp.on('ready', function () {
 
             applicationMenu.rebuild();
 
-            return {
+            let result = {
                 languageChanged: languageChanged,
                 lang: appInstance.currentLanguageName,
                 type: appInstance.currentLanguageType,
@@ -363,6 +363,14 @@ electronApp.on('ready', function () {
                 wysiwygTranslation: appInstance.currentWysiwygTranslation,
                 languageLoadingError: appInstance.languageLoadingError
             };
+
+            // Other windows switch to the new language too. Otherwise they would keep the previous one
+            // in their copy of the app config and bring it back while saving the app settings.
+            if (languageChanged) {
+                appInstance.windowManager.broadcast('app-language-updated', result, event.sender.id);
+            }
+
+            return result;
         } catch (error) {
             return false;
         }

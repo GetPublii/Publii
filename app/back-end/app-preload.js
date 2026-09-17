@@ -142,6 +142,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-sites-updated',
             'app-config-updated',
             'app-extensions-updated',
+            'app-language-updated',
             'no-remote-files'
         ];
 
@@ -324,7 +325,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-menu-command',
             'app-sites-updated',
             'app-config-updated',
-            'app-extensions-updated'
+            'app-extensions-updated',
+            'app-language-updated'
         ];
 
         if (validChannels.includes(channel)) {

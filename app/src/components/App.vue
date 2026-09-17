@@ -300,6 +300,24 @@ export default {
                 this.$store.commit('replaceAppLanguages', data.languages);
                 this.$store.commit('replaceAppPlugins', data.plugins);
             });
+
+            // The app language was changed in another window - the same steps as while activating a language
+            mainProcessAPI.receive('app-language-updated', data => {
+                if (!data || !data.lang || !data.translations) {
+                    return;
+                }
+
+                this.$store.commit('setAppLanguage', data.lang);
+                this.$store.commit('setAppLanguageType', data.type);
+                this.$i18n.setLocaleMessage(data.lang, data.translations);
+                this.$i18n.locale = data.lang;
+
+                if (data.momentLocale) {
+                    this.$moment.locale(data.momentLocale);
+                }
+
+                this.$store.commit('setWysiwygTranslation', data.wysiwygTranslation);
+            });
         },
         setupExclusiveViews () {
             this.exclusiveViewsUnregister = [
@@ -511,6 +529,7 @@ export default {
         mainProcessAPI.stopReceiveAll('app-sites-updated');
         mainProcessAPI.stopReceiveAll('app-config-updated');
         mainProcessAPI.stopReceiveAll('app-extensions-updated');
+        mainProcessAPI.stopReceiveAll('app-language-updated');
 
         if (this.applicationMenuStateUnwatch) {
             this.applicationMenuStateUnwatch();
