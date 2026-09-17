@@ -12,18 +12,10 @@
                 aria-valuemax="100"
                 :aria-valuenow="isPartialPreview && progressIntent !== 'success' ? null : progress">
                 <template #icon>
-                    <svg
+                    <icon
+                        name="preview-layout"
                         class="preview-orb-icon"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.7"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        focusable="false">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <path d="M3 9h18M9 9v12" />
-                    </svg>
+                        focusable="false" />
                 </template>
             </progress-orb>
 

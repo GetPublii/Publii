@@ -329,7 +329,7 @@ export default {
 .progress-orb-ring-track {
     fill: none;
     stroke: color-mix(in srgb, var(--progress-orb-color) 18%, var(--bg-secondary));
-    stroke-width: 3;
+    stroke-width: 5;
     transition: stroke .5s ease;
 }
 
@@ -339,7 +339,7 @@ export default {
     stroke-dasharray: 377;
     stroke-dashoffset: 377;
     stroke-linecap: round;
-    stroke-width: 3;
+    stroke-width: 5;
     transition: stroke-dashoffset .35s ease-out, stroke .5s ease;
 }
 

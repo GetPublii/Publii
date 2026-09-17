@@ -33,6 +33,10 @@
        <polygon points="14 8.58 9.56 9.53 12.89 1 4 12.37 8.44 11.42 5.11 19 14 8.58" fill="currentColor" />
        <line x1="19" y1="18" x2="1" y2="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
     </symbol>
+
+     <symbol id="preview-layout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+       <path d="M7 21h10"/><rect width="20" height="14" x="2" y="3" rx="2"/>
+    </symbol>
     
     <!-- Menu icons -->
     
