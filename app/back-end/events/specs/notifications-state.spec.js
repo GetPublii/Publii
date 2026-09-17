@@ -37,6 +37,7 @@ describe('Notification center settings persistence', function () {
 
         const fileAPI = {
             readFileSync: fs.readFileSync,
+            lstatSync: fs.lstatSync,
             writeFileSync(...args) {
                 if (failWrites) {
                     throw new Error('Simulated write failure');
@@ -186,6 +187,25 @@ describe('Notification center settings persistence', function () {
         // A missing directory is not an error
         fs.removeSync(tempDir);
         assert.doesNotThrow(() => application.cleanTempDirectory());
+    });
+
+    it('never empties another location through a linked temp directory', function () {
+        let outsideDir = path.join(base, 'documents-of-the-user');
+        let tempDir = path.join(base, 'temp');
+
+        application.appDir = base;
+        fs.outputFileSync(path.join(outsideDir, 'important.txt'), 'keep me');
+
+        try {
+            fs.symlinkSync(outsideDir, tempDir, 'dir');
+        } catch (error) {
+            // Creating symbolic links requires additional privileges on Windows
+            this.skip();
+        }
+
+        application.cleanTempDirectory();
+
+        assert.equal(fs.readFileSync(path.join(outsideDir, 'important.txt'), 'utf8'), 'keep me');
     });
 
     it('drops messages sent to a window which has been closed in the meantime', function () {

@@ -32,6 +32,33 @@ describe('Creating a website from a backup - temp directories', () => {
         assert.equal(new CreateFromBackup(app, '/backup.tar').tempDir, sharedDir);
     });
 
+    it('never empties another location through a linked temp directory', function () {
+        let outsideDir = path.join(appDir, 'documents-of-the-user');
+        let creator = new CreateFromBackup(app, '/backup.tar', 3);
+
+        fs.mkdirSync(outsideDir);
+        fs.writeFileSync(path.join(outsideDir, 'important.txt'), 'keep me');
+        fs.mkdirSync(path.dirname(creator.tempDir), { recursive: true });
+
+        try {
+            fs.symlinkSync(outsideDir, creator.tempDir, 'dir');
+        } catch (error) {
+            // Creating symbolic links requires additional privileges on Windows
+            this.skip();
+        }
+
+        creator.removeBackupFilesIfNecessary();
+
+        assert.equal(fs.readFileSync(path.join(outsideDir, 'important.txt'), 'utf8'), 'keep me');
+        assert.equal(fs.existsSync(creator.tempDir), false);
+
+        // A regular directory is still emptied, not removed
+        fs.mkdirSync(path.join(creator.tempDir, 'input'), { recursive: true });
+        creator.removeBackupFilesIfNecessary();
+
+        assert.deepEqual(fs.readdirSync(creator.tempDir), []);
+    });
+
     it('removes the unpacked backup of the given window only', () => {
         fs.mkdirSync(path.join(CreateFromBackup.getTempDir(app, 3), 'input'), { recursive: true });
         fs.mkdirSync(path.join(CreateFromBackup.getTempDir(app, 4), 'input'), { recursive: true });

@@ -83,6 +83,38 @@ describe('Website logs', function () {
         assert.equal(SiteLogs.resolveFile(application, 'with-uuid', undefined), null);
     });
 
+    it('never follows symbolic links placed among the logs', function () {
+        let siteDir = SiteLogs.getDirectory(application, 'with-uuid');
+        let outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), 'publii-site-logs-outside-'));
+
+        try {
+            fs.writeFileSync(path.join(outsideDir, 'secret.txt'), 'outside');
+            fs.writeFileSync(path.join(siteDir, 'rendering-process.log'), 'site');
+
+            try {
+                fs.symlinkSync(path.join(outsideDir, 'secret.txt'), path.join(siteDir, 'linked.log'));
+                fs.symlinkSync(path.join(outsideDir, 'secret.txt'), path.join(logsDir, 'linked-general.txt'));
+                fs.symlinkSync(outsideDir, path.join(logsDir, 'sites', 'legacy-site'), 'dir');
+            } catch (error) {
+                // Creating symbolic links requires additional privileges on Windows
+                this.skip();
+            }
+
+            assert.deepEqual(SiteLogs.list(application, 'with-uuid'), {
+                site: ['rendering-process.log'],
+                app: []
+            });
+            assert.equal(SiteLogs.resolveFile(application, 'with-uuid', 'linked.log'), null);
+            assert.equal(SiteLogs.resolveFile(application, 'with-uuid', 'linked-general.txt'), null);
+
+            // The whole directory of a website replaced with a link to another location
+            assert.deepEqual(SiteLogs.list(application, 'legacy-site').site, []);
+            assert.equal(SiteLogs.resolveFile(application, 'legacy-site', 'secret.txt'), null);
+        } finally {
+            fs.removeSync(outsideDir);
+        }
+    });
+
     it('removes logs of a deleted website', function () {
         let siteDir = SiteLogs.getDirectory(application, 'with-uuid');
         let otherDir = SiteLogs.getDirectory(application, 'legacy-site');

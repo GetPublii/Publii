@@ -165,9 +165,21 @@ class CreateFromBackup {
     }
 
     removeBackupFilesIfNecessary () {
-        if (fs.existsSync(this.tempDir)) {
-            Utils.emptyDirRecursively(this.tempDir);
+        let stats;
+
+        try {
+            stats = fs.lstatSync(this.tempDir);
+        } catch (error) {
+            // Nothing to clean up
+            return;
         }
+
+        if (stats.isSymbolicLink()) {
+            Utils.removePathRecursively(this.tempDir);
+            return;
+        }
+
+        Utils.emptyDirRecursively(this.tempDir);
     }
 }
 

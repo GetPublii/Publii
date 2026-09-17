@@ -160,6 +160,25 @@ describe('IPC helper', function () {
             assert.equal(readLog('rendering-errors.log'), 'error: first\n');
         });
 
+        it('should not write through a symbolic link placed instead of a log', async function () {
+            let outsideFile = path.join(directory, 'important.txt');
+
+            fs.writeFileSync(outsideFile, 'keep me');
+
+            try {
+                fs.symlinkSync(outsideFile, path.join(directory, 'rendering-process.log'));
+            } catch (error) {
+                // Creating symbolic links requires additional privileges on Windows
+                this.skip();
+            }
+
+            await runWorker('first');
+
+            assert.equal(fs.readFileSync(outsideFile, 'utf8'), 'keep me');
+            assert.equal(fs.lstatSync(path.join(directory, 'rendering-process.log')).isSymbolicLink(), false);
+            assert.equal(readLog('rendering-process.log'), 'first\n');
+        });
+
         it('should keep the output of workers which run in parallel', async function () {
             await Promise.all([
                 runWorker('window A', 150),

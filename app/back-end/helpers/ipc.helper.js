@@ -31,6 +31,26 @@ function createSafeSender (webContents) {
 }
 
 /**
+ * Removes the symbolic link itself - its target stays untouched
+ *
+ * @param {string} filePath
+ */
+function removeSymbolicLink (filePath) {
+    let stats;
+
+    try {
+        stats = fs.lstatSync(filePath);
+    } catch (error) {
+        // The file does not exist yet
+        return;
+    }
+
+    if (stats.isSymbolicLink()) {
+        fs.unlinkSync(filePath);
+    }
+}
+
+/**
  * Forks a worker with its output redirected to the '<logName>-process.log' and '<logName>-errors.log' files
  *
  * Logs of a website have their own directory, but workers of the same kind can still overlap: general logs
@@ -54,6 +74,7 @@ function forkWorkerWithLogs (workerPath, logsDir, logName) {
 
         for (let suffix of ['-process.log', '-errors.log']) {
             let logPath = path.join(logsDir, logName + suffix);
+            removeSymbolicLink(logPath);
 
             if (isOnlyWriter) {
                 fs.writeFileSync(logPath, '');

@@ -576,7 +576,7 @@ class App {
         let tempDir = path.join(this.appDir, 'temp');
 
         try {
-            if (Utils.dirExists(tempDir)) {
+            if (Utils.dirExists(tempDir) && !fs.lstatSync(tempDir).isSymbolicLink()) {
                 Utils.emptyDirRecursively(tempDir);
             }
         } catch (error) {

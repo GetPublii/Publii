@@ -79,8 +79,20 @@ class SiteLogs {
         return SiteLogs.getDirectory(appInstance, siteName) || SiteLogs.getRootDirectory(appInstance);
     }
 
-    static listDirectory (directory) {
+    static isSymbolicLink (targetPath) {
+        try {
+            return fs.lstatSync(targetPath).isSymbolicLink();
+        } catch (error) {
+            return false;
+        }
+    }
+
+    static listDirectory (directory, allowLinkedDirectory = false) {
         if (!directory || !fs.existsSync(directory)) {
+            return [];
+        }
+
+        if (!allowLinkedDirectory && SiteLogs.isSymbolicLink(directory)) {
             return [];
         }
 
@@ -90,7 +102,7 @@ class SiteLogs {
             }
 
             try {
-                return fs.statSync(path.join(directory, fileName)).isFile();
+                return fs.lstatSync(path.join(directory, fileName)).isFile();
             } catch (error) {
                 return false;
             }
@@ -102,7 +114,7 @@ class SiteLogs {
      */
     static list (appInstance, siteName) {
         let siteFiles = SiteLogs.listDirectory(SiteLogs.getDirectory(appInstance, siteName, false));
-        let appFiles = SiteLogs.listDirectory(SiteLogs.getRootDirectory(appInstance)).filter(fileName => {
+        let appFiles = SiteLogs.listDirectory(SiteLogs.getRootDirectory(appInstance), true).filter(fileName => {
             return !SiteLogs.isSiteLogFileName(fileName) && siteFiles.indexOf(fileName) === -1;
         });
 
