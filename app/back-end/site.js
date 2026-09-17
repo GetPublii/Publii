@@ -604,10 +604,14 @@ class Site {
         }
     }
 
-    static async checkWebsiteBackup (appInstance, backupPath) {
-        let siteCreator = new CreateFromBackup(appInstance, backupPath);
+    static async checkWebsiteBackup (appInstance, backupPath, webContentsId = null) {
+        let siteCreator = new CreateFromBackup(appInstance, backupPath, webContentsId);
         let result = await siteCreator.prepareBackupToRestore()
         return result;
+    }
+
+    static removeTemporaryBackupFiles (appInstance, webContentsId = null) {
+        CreateFromBackup.removeTempDir(appInstance, webContentsId);
     }
 
     static checkWebsiteCatalogAvailability (appInstance, siteName) {
@@ -624,12 +628,13 @@ class Site {
         };
     }
 
-    static restoreFromBackup (appInstance, siteName) {
+    static restoreFromBackup (appInstance, siteName, webContentsId = null) {
         let catalogName = slug(siteName).toLowerCase();
-        let source = path.join(appInstance.appDir, 'temp', 'backup-to-restore');
+        let source = CreateFromBackup.getTempDir(appInstance, webContentsId);
         let destination = path.join(appInstance.sitesDir, catalogName);
 
-        if (catalogName.trim() === '') {
+        // Without the unpacked backup there is nothing to restore - and an existing website must stay untouched
+        if (catalogName.trim() === '' || !UtilsHelper.dirExists(source)) {
             return {
                 status: 'error',
             };

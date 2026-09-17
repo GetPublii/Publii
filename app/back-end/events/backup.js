@@ -149,8 +149,34 @@ class BackupEvents {
     async restoreBackup(siteName, backupName, event) {
         let backupsDir = this.backupsLocation;
         let destinationDir = this.app.sitesDir;
-        let tempDir = path.join(this.app.appDir, 'temp');
-        let backupResult = await Backup.restore(siteName, backupName, backupsDir, destinationDir, tempDir, this.app);
+        let tempDir;
+        let backupResult;
+
+        // Every restore gets its own temp directory, so operations started in other windows are not affected
+        try {
+            let baseTempDir = path.join(this.app.appDir, 'temp');
+            fs.ensureDirSync(baseTempDir);
+            tempDir = fs.mkdtempSync(path.join(baseTempDir, 'restore-'));
+        } catch (error) {
+            console.log('Unable to create a temporary directory for the backup:', error);
+            event.sender.send('app-backup-restored', {
+                status: false,
+                error: 'core.backup.temporaryDirectoryDoesNotExists'
+            });
+
+            return;
+        }
+
+        try {
+            backupResult = await Backup.restore(siteName, backupName, backupsDir, destinationDir, tempDir, this.app);
+        } finally {
+            // A locked leftover must not hide the result of the restore
+            try {
+                fs.removeSync(tempDir);
+            } catch (error) {
+                console.log('Unable to remove the temporary directory of the backup:', error);
+            }
+        }
 
         if (backupResult.type === 'app-backup-restore-success') {
             event.sender.send('app-backup-restored', {

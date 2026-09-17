@@ -5,11 +5,39 @@ const tar = require('tar-fs');
 const Utils = require('./../../helpers/utils.js');
 
 class CreateFromBackup {
-    constructor (appInstance, backupPath) {
+    constructor (appInstance, backupPath, webContentsId = null) {
         this.backupPath = backupPath;
         this.appInstance = appInstance;
         this.baseDir = path.join(this.appInstance.appDir, 'temp');
-        this.tempDir = path.join(this.baseDir, 'backup-to-restore');
+        this.tempDir = CreateFromBackup.getTempDir(appInstance, webContentsId);
+    }
+
+    /**
+     * Every window unpacks a backup to its own directory,
+     * so the same operation running in another window is not affected
+     *
+     * @param appInstance
+     * @param webContentsId - ID of the window which restores the backup
+     */
+    static getTempDir (appInstance, webContentsId = null) {
+        let dirName = 'backup-to-restore';
+
+        if (Number.isInteger(webContentsId)) {
+            dirName += '-' + webContentsId;
+        }
+
+        return path.join(appInstance.appDir, 'temp', dirName);
+    }
+
+    /**
+     * Removes the unpacked backup of the given window
+     */
+    static removeTempDir (appInstance, webContentsId = null) {
+        let tempDir = CreateFromBackup.getTempDir(appInstance, webContentsId);
+
+        if (fs.existsSync(tempDir)) {
+            Utils.removePathRecursively(tempDir);
+        }
     }
 
     async prepareBackupToRestore () {

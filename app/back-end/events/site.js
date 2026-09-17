@@ -27,9 +27,12 @@ class SiteEvents {
         let self = this;
         this.regenerateProcesses = new Map(); // webContentsId -> process
 
-        // Workers must not outlive the window which started them
+        // Workers and unpacked backups must not outlive the window which started them
         if (appInstance.windowManager && typeof appInstance.windowManager.onWindowDestroyed === 'function') {
-            appInstance.windowManager.onWindowDestroyed(webContentsId => abortWindowWorkerProcess(self.regenerateProcesses, webContentsId));
+            appInstance.windowManager.onWindowDestroyed(webContentsId => {
+                abortWindowWorkerProcess(self.regenerateProcesses, webContentsId);
+                Site.removeTemporaryBackupFiles(appInstance, webContentsId);
+            });
         }
 
         /*
@@ -690,8 +693,16 @@ class SiteEvents {
                 return;
             }
 
-            let result = await Site.checkWebsiteBackup(appInstance, config.backupPath);
-            event.sender.send('app-site-backup-checked', result);
+            let sender = createSafeSender(event.sender);
+            let result = await Site.checkWebsiteBackup(appInstance, config.backupPath, sender.id);
+
+            // The window was closed while the backup was being unpacked, so nobody is going to use these files
+            if (sender.isDestroyed()) {
+                Site.removeTemporaryBackupFiles(appInstance, sender.id);
+                return;
+            }
+
+            sender.send('app-site-backup-checked', result);
         });
 
         /*
@@ -706,11 +717,7 @@ class SiteEvents {
          * Remove temp backup files 
          */
         ipcMain.on('app-site-remove-temporary-backup-files', function (event, config) {
-            let tempBackupDir = path.join(appInstance.appDir, 'temp', 'backup-to-restore');
-
-            if (fs.existsSync(tempBackupDir)) {
-                UtilsHelper.emptyDirRecursively(tempBackupDir);
-            }
+            Site.removeTemporaryBackupFiles(appInstance, event.sender.id);
         });
 
         /*
@@ -725,7 +732,7 @@ class SiteEvents {
                 return;
             }
 
-            let result = Site.restoreFromBackup(appInstance, config.siteName);
+            let result = Site.restoreFromBackup(appInstance, config.siteName, event.sender.id);
             event.sender.send('app-site-restored-from-backup', result);
         });
     }
