@@ -348,15 +348,16 @@ class SFTP {
         });
     }
 
-    async testConnection(app, deploymentConfig, siteName, siteConfig, sender) {
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
         let client = new sftpClient();
         let waitForTimeout = true;
         let ftpPassword = deploymentConfig.password;
         let passphrase = deploymentConfig.passphrase;
         let account = slug(siteName);
 
-        if (siteConfig.uuid) {
-            account = siteConfig.uuid;
+        // Credentials of websites with UUID are stored under that UUID - the same as in the other protocols
+        if (uuid) {
+            account = uuid;
         }
 
         if(ftpPassword === 'publii ' + account) {
