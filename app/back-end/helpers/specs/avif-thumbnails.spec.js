@@ -310,7 +310,7 @@ describe('AVIF upload and thumbnails', function () {
             }
         });
 
-        it(`${engine}: applies AVIF quality, lossless and compression effort`, async function () {
+        it(`${engine}: uses shared quality for AVIF and supports lossless and compression effort`, async function () {
             application.appConfig.resizeEngine = engine;
             siteConfig.advanced.forceAvif = true;
             const image = createImage('.png');
@@ -325,8 +325,8 @@ describe('AVIF upload and thumbnails', function () {
             }).png().toFile(image.path);
             const outputs = [];
 
-            for (const [quality, effort, lossless] of [[20, 2, false], [85, 4, false], [20, 6, true]]) {
-                siteConfig.advanced.avifQuality = quality;
+            for (const [quality, effort, lossless] of [[20, 2, false], [85, 2, false], [20, 6, true]]) {
+                siteConfig.advanced.imagesQuality = quality;
                 siteConfig.advanced.avifEffort = effort;
                 siteConfig.advanced.avifLossless = lossless;
                 saveConfig();

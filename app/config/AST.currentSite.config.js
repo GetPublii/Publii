@@ -20,7 +20,6 @@ const AstCurrentSiteConfig = {
         forceWebp: false,
         webpLossless: false,
         forceAvif: false,
-        avifQuality: 50,
         avifLossless: false,
         avifEffort: 4,
         responsiveImages: 1,

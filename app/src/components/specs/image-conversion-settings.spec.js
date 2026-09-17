@@ -33,6 +33,7 @@ function createSettings(advanced) {
         },
         computed: {
             imageConversion: options.computed.imageConversion,
+            imageQualityDisabled: options.computed.imageQualityDisabled,
             imageConversionItems: options.computed.imageConversionItems,
             imageConversionInfo: options.computed.imageConversionInfo,
             avifEffortItems: options.computed.avifEffortItems
@@ -70,13 +71,12 @@ describe('Image conversion settings', function () {
         });
     }
 
-    it('switches formats exclusively and restores the saved selection without losing format settings', function () {
+    it('keeps 99% quality when switching formats and reopening saved settings', function () {
         const instance = createSettings({
             forceWebp: true,
-            imagesQuality: 73,
+            imagesQuality: 99,
             alphaQuality: 91,
             webpLossless: true,
-            avifQuality: 45,
             avifLossless: false,
             avifEffort: 6
         });
@@ -87,10 +87,9 @@ describe('Image conversion settings', function () {
             assert.equal(instance.advanced.forceAvif, format === 'avif');
             const reopened = createSettings(JSON.parse(JSON.stringify(instance.advanced)));
             assert.equal(reopened.imageConversion, format);
-            assert.equal(reopened.advanced.imagesQuality, 73);
+            assert.equal(reopened.advanced.imagesQuality, 99);
             assert.equal(reopened.advanced.alphaQuality, 91);
             assert.equal(reopened.advanced.webpLossless, true);
-            assert.equal(reopened.advanced.avifQuality, 45);
             assert.equal(reopened.advanced.avifEffort, 6);
             reopened.$destroy();
         }
@@ -104,7 +103,11 @@ describe('Image conversion settings', function () {
         const template = '<section>' + source.slice(start, end) + '</section>';
         assert.deepEqual(compiler.compile(template).errors, []);
         const compiled = compiler.compileToFunctions(template);
-        const instance = createSettings({ responsiveImages: true, forceWebp: true });
+        const instance = createSettings({
+            responsiveImages: true,
+            forceWebp: true,
+            imagesQuality: 99
+        });
         instance.$options.render = compiled.render;
         instance.$options.staticRenderFns = compiled.staticRenderFns;
 
@@ -117,18 +120,70 @@ describe('Image conversion settings', function () {
             assert.equal(radio.data.attrs.role, 'radiogroup');
             assert.equal(radio.data.attrs['aria-labelledby'], 'image-conversion-label');
             const fields = nodes.filter(node => node.tag === 'field').map(node => node.data.attrs.id);
-            assert.equal(fields.includes('avif-quality'), format === 'avif');
+            assert.equal(fields.includes('avif-quality'), false);
             assert.equal(fields.includes('avif-effort'), format === 'avif');
             assert.equal(fields.includes('webp-lossless'), format === 'webp');
-            assert.equal(fields.includes('images-quality'), format !== 'avif');
+            assert.equal(fields.filter(id => id === 'images-quality').length, 1);
+            assert.ok(fields.indexOf('images-quality') < fields.indexOf('image-conversion'));
+            const quality = nodes.find(node => node.tag === 'text-input' && node.data.attrs.id === 'images-quality');
+            assert.equal(quality.data.model.value, 99);
+            assert.equal(quality.data.attrs.disabled, format === 'avif');
 
             if (format === 'avif') {
                 const effort = nodes.find(node => node.tag === 'radio-buttons' && node.data.attrs.name === 'avif-effort');
                 assert.equal(effort.data.model.value, 4);
                 assert.equal(effort.data.attrs['aria-labelledby'], 'avif-effort-label');
-                const quality = nodes.find(node => node.tag === 'text-input' && node.data.attrs.id === 'avif-quality');
-                assert.equal(quality.data.attrs.disabled, true);
             }
+        }
+
+        instance.$destroy();
+    });
+
+    it('disables the shared quality only for the selected lossless format without resetting it', function () {
+        const instance = createSettings({
+            imagesQuality: 99,
+            webpLossless: false,
+            avifLossless: false
+        });
+        const scenarios = [
+            {
+                format: 'webp',
+                webpLossless: false,
+                avifLossless: true,
+                disabled: false
+            },
+            {
+                format: 'webp',
+                webpLossless: true,
+                avifLossless: false,
+                disabled: true
+            },
+            {
+                format: 'avif',
+                webpLossless: true,
+                avifLossless: false,
+                disabled: false
+            },
+            {
+                format: 'avif',
+                webpLossless: false,
+                avifLossless: true,
+                disabled: true
+            },
+            {
+                format: 'none',
+                webpLossless: true,
+                avifLossless: true,
+                disabled: false
+            }
+        ];
+
+        for (const scenario of scenarios) {
+            instance.imageConversion = scenario.format;
+            instance.advanced.webpLossless = scenario.webpLossless;
+            instance.advanced.avifLossless = scenario.avifLossless;
+            assert.equal(instance.imageQualityDisabled, scenario.disabled);
+            assert.equal(instance.advanced.imagesQuality, 99);
         }
 
         instance.$destroy();

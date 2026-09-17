@@ -79,7 +79,6 @@ describe('Image conversion regeneration notice', function () {
     it('does not ask for regeneration merely because AVIF defaults were added to an existing site', async function () {
         const previous = JSON.parse(JSON.stringify(defaultConfig.advanced));
         delete previous.forceAvif;
-        delete previous.avifQuality;
         delete previous.avifLossless;
         delete previous.avifEffort;
         previous.forceWebp = true;
@@ -89,7 +88,7 @@ describe('Image conversion regeneration notice', function () {
 
     for (const [key, value] of [
         ['forceAvif', true],
-        ['avifQuality', 72],
+        ['imagesQuality', 72],
         ['avifLossless', true],
         ['avifEffort', 6]
     ]) {
@@ -100,9 +99,9 @@ describe('Image conversion regeneration notice', function () {
         });
     }
 
-    it('treats equivalent numeric field values as unchanged', async function () {
+    it('treats equivalent numeric effort values as unchanged', async function () {
         const previous = JSON.parse(JSON.stringify(defaultConfig.advanced));
-        const next = { ...previous, avifQuality: '50', avifEffort: '4' };
+        const next = { ...previous, avifEffort: '4' };
         assert.equal(await saveSettings(previous, next), false);
     });
 });

@@ -215,12 +215,6 @@ class Image extends Model {
         let alphaQuality = 100;
         const conversion = ImageConversion.createContext(siteConfig.advanced);
         const avifLossless = !!siteConfig.advanced.forceAvif && !!siteConfig.advanced.avifLossless;
-        let avifQuality = parseInt(siteConfig.advanced.avifQuality, 10);
-
-        if (!Number.isInteger(avifQuality) || avifQuality < 1 || avifQuality > 100) {
-            avifQuality = 50;
-        }
-
         const configuredAvifEffort = parseInt(siteConfig.advanced.avifEffort, 10);
         const avifEffort = [2, 4, 6].includes(configuredAvifEffort) ? configuredAvifEffort : 4;
         let webpLossless = false;
@@ -383,7 +377,6 @@ class Image extends Model {
                 imagesQuality,
                 alphaQuality: outputFormat === 'avif' && siteConfig.advanced.forceAvif ? 100 : alphaQuality,
                 webpLossless,
-                avifQuality: siteConfig.advanced.forceAvif ? avifQuality : imagesQuality,
                 avifLossless,
                 avifEffort: siteConfig.advanced.forceAvif ? avifEffort : undefined
             };
@@ -432,7 +425,6 @@ class Image extends Model {
             imagesQuality,
             alphaQuality,
             webpLossless,
-            avifQuality,
             avifLossless,
             avifEffort
         } = job;
@@ -475,7 +467,7 @@ class Image extends Model {
         } else if (format === 'avif') {
             writeOptions = avifLossless
                 ? { lossless: true, effort: avifEffort }
-                : { quality: avifQuality ?? imagesQuality, alphaQuality, effort: avifEffort };
+                : { quality: imagesQuality, alphaQuality, effort: avifEffort };
         } else if (format === 'png') {
             writeOptions = {};
         } else {

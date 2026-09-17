@@ -1921,7 +1921,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.responsiveImages && imageConversion !== 'avif'"
+                            v-if="advanced.responsiveImages"
                             id="images-quality"
                             :label="$t('settings.responsiveImagesQuality')">
                             <label slot="field">
@@ -1931,7 +1931,7 @@
                                     min="1"
                                     max="100"
                                     step="1"
-                                    :disabled="advanced.forceWebp && advanced.webpLossless"
+                                    :disabled="imageQualityDisabled"
                                     v-model="advanced.imagesQuality" />
                                 %
                             </label>
@@ -1941,7 +1941,7 @@
                             v-if="advanced.responsiveImages"
                             type="small thin"
                             :is-line="true"/>
-                        
+
                         <field
                             v-if="advanced.responsiveImages"
                             id="image-conversion"
@@ -1988,23 +1988,6 @@
                                     :disabled="advanced.forceWebp && advanced.webpLossless"
                                     v-model="advanced.alphaQuality" />
                                 %
-                            </label>
-                        </field>
-
-                        <field
-                            v-if="advanced.responsiveImages && imageConversion === 'avif'"
-                            id="avif-quality"
-                            :label="$t('settings.avifQuality')">
-                            <label slot="field">
-                                <text-input
-                                    id="avif-quality"
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    step="1"
-                                    :disabled="advanced.avifLossless"
-                                    v-model="advanced.avifQuality" />
-                                / 100
                             </label>
                         </field>
 
@@ -2430,7 +2413,6 @@ export default {
             theme: '',
             advanced: {
                 forceAvif: false,
-                avifQuality: 50,
                 avifLossless: false,
                 avifEffort: 4
             },
@@ -2451,6 +2433,10 @@ export default {
                 this.$set(this.advanced, 'forceWebp', format === 'webp');
                 this.$set(this.advanced, 'forceAvif', format === 'avif');
             }
+        },
+        imageQualityDisabled () {
+            return (this.imageConversion === 'webp' && !!this.advanced.webpLossless) ||
+                (this.imageConversion === 'avif' && !!this.advanced.avifLossless);
         },
         imageConversionItems () {
             return [

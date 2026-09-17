@@ -940,7 +940,6 @@
         "noImageConversion": "No conversion",
         "imageConversionInfo": "Choose the format for generated image thumbnails. Original files remain unchanged. After changing the format, regenerate your thumbnails.",
         "convertToAvifInfo": "Convert JPG, JPEG, PNG and static WebP thumbnails to AVIF. Original files remain unchanged. AVIF encoding can take longer and does not always produce smaller files. After changing the format, regenerate your thumbnails.",
-        "avifQuality": "AVIF quality",
         "avifLossless": "Enable lossless compression for responsive AVIF images",
         "avifEffort": "AVIF compression effort",
         "avifEffortFast": "Fast",

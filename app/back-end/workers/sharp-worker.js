@@ -57,7 +57,6 @@ function runJob(job) {
         imagesQuality,
         alphaQuality,
         webpLossless,
-        avifQuality,
         avifLossless,
         avifEffort
     } = job;
@@ -93,7 +92,7 @@ function runJob(job) {
     } else if (format === 'avif') {
         pipeline = pipeline.avif(avifLossless
             ? { lossless: true, effort: avifEffort }
-            : { quality: avifQuality ?? imagesQuality, effort: avifEffort });
+            : { quality: imagesQuality, effort: avifEffort });
     }
 
     return pipeline.toBuffer().then(buffer => writeBuffer(destinationPath, buffer));

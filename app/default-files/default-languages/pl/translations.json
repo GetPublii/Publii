@@ -942,7 +942,6 @@
         "noImageConversion": "Bez konwersji",
         "imageConversionInfo": "Wybierz format generowanych miniaturek. Oryginalne pliki pozostają bez zmian. Po zmianie formatu wygeneruj miniaturki ponownie.",
         "convertToAvifInfo": "Konwertuj miniaturki JPG, JPEG, PNG i statycznych WebP do AVIF. Oryginalne pliki pozostają bez zmian. Kodowanie AVIF może trwać dłużej i nie zawsze daje mniejsze pliki. Po zmianie formatu wygeneruj miniaturki ponownie.",
-        "avifQuality": "Jakość AVIF",
         "avifLossless": "Włącz bezstratną kompresję dla grafik w formacie AVIF",
         "avifEffort": "Poziom kompresji AVIF",
         "avifEffortFast": "Szybki",

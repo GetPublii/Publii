@@ -881,7 +881,6 @@
         "noImageConversion": "Keine Konvertierung",
         "imageConversionInfo": "Wähle das Format für generierte Vorschaubilder. Originaldateien bleiben unverändert. Nach einem Formatwechsel müssen die Vorschaubilder neu generiert werden.",
         "convertToAvifInfo": "Konvertiere Vorschaubilder aus JPG, JPEG, PNG und statischen WebP-Bildern in AVIF. Originaldateien bleiben unverändert. Die AVIF-Kodierung kann länger dauern und erzeugt nicht immer kleinere Dateien. Nach einem Formatwechsel müssen die Vorschaubilder neu generiert werden.",
-        "avifQuality": "AVIF-Qualität",
         "avifLossless": "Aktiviere verlustfreie Kompression für responsive AVIF-Bilder",
         "avifEffort": "AVIF-Kompressionsaufwand",
         "avifEffortFast": "Schnell",
