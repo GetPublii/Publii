@@ -238,29 +238,6 @@
                         {{ $t('settings.selectedDirInvalid') }}
                     </small>
                 </field>
-
-                <field
-                    id="preview-location"
-                    :label="$t('settings.previewLocation')">
-                    <dir-select
-                        id="preview-location"
-                        :placeholder="$t('settings.leaveBlankForDefaultPreviewDirectory')"
-                        v-model="locations.preview"
-                        :readonly="syncInProgress"
-                        slot="field" />
-                    <small
-                        v-if="syncInProgress"
-                        slot="note"
-                        class="note">
-                        {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
-                    </small>
-                    <small
-                        v-if="locations.preview !== '' && !checkPreviewCatalog"
-                        slot="note"
-                        class="note is-invalid">
-                        {{ $t('settings.selectedDirInvalid') }}
-                    </small>
-                </field>
             </fields-group>
 
             <fields-group :title="$t('settings.defaultOrderingOnLists')">
@@ -484,10 +461,8 @@ export default {
             enableAdvancedPreview: false,
             locations: {
                 sites: '',
-                backups: '',
-                preview: ''
+                backups: ''
             },
-            unwatchLocationPreview: null,
             unwatchBackupsLocation: null,
             editorFontSize: 18,
             editorFontFamily: 'serif',
@@ -496,8 +471,7 @@ export default {
             experimentalFileManagerInSidebar: false,
             changeSitesLocationWithoutCopying: false,
             sitesLocationExists: false,
-            backupsLocationExists: false,
-            previewLocationExists: false
+            backupsLocationExists: false
         };
     },
     computed: {
@@ -600,9 +574,6 @@ export default {
         },
         isBackupsLocationExists () {
             return this.backupsLocationExists;
-        },
-        isPreviewLocationExists () {
-            return this.previewLocationExists;
         }
     },
     watch: {
@@ -612,9 +583,6 @@ export default {
         'locations.backups': async function (newValue) {
             this.checkBackupsCatalog();
         },
-        'locations.preview': async function (newValue) {
-            this.checkPreviewCatalog();
-        },
         'uiZoomLevel': async function (newValue) {
             await this.setUIZoomLevel();
         }
@@ -623,7 +591,6 @@ export default {
         this.locations.sites = this.$store.state.app.config.sitesLocation;
         this.originalSitesLocation = this.locations.sites;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
-        this.locations.preview = this.$store.state.app.config.previewLocation;
         this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
         this.showTooltips = this.$store.state.app.config.showTooltips !== false;
@@ -653,7 +620,6 @@ export default {
         this.theme = this.getAppTheme();
 
         Vue.nextTick(() => {
-            this.unwatchLocationPreview = this.$watch('locations.preview', this.detectPreviewLocationChange);
             this.unwatchBackupsLocation = this.$watch('locations.backups', this.detectBackupLocationChange);
         });
     },
@@ -690,7 +656,6 @@ export default {
                 autoAdjustSidebarWidth: this.autoAdjustSidebarWidth,
                 sitesLocation: this.locations.sites.trim(),
                 backupsLocation: this.locations.backups.trim(),
-                previewLocation: this.locations.preview.trim(),
                 wideScrollbars: this.wideScrollbars,
                 showTooltips: this.showTooltips,
                 notificationsStatus: this.notificationsStatus ? 'accepted' : 'rejected',
@@ -777,16 +742,6 @@ export default {
 
             return 'system';
         },
-        detectPreviewLocationChange (newValue, oldValue) {
-            if (newValue !== oldValue) {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('settings.previewLocationChangedConfirmMsg'),
-                    okLabel: this.$t('ui.iUnderstand'),
-                });
-
-                this.unwatchLocationPreview();
-            }
-        },
         detectBackupLocationChange (newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.$bus.$emit('alert-display', {
@@ -802,9 +757,6 @@ export default {
         },
         async checkBackupsCatalog () {
             return await mainProcessAPI.existsSync(this.locations.backups);
-        },
-        async checkPreviewCatalog () {
-            return await mainProcessAPI.existsSync(this.locations.preview);
         },
         async setUIZoomLevel () {
             this.$store.commit('setAppUIZoomLevel', this.uiZoomLevel);

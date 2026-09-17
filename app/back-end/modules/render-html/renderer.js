@@ -105,9 +105,8 @@ class Renderer {
     /*
      * Renders the pages
      */
-    async render(previewMode = false, previewLocation = '', mode = 'full') {
+    async render(previewMode = false, mode = 'full') {
         this.previewMode = previewMode;
-        this.previewLocation = previewLocation;
         this.singlePageMode = mode === 'post' || mode === 'page';
         this.itemType = mode;
         this.homepageOnlyMode = mode === 'home';
@@ -472,10 +471,6 @@ class Renderer {
 
         if(this.previewMode) {
             this.outputDir = path.join(basePath, 'preview');
-
-            if(this.previewLocation !== '' && UtilsHelper.dirExists(this.previewLocation)) {
-                this.outputDir = this.previewLocation;
-            }
         }
     }
 

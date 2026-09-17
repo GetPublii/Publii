@@ -4,7 +4,6 @@ const electron = require('electron');
 const shell = electron.shell;
 const ipcMain = electron.ipcMain;
 const childProcess = require('child_process');
-const UtilsHelper = require('../helpers/utils.js');
 const stripTags = require('striptags');
 const PathValidator = require('../helpers/path-validator.js');
 const {
@@ -131,8 +130,7 @@ class PreviewEvents {
             itemID: itemID,
             postData: postData,
             previewMode: previewMode,
-            mode: mode,
-            previewLocation: this.app.appConfig.previewLocation
+            mode: mode
         });
 
         rendererProcess.on('message', function(data) {
@@ -180,25 +178,14 @@ class PreviewEvents {
     }
 
     /**
-     * Displays preview
+     * Displays preview stored in the preview directory of the website
      *
-     * @param siteData
+     * @param siteName
+     * @param mode
      */
     showPreview (siteName, mode) {
         let basePath = path.join(this.app.sitesDir, siteName, 'preview');
-        let previewLocation = '';
-
-        if(this.app.appConfig.previewLocation) {
-            previewLocation = this.app.appConfig.previewLocation.trim();
-        }
-
-        let url = '';
-
-        if(previewLocation !== '' && UtilsHelper.dirExists(previewLocation)) {
-            basePath = previewLocation;
-        }
-
-        url = path.join(basePath, 'index.html');
+        let url = path.join(basePath, 'index.html');
 
         if (mode === 'tag' || mode === 'post' || mode === 'page' || mode === 'author') {
             url = path.join(basePath, 'preview.html');

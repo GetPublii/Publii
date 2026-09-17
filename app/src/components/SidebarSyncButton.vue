@@ -206,7 +206,7 @@ export default {
             const label = this.$refs.syncLabel;
             this.isSyncLabelTruncated = !!label && label.clientWidth > 0 && label.scrollWidth > label.clientWidth;
         },
-        renderPreview: async function() {
+        renderPreview: function() {
             if (!this.$store.state.currentSite.config.theme) {
                 let siteName = this.$store.state.currentSite.config.name;
 
@@ -215,19 +215,6 @@ export default {
                     okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         this.$router.push(`/site/${siteName}/settings/`);
-                    }
-                });
-                return;
-            }
-
-            let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
-
-            if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
-                this.$bus.$emit('confirm-display', {
-                    message: this.$t('sync.previewCatalogDoesNotExistInfo'),
-                    okLabel: this.$t('sync.goToAppSettings'),
-                    okClick: () => {
-                        this.$router.push(`/app-settings/`);
                     }
                 });
                 return;
@@ -235,7 +222,7 @@ export default {
 
             this.$bus.$emit('rendering-popup-display');
         },
-        renderFiles: async function() {
+        renderFiles: function() {
             if (!this.$store.state.currentSite.config.theme) {
                 let siteName = this.$store.state.currentSite.config.name;
 
@@ -244,19 +231,6 @@ export default {
                     okLabel: this.$t('sync.goToSettings'),
                     okClick: () => {
                         this.$router.push(`/site/${siteName}/settings/`);
-                    }
-                });
-                return;
-            }
-
-            let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
-
-            if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
-                this.$bus.$emit('confirm-display', {
-                    message: this.$t('sync.previewCatalogDoesNotExistInfo'),
-                    okLabel: this.$t('sync.goToAppSettings'),
-                    okClick: () => {
-                        this.$router.push(`/app-settings/`);
                     }
                 });
                 return;

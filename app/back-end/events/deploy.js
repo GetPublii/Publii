@@ -103,8 +103,7 @@ class DeployEvents {
             singlePageMode: false,
             homepageOnlyMode: false,
             tagOnlyMode: false,
-            authorOnlyMode: false,
-            previewLocation: this.app.appConfig.previewLocation
+            authorOnlyMode: false
         });
 
         rendererProcess.on('message', function(data) {

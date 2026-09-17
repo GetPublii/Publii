@@ -311,7 +311,7 @@ export default {
         saveAndRender (renderingType = false) {
             this.save(true, renderingType, true);
         },
-        async saved (newSettings, showPreview, renderingType = false, renderFiles = false) {
+        saved (newSettings, showPreview, renderingType = false, renderFiles = false) {
             let siteName = this.$store.state.currentSite.config.name;
 
             this.$store.commit('refreshSiteConfig', {
@@ -320,19 +320,6 @@ export default {
             });
 
             if (showPreview) {
-                let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
-
-                if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
-                    this.$bus.$emit('confirm-display', {
-                        message: this.$t('sync.previewCatalogDoesNotExistInfo'),
-                        okLabel: this.$t('sync.goToAppSettings'),
-                        okClick: () => {
-                            this.$router.push(`/app-settings/`);
-                        }
-                    });
-                    return;
-                }
-
                 if (renderingType === 'homepage') {
                     this.$bus.$emit('rendering-popup-display', {
                         homepageOnly: true,

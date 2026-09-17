@@ -170,7 +170,7 @@ export default {
                 this.save(true, renderingType, true);
             }, 500);
         },
-        async saved (showPreview, renderingType = false, renderFiles = false) {
+        saved (showPreview, renderingType = false, renderFiles = false) {
             this.$bus.$emit('message-display', {
                 message: this.$t('tools.css.customCSSSaveSuccessMsg'),
                 type: 'success',
@@ -178,19 +178,6 @@ export default {
             });
 
             if (showPreview) {
-                let previewLocationExists = await mainProcessAPI.existsSync(this.$store.state.app.config.previewLocation);
-
-                if (this.$store.state.app.config.previewLocation !== '' && !previewLocationExists) {
-                    this.$bus.$emit('confirm-display', {
-                        message: this.$t('sync.previewCatalogDoesNotExistInfo'),
-                        okLabel: this.$t('sync.goToAppSettings'),
-                        okClick: () => {
-                            this.$router.push(`/app-settings/`);
-                        }
-                    });
-                    return;
-                }
-
                 if (renderingType === 'homepage') {
                     this.$bus.$emit('rendering-popup-display', {
                         homepageOnly: true,

@@ -9,12 +9,11 @@ process.on('message', async function(msg){
         let postData = msg.postData;
         let previewMode = msg.previewMode;
         let mode = msg.mode || 'full';
-        let previewLocation = msg.previewLocation;
         let renderer = new Renderer(appDir, sitesDir, siteConfig, itemID, postData);
         let result;
 
         try {
-            result = await renderer.render(previewMode, previewLocation, mode);
+            result = await renderer.render(previewMode, mode);
         } catch (e) {
             process.send({
                 type: 'app-rendering-results',

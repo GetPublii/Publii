@@ -546,6 +546,8 @@ class App {
         try {
             this.appConfig = JSON.parse(FileHelper.readFileSync(this.appConfigPath, 'utf8'));
             this.appConfig = Utils.mergeObjects(JSON.parse(JSON.stringify(defaultAstAppConfig)), this.appConfig);
+            // The custom preview location was removed in v.0.48 - previews always go to the website's own directory
+            delete this.appConfig.previewLocation;
         } catch (e) {
             if (this.hasPermissionsErrors(e)) {
                 return false;
