@@ -77,6 +77,12 @@ class App {
          * Run the app
          */
         this.checkDirs();
+
+        // Without the single-instance lock another running instance could still be using these files
+        if (startupSettings.isOnlyInstance === true) {
+            this.cleanTempDirectory();
+        }
+
         let loadConfigResult = this.loadConfig();
 
         if (!loadConfigResult) {
@@ -566,6 +572,18 @@ class App {
         return true;
     }
 
+    cleanTempDirectory () {
+        let tempDir = path.join(this.appDir, 'temp');
+
+        try {
+            if (Utils.dirExists(tempDir)) {
+                Utils.emptyDirRecursively(tempDir);
+            }
+        } catch (error) {
+            console.log('Unable to clean the temporary directory:', error);
+        }
+    }
+
     // The custom preview location was removed in v.0.48 - previews always go to the website's own directory.
     // Users who had it configured are informed once that their folder is no longer used.
     removeLegacyPreviewLocation () {
@@ -884,6 +902,15 @@ class App {
 
         this.initWindow(true);
         return { status: true };
+    }
+
+    // The app was launched again while it is running: show the window the user worked in most recently
+    handleSecondInstance () {
+        if (this.windowManager.getAllWindows().length === 0) {
+            return this.reopenMainWindow();
+        }
+
+        this.windowManager.focusLastUsedWindow();
     }
 
     // Open an additional window (for a second site)

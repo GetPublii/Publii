@@ -7,6 +7,7 @@ class PubliiWindowManager {
         this.viewLocks = new Map();    // viewId (i.e. 'app-settings') -> webContentsId
         this.destroyedListeners = [];  // callbacks run with the webContentsId of every closed window
         this.focusedListeners = [];    // callbacks run with the webContentsId of every window which gets focus
+        this.lastFocusedWindowId = null;
     }
 
     registerWindow (win) {
@@ -18,6 +19,7 @@ class PubliiWindowManager {
         });
 
         win.on('focus', () => {
+            this.lastFocusedWindowId = webContentsId;
             this._runListeners(this.focusedListeners, webContentsId);
         });
     }
@@ -145,11 +147,26 @@ class PubliiWindowManager {
         const win = this.windows.get(webContentsId);
 
         if (win && !win.isDestroyed()) {
+            // Focusing alone does not bring back a minimized window on every platform
+            if (win.isMinimized()) {
+                win.restore();
+            }
+
             win.focus();
             return true;
         }
 
         return false;
+    }
+
+    // Bring the most recently used window to the front (i.e. when the app is launched again)
+    focusLastUsedWindow () {
+        if (this._focusWindow(this.lastFocusedWindowId === null ? undefined : this.lastFocusedWindowId)) {
+            return true;
+        }
+
+        const mainWindow = this.getMainWindow();
+        return mainWindow ? this._focusWindow(mainWindow.webContents.id) : false;
     }
 
     // Send a message to every open window, optionally skipping one of them (i.e. the sender)

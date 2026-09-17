@@ -42,6 +42,24 @@ if (typeof process.env.NODE_ENV === 'undefined') {
 let appInstance;
 let applicationMenu;
 
+// Website locks live in the memory of a single process, so a second Publii process could modify a website
+// which is already open. Another launch brings the running app to the front instead - more windows are
+// available from the File menu. Development builds share the app name (and thus the lock) with the installed
+// app, so they skip the lock unless PUBLII_SINGLE_INSTANCE=1 is set.
+const useSingleInstanceLock = electronApp.isPackaged || process.env.PUBLII_SINGLE_INSTANCE === '1';
+const isPrimaryInstance = !useSingleInstanceLock || electronApp.requestSingleInstanceLock();
+
+if (!isPrimaryInstance) {
+    electronApp.quit();
+}
+
+electronApp.on('second-instance', function () {
+    // The running instance may still be starting - its first window is about to appear anyway
+    if (appInstance) {
+        appInstance.handleSecondInstance();
+    }
+});
+
 electronApp.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
         electronApp.quit();
@@ -55,10 +73,16 @@ electronApp.on('activate', function () {
 });
 
 electronApp.on('ready', function () {
+    // Quitting is not immediate, so make sure that a secondary instance never touches the config and websites
+    if (!isPrimaryInstance) {
+        return;
+    }
+
     // Start the app
     let startupSettings = {
         'app': electronApp,
-        'basedir': __dirname
+        'basedir': __dirname,
+        'isOnlyInstance': useSingleInstanceLock
     };
 
     appInstance = new App(startupSettings);

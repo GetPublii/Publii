@@ -7,7 +7,14 @@ function createWindow (id) {
 
     let win = {
         focused: false,
+        minimized: false,
         received: [],
+        isMinimized () {
+            return this.minimized;
+        },
+        restore () {
+            this.minimized = false;
+        },
         on (eventName, callback) {
             windowListeners[eventName] = callback;
         },
@@ -176,6 +183,38 @@ describe('Publii window manager', function() {
         first.emitWindow('focus');
 
         assert.deepStrictEqual(focusedWindows, [28, 27]);
+    });
+
+    it('should bring the most recently used window to the front', function() {
+        let manager = new PubliiWindowManager({ closeDbForSite () {} });
+        let first = createWindow(40);
+        let second = createWindow(41);
+
+        assert.strictEqual(manager.focusLastUsedWindow(), false);
+
+        manager.registerWindow(first);
+        manager.registerWindow(second);
+
+        // Nothing was focused yet, so the primary window is used
+        assert.strictEqual(manager.focusLastUsedWindow(), true);
+        assert.strictEqual(first.focused, true);
+        assert.strictEqual(second.focused, false);
+
+        first.focused = false;
+        second.emitWindow('focus');
+        second.minimized = true;
+
+        assert.strictEqual(manager.focusLastUsedWindow(), true);
+        assert.strictEqual(second.focused, true);
+        assert.strictEqual(second.minimized, false);
+        assert.strictEqual(first.focused, false);
+
+        // The last used window was closed in the meantime
+        second.focused = false;
+        second.emitWebContents('destroyed');
+
+        assert.strictEqual(manager.focusLastUsedWindow(), true);
+        assert.strictEqual(first.focused, true);
     });
 
     it('should broadcast a message to every other live window', function() {

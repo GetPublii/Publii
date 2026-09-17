@@ -172,6 +172,22 @@ describe('Notification center settings persistence', function () {
         assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, 'rejected');
     });
 
+    it('removes leftovers of interrupted backup operations from the temp directory', function () {
+        let tempDir = path.join(base, 'temp');
+
+        application.appDir = base;
+        fs.outputFileSync(path.join(tempDir, 'restore-abc123', 'input', 'db.sqlite'), 'leftover');
+        fs.outputFileSync(path.join(tempDir, 'backup-to-restore-1', 'input', 'db.sqlite'), 'leftover');
+
+        application.cleanTempDirectory();
+
+        assert.deepEqual(fs.readdirSync(tempDir), []);
+
+        // A missing directory is not an error
+        fs.removeSync(tempDir);
+        assert.doesNotThrow(() => application.cleanTempDirectory());
+    });
+
     it('drops messages sent to a window which has been closed in the meantime', function () {
         let win = application._createWindow({});
 
