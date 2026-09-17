@@ -138,6 +138,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'block-editor-redo',
             'app-menu-command',
             'app-sites-updated',
+            'app-config-updated',
             'no-remote-files'
         ];
 
@@ -318,7 +319,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'block-editor-undo',
             'block-editor-redo',
             'app-menu-command',
-            'app-sites-updated'
+            'app-sites-updated',
+            'app-config-updated'
         ];
 
         if (validChannels.includes(channel)) {

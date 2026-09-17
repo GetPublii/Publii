@@ -279,10 +279,18 @@ export default {
                 { immediate: true }
             );
         },
-        // Keep the sites list in sync with sites created, cloned, changed or deleted in other windows
+        // Keep the sites list and the app config in sync with changes made in other windows
         setupSitesSync () {
             mainProcessAPI.receive('app-sites-updated', sites => {
                 this.$store.commit('setSites', sites);
+            });
+
+            mainProcessAPI.receive('app-config-updated', config => {
+                this.$store.commit('setAppConfig', config);
+                // The zoom factor of this window is applied by the main process - only the CSS part is left
+                document.documentElement.style.setProperty('--ui-zoom-level', parseInt(this.getApplicationZoom() * 100.0, 10) + '%');
+                // Lists react to this event by applying the new default ordering
+                this.$bus.$emit('app-settings-saved', this.$store.state.app.config);
             });
         },
         setupExclusiveViews () {
@@ -493,6 +501,7 @@ export default {
         mainProcessAPI.stopReceiveAll('app-license-accepted');
         mainProcessAPI.stopReceiveAll('app-menu-command');
         mainProcessAPI.stopReceiveAll('app-sites-updated');
+        mainProcessAPI.stopReceiveAll('app-config-updated');
 
         if (this.applicationMenuStateUnwatch) {
             this.applicationMenuStateUnwatch();

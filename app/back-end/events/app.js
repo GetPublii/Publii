@@ -115,6 +115,10 @@ class AppEvents {
                             sites: appInstance.sites
                         });
                         appInstance.notifySitesListChanged(event.sender.id);
+
+                        if (result) {
+                            appInstance.notifyAppConfigChanged(event.sender.id);
+                        }
                     }, 500);
 
                     return;
@@ -128,6 +132,7 @@ class AppEvents {
 
             fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
             appInstance.appConfig = config;
+            appInstance.notifyAppConfigChanged(event.sender.id);
         });
 
         /*
@@ -635,11 +640,14 @@ class AppEvents {
                 appConfig = JSON.parse(appConfig);
                 appConfig.uiZoomLevel = zoomLevel;
                 fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
+                // Keep the in-memory config in line with the file - it is used for other windows and on resize
+                appInstance.appConfig.uiZoomLevel = zoomLevel;
             } catch (e) {
                 console.log('(!) App was unable to save the UI zoom level');
             }
 
             event.sender.setZoomFactor(zoomLevel);
+            appInstance.notifyAppConfigChanged(event.sender.id);
         });
 
         /**
@@ -651,6 +659,7 @@ class AppEvents {
                 appConfig.notificationsStatus = state;
                 fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(appConfig, null, 4));
                 appInstance.appConfig.notificationsStatus = state;
+                appInstance.notifyAppConfigChanged(event.sender.id);
             } catch (e) {
                 console.log('(!) App was unable to save the notifications center state');
             }

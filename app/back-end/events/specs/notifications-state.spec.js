@@ -113,7 +113,7 @@ describe('Notification center settings persistence', function () {
             appConfigPath: path.join(base, 'app-config.json'),
             initPath: path.join(base, 'window-config.json'),
             basedir: base,
-            windowManager: { getAllWindows: () => [], releaseViewLocksForWindow () {} },
+            windowManager: { getAllWindows: () => [], releaseViewLocksForWindow () {}, broadcast () {} },
             initWindow() {
                 this.mainWindow = this._createWindow({});
                 this.mainWindow.webContents.emit('did-finish-load');
@@ -140,7 +140,7 @@ describe('Notification center settings persistence', function () {
             application.appConfig.notificationsStatus = previousStatus;
             fs.writeJsonSync(application.appConfigPath, application.appConfig);
 
-            handlers.get('app-set-notifications-center-state')({}, status);
+            handlers.get('app-set-notifications-center-state')({ sender: { id: 1 } },status);
             application.reopenMainWindow();
             assert.equal(application.mainWindow.initialData.config.notificationsStatus, status);
             assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, status);
@@ -154,7 +154,7 @@ describe('Notification center settings persistence', function () {
     }
 
     it('preserves the new notification setting when changing the application language', function () {
-        handlers.get('app-set-notifications-center-state')({}, 'accepted');
+        handlers.get('app-set-notifications-center-state')({ sender: { id: 1 } },'accepted');
         application.setLanguage('pl', 'default');
         const savedConfig = fs.readJsonSync(application.appConfigPath);
 
@@ -165,7 +165,7 @@ describe('Notification center settings persistence', function () {
 
     it('keeps the previous setting if writing the config fails', function () {
         failWrites = true;
-        handlers.get('app-set-notifications-center-state')({}, 'accepted');
+        handlers.get('app-set-notifications-center-state')({ sender: { id: 1 } },'accepted');
 
         assert.equal(application.appConfig.notificationsStatus, 'rejected');
         assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, 'rejected');
@@ -236,15 +236,56 @@ describe('Notification center settings persistence', function () {
         assert.equal(application.appConfig.sitesLocation, currentLocation);
     });
 
+    it('broadcasts the changed config to the other windows and applies their zoom', function () {
+        let broadcasts = [];
+        let createWindow = id => ({
+            webContents: {
+                id,
+                setZoomFactor (zoom) {
+                    this.zoomFactor = zoom;
+                }
+            }
+        });
+        let ownWindow = createWindow(1);
+        let otherWindow = createWindow(2);
+
+        application.appConfig.uiZoomLevel = 1.25;
+        application.windowManager.getAllWindows = () => [ownWindow, otherWindow];
+        application.windowManager.broadcast = (channel, payload, exceptWebContentsId) => {
+            broadcasts.push({ channel, status: payload.notificationsStatus, exceptWebContentsId });
+        };
+
+        handlers.get('app-set-notifications-center-state')({ sender: { id: 1 } }, 'accepted');
+
+        assert.deepEqual(broadcasts, [{ channel: 'app-config-updated', status: 'accepted', exceptWebContentsId: 1 }]);
+        assert.equal(otherWindow.webContents.zoomFactor, 1.25);
+        assert.equal(ownWindow.webContents.zoomFactor, undefined);
+    });
+
+    it('does not broadcast the config when saving it fails', function () {
+        let broadcasts = 0;
+
+        application.windowManager.broadcast = () => {
+            broadcasts++;
+        };
+        failWrites = true;
+
+        handlers.get('app-set-notifications-center-state')({ sender: { id: 1 } }, 'accepted');
+
+        assert.equal(broadcasts, 0);
+    });
+
     it('refuses to change the backups location while other windows are open', function () {
         let replies = [];
         let sender = {
+            id: 1,
             send: (channel, data) => replies.push({ channel, data })
         };
+        let createWindow = id => ({ webContents: { id, setZoomFactor () {} } });
 
         application.appConfig.sitesLocation = path.join(base, 'sites');
         application.appConfig.backupsLocation = '';
-        application.windowManager.getAllWindows = () => [{}, {}];
+        application.windowManager.getAllWindows = () => [createWindow(1), createWindow(2)];
 
         handlers.get('app-config-save')({ sender }, Object.assign({}, application.appConfig, {
             backupsLocation: path.join(base, 'backups')
@@ -263,7 +304,7 @@ describe('Notification center settings persistence', function () {
 
         // The same change is accepted once the other windows are closed
         replies = [];
-        application.windowManager.getAllWindows = () => [{}];
+        application.windowManager.getAllWindows = () => [createWindow(1)];
 
         handlers.get('app-config-save')({ sender }, Object.assign({}, application.appConfig, {
             backupsLocation: path.join(base, 'backups')
@@ -277,7 +318,7 @@ describe('Notification center settings persistence', function () {
         application.appConfigPath = path.join(base, 'missing.json');
 
         assert.doesNotThrow(() => {
-            handlers.get('app-set-notifications-center-state')({}, 'accepted');
+            handlers.get('app-set-notifications-center-state')({ sender: { id: 1 } },'accepted');
         });
         assert.equal(application.appConfig.notificationsStatus, 'rejected');
     });

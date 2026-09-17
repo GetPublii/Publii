@@ -950,6 +950,18 @@ class App {
         this.windowManager.broadcast('app-sites-updated', this.sites, exceptWebContentsId);
     }
 
+    // Keep the app config of the other windows in sync, so they neither use nor save outdated settings
+    notifyAppConfigChanged (exceptWebContentsId = null) {
+        this.windowManager.broadcast('app-config-updated', this.appConfig, exceptWebContentsId);
+
+        // The zoom factor belongs to the window itself, so it has to be applied from the main process
+        for (let win of this.windowManager.getAllWindows()) {
+            if (win.webContents.id !== exceptWebContentsId) {
+                this._setZoomLevel(win);
+            }
+        }
+    }
+
     // Restore zoom level for a specific window
     _setZoomLevel (win) {
         let zoom = parseFloat(this.appConfig.uiZoomLevel);
