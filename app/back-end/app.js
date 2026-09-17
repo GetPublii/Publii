@@ -798,8 +798,14 @@ class App {
         });
 
         win.on('close', () => {
-            let windowBounds = win.getBounds();
-            fs.writeFileSync(this.initPath, JSON.stringify(windowBounds, null, 4), {'flags': 'w'});
+            // Only the primary window keeps its position - otherwise the last closed window would always win
+            if (win !== this.mainWindow) {
+                return;
+            }
+
+            // Kept in memory too, so a window reopened from the dock shows up where the previous one was closed
+            this.windowBounds = win.getBounds();
+            fs.writeFileSync(this.initPath, JSON.stringify(this.windowBounds, null, 4), {'flags': 'w'});
         });
 
         win.on('closed', () => {

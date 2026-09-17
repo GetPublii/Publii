@@ -171,6 +171,24 @@ describe('Notification center settings persistence', function () {
         assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, 'rejected');
     });
 
+    it('saves the window position only for the primary window', function () {
+        let primaryWindow = application._createWindow({});
+        let secondaryWindow = application._createWindow({}, { isNewWindow: true });
+        let initialBounds = { x: 0, y: 0, width: 1200, height: 800 };
+        let primaryBounds = { x: 10, y: 20, width: 1300, height: 800 };
+
+        application.mainWindow = primaryWindow;
+        primaryWindow.getBounds = () => primaryBounds;
+        secondaryWindow.getBounds = () => ({ x: 500, y: 500, width: 900, height: 700 });
+
+        secondaryWindow.emit('close');
+        assert.deepEqual(fs.readJsonSync(application.initPath), initialBounds);
+
+        primaryWindow.emit('close');
+        assert.deepEqual(fs.readJsonSync(application.initPath), primaryBounds);
+        assert.equal(application.windowBounds, primaryBounds);
+    });
+
     it('drops the legacy preview location and reports it to the first window only', function () {
         fs.writeJsonSync(application.appConfigPath, Object.assign({}, application.appConfig, {
             previewLocation: '  /custom/preview  '
