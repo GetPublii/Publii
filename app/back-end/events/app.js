@@ -43,10 +43,23 @@ class AppEvents {
                 config.sitesLocation = appInstance.dirPaths.sites;
             }
 
+            let otherWindowsOpen = !!appInstance.windowManager && appInstance.windowManager.getAllWindows().length > 1;
+
+            // Backups lists and operations of other windows still point to the current backups location
+            if (otherWindowsOpen && (config.backupsLocation || '') !== (appInstance.appConfig.backupsLocation || '')) {
+                event.sender.send('app-config-saved', {
+                    status: false,
+                    message: 'error-save',
+                    reason: 'backups-location-other-windows'
+                });
+
+                return;
+            }
+
             if (config.sitesLocation !== appInstance.appConfig.sitesLocation) {
                 if (appInstance.appConfig.sitesLocation) {
                     // Other windows keep working on the databases and paths from the current location
-                    if (appInstance.windowManager && appInstance.windowManager.getAllWindows().length > 1) {
+                    if (otherWindowsOpen) {
                         event.sender.send('app-config-saved', {
                             status: false,
                             message: 'error-save',

@@ -847,7 +847,19 @@ export default {
             mainProcessAPI.receiveOnce('app-site-restored-from-backup', (data) => {
                 this.restoreInProgress = false;
 
-                if (data.status === 'error') {
+                if (data.status === 'error' && data.type === 'site-already-open') {
+                    // The website to replace is open in another window - offer switching to it instead
+                    this.$bus.$emit('confirm-display', {
+                        message: this.$t('site.restoreFromBackup.siteOpenInAnotherWindow', {
+                            siteName: escapeHTML(siteName)
+                        }),
+                        okLabel: this.$t('site.goToWindowWithSite'),
+                        cancelLabel: this.$t('ui.cancel'),
+                        okClick: () => {
+                            mainProcessAPI.send('app-focus-window-with-site', data.siteCatalogName);
+                        }
+                    });
+                } else if (data.status === 'error') {
                     this.$bus.$emit('alert-display', {
                         message: this.$t('site.restoreFromBackup.restoreFailed'),
                         buttonStyle: 'danger'

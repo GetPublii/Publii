@@ -236,6 +236,43 @@ describe('Notification center settings persistence', function () {
         assert.equal(application.appConfig.sitesLocation, currentLocation);
     });
 
+    it('refuses to change the backups location while other windows are open', function () {
+        let replies = [];
+        let sender = {
+            send: (channel, data) => replies.push({ channel, data })
+        };
+
+        application.appConfig.sitesLocation = path.join(base, 'sites');
+        application.appConfig.backupsLocation = '';
+        application.windowManager.getAllWindows = () => [{}, {}];
+
+        handlers.get('app-config-save')({ sender }, Object.assign({}, application.appConfig, {
+            backupsLocation: path.join(base, 'backups')
+        }));
+
+        // The reply is created in another VM context, so compare it by value only
+        assert.deepEqual(JSON.parse(JSON.stringify(replies)), [{
+            channel: 'app-config-saved',
+            data: {
+                status: false,
+                message: 'error-save',
+                reason: 'backups-location-other-windows'
+            }
+        }]);
+        assert.equal(application.appConfig.backupsLocation, '');
+
+        // The same change is accepted once the other windows are closed
+        replies = [];
+        application.windowManager.getAllWindows = () => [{}];
+
+        handlers.get('app-config-save')({ sender }, Object.assign({}, application.appConfig, {
+            backupsLocation: path.join(base, 'backups')
+        }));
+
+        assert.equal(replies[0].data.status, true);
+        assert.equal(application.appConfig.backupsLocation, path.join(base, 'backups'));
+    });
+
     it('handles an unreadable config without changing the in-memory setting', function () {
         application.appConfigPath = path.join(base, 'missing.json');
 

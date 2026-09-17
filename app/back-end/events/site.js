@@ -732,6 +732,18 @@ class SiteEvents {
                 return;
             }
 
+            // A website which is open in another window cannot be replaced with the backup
+            let catalogName = slug(config.siteName).toLowerCase();
+
+            if (appInstance.windowManager && appInstance.windowManager.isSiteLockedByOther(catalogName, event.sender.id)) {
+                event.sender.send('app-site-restored-from-backup', {
+                    status: 'error',
+                    type: 'site-already-open',
+                    siteCatalogName: catalogName
+                });
+                return;
+            }
+
             let result = Site.restoreFromBackup(appInstance, config.siteName, event.sender.id);
             event.sender.send('app-site-restored-from-backup', result);
         });
