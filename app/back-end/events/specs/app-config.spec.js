@@ -7,11 +7,13 @@ const AppFiles = require('../../helpers/app-files.js');
 const UtilsHelper = require('../../helpers/utils.js');
 
 describe('Website location settings IPC', function () {
+    const senderId = 42;
     let base;
     let application;
     let handlers;
     let replies;
     let reloads;
+    let notifications;
     let closed;
     let originalLog;
 
@@ -23,6 +25,7 @@ describe('Website location settings IPC', function () {
         handlers = new Map();
         replies = [];
         reloads = [];
+        notifications = [];
         closed = 0;
         originalLog = console.log;
         console.log = () => {};
@@ -31,6 +34,12 @@ describe('Website location settings IPC', function () {
             appConfig: { sitesLocation: source },
             sitesDir: source,
             appConfigPath: path.join(base, 'app-config.json'),
+            notifySitesListChanged(exceptWebContentsId) {
+                notifications.push({
+                    exceptWebContentsId,
+                    sites: this.sites
+                });
+            },
             closeAllDbs() {
                 closed++;
             },
@@ -84,6 +93,7 @@ describe('Website location settings IPC', function () {
     function save(config) {
         handlers.get('app-config-save')({
             sender: {
+                id: senderId,
                 send(channel, payload) {
                     replies.push({ channel, payload });
                 }
@@ -108,6 +118,12 @@ describe('Website location settings IPC', function () {
         assert.equal(replies[0].payload.reason, 'destination-exists');
         assert.equal(replies[0].payload.reasonDetail, 'demo');
         assert.equal(fs.readFileSync(path.join(destination, 'demo', 'keep.txt'), 'utf8'), 'existing');
+        assert.deepEqual(notifications, [
+            {
+                exceptWebContentsId: senderId,
+                sites: { location: oldConfig.sitesLocation }
+            }
+        ]);
     });
 
     for (const withoutCopying of [false, true]) {
@@ -129,6 +145,12 @@ describe('Website location settings IPC', function () {
             assert.equal(replies[0].payload.message, 'success-save');
             assert.equal(fs.existsSync(path.join(original, 'demo')), withoutCopying);
             assert.equal(fs.existsSync(path.join(config.sitesLocation, 'demo')), !withoutCopying);
+            assert.deepEqual(notifications, [
+                {
+                    exceptWebContentsId: senderId,
+                    sites: { location: config.sitesLocation }
+                }
+            ]);
         });
     }
 
@@ -148,6 +170,12 @@ describe('Website location settings IPC', function () {
         assert.equal(replies[0].payload.message, 'error-save');
         assert.equal(replies[0].payload.reason, 'location-missing');
         assert.equal(fs.existsSync(missing), false);
+        assert.deepEqual(notifications, [
+            {
+                exceptWebContentsId: senderId,
+                sites: { location: oldConfig.sitesLocation }
+            }
+        ]);
     });
 
     it('reports a settings save failure without switching the active directory', function () {
@@ -163,5 +191,11 @@ describe('Website location settings IPC', function () {
         assert.deepEqual(reloads, [original]);
         assert.equal(fs.readFileSync(path.join(original, 'demo', 'input', 'db.sqlite'), 'utf8'), 'original');
         assert.deepEqual(fs.readdirSync(path.join(base, 'destination')), []);
+        assert.deepEqual(notifications, [
+            {
+                exceptWebContentsId: senderId,
+                sites: { location: original }
+            }
+        ]);
     });
 });

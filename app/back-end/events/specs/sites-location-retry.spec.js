@@ -7,12 +7,14 @@ const AppFiles = require('../../helpers/app-files.js');
 const UtilsHelper = require('../../helpers/utils.js');
 
 describe('Sites location retry IPC', function () {
+    const senderId = 42;
     let base;
     let missingLocation;
     let application;
     let handlers;
     let replies;
     let reloads;
+    let notifications;
     let originalLog;
 
     beforeEach(function () {
@@ -21,6 +23,7 @@ describe('Sites location retry IPC', function () {
         handlers = new Map();
         replies = [];
         reloads = [];
+        notifications = [];
         originalLog = console.log;
         console.log = () => {};
         application = {
@@ -30,6 +33,12 @@ describe('Sites location retry IPC', function () {
             sites: {},
             sitesLocationMissing: true,
             appConfigPath: path.join(base, 'app-config.json'),
+            notifySitesListChanged(exceptWebContentsId) {
+                notifications.push({
+                    exceptWebContentsId,
+                    sites: this.sites
+                });
+            },
             setSitesDir(sitesLocation) {
                 this.sitesDir = sitesLocation;
                 this.app.sitesDir = sitesLocation;
@@ -90,6 +99,7 @@ describe('Sites location retry IPC', function () {
     function retry(data) {
         handlers.get('app-sites-location-retry')({
             sender: {
+                id: senderId,
                 send(channel, payload) {
                     replies.push({ channel, payload });
                 }
@@ -106,6 +116,12 @@ describe('Sites location retry IPC', function () {
         assert.equal(replies[0].payload.reason, 'location-missing');
         assert.equal(replies[0].payload.checkedLocation, missingLocation);
         assert.equal(application.sitesLocationMissing, true);
+        assert.deepEqual(notifications, [
+            {
+                exceptWebContentsId: senderId,
+                sites: {}
+            }
+        ]);
 
         fs.ensureDirSync(missingLocation);
         retry({ sitesLocation: '' });
@@ -118,6 +134,16 @@ describe('Sites location retry IPC', function () {
         assert.deepEqual(reloads, [missingLocation, missingLocation]);
         assert.equal(application.sitesLocationMissing, false);
         assert.equal(fs.readJsonSync(application.appConfigPath).sitesLocation, missingLocation);
+        assert.deepEqual(notifications, [
+            {
+                exceptWebContentsId: senderId,
+                sites: {}
+            },
+            {
+                exceptWebContentsId: senderId,
+                sites: { location: missingLocation }
+            }
+        ]);
     });
 
     it('switches to an existing folder, persists it and reloads websites', function () {
@@ -138,6 +164,12 @@ describe('Sites location retry IPC', function () {
             licenseAccepted: true,
             sitesLocation: newLocation
         });
+        assert.deepEqual(notifications, [
+            {
+                exceptWebContentsId: senderId,
+                sites: { location: newLocation }
+            }
+        ]);
     });
 
     it('refuses a missing folder without touching the current location', function () {
@@ -152,6 +184,7 @@ describe('Sites location retry IPC', function () {
         assert.equal(application.app.sitesDir, missingLocation);
         assert.deepEqual(reloads, []);
         assert.equal(fs.readJsonSync(application.appConfigPath).sitesLocation, missingLocation);
+        assert.deepEqual(notifications, []);
     });
 
     it('treats a non-string location as a plain retry', function () {
@@ -163,6 +196,16 @@ describe('Sites location retry IPC', function () {
         assert.equal(replies[0].payload.checkedLocation, missingLocation);
         assert.equal(replies[1].payload.checkedLocation, missingLocation);
         assert.equal(application.sitesDir, missingLocation);
+        assert.deepEqual(notifications, [
+            {
+                exceptWebContentsId: senderId,
+                sites: {}
+            },
+            {
+                exceptWebContentsId: senderId,
+                sites: {}
+            }
+        ]);
     });
 
     it('restores the previous location when the config cannot be saved', function () {
@@ -180,5 +223,6 @@ describe('Sites location retry IPC', function () {
         assert.equal(application.appConfig.sitesLocation, missingLocation);
         assert.deepEqual(reloads, []);
         assert.equal(fs.existsSync(application.appConfigPath), false);
+        assert.deepEqual(notifications, []);
     });
 });
