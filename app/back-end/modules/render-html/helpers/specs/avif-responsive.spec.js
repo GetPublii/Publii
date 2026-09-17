@@ -149,4 +149,50 @@ describe('AVIF responsive image URLs', function () {
             fs.rmSync(directory, { recursive: true, force: true });
         }
     });
+
+    for (const [name, render] of Object.entries(renderers)) {
+        it(`${name}: uses AVIF URLs for converted content and gallery thumbnails`, function () {
+            const context = createContext();
+            context.siteConfig.advanced.forceAvif = true;
+
+            for (const extension of ['jpg', 'JPEG', 'png', 'webp', 'avif']) {
+                const html = `<img src="#DOMAIN_NAME#photo.${extension}" width="120" height="80">`;
+                const output = render(context, html);
+                assert.ok(output.includes('responsive/photo-small.avif 60w'));
+                assert.ok(output.includes(`/photo.${extension}"`));
+
+                const gallery = `<figure class="gallery__item"><a href="#DOMAIN_NAME#gallery/photo.${extension}"><img src="#DOMAIN_NAME#gallery/photo-thumbnail.webp"></a></figure>`;
+                assert.match(render(context, gallery), /photo-thumbnail\.avif/);
+            }
+        });
+
+        it(`${name}: restores gallery thumbnail extensions when switching away from AVIF`, function () {
+            for (const forceWebp of [false, true]) {
+                const context = createContext(forceWebp);
+                const html = '<figure class="gallery__item"><a href="#DOMAIN_NAME#gallery/photo.jpg"><img src="#DOMAIN_NAME#gallery/photo-thumbnail.avif"></a></figure>';
+                const output = render(context, html);
+                assert.ok(output.includes('photo-thumbnail.' + (forceWebp ? 'webp' : 'jpg')));
+                assert.ok(output.includes('href="https://example.com/media/posts/1/gallery/photo.jpg"'));
+            }
+        });
+    }
+
+    it('uses AVIF srcset in theme helpers for posts, authors, tags and website images', function () {
+        const context = createContext();
+        context.siteConfig.advanced.forceAvif = true;
+
+        for (const [directory, type] of [
+            ['posts/1', 'contentImages'],
+            ['tags/1', 'tagImages'],
+            ['authors/1', 'authorImages'],
+            ['website', 'optionImages']
+        ]) {
+            for (const extension of ['jpg', 'png', 'webp']) {
+                const url = `${context.siteConfig.domain}/media/${directory}/photo.${extension}`;
+                const result = returnSrcSetAttribute.call(context, url, type).toString();
+                assert.ok(result.includes(`media/${directory}/responsive/photo-small.avif 60w`));
+            }
+        }
+    });
+
 });

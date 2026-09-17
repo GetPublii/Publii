@@ -13,6 +13,7 @@ const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const getJimp = require('./helpers/jimp-webp.js');
 const sharpQueue = require('./helpers/sharp-queue.js');
+const ImageConversion = require('../shared/image-conversion.js');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 
@@ -212,7 +213,16 @@ class Image extends Model {
         siteConfig = Utils.mergeObjects(defaultSiteConfig, siteConfig);
         let imagesQuality = 60;
         let alphaQuality = 100;
-        let forceWebp = false;
+        const conversion = ImageConversion.createContext(siteConfig.advanced);
+        const avifLossless = !!siteConfig.advanced.forceAvif && !!siteConfig.advanced.avifLossless;
+        let avifQuality = parseInt(siteConfig.advanced.avifQuality, 10);
+
+        if (!Number.isInteger(avifQuality) || avifQuality < 1 || avifQuality > 100) {
+            avifQuality = 50;
+        }
+
+        const configuredAvifEffort = parseInt(siteConfig.advanced.avifEffort, 10);
+        const avifEffort = [2, 4, 6].includes(configuredAvifEffort) ? configuredAvifEffort : 4;
         let webpLossless = false;
         let imageExtension = path.parse(originalPath).ext;
         let imageDimensions = {
@@ -267,10 +277,6 @@ class Image extends Model {
 
         if (siteConfig?.advanced?.webpLossless) {
             webpLossless = !!siteConfig.advanced.webpLossless;
-        }
-
-        if (siteConfig?.advanced?.forceWebp) {
-            forceWebp = !!siteConfig.advanced.forceWebp;
         }
 
         // If there is no selected theme
@@ -338,16 +344,8 @@ class Image extends Model {
             let extension = path.parse(originalPath).ext;
             let extLower = extension.toLowerCase();
             let fallbackDestinationPath = path.join(targetImagesDir, filename + '-' + name + extension);
-            let destinationPath = fallbackDestinationPath;
-            let shouldBeChangedToWebp = false;
-
-            if (['.png', '.jpg', '.jpeg'].indexOf(extLower) > -1) {
-                shouldBeChangedToWebp = true;
-            }
-
-            if (forceWebp && shouldBeChangedToWebp) {
-                destinationPath = path.join(targetImagesDir, filename + '-' + name + '.webp');
-            }
+            const outputExtension = ImageConversion.getOutputExtension(extension, conversion, originalPath);
+            const destinationPath = path.join(targetImagesDir, filename + '-' + name + outputExtension);
 
             if (!this.allowedImageExtension(extension)) {
                 continue;
@@ -369,15 +367,9 @@ class Image extends Model {
                 finalWidth = null;
             }
 
-            let outputFormat = 'jpeg';
-
-            if (extLower === '.png' && !forceWebp) {
-                outputFormat = 'png';
-            } else if (extLower === '.webp' || (forceWebp && shouldBeChangedToWebp)) {
-                outputFormat = 'webp';
-            } else if (extLower === '.avif') {
-                outputFormat = 'avif';
-            }
+            const outputFormat = ['.jpg', '.jpeg'].includes(outputExtension.toLowerCase())
+                ? 'jpeg'
+                : outputExtension.slice(1).toLowerCase();
 
             let job = {
                 originalPath,
@@ -388,10 +380,12 @@ class Image extends Model {
                 width: finalWidth,
                 height: finalHeight,
                 crop: !!cropImage,
-                forceWebp,
                 imagesQuality,
-                alphaQuality,
-                webpLossless
+                alphaQuality: outputFormat === 'avif' && siteConfig.advanced.forceAvif ? 100 : alphaQuality,
+                webpLossless,
+                avifQuality: siteConfig.advanced.forceAvif ? avifQuality : imagesQuality,
+                avifLossless,
+                avifEffort: siteConfig.advanced.forceAvif ? avifEffort : undefined
             };
 
             let result = previousPromise.then(() => {
@@ -437,7 +431,10 @@ class Image extends Model {
             crop,
             imagesQuality,
             alphaQuality,
-            webpLossless
+            webpLossless,
+            avifQuality,
+            avifLossless,
+            avifEffort
         } = job;
 
         const Jimp = await getJimp();
@@ -476,7 +473,9 @@ class Image extends Model {
                 ? { lossless: 1 }
                 : { quality: imagesQuality, alphaQuality: alphaQuality };
         } else if (format === 'avif') {
-            writeOptions = { quality: imagesQuality, alphaQuality: alphaQuality };
+            writeOptions = avifLossless
+                ? { lossless: true, effort: avifEffort }
+                : { quality: avifQuality ?? imagesQuality, alphaQuality, effort: avifEffort };
         } else if (format === 'png') {
             writeOptions = {};
         } else {

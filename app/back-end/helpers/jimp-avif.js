@@ -41,6 +41,16 @@ module.exports = () => ({
         const { encoder } = await getCodec();
         const encodeOptions = {};
 
+        if (options.lossless != null) {
+            encodeOptions.lossless = !!options.lossless;
+        }
+
+        if (options.effort != null) {
+            // libavif speed runs in the opposite direction to Sharp's effort.
+            encodeOptions.speed = 10 - options.effort;
+            encodeOptions.subsample = 3;
+        }
+
         if (options.quality != null) {
             encodeOptions.quality = options.quality;
         }

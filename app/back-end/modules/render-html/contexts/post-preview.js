@@ -1,3 +1,4 @@
+const ImageConversion = require('../../../../shared/image-conversion.js');
 // Necessary packages
 const wrapIframes = require('./../../../../shared/iframe-wrapper');
 const fs = require('fs');
@@ -391,13 +392,13 @@ class RendererContextPostPreview extends RendererContext {
             let featuredImageSizes = false;
 
             if(!this.isGifOrSvg(url)) {
-                let useWebp = false;
+                const conversion = ImageConversion.createContext(
+                    this.renderer.siteConfig.advanced,
+                    this.renderer.inputDir,
+                    this.renderer.siteConfig.domain
+                );
 
-                if (this.renderer.siteConfig?.advanced?.forceWebp) {
-                    useWebp = true;
-                }
-
-                featuredImageSrcSet = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig, useWebp);
+                featuredImageSrcSet = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig, conversion);
                 featuredImageSizes = ContentHelper.getFeaturedImageSizes(this.themeConfig);
             } else {
                 featuredImageSrcSet = '';
@@ -441,12 +442,17 @@ class RendererContextPostPreview extends RendererContext {
                     for (let dimensionName of dimensionNames) {
                         let base = path.parse(url).base;
                         let filename = path.parse(url).name;
-                        let extension = path.parse(url).ext;
+                        const conversion = ImageConversion.createContext(
+                            this.renderer.siteConfig.advanced,
+                            this.renderer.inputDir,
+                            this.renderer.siteConfig.domain
+                        );
+                        let extension = ImageConversion.getOutputExtension(path.parse(url).ext, conversion, url);
                         let newFilename = filename + '-' + dimensionName + extension;
                         let capitalizedDimensionName = dimensionName.charAt(0).toUpperCase() + dimensionName.slice(1);
 
                         if(!this.isGifOrSvg(url)) {
-                            featuredImageData['url' + capitalizedDimensionName] = url.replace(base, newFilename);
+                            featuredImageData['url' + capitalizedDimensionName] = url.replace(base, 'responsive/' + newFilename);
                         } else {
                             featuredImageData['url' + capitalizedDimensionName] = url;
                         }
@@ -497,27 +503,33 @@ class RendererContextPostPreview extends RendererContext {
         // Remove the last empty paragraph
         preparedText = preparedText.replace(/<p>&nbsp;<\/p>\s?$/gmi, '');
 
-        let useWebp = false;
+        const conversion = ImageConversion.createContext(
 
-        if (this.renderer.siteConfig?.advanced?.forceWebp) {
-            useWebp = true;
-        }
+            this.renderer.siteConfig.advanced,
+
+            this.renderer.inputDir,
+
+            this.renderer.siteConfig.domain
+
+        );
+
+        preparedText = ImageConversion.convertGalleryThumbnails(preparedText, conversion);
 
         // Find all images and add srcset and sizes attributes
         if (this.siteConfig.responsiveImages) {
             preparedText = preparedText.replace(/<img.*?src="(.*?)"/gmi, function(matches, url) {
                 if(
-                    ContentHelper.getContentImageSrcset(url, self.themeConfig, useWebp) !== false &&
+                    ContentHelper.getContentImageSrcset(url, self.themeConfig, conversion) !== false &&
                     ContentHelper._isImage(url) &&
                     url.toLowerCase().indexOf('/gallery/') === -1
                 ) {
                     if(ContentHelper.getContentImageSizes(self.themeConfig)) {
                         return matches +
                             ' sizes="' + ContentHelper.getContentImageSizes(self.themeConfig) + '"' +
-                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig, useWebp) + '" ';
+                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig, conversion) + '" ';
                     } else {
                         return matches +
-                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig, useWebp) + '" ';
+                            ' srcset="' + ContentHelper.getContentImageSrcset(url, self.themeConfig, conversion) + '" ';
                     }
                 } else {
                     return matches;

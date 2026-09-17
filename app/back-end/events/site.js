@@ -177,7 +177,11 @@ class SiteEvents {
                     (oldConfig.advanced.imagesQuality !== config.settings.advanced.imagesQuality) || 
                     (oldConfig.advanced.alphaQuality !== config.settings.advanced.alphaQuality) || 
                     (oldConfig.advanced.forceWebp !== config.settings.advanced.forceWebp) ||
-                    (oldConfig.advanced.webpLossless !== config.settings.advanced.webpLossless)
+                    (oldConfig.advanced.webpLossless !== config.settings.advanced.webpLossless) ||
+                    (!!oldConfig.advanced.forceAvif !== !!config.settings.advanced.forceAvif) ||
+                    (Number(oldConfig.advanced.avifQuality ?? 50) !== Number(config.settings.advanced.avifQuality ?? 50)) ||
+                    (!!oldConfig.advanced.avifLossless !== !!config.settings.advanced.avifLossless) ||
+                    (Number(oldConfig.advanced.avifEffort ?? 4) !== Number(config.settings.advanced.avifEffort ?? 4))
                 )
             ) {
                 thumbnailsRegenerateRequired = true;

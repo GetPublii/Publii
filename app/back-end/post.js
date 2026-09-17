@@ -1,3 +1,4 @@
+const ImageConversion = require('../shared/image-conversion.js');
 /*
  * Post instance
  */
@@ -712,21 +713,25 @@ class Post extends Model {
                 return;
             }
 
-            let forceWebp = !!this.application.sites[this.site]?.advanced?.forceWebp;
+            const conversion = ImageConversion.createContext(this.application.sites[this.site]?.advanced);
 
             // Remove responsive images of each size
             for(let dimensionName of dimensions) {
                 let filename = path.parse(originalPath).name;
                 let extension = path.parse(originalPath).ext;
 
-                if (forceWebp && ['.png', '.jpg', '.jpeg'].indexOf(extension.toLowerCase()) > -1) {
-                    extension = '.webp'; 
-                }
+                const outputExtension = ImageConversion.getOutputExtension(extension, conversion, originalPath);
+                // The original may already be deleted, so animated WebP cannot be detected here.
+                const extensions = conversion.format === 'avif' && extension.toLowerCase() === '.webp'
+                    ? new Set([extension, outputExtension])
+                    : [outputExtension];
 
-                let responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + extension);
+                for (const thumbnailExtension of extensions) {
+                    const responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + thumbnailExtension);
 
-                if(Utils.fileExists(responsiveImagePath)){
-                    fs.unlinkSync(responsiveImagePath);
+                    if (Utils.fileExists(responsiveImagePath)) {
+                        fs.unlinkSync(responsiveImagePath);
+                    }
                 }
             }
         }

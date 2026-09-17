@@ -1,3 +1,4 @@
+const ImageConversion = require('../../../../../shared/image-conversion.js');
 const Handlebars = require('handlebars');
 const path = require('path');
 const normalizePath = require('normalize-path');
@@ -70,15 +71,12 @@ function returnSrcSetAttribute (url, type, group) {
         filename = filename[filename.length-1];
         let filenameFile = path.parse(filename).name;
         let filenameExtension = path.parse(filename).ext;
-        let useWebp = false;
-
-        if (this.siteConfig?.advanced?.forceWebp) {
-            useWebp = true;
-        }
-
-        if (useWebp && ['.jpg', '.jpeg', '.png'].includes(filenameExtension.toLowerCase())) {
-            filenameExtension = '.webp';
-        }
+        const conversion = ImageConversion.createContext(
+            this.siteConfig.advanced,
+            this.inputDir,
+            this.siteConfig.domain
+        );
+        filenameExtension = ImageConversion.getOutputExtension(filenameExtension, conversion, url);
 
         let baseUrlWithoutFilename = url.replace(filename, '');
         let responsiveImage = baseUrlWithoutFilename + 'responsive/' + filenameFile + '-' + name + filenameExtension;

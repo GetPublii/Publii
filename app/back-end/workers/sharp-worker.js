@@ -56,7 +56,10 @@ function runJob(job) {
         crop,
         imagesQuality,
         alphaQuality,
-        webpLossless
+        webpLossless,
+        avifQuality,
+        avifLossless,
+        avifEffort
     } = job;
 
     let resizeOptions = {
@@ -88,7 +91,9 @@ function runJob(job) {
     } else if (format === 'jpeg') {
         pipeline = pipeline.jpeg({ quality: imagesQuality });
     } else if (format === 'avif') {
-        pipeline = pipeline.avif({ quality: imagesQuality });
+        pipeline = pipeline.avif(avifLossless
+            ? { lossless: true, effort: avifEffort }
+            : { quality: avifQuality ?? imagesQuality, effort: avifEffort });
     }
 
     return pipeline.toBuffer().then(buffer => writeBuffer(destinationPath, buffer));

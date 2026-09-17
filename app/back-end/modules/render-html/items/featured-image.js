@@ -1,3 +1,4 @@
+const ImageConversion = require('../../../../shared/image-conversion.js');
 const path = require('path');
 const sizeOf = require('image-size');
 const URLHelper = require('./../helpers/url');
@@ -73,14 +74,14 @@ class FeaturedImageItem {
         }
 
         let featuredImageSrcSets = '';
-        let useWebp = false;
-
-        if (this.renderer.siteConfig?.advanced?.forceWebp) {
-            useWebp = true;
-        }
+        const conversion = ImageConversion.createContext(
+            this.renderer.siteConfig.advanced,
+            this.renderer.inputDir,
+            this.renderer.siteConfig.domain
+        );
 
         if(!this.isGifOrSvg(url)) {
-            featuredImageSrcSets = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig, useWebp, this.itemType);
+            featuredImageSrcSets = ContentHelper.getFeaturedImageSrcset(url, this.themeConfig, conversion, this.itemType);
         }
 
         let featuredImageSizes = false;
@@ -125,9 +126,7 @@ class FeaturedImageItem {
                     let filename = path.parse(url).name;
                     let extension = path.parse(url).ext;
 
-                    if (useWebp && ['.jpg', '.jpeg', '.png'].includes(extension.toLowerCase())) {
-                        extension = '.webp';
-                    }
+                    extension = ImageConversion.getOutputExtension(extension, conversion, url);
 
                     let newFilename = filename + '-' + dimensionName + extension;
                     let capitalizedDimensionName = dimensionName.charAt(0).toUpperCase() + dimensionName.slice(1);

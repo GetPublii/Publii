@@ -1,3 +1,4 @@
+const ImageConversion = require('../shared/image-conversion.js');
 /*
  * Themes instance
  */
@@ -633,7 +634,7 @@ class Themes {
 
         // Load theme config
         let themeConfig = UtilsHelper.loadThemeConfig(this.siteInputPath, currentTheme);
-        let forceWebp = !!this.appInstance.sites[this.siteName]?.advanced?.forceWebp;
+        const conversion = ImageConversion.createContext(this.appInstance.sites[this.siteName]?.advanced);
         
         // check if responsive images config exists
         if(UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
@@ -655,14 +656,18 @@ class Themes {
                 let filename = path.parse(originalPath).name;
                 let extension = path.parse(originalPath).ext;
                 
-                if (forceWebp && ['.png', '.jpg', '.jpeg'].indexOf(extension.toLowerCase()) > -1) {
-                    extension = '.webp'; 
-                }
+                const outputExtension = ImageConversion.getOutputExtension(extension, conversion, originalPath);
+                // The original may already be deleted, so animated WebP cannot be detected here.
+                const extensions = conversion.format === 'avif' && extension.toLowerCase() === '.webp'
+                    ? new Set([extension, outputExtension])
+                    : [outputExtension];
 
-                let responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + extension);
+                for (const thumbnailExtension of extensions) {
+                    const responsiveImagePath = path.join(responsiveImagesDir, filename + '-' + dimensionName + thumbnailExtension);
 
-                if(UtilsHelper.fileExists(responsiveImagePath)) {
-                    fs.unlinkSync(responsiveImagePath);
+                    if (UtilsHelper.fileExists(responsiveImagePath)) {
+                        fs.unlinkSync(responsiveImagePath);
+                    }
                 }
             }
         }

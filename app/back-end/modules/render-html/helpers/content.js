@@ -1,3 +1,4 @@
+const ImageConversion = require('../../../../shared/image-conversion.js');
 /*
  * Class used to help with operations on
  * the URLs and slugs
@@ -33,17 +34,17 @@ class ContentHelper {
         // Get media URL
         let domainMediaPath = domain + '/media/posts/' + postID + '/';
 
-        // Detect forced WebP images
-        let useWebp = false;
-
-        if (renderer.siteConfig?.advanced?.forceWebp) {
-            useWebp = true;
-        }
+        // Resolve the selected image conversion format
+        const conversion = ImageConversion.createContext(
+            renderer.siteConfig.advanced,
+            renderer.inputDir,
+            renderer.siteConfig.domain
+        );
 
         // Replace domain name constant with real URL to media directory
         let preparedText = originalText.split('#DOMAIN_NAME#').join(domainMediaPath);
         preparedText = ContentHelper.parseText(preparedText, editor);
-        preparedText = ContentHelper.setWebpCompatibility(useWebp, preparedText);
+        preparedText = ContentHelper.setWebpCompatibility(conversion, preparedText);
 
         // Remove content for AMP or non-AMP depending from ampMode value
         preparedText = preparedText.replace(/<publii-amp>[\s\S]*?<\/publii-amp>/gmi, '');
@@ -68,7 +69,7 @@ class ContentHelper {
                     return matches;
                 }
 
-                return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, useWebp, domain);
+                return ContentHelper._addResponsiveAttributes(matches, url, themeConfig, conversion, domain);
             });
         }
 
@@ -243,7 +244,7 @@ class ContentHelper {
     /**
      * Returns srcset for featured image
      */
-    static getFeaturedImageSrcset(baseUrl, themeConfig, useWebp, type = 'post') {
+    static getFeaturedImageSrcset(baseUrl, themeConfig, conversion, type = 'post') {
         if(!ContentHelper._isImage(baseUrl) || !UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             return false;
         }
@@ -276,7 +277,7 @@ class ContentHelper {
 
         if(groups === false) {
             for(let dimension of dimensions) {
-                let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, useWebp);
+                let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, conversion);
                 srcset.push(responsiveImage + ' ' + dimensionsData[dimension].width + 'w');
             }
 
@@ -292,7 +293,7 @@ class ContentHelper {
                         srcset[groupName] = [];
                     }
 
-                    let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, useWebp);
+                    let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, conversion);
                     srcset[groupName].push(responsiveImage + ' ' + dimensionsData[dimension].width + 'w');
                 }
             }
@@ -335,7 +336,7 @@ class ContentHelper {
      * @param themeConfig
      * @returns {*}
      */
-    static getContentImageSrcset(baseUrl, themeConfig, useWebp) {
+    static getContentImageSrcset(baseUrl, themeConfig, conversion) {
         if(!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
             return false;
         }
@@ -350,7 +351,7 @@ class ContentHelper {
         let srcset = [];
 
         for(let dimension of dimensions) {
-            let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, useWebp);
+            let responsiveImage = ContentHelper._getSrcSet(baseUrl, dimension, conversion);
             srcset.push(responsiveImage + ' ' + dimensionsData[dimension].width + 'w');
         }
 
@@ -383,15 +384,13 @@ class ContentHelper {
      * @returns {string}
      * @private
      */
-    static _getSrcSet(url, dimension, useWebp) {
+    static _getSrcSet(url, dimension, conversion) {
         let filename = url.split('/');
         filename = filename[filename.length-1];
         let filenameFile = path.parse(filename).name;
         let filenameExtension = path.parse(filename).ext;
 
-        if (useWebp && ['.jpg', '.jpeg', '.png'].indexOf(filenameExtension.toLowerCase()) > -1) {
-            filenameExtension = '.webp';
-        }
+        filenameExtension = ImageConversion.getOutputExtension(filenameExtension, conversion, url);
 
         let baseUrlWithoutFilename = url.replace(filename, '');
         let responsiveImage = baseUrlWithoutFilename + 'responsive/' + filenameFile + '-' + dimension + filenameExtension;
@@ -431,7 +430,7 @@ class ContentHelper {
      * @returns {*}
      * @private
      */
-    static _addResponsiveAttributes(matches, url, themeConfig, useWebp, domain) {
+    static _addResponsiveAttributes(matches, url, themeConfig, conversion, domain) {
         matches = matches.replace('/>', '');
         matches = matches.replace('>', '');
 
@@ -445,7 +444,7 @@ class ContentHelper {
         }
 
         if(
-            ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) !== false &&
+            ContentHelper.getContentImageSrcset(url, themeConfig, conversion) !== false &&
             ContentHelper._imageIsLocal(url, domain) &&
             ContentHelper._isImage(url) &&
             url.toLowerCase().indexOf('/gallery/') === -1
@@ -453,10 +452,10 @@ class ContentHelper {
             if(ContentHelper.getContentImageSizes(themeConfig)) {
                 return matches +
                     ' sizes="' + ContentHelper.getContentImageSizes(themeConfig) + '"' +
-                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '">';
+                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, conversion) + '">';
             } else {
                 return matches +
-                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, useWebp) + '">';
+                    ' srcset="' + ContentHelper.getContentImageSrcset(url, themeConfig, conversion) + '">';
             }
         } else if (!ContentHelper._imageIsLocal(url, domain)) {
             return matches + ' data-is-external-image="true">';
@@ -709,37 +708,13 @@ class ContentHelper {
     }
 
     /**
-     * Replaces non-WebP images to WebP or WebP images to non-WebP images in gallery thumbnails if necessary
-     * @param {boolean} forceWebp - state of force WebP option
+     * Updates gallery thumbnails for the selected format, including legacy WebP settings
+     * @param {boolean|object} conversion - legacy WebP flag or image conversion context
      * @param {string} text - text to modify
      * @returns {string} - modified text
      */
-    static setWebpCompatibility (forceWebp, text) {
-        text = text.replace(/\<figure class="gallery__item">[\s\S]*?<a[\s\S]*?href="(.*?)"[\s\S]+?>[\s\S]*?<img[\s\S]*?src="(.*?)"/gmi, (matches, linkUrl, imgUrl) => {
-            if (linkUrl && imgUrl) {
-                if (
-                    forceWebp && 
-                    ContentHelper.getImageType(linkUrl) === 'webp-compatible' && 
-                    !ContentHelper.isWebpImage(imgUrl)
-                ) {
-                    let imgExtension = ContentHelper.getImageExtension(imgUrl);
-                    let newImgUrl = imgUrl.substr(0, imgUrl.length + (-1 * imgExtension.length)) + '.webp';
-                    matches = matches.replace(imgUrl, newImgUrl);
-                } else if (
-                    !forceWebp && 
-                    ContentHelper.getImageType(linkUrl) === 'webp-compatible' && 
-                    ContentHelper.isWebpImage(imgUrl)
-                ) {
-                    let imgExtension = ContentHelper.getImageExtension(linkUrl);
-                    let newImgUrl = imgUrl.substr(0, imgUrl.length - 5) + imgExtension;
-                    matches = matches.replace(imgUrl, newImgUrl);
-                }
-            }
-
-            return matches;
-        });
-
-        return text;
+    static setWebpCompatibility (conversion, text) {
+        return ImageConversion.convertGalleryThumbnails(text, conversion);
     }
 
     /**

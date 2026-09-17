@@ -1921,7 +1921,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.responsiveImages"
+                            v-if="advanced.responsiveImages && imageConversion !== 'avif'"
                             id="images-quality"
                             :label="$t('settings.responsiveImagesQuality')">
                             <label slot="field">
@@ -1944,22 +1944,28 @@
                         
                         <field
                             v-if="advanced.responsiveImages"
-                            id="convert-to-webp"
-                            :label="$t('settings.convertToWebp')">
-                            <switcher
-                                id="version-suffix"
-                                v-model="advanced.forceWebp"
-                                slot="field" />
+                            id="image-conversion"
+                            :label="$t('settings.imageConversion')">
+                            <radio-buttons
+                                slot="field"
+                                name="image-conversion"
+                                role="radiogroup"
+                                aria-labelledby="image-conversion-label"
+                                aria-describedby="image-conversion-note"
+                                custom-css-classes="image-conversion-options"
+                                :items="imageConversionItems"
+                                v-model="imageConversion" />
 
                             <small
+                                id="image-conversion-note"
                                 slot="note"
                                 class="note">
-                                {{ $t('settings.convertToWebpInfo') }}
+                                {{ imageConversionInfo }}
                             </small>
                         </field>
 
                         <field
-                            v-if="advanced.responsiveImages && advanced.forceWebp"
+                            v-if="advanced.responsiveImages && imageConversion === 'webp'"
                             id="webp-lossless"
                             :label="$t('settings.webpLossless')">
                             <switcher
@@ -1969,7 +1975,7 @@
                         </field>
 
                         <field
-                            v-if="advanced.responsiveImages && advanced.forceWebp"
+                            v-if="advanced.responsiveImages && imageConversion === 'webp'"
                             id="images-alpha-quality"
                             :label="$t('settings.responsiveImagesAlphaQuality')">
                             <label slot="field">
@@ -1983,6 +1989,54 @@
                                     v-model="advanced.alphaQuality" />
                                 %
                             </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.responsiveImages && imageConversion === 'avif'"
+                            id="avif-quality"
+                            :label="$t('settings.avifQuality')">
+                            <label slot="field">
+                                <text-input
+                                    id="avif-quality"
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    step="1"
+                                    :disabled="advanced.avifLossless"
+                                    v-model="advanced.avifQuality" />
+                                / 100
+                            </label>
+                        </field>
+
+                        <field
+                            v-if="advanced.responsiveImages && imageConversion === 'avif'"
+                            id="avif-lossless"
+                            :label="$t('settings.avifLossless')">
+                            <switcher
+                                slot="field"
+                                id="avif-lossless"
+                                v-model="advanced.avifLossless" />
+                        </field>
+
+                        <field
+                            v-if="advanced.responsiveImages && imageConversion === 'avif'"
+                            id="avif-effort"
+                            :label="$t('settings.avifEffort')">
+                            <radio-buttons
+                                slot="field"
+                                name="avif-effort"
+                                role="radiogroup"
+                                aria-labelledby="avif-effort-label"
+                                aria-describedby="avif-effort-note"
+                                custom-css-classes="image-conversion-options"
+                                :items="avifEffortItems"
+                                v-model="advanced.avifEffort" />
+                            <small
+                                slot="note"
+                                id="avif-effort-note"
+                                class="note">
+                                {{ $t('settings.avifEffortInfo') }}
+                            </small>
                         </field>
                     </div>
 
@@ -2374,12 +2428,73 @@ export default {
             name: '',
             uuid: '',
             theme: '',
-            advanced: {},
+            advanced: {
+                forceAvif: false,
+                avifQuality: 50,
+                avifLossless: false,
+                avifEffort: 4
+            },
             errors: [],
             spellcheckerLanguages: false
         };
     },
     computed: {
+        imageConversion: {
+            get () {
+                if (this.advanced.forceAvif) {
+                    return 'avif';
+                }
+
+                return this.advanced.forceWebp ? 'webp' : 'none';
+            },
+            set (format) {
+                this.$set(this.advanced, 'forceWebp', format === 'webp');
+                this.$set(this.advanced, 'forceAvif', format === 'avif');
+            }
+        },
+        imageConversionItems () {
+            return [
+                {
+                    label: this.$t('settings.noImageConversion'),
+                    value: 'none'
+                },
+                {
+                    label: 'WebP',
+                    value: 'webp'
+                },
+                {
+                    label: 'AVIF',
+                    value: 'avif'
+                }
+            ];
+        },
+        imageConversionInfo () {
+            if (this.imageConversion === 'webp') {
+                return this.$t('settings.convertToWebpInfo');
+            }
+
+            if (this.imageConversion === 'avif') {
+                return this.$t('settings.convertToAvifInfo');
+            }
+
+            return this.$t('settings.imageConversionInfo');
+        },
+        avifEffortItems () {
+            return [
+                {
+                    label: this.$t('settings.avifEffortFast'),
+                    value: 2
+                },
+                {
+                    label: this.$t('settings.avifEffortBalanced'),
+                    value: 4
+                },
+                {
+                    label: this.$t('settings.avifEffortHigh'),
+                    value: 6
+                }
+            ];
+        },
         serverSettingsNoticeRoute () {
             return {
                 path: '/site/' + this.$route.params.name + '/settings/server',
@@ -3299,6 +3414,30 @@ export default {
 
 <style scoped>
 @import '../css/notifications.css';
+
+.image-conversion-options {
+    padding-top: var(--space-6);
+
+    &::v-deep input[type="radio"] {
+        clip-path: inset(50%);
+        display: block;
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
+
+    &::v-deep input[type="radio"]:focus-visible + label::before {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+
+    &::v-deep label.radio {
+        margin-bottom: var(--space-2);
+    }
+}
+
 
 .site-settings {
     margin: 0 auto;

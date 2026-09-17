@@ -283,4 +283,155 @@ describe('AVIF upload and thumbnails', function () {
             }
         }
     });
+
+    for (const engine of ['sharp', 'jimp']) {
+        it(`${engine}: converts JPEG, PNG and static WebP thumbnails to AVIF without changing originals`, async function () {
+            application.appConfig.resizeEngine = engine;
+            siteConfig.advanced.forceAvif = true;
+            saveConfig();
+
+            for (const extension of ['jpg', 'JPEG', 'png', 'webp']) {
+                const image = createImage(`.${extension}`);
+                const format = ['jpg', 'JPEG'].includes(extension) ? 'jpeg' : extension;
+                await sharp(sourceBuffer).toFormat(format).toFile(image.path);
+                const original = fs.readFileSync(image.path);
+                const results = await Promise.all(image.createResponsiveImages(image.path));
+
+                for (const [index, dimensions] of [[60, 40], [32, 32], [120, 80]].entries()) {
+                    const metadata = await sharp(results[index]).metadata();
+                    assert.equal(metadata.compression, 'av1');
+                    assert.equal(metadata.width, dimensions[0]);
+                    assert.equal(metadata.height, dimensions[1]);
+                    assert.equal(metadata.hasAlpha, format !== 'jpeg');
+                    assert.ok(results[index].endsWith('.avif'));
+                }
+
+                assert.deepEqual(fs.readFileSync(image.path), original);
+            }
+        });
+
+        it(`${engine}: applies AVIF quality, lossless and compression effort`, async function () {
+            application.appConfig.resizeEngine = engine;
+            siteConfig.advanced.forceAvif = true;
+            const image = createImage('.png');
+            const pixels = Buffer.alloc(120 * 80 * 3);
+
+            for (let index = 0; index < pixels.length; index++) {
+                pixels[index] = (index * 31 + Math.floor(index / 113) * 53) % 256;
+            }
+
+            await sharp(pixels, {
+                raw: { width: 120, height: 80, channels: 3 }
+            }).png().toFile(image.path);
+            const outputs = [];
+
+            for (const [quality, effort, lossless] of [[20, 2, false], [85, 4, false], [20, 6, true]]) {
+                siteConfig.advanced.avifQuality = quality;
+                siteConfig.advanced.avifEffort = effort;
+                siteConfig.advanced.avifLossless = lossless;
+                saveConfig();
+                const results = await Promise.all(image.createResponsiveImages(image.path));
+                const output = fs.readFileSync(results[2]);
+                outputs.push(output);
+                const metadata = await sharp(output).metadata();
+                assert.equal(metadata.compression, 'av1');
+
+                if (lossless) {
+                    const decoded = await sharp(output).removeAlpha().raw().toBuffer();
+                    assert.deepEqual(decoded, pixels);
+                }
+            }
+
+            assert.notDeepEqual(outputs[0], outputs[1]);
+            assert.notDeepEqual(outputs[1], outputs[2]);
+        });
+
+        it(`${engine}: generates AVIF for galleries, featured images, authors, tags and theme options`, async function () {
+            application.appConfig.resizeEngine = engine;
+            siteConfig.advanced.forceAvif = true;
+            saveConfig();
+            const image = createImage('.png');
+            await sharp(sourceBuffer).png().toFile(image.path);
+
+            for (const imageType of ['galleryImages', 'featuredImages', 'authorImages', 'tagImages', 'optionImages']) {
+                const results = await Promise.all(image.createResponsiveImages(image.path, imageType));
+                const size = imageType === 'galleryImages' ? [32, 32] : [60, 40];
+                await assertAvif(results[0], ...size);
+                assert.ok(results[0].endsWith('.avif'));
+            }
+        });
+    }
+
+    it('converts to AVIF through the fallback when Sharp fails', async function () {
+        siteConfig.advanced.forceAvif = true;
+        saveConfig();
+        const image = createImage('.png');
+        await sharp(sourceBuffer).png().toFile(image.path);
+        const originalProcess = sharpQueue.process;
+        sharpQueue.process = () => Promise.reject(new Error('Simulated Sharp failure'));
+
+        try {
+            const results = await Promise.all(image.createResponsiveImages(image.path));
+            await assertAvif(results[0], 60, 40);
+        } finally {
+            sharpQueue.process = originalProcess;
+        }
+    });
+
+    it('uses AVIF settings when regenerating existing JPEG thumbnails', async function () {
+        siteConfig.advanced.forceAvif = true;
+        saveConfig();
+        const image = createImage('.jpg');
+        await sharp(sourceBuffer).jpeg().toFile(image.path);
+        const result = await runWorker('regenerate.js', {
+            type: 'dependencies',
+            context: {
+                application,
+                name: 'test-site',
+                totalProgress: 0,
+                numberOfImages: 1,
+                postImagesRef: []
+            },
+            catalog: 'posts/1',
+            mediaPath: path.join(inputDirectory, 'media')
+        });
+        const thumbnail = path.join(path.dirname(image.path), 'responsive/photo-small.avif');
+        const metadata = await sharp(thumbnail).metadata();
+
+        assert.equal(result.brokenFilesCount, 0);
+        assert.equal(metadata.compression, 'av1');
+        assert.equal(metadata.width, 60);
+    });
+
+    it('removes converted and preserved WebP thumbnails after the original has already been deleted', function () {
+        siteConfig.advanced.forceAvif = true;
+        saveConfig();
+        application.sites = { 'test-site': siteConfig };
+        const image = createImage('.webp');
+        const thumbnailDirectory = path.join(path.dirname(image.path), 'responsive');
+        fs.unlinkSync(image.path);
+
+        for (const name of ['post', 'page', 'author', 'tag', 'themes']) {
+            const Model = require('../../' + name);
+            const context = name === 'themes'
+                ? new Model(application, { site: 'test-site' })
+                : {
+                    application,
+                    site: 'test-site',
+                    siteDir: path.join(directory, 'test-site')
+                };
+            const thumbnails = ['photo-small.avif', 'photo-small.webp'];
+
+            for (const filename of thumbnails) {
+                fs.writeFileSync(path.join(thumbnailDirectory, filename), 'thumbnail');
+            }
+
+            Model.prototype.removeResponsiveImages.call(context, image.path);
+
+            for (const filename of thumbnails) {
+                assert.equal(fs.existsSync(path.join(thumbnailDirectory, filename)), false, name + ': ' + filename);
+            }
+        }
+    });
+
 });
