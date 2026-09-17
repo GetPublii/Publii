@@ -743,7 +743,8 @@ export default {
                     'location-missing': 'settings.sitesLocationErrorMissing',
                     'locations-overlap': 'settings.sitesLocationErrorOverlap',
                     'website-symlink': 'settings.sitesLocationErrorSymlink',
-                    'destination-exists': 'settings.sitesLocationErrorExists'
+                    'destination-exists': 'settings.sitesLocationErrorExists',
+                    'other-windows-open': 'settings.sitesLocationErrorOtherWindows'
                 };
 
                 if (data.reason && relocationAlerts[data.reason]) {

@@ -1209,6 +1209,7 @@
         "sitesLocationChangedConfirmMsg": "Move your websites to the selected folder? Existing files will be kept. If a website folder name is already in use, the move will be cancelled. The original website folders will be removed after the move completes successfully.",
         "sitesLocationErrorExists": "Your websites cannot be moved because the selected folder already contains an item named <strong>{detail}</strong>. Remove or rename it, then try again.",
         "sitesLocationErrorMissing": "The selected sites location does not exist. Choose an existing folder and try again.",
+        "sitesLocationErrorOtherWindows": "Close all other Publii windows before changing the sites location. Your settings have not been saved.",
         "sitesLocationErrorOverlap": "The new sites location cannot be the same as the current one or placed inside it. Choose a different folder.",
         "sitesLocationErrorSymlink": "Your websites cannot be moved because a symbolic link was found: <strong>{detail}</strong>. Remove the link or move your websites manually, then try again.",
         "sitesLocationMissingHint": "If the folder is on an external or network drive, connect the drive and try again. You can also select a different folder. Your websites will not be moved.",

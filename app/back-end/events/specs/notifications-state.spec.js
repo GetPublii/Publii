@@ -171,6 +171,38 @@ describe('Notification center settings persistence', function () {
         assert.equal(fs.readJsonSync(application.appConfigPath).notificationsStatus, 'rejected');
     });
 
+    it('refuses to move the websites while other windows are open', function () {
+        let replies = [];
+        let databasesClosed = false;
+        let currentLocation = path.join(base, 'sites');
+
+        application.appConfig.sitesLocation = currentLocation;
+        application.windowManager.getAllWindows = () => [{}, {}];
+        application.closeAllDbs = () => {
+            databasesClosed = true;
+        };
+
+        handlers.get('app-config-save')({
+            sender: {
+                send: (channel, data) => replies.push({ channel, data })
+            }
+        }, Object.assign({}, application.appConfig, {
+            sitesLocation: path.join(base, 'moved-sites')
+        }));
+
+        // The reply is created in another VM context, so compare it by value only
+        assert.deepEqual(JSON.parse(JSON.stringify(replies)), [{
+            channel: 'app-config-saved',
+            data: {
+                status: false,
+                message: 'error-save',
+                reason: 'other-windows-open'
+            }
+        }]);
+        assert.equal(databasesClosed, false);
+        assert.equal(application.appConfig.sitesLocation, currentLocation);
+    });
+
     it('handles an unreadable config without changing the in-memory setting', function () {
         application.appConfigPath = path.join(base, 'missing.json');
 

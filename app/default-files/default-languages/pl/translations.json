@@ -1210,6 +1210,7 @@
         "sitesLocationChangedConfirmMsg": "Przenieść witryny do wybranego folderu? Istniejące w nim pliki pozostaną bez zmian. Jeśli folder którejś witryny ma nazwę już używaną w nowej lokalizacji, przenoszenie zostanie anulowane. Po pomyślnym przeniesieniu oryginalne foldery witryn zostaną usunięte.",
         "sitesLocationErrorExists": "Nie można przenieść witryn, ponieważ wybrany folder zawiera już element o nazwie <strong>{detail}</strong>. Usuń go lub zmień jego nazwę i spróbuj ponownie.",
         "sitesLocationErrorMissing": "Wybrana lokalizacja witryn nie istnieje. Wskaż istniejący folder i spróbuj ponownie.",
+        "sitesLocationErrorOtherWindows": "Zamknij pozostałe okna Publii przed zmianą lokalizacji witryn. Ustawienia nie zostały zapisane.",
         "sitesLocationErrorOverlap": "Nowa lokalizacja witryn nie może być tą samą lokalizacją co obecna ani znajdować się wewnątrz niej. Wybierz inny folder.",
         "sitesLocationErrorSymlink": "Nie można przenieść witryn, ponieważ znaleziono dowiązanie symboliczne: <strong>{detail}</strong>. Usuń dowiązanie albo przenieś witryny ręcznie i spróbuj ponownie.",
         "sitesLocationMissingHint": "Jeśli folder znajduje się na dysku zewnętrznym lub sieciowym, podłącz dysk i spróbuj ponownie. Możesz też wskazać inny folder. Witryny nie zostaną przeniesione.",

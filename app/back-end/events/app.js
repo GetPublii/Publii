@@ -45,6 +45,17 @@ class AppEvents {
 
             if (config.sitesLocation !== appInstance.appConfig.sitesLocation) {
                 if (appInstance.appConfig.sitesLocation) {
+                    // Other windows keep working on the databases and paths from the current location
+                    if (appInstance.windowManager && appInstance.windowManager.getAllWindows().length > 1) {
+                        event.sender.send('app-config-saved', {
+                            status: false,
+                            message: 'error-save',
+                            reason: 'other-windows-open'
+                        });
+
+                        return;
+                    }
+
                     let appFilesHelper = new AppFiles(appInstance);
                     appInstance.closeAllDbs();
 
