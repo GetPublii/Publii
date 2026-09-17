@@ -319,6 +319,26 @@ describe('Notification center settings persistence', function () {
         assert.equal(ownWindow.webContents.zoomFactor, undefined);
     });
 
+    it('hands the installed themes, languages and plugins over to the other windows', function () {
+        let broadcasts = [];
+
+        application.themes = [{ name: 'simple' }];
+        application.languages = [{ name: 'pl' }];
+        application.plugins = [];
+        application.windowManager.broadcast = (channel, payload, exceptWebContentsId) => {
+            broadcasts.push({ channel, payload, exceptWebContentsId });
+        };
+
+        application.notifyExtensionsChanged(3);
+
+        assert.equal(broadcasts.length, 1);
+        assert.equal(broadcasts[0].channel, 'app-extensions-updated');
+        assert.equal(broadcasts[0].exceptWebContentsId, 3);
+        assert.equal(broadcasts[0].payload.themes, application.themes);
+        assert.equal(broadcasts[0].payload.languages, application.languages);
+        assert.equal(broadcasts[0].payload.plugins, application.plugins);
+    });
+
     it('saves the color theme and hands it over to the other windows', function () {
         let broadcasts = [];
 

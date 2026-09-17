@@ -987,6 +987,15 @@ class App {
         this.windowManager.broadcast('app-sites-updated', this.sites, exceptWebContentsId);
     }
 
+    // Keep the lists of installed themes, languages and plugins of the other windows in sync
+    notifyExtensionsChanged (exceptWebContentsId = null) {
+        this.windowManager.broadcast('app-extensions-updated', {
+            themes: this.themes,
+            languages: this.languages,
+            plugins: this.plugins
+        }, exceptWebContentsId);
+    }
+
     // Keep the app config of the other windows in sync, so they neither use nor save outdated settings
     notifyAppConfigChanged (exceptWebContentsId = null) {
         this.windowManager.broadcast('app-config-updated', this.appConfig, exceptWebContentsId);

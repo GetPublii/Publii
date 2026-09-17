@@ -292,6 +292,14 @@ export default {
                 // Lists react to this event by applying the new default ordering
                 this.$bus.$emit('app-settings-saved', this.$store.state.app.config);
             });
+
+            // Themes, languages or plugins were installed or removed in another window
+            mainProcessAPI.receive('app-extensions-updated', data => {
+                this.$store.commit('replaceAppThemes', data.themes);
+                this.$store.commit('updateSiteThemes');
+                this.$store.commit('replaceAppLanguages', data.languages);
+                this.$store.commit('replaceAppPlugins', data.plugins);
+            });
         },
         setupExclusiveViews () {
             this.exclusiveViewsUnregister = [
@@ -502,6 +510,7 @@ export default {
         mainProcessAPI.stopReceiveAll('app-menu-command');
         mainProcessAPI.stopReceiveAll('app-sites-updated');
         mainProcessAPI.stopReceiveAll('app-config-updated');
+        mainProcessAPI.stopReceiveAll('app-extensions-updated');
 
         if (this.applicationMenuStateUnwatch) {
             this.applicationMenuStateUnwatch();

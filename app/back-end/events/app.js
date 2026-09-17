@@ -231,6 +231,7 @@ class AppEvents {
                 status: true,
                 themes: appInstance.themes
             });
+            appInstance.notifyExtensionsChanged(event.sender.id);
         });
 
         /*
@@ -256,6 +257,7 @@ class AppEvents {
                 status: true,
                 languages: appInstance.languages
             });
+            appInstance.notifyExtensionsChanged(event.sender.id);
         });
 
         /*
@@ -281,6 +283,7 @@ class AppEvents {
                 status: true,
                 plugins: appInstance.plugins
             });
+            appInstance.notifyExtensionsChanged(event.sender.id);
         });
 
         /*
@@ -359,6 +362,7 @@ class AppEvents {
                         directory: newThemeDir,
                         themes: appInstance.themes
                     });
+                    appInstance.notifyExtensionsChanged(event.sender.id);
 
                     return;
                 } else if (!isValidDirSegment(newThemeDir)) {
@@ -386,6 +390,10 @@ class AppEvents {
                 directory: newThemeDir,
                 themes: appInstance.themes
             });
+
+            if (status === 'added' || status === 'updated') {
+                appInstance.notifyExtensionsChanged(event.sender.id);
+            }
         });
 
         /*
@@ -464,6 +472,7 @@ class AppEvents {
                         status: status,
                         languages: appInstance.languages
                     });
+                    appInstance.notifyExtensionsChanged(event.sender.id);
 
                     return;
                 } else if (!isValidDirSegment(newLanguageDir)) {
@@ -490,6 +499,10 @@ class AppEvents {
                 status: status,
                 languages: appInstance.languages
             });
+
+            if (status === 'added' || status === 'updated') {
+                appInstance.notifyExtensionsChanged(event.sender.id);
+            }
         });
 
         /*
@@ -568,6 +581,7 @@ class AppEvents {
                         status: status,
                         plugins: appInstance.plugins
                     });
+                    appInstance.notifyExtensionsChanged(event.sender.id);
 
                     return;
                 } else if (!isValidDirSegment(newPluginDir)) {
@@ -594,6 +608,10 @@ class AppEvents {
                 status: status,
                 plugins: appInstance.plugins
             });
+
+            if (status === 'added' || status === 'updated') {
+                appInstance.notifyExtensionsChanged(event.sender.id);
+            }
         });
 
         /*
