@@ -646,11 +646,11 @@ export default {
         siteHasTheme () {
             return !!this.$store.state.currentSite.config.theme;
         },
-        customSettingsTabs () {
+       customSettingsTabs () {
             let tabs = [];
 
             this.$store.state.currentSite.themeSettings.customConfig.forEach(item => {
-                if (tabs.indexOf(item.group) === -1 && !item.parentgroup) {
+                if (item.group && tabs.indexOf(item.group) === -1 && !item.parentgroup) {
                     tabs.push(item.group);
                 }
             });
