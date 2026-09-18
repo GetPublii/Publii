@@ -410,13 +410,16 @@ describe('File Manager public addresses and ordering',()=>{
 
 describe('Shared Electron file picker compatibility',()=>{
     it('retains the legacy event contract and emits no global event for direct requests',async()=>{
-        let handler, properties; const sends=[];
+        let handler, properties, defaultPath; const sends=[], remembered=[];
+        const dialogsState={getLastDirectory:()=>'/tmp/last',rememberDirectoryFromResult:(name,result)=>remembered.push([name,result])};
         const code=read('app/main.js'); const start=code.indexOf("    ipcMain.handle('app-main-process-select-files'"); const end=code.indexOf('\n    // Get available spellchecker languages',start);
-        vm.runInNewContext(code.slice(start,end),{ipcMain:{handle:(name,fn)=>{handler=fn;}},BrowserWindow:{fromWebContents:()=>({})},dialog:{showOpenDialog:async(win,config)=>{properties=config.properties;return{canceled:false,filePaths:['/tmp/a.pdf']};}}});
+        vm.runInNewContext(code.slice(start,end),{ipcMain:{handle:(name,fn)=>{handler=fn;}},BrowserWindow:{fromWebContents:()=>({})},dialogsState,dialog:{showOpenDialog:async(win,config)=>{properties=config.properties;defaultPath=config.defaultPath;return{canceled:false,filePaths:['/tmp/a.pdf']};}}});
         const event={sender:{send:(...args)=>sends.push(args)}};
         assert.equal(handler(event,'legacy',[]),undefined); await tick(); assert.equal(sends.length,1); assert.equal(sends[0][0],'app-files-selected'); assert.equal(sends[0][1].fieldName,'legacy');
         const result=await handler(event,false,[],{returnResult:true,multiple:false});
         assert.equal(result.filePaths[0],'/tmp/a.pdf'); assert.equal(sends.length,1); assert.deepEqual(Array.from(properties),['openFile']);
+        // Electron 43 opens every dialog in Downloads unless the previous directory is restored
+        assert.equal(defaultPath,'/tmp/last'); assert.equal(remembered.length,2); assert.deepEqual(remembered[0],['files',{canceled:false,filePaths:['/tmp/a.pdf']}]);
     });
 });
 

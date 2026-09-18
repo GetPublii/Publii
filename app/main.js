@@ -13,6 +13,7 @@ const App = require('./back-end/app.js');
 const { ApplicationMenuController } = require('./back-end/application-menu.js');
 const createSlug = require('./back-end/helpers/slug.js');
 const ContextMenuBuilder = require('./back-end/helpers/context-menu-builder.js');
+const DialogsState = require('./back-end/helpers/dialogs-state.js');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -41,6 +42,7 @@ if (typeof process.env.NODE_ENV === 'undefined') {
 // Keep a global reference of the app instance for avoiding Garbage Collector
 let appInstance;
 let applicationMenu;
+let dialogsState;
 
 // Website locks live in the memory of a single process, so a second Publii process could modify a website
 // which is already open. Another launch brings the running app to the front instead - more windows are
@@ -86,6 +88,7 @@ electronApp.on('ready', function () {
     };
 
     appInstance = new App(startupSettings);
+    dialogsState = new DialogsState(path.join(appInstance.appDir, 'config'));
     applicationMenu = new ApplicationMenuController({
         app: electronApp,
         Menu: Menu,
@@ -284,8 +287,11 @@ electronApp.on('ready', function () {
         let win = BrowserWindow.fromWebContents(event.sender);
 
         dialog.showOpenDialog(win, {
-            properties: ['openDirectory']
+            properties: ['openDirectory'],
+            defaultPath: dialogsState.getLastDirectory('directory')
         }).then(selectedPath => {
+            dialogsState.rememberDirectoryFromResult('directory', selectedPath, true);
+
             event.sender.send('app-directory-selected', {
                 path: selectedPath,
                 fieldName: fieldName
@@ -298,8 +304,11 @@ electronApp.on('ready', function () {
         let win = BrowserWindow.fromWebContents(event.sender);
 
         dialog.showOpenDialog(win, {
-            properties: ['openFile', 'showHiddenFiles']
+            properties: ['openFile', 'showHiddenFiles'],
+            defaultPath: dialogsState.getLastDirectory('file')
         }).then(selectedPath => {
+            dialogsState.rememberDirectoryFromResult('file', selectedPath);
+
             event.sender.send('app-file-selected', {
                 path: selectedPath,
                 fieldName: fieldName
@@ -313,7 +322,11 @@ electronApp.on('ready', function () {
 
         const selection = dialog.showOpenDialog(win, {
             properties: options.returnResult === true && options.multiple === false ? ['openFile'] : ['openFile', 'multiSelections'],
-            filters: filters
+            filters: filters,
+            defaultPath: dialogsState.getLastDirectory('files')
+        }).then(selectedPaths => {
+            dialogsState.rememberDirectoryFromResult('files', selectedPaths);
+            return selectedPaths;
         });
         // Existing uploaders retain their event-based contract. FileManager opts
         // into a direct result so opening another picker cannot start its queue.
