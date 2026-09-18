@@ -4,7 +4,7 @@ const FileHelper = require('./../../helpers/file.js');
 const listAll = require('./../../helpers/files-list.js');
 const path = require('path');
 const Handlebars = require('handlebars');
-const CleanCSS = require('clean-css');
+const lightningCSS = require('lightningcss');
 const normalizePath = require('normalize-path');
 
 // Internal packages
@@ -1901,9 +1901,26 @@ class Renderer {
 
         // minify CSS if user enabled it
         if (this.siteConfig.advanced.cssCompression) {
-            styleCSS = new CleanCSS({ compatibility: '*', rebase: false }).minify(styleCSS);
-            console.log('CSS stats: ' + styleCSS.stats.efficiency + ' (' + styleCSS.stats.minifiedSize + '/' + styleCSS.stats.originalSize + ')');
-            styleCSS = styleCSS.styles;
+            try {
+                let originalCSS = Buffer.from(styleCSS);
+                let minifiedCSS = lightningCSS.transform({
+                    filename: 'style.css',
+                    code: originalCSS,
+                    minify: true,
+                    errorRecovery: true
+                });
+
+                minifiedCSS.warnings.forEach(warning => {
+                    console.log('CSS warning: ' + warning.message + ' (style.css ' + warning.loc.line + ':' + (warning.loc.column + 1) + ')');
+                });
+
+                let efficiency = originalCSS.length ? 1 - (minifiedCSS.code.length / originalCSS.length) : 0;
+                console.log('CSS stats: ' + efficiency + ' (' + minifiedCSS.code.length + '/' + originalCSS.length + ')');
+                styleCSS = minifiedCSS.code.toString();
+            } catch (e) {
+                // keep the unminified CSS if the minification fails
+                console.log('CSS minification failed: ' + e.message);
+            }
         }
 
         fs.writeFileSync(newFileName, styleCSS, {'flags': 'w'});
