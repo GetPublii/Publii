@@ -5,6 +5,20 @@ const listAll = require('./../../helpers/files-list.js');
 const path = require('path');
 const Handlebars = require('handlebars');
 const lightningCSS = require('lightningcss');
+// The browsers a Publii site supports: lightningcss keeps what they understand, adds the prefixes
+// they need and rewrites nothing else. Without targets it assumes the newest browsers and, among
+// other things, turns min-width media queries into the range syntax (width >= ...), which Safari
+// before 16.4 ignores as a whole. Versions are (major << 16) | (minor << 8).
+const CSS_TARGETS = {
+    chrome: 100 << 16,
+    edge: 100 << 16,
+    firefox: 100 << 16,
+    safari: 15 << 16,
+    ios_saf: 15 << 16,
+    opera: 86 << 16,
+    samsung: 17 << 16,
+    android: 100 << 16
+};
 const normalizePath = require('normalize-path');
 
 // Internal packages
@@ -1907,6 +1921,7 @@ class Renderer {
                     filename: 'style.css',
                     code: originalCSS,
                     minify: true,
+                    targets: CSS_TARGETS,
                     errorRecovery: true
                 });
 
