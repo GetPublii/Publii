@@ -15,7 +15,12 @@
                     class="options-sidebar-close"
                     name="sidebar-close"
                     @click.prevent="close()">
-                    &times;
+                    <icon
+                        name="close"
+                        size="m"
+                        non-interactive
+                        aria-hidden="true"
+                        focusable="false" />
                 </span>
             </div>
 

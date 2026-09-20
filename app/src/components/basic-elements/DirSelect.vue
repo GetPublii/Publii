@@ -16,7 +16,12 @@
             v-if="fieldValue"
             class="clear"
             @click.stop="clear">
-            &times;
+            <icon
+                name="close"
+                size="m"
+                non-interactive
+                aria-hidden="true"
+                focusable="false" />
         </span>
     </div>
 </template>
@@ -102,20 +107,25 @@ export default {
     }
 
     .clear {
+        align-items: center;
         border-radius: 50%;
         color: var(--color-danger);
         cursor: pointer;
+        display: flex;
         font-size: var(--font-size-ui-xl);
         font-weight: var(--font-weight-light);
-        height: 3rem; 
-        line-height: 1.1;
+        height: 3rem;
+        justify-content: center;
         position: absolute;
         right: 1.5rem;
-        text-align: center;
         transition: var(--transition-default);
         top: 50%;
-        transform: translateY(-50%); 
+        transform: translateY(-50%);
         width: 3rem;
+
+        & > .icon {
+            position: static;
+        }
 
         &:active,
         &:focus,

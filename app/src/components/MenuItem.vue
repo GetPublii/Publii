@@ -92,7 +92,7 @@
                         name="close"
                         size="xs"
                         non-interactive
-                        class="menu-item-action-icon is-stroke" />
+                        class="menu-item-action-icon" />
                     {{ $t('menu.unselectItem') }}
                 </button>
             </div>
@@ -762,12 +762,6 @@ export default {
     color: currentColor;
     fill: currentColor;
     pointer-events: none;
-
-    &.is-stroke {
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-    }
 }
 
 .menu-item-insert-actions {

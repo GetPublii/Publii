@@ -57,7 +57,12 @@
                             <a
                                 href="#remove"
                                 @click.prevent="removeImage(index)">
-                                &times;
+                                <icon
+                                    name="close"
+                                    size="m"
+                                    non-interactive
+                                    aria-hidden="true"
+                                    focusable="false" />
                             </a>
 
                             <a
@@ -624,9 +629,12 @@ h1 {
             width: 3rem;
 
             &[href="#remove"] {
+                align-items: center;
                 color: var(--color-danger);
+                display: flex;
+                justify-content: center;
                 top: 50%;
-                transform: translateY(-60%);
+                transform: translateY(-50%);
             }
 
             &[href="#up"],

@@ -9,7 +9,12 @@
                     class="sidebar-panel-close"
                     :aria-label="$t('ui.close')"
                     @click="$emit('close')">
-                    &times;
+                    <icon
+                        name="close"
+                        size="m"
+                        non-interactive
+                        aria-hidden="true"
+                        focusable="false" />
                 </button>
             </div>
             <div

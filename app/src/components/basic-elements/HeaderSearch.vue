@@ -16,7 +16,12 @@
         <span
             v-if="isOpen"
             @click.stop="close">
-            &times;
+            <icon
+                name="close"
+                size="m"
+                non-interactive
+                aria-hidden="true"
+                focusable="false" />
         </span>
     </div>
 </template>
@@ -116,23 +121,24 @@ export default {
     }
 
     & > span {
+        align-items: center;
         animation: close-delay .3s ease-out .3s forwards;
         border-radius: 50%;
         color: var(--icon-secondary-color);
         cursor: pointer;
+        display: flex;
         font-size: var(--font-size-ui-xl);
         font-weight: var(--font-weight-light);
         height: 3rem;
-        line-height: 1;       
+        justify-content: center;
         opacity: 0;
         padding: 0;
         position: absolute;
         right: 4.4rem;
-        text-align: center;       
         transition: all .3s ease-out;
-        transition-delay: .3s;  
+        transition-delay: .3s;
         top: 50%;
-        transform: translate(0, -50%);       
+        transform: translate(0, -50%);
         width: 3rem;
 
         &:active,

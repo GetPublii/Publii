@@ -154,7 +154,8 @@ export default {
         width: 2.8rem;
         
         & > svg {           
-            stroke: var(--icon-secondary-color);
+            color: var(--icon-secondary-color);
+            stroke: currentColor;
             vertical-align: middle;
         }       
         
@@ -162,7 +163,7 @@ export default {
         &:focus,
         &:hover {
             & > svg {           
-                stroke: var(--icon-tertiary-color);
+                color: var(--icon-tertiary-color);
             }
         }
         

@@ -611,9 +611,15 @@
     </symbol>   
     
 
-    <symbol id="close" viewBox="0 0 24 24"> 
-         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="8" y1="16" x2="16" y2="8"/>
-         <line fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="16" y1="16" x2="8" y2="8"/>
+    <symbol
+        id="close"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5">
+        <path d="M8 16L16 8M16 16L8 8"/>
     </symbol>
         
     <symbol id="arrow-down" viewBox="0 0 24 24"> 

@@ -124,7 +124,12 @@
                                                 <span
                                                     class="post-date-reset"
                                                     @click.stop.prevent="resetCreationDate()">
-                                                    &times;
+                                                    <icon
+                                                        name="close"
+                                                        size="m"
+                                                        non-interactive
+                                                        aria-hidden="true"
+                                                        focusable="false" />
                                                 </span>
 
                                             </template>
@@ -1136,24 +1141,20 @@ export default {
 }
 
 .post-editor-sidebar .post-editor-settings .post-date-reset {
+    align-items: center;
     border-radius: 50%;
     color: var(--icon-secondary-color);
+    display: flex;
     font-size: var(--font-size-ui-xl);
     font-weight: var(--font-weight-light);
     height: 3rem;
-    line-height: 1;
+    justify-content: center;
     position: absolute;
     right: 0;
-    text-align: center;
     transition: var(--transition-default);
     top: 50%;
     transform: translate(0, -50%);
     width: 3rem;
-
-    .icon {
-        cursor: pointer;
-        fill: currentColor;
-    }
 
     &:active,
     &:focus,

@@ -21,7 +21,12 @@
             class="upload-remove"
             :title="$t('image.removeImage')"
             @click="remove">
-            &times;
+            <icon
+                name="close"
+                size="m"
+                non-interactive
+                aria-hidden="true"
+                focusable="false" />
         </a>
     </div>
 </template>
@@ -177,17 +182,18 @@ export default {
     }
 
     .upload-remove {
+        align-items: center;
         border-radius: 50%;
         color: var(--color-danger);
         cursor: pointer;
+        display: flex;
         font-size: var(--font-size-ui-xl);
         font-weight: var(--font-weight-light);
         height: 3rem;
-        line-height: 1.1;
+        justify-content: center;
         padding: 0;
         position: absolute;
         right: 1.5rem;
-        text-align: center;
         top: 50%;
         transition: var(--transition-default);
         transform: translateY(-50%);
