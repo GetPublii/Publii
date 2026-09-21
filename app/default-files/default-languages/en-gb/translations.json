@@ -136,6 +136,8 @@
         },
         "rendering": {
             "localPreviewFailed": "Local preview server could not be started",
+            "previewClearingInProgress": "Preview files are being removed",
+            "previewClearingInProgressMsg": "The preview files of this website are being cleared right now. Try again in a moment.",
             "renderingProcessCrashed": "Rendering process crashed",
             "renderingProcessCrashedMsg": "For more information, check the rendering-errors.log and rendering-process.log files under Tools -> Log viewer.",
             "renderingProcessFailed": "Rendering process failed"
@@ -595,7 +597,6 @@
         "fileTypesSummary": "Built-in types: {builtIn} · Your types: {custom}",
         "filterWebsites": "Filter websites",
         "filterWebsitesPlaceholder": "Search by website name…",
-        "manage": "Manage",
         "noActivePreviews": "No website is available on the local server right now.",
         "noMatchingWebsites": "No websites match your search.",
         "noPreviewFiles": "There are no preview files.",

@@ -297,7 +297,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
         if (validCommands.includes(command)) {
             return ipcRenderer.invoke(command, ...data);
         } else {
-            console.info('Event: ', channel, ' is not supported in invoke');
+            console.info('Event: ', command, ' is not supported in invoke');
         }
 
         return false;

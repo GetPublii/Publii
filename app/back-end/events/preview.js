@@ -28,6 +28,7 @@ class PreviewEvents {
         this.app = appInstance;
         this.rendererProcesses = new Map(); // webContentsId -> process
         this.renderingSites = new Map(); // siteName -> number of working preview renderers
+        this.clearingSites = new Map(); // siteName -> pending removal of the preview files, shared by all windows
         this.previewSizes = new Map(); // preview directory -> size of its files, valid until the next rendering or clearing
         this.previewSizeRequests = new Map(); // preview directory -> pending calculation shared by all windows
 
@@ -79,7 +80,7 @@ class PreviewEvents {
         ipcMain.handle('app-local-preview:get-state', () => this.app.previewServer.getState());
 
         ipcMain.handle('app-local-preview:disable-site', async (event, siteName) => {
-            if (typeof siteName !== 'string') {
+            if (!isValidDirSegment(siteName)) {
                 return false;
             }
 
@@ -117,6 +118,22 @@ class PreviewEvents {
         let previewRendered = false;
         let previewUrl = false;
         let previewWasEnabled = this.app.previewServer.isSiteEnabled(site);
+
+        // Both checks are synchronous, so rendering and clearing of the same website never overlap
+        if (this.clearingSites.has(site)) {
+            sender.send('app-preview-render-error', {
+                message: [{
+                    message: {
+                        translation: 'core.rendering.previewClearingInProgress'
+                    },
+                    desc: {
+                        translation: 'core.rendering.previewClearingInProgressMsg'
+                    }
+                }]
+            });
+
+            return;
+        }
 
         // Counted before the first await - otherwise the preview files could be cleared while the preview is being enabled
         this.renderingSites.set(site, (this.renderingSites.get(site) || 0) + 1);
@@ -475,7 +492,7 @@ class PreviewEvents {
      *
      * @param siteName
      */
-    async clearPreview (siteName) {
+    clearPreview (siteName) {
         if (!this.isExistingSite(siteName)) {
             return { status: false, reason: 'site-not-exists' };
         }
@@ -484,17 +501,26 @@ class PreviewEvents {
             return { status: false, reason: 'rendering-in-progress' };
         }
 
+        // Registered without any await after the check above - renderSite() refuses to start until the files are removed
+        if (!this.clearingSites.has(siteName)) {
+            this.clearingSites.set(siteName, this.removePreviewFiles(siteName));
+        }
+
+        return this.clearingSites.get(siteName);
+    }
+
+    async removePreviewFiles (siteName) {
         try {
             await this.app.previewServer.disableSite(siteName);
             await fs.remove(this.getPreviewDir(siteName));
+            return { status: true };
         } catch (error) {
             console.log('Unable to remove the preview files:', error);
-            this.invalidatePreviewSize(siteName);
             return { status: false, reason: 'remove-error' };
+        } finally {
+            this.clearingSites.delete(siteName);
+            this.invalidatePreviewSize(siteName);
         }
-
-        this.invalidatePreviewSize(siteName);
-        return { status: true };
     }
 
     // Preview files of the website can be cleared again when its last preview renderer is gone

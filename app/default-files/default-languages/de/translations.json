@@ -64,6 +64,8 @@
         },
         "rendering": {
             "localPreviewFailed": "Der lokale Vorschau-Server konnte nicht gestartet werden",
+            "previewClearingInProgress": "Die Vorschaudateien werden gerade entfernt",
+            "previewClearingInProgressMsg": "Die Vorschaudateien dieser Website werden gerade geleert. Versuchen Sie es gleich noch einmal.",
             "renderingProcessCrashed": "Der Rendervorgang ist abgestürzt",
             "renderingProcessCrashedMsg": "Weitere Informationen finden Sie in den Dateien rendering-errors.log und rendering-process.log unter Werkzeuge & Plugins -> Log-Ansicht.",
             "renderingProcessFailed": "Rendervorgang fehlgeschlagen"
@@ -601,7 +603,6 @@
         "fileTypesSummary": "Integrierte Typen: {builtIn} · Ihre Typen: {custom}",
         "filterWebsites": "Websites filtern",
         "filterWebsitesPlaceholder": "Nach Website-Namen suchen…",
-        "manage": "Verwalten",
         "noActivePreviews": "Derzeit ist keine Website auf dem lokalen Server verfügbar.",
         "noMatchingWebsites": "Keine Websites entsprechen Ihrer Suche.",
         "noPreviewFiles": "Es gibt keine Vorschaudateien.",

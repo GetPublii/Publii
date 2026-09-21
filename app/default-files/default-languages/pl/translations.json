@@ -136,6 +136,8 @@
         },
         "rendering": {
             "localPreviewFailed": "Nie udało się uruchomić lokalnego serwera podglądu",
+            "previewClearingInProgress": "Pliki podglądu są właśnie usuwane",
+            "previewClearingInProgressMsg": "Pliki podglądu tej strony są w tej chwili czyszczone. Spróbuj ponownie za moment.",
             "renderingProcessCrashed": "Proces renderowania uległ awarii",
             "renderingProcessCrashedMsg": "Sprawdź pliki rendering-errors.log i rendering-process.log pod Narzędzia -> Przeglądarka logów.",
             "renderingProcessFailed": "Proces renderowania nie powiódł się"
@@ -595,7 +597,6 @@
         "fileTypesSummary": "Typy wbudowane: {builtIn} · Twoje typy: {custom}",
         "filterWebsites": "Filtruj strony",
         "filterWebsitesPlaceholder": "Wyszukaj stronę po nazwie…",
-        "manage": "Zarządzaj",
         "noActivePreviews": "Żadna strona nie jest teraz dostępna na lokalnym serwerze.",
         "noMatchingWebsites": "Brak stron pasujących do wyszukiwania.",
         "noPreviewFiles": "Brak plików podglądu.",

@@ -16,6 +16,7 @@ describe('Local preview files IPC', function () {
     let pendingSizeCheck;
     let appliedMimeTypes;
     let configNotifications;
+    let pendingDisabling;
 
     // Results come from another realm, so they are compared as plain data
     function plain (value) {
@@ -41,6 +42,7 @@ describe('Local preview files IPC', function () {
         pendingSizeCheck = null;
         appliedMimeTypes = [];
         configNotifications = [];
+        pendingDisabling = null;
 
         application = {
             sitesDir: sitesDir,
@@ -51,8 +53,12 @@ describe('Local preview files IPC', function () {
                 configNotifications.push(exceptWebContentsId);
             },
             previewServer: {
+                isSiteEnabled () {
+                    return false;
+                },
                 async disableSite (siteName) {
                     disabledPreviews.push(siteName);
+                    await pendingDisabling;
                 },
                 setCustomMimeTypes (mimeTypes) {
                     appliedMimeTypes.push(mimeTypes);
@@ -224,6 +230,54 @@ describe('Local preview files IPC', function () {
         application.appConfig.previewServerMimeTypes = [{ extension: '.zip', mimeType: 'application/zip' }, { extension: '../x', mimeType: 'x/y' }, null];
 
         assert.deepEqual(plain(await invoke('app-local-preview:get-mime-types')).custom, [{ extension: '.zip', mimeType: 'application/zip' }]);
+    });
+
+    it('disables previews only for valid website names', async function () {
+        for (let siteName of ['../demo', 'demo/preview', '', '.', '..', null, undefined, 7, { name: 'demo' }]) {
+            assert.equal(await invoke('app-local-preview:disable-site', siteName), false);
+        }
+
+        assert.deepEqual(disabledPreviews, []);
+        assert.equal(await invoke('app-local-preview:disable-site', 'demo'), true);
+        assert.deepEqual(disabledPreviews, ['demo']);
+    });
+
+    it('does not render the preview while its files are being cleared', async function () {
+        let finishDisabling;
+        let renderErrors = [];
+        pendingDisabling = new Promise(resolve => finishDisabling = resolve);
+
+        let clearing = invoke('app-local-preview:clear', 'demo');
+
+        await events.renderSite('demo', false, false, false, {
+            id: 1,
+            isDestroyed: () => false,
+            send (channel, payload) {
+                renderErrors.push({ channel, payload });
+            }
+        }, true);
+
+        assert.equal(renderErrors.length, 1);
+        assert.equal(renderErrors[0].channel, 'app-preview-render-error');
+        assert.equal(plain(renderErrors[0].payload).message[0].message.translation, 'core.rendering.previewClearingInProgress');
+        assert.equal(events.renderingSites.has('demo'), false);
+
+        finishDisabling();
+
+        assert.deepEqual(plain(await clearing), { status: true });
+        assert.equal(fs.existsSync(path.join(sitesDir, 'demo', 'preview')), false);
+        assert.equal(events.clearingSites.has('demo'), false);
+    });
+
+    it('shares one clearing between all windows', async function () {
+        let results = await Promise.all([
+            invoke('app-local-preview:clear', 'demo'),
+            invoke('app-local-preview:clear', 'demo')
+        ]);
+
+        assert.deepEqual(plain(results), [{ status: true }, { status: true }]);
+        assert.deepEqual(disabledPreviews, ['demo']);
+        assert.equal(events.clearingSites.has('demo'), false);
     });
 
     it('does not clear preview files during the rendering', async function () {
