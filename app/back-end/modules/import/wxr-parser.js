@@ -93,6 +93,9 @@ class WxrParser {
         this.siteName = siteName;
         this.importAuthors = false;
         this.autop = false;
+        this.cleanHtml = false;
+        this.newContentItems = [];
+        this.htmlCleanup = null;
         this.importMenus = true;
         this.usedTaxonomy = 'tags';
         this.postTypes = [];
@@ -416,11 +419,22 @@ class WxrParser {
      * @param slugStrategy
      * @param importMenus
      * @param seoProvider
+     * @param cleanHtml
      */
-    setConfig(authors, taxonomy, autop, postTypes, slugStrategy = 'wordpress', importMenus = true, seoProvider = 'auto') {
+    setConfig(
+        authors,
+        taxonomy,
+        autop,
+        postTypes,
+        slugStrategy = 'wordpress',
+        importMenus = true,
+        seoProvider = 'auto',
+        cleanHtml = false
+    ) {
         this.importAuthors = false;
         this.usedTaxonomy = ['tags', 'categories', 'both'].includes(taxonomy) ? taxonomy : 'both';
         this.autop = autop === true;
+        this.cleanHtml = cleanHtml === true;
         this.importMenus = importMenus === true;
         this.postTypes = (Array.isArray(postTypes) ? postTypes : [])
             .map(postType => WxrUtils.asString(postType).trim())
@@ -1080,6 +1094,7 @@ class WxrParser {
             this.temp.posts[savedPost ? savedPost.slug : postSlug] = newPostID;
             this.registerImportedItem(item, newPostID, false);
             this.queueSeoCanonical(item, newPostID, false);
+            this.newContentItems.push({ id: newPostID, itemType: 'post', title: postTitle });
 
             for (let image of postImages) {
                 this.queueImage(newPostID, image.url, { gallery: image.gallery });
@@ -1166,6 +1181,7 @@ class WxrParser {
             this.registerImportedItem(item, newPageID, true);
             this.recordPageHierarchy(item, newPageID, i);
             this.queueSeoCanonical(item, newPageID, true);
+            this.newContentItems.push({ id: newPageID, itemType: 'page', title: pageTitle });
 
             for (let image of pageImages) {
                 this.queueImage(newPageID, image.url, { gallery: image.gallery });
@@ -2403,6 +2419,83 @@ class WxrParser {
         return this.getWordPressSourceRelativeUrl(link) !== null;
     }
 
+    cleanImportedHtml() {
+        if (!this.cleanHtml) {
+            return;
+        }
+
+        const HtmlCleaner = require('./wordpress-html-cleaner.js');
+        const cleanup = {
+            enabled: true,
+            processedItems: 0,
+            changedItems: 0,
+            changedPosts: 0,
+            changedPages: 0,
+            skippedExisting: this.summary.skipped.posts + this.summary.skipped.pages,
+            ...HtmlCleaner.createStats(),
+            skippedItems: []
+        };
+        const updates = [];
+        const query = this.appInstance.db.prepare('SELECT text FROM posts WHERE id = @id');
+
+        for (const item of this.newContentItems) {
+            const row = query.get({ id: item.id });
+
+            if (!row) {
+                continue;
+            }
+
+            const original = row.text || '';
+            const result = HtmlCleaner.cleanHtml(original);
+            cleanup.processedItems++;
+
+            if (result.skippedReason) {
+                cleanup.skippedItems.push({
+                    itemID: item.id,
+                    itemType: item.itemType,
+                    title: item.title,
+                    reason: result.skippedReason
+                });
+                continue;
+            }
+
+            for (const key of Object.keys(result.stats)) {
+                cleanup[key] += result.stats[key];
+            }
+
+            if (result.html !== original) {
+                updates.push({ id: item.id, text: result.html });
+                cleanup.changedItems++;
+                cleanup[item.itemType === 'page' ? 'changedPages' : 'changedPosts']++;
+            }
+        }
+
+        if (updates.length) {
+            let transactionStarted = false;
+
+            try {
+                this.appInstance.db.exec('BEGIN IMMEDIATE');
+                transactionStarted = true;
+                const update = this.appInstance.db.prepare('UPDATE posts SET text = @text WHERE id = @id');
+
+                for (const item of updates) {
+                    update.run(item);
+                }
+
+                this.appInstance.db.exec('COMMIT');
+                transactionStarted = false;
+            } catch (error) {
+                if (transactionStarted) {
+                    this.appInstance.db.exec('ROLLBACK');
+                }
+
+                throw error;
+            }
+        }
+
+        this.htmlCleanup = cleanup;
+    }
+
     buildImportReport() {
         let reportItems = this.getImportedReportItems();
         let settings = this.getReportUrlSettings();
@@ -2586,6 +2679,10 @@ class WxrParser {
             ignoredSystemTypes: this.summary.ignoredSystemTypes.map(item => ({ ...item })),
             warnings: [...this.summary.warnings]
         };
+
+        if (this.htmlCleanup) {
+            this.summary.report.htmlCleanup = this.htmlCleanup;
+        }
 
         return this.summary.report;
     }
@@ -2994,7 +3091,9 @@ class WxrParser {
             text = automaticParagraphs(text);
         }
 
-        return text;
+        // Matching Publii text alignment is part of every import, independently of HTML cleanup.
+        const HtmlCleaner = require('./wordpress-html-cleaner.js');
+        return HtmlCleaner.normalizeTextAlignment(text);
     }
 
     getSummary() {

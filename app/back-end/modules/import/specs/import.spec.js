@@ -292,6 +292,260 @@ describeWithDatabase('WordPress WXR import', function() {
         fs.rmSync(temporaryDir, { recursive: true, force: true });
     });
 
+    for (const cleanHtml of [false, true]) {
+        for (const autop of [false, true]) {
+            it('converts inline alignment with cleanup=' + cleanHtml + ' and automatic paragraphs=' + autop, async function() {
+                const source = fs.readFileSync(wxrFile, 'utf8')
+                    .replace('<p><a href="https://example.com/parent/child/">',
+                        '<p class="theme-text" style="text-align:center;color:red"><a href="https://example.com/parent/child/">')
+                    .replace('<p>Parent</p>', '<p style="text-align:right">Parent</p>');
+                fs.writeFileSync(wxrFile, source);
+                const importer = new Import(appInstance, 'test-site', wxrFile);
+                const result = await importer.importFile(
+                    'publii-author',
+                    'both',
+                    autop,
+                    ['post', 'page'],
+                    'wordpress',
+                    true,
+                    'none',
+                    cleanHtml
+                );
+                const rows = appInstance.db.prepare('SELECT id, title, text FROM posts ORDER BY id').all();
+                const post = rows.find(row => row.title === 'Changed title');
+                const parent = rows.find(row => row.title === 'Parent');
+                const child = rows.find(row => row.title === 'Child');
+                assert.ok(post.text.includes('align-center'));
+                assert.ok(post.text.includes('#INTERNAL_LINK#/page/' + child.id));
+                assert.ok(parent.text.includes('<p class="align-right">Parent</p>'));
+                assert.doesNotMatch(post.text + parent.text, /text-align:/);
+
+                if (cleanHtml) {
+                    assert.doesNotMatch(post.text, /theme-text|style=/);
+                    // Standard migration conversions are not counted as optional cleanup.
+                    assert.strictEqual(result.summary.report.htmlCleanup.changedPosts, 1);
+                    assert.strictEqual(result.summary.report.htmlCleanup.changedPages, 0);
+                } else {
+                    assert.ok(post.text.includes('class="theme-text align-center"'));
+                    assert.ok(post.text.includes('color: red'));
+                    assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+                }
+            });
+        }
+    }
+
+    for (const cleanHtml of [false, true]) {
+        for (const autop of [false, true]) {
+            it('preserves authored elements and emphasis styles with cleanup=' + cleanHtml +
+                ' and automatic paragraphs=' + autop, async function() {
+                const markup = '<div class="theme-wrapper">' +
+                    '<p class="theme-text" style="text-align:center;color:red">' +
+                    '<em>E</em><strong>S</strong><b>B</b><i>I</i>' +
+                    '<span style="font-style:italic">Italic</span>' +
+                    '<span style="font-weight:600">Semibold</span>' +
+                    '<span style="font-weight:bold"><span style="font-weight:normal">Reset</span></span>' +
+                    '</p></div>';
+                const source = fs.readFileSync(wxrFile, 'utf8')
+                    .replace('<p>Parent</p>', markup)
+                    .replace('<p><a href="https://example.com/parent/child/">Child page</a></p>', markup);
+                fs.writeFileSync(wxrFile, source);
+                const importer = new Import(appInstance, 'test-site', wxrFile);
+                const result = await importer.importFile(
+                    'publii-author',
+                    'both',
+                    autop,
+                    ['post', 'page'],
+                    'wordpress',
+                    true,
+                    'none',
+                    cleanHtml
+                );
+                const rows = appInstance.db.prepare('SELECT title, text FROM posts ORDER BY id').all();
+
+                for (const title of ['Parent', 'Changed title']) {
+                    const row = rows.find(item => item.title === title);
+                    assert.ok(row.text.includes('<em>E</em><strong>S</strong><b>B</b><i>I</i>'));
+                    assert.ok(row.text.includes('<span style="font-style:italic">Italic</span>'));
+                    assert.ok(row.text.includes('<span style="font-weight:600">Semibold</span>'));
+                    assert.ok(row.text.includes('<span style="font-weight:bold"><span style="font-weight:normal">Reset</span></span>'));
+                    assert.ok(row.text.includes('align-center'));
+                    assert.doesNotMatch(row.text, /text-align:/);
+
+                    if (cleanHtml) {
+                        assert.ok(row.text.startsWith('<div>'));
+                        assert.doesNotMatch(row.text, /theme-wrapper|theme-text|color:/);
+                    } else {
+                        assert.ok(row.text.startsWith('<div class="theme-wrapper">'));
+                        assert.ok(row.text.includes('theme-text'));
+                        assert.ok(row.text.includes('color: red'));
+                    }
+                }
+
+                if (cleanHtml) {
+                    const cleanup = result.summary.report.htmlCleanup;
+                    assert.strictEqual(cleanup.changedPosts, 1);
+                    assert.strictEqual(cleanup.changedPages, 1);
+                    assert.strictEqual(cleanup.semanticConversions, 0);
+                    assert.strictEqual(cleanup.preservedStyles, 8);
+                }
+            });
+        }
+    }
+
+    for (const cleanHtml of [false, true]) {
+        it('preserves contrast, table position and complex alignment during import with cleanup=' + cleanHtml, async function() {
+            const contrast = '<p style="background:#000;color:#fff">Contrast</p>';
+            const table = '<table align="center"><tbody><tr><td>Cell</td></tr></tbody></table>';
+            const alignment = '<p style="--alignment:left;text-align:right!important;text-align:var(--alignment)">Aligned</p>';
+            const source = fs.readFileSync(wxrFile, 'utf8').replace('<p>Parent</p>', contrast + table + alignment);
+            fs.writeFileSync(wxrFile, source);
+
+            const importer = new Import(appInstance, 'test-site', wxrFile);
+            await importer.importFile(
+                'publii-author',
+                'both',
+                false,
+                ['post', 'page'],
+                'wordpress',
+                true,
+                'none',
+                cleanHtml
+            );
+
+            const parent = appInstance.db.prepare("SELECT text FROM posts WHERE title = 'Parent'").get();
+            const expectedContrast = cleanHtml ? '<p>Contrast</p>' : contrast;
+            assert.strictEqual(parent.text, expectedContrast + table + '<p class="align-right">Aligned</p>');
+        });
+    }
+
+    it('converts inline alignment when the cleanup argument is omitted', async function() {
+        const source = fs.readFileSync(wxrFile, 'utf8')
+            .replace('<p>Parent</p>', '<p style="text-align:center;color:red">Parent</p>');
+        fs.writeFileSync(wxrFile, source);
+        const importer = new Import(appInstance, 'test-site', wxrFile);
+        const result = await importer.importFile('publii-author', 'tags', false, ['page']);
+        const parent = appInstance.db.prepare("SELECT text FROM posts WHERE title = 'Parent'").get();
+        assert.ok(parent.text.includes('class="align-center"'));
+        assert.ok(parent.text.includes('color: red'));
+        assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+    });
+
+    for (const cleanHtml of [false, true]) {
+        it('does not convert inline alignment in previously imported content with cleanup=' + cleanHtml, async function() {
+            const first = new Import(appInstance, 'test-site', wxrFile);
+            await first.importFile('publii-author', 'both', false, ['post', 'page']);
+            const manual = '<p class="my-class" style="text-align:center;color:red">Edited</p>';
+            appInstance.db.prepare('UPDATE posts SET text = @text').run({ text: manual });
+            const second = new Import(appInstance, 'test-site', wxrFile);
+            await second.importFile('publii-author', 'both', false, ['post', 'page'], 'wordpress', true, 'none', cleanHtml);
+            assert.ok(appInstance.db.prepare('SELECT text FROM posts').all().every(row => row.text === manual));
+        });
+    }
+
+    it('keeps presentation markup unchanged without cleanup when no inline alignment is present', async function() {
+        const source = fs.readFileSync(wxrFile, 'utf8').replace('<p>Parent</p>', '<p class="theme-text" style="color:red">Parent</p>');
+        fs.writeFileSync(wxrFile, source);
+        const importer = new Import(appInstance, 'test-site', wxrFile);
+        const result = await importer.importFile('publii-author', 'both', false, ['post', 'page']);
+        assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+        assert.strictEqual(appInstance.db.prepare("SELECT text FROM posts WHERE title = 'Parent'").get().text,
+            '<p class="theme-text" style="color:red">Parent</p>');
+        assert.strictEqual(importer.parser.cleanHtml, false);
+    });
+
+    it('cleans new posts and pages after media conversion and preserves internal links, metadata and menus', async function() {
+        addMenuFixture();
+        let source = fs.readFileSync(wxrFile, 'utf8')
+            .replace('<p><a href="https://example.com/parent/child/">', '<p class="wp-text" style="text-align:center;color:red"><a href="https://example.com/parent/child/">')
+            .replace('<p>Parent</p>', '<div class="theme-wrapper"><p style="font-weight:bold">Parent</p></div>');
+        fs.writeFileSync(wxrFile, source);
+        const importer = new Import(appInstance, 'test-site', wxrFile);
+        importer.parser.importImages = async function() {
+            const parent = appInstance.db.prepare("SELECT id, text FROM posts WHERE title = 'Parent'").get();
+            assert.ok(parent.text.includes('theme-wrapper'));
+            appInstance.db.prepare('UPDATE posts SET text = @text WHERE id = @id').run({
+                id: parent.id,
+                text: parent.text + '<figure class="post__image post__image--wide theme-image"><img src="https://example.com/photo.jpg" width="800" height="600" alt="Photo"></figure>'
+            });
+            this.storeDownloadedImage({
+                filename: 'photo.jpg',
+                postID: parent.id,
+                sourceUrl: 'https://example.com/photo.jpg',
+                remoteUrl: 'https://example.com/photo.jpg'
+            }, 'unused-for-non-gallery-image');
+        };
+        const result = await importer.importFile('publii-author', 'both', false, ['post', 'page'], 'wordpress', true, 'none', true);
+        const rows = appInstance.db.prepare('SELECT * FROM posts ORDER BY id').all();
+        const post = rows.find(row => row.title === 'Changed title');
+        const parent = rows.find(row => row.title === 'Parent');
+        const child = rows.find(row => row.title === 'Child');
+        assert.strictEqual(post.text, '<p class="align-center"><a href="#INTERNAL_LINK#/page/' + child.id + '">Child page</a></p>');
+        assert.strictEqual(parent.text, '<div><p style="font-weight:bold">Parent</p></div><figure class="post__image post__image--wide"><img src="#DOMAIN_NAME#photo.jpg" width="800" height="600" alt="Photo"></figure>');
+        assert.strictEqual(post.slug, 'original-post-slug');
+        assert.strictEqual(post.status, 'draft');
+        assert.strictEqual(post.modified_at, Date.UTC(2021, 1, 3, 3, 5, 6));
+        assert.strictEqual(result.summary.menus, 2);
+        assert.strictEqual(result.summary.menuItems, 5);
+        const cleanup = result.summary.report.htmlCleanup;
+        assert.strictEqual(cleanup.processedItems, 3);
+        assert.strictEqual(cleanup.changedItems, 2);
+        assert.strictEqual(cleanup.changedPosts, 1);
+        assert.strictEqual(cleanup.changedPages, 1);
+        assert.strictEqual(cleanup.removedClasses, 3);
+        assert.strictEqual(cleanup.removedStyles, 1);
+        assert.strictEqual(cleanup.preservedStyles, 1);
+        assert.deepStrictEqual(cleanup.skippedItems, []);
+    });
+
+    it('never cleans existing content during a repeated import', async function() {
+        const first = new Import(appInstance, 'test-site', wxrFile);
+        await first.importFile('publii-author', 'both', false, ['post', 'page']);
+        const manual = '<p id="manual" class="my-class" style="color:red"><span>Edited in Publii</span></p>';
+        appInstance.db.prepare('UPDATE posts SET text = @text').run({ text: manual });
+        const second = new Import(appInstance, 'test-site', wxrFile);
+        const result = await second.importFile('publii-author', 'both', false, ['post', 'page'], 'wordpress', true, 'none', true);
+        assert.ok(appInstance.db.prepare('SELECT text FROM posts').all().every(row => row.text === manual));
+        assert.strictEqual(result.summary.report.htmlCleanup.changedItems, 0);
+        assert.strictEqual(result.summary.report.htmlCleanup.processedItems, 0);
+        assert.strictEqual(result.summary.report.htmlCleanup.skippedExisting, 3);
+    });
+
+    it('reports preserved active content and still cleans other imported items with automatic paragraphs enabled', async function() {
+        const source = fs.readFileSync(wxrFile, 'utf8')
+            .replace('<p>Parent</p>', '<script>init()</script><p class="target">Parent</p>')
+            .replace('<p>Child</p>', '<p class="theme-text">Child</p>');
+        fs.writeFileSync(wxrFile, source);
+        const importer = new Import(appInstance, 'test-site', wxrFile);
+        const result = await importer.importFile('publii-author', 'tags', true, ['page'], 'title', false, 'none', true);
+        const cleanup = result.summary.report.htmlCleanup;
+        assert.strictEqual(cleanup.changedPages, 1);
+        assert.strictEqual(cleanup.skippedItems.length, 1);
+        assert.strictEqual(cleanup.skippedItems[0].title, 'Parent');
+        assert.strictEqual(cleanup.skippedItems[0].reason, 'active-content');
+        assert.match(appInstance.db.prepare("SELECT text FROM posts WHERE title = 'Parent'").get().text, /class="target"/);
+    });
+
+    it('rolls back all cleanup updates if saving one cleaned item fails', async function() {
+        const source = fs.readFileSync(wxrFile, 'utf8')
+            .replace('<p>Parent</p>', '<p class="theme-text">Parent</p>')
+            .replace('<p>Child</p>', '<p class="theme-text">Child</p>');
+        fs.writeFileSync(wxrFile, source);
+        const importer = new Import(appInstance, 'test-site', wxrFile);
+        await importer.importFile('publii-author', 'both', false, ['post', 'page']);
+        appInstance.db.exec(`
+            CREATE TRIGGER fail_cleanup BEFORE UPDATE OF text ON posts
+            WHEN OLD.title = 'Child'
+            BEGIN
+                SELECT RAISE(ABORT, 'cleanup write failed');
+            END;
+        `);
+        importer.parser.cleanHtml = true;
+        assert.throws(() => importer.parser.cleanImportedHtml(), /cleanup write failed/);
+        assert.strictEqual(appInstance.db.prepare("SELECT text FROM posts WHERE title = 'Parent'").get().text,
+            '<p class="theme-text">Parent</p>');
+        assert.strictEqual(importer.parser.htmlCleanup, null);
+    });
+
     it('serves the importer database through the app API used by the models', function() {
         new Import(appInstance, 'test-site', wxrFile);
 

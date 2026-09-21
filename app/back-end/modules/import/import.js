@@ -104,11 +104,21 @@ class Import {
      * @param slugStrategy
      * @param importMenus
      * @param seoProvider
+     * @param cleanHtml
      * @returns {{status: string, message: boolean}}
      */
-    async importFile(importAuthors, usedTaxonomy, autop, postTypes, slugStrategy = 'wordpress', importMenus = true, seoProvider = 'auto') {
+    async importFile(
+        importAuthors,
+        usedTaxonomy,
+        autop,
+        postTypes,
+        slugStrategy = 'wordpress',
+        importMenus = true,
+        seoProvider = 'auto',
+        cleanHtml = false
+    ) {
         console.log('(i) Import started');
-        this.parser.setConfig(importAuthors, usedTaxonomy, autop, postTypes, slugStrategy, importMenus, seoProvider);
+        this.parser.setConfig(importAuthors, usedTaxonomy, autop, postTypes, slugStrategy, importMenus, seoProvider, cleanHtml);
         this.parser.loadExistingImportMappings();
 
         let transactionStarted = false;
@@ -129,6 +139,7 @@ class Import {
             this.parser.savePagesHierarchy();
             this.parser.importMenusData();
             await this.parser.importImages();
+            this.parser.cleanImportedHtml();
             this.parser.buildImportReport();
             console.log('(i) Import is done');
 

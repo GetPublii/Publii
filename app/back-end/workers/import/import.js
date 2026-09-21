@@ -24,7 +24,8 @@ process.on('message', async function(msg){
                 postTypes,
                 slugStrategy,
                 importMenus,
-                seoProvider
+                seoProvider,
+                msg.cleanHtml === true
             );
 
             if (typeof process.send === 'function') {

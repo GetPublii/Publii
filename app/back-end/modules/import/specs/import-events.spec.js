@@ -65,6 +65,109 @@ describe('WordPress import report persistence', function() {
         assert.strictEqual(reportStore.load('test-site'), null);
     });
 
+    it('accepts only an optional boolean cleanup option and forwards it to the worker', function() {
+        const vm = require('vm');
+        const { createRequire } = require('module');
+        const filename = path.join(__dirname, '../../../events/import.js');
+        const localRequire = createRequire(filename);
+        const messages = [];
+        const context = {
+            module: { exports: {} },
+            __dirname: path.dirname(filename),
+            require(name) {
+                if (name === 'electron') {
+                    return { ipcMain: { on() {}, handle() {} } };
+                }
+                if (name === '../helpers/ipc.helper.js') {
+                    return {
+                        forkWorkerWithLogs() {
+                            return { on() {}, send: message => messages.push(message) };
+                        }
+                    };
+                }
+                return localRequire(name);
+            }
+        };
+        vm.runInNewContext(fs.readFileSync(filename, 'utf8'), context);
+        const events = new context.module.exports(appInstance);
+        const filePath = path.join(temporaryDir, 'sample.xml');
+        fs.writeFileSync(filePath, '<rss />');
+        const config = {
+            siteName: 'test-site',
+            filePath,
+            importAuthors: 'publii-author',
+            usedTaxonomy: 'both',
+            slugStrategy: 'wordpress',
+            autop: false,
+            importMenus: true,
+            postTypes: ['post', 'page']
+        };
+        for (const cleanHtml of [undefined, false, true]) {
+            assert.strictEqual(events.validateImportInput({ ...config, cleanHtml }, true), true);
+            events.importFile(appInstance, { ...config, cleanHtml }, { send() {} });
+            assert.strictEqual(messages.at(-1).cleanHtml, cleanHtml === true);
+        }
+        for (const cleanHtml of ['true', 'false', 1, null, {}, []]) {
+            assert.strictEqual(events.validateImportInput({ ...config, cleanHtml }, true), false);
+        }
+    });
+
+    it('passes the cleanup selection through the import worker and closes its database', async function() {
+        const vm = require('vm');
+        const filename = path.join(__dirname, '../../../workers/import/import.js');
+        for (const cleanHtml of [undefined, false, true]) {
+            let listener;
+            let parameters;
+            let closed = false;
+            const messages = [];
+            const context = {
+                process: {
+                    on(name, callback) {
+                        listener = callback;
+                    },
+                    send: message => messages.push(message)
+                },
+                console,
+                setTimeout() {},
+                require() {
+                    return class {
+                        async importFile(...args) {
+                            parameters = args;
+                            return { status: 'success' };
+                        }
+                        closeDatabase() {
+                            closed = true;
+                        }
+                    };
+                }
+            };
+            vm.runInNewContext(fs.readFileSync(filename, 'utf8'), context);
+            await listener({ type: 'dependencies', cleanHtml });
+            assert.strictEqual(parameters.at(-1), cleanHtml === true);
+            assert.strictEqual(messages[0].status, 'success');
+            assert.strictEqual(closed, true);
+        }
+    });
+
+    it('persists HTML cleanup details and remains compatible with old reports', function() {
+        const summary = {
+            posts: 2,
+            report: {
+                htmlCleanup: {
+                    enabled: true,
+                    changedItems: 1,
+                    removedClasses: 12,
+                    skippedItems: [{ itemID: 2, title: 'Widget', reason: 'active-content' }]
+                }
+            }
+        };
+        assert.strictEqual(reportStore.save('test-site', summary), true);
+        const reopenedStore = new WordPressImportReport(appInstance);
+        assert.deepStrictEqual(reopenedStore.load('test-site').summary, summary);
+        assert.strictEqual(reopenedStore.save('test-site', { report: { warnings: [] } }), true);
+        assert.strictEqual(reopenedStore.load('test-site').summary.report.htmlCleanup, undefined);
+    });
+
     it('persists the successful result received at the end of the import worker', function() {
         let data = {
             type: 'result',

@@ -110,6 +110,7 @@ class ImportEvents {
                 !['wordpress', 'title'].includes(config.slugStrategy) ||
                 !['auto', 'yoast', 'rank-math', 'aioseo', 'none'].includes(seoProvider) ||
                 typeof config.autop !== 'boolean' ||
+                (typeof config.cleanHtml !== 'undefined' && typeof config.cleanHtml !== 'boolean') ||
                 typeof config.importMenus !== 'boolean' ||
                 !Array.isArray(config.postTypes) ||
                 config.postTypes.length > 100 ||
@@ -232,6 +233,7 @@ class ImportEvents {
             slugStrategy: config.slugStrategy,
             seoProvider: config.seoProvider || 'auto',
             autop: config.autop,
+            cleanHtml: config.cleanHtml === true,
             importMenus: config.importMenus,
             postTypes: config.postTypes
         });

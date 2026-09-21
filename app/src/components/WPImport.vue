@@ -244,6 +244,23 @@
                                     id="use-autop"
                                     v-model="autoFormatContent" />
                             </field>
+                            <field
+                                id="clean-imported-html"
+                                :label="$t('tools.wpImport.cleanHtml')"
+                                :labelSeparated="false"
+                                :noLabelSpace="true"
+                                spacing="small">
+                                <switcher
+                                    slot="field"
+                                    id="clean-imported-html"
+                                    v-model="cleanImportedHtml"
+                                    :accessible-label="$t('tools.wpImport.cleanHtml')"
+                                    :description="$t('tools.wpImport.cleanHtmlInfo')"
+                                    :disabled="importInProgress" />
+                            </field>
+                            <small class="note">
+                                {{ $t('tools.wpImport.cleanHtmlInfo') }}
+                            </small>
                         </div>
                     </field>
 
@@ -341,6 +358,7 @@ export default {
             },
             importMenus: true,
             autoFormatContent: false,
+            cleanImportedHtml: false,
             slugStrategy: 'wordpress',
             taxonomyStrategy: 'both',
             authorStrategy: 'publii-author',
@@ -609,6 +627,7 @@ export default {
                 slugStrategy: this.slugStrategy,
                 seoProvider: this.seoProviderSelection,
                 autop: this.autoFormatContent,
+                cleanHtml: this.cleanImportedHtml,
                 importMenus: this.importMenus,
                 postTypes: selectedPostTypes
             });
@@ -717,6 +736,7 @@ export default {
             };
             this.importMenus = true;
             this.autoFormatContent = false;
+            this.cleanImportedHtml = false;
             this.slugStrategy = 'wordpress';
             this.taxonomyStrategy = 'both';
             this.authorStrategy = 'publii-author';

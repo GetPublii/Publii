@@ -49,7 +49,7 @@
                         :key="section.id"
                         :slot="'tab-' + index">
                         <p class="wp-import-report__note">
-                            {{ section.id === 'redirects' ? redirectNote : (section.id === 'seo' ? $t('tools.wpImport.reportSeoNote') : $t('tools.wpImport.reportVerificationNote')) }}
+                            {{ getSectionNote(section.id) }}
                         </p>
 
                         <textarea
@@ -109,6 +109,7 @@ export default {
             let report = this.summary.report || {};
 
             return {
+                htmlCleanup: report.htmlCleanup && report.htmlCleanup.enabled === true ? report.htmlCleanup : null,
                 source: report.source || '',
                 generatedAt: report.generatedAt || '',
                 urlSettings: report.urlSettings || {},
@@ -145,7 +146,7 @@ export default {
             }, 0);
         },
         sections () {
-            return [
+            let sections = [
                 {
                     id: 'redirects',
                     label: this.$t('tools.wpImport.reportRedirects'),
@@ -188,13 +189,34 @@ export default {
                         (this.report.ignoredSystemTypes.length ? 1 : 0)
                 }
             ];
+
+            if (this.report.htmlCleanup) {
+                sections.push({
+                    id: 'htmlCleanup',
+                    label: this.$t('tools.wpImport.reportCleanup'),
+                    count: Number(this.report.htmlCleanup.changedItems) || 0
+                });
+            }
+
+            return sections;
         },
         sectionLabels () {
             return this.sections.map(section => section.label + ' (' + section.count + ')');
         },
+        cleanupHasErrors () {
+            const cleanup = this.report.htmlCleanup;
+
+            return Boolean(cleanup && Array.isArray(cleanup.skippedItems) && cleanup.skippedItems.some(item => {
+                return item && ['invalid-html', 'processing-error'].includes(item.reason);
+            }));
+        },
         warningSectionIndexes () {
             return this.sections.reduce((indexes, section, index) => {
-                if (section.id !== 'redirects' && section.count > 0) {
+                const requiresAttention = section.id === 'htmlCleanup'
+                    ? this.cleanupHasErrors
+                    : section.id !== 'redirects' && section.count > 0;
+
+                if (requiresAttention) {
                     indexes.push(index);
                 }
 
@@ -401,7 +423,64 @@ export default {
 
             return lines.length ? lines.join('\n') : this.emptySectionText();
         },
+        getSectionNote (section) {
+            if (section === 'redirects') {
+                return this.redirectNote;
+            }
+
+            const labels = {
+                htmlCleanup: 'reportCleanupNote',
+                seo: 'reportSeoNote'
+            };
+            return this.$t('tools.wpImport.' + (labels[section] || 'reportVerificationNote'));
+        },
+        getCleanupText () {
+            const cleanup = this.report.htmlCleanup || {};
+            const counters = {
+                processedItems: 'reportCleanupProcessed',
+                changedPosts: 'reportCleanupPosts',
+                changedPages: 'reportCleanupPages',
+                removedClasses: 'reportCleanupClasses',
+                removedStyles: 'reportCleanupStyles',
+                removedStyleDeclarations: 'reportCleanupDeclarations',
+                removedAttributes: 'reportCleanupAttributes',
+                semanticConversions: 'reportCleanupAlignment',
+                preservedBlocks: 'reportCleanupProtected',
+                preservedStyles: 'reportCleanupPreservedStyles',
+                skippedExisting: 'reportCleanupExisting'
+            };
+            const lines = Object.entries(counters).map(([key, label]) => {
+                return this.$t('tools.wpImport.' + label) + ': ' + (Number(cleanup[key]) || 0);
+            });
+            const skippedItems = Array.isArray(cleanup.skippedItems) ? cleanup.skippedItems : [];
+
+            if (cleanup.processedItems > 0 && !cleanup.changedItems && !skippedItems.length &&
+                !cleanup.preservedBlocks && !cleanup.preservedStyles) {
+                lines.unshift(this.$t('tools.wpImport.reportCleanupNoChanges'), '');
+            }
+
+            if (skippedItems.length) {
+                lines.push('', this.$t('tools.wpImport.reportCleanupSkipped') + ': ' + skippedItems.length);
+                const reasons = {
+                    'invalid-html': 'reportCleanupInvalidHtml',
+                    'active-content': 'reportCleanupActiveContent',
+                    'processing-error': 'reportCleanupProcessingError'
+                };
+
+                for (const item of skippedItems) {
+                    lines.push(this.formatItemReference(item) + '\n' +
+                        this.$t('tools.wpImport.' + (reasons[item.reason] || 'reportCleanupProcessingError')));
+                }
+            }
+
+            return lines.join('\n');
+        },
+
         getSectionText (section) {
+            if (section === 'htmlCleanup') {
+                return this.getCleanupText();
+            }
+
             if (section === 'redirects') {
                 return this.getRedirectsText();
             }

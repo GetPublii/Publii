@@ -57,6 +57,7 @@
     "moment": "2.29.4",
     "node-version-compare": "1.0.3",
     "normalize-path": "3.0.0",
+    "parse5": "7.3.0",
     "prismjs": "1.30.0",
     "sharp": "0.35.4",
     "slug": "0.9.4",
