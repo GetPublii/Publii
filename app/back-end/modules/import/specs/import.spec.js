@@ -418,6 +418,88 @@ describeWithDatabase('WordPress WXR import', function() {
         });
     }
 
+    for (const cleanHtml of [false, true]) {
+        it('cleans WordPress spacing presets only when cleanup is enabled: ' + cleanHtml, async function() {
+            const markup = '<div style="margin-top:var(--wp--preset--spacing--20);' +
+                'margin-bottom:var(--wp--preset--spacing--20)"><p>Parent</p></div>';
+            const source = fs.readFileSync(wxrFile, 'utf8').replace('<p>Parent</p>', markup);
+            fs.writeFileSync(wxrFile, source);
+
+            const importer = new Import(appInstance, 'test-site', wxrFile);
+            const result = await importer.importFile(
+                'publii-author',
+                'both',
+                false,
+                ['post', 'page'],
+                'wordpress',
+                true,
+                'none',
+                cleanHtml
+            );
+            const parent = appInstance.db.prepare("SELECT text FROM posts WHERE title = 'Parent'").get();
+
+            assert.strictEqual(parent.text, cleanHtml ? '<div><p>Parent</p></div>' : markup);
+
+            if (cleanHtml) {
+                const cleanup = result.summary.report.htmlCleanup;
+                assert.strictEqual(cleanup.changedPages, 1);
+                assert.strictEqual(cleanup.removedStyleDeclarations, 2);
+                assert.strictEqual(cleanup.removedStyles, 1);
+            } else {
+                assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+            }
+        });
+    }
+
+    for (const cleanHtml of [false, true]) {
+        it('cleans Media & Text image fill after local image conversion with cleanup=' + cleanHtml, async function() {
+            const remoteUrl = 'https://example.com/photo.jpg';
+            const markup = '<div class="wp-block-media-text is-image-fill">' +
+                '<figure class="wp-block-media-text__media" ' +
+                'style="background-image:url(' + remoteUrl + ');background-position:50% 50%">' +
+                '<img src="' + remoteUrl + '" alt="Photo"></figure>' +
+                '<div class="wp-block-media-text__content"><p>Parent</p></div></div>';
+            const source = fs.readFileSync(wxrFile, 'utf8').replace('<p>Parent</p>', markup);
+            fs.writeFileSync(wxrFile, source);
+
+            const importer = new Import(appInstance, 'test-site', wxrFile);
+            importer.parser.importImages = async function() {
+                const parent = appInstance.db.prepare("SELECT id FROM posts WHERE title = 'Parent'").get();
+                this.storeDownloadedImage({
+                    filename: 'photo.jpg',
+                    postID: parent.id,
+                    sourceUrl: remoteUrl,
+                    remoteUrl
+                }, 'unused-for-non-gallery-image');
+            };
+            const result = await importer.importFile(
+                'publii-author',
+                'both',
+                false,
+                ['post', 'page'],
+                'wordpress',
+                true,
+                'none',
+                cleanHtml
+            );
+            const parent = appInstance.db.prepare("SELECT text FROM posts WHERE title = 'Parent'").get();
+
+            assert.ok(parent.text.includes('src="#DOMAIN_NAME#photo.jpg"'));
+            assert.ok(parent.text.includes('alt="Photo"'));
+            assert.ok(parent.text.includes('<p>Parent</p>'));
+
+            if (cleanHtml) {
+                assert.doesNotMatch(parent.text, /wp-block|is-image-fill|background-|https:\/\/example.com/);
+                assert.strictEqual(result.summary.report.htmlCleanup.changedPages, 1);
+                assert.strictEqual(result.summary.report.htmlCleanup.removedStyleDeclarations, 2);
+            } else {
+                assert.ok(parent.text.includes('background-image:url(' + remoteUrl + ')'));
+                assert.ok(parent.text.includes('wp-block-media-text'));
+                assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+            }
+        });
+    }
+
     it('converts inline alignment when the cleanup argument is omitted', async function() {
         const source = fs.readFileSync(wxrFile, 'utf8')
             .replace('<p>Parent</p>', '<p style="text-align:center;color:red">Parent</p>');

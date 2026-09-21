@@ -35,6 +35,10 @@ const PRESENTATION_ATTRIBUTES = new Set([
 ]);
 const DECORATIVE_PROPERTIES = /^(?:color|background(?:-color)?|font-family|font-size|line-height|letter-spacing|word-spacing|text-shadow|box-shadow|border(?:-(?:top|right|bottom|left))?(?:-(?:color|style|width|radius))?|margin(?:-(?:top|right|bottom|left))?|padding(?:-(?:top|right|bottom|left))?)$/;
 
+const MEDIA_TEXT_BACKGROUND_PROPERTIES = new Set([
+    'background-image', 'background-position', 'background-position-x', 'background-position-y'
+]);
+
 function createStats() {
     return {
         removedClasses: 0,
@@ -100,6 +104,60 @@ function hasProtectedBackground(declarations) {
 
         return false;
     });
+}
+
+function hasRedundantMediaTextBackground(node, declarations) {
+    const parent = node.parentNode;
+
+    if (node.tagName !== 'figure' || !classNames(node).includes('wp-block-media-text__media') ||
+        !parent || parent.tagName !== 'div' || !classNames(parent).includes('wp-block-media-text') ||
+        !classNames(parent).includes('is-image-fill')) {
+        return false;
+    }
+
+    const backgrounds = declarations.filter(declaration => {
+        const property = declaration.property === 'custom'
+            ? declaration.value.name
+            : getCssProperty(declaration);
+
+        return property.toLowerCase().startsWith('background');
+    });
+    const images = backgrounds.filter(declaration => getCssProperty(declaration) === 'background-image');
+
+    if (backgrounds.some(declaration => !MEDIA_TEXT_BACKGROUND_PROPERTIES.has(getCssProperty(declaration))) ||
+        images.length !== 1 || images[0].property !== 'background-image' ||
+        images[0].value.length !== 1 || images[0].value[0].type !== 'url') {
+        return false;
+    }
+
+    // WordPress stores the cropped image as a background and an img fallback, whose URL may already be local.
+    const pending = [...(node.childNodes || [])];
+    let imageCount = 0;
+
+    while (pending.length) {
+        const child = pending.pop();
+
+        if (child.nodeName === '#comment' || (child.nodeName === '#text' && !child.value.trim())) {
+            continue;
+        }
+
+        if (!['figure', 'a', 'img'].includes(child.tagName) ||
+            attribute(child, 'style') || child.attrs.some(item => item.name === 'hidden')) {
+            return false;
+        }
+
+        if (child.tagName === 'img') {
+            if (!attribute(child, 'src').trim()) {
+                return false;
+            }
+
+            imageCount++;
+        }
+
+        pending.push(...(child.childNodes || []));
+    }
+
+    return imageCount === 1;
 }
 
 function resolveAlignmentTokens(tokens, properties, seen = new Set()) {
@@ -203,7 +261,8 @@ function cleanStyle(node, alignmentOnly) {
                 }
             }
         }).code;
-        result.protectSubtree = !alignmentOnly && hasProtectedBackground(sourceDeclarations);
+        const redundantMediaBackground = !alignmentOnly && hasRedundantMediaTextBackground(node, sourceDeclarations);
+        result.protectSubtree = !alignmentOnly && !redundantMediaBackground && hasProtectedBackground(sourceDeclarations);
 
         if (result.protectSubtree) {
             return result;
@@ -229,11 +288,13 @@ function cleanStyle(node, alignmentOnly) {
             effective.set(property, declaration);
         }
 
-        const removable = new Set();
+        const removable = new Set(redundantMediaBackground ? MEDIA_TEXT_BACKGROUND_PROPERTIES : []);
 
         for (const declaration of effective.values()) {
-            if (!alignmentOnly && DECORATIVE_PROPERTIES.test(declaration.property)) {
-                removable.add(declaration.property);
+            const property = getCssProperty(declaration);
+
+            if (!alignmentOnly && DECORATIVE_PROPERTIES.test(property)) {
+                removable.add(property);
             }
         }
 
@@ -250,6 +311,7 @@ function cleanStyle(node, alignmentOnly) {
         result.preserveAlignment = effective.has('all') || Boolean(alignmentDeclaration && !supportedAlignment);
 
         if (result.preserveAlignment) {
+            result.protectSubtree = !alignmentOnly && hasProtectedBackground(sourceDeclarations);
             return result;
         }
 
@@ -269,9 +331,10 @@ function cleanStyle(node, alignmentOnly) {
             code: Buffer.from(original),
             visitor: {
                 Declaration(declaration) {
-                    if ((!alignmentOnly && DECORATIVE_PROPERTIES.test(declaration.property)) ||
-                        removable.has(declaration.property) ||
-                        (result.alignment && getCssProperty(declaration) === 'text-align') ||
+                    const property = getCssProperty(declaration);
+
+                    if ((!alignmentOnly && DECORATIVE_PROPERTIES.test(property)) ||
+                        removable.has(property) ||
                         (declaration.property === 'custom' && unusedVariables.has(declaration.value.name))) {
                         result.removed++;
                         return [];

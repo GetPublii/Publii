@@ -197,6 +197,61 @@ describe('WordPress HTML cleanup', function() {
         assert.strictEqual(result.stats.removedStyles, 1);
     });
 
+    it('removes WordPress spacing presets without changing the group structure or text', function() {
+        const html = '<div style="margin-top:var(--wp--preset--spacing--20);' +
+            'margin-bottom:var(--wp--preset--spacing--20)">' +
+            '<p>This group has a background color and margin preset 1</p></div>';
+        const expected = '<div><p>This group has a background color and margin preset 1</p></div>';
+        const result = cleanHtml(html);
+
+        assert.strictEqual(result.html, expected);
+        assert.strictEqual(result.stats.removedStyleDeclarations, 2);
+        assert.strictEqual(result.stats.removedStyles, 1);
+        assert.strictEqual(result.stats.preservedStyles, 0);
+        assert.strictEqual(result.skippedReason, null);
+        assert.strictEqual(cleanHtml(expected).html, expected);
+        assert.strictEqual(normalizeTextAlignment(html), html);
+    });
+
+    for (const style of [
+        'margin:1px;margin:var(--spacing)!important',
+        'padding:calc(var(--spacing, 1rem) * 2)',
+        'font-size:var(--size);line-height:var(--leading)',
+        'color:var(--foreground);border:var(--border)'
+    ]) {
+        it('removes decorative CSS variables including fallbacks and important declarations: ' + style, function() {
+            const result = cleanHtml('<p style="' + style + '">Text</p>');
+
+            assert.strictEqual(result.html, '<p>Text</p>');
+            assert.strictEqual(result.stats.removedStyles, 1);
+            assert.strictEqual(result.stats.preservedStyles, 0);
+        });
+    }
+
+    it('keeps functional CSS variables and custom properties beside removed decoration', function() {
+        const html = '<p style="--size:20px;width:var(--size);font-weight:var(--weight);' +
+            'margin-top:var(--spacing);padding:var(--spacing, 1rem)">Text</p>';
+        const result = cleanHtml(html);
+
+        assert.match(result.html, /--size: 20px/);
+        assert.match(result.html, /width: var\(--size\)/);
+        assert.match(result.html, /font-weight: var\(--weight\)/);
+        assert.doesNotMatch(result.html, /margin|padding|--spacing/);
+        assert.strictEqual(result.stats.removedStyleDeclarations, 2);
+        assert.strictEqual(result.stats.preservedStyles, 1);
+        assert.strictEqual(cleanHtml(result.html).html, result.html);
+    });
+
+    it('retains decorative CSS variables when only converting text alignment', function() {
+        const html = '<p style="text-align:center;margin-top:var(--wp--preset--spacing--20)">Text</p>';
+        const output = normalizeTextAlignment(html);
+
+        assert.match(output, /class="align-center"/);
+        assert.match(output, /margin-top: var\(--wp--preset--spacing--20\)/);
+        assert.doesNotMatch(output, /text-align:/);
+        assert.strictEqual(cleanHtml(html).html, '<p class="align-center">Text</p>');
+    });
+
     it('preserves actual block-editor quote markup and image and gallery layouts', function() {
         const renderQuote = require('../../../../src/components/block-editor/components/default-blocks/publii-quote/render');
         const renderImage = require('../../../../src/components/block-editor/components/default-blocks/publii-image/render');
@@ -334,6 +389,88 @@ describe('WordPress HTML cleanup', function() {
             assert.deepStrictEqual(errors, []);
             assert.strictEqual(cleanHtml(result.html).html, result.html);
         }
+    });
+});
+
+describe('WordPress Media & Text image fill cleanup', function() {
+    const background = 'background-image:url(https://example.com/original.jpg);background-position:50% 50%';
+    const image = '<img loading="lazy" src="#DOMAIN_NAME#original.jpg" alt="Photo &amp; view" ' +
+        'sizes="100vw" srcset="small.jpg 640w, large.jpg 1200w">';
+
+    function block(media, style = background) {
+        return '<div class="wp-block-media-text alignwide is-stacked-on-mobile is-image-fill">' +
+            '<figure class="wp-block-media-text__media" style="' + style + '">' + media + '</figure>' +
+            '<div class="wp-block-media-text__content"><p>Media &amp; Text</p></div></div>';
+    }
+
+    for (const media of [
+        image,
+        '<figure class="post__image">' + image + '</figure>',
+        '<a href="full.jpg"><figure class="post__image">' + image + '</figure></a>'
+    ]) {
+        it('removes a redundant cropped background while preserving image markup: ' + media.slice(0, 40), function() {
+            const html = block(media);
+            const expected = '<div><figure>' + media + '</figure><div><p>Media &amp; Text</p></div></div>';
+            const result = cleanHtml(html);
+
+            assert.strictEqual(result.html, expected);
+            assert.strictEqual(result.stats.removedClasses, 6);
+            assert.strictEqual(result.stats.removedStyleDeclarations, 2);
+            assert.strictEqual(result.stats.removedStyles, 1);
+            assert.strictEqual(result.stats.preservedBlocks, 0);
+            assert.strictEqual(cleanHtml(expected).html, expected);
+            assert.strictEqual(normalizeTextAlignment(html), html);
+        });
+    }
+
+    for (const media of [
+        '',
+        '<img alt="Missing source">',
+        '<img src="photo.jpg" hidden>',
+        '<img src="photo.jpg" style="display:none">',
+        '<video controls src="movie.mp4"></video>',
+        image + image,
+        image + '<figcaption>Caption over the background</figcaption>'
+    ]) {
+        it('preserves the background when a single visible image fallback is not available: ' + media.slice(0, 55), function() {
+            const html = block(media);
+
+            assert.strictEqual(cleanHtml(html).html, html);
+        });
+    }
+
+    for (const style of [
+        'background-image:linear-gradient(#000,#333)',
+        'background-image:url(photo.jpg),url(other.jpg)',
+        'background-image:var(--photo)',
+        background + ';background-blend-mode:multiply',
+        background + ';all:unset',
+        background + ';text-align:var(--alignment)'
+    ]) {
+        it('preserves complex Media & Text backgrounds: ' + style, function() {
+            const html = block(image, style);
+
+            assert.strictEqual(cleanHtml(html).html, html);
+        });
+    }
+
+    it('preserves generic image backgrounds without the WordPress image fill contract', function() {
+        for (const html of [
+            block(image).replace('wp-block-media-text alignwide', 'custom-media alignwide'),
+            block(image).replace(' is-image-fill', ''),
+            block(image).replace('wp-block-media-text__media', 'custom-media__image')
+        ]) {
+            assert.strictEqual(cleanHtml(html).html, html);
+        }
+    });
+
+    it('preserves a Cover whose image exists only in the background', function() {
+        const html = '<div class="wp-block-cover is-light has-parallax">' +
+            '<span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span>' +
+            '<div role="img" class="wp-block-cover__image-background" style="' + background + '"></div>' +
+            '<div class="wp-block-cover__inner-container"><p class="align-center">Cover</p></div></div>';
+
+        assert.strictEqual(cleanHtml(html).html, html);
     });
 });
 
