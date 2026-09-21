@@ -5,33 +5,41 @@
             'sidebar-sync-in-progress': syncInProgress
         }">
 
-        <a
-            href="#"
-            class="sidebar-preview-link"
-            @click="renderPreview">
-            {{ $t('sync.previewChanges') }}
-        </a>
+        <div class="sidebar-preview-actions">
+            <button
+                type="button"
+                class="sidebar-preview-control sidebar-preview-trigger"
+                @click="renderPreview">
+                {{ $t('sync.previewSite') }}
+            </button>
 
-        <p class="sidebar-local-preview">
-            <template v-if="localPreviewIsRunning">
-                <span class="sidebar-local-preview-status">
-                    {{ $t('localPreview.serverIsRunning') }}
+            <button
+                type="button"
+                class="sidebar-preview-control sidebar-preview-settings"
+                :aria-label="$t('localPreview.settings')"
+                aria-haspopup="dialog"
+                v-tooltip="{
+                    title: $t('localPreview.settings'),
+                    text: localPreviewIsRunning
+                        ? $t('localPreview.serverIsRunning')
+                        : $t('localPreview.serverStopped'),
+                    offsetX: '75%'
+                }"
+                @click="showLocalPreviewPopup">
+                <span
+                    class="sidebar-preview-settings-icon"
+                    aria-hidden="true">
+                    <icon
+                        name="settings"
+                        custom-width="18"
+                        custom-height="18"
+                        non-interactive />
+                    <span
+                        v-if="localPreviewIsRunning"
+                        class="sidebar-preview-running-indicator"></span>
                 </span>
-                <a
-                    href="#"
-                    class="sidebar-local-preview-link"
-                    @click.prevent="showLocalPreviewPopup">
-                    {{ $t('localPreview.manage') }}
-                </a>
-            </template>
-            <a
-                v-else
-                href="#"
-                class="sidebar-local-preview-link"
-                @click.prevent="showLocalPreviewPopup">
-                {{ $t('localPreview.settings') }}
-            </a>
-        </p>
+            </button>
+        </div>
 
         <a
             v-if="$store.state.app.config.enableAdvancedPreview"
@@ -360,42 +368,106 @@ export default {
     }
 }
 
-.sidebar-local-preview {
-    color: var(--sidebar-link-color);
-    font-size: var(--font-size-ui-xs);
-    letter-spacing: -.025em;
-    margin: -.4rem 0 var(--space-4);
+.sidebar-preview-actions {
+    background: transparent;
+    border: 2px solid var(--sidebar-preview-btn-border-color);
+    border-radius: var(--radius-base);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) calc(var(--button-height-sidebar) - 4px);
+    isolation: isolate;
+    margin-bottom: var(--space-4);
+    min-height: var(--button-height-sidebar);
+    transition: var(--transition-default);
+    transition-property: background-color, border-color;
+
+    &:has(.sidebar-preview-trigger:hover) {
+        background-color: var(--sidebar-link-bg-hover);
+        border-color: var(--sidebar-preview-btn-border-color-hover);
+    }
+
+    &:has(.sidebar-preview-trigger:active) {
+        background-color: var(--sidebar-link-bg-active);
+    }
+}
+
+.sidebar-preview-control {
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: var(--sidebar-preview-btn-color);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
+    justify-content: center;
+    min-height: calc(var(--button-height-sidebar) - 4px);
+    min-width: 0;
+    position: relative;
+    transition: var(--transition-default);
+    transition-property: background-color, color;
+
+    &:hover {
+        color: var(--sidebar-preview-btn-color-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--sidebar-link-color);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+}
+
+.sidebar-preview-trigger {
+    border-radius: calc(var(--radius-base) - 2px) 0 0 calc(var(--radius-base) - 2px);
+    overflow-wrap: anywhere;
+    padding: .6rem var(--button-padding-inline);
     text-align: center;
 }
 
-.sidebar-local-preview-status {
-    opacity: var(--sidebar-link-opacity);
+.sidebar-preview-settings {
+    border-radius: 0 calc(var(--radius-base) - 2px) calc(var(--radius-base) - 2px) 0;
+    padding: 0;
 
-    &::before {
-        background: var(--color-success);
-        border-radius: 50%;
-        content: "";
-        display: inline-block;
-        height: .6rem;
-        margin-right: var(--space-1);
-        width: .6rem;
+    &:hover {
+        background-color: var(--sidebar-link-bg-hover);
     }
 
-    &::after {
-        content: "\00b7";
-        margin: 0 var(--space-1);
+    &:active {
+        background-color: var(--sidebar-link-bg-active);
+    }
+
+    &::before {
+        background: var(--sidebar-preview-btn-border-color);
+        bottom: var(--space-4);
+        content: "";
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        top: var(--space-4);
+        width: 1px;
     }
 }
 
-.sidebar-local-preview-link {
-    color: var(--sidebar-link-color);
-    opacity: var(--sidebar-link-opacity);
-    text-decoration: underline;
+.sidebar-preview-settings-icon {
+    display: inline-flex;
+    position: relative;
+}
 
-    &:hover,
-    &:focus {
-        color: var(--sidebar-link-color-hover);
-        opacity: 1;
+.sidebar-preview-running-indicator {
+    background: var(--color-success);
+    border-radius: 50%;
+    height: .6rem;
+    position: absolute;
+    right: calc(-1 * var(--space-2));
+    top: calc(-1 * var(--space-1));
+    width: .6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sidebar-preview-actions,
+    .sidebar-preview-control {
+        transition: none;
     }
 }
 

@@ -3,17 +3,32 @@
         v-if="isVisible"
         class="overlay">
         <div
-            class="popup"
+            ref="dialog"
+            class="popup local-preview-popup"
             role="dialog"
             aria-modal="true"
-            :aria-label="$t('localPreview.title')">
-            <h2>{{ $t('localPreview.title') }}</h2>
+            aria-labelledby="local-preview-title"
+            tabindex="-1">
+            <header class="local-preview-header">
+                <h2 id="local-preview-title">{{ $t('localPreview.title') }}</h2>
+            </header>
 
             <div class="local-preview-content">
-                <section class="local-preview-section">
-                    <h3>{{ $t('localPreview.server') }}</h3>
+                <section
+                    class="local-preview-section"
+                    aria-labelledby="local-preview-server-title">
+                    <h3 id="local-preview-server-title">
+                        <icon
+                            name="local-preview-server"
+                            size="s"
+                            non-interactive
+                            aria-hidden="true" />
+                        {{ $t('localPreview.server') }}
+                    </h3>
 
-                    <div class="local-preview-row">
+                    <div
+                        class="local-preview-row"
+                        :class="{ 'is-stopped': !isRunning }">
                         <p
                             :class="{ 'local-preview-status': true, 'is-running': isRunning }"
                             role="status">
@@ -26,10 +41,17 @@
                             </template>
                         </p>
 
+                        <p
+                            v-if="!isRunning"
+                            class="local-preview-note">
+                            {{ $t('localPreview.serverStoppedInfo') }}
+                        </p>
+
                         <p-button
                             v-if="isRunning"
                             appearance="outline"
                             size="small"
+                            loading-layout="overlay"
                             :loading="isStopping"
                             :disabled="isStopping"
                             :onClick="stopServer">
@@ -43,57 +65,65 @@
                         {{ $t('localPreview.portWasBusy', { requestedPort: localPreview.requestedPort, port: localPreview.port }) }}
                     </p>
 
-                    <p
-                        v-if="!isRunning"
-                        class="local-preview-note">
-                        {{ $t('localPreview.serverStoppedInfo') }}
-                    </p>
+                    <div class="local-preview-port">
+                        <label
+                            class="local-preview-label"
+                            for="local-preview-port">
+                            {{ $t('localPreview.port') }}
+                        </label>
 
-                    <label
-                        class="local-preview-label"
-                        for="local-preview-port">
-                        {{ $t('localPreview.port') }}
-                    </label>
+                        <div class="local-preview-port-controls">
+                            <text-input
+                                id="local-preview-port"
+                                type="number"
+                                size="small"
+                                min="1024"
+                                max="65535"
+                                step="1"
+                                v-model="port"
+                                :disabled="isRunning || isSavingPort"
+                                :invalid="portError !== ''"
+                                :spellcheck="false"
+                                :ariaDescribedby="portError ? 'local-preview-port-note local-preview-port-error' : 'local-preview-port-note'" />
 
-                    <div class="local-preview-row">
-                        <text-input
-                            id="local-preview-port"
-                            type="number"
-                            min="1024"
-                            max="65535"
-                            step="1"
-                            v-model="port"
-                            :disabled="isRunning || isSavingPort"
-                            :invalid="portError !== ''"
-                            :spellcheck="false"
-                            ariaDescribedby="local-preview-port-note" />
+                            <p-button
+                                intent="primary"
+                                size="small"
+                                loading-layout="overlay"
+                                :loading="isSavingPort"
+                                :disabled="isRunning || isSavingPort || !portWasChanged"
+                                :onClick="savePort">
+                                {{ $t('localPreview.savePort') }}
+                            </p-button>
+                        </div>
 
-                        <p-button
-                            intent="primary"
-                            size="small"
-                            :loading="isSavingPort"
-                            :disabled="isRunning || isSavingPort || !portWasChanged"
-                            :onClick="savePort">
-                            {{ $t('localPreview.savePort') }}
-                        </p-button>
+                        <p
+                            v-if="portError"
+                            id="local-preview-port-error"
+                            class="local-preview-note is-error"
+                            role="alert">
+                            {{ portError }}
+                        </p>
+
+                        <p
+                            id="local-preview-port-note"
+                            class="local-preview-note">
+                            {{ isRunning ? $t('localPreview.portLockedInfo') : $t('localPreview.portInfo') }}
+                        </p>
                     </div>
-
-                    <p
-                        v-if="portError"
-                        class="local-preview-note is-error"
-                        role="alert">
-                        {{ portError }}
-                    </p>
-
-                    <p
-                        id="local-preview-port-note"
-                        class="local-preview-note">
-                        {{ isRunning ? $t('localPreview.portLockedInfo') : $t('localPreview.portInfo') }}
-                    </p>
                 </section>
 
-                <section class="local-preview-section">
-                    <h3>{{ $t('localPreview.activePreviews') }}</h3>
+                <section
+                    class="local-preview-section"
+                    aria-labelledby="local-preview-active-title">
+                    <h3 id="local-preview-active-title">
+                        <icon
+                            name="full-preview-monitor"
+                            size="s"
+                            non-interactive
+                            aria-hidden="true" />
+                        {{ $t('localPreview.activePreviews') }}
+                    </h3>
 
                     <p
                         v-if="!activePreviews.length"
@@ -107,19 +137,27 @@
                         <li
                             v-for="preview in activePreviews"
                             :key="'active-preview-' + preview.name"
-                            class="local-preview-list-item">
-                            <span class="local-preview-list-name">{{ preview.displayName }}</span>
-
-                            <a
-                                href="#"
-                                class="local-preview-list-url"
-                                @click.prevent="openPreview(preview.url)">
-                                {{ preview.url }}/
-                            </a>
+                            class="local-preview-list-item local-preview-active-item">
+                            <div class="local-preview-site">
+                                <span class="local-preview-list-name">{{ preview.displayName }}</span>
+                                <a
+                                    href="#"
+                                    class="local-preview-list-url"
+                                    @click.prevent="openPreview(preview.url)">
+                                    {{ preview.url }}/
+                                    <icon
+                                        name="external-link"
+                                        size="xxs"
+                                        non-interactive
+                                        aria-hidden="true" />
+                                </a>
+                            </div>
 
                             <p-button
                                 appearance="outline"
                                 size="small"
+                                loading-layout="overlay"
+                                :loading="busySite === preview.name"
                                 :disabled="busySite === preview.name"
                                 :onClick="disablePreview.bind(this, preview.name)">
                                 {{ $t('localPreview.disablePreview') }}
@@ -128,8 +166,17 @@
                     </ul>
                 </section>
 
-                <section class="local-preview-section">
-                    <h3>{{ $t('localPreview.previewFiles') }}</h3>
+                <section
+                    class="local-preview-section"
+                    aria-labelledby="local-preview-files-title">
+                    <h3 id="local-preview-files-title">
+                        <icon
+                            name="folder"
+                            size="s"
+                            non-interactive
+                            aria-hidden="true" />
+                        {{ $t('localPreview.previewFiles') }}
+                    </h3>
 
                     <p class="local-preview-note">
                         {{ $t('localPreview.previewFilesInfo') }}
@@ -147,20 +194,28 @@
                                 type="button"
                                 class="local-preview-summary-toggle"
                                 :aria-expanded="filesAreExpanded ? 'true' : 'false'"
-                                :aria-controls="filesAreExpanded ? 'local-preview-files' : null"
+                                aria-controls="local-preview-files"
                                 @click="filesAreExpanded = !filesAreExpanded">
-                                <template v-if="allSizesAreKnown">
-                                    {{ $t('localPreview.previewFilesSummary', { count: previewFiles.length, size: formatBytes(totalSize) }) }}
-                                </template>
-                                <template v-else>
-                                    {{ $t('localPreview.previewFilesCount', { count: previewFiles.length }) }}
-                                </template>
+                                <icon
+                                    name="arrow-down"
+                                    size="xs"
+                                    non-interactive
+                                    aria-hidden="true" />
+                                <span>
+                                    <template v-if="allSizesAreKnown">
+                                        {{ $t('localPreview.previewFilesSummary', { count: previewFiles.length, size: formatBytes(totalSize) }) }}
+                                    </template>
+                                    <template v-else>
+                                        {{ $t('localPreview.previewFilesCount', { count: previewFiles.length }) }}
+                                    </template>
+                                </span>
                             </button>
 
                             <p-button
                                 v-if="!allSizesAreKnown"
                                 appearance="outline"
                                 size="small"
+                                loading-layout="overlay"
                                 :loading="isCheckingSizes"
                                 :disabled="isCheckingSizes"
                                 :onClick="checkSizes">
@@ -169,17 +224,41 @@
                         </div>
 
                         <div
-                            v-if="filesAreExpanded"
+                            v-show="filesAreExpanded"
                             id="local-preview-files">
-                            <p class="local-preview-note">
+                            <div class="local-preview-search">
+                                <label
+                                    class="local-preview-label"
+                                    for="local-preview-search">
+                                    {{ $t('localPreview.filterWebsites') }}
+                                </label>
+                                <text-input
+                                    id="local-preview-search"
+                                    type="search"
+                                    icon="magnifier"
+                                    v-model="filesSearch"
+                                    :placeholder="$t('localPreview.filterWebsitesPlaceholder')"
+                                    :spellcheck="false" />
+                            </div>
+
+                            <p class="local-preview-note local-preview-files-note">
                                 {{ $t('localPreview.clearPreviewInfo') }}
                             </p>
 
-                            <ul class="local-preview-list">
+                            <p
+                                v-if="!filteredPreviewFiles.length"
+                                class="local-preview-empty"
+                                role="status">
+                                {{ $t('localPreview.noMatchingWebsites') }}
+                            </p>
+
+                            <ul
+                                v-else
+                                class="local-preview-list local-preview-files-list">
                                 <li
-                                    v-for="item in previewFiles"
+                                    v-for="item in filteredPreviewFiles"
                                     :key="'preview-files-' + item.name"
-                                    class="local-preview-list-item">
+                                    class="local-preview-list-item local-preview-file-item">
                                     <span class="local-preview-list-name">{{ item.displayName }}</span>
 
                                     <span
@@ -197,6 +276,8 @@
                                     <p-button
                                         appearance="outline"
                                         size="small"
+                                        loading-layout="overlay"
+                                        :loading="busySite === item.name"
                                         :disabled="busySite === item.name"
                                         :onClick="askForClearing.bind(this, item)">
                                         {{ $t('localPreview.clearPreview') }}
@@ -237,6 +318,7 @@ export default {
             filesAreLoaded: false,
             filesRequestID: 0,
             filesAreExpanded: false,
+            filesSearch: '',
             isCheckingSizes: false,
             checkedSite: '',
             sizesCheckID: 0,
@@ -283,6 +365,17 @@ export default {
                 }))
                 .sort((itemA, itemB) => itemA.displayName.localeCompare(itemB.displayName));
         },
+        filteredPreviewFiles () {
+            let query = this.filesSearch.trim().toLocaleLowerCase();
+
+            if (!query) {
+                return this.previewFiles;
+            }
+
+            return this.previewFiles.filter(file => {
+                return file.displayName.toLocaleLowerCase().includes(query);
+            });
+        },
         allSizesAreKnown () {
             return this.files.length > 0 && this.files.every(file => file.size !== null);
         },
@@ -310,24 +403,64 @@ export default {
     },
     methods: {
         show () {
+            this.returnFocusTo = document.activeElement;
             this.port = String(this.savedPort);
             this.portError = '';
             this.files = [];
             this.filesAreLoaded = false;
             this.filesAreExpanded = false;
+            this.filesSearch = '';
             this.isVisible = true;
             document.body.classList.add('has-popup-visible');
             this.loadFiles();
+            this.$nextTick(() => {
+                if (this.$refs.dialog) {
+                    this.$refs.dialog.focus();
+                }
+            });
         },
         hide () {
             this.isVisible = false;
             this.stopCheckingSizes();
             document.body.classList.remove('has-popup-visible');
+            this.$nextTick(() => {
+                if (this.returnFocusTo && this.returnFocusTo.isConnected) {
+                    this.returnFocusTo.focus();
+                }
+
+                this.returnFocusTo = null;
+            });
         },
         onDocumentKeyDown (e) {
-            // A dialog displayed over this popup (i.e. the confirmation of clearing) handles the key on its own
-            if (this.isVisible && e.key === 'Escape' && document.querySelectorAll('.overlay').length === 1) {
+            // Let a confirmation displayed over this popup manage its own keyboard focus.
+            if (!this.isVisible || e.defaultPrevented || e.isComposing || document.querySelectorAll('.overlay').length !== 1) {
+                return;
+            }
+
+            if (e.key === 'Escape') {
+                e.preventDefault();
                 this.hide();
+                return;
+            }
+
+            if (e.key !== 'Tab') {
+                return;
+            }
+
+            let dialog = this.$refs.dialog;
+            let controls = Array.from(dialog.querySelectorAll('button:not(:disabled), input:not(:disabled), a[href]'))
+                .filter(control => control.getClientRects().length > 0);
+            let first = controls[0];
+            let last = controls[controls.length - 1];
+            let activeElement = document.activeElement;
+            let focusIsOutside = !controls.includes(activeElement);
+
+            if (e.shiftKey && (activeElement === first || focusIsOutside)) {
+                e.preventDefault();
+                (last || dialog).focus();
+            } else if (!e.shiftKey && (activeElement === last || focusIsOutside)) {
+                e.preventDefault();
+                (first || dialog).focus();
             }
         },
         getDisplayName (siteName) {
@@ -454,6 +587,7 @@ export default {
             }
 
             this.$bus.$emit('confirm-display', {
+                dialogLabel: this.$t('localPreview.clearPreviewTitle'),
                 message: message,
                 isDanger: true,
                 okLabel: this.$t('localPreview.clearPreview'),
@@ -505,50 +639,92 @@ export default {
 <style scoped>
 @import '../css/popup-common.css';
 
-.popup {
-    max-width: 72rem;
-    min-width: 72rem;
-    padding: var(--space-16);
+.local-preview-popup {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - var(--space-8) * 2);
+    max-width: 76rem;
+    min-width: 0;
+    outline: none;
+    padding: 0;
+    width: calc(100vw - var(--space-8) * 2);
 }
 
-h2 {
-    margin: 0 0 var(--space-8);
-}
+.local-preview-header {
+    flex-shrink: 0;
+    padding: var(--space-8) var(--space-12);
 
-h3 {
-    color: var(--headings-color);
-    font-size: var(--font-size-ui-md);
-    font-weight: var(--font-weight-semibold);
-    margin: 0 0 var(--space-4);
+    h2 {
+        margin: 0;
+    }
 }
 
 .local-preview-content {
-    max-height: calc(100vh - 32rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--space-8) var(--space-8);
+    scrollbar-gutter: stable both-edges;
     text-align: left;
     user-select: text;
 }
 
 .local-preview-section {
-    border-top: 1px solid var(--border-light-color);
-    padding: var(--space-6) 0;
+    background: var(--popup-bg);
+    border: 1px solid var(--border-light-color);
+    border-radius: var(--radius-base);
+    flex-shrink: 0;
+    min-width: 0;
+    padding: var(--space-6);
 
-    &:first-child {
-        border-top: none;
-        padding-top: 0;
+    h3 {
+        align-items: center;
+        color: var(--headings-color);
+        display: flex;
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-semibold);
+        gap: var(--space-3);
+        margin: 0 0 var(--space-4);
+
+        .icon {
+            color: var(--icon-secondary-color);
+            fill: currentColor;
+            flex-shrink: 0;
+        }
     }
 }
 
-.local-preview-row {
+.local-preview-row,
+.local-preview-port-controls {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-4);
+}
+
+.local-preview-row {
     justify-content: space-between;
+
+    &.is-stopped {
+        align-items: baseline;
+        display: grid;
+        gap: var(--space-6);
+        grid-template-columns: max-content minmax(0, 1fr);
+
+        .local-preview-note {
+            margin: 0;
+        }
+    }
 }
 
 .local-preview-status {
     color: var(--text-primary-color);
     margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
 
     &::before {
         background: var(--color-text-faint);
@@ -570,17 +746,25 @@ h3 {
     font-size: var(--font-size-ui-sm);
 }
 
+.local-preview-port {
+    border-top: 1px solid var(--border-light-color);
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+}
+
 .local-preview-label {
     color: var(--label-color);
     display: block;
     font-size: var(--font-size-ui-sm);
-    margin: var(--space-6) 0 var(--space-2);
+    margin-bottom: var(--space-3);
 }
 
 .local-preview-note {
     color: var(--text-light-color);
     font-size: var(--font-size-ui-sm);
-    margin: var(--space-2) 0 0;
+    line-height: var(--line-height-base);
+    margin: var(--space-3) 0 0;
+    overflow-wrap: anywhere;
 
     &.is-warning {
         color: var(--color-warning);
@@ -593,17 +777,13 @@ h3 {
 
 .local-preview-summary {
     align-items: center;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-light-color);
+    background: var(--color-surface-subtle);
     border-radius: var(--radius-base);
     display: flex;
-    gap: var(--space-4);
-    margin-top: var(--space-4);
-    padding: var(--space-2) var(--space-4);
-
-    &:hover {
-        border-color: var(--color-border-default);
-    }
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding: var(--space-3);
 }
 
 .local-preview-summary-toggle {
@@ -614,34 +794,43 @@ h3 {
     color: var(--text-primary-color);
     cursor: pointer;
     display: flex;
-    flex: 1 1 0;
-    font-family: var(--font-family-sans);
-    font-size: var(--font-size-ui-md);
-    font-weight: var(--font-weight-medium);
-    min-height: 3.2rem;
-    padding: 0;
+    flex: 1 1 20rem;
+    font: var(--font-weight-medium) var(--font-size-ui-sm)/var(--line-height-base) var(--font-family-sans);
+    gap: var(--space-3);
+    min-height: var(--button-height-small);
+    min-width: 0;
+    padding: var(--space-2);
     text-align: left;
 
-    &::before {
-        border-bottom: 2px solid currentColor;
-        border-right: 2px solid currentColor;
-        content: "";
+    .icon {
+        color: var(--icon-secondary-color);
+        fill: currentColor;
         flex-shrink: 0;
-        height: .7rem;
-        margin: 0 var(--space-4) 0 var(--space-1);
-        transform: rotate(-45deg);
-        transition: var(--transition-default);
-        width: .7rem;
+        stroke: currentColor;
+        stroke-width: 2;
+        transform: rotate(-90deg);
     }
 
-    &[aria-expanded="true"]::before {
-        transform: rotate(45deg);
+    &[aria-expanded="true"] .icon {
+        transform: rotate(0);
+    }
+
+    &:hover {
+        background: var(--color-control-surface-hover);
     }
 
     &:focus-visible {
-        box-shadow: var(--input-shadow-focus);
-        outline: none;
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
     }
+}
+
+.local-preview-search {
+    margin-top: var(--space-6);
+}
+
+.local-preview-files-note {
+    margin-bottom: var(--space-4);
 }
 
 .local-preview-list {
@@ -653,47 +842,130 @@ h3 {
 .local-preview-list-item {
     align-items: center;
     border-bottom: 1px solid var(--border-light-color);
-    display: flex;
     gap: var(--space-4);
-    padding: var(--space-2) 0;
+    padding: var(--space-4) 0;
 
     &:last-child {
         border-bottom: none;
+        padding-bottom: 0;
     }
+}
 
+.local-preview-active-item {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 0;
+
+    & + & {
+        padding-top: var(--space-4);
+    }
+}
+
+.local-preview-site {
+    flex: 1 1 22rem;
+    min-width: 0;
 }
 
 .local-preview-list-name {
     color: var(--text-primary-color);
-    flex: 1 1 0;
+    display: block;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .local-preview-list-url {
     color: var(--link-primary-color);
-    flex: 2 1 0;
+    display: inline-block;
     font-family: var(--font-family-mono);
     font-size: var(--font-size-ui-sm);
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    margin-top: var(--space-1);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+
+    .icon {
+        fill: currentColor;
+        margin-left: var(--space-1);
+        vertical-align: middle;
+    }
+
+    &:focus-visible {
+        border-radius: var(--radius-base);
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+}
+
+.local-preview-file-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
 .local-preview-list-size {
     color: var(--text-light-color);
     font-size: var(--font-size-ui-sm);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
     white-space: nowrap;
+}
+
+.local-preview-empty {
+    color: var(--text-light-color);
+    font-size: var(--font-size-ui-sm);
+    margin: 0;
+    padding: var(--space-6) 0;
+    text-align: center;
+}
+
+.local-preview-popup .button {
+    flex-shrink: 0;
+    height: auto;
+    max-width: 100%;
+    min-height: var(--button-height-small);
+    overflow-wrap: anywhere;
+    padding-block: var(--space-1);
+    white-space: normal;
 }
 
 .buttons {
     display: flex;
-    margin: var(--space-8) -4rem -4rem -4rem;
-    position: relative;
+    flex-shrink: 0;
+    margin: 0;
     text-align: center;
-    top: 1px;
+
+    .button {
+        min-height: var(--button-height-large);
+    }
+}
+
+@media (max-width: 520px) {
+    .local-preview-popup {
+        max-height: calc(100vh - var(--space-4) * 2);
+        width: calc(100vw - var(--space-4) * 2);
+    }
+
+    .local-preview-header {
+        padding: var(--space-6);
+    }
+
+    .local-preview-content {
+        padding: 0 var(--space-4) var(--space-4);
+    }
+
+    .local-preview-row.is-stopped {
+        gap: var(--space-2);
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .local-preview-file-item {
+        grid-template-columns: minmax(0, 1fr) auto;
+
+        .local-preview-list-name {
+            grid-column: 1 / -1;
+        }
+
+        .local-preview-list-size {
+            text-align: left;
+        }
+    }
 }
 </style>
