@@ -287,6 +287,125 @@
                         </div>
                     </template>
                 </section>
+
+                <section
+                    class="local-preview-section"
+                    aria-labelledby="local-preview-file-types-title">
+                    <h3 id="local-preview-file-types-title">
+                        <icon
+                            name="file-manager"
+                            size="s"
+                            non-interactive
+                            aria-hidden="true" />
+                        {{ $t('localPreview.fileTypes') }}
+                    </h3>
+
+                    <p class="local-preview-note">
+                        {{ $t('localPreview.fileTypesInfo') }}
+                    </p>
+
+                    <div class="local-preview-summary">
+                        <button
+                            type="button"
+                            class="local-preview-summary-toggle"
+                            :aria-expanded="fileTypesAreExpanded ? 'true' : 'false'"
+                            aria-controls="local-preview-file-types"
+                            @click="fileTypesAreExpanded = !fileTypesAreExpanded">
+                            <icon
+                                name="arrow-down"
+                                size="xs"
+                                non-interactive
+                                aria-hidden="true" />
+                            <span>
+                                {{ $t('localPreview.fileTypesSummary', { builtIn: builtInMimeTypes.length, custom: customMimeTypes.length }) }}
+                            </span>
+                        </button>
+                    </div>
+
+                    <div
+                        v-show="fileTypesAreExpanded"
+                        id="local-preview-file-types">
+                        <ul
+                            v-if="customMimeTypes.length"
+                            class="local-preview-list local-preview-file-types-list">
+                            <li
+                                v-for="item in customMimeTypes"
+                                :key="'file-type-' + item.extension"
+                                class="local-preview-list-item local-preview-file-type-item">
+                                <span class="local-preview-list-extension">{{ item.extension }}</span>
+                                <span class="local-preview-list-mime-type">{{ item.mimeType }}</span>
+
+                                <p-button
+                                    appearance="outline"
+                                    size="small"
+                                    loading-layout="overlay"
+                                    :disabled="isSavingMimeTypes"
+                                    :onClick="removeMimeType.bind(this, item.extension)">
+                                    {{ $t('localPreview.removeFileType') }}
+                                </p-button>
+                            </li>
+                        </ul>
+
+                        <div class="local-preview-file-type-form">
+                            <div>
+                                <label
+                                    class="local-preview-label"
+                                    for="local-preview-file-extension">
+                                    {{ $t('localPreview.fileTypeExtension') }}
+                                </label>
+                                <text-input
+                                    id="local-preview-file-extension"
+                                    size="small"
+                                    placeholder=".zip"
+                                    v-model="newExtension"
+                                    :disabled="isSavingMimeTypes"
+                                    :invalid="mimeTypeErrorField === 'extension'"
+                                    :spellcheck="false"
+                                    :ariaDescribedby="mimeTypeError ? 'local-preview-file-type-error' : ''" />
+                            </div>
+
+                            <div>
+                                <label
+                                    class="local-preview-label"
+                                    for="local-preview-file-mime-type">
+                                    {{ $t('localPreview.fileTypeMimeType') }}
+                                </label>
+                                <text-input
+                                    id="local-preview-file-mime-type"
+                                    size="small"
+                                    placeholder="application/zip"
+                                    v-model="newMimeType"
+                                    :disabled="isSavingMimeTypes"
+                                    :invalid="mimeTypeErrorField === 'mimeType'"
+                                    :spellcheck="false"
+                                    :ariaDescribedby="mimeTypeError ? 'local-preview-file-type-error' : ''" />
+                            </div>
+
+                            <p-button
+                                intent="primary"
+                                size="small"
+                                loading-layout="overlay"
+                                :loading="isSavingMimeTypes"
+                                :disabled="isSavingMimeTypes || !newExtension.trim() || !newMimeType.trim()"
+                                :onClick="addMimeType">
+                                {{ $t('localPreview.addFileType') }}
+                            </p-button>
+                        </div>
+
+                        <p
+                            v-if="mimeTypeError"
+                            id="local-preview-file-type-error"
+                            class="local-preview-note is-error"
+                            role="alert">
+                            {{ mimeTypeError }}
+                        </p>
+
+                        <p class="local-preview-note">
+                            {{ $t('localPreview.builtInFileTypes') }}
+                            <span class="local-preview-extensions">{{ builtInExtensions }}</span>
+                        </p>
+                    </div>
+                </section>
             </div>
 
             <div class="buttons">
@@ -325,7 +444,15 @@ export default {
             busySite: '',
             port: String(DEFAULT_PORT),
             portError: '',
-            files: [] // websites with preview files: { name, size } - size is null until it is checked
+            files: [], // websites with preview files: { name, size } - size is null until it is checked
+            fileTypesAreExpanded: false,
+            isSavingMimeTypes: false,
+            builtInMimeTypes: [], // always served: { extension, mimeType }
+            customMimeTypes: [], // added by the user: { extension, mimeType }
+            newExtension: '',
+            newMimeType: '',
+            mimeTypeError: '',
+            mimeTypeErrorField: ''
         };
     },
     computed: {
@@ -376,6 +503,9 @@ export default {
                 return file.displayName.toLocaleLowerCase().includes(query);
             });
         },
+        builtInExtensions () {
+            return this.builtInMimeTypes.map(item => item.extension).join(', ');
+        },
         allSizesAreKnown () {
             return this.files.length > 0 && this.files.every(file => file.size !== null);
         },
@@ -384,6 +514,11 @@ export default {
         }
     },
     watch: {
+        '$store.state.app.config.previewServerMimeTypes' () {
+            if (this.isVisible && !this.isSavingMimeTypes) {
+                this.loadMimeTypes();
+            }
+        },
         savedPort (newPort) {
             if (!this.isSavingPort) {
                 this.port = String(newPort);
@@ -410,9 +545,15 @@ export default {
             this.filesAreLoaded = false;
             this.filesAreExpanded = false;
             this.filesSearch = '';
+            this.fileTypesAreExpanded = false;
+            this.newExtension = '';
+            this.newMimeType = '';
+            this.mimeTypeError = '';
+            this.mimeTypeErrorField = '';
             this.isVisible = true;
             document.body.classList.add('has-popup-visible');
             this.loadFiles();
+            this.loadMimeTypes();
             this.$nextTick(() => {
                 if (this.$refs.dialog) {
                     this.$refs.dialog.focus();
@@ -515,6 +656,59 @@ export default {
             this.sizesCheckID++;
             this.isCheckingSizes = false;
             this.checkedSite = '';
+        },
+        async loadMimeTypes () {
+            let mimeTypes = await mainProcessAPI.invoke('app-local-preview:get-mime-types');
+
+            this.builtInMimeTypes = mimeTypes && Array.isArray(mimeTypes.builtIn) ? mimeTypes.builtIn : [];
+            this.customMimeTypes = mimeTypes && Array.isArray(mimeTypes.custom) ? mimeTypes.custom : [];
+        },
+        addMimeType () {
+            let mimeTypes = this.customMimeTypes.concat([{
+                extension: this.newExtension,
+                mimeType: this.newMimeType
+            }]);
+
+            return this.saveMimeTypes(mimeTypes, true);
+        },
+        removeMimeType (extension) {
+            return this.saveMimeTypes(this.customMimeTypes.filter(item => item.extension !== extension), false);
+        },
+        // The whole list is always sent - the main process checks it, saves it and applies it to the working server
+        async saveMimeTypes (mimeTypes, isAdding) {
+            this.mimeTypeError = '';
+            this.mimeTypeErrorField = '';
+            this.isSavingMimeTypes = true;
+
+            try {
+                let result = await mainProcessAPI.invoke('app-local-preview:set-mime-types', mimeTypes);
+
+                if (result && result.status === true) {
+                    this.customMimeTypes = result.mimeTypes;
+                    this.$store.commit('setAppConfig', { previewServerMimeTypes: result.mimeTypes });
+
+                    if (isAdding) {
+                        this.newExtension = '';
+                        this.newMimeType = '';
+                    }
+
+                    return;
+                }
+
+                let errors = {
+                    'invalid-extension': ['extension', 'localPreview.fileTypeInvalidExtension'],
+                    'built-in-extension': ['extension', 'localPreview.fileTypeBuiltIn'],
+                    'duplicated-extension': ['extension', 'localPreview.fileTypeDuplicated'],
+                    'invalid-mime-type': ['mimeType', 'localPreview.fileTypeInvalidMimeType'],
+                    'too-many': ['', 'localPreview.fileTypeTooMany']
+                };
+                let error = errors[result && result.reason] || ['', 'localPreview.fileTypesSaveError'];
+
+                this.mimeTypeErrorField = isAdding ? error[0] : '';
+                this.mimeTypeError = this.$t(error[1]);
+            } finally {
+                this.isSavingMimeTypes = false;
+            }
         },
         async stopServer () {
             this.isStopping = true;
@@ -900,6 +1094,42 @@ export default {
     grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
+.local-preview-file-types-list {
+    margin-top: var(--space-4);
+}
+
+.local-preview-file-type-item {
+    display: grid;
+    grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr) auto;
+}
+
+.local-preview-list-extension,
+.local-preview-list-mime-type,
+.local-preview-extensions {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-ui-sm);
+}
+
+.local-preview-list-extension {
+    color: var(--text-primary-color);
+}
+
+.local-preview-list-mime-type {
+    color: var(--text-light-color);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.local-preview-file-type-form {
+    align-items: end;
+    border-top: 1px solid var(--border-light-color);
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+}
+
 .local-preview-list-size {
     color: var(--text-light-color);
     font-size: var(--font-size-ui-sm);
@@ -953,6 +1183,10 @@ export default {
 
     .local-preview-row.is-stopped {
         gap: var(--space-2);
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .local-preview-file-type-form {
         grid-template-columns: minmax(0, 1fr);
     }
 

@@ -14,6 +14,8 @@ describe('Local preview files IPC', function () {
     let disabledPreviews;
     let sizeChecks;
     let pendingSizeCheck;
+    let appliedMimeTypes;
+    let configNotifications;
 
     // Results come from another realm, so they are compared as plain data
     function plain (value) {
@@ -37,13 +39,23 @@ describe('Local preview files IPC', function () {
         disabledPreviews = [];
         sizeChecks = [];
         pendingSizeCheck = null;
+        appliedMimeTypes = [];
+        configNotifications = [];
 
         application = {
             sitesDir: sitesDir,
             sites: { 'demo': {}, 'blog': {}, 'empty-preview': {}, 'no-preview': {} },
+            appConfig: { previewServerPort: 3000, previewServerMimeTypes: [] },
+            appConfigPath: path.join(sitesDir, 'app-config.json'),
+            notifyAppConfigChanged (exceptWebContentsId) {
+                configNotifications.push(exceptWebContentsId);
+            },
             previewServer: {
                 async disableSite (siteName) {
                     disabledPreviews.push(siteName);
+                },
+                setCustomMimeTypes (mimeTypes) {
+                    appliedMimeTypes.push(mimeTypes);
                 }
             },
             windowManager: {
@@ -183,6 +195,35 @@ describe('Local preview files IPC', function () {
         assert.deepEqual(disabledPreviews, ['demo']);
         assert.deepEqual(plain(await invoke('app-local-preview:get-files-overview')), [{ name: 'blog', size: null }]);
         assert.deepEqual(broadcasts, [{ channel: 'app-local-preview-files-changed', payload: 'demo' }]);
+    });
+
+    it('saves file types added by the user and applies them to the server', async function () {
+        let result = plain(await invoke('app-local-preview:set-mime-types', [{ extension: 'ZIP', mimeType: 'Application/Zip' }]));
+        let expected = [{ extension: '.zip', mimeType: 'application/zip' }];
+
+        assert.deepEqual(result, { status: true, mimeTypes: expected });
+        assert.deepEqual(fs.readJsonSync(application.appConfigPath).previewServerMimeTypes, expected);
+        assert.deepEqual(plain(appliedMimeTypes), [expected]);
+        assert.deepEqual(configNotifications, [1]);
+        assert.deepEqual(plain(await invoke('app-local-preview:get-mime-types')).custom, expected);
+        assert.ok(plain(await invoke('app-local-preview:get-mime-types')).builtIn.some(item => item.extension === '.html'));
+    });
+
+    it('does not save an invalid list of file types', async function () {
+        for (let mimeTypes of [[{ extension: '../x', mimeType: 'application/zip' }], [{ extension: '.html', mimeType: 'text/plain' }], 'zip', null]) {
+            assert.equal(plain(await invoke('app-local-preview:set-mime-types', mimeTypes)).status, false);
+        }
+
+        assert.equal(fs.existsSync(application.appConfigPath), false);
+        assert.deepEqual(plain(application.appConfig.previewServerMimeTypes), []);
+        assert.deepEqual(appliedMimeTypes, []);
+        assert.deepEqual(configNotifications, []);
+    });
+
+    it('ignores invalid file types stored in the config file', async function () {
+        application.appConfig.previewServerMimeTypes = [{ extension: '.zip', mimeType: 'application/zip' }, { extension: '../x', mimeType: 'x/y' }, null];
+
+        assert.deepEqual(plain(await invoke('app-local-preview:get-mime-types')).custom, [{ extension: '.zip', mimeType: 'application/zip' }]);
     });
 
     it('does not clear preview files during the rendering', async function () {

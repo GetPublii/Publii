@@ -289,7 +289,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-local-preview:set-port',
             'app-local-preview:get-files-overview',
             'app-local-preview:get-size',
-            'app-local-preview:clear'
+            'app-local-preview:clear',
+            'app-local-preview:get-mime-types',
+            'app-local-preview:set-mime-types'
         ];
 
         if (validCommands.includes(command)) {

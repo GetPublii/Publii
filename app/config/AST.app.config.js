@@ -26,6 +26,7 @@ const AstAppConfig = {
     languageType: 'default',
     enableAdvancedPreview: false,
     previewServerPort: 3000,
+    previewServerMimeTypes: [],
     editorFontSize: 18,
     editorFontFamily: 'sans-serif',
     experimentalFeatureAppAutoBeautifySourceCode: false,

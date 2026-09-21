@@ -10,7 +10,8 @@ const DEFAULT_PORT = 3000;
 const MIN_PORT = 1024;
 const MAX_PORT = 65535;
 
-// Only these file types are served - an unknown extension ends with 404, never with a generic MIME type
+// Only these file types and the types added by the user are served - an unknown extension
+// ends with 404, never with a generic MIME type
 const MIME = {
     '.html': 'text/html; charset=utf-8',
     '.htm': 'text/html; charset=utf-8',
@@ -45,6 +46,11 @@ const MIME = {
     '.pdf': 'application/pdf'
 };
 
+// File types added by the user - they extend the list above, but they cannot change it
+const MAX_CUSTOM_MIME_TYPES = 50;
+const EXTENSION_PATTERN = /^\.[a-z0-9][a-z0-9_+-]{0,15}$/;
+const MIME_TYPE_PATTERN = /^[a-z0-9][a-z0-9!#$&^_.+-]{0,63}\/[a-z0-9][a-z0-9!#$&^_.+-]{0,63}$/;
+
 const STATUS_MESSAGES = {
     400: 'Bad Request',
     403: 'Forbidden',
@@ -68,6 +74,7 @@ class PreviewServer extends EventEmitter {
         this.port = null;
         this.requestedPort = null;
         this.sites = new Map();             // siteName -> real path of the preview directory
+        this.customMimeTypes = {};          // extension -> Content-Type of the file types added by the user
         this.queue = Promise.resolve();     // state changes run one by one - previews are requested by many windows
     }
 
@@ -78,6 +85,97 @@ class PreviewServer extends EventEmitter {
     // Port which can be set by the user
     static isValidPort (port) {
         return Number.isInteger(port) && port >= MIN_PORT && port <= MAX_PORT;
+    }
+
+    // File types which are always served: [{ extension, mimeType }]
+    static getBuiltInMimeTypes () {
+        return Object.keys(MIME).map(extension => ({
+            extension: extension,
+            mimeType: MIME[extension].split(';')[0]
+        }));
+    }
+
+    /**
+     * Checks a file type added by the user. The MIME type becomes a value of the Content-Type header
+     * and the extension extends the allow-list, so both have a strict format.
+     *
+     * @param entry - { extension, mimeType }
+     * @returns {object} { status: true, extension, mimeType } or { status: false, reason }
+     */
+    static normalizeMimeType (entry) {
+        if (!entry || typeof entry.extension !== 'string' || typeof entry.mimeType !== 'string') {
+            return { status: false, reason: 'invalid-extension' };
+        }
+
+        let extension = entry.extension.trim().toLowerCase();
+        let mimeType = entry.mimeType.trim().toLowerCase();
+
+        if (extension !== '' && extension[0] !== '.') {
+            extension = '.' + extension;
+        }
+
+        if (!EXTENSION_PATTERN.test(extension)) {
+            return { status: false, reason: 'invalid-extension' };
+        }
+
+        if (Object.prototype.hasOwnProperty.call(MIME, extension)) {
+            return { status: false, reason: 'built-in-extension' };
+        }
+
+        if (!MIME_TYPE_PATTERN.test(mimeType)) {
+            return { status: false, reason: 'invalid-mime-type' };
+        }
+
+        return { status: true, extension: extension, mimeType: mimeType };
+    }
+
+    /**
+     * Checks the whole list of the file types added by the user
+     *
+     * @param mimeTypes - [{ extension, mimeType }]
+     * @returns {object} { status: true, mimeTypes } or { status: false, reason, index } for the first invalid item
+     */
+    static normalizeMimeTypes (mimeTypes) {
+        if (!Array.isArray(mimeTypes)) {
+            return { status: false, reason: 'invalid-list', index: -1 };
+        }
+
+        if (mimeTypes.length > MAX_CUSTOM_MIME_TYPES) {
+            return { status: false, reason: 'too-many', index: MAX_CUSTOM_MIME_TYPES };
+        }
+
+        let normalized = [];
+
+        for (let index = 0; index < mimeTypes.length; index++) {
+            let result = PreviewServer.normalizeMimeType(mimeTypes[index]);
+
+            if (!result.status) {
+                return { status: false, reason: result.reason, index: index };
+            }
+
+            if (normalized.some(item => item.extension === result.extension)) {
+                return { status: false, reason: 'duplicated-extension', index: index };
+            }
+
+            normalized.push({ extension: result.extension, mimeType: result.mimeType });
+        }
+
+        return { status: true, mimeTypes: normalized };
+    }
+
+    // Tolerant version for the values read from the config file - invalid items are skipped
+    static sanitizeMimeTypes (mimeTypes) {
+        let sanitized = [];
+
+        for (let entry of (Array.isArray(mimeTypes) ? mimeTypes : [])) {
+            let result = PreviewServer.normalizeMimeType(entry);
+
+            if (result.status && sanitized.length < MAX_CUSTOM_MIME_TYPES && !sanitized.some(item => item.extension === result.extension)) {
+                sanitized.push({ extension: result.extension, mimeType: result.mimeType });
+            }
+        }
+
+        return sanitized;
     }
 
     // Address of the local preview server
@@ -166,6 +264,22 @@ class PreviewServer extends EventEmitter {
             await this._stop();
             this.emit('state-changed', this.getState());
         });
+    }
+
+    /**
+     * Sets file types added by the user - it works right away, also for the previews which are already enabled
+     *
+     * @param mimeTypes - [{ extension, mimeType }], invalid items are skipped
+     */
+    setCustomMimeTypes (mimeTypes) {
+        let customMimeTypes = {};
+
+        for (let entry of PreviewServer.sanitizeMimeTypes(mimeTypes)) {
+            // Generated websites use UTF-8
+            customMimeTypes[entry.extension] = entry.mimeType.indexOf('text/') === 0 ? entry.mimeType + '; charset=utf-8' : entry.mimeType;
+        }
+
+        this.customMimeTypes = customMimeTypes;
     }
 
     isSiteEnabled (siteName) {
@@ -474,7 +588,12 @@ class PreviewServer extends EventEmitter {
 
     _getMimeType (filePath) {
         let extension = path.extname(filePath).toLowerCase();
-        return Object.prototype.hasOwnProperty.call(MIME, extension) ? MIME[extension] : null;
+
+        if (Object.prototype.hasOwnProperty.call(MIME, extension)) {
+            return MIME[extension];
+        }
+
+        return Object.prototype.hasOwnProperty.call(this.customMimeTypes, extension) ? this.customMimeTypes[extension] : null;
     }
 
     async _stat (filePath) {

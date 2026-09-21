@@ -96,6 +96,8 @@ class PreviewEvents {
         ipcMain.handle('app-local-preview:get-files-overview', () => this.getPreviewFilesOverview());
         ipcMain.handle('app-local-preview:get-size', (event, siteName) => this.getPreviewSize(siteName));
         ipcMain.handle('app-local-preview:clear', (event, siteName) => this.clearPreview(siteName));
+        ipcMain.handle('app-local-preview:get-mime-types', () => this.getMimeTypes());
+        ipcMain.handle('app-local-preview:set-mime-types', (event, mimeTypes) => this.setMimeTypes(mimeTypes, event.sender.id));
     }
 
     /**
@@ -265,6 +267,9 @@ class PreviewEvents {
         let previewDir = this.getPreviewDir(siteName);
         await fs.ensureDir(previewDir);
 
+        // The app config can be saved also by the application settings, so the file types are taken from it every time
+        this.app.previewServer.setCustomMimeTypes(this.app.appConfig.previewServerMimeTypes);
+
         return this.app.previewServer.enableSite(siteName, previewDir, {
             port: this.app.appConfig.previewServerPort,
             portFallback: true
@@ -331,6 +336,48 @@ class PreviewEvents {
 
         this.app.notifyAppConfigChanged(webContentsId);
         return { status: true };
+    }
+
+    /**
+     * Returns file types served by the local preview server
+     *
+     * @returns {object} builtIn - always served, custom - added by the user; both as [{ extension, mimeType }]
+     */
+    getMimeTypes () {
+        return {
+            builtIn: PreviewServer.getBuiltInMimeTypes(),
+            custom: PreviewServer.sanitizeMimeTypes(this.app.appConfig.previewServerMimeTypes)
+        };
+    }
+
+    /**
+     * Saves file types added by the user - they are used right away, also by the enabled previews
+     *
+     * @param mimeTypes - the whole list: [{ extension, mimeType }]
+     * @param webContentsId - window which changes the list
+     */
+    setMimeTypes (mimeTypes, webContentsId) {
+        let result = PreviewServer.normalizeMimeTypes(mimeTypes);
+
+        if (!result.status) {
+            return result;
+        }
+
+        let previousMimeTypes = this.app.appConfig.previewServerMimeTypes;
+        this.app.appConfig.previewServerMimeTypes = result.mimeTypes;
+
+        try {
+            fs.writeFileSync(this.app.appConfigPath, JSON.stringify(this.app.appConfig, null, 4));
+        } catch (error) {
+            console.log('Unable to save file types of the local preview server:', error);
+            this.app.appConfig.previewServerMimeTypes = previousMimeTypes;
+            return { status: false, reason: 'config-save-error' };
+        }
+
+        this.app.previewServer.setCustomMimeTypes(result.mimeTypes);
+        this.app.notifyAppConfigChanged(webContentsId);
+
+        return result;
     }
 
     /**

@@ -400,5 +400,130 @@ describe('Preview server', function () {
             let response = await request('/my-site/video.mp4', { method: 'HEAD' });
             assert.equal(response.headers['accept-ranges'], 'bytes');
         });
+
+        // Browsers check the support of ranges with a request for the first bytes and then they seek with open ranges
+        it('serves parts of audio and video files with their MIME types', async function () {
+            fs.outputFileSync(path.join(previewDir, 'media', 'files', 'podcast.mp3'), '0123456789');
+
+            let files = {
+                '/my-site/media/files/podcast.mp3': 'audio/mpeg',
+                '/my-site/video.mp4': 'video/mp4'
+            };
+
+            for (let requestPath of Object.keys(files)) {
+                let response = await request(requestPath, { headers: { Range: 'bytes=0-1' } });
+
+                assert.equal(response.status, 206, requestPath);
+                assert.equal(response.headers['content-type'], files[requestPath]);
+                assert.equal(response.headers['content-range'], 'bytes 0-1/10');
+                assert.equal(response.headers['content-length'], '2');
+                assert.equal(response.headers['accept-ranges'], 'bytes');
+                assert.equal(response.body, '01');
+
+                response = await request(requestPath, { headers: { Range: 'bytes=0-' } });
+
+                assert.equal(response.status, 206, requestPath);
+                assert.equal(response.headers['content-range'], 'bytes 0-9/10');
+                assert.equal(response.body, '0123456789');
+            }
+        });
+    });
+
+    describe('file types added by the user', function () {
+        beforeEach(function () {
+            fs.outputFileSync(path.join(previewDir, 'archive.zip'), 'ZIP');
+            fs.outputFileSync(path.join(previewDir, 'notes.md'), '# Notes');
+        });
+
+        it('serves them only after they were added', async function () {
+            assert.equal((await request('/my-site/archive.zip')).status, 404);
+
+            server.setCustomMimeTypes([
+                { extension: 'zip', mimeType: 'application/zip' },
+                { extension: '.MD', mimeType: 'Text/Markdown' }
+            ]);
+
+            let response = await request('/my-site/archive.zip');
+            assert.equal(response.status, 200);
+            assert.equal(response.headers['content-type'], 'application/zip');
+            assert.equal(response.headers['x-content-type-options'], 'nosniff');
+            assert.equal(response.body, 'ZIP');
+
+            response = await request('/my-site/notes.md');
+            assert.equal(response.status, 200);
+            assert.equal(response.headers['content-type'], 'text/markdown; charset=utf-8');
+
+            server.setCustomMimeTypes([]);
+            assert.equal((await request('/my-site/archive.zip')).status, 404);
+        });
+
+        it('cannot change the built-in types', async function () {
+            server.setCustomMimeTypes([{ extension: '.html', mimeType: 'text/plain' }]);
+
+            assert.equal((await request('/my-site/index.html')).headers['content-type'], 'text/html; charset=utf-8');
+        });
+
+        it('cannot be used to reach dotfiles, other files and other directories', async function () {
+            server.setCustomMimeTypes([
+                { extension: '.secret', mimeType: 'text/plain' },
+                { extension: '.zip', mimeType: 'application/zip' }
+            ]);
+
+            assert.equal((await request('/my-site/.secret')).status, 404);
+            assert.equal((await request('/my-site/.git/config')).status, 404);
+            assert.equal((await request('/my-site/config.bak')).status, 404);
+            assert.equal((await request('/my-site/../preview-secret/index.html')).status, 403);
+        });
+
+        it('checks the list strictly before it is saved', function () {
+            let check = mimeTypes => PreviewServer.normalizeMimeTypes(mimeTypes);
+
+            assert.deepEqual(check([{ extension: ' ZIP ', mimeType: ' Application/ZIP ' }, { extension: '.tar-gz', mimeType: 'application/gzip' }]), {
+                status: true,
+                mimeTypes: [
+                    { extension: '.zip', mimeType: 'application/zip' },
+                    { extension: '.tar-gz', mimeType: 'application/gzip' }
+                ]
+            });
+
+            for (let extension of ['', '.', '..', '../x', 'a/b', 'a\\b', 'a b', '.tar.gz', 'x'.repeat(17), '.zi\np', null, 7]) {
+                assert.deepEqual(check([{ extension: extension, mimeType: 'application/zip' }]), { status: false, reason: 'invalid-extension', index: 0 });
+            }
+
+            for (let mimeType of ['', 'zip', 'application/', '/zip', 'application/zip; charset=utf-8', 'text/html\r\nX-Injected: 1', 'a/b/c', null]) {
+                let result = check([{ extension: '.zip', mimeType: mimeType }]);
+
+                assert.equal(result.status, false, String(mimeType));
+                assert.equal(result.index, 0);
+            }
+
+            assert.deepEqual(check([{ extension: 'HTML', mimeType: 'text/plain' }]), { status: false, reason: 'built-in-extension', index: 0 });
+            assert.deepEqual(check([
+                { extension: '.zip', mimeType: 'application/zip' },
+                { extension: 'zip', mimeType: 'application/x-zip' }
+            ]), { status: false, reason: 'duplicated-extension', index: 1 });
+            assert.equal(check('zip').reason, 'invalid-list');
+            assert.equal(check(new Array(51).fill({ extension: '.zip', mimeType: 'application/zip' })).reason, 'too-many');
+        });
+
+        it('skips invalid items read from the config file', function () {
+            assert.deepEqual(PreviewServer.sanitizeMimeTypes([
+                { extension: '.zip', mimeType: 'application/zip' },
+                { extension: '../x', mimeType: 'application/zip' },
+                { extension: '.html', mimeType: 'text/plain' },
+                { extension: '.zip', mimeType: 'application/x-zip' },
+                null,
+                'zip'
+            ]), [{ extension: '.zip', mimeType: 'application/zip' }]);
+            assert.deepEqual(PreviewServer.sanitizeMimeTypes({ '.zip': 'application/zip' }), []);
+            assert.deepEqual(PreviewServer.sanitizeMimeTypes(undefined), []);
+        });
+
+        it('lists the built-in types without the charset', function () {
+            let builtIn = PreviewServer.getBuiltInMimeTypes();
+
+            assert.ok(builtIn.some(item => item.extension === '.html' && item.mimeType === 'text/html'));
+            assert.ok(builtIn.some(item => item.extension === '.mp3' && item.mimeType === 'audio/mpeg'));
+        });
     });
 });
