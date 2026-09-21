@@ -28,6 +28,7 @@ class SiteEvents {
     constructor(appInstance) {
         let self = this;
         this.regenerateProcesses = new Map(); // webContentsId -> process
+        this.deletingSites = new Set(); // names of websites which are being removed
         this.appliedSpellcheckerLanguage = null;
 
         // Windows with websites in different languages take over the shared spellchecker when they get focus
@@ -606,50 +607,84 @@ class SiteEvents {
         });
 
         /*
-         * Delete website
+         * Delete website - the confirmation is displayed by the window which sends the request
          */
         ipcMain.on('app-site-delete', async function (event, config) {
-            if (!config ||
-                !PathValidator.isValidDirSegment(config.site) ||
-                !Object.prototype.hasOwnProperty.call(appInstance.sites, config.site)) {
-                event.sender.send('app-site-deleted', { status: false });
+            let sender = createSafeSender(event.sender);
+            let siteName = config ? config.site : undefined;
+            let error = false;
+
+            if (!PathValidator.isValidDirSegment(siteName) ||
+                !Object.prototype.hasOwnProperty.call(appInstance.sites, siteName)) {
+                error = 'site-not-exists';
+            } else if (appInstance.windowManager && appInstance.windowManager.isSiteLockedByOther(siteName, sender.id)) {
+                // A website which is open in another window cannot be removed
+                error = 'site-already-open';
+            } else if (self.deletingSites.has(siteName)) {
+                // Moving the website to the trash takes a while - the same request could come again
+                error = 'delete-in-progress';
+            }
+
+            if (error) {
+                sender.send('app-site-deleted', { status: false, error: error });
                 return;
             }
 
-            // A website which is open in another window cannot be removed
-            if (appInstance.windowManager && appInstance.windowManager.isSiteLockedByOther(config.site, event.sender.id)) {
-                event.sender.send('app-site-deleted', { status: false, error: 'site-already-open' });
-                return;
-            }
+            self.deletingSites.add(siteName);
 
-            let siteConfig = appInstance.sites[config.site];
-            let account = slug(siteConfig.name);
-
-            if (siteConfig.uuid) {
-                account = siteConfig.uuid;
-            }
-
-            await passwordSafeStorage.deleteAllPasswords(account);
-            await appInstance.previewServer.disableSite(config.site);
-
-            Site.delete(appInstance, config.site);
-
-            // The logs directory is found through the sites list, so it has to be removed first
             try {
-                SiteLogs.remove(appInstance, config.site);
-            } catch (error) {
-                console.log('(!) Unable to remove logs of the deleted website:', error);
+                let siteConfig = appInstance.sites[siteName];
+                let account = siteConfig.uuid ? siteConfig.uuid : slug(siteConfig.name);
+                let dbWasOpened = !!appInstance.getDbForSite(siteName);
+
+                // Files served by the local preview would block moving the directory
+                await appInstance.previewServer.disableSite(siteName);
+
+                try {
+                    await Site.delete(appInstance, siteName);
+                } catch (trashError) {
+                    console.log('(!) Unable to move the website to the trash:', trashError);
+
+                    // The website stays untouched - with its credentials and on the list
+                    if (dbWasOpened) {
+                        try {
+                            let dbPath = path.join(appInstance.sitesDir, siteName, 'input', 'db.sqlite');
+                            appInstance.setDbForSite(siteName, new DBUtils(new Database(dbPath)));
+                        } catch (dbError) {
+                            console.log('(!) Unable to reopen the database of the website:', dbError);
+                        }
+                    }
+
+                    sender.send('app-site-deleted', { status: false, error: 'trash-failed' });
+                    return;
+                }
+
+                // Credentials cannot be restored, so they are removed only when the website is already in the trash
+                try {
+                    await passwordSafeStorage.deleteAllPasswords(account);
+                } catch (passwordsError) {
+                    console.log('(!) Unable to remove credentials of the deleted website:', passwordsError);
+                }
+
+                // The logs directory is found through the sites list, so it has to be removed first
+                try {
+                    SiteLogs.remove(appInstance, siteName);
+                } catch (logsError) {
+                    console.log('(!) Unable to remove logs of the deleted website:', logsError);
+                }
+
+                delete appInstance.sites[siteName];
+
+                // Release the lock of the deleting window, so the name can be reused right away
+                if (appInstance.windowManager && appInstance.windowManager.getSiteForWindow(sender.id) === siteName) {
+                    appInstance.windowManager.clearWindowSite(sender.id);
+                }
+
+                sender.send('app-site-deleted', { status: true });
+                appInstance.notifySitesListChanged(sender.id);
+            } finally {
+                self.deletingSites.delete(siteName);
             }
-
-            delete appInstance.sites[config.site];
-
-            // Release the lock of the deleting window, so the name can be reused right away
-            if (appInstance.windowManager && appInstance.windowManager.getSiteForWindow(event.sender.id) === config.site) {
-                appInstance.windowManager.clearWindowSite(event.sender.id);
-            }
-
-            event.sender.send('app-site-deleted', { status: true });
-            appInstance.notifySitesListChanged(event.sender.id);
         });
 
         /*

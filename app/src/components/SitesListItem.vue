@@ -49,6 +49,11 @@
 
 <script>
 import escapeHTML from '../helpers/escape-html.js';
+
+// Shared by all websites on the list - replies for many removals come through the same channel,
+// so a window removes one website at a time
+let websiteRemovalInProgress = false;
+
 export default {
     name: 'sites-list-item',
     props: [
@@ -232,11 +237,24 @@ export default {
             });
         },
         removeWebsite (name) {
+            if (websiteRemovalInProgress) {
+                return;
+            }
+
+            websiteRemovalInProgress = true;
+
             mainProcessAPI.send('app-site-delete', {
                 site: name
             });
 
             mainProcessAPI.receiveOnce('app-site-deleted', (result) => {
+                websiteRemovalInProgress = false;
+
+                // The website is already being removed - i.e. by another window
+                if (result && result.error === 'delete-in-progress') {
+                    return;
+                }
+
                 if (!result || result.status !== true) {
                     this.showRemoveError(name, result);
                     return;

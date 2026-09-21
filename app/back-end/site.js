@@ -431,15 +431,16 @@ class Site {
     }
 
     /*
-     * Delete website
+     * Delete website - its directory is moved to the system trash.
+     * The returned promise is rejected when the directory could not be moved.
      */
-    static delete(appInstance, name) {
+    static async delete(appInstance, name) {
         let sitePath = path.join(appInstance.sitesDir, name);
         appInstance.closeDbForSite(name);
 
-        setTimeout(async () => {
-            await shell.trashItem(sitePath);
-        }, 500);
+        // Keep the short delay used so far between closing the database and moving the directory
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await shell.trashItem(sitePath);
     }
 
     /*
