@@ -12,6 +12,27 @@
             {{ $t('sync.previewChanges') }}
         </a>
 
+        <p class="sidebar-local-preview">
+            <template v-if="localPreviewIsRunning">
+                <span class="sidebar-local-preview-status">
+                    {{ $t('localPreview.serverIsRunning') }}
+                </span>
+                <a
+                    href="#"
+                    class="sidebar-local-preview-link"
+                    @click.prevent="showLocalPreviewPopup">
+                    {{ $t('localPreview.manage') }}
+                </a>
+            </template>
+            <a
+                v-else
+                href="#"
+                class="sidebar-local-preview-link"
+                @click.prevent="showLocalPreviewPopup">
+                {{ $t('localPreview.settings') }}
+            </a>
+        </p>
+
         <a
             v-if="$store.state.app.config.enableAdvancedPreview"
             href="#"
@@ -83,6 +104,9 @@ export default {
             return {
                 'sidebar-sync-link': true
             };
+        },
+        localPreviewIsRunning: function() {
+            return this.$store.state.app.localPreview.running;
         },
         status: function() {
             let status = this.$store.state.components.sidebar.status;
@@ -222,6 +246,9 @@ export default {
 
             this.$bus.$emit('rendering-popup-display');
         },
+        showLocalPreviewPopup: function() {
+            this.$bus.$emit('local-preview-popup-show');
+        },
         renderFiles: function() {
             if (!this.$store.state.currentSite.config.theme) {
                 let siteName = this.$store.state.currentSite.config.name;
@@ -330,6 +357,45 @@ export default {
 
     &:focus {
         color: var(--sidebar-link-color);
+    }
+}
+
+.sidebar-local-preview {
+    color: var(--sidebar-link-color);
+    font-size: var(--font-size-ui-xs);
+    letter-spacing: -.025em;
+    margin: -.4rem 0 var(--space-4);
+    text-align: center;
+}
+
+.sidebar-local-preview-status {
+    opacity: var(--sidebar-link-opacity);
+
+    &::before {
+        background: var(--color-success);
+        border-radius: 50%;
+        content: "";
+        display: inline-block;
+        height: .6rem;
+        margin-right: var(--space-1);
+        width: .6rem;
+    }
+
+    &::after {
+        content: "\00b7";
+        margin: 0 var(--space-1);
+    }
+}
+
+.sidebar-local-preview-link {
+    color: var(--sidebar-link-color);
+    opacity: var(--sidebar-link-opacity);
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+        color: var(--sidebar-link-color-hover);
+        opacity: 1;
     }
 }
 

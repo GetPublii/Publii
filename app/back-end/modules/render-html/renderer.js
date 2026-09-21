@@ -50,6 +50,7 @@ const UtilsHelper = require('./../../helpers/utils');
 const Sitemap = require('./helpers/sitemap.js');
 const Gdpr = require('./helpers/gdpr.js');
 const Git = require('./../deploy/git.js');
+const PreviewServer = require('./../preview-server/preview-server.js');
 
 // Default config
 const defaultAstCurrentSiteConfig = require('./../../../config/AST.currentSite.config');
@@ -60,7 +61,7 @@ const defaultAstCurrentSiteConfig = require('./../../../config/AST.currentSite.c
  */
 
 class Renderer {
-    constructor(appDir, sitesDir, siteConfig, itemID = false, postData = false) {
+    constructor(appDir, sitesDir, siteConfig, itemID = false, postData = false, previewUrl = false) {
         this.appDir = appDir;
         this.sitesDir = sitesDir;
         this.siteConfig = siteConfig;
@@ -69,6 +70,8 @@ class Renderer {
         this.menuContext = '';
         this.errorLog = [];
         this.previewMode = false;
+        // Address of the website on the local preview server - without it the preview uses file:/// URLs
+        this.previewUrl = PreviewServer.isPreviewUrl(previewUrl) ? previewUrl : false;
         this.useRelativeUrls = siteConfig.deployment.relativeUrls;
         let sitePath = path.join(this.sitesDir, this.siteName);
         this.plugins = new RendererPlugins(sitePath);
@@ -560,7 +563,7 @@ class Renderer {
         this.siteConfig = UtilsHelper.mergeObjects(defaultSiteConfig, this.siteConfig);
 
         if(this.previewMode) {
-            this.siteConfig.domain = 'file:///' + this.outputDir;
+            this.siteConfig.domain = this.previewUrl || 'file:///' + this.outputDir;
         } else if (this.siteConfig.domain === '/') {
             this.siteConfig.domain = '';
         }

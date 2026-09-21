@@ -8,8 +8,9 @@ process.on('message', async function(msg){
         let itemID = msg.itemID;
         let postData = msg.postData;
         let previewMode = msg.previewMode;
+        let previewUrl = msg.previewUrl || false;
         let mode = msg.mode || 'full';
-        let renderer = new Renderer(appDir, sitesDir, siteConfig, itemID, postData);
+        let renderer = new Renderer(appDir, sitesDir, siteConfig, itemID, postData, previewUrl);
         let result;
 
         try {

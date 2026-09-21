@@ -104,6 +104,9 @@ class SiteEvents {
                 ) {
                     appInstance.closeDbForSite(config.site);
 
+                    // Local preview serves files under the old name and from the old directory
+                    await appInstance.previewServer.disableSite(config.site);
+
                     // If yes - rename the dir
                     delete appInstance.sites[siteName];
                     siteName = config.settings.name;
@@ -627,6 +630,7 @@ class SiteEvents {
             }
 
             await passwordSafeStorage.deleteAllPasswords(account);
+            await appInstance.previewServer.disableSite(config.site);
 
             Site.delete(appInstance, config.site);
 

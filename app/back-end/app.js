@@ -36,6 +36,7 @@ const defaultAstAppConfig = require('./../config/AST.app.config');
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
 // Plugins packages
 const PluginsAPI = require('./modules/plugins/plugins-api.js')
+const PreviewServer = require('./modules/preview-server/preview-server.js');
 
 /**
  * Main app class
@@ -72,6 +73,10 @@ class App {
         this.dbMap = new Map();
         this.windowManager = new PubliiWindowManager(this);
         this.pluginsAPI = new PluginsAPI();
+        this.previewServer = new PreviewServer();
+
+        // Every window shows the state of the local preview
+        this.previewServer.on('state-changed', state => this.windowManager.broadcast('app-local-preview-updated', state));
 
         /*
          * Run the app
@@ -950,6 +955,11 @@ class App {
         // Closing a window with unsaved changes must not quit the app - unless the user asked for quitting
         this.app.on('before-quit', () => {
             this.quitRequested = true;
+        });
+
+        // Quitting can be still cancelled by a window with unsaved changes, so the previews are closed at the very end
+        this.app.on('will-quit', () => {
+            this.previewServer.stop().catch(error => console.log('Unable to stop the preview server:', error));
         });
         this.windowManager.onWindowDestroyed(webContentsId => this.windowsBlockingQuit.delete(webContentsId));
         ipcMain.on('app-window-close-confirmed', event => this.closeWindowAfterConfirmation(event.sender));

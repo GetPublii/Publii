@@ -143,6 +143,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-config-updated',
             'app-extensions-updated',
             'app-language-updated',
+            'app-local-preview-updated',
+            'app-local-preview-files-changed',
             'no-remote-files'
         ];
 
@@ -280,7 +282,14 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-plugins-api:delete-config-file',
             'app-plugins-api:delete-language-file',
             'app-open-new-window',
-            'app-view-lock'
+            'app-view-lock',
+            'app-local-preview:get-state',
+            'app-local-preview:disable-site',
+            'app-local-preview:stop',
+            'app-local-preview:set-port',
+            'app-local-preview:get-files-overview',
+            'app-local-preview:get-size',
+            'app-local-preview:clear'
         ];
 
         if (validCommands.includes(command)) {
@@ -326,7 +335,9 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-sites-updated',
             'app-config-updated',
             'app-extensions-updated',
-            'app-language-updated'
+            'app-language-updated',
+            'app-local-preview-updated',
+            'app-local-preview-files-changed'
         ];
 
         if (validChannels.includes(channel)) {

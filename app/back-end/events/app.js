@@ -73,6 +73,11 @@ class AppEvents {
                     let appFilesHelper = new AppFiles(appInstance);
                     appInstance.closeAllDbs();
 
+                    // Enabled local previews serve files from the current location
+                    if (appInstance.previewServer) {
+                        appInstance.previewServer.stop().catch(error => console.log('Unable to stop the local preview:', error));
+                    }
+
                     setTimeout(() => {
                         let result = false;
                         let reason = null;

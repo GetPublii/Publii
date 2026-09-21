@@ -14,6 +14,13 @@ export default {
         editorOpened: false,
         editorType: 'blockeditor',
         sitesLocationMissing: false,
+        // State of the local preview server - shared by all windows
+        localPreview: {
+            running: false,
+            port: null,
+            requestedPort: null,
+            sites: []
+        },
         skipSplashScreen: false,
         windowIsMaximized: false,
         theme: ['system', 'dark', 'default'].indexOf(localStorage.getItem('publii-theme')) > -1 ? localStorage.getItem('publii-theme') : 'default' 

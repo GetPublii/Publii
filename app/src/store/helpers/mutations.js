@@ -217,6 +217,16 @@ export default {
     setSitesLocationMissing (state, isMissing) {
         state.app.sitesLocationMissing = isMissing === true;
     },
+    setLocalPreview (state, localPreview) {
+        let sites = localPreview && Array.isArray(localPreview.sites) ? localPreview.sites : [];
+
+        state.app.localPreview = {
+            running: !!(localPreview && localPreview.running),
+            port: localPreview && localPreview.port ? localPreview.port : null,
+            requestedPort: localPreview && localPreview.requestedPort ? localPreview.requestedPort : null,
+            sites: sites.map(site => ({ name: site.name, url: site.url }))
+        };
+    },
     setNewThemeConfig (state, data) {
         state.currentSite.config.theme = data.themeName;
         state.currentSite.themeSettings = data.newThemeConfig;

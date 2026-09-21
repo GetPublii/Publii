@@ -69,7 +69,10 @@ function setup(protocol, domain, relativeUrls, locale = 'en-gb', output = 'catal
                     }
                 }
             },
-            app: { config: { timeFormat: 24 } },
+            app: {
+                config: { timeFormat: 24 },
+                localPreview: { running: false, port: null, requestedPort: null, sites: [] }
+            },
             components: { sidebar: { status: false, syncInProgress: false } }
         }),
         getters: {

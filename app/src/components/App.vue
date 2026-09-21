@@ -17,6 +17,7 @@
         <sites-location-popup />
         <sites-popup />
         <sync-popup />
+        <local-preview-popup />
     </div>
 </template>
 
@@ -31,6 +32,7 @@ import SitesPopup from './SitesPopup';
 import SyncPopup from './SyncPopup';
 import ErrorPopup from './ErrorPopup';
 import SitesLocationPopup from './SitesLocationPopup';
+import LocalPreviewPopup from './LocalPreviewPopup';
 import { setTooltipsEnabled } from '../helpers/tooltip';
 import escapeHTML from '../helpers/escape-html.js';
 
@@ -87,7 +89,8 @@ export default {
         'error-popup': ErrorPopup,
         'sites-location-popup': SitesLocationPopup,
         'sites-popup': SitesPopup,
-        'sync-popup': SyncPopup
+        'sync-popup': SyncPopup,
+        'local-preview-popup': LocalPreviewPopup
     },
     computed: {
         ...mapGetters([
@@ -283,6 +286,15 @@ export default {
         setupSitesSync () {
             mainProcessAPI.receive('app-sites-updated', sites => {
                 this.$store.commit('setSites', sites);
+            });
+
+            // Local preview server is shared by all windows
+            mainProcessAPI.receive('app-local-preview-updated', localPreview => {
+                this.$store.commit('setLocalPreview', localPreview);
+            });
+
+            mainProcessAPI.invoke('app-local-preview:get-state').then(localPreview => {
+                this.$store.commit('setLocalPreview', localPreview);
             });
 
             mainProcessAPI.receive('app-config-updated', config => {
@@ -528,6 +540,7 @@ export default {
         mainProcessAPI.stopReceiveAll('app-menu-command');
         mainProcessAPI.stopReceiveAll('app-sites-updated');
         mainProcessAPI.stopReceiveAll('app-config-updated');
+        mainProcessAPI.stopReceiveAll('app-local-preview-updated');
         mainProcessAPI.stopReceiveAll('app-extensions-updated');
         mainProcessAPI.stopReceiveAll('app-language-updated');
 
