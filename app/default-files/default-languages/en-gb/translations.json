@@ -1758,7 +1758,7 @@
         },
         "wpImport": {
             "cleanHtml": "Clean HTML",
-            "cleanHtmlInfo": "Removes unnecessary classes, decorative styles and editor attributes from newly imported posts and pages. Preserves HTML structure, italics, bold text and Publii formatting. Required styles and complex embeds may remain unchanged. Text alignment is converted to Publii classes regardless of this option.",
+            "cleanHtmlInfo": "Removes unnecessary classes, decorative styles, editor attributes and empty paragraphs or containers from new posts and pages, including paragraphs used only for spacing. Image Cover blocks become standard images with their content below, without background effects. Preserves emphasis, Publii formatting and functional markup; complex content may remain unchanged. Text alignment is converted to Publii classes regardless of this option.",
             "reportCleanup": "HTML cleanup",
             "reportCleanupNote": "Cleanup applies only to newly imported posts and pages. Counts refer to occurrences, not unique names. Functional markup and styles without a safe conversion are preserved.",
             "reportCleanupProcessed": "Posts and pages checked",
@@ -1768,6 +1768,8 @@
             "reportCleanupStyles": "Inline style attributes removed",
             "reportCleanupDeclarations": "CSS declarations removed or converted",
             "reportCleanupAttributes": "Other attributes removed",
+            "reportCleanupEmptyElements": "Empty paragraphs and div containers removed",
+            "reportCleanupCovers": "Cover blocks converted to images and content",
             "reportCleanupAlignment": "Text alignments converted",
             "reportCleanupProtected": "Protected fragments kept",
             "reportCleanupPreservedStyles": "Style attributes kept in full or in part",

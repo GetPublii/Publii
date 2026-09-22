@@ -1,5 +1,32 @@
 const { parseFragment } = require('parse5');
 const { transform, transformStyleAttribute } = require('lightningcss');
+const codeLanguages = require('../../../shared/code-languages');
+
+const CODE_LANGUAGES = new Set(codeLanguages.map(language => language.value));
+const CODE_LANGUAGE_ALIASES = new Map([
+    ['text', 'none'],
+    ['plain', 'none'],
+    ['plaintext', 'none'],
+    ['js', 'javascript'],
+    ['ts', 'typescript'],
+    ['py', 'python'],
+    ['sh', 'bash'],
+    ['shell', 'bash'],
+    ['xml', 'markup'],
+    ['cs', 'csharp'],
+    ['c#', 'csharp'],
+    ['c++', 'cpp'],
+    ['rb', 'ruby'],
+    ['yml', 'yaml'],
+    ['md', 'markdown'],
+    ['dockerfile', 'docker'],
+    ['tex', 'latex']
+]);
+const WORDPRESS_CODE_CLASSES = new Set([
+    'wp-block-code',
+    'wp-block-preformatted',
+    'wp-block-verse'
+]);
 
 // Keep these contracts in sync with EditorBridge, block renderers and render-html/helpers/content.
 // https://getpublii.com/dev/default-publii-classes-for-using-with-css/
@@ -45,6 +72,7 @@ function createStats() {
         removedStyles: 0,
         removedStyleDeclarations: 0,
         removedAttributes: 0,
+        removedEmptyElements: 0,
         semanticConversions: 0,
         preservedBlocks: 0,
         preservedStyles: 0
@@ -65,10 +93,138 @@ function escapeAttribute(value) {
 }
 
 function isProtected(node) {
-    return PROTECTED_TAGS.has(node.tagName) || node.tagName.includes('-') ||
+    return PROTECTED_TAGS.has(node.tagName) || hasProtectedBehavior(node);
+}
+
+function hasProtectedBehavior(node) {
+    return node.tagName.includes('-') ||
         ['button', 'tab', 'tablist', 'switch', 'slider', 'checkbox', 'menu', 'dialog'].includes(attribute(node, 'role')) ||
         classNames(node).some(name => /^(?:pec-|wp-block-embed|twitter-|instagram-|fb-|tiktok-)/.test(name)) ||
         (node.attrs || []).some(item => /^on|^data-(?:wp-interactive|wp-on|wp-bind|consent-|mce-object)/.test(item.name));
+}
+
+function codeLanguage(className) {
+    const match = /^(?:language|lang)-([a-z0-9_+#-]+)$/i.exec(className);
+
+    if (!match) {
+        return '';
+    }
+
+    const language = match[1].toLowerCase();
+    return CODE_LANGUAGE_ALIASES.get(language) || language;
+}
+
+function getWordPressCodeChanges(node, styles) {
+    const originalClasses = classNames(node);
+
+    if (node.tagName !== 'pre' || !originalClasses.some(name => WORDPRESS_CODE_CLASSES.has(name))) {
+        return [];
+    }
+
+    const pending = [node];
+
+    while (pending.length) {
+        const current = pending.pop();
+
+        if (current.tagName && (
+            hasProtectedBehavior(current) || styles.get(current).protectSubtree ||
+            (current !== node && isProtected(current) &&
+                !(current.tagName === 'code' && current.parentNode === node)) ||
+            current.attrs.some(item => item.name === 'contenteditable' || item.name === 'tabindex' ||
+                (/^data-/.test(item.name) && !['data-start', 'data-line', 'data-line-offset'].includes(item.name)))
+        )) {
+            return [];
+        }
+
+        pending.push(...(current.childNodes || []));
+    }
+
+    const cleanedClasses = originalClasses.filter(name => !WORDPRESS_CODE_CLASSES.has(name));
+    let keptClasses = cleanedClasses.slice();
+    const changes = [];
+    const content = node.childNodes.filter(child => child.nodeName !== '#text' || child.value.trim());
+    const code = content.length === 1 && content[0].tagName === 'code' ? content[0] : null;
+
+    // Normalize plain WordPress code for the native editor, using no highlighting
+    // when a language is absent. Do not reinterpret verse or highlighted HTML.
+    if (originalClasses.includes('wp-block-code') &&
+        !originalClasses.some(name => ['wp-block-preformatted', 'wp-block-verse'].includes(name)) &&
+        code && code.childNodes.every(child => child.nodeName === '#text' || child.tagName === 'br')) {
+        const originalCodeClasses = classNames(code);
+        let languages = new Set([...keptClasses, ...originalCodeClasses].map(codeLanguage).filter(Boolean));
+
+        // Prism also inherits the language from the closest labelled ancestor.
+        for (let parent = node.parentNode; parent && !languages.size; parent = parent.parentNode) {
+            languages = new Set(classNames(parent).map(codeLanguage).filter(Boolean));
+        }
+
+        const language = languages.size === 0 ? 'none' : languages.size === 1 ? [...languages][0] : '';
+
+        if (CODE_LANGUAGES.has(language)) {
+            const languageClass = 'language-' + language;
+            const firstLanguage = keptClasses.findIndex(name => codeLanguage(name));
+            keptClasses = keptClasses.filter(name => !codeLanguage(name));
+            keptClasses.splice(firstLanguage === -1 ? keptClasses.length : firstLanguage, 0, languageClass);
+            const keptCodeClasses = originalCodeClasses.filter(name => !codeLanguage(name));
+
+            if (keptCodeClasses.join(' ') !== originalCodeClasses.join(' ')) {
+                changes.push({ node: code, classes: keptCodeClasses, removed: 0 });
+            }
+        }
+    }
+
+    changes.push({
+        node,
+        classes: keptClasses,
+        removed: originalClasses.length - cleanedClasses.length
+    });
+    return changes;
+}
+
+function attributeEdit(html, node, changes) {
+    const location = node.sourceCodeLocation;
+
+    if (!location || !location.startTag) {
+        return null;
+    }
+
+    let opening = html.slice(location.startTag.startOffset, location.startTag.endOffset);
+    const attributeEdits = [];
+
+    for (const [name, value] of changes) {
+        const attrLocation = location.attrs && location.attrs[name];
+
+        if (attrLocation) {
+            let start = attrLocation.startOffset - location.startOffset;
+
+            while (start > 0 && /\s/.test(opening[start - 1])) {
+                start--;
+            }
+
+            attributeEdits.push({
+                start,
+                end: attrLocation.endOffset - location.startOffset,
+                value: value === null ? '' : ' ' + name + '="' + escapeAttribute(value) + '"'
+            });
+        } else if (value !== null) {
+            const insertion = opening.search(/\/?\s*>$/);
+            attributeEdits.push({
+                start: insertion,
+                end: insertion,
+                value: ' ' + name + '="' + escapeAttribute(value) + '"'
+            });
+        }
+    }
+
+    for (const edit of attributeEdits.sort((a, b) => b.start - a.start)) {
+        opening = opening.slice(0, edit.start) + edit.value + opening.slice(edit.end);
+    }
+
+    return {
+        start: location.startTag.startOffset,
+        end: location.startTag.endOffset,
+        value: opening
+    };
 }
 
 function getCssProperty(declaration) {
@@ -356,9 +512,88 @@ function cleanStyle(node, alignmentOnly) {
     }
 }
 
+function getEmptyElementEdits(html, nodes, attributeFreeNodes) {
+    const removed = new Set();
+    const edits = [];
+
+    // Children come first so removing an empty paragraph can also empty its wrapper.
+    for (const node of nodes.slice().reverse()) {
+        const location = node.sourceCodeLocation;
+
+        if (!['p', 'div'].includes(node.tagName) || !attributeFreeNodes.has(node) ||
+            !location || !location.startTag || !location.endTag) {
+            continue;
+        }
+
+        let offset = location.startTag.endOffset;
+        const end = location.endTag.startOffset;
+        const empty = (node.childNodes || []).every(child => {
+            const childLocation = child.sourceCodeLocation;
+            const disposable = child.nodeName === '#text'
+                ? /^[\t\n\f\r \u00a0]*$/.test(child.value)
+                : removed.has(child) ||
+                    (node.tagName === 'p' && child.tagName === 'br' && attributeFreeNodes.has(child));
+
+            // Require source coverage as well as an empty DOM: HTML parsing can move nodes.
+            if (!disposable || !childLocation || childLocation.startOffset < offset ||
+                childLocation.endOffset > end ||
+                !/^[\t\n\f\r ]*$/.test(html.slice(offset, childLocation.startOffset))) {
+                return false;
+            }
+
+            offset = childLocation.endOffset;
+            return true;
+        });
+
+        if (empty && /^[\t\n\f\r ]*$/.test(html.slice(offset, end))) {
+            removed.add(node);
+            edits.push({
+                start: location.startTag.startOffset,
+                end: location.endTag.endOffset,
+                value: ''
+            });
+        }
+    }
+
+    return { edits, removed };
+}
+
+function contentStructure(root, omitted = new Set()) {
+    const structure = [];
+    const pending = [root];
+
+    while (pending.length) {
+        const node = pending.pop();
+
+        if (typeof node === 'string') {
+            structure.push([node]);
+        } else if (omitted.has(node)) {
+            continue;
+        } else if (node.nodeName === '#text') {
+            const previous = structure[structure.length - 1];
+
+            // Removing a sibling can join two text nodes without changing their text.
+            if (previous && previous[0] === '#text') {
+                previous[1] += node.value;
+            } else {
+                structure.push(['#text', node.value]);
+            }
+        } else if (node.nodeName === '#comment') {
+            structure.push(['#comment', node.data]);
+        } else {
+            structure.push([node.nodeName, node.namespaceURI || '']);
+            pending.push('/' + node.nodeName);
+            const children = node.content ? [node.content] : node.childNodes || [];
+            pending.push(...children.slice().reverse());
+        }
+    }
+
+    return JSON.stringify(structure);
+}
+
 /**
- * Normalize presentation markup, not security-sensitive content. Source offsets let us
- * edit attributes without changing elements, text, entities, comments or protected code.
+ * Normalize presentation markup, not security-sensitive content. Source offsets preserve
+ * authored markup except for cleaned attributes and explicitly removable empty p/div elements.
  */
 function transformHtml(html, alignmentOnly) {
     const stats = createStats();
@@ -425,6 +660,8 @@ function transformHtml(html, alignmentOnly) {
         }
 
         const edits = [];
+        const attributeFreeNodes = new Set();
+        const preserveEmptyContent = new Set();
         const visit = [...root.childNodes];
 
         while (visit.length) {
@@ -435,11 +672,31 @@ function transformHtml(html, alignmentOnly) {
             }
 
             if (protectedNodes.has(node)) {
+                if (!alignmentOnly) {
+                    const codeChanges = getWordPressCodeChanges(node, styles);
+
+                    for (const change of codeChanges) {
+                        const edit = attributeEdit(html, change.node, new Map([
+                            ['class', change.classes.join(' ') || null]
+                        ]));
+
+                        if (edit) {
+                            edits.push(edit);
+                            stats.removedClasses += change.removed;
+                        }
+                    }
+                }
+
                 stats.preservedBlocks++;
                 continue;
             }
 
             visit.push(...(node.childNodes || []));
+
+            if (preserveEmptyContent.has(node.parentNode)) {
+                preserveEmptyContent.add(node);
+            }
+
             const location = node.sourceCodeLocation;
 
             if (!location || !location.startTag) {
@@ -497,56 +754,75 @@ function transformHtml(html, alignmentOnly) {
                 }
             }
 
+            if (!alignmentOnly) {
+                const hasRetainedAttributes = node.attrs.some(item => !changes.has(item.name)) ||
+                    [...changes.values()].some(value => value !== null);
+
+                // Retained styles, classes and attributes may affect empty descendants too
+                // (inherited whitespace, layout, widget hooks or accessibility semantics).
+                if (hasRetainedAttributes || preserveEmptyContent.has(node.parentNode)) {
+                    preserveEmptyContent.add(node);
+                } else {
+                    attributeFreeNodes.add(node);
+                }
+            }
+
             if (!changes.size) {
                 continue;
             }
 
-            let opening = html.slice(location.startTag.startOffset, location.startTag.endOffset);
-            const attributeEdits = [];
+            // Keep the original tag spelling and all attributes outside the cleanup scope.
+            edits.push(attributeEdit(html, node, changes));
+        }
 
-            for (const [name, value] of changes) {
-                const attrLocation = location.attrs && location.attrs[name];
+        let removedNodes = new Set();
 
-                if (attrLocation) {
-                    let start = attrLocation.startOffset - location.startOffset;
+        if (!alignmentOnly) {
+            const emptyElements = getEmptyElementEdits(html, nodes, attributeFreeNodes);
+            stats.removedEmptyElements = emptyElements.removed.size;
+            removedNodes = emptyElements.removed;
+            edits.push(...emptyElements.edits);
+        }
 
-                    while (start > 0 && /\s/.test(opening[start - 1])) {
-                        start--;
-                    }
+        const effectiveEdits = [];
+        let removedUntil = -1;
 
-                    attributeEdits.push({
-                        start,
-                        end: attrLocation.endOffset - location.startOffset,
-                        value: value === null ? '' : ' ' + name + '="' + escapeAttribute(value) + '"'
-                    });
-                } else if (value !== null) {
-                    const insertion = opening.search(/\/?\s*>$/);
-                    attributeEdits.push({ start: insertion, end: insertion, value: ' ' + name + '="' + escapeAttribute(value) + '"' });
-                }
+        for (const edit of edits.sort((a, b) => a.start - b.start || b.end - a.end)) {
+            // A removed wrapper already includes its descendants and their attribute edits.
+            if (edit.start < removedUntil && edit.end <= removedUntil) {
+                continue;
             }
 
-            for (const edit of attributeEdits.sort((a, b) => b.start - a.start)) {
-                opening = opening.slice(0, edit.start) + edit.value + opening.slice(edit.end);
-            }
+            effectiveEdits.push(edit);
 
-            // Rewrite attributes only; retain every existing element, its content and nesting.
-            edits.push({
-                start: location.startTag.startOffset,
-                end: location.startTag.endOffset,
-                value: opening
-            });
+            if (edit.value === '') {
+                removedUntil = edit.end;
+            }
         }
 
         let cleaned = html;
         let boundary = html.length;
 
-        for (const edit of edits.sort((a, b) => b.start - a.start)) {
+        for (const edit of effectiveEdits.reverse()) {
             if (edit.end > boundary) {
                 return unchanged('invalid-html');
             }
 
             cleaned = cleaned.slice(0, edit.start) + edit.value + cleaned.slice(edit.end);
             boundary = edit.start;
+        }
+
+        if (removedNodes.size) {
+            const cleanedRoot = parseFragment(cleaned, {
+                onParseError() {
+                    invalid = true;
+                }
+            });
+
+            // Removing a tag must not change how adjacent, implicitly closed HTML is parsed.
+            if (invalid || contentStructure(root, removedNodes) !== contentStructure(cleanedRoot)) {
+                return unchanged('invalid-html');
+            }
         }
 
         return { html: cleaned, stats, skippedReason: null };
@@ -570,6 +846,8 @@ function normalizeTextAlignment(html) {
 
 module.exports = {
     cleanHtml,
+    contentStructure,
     createStats,
+    isProtected,
     normalizeTextAlignment
 };

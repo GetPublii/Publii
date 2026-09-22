@@ -678,10 +678,177 @@ describeWithDatabase('WordPress WXR import', function() {
         assert.deepStrictEqual(cleanup.skippedItems, []);
     });
 
+    for (const cleanHtml of [false, true]) {
+        for (const autop of [false, true]) {
+            it('removes empty post/page containers only with cleanup=' + cleanHtml +
+                ' and automatic paragraphs=' + autop, async function() {
+                const postContent = '<p><a href="https://example.com/parent/child/">Child page</a></p>';
+                const wrap = content => '<!-- wp:group --><div class="theme-wrapper">' +
+                    '<div><p>&nbsp;<br></p></div>' + content +
+                    '<div id="anchor"></div></div><!-- /wp:group -->';
+                const source = fs.readFileSync(wxrFile, 'utf8')
+                    .replace(postContent, wrap(postContent))
+                    .replace('<p>Parent</p>', wrap('<p>Parent</p>'));
+                fs.writeFileSync(wxrFile, source);
+                const importer = new Import(appInstance, 'test-site', wxrFile);
+                const result = await importer.importFile(
+                    'publii-author', 'both', autop, ['post', 'page'], 'wordpress', false, 'none', cleanHtml
+                );
+                const rows = appInstance.db.prepare('SELECT id, title, text FROM posts').all();
+                const child = rows.find(row => row.title === 'Child');
+                const expected = content => cleanHtml
+                    ? '<div>' + content + '<div id="anchor"></div></div>'
+                    : '<div class="theme-wrapper"><div><p>&nbsp;<br></p></div>' +
+                        content + '<div id="anchor"></div></div>';
+
+                assert.strictEqual(rows.find(row => row.title === 'Parent').text, expected('<p>Parent</p>'));
+                assert.strictEqual(rows.find(row => row.title === 'Changed title').text,
+                    expected('<p><a href="#INTERNAL_LINK#/page/' + child.id + '">Child page</a></p>'));
+
+                if (cleanHtml) {
+                    const cleanup = result.summary.report.htmlCleanup;
+
+                    assert.strictEqual(cleanup.removedEmptyElements, 4);
+                    assert.strictEqual(cleanup.changedPosts, 1);
+                    assert.strictEqual(cleanup.changedPages, 1);
+                    assert.strictEqual(cleanup.processedItems, 3);
+                    assert.deepStrictEqual(cleanup.skippedItems, []);
+                } else {
+                    assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+                }
+            });
+        }
+    }
+
+    for (const cleanHtml of [false, true]) {
+        for (const autop of [false, true]) {
+            it('normalizes code in posts and pages only with cleanup=' + cleanHtml +
+                ' and automatic paragraphs=' + autop, async function() {
+                const sample = '  &lt;!-- wp:code --&gt;\n\t&lt;tag&gt;&amp;lt;<br>  ';
+                const code = '<pre class="wp-block-code"><code class="lang-js">' + sample + '</code></pre>';
+                const plain = '<pre class="wp-block-code"><code>' + sample + '</code></pre>';
+                const verse = '<pre class="wp-block-verse">  One<br>    Two</pre>';
+                const source = fs.readFileSync(wxrFile, 'utf8')
+                    .replace('<p><a href="https://example.com/parent/child/">Child page</a></p>',
+                        '<!-- wp:code -->' + code + '<!-- /wp:code -->')
+                    .replace('<p>Parent</p>', '<!-- wp:code -->' + plain + '<!-- /wp:code -->' +
+                        '<!-- wp:verse -->' + verse + '<!-- /wp:verse -->');
+                fs.writeFileSync(wxrFile, source);
+                const importer = new Import(appInstance, 'test-site', wxrFile);
+                const result = await importer.importFile(
+                    'publii-author', 'both', autop, ['post', 'page'], 'wordpress', false, 'none', cleanHtml
+                );
+                const rows = appInstance.db.prepare('SELECT title, text FROM posts').all();
+
+                assert.strictEqual(rows.find(row => row.title === 'Changed title').text, cleanHtml
+                    ? '<pre class="language-javascript"><code>' + sample + '</code></pre>'
+                    : code);
+                assert.strictEqual(rows.find(row => row.title === 'Parent').text, cleanHtml
+                    ? '<pre class="language-none"><code>' + sample + '</code></pre><pre>  One<br>    Two</pre>'
+                    : plain + verse);
+
+                if (cleanHtml) {
+                    assert.strictEqual(result.summary.report.htmlCleanup.removedClasses, 3);
+                    assert.strictEqual(result.summary.report.htmlCleanup.semanticConversions, 0);
+                    assert.deepStrictEqual(result.summary.report.htmlCleanup.skippedItems, []);
+                }
+            });
+        }
+    }
+
+    for (const cleanHtml of [false, true]) {
+        for (const autop of [false, true]) {
+            for (const backgroundImage of [false, true]) {
+                it('imports Cover media with cleanup=' + cleanHtml + ', paragraphs=' + autop +
+                    ' and CSS background=' + backgroundImage, async function() {
+                    const imageUrl = 'https://example.com/cover.jpg';
+                    const media = backgroundImage
+                        ? '<div role="img" class="wp-block-cover__image-background" ' +
+                            'style="background-image:url(' + imageUrl + ')"></div>'
+                        : '<img class="wp-block-cover__image-background" alt="Cover" src="' + imageUrl + '" data-object-fit="cover">';
+                    const cover = content => '<!-- wp:cover --><div class="wp-block-cover">' +
+                        '<span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span>' +
+                        media + '<div class="wp-block-cover__inner-container">' + content + '</div></div><!-- /wp:cover -->';
+                    const source = fs.readFileSync(wxrFile, 'utf8')
+                        .replace('<p>Parent</p>', cover('<p>Parent</p>'))
+                        .replace('<p><a href="https://example.com/parent/child/">Child page</a></p>',
+                            cover('<p><a href="https://example.com/parent/child/">Child page</a></p>'));
+                    fs.writeFileSync(wxrFile, source);
+                    const importer = new Import(appInstance, 'test-site', wxrFile);
+                    const queued = [];
+                    importer.parser.importImages = async function() {
+                        for (const image of Object.values(this.temp.imagesQueue).flat()) {
+                            queued.push(image.remoteUrl);
+                            this.storeDownloadedImage(image, 'unused-for-content-image');
+                        }
+                    };
+                    const result = await importer.importFile(
+                        'publii-author', 'both', autop, ['post', 'page'], 'wordpress', false, 'none', cleanHtml
+                    );
+                    const rows = appInstance.db.prepare('SELECT id, title, text FROM posts').all();
+                    const parent = rows.find(row => row.title === 'Parent');
+                    const post = rows.find(row => row.title === 'Changed title');
+                    const child = rows.find(row => row.title === 'Child');
+
+                    assert.deepStrictEqual(queued, cleanHtml || !backgroundImage ? [imageUrl, imageUrl] : []);
+                    assert.ok(post.text.includes('<a href="#INTERNAL_LINK#/page/' + child.id + '">Child page</a>'));
+
+                    if (cleanHtml) {
+                        for (const row of [parent, post]) {
+                            assert.match(row.text, /src="#DOMAIN_NAME#cover.jpg"/);
+                            assert.match(row.text, /class="post__image"/);
+                            assert.doesNotMatch(row.text, /<div|<span|wp-block-cover|background-image|data-object-fit/);
+                        }
+
+                        assert.strictEqual(result.summary.report.htmlCleanup.convertedCovers, 2);
+                        assert.strictEqual(result.summary.report.htmlCleanup.changedPosts, 1);
+                        assert.strictEqual(result.summary.report.htmlCleanup.changedPages, 1);
+                        assert.deepStrictEqual(result.summary.report.htmlCleanup.skippedItems, []);
+                    } else {
+                        assert.match(parent.text, /class="wp-block-cover"/);
+                        assert.match(parent.text, /class="wp-block-cover__inner-container"/);
+                        assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+                    }
+                });
+            }
+        }
+    }
+
+    it('retries a failed Cover image download without reconverting existing content', async function() {
+        const cover = '<div class="wp-block-cover"><div role="img" class="wp-block-cover__image-background" ' +
+            'style="background-image:url(https://example.com/cover.jpg)"></div>' +
+            '<div class="wp-block-cover__inner-container"><p>Parent</p></div></div>';
+        fs.writeFileSync(wxrFile, fs.readFileSync(wxrFile, 'utf8').replace('<p>Parent</p>', cover));
+        const first = new Import(appInstance, 'test-site', wxrFile);
+        first.parser.importImages = async function() {};
+        await first.importFile('publii-author', 'both', false, ['post', 'page'], 'wordpress', false, 'none', true);
+        const parent = appInstance.db.prepare("SELECT id, text FROM posts WHERE title = 'Parent'").get();
+        const manual = parent.text + '<p>Manually edited</p>';
+        appInstance.db.prepare('UPDATE posts SET text = @text WHERE id = @id').run({ id: parent.id, text: manual });
+        const second = new Import(appInstance, 'test-site', wxrFile);
+        const queued = [];
+        second.parser.importImages = async function() {
+            for (const image of Object.values(this.temp.imagesQueue).flat()) {
+                queued.push(image.remoteUrl);
+                this.storeDownloadedImage(image, 'unused-for-content-image');
+            }
+        };
+        const result = await second.importFile(
+            'publii-author', 'both', false, ['post', 'page'], 'wordpress', false, 'none', false
+        );
+
+        assert.deepStrictEqual(queued, ['https://example.com/cover.jpg']);
+        assert.strictEqual(appInstance.db.prepare('SELECT text FROM posts WHERE id = @id').get({ id: parent.id }).text,
+            manual.replace('https://example.com/cover.jpg', '#DOMAIN_NAME#cover.jpg'));
+        assert.strictEqual(result.summary.report.htmlCleanup, undefined);
+        assert.strictEqual(result.summary.skipped.pages, 2);
+    });
+
     it('never cleans existing content during a repeated import', async function() {
         const first = new Import(appInstance, 'test-site', wxrFile);
         await first.importFile('publii-author', 'both', false, ['post', 'page']);
-        const manual = '<p id="manual" class="my-class" style="color:red"><span>Edited in Publii</span></p>';
+        const manual = '<p id="manual" class="my-class" style="color:red"><span>Edited in Publii</span></p>' +
+            '<div><p>&nbsp;<br></p></div>';
         appInstance.db.prepare('UPDATE posts SET text = @text').run({ text: manual });
         const second = new Import(appInstance, 'test-site', wxrFile);
         const result = await second.importFile('publii-author', 'both', false, ['post', 'page'], 'wordpress', true, 'none', true);
@@ -689,6 +856,7 @@ describeWithDatabase('WordPress WXR import', function() {
         assert.strictEqual(result.summary.report.htmlCleanup.changedItems, 0);
         assert.strictEqual(result.summary.report.htmlCleanup.processedItems, 0);
         assert.strictEqual(result.summary.report.htmlCleanup.skippedExisting, 3);
+        assert.strictEqual(result.summary.report.htmlCleanup.removedEmptyElements, 0);
     });
 
     it('reports preserved active content and still cleans other imported items with automatic paragraphs enabled', async function() {

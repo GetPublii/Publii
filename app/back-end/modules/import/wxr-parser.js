@@ -7,6 +7,7 @@ const download = require('image-downloader');
 const sizeOf = require('image-size');
 const automaticParagraphs = require('./automatic-paragraphs.js');
 const WordPressBlocks = require('./wordpress-blocks');
+const WordPressCover = require('./wordpress-cover');
 const slug = require('./../../helpers/slug');
 const Author = require('./../../author.js');
 const Tag = require('./../../tag.js');
@@ -95,6 +96,7 @@ class WxrParser {
         this.importAuthors = false;
         this.autop = false;
         this.wordPressBlocks = new WeakMap();
+        this.coverConversions = new WeakMap();
         this.cleanHtml = false;
         this.newContentItems = [];
         this.htmlCleanup = null;
@@ -1097,7 +1099,12 @@ class WxrParser {
             this.temp.posts[savedPost ? savedPost.slug : postSlug] = newPostID;
             this.registerImportedItem(item, newPostID, false);
             this.queueSeoCanonical(item, newPostID, false);
-            this.newContentItems.push({ id: newPostID, itemType: 'post', title: postTitle });
+            this.newContentItems.push({
+                id: newPostID,
+                itemType: 'post',
+                title: postTitle,
+                convertedCovers: this.coverConversions.get(item) || 0
+            });
 
             for (let image of postImages) {
                 this.queueImage(newPostID, image.url, { gallery: image.gallery });
@@ -1184,7 +1191,12 @@ class WxrParser {
             this.registerImportedItem(item, newPageID, true);
             this.recordPageHierarchy(item, newPageID, i);
             this.queueSeoCanonical(item, newPageID, true);
-            this.newContentItems.push({ id: newPageID, itemType: 'page', title: pageTitle });
+            this.newContentItems.push({
+                id: newPageID,
+                itemType: 'page',
+                title: pageTitle,
+                convertedCovers: this.coverConversions.get(item) || 0
+            });
 
             for (let image of pageImages) {
                 this.queueImage(newPageID, image.url, { gallery: image.gallery });
@@ -1902,9 +1914,19 @@ class WxrParser {
         }
 
         let normalizedText = this.replaceGalleryShortcodes(WxrUtils.asString(item['content:encoded']), item);
+        const coverImages = this.getPostImageReferences(WordPressCover.convertCovers(normalizedText).html);
+        const storedImageUrls = new Set(this.getPostImageReferences(row.text).map(image => {
+            return WxrUtils.resolveRemoteUrl(image.url, this.sourceBaseUrl + '/');
+        }));
         normalizedText = WxrUtils.normalizeWordPressImageMarkup(normalizedText);
+        const imageReferences = this.getPostImageReferences(normalizedText);
 
-        for (let image of this.getPostImageReferences(normalizedText)) {
+        // Retry a failed Cover download only when the converted img is already in saved content.
+        imageReferences.push(...coverImages.filter(image => {
+            return storedImageUrls.has(WxrUtils.resolveRemoteUrl(image.url, this.sourceBaseUrl + '/'));
+        }));
+
+        for (let image of imageReferences) {
             let remoteUrl = WxrUtils.resolveRemoteUrl(image.url, this.sourceBaseUrl ? this.sourceBaseUrl + '/' : '');
 
             if ((row.text || '').includes(image.url) || (remoteUrl && (row.text || '').includes(remoteUrl))) {
@@ -2453,6 +2475,7 @@ class WxrParser {
             changedItems: 0,
             changedPosts: 0,
             changedPages: 0,
+            convertedCovers: 0,
             skippedExisting: this.summary.skipped.posts + this.summary.skipped.pages,
             ...HtmlCleaner.createStats(),
             skippedItems: []
@@ -2470,6 +2493,12 @@ class WxrParser {
             const original = row.text || '';
             const result = HtmlCleaner.cleanHtml(original);
             cleanup.processedItems++;
+            cleanup.convertedCovers += item.convertedCovers || 0;
+
+            if (result.html !== original || item.convertedCovers) {
+                cleanup.changedItems++;
+                cleanup[item.itemType === 'page' ? 'changedPages' : 'changedPosts']++;
+            }
 
             if (result.skippedReason) {
                 cleanup.skippedItems.push({
@@ -2487,8 +2516,6 @@ class WxrParser {
 
             if (result.html !== original) {
                 updates.push({ id: item.id, text: result.html });
-                cleanup.changedItems++;
-                cleanup[item.itemType === 'page' ? 'changedPages' : 'changedPosts']++;
             }
         }
 
@@ -3103,6 +3130,15 @@ class WxrParser {
 
         // Convert WordPress oEmbed URLs and blocks to Publii video markup.
         text = WxrUtils.replaceStandaloneVideoEmbeds(text);
+
+        if (this.cleanHtml) {
+            const covers = WordPressCover.convertCovers(text);
+            text = covers.html;
+
+            if (item) {
+                this.coverConversions.set(item, covers.convertedCovers);
+            }
+        }
 
         // Convert WordPress image markup and classes to the format used by Publii.
         text = WxrUtils.normalizeWordPressImageMarkup(text);

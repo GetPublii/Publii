@@ -445,6 +445,8 @@ export default {
                 removedStyles: 'reportCleanupStyles',
                 removedStyleDeclarations: 'reportCleanupDeclarations',
                 removedAttributes: 'reportCleanupAttributes',
+                removedEmptyElements: 'reportCleanupEmptyElements',
+                convertedCovers: 'reportCleanupCovers',
                 semanticConversions: 'reportCleanupAlignment',
                 preservedBlocks: 'reportCleanupProtected',
                 preservedStyles: 'reportCleanupPreservedStyles',

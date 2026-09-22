@@ -103,6 +103,8 @@ describe('WordPress HTML cleanup controls and report', function() {
                     removedClasses: 17,
                     removedStyles: 8,
                     removedAttributes: 4,
+                    removedEmptyElements: 6,
+                    convertedCovers: 3,
                     semanticConversions: 2,
                     skippedItems: [{ itemID: 7, itemType: 'post', title: 'Widget', reason: 'active-content' }]
                 }
@@ -116,9 +118,13 @@ describe('WordPress HTML cleanup controls and report', function() {
         assert.equal(instance.warningSectionIndexes.includes(index), false);
         assert.equal(instance.warningSectionIndexes.includes(1), true);
         assert.match(instance.getSectionText('htmlCleanup'), /reportCleanupClasses: 17/);
+        assert.match(instance.getSectionText('htmlCleanup'), /reportCleanupEmptyElements: 6/);
+        assert.match(instance.getSectionText('htmlCleanup'), /reportCleanupCovers: 3/);
         assert.match(instance.getSectionText('htmlCleanup'), /reportCleanupActiveContent/);
         assert.match(instance.getFullReportText(), /reportCleanupStyles: 8/);
         assert.match(instance.getFullReportText(), /reportCleanupAlignment: 2/);
+        assert.match(instance.getFullReportText(), /reportCleanupEmptyElements: 6/);
+        assert.match(instance.getFullReportText(), /reportCleanupCovers: 3/);
         assert.doesNotMatch(instance.getFullReportText(), /reportCleanupWrappers|reportCleanupSemantic/);
         instance.$destroy();
     });
@@ -186,6 +192,8 @@ describe('WordPress HTML cleanup controls and report', function() {
         }
         const instance = createReport({ report: { htmlCleanup: { enabled: true, processedItems: 1, changedItems: 0 } } });
         assert.match(instance.getCleanupText(), /reportCleanupNoChanges/);
+        assert.match(instance.getCleanupText(), /reportCleanupEmptyElements: 0/);
+        assert.match(instance.getCleanupText(), /reportCleanupCovers: 0/);
         instance.$destroy();
     });
 

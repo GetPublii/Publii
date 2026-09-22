@@ -1706,7 +1706,7 @@
         },
         "wpImport": {
             "cleanHtml": "HTML bereinigen",
-            "cleanHtmlInfo": "Entfernt unnötige Klassen, dekorative Stile und Editor-Attribute aus neu importierten Beiträgen und Seiten. HTML-Struktur, Kursiv- und Fettschrift sowie die Publii-Formatierung bleiben erhalten. Erforderliche Stile und komplexe Einbettungen können unverändert bleiben. Die Textausrichtung wird unabhängig von dieser Option in Publii-Klassen umgewandelt.",
+            "cleanHtmlInfo": "Entfernt unnötige Klassen, dekorative Stile, Editor-Attribute sowie leere Absätze und Container aus neuen Beiträgen und Seiten, auch Absätze, die nur Abstände erzeugen. Cover-Blöcke mit Bildern werden in normale Bilder mit Inhalt darunter umgewandelt, ohne Hintergrundeffekte. Hervorhebungen, Publii-Formatierung und funktionaler Code bleiben erhalten; komplexe Inhalte können unverändert bleiben. Die Textausrichtung wird unabhängig von dieser Option in Publii-Klassen umgewandelt.",
             "reportCleanup": "HTML-Bereinigung",
             "reportCleanupNote": "Die Bereinigung gilt nur für neu importierte Beiträge und Seiten. Gezählt werden Vorkommen, nicht eindeutige Namen. Funktionaler Code und Stile ohne sichere Umwandlung bleiben erhalten.",
             "reportCleanupProcessed": "Geprüfte Beiträge und Seiten",
@@ -1716,6 +1716,8 @@
             "reportCleanupStyles": "Entfernte Inline-Stilattribute",
             "reportCleanupDeclarations": "Entfernte oder umgewandelte CSS-Deklarationen",
             "reportCleanupAttributes": "Weitere entfernte Attribute",
+            "reportCleanupEmptyElements": "Entfernte leere Absätze und div-Container",
+            "reportCleanupCovers": "In Bilder und Inhalte umgewandelte Cover-Blöcke",
             "reportCleanupAlignment": "Umgewandelte Textausrichtungen",
             "reportCleanupProtected": "Beibehaltene geschützte Fragmente",
             "reportCleanupPreservedStyles": "Ganz oder teilweise beibehaltene Stilattribute",

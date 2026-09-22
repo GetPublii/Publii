@@ -87,8 +87,8 @@ class ContentHelper {
 
         if (editor === 'tinymce' || editor === 'markdown') {
             // Wrap images with classes into <figure>
-            preparedText = preparedText.replace(/(<p.*?>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
-                return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p.*?>/, '').replace(classes, '') + '</figure>';
+            preparedText = preparedText.replace(/(<p\b(?:[^<>"']|"[^"]*"|'[^']*')*>\s*?)?<img[^>]*?(class=".*?").*?>(\s*?<\/p>)?/gmi, function(matches, p1, classes) {
+                return '<figure ' + classes + '>' + matches.replace('</p>', '').replace(/<p\b(?:[^<>"']|"[^"]*"|'[^']*')*>/, '').replace(classes, '') + '</figure>';
             });
 
             // Fix some specific syntax cases for double figure elements

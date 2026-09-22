@@ -392,6 +392,172 @@ describe('WordPress HTML cleanup', function() {
     });
 });
 
+describe('WordPress empty paragraph and container cleanup', function() {
+    it('removes nested empty elements after attribute cleanup and counts each p/div once', function() {
+        const html = '<div class="theme" style="color:red" data-block="group">\n' +
+            '<div class=""><p style=""> \t\r\n&nbsp;&#160;&#xA0;<br class="theme"> </p></div>' +
+            '<p></p></div><p>Keep &amp; preserve</p><div> </div>';
+        const result = cleanHtml(html);
+
+        assert.strictEqual(result.html, '<p>Keep &amp; preserve</p>');
+        assert.strictEqual(result.stats.removedEmptyElements, 5);
+        assert.strictEqual(result.stats.removedClasses, 2);
+        assert.strictEqual(result.stats.removedAttributes, 1);
+        assert.strictEqual(result.skippedReason, null);
+        assert.strictEqual(cleanHtml(result.html).html, result.html);
+        assert.strictEqual(cleanHtml(result.html).stats.removedEmptyElements, 0);
+    });
+
+    it('removes empty siblings without unwrapping content or changing its original markup', function() {
+        const html = '<DIV class="theme"><p></p><P>A &amp; <em>B</em>&nbsp;C<br>D</P>' +
+            '<div><p> </p></div><div><p>E</p></div></DIV>';
+        const result = cleanHtml(html);
+
+        assert.strictEqual(result.html, '<DIV><P>A &amp; <em>B</em>&nbsp;C<br>D</P>' +
+            '<div><p>E</p></div></DIV>');
+        assert.strictEqual(result.stats.removedEmptyElements, 3);
+    });
+
+    for (const html of [
+        '<p id="anchor"></p>',
+        '<div name="legacy"></div>',
+        '<div role="status" aria-live="polite"></div>',
+        '<p aria-label="Description"></p>',
+        '<div tabindex="0"></div>',
+        '<div contenteditable></div>',
+        '<div data-widget="map"></div>',
+        '<div hidden></div>',
+        '<div itemscope itemtype="https://schema.org/Thing"></div>',
+        '<div class="separator"></div>',
+        '<div class="gallery"></div>',
+        '<p class="screen-reader-text"></p>',
+        '<p style="white-space:pre-wrap"> \n </p>',
+        '<div style="min-height:100px"></div>',
+        '<div style="background-image:url(photo.jpg)"></div>',
+        '<div style="unknown-property:keep"></div>',
+        '<div><p><img src="photo.jpg" alt=""></p></div>',
+        '<div><svg><path d="M0 0L1 1"/></svg></div>',
+        '<div><iframe src="video.html"></iframe></div>',
+        '<div><pre> \n </pre><code></code></div>',
+        '<div><template><p></p></template></div>',
+        '<div><span></span></div>',
+        '<p><a id="anchor"></a></p>',
+        '<p><!-- Keep this comment --></p>',
+        '<p>&#8203;</p>',
+        '<p>&emsp;</p>',
+        '<p><br id="anchor"></p>',
+        '<div><br></div>'
+    ]) {
+        it('keeps empty-looking markup with content or a function: ' + html.slice(0, 65), function() {
+            const result = cleanHtml(html);
+
+            assert.strictEqual(result.html, html);
+            assert.strictEqual(result.stats.removedEmptyElements, 0);
+            assert.strictEqual(result.skippedReason, null);
+        });
+    }
+
+    for (const wrapper of [
+        '<div id="widget">',
+        '<section data-widget="container">',
+        '<div role="status">',
+        '<div style="white-space:pre-wrap">',
+        '<div style="display:grid">',
+        '<div class="gallery">',
+        '<div class="pec-wrapper">',
+        '<custom-widget>'
+    ]) {
+        it('preserves empty descendants in functional or styled contexts: ' + wrapper, function() {
+            const tag = wrapper.match(/^<([\w-]+)/)[1];
+            const html = wrapper + '<div><p> \n </p></div></' + tag + '>';
+            const result = cleanHtml(html);
+
+            assert.strictEqual(result.html, html);
+            assert.strictEqual(result.stats.removedEmptyElements, 0);
+        });
+    }
+
+    it('preserves inherited context across an implicit table body', function() {
+        const html = '<table style="white-space:pre-wrap"><tr><td><p> \n </p></td></tr></table>';
+
+        assert.strictEqual(cleanHtml(html).html, html);
+        assert.strictEqual(cleanHtml(html).stats.removedEmptyElements, 0);
+    });
+
+    it('keeps comments and surrounding whitespace while removing empty descendants', function() {
+        const result = cleanHtml('<div>\n<!-- Keep --><p> </p>\n</div>');
+
+        assert.strictEqual(result.html, '<div>\n<!-- Keep -->\n</div>');
+        assert.strictEqual(result.stats.removedEmptyElements, 1);
+    });
+
+    for (const html of [
+        '<p>',
+        '<p> <p>Text</p>',
+        '<div><p></p>Text',
+        '<table><div><p></p></div>Text<tr><td>Cell</td></tr></table>',
+        '<p><div></div>Keep</p>'
+    ]) {
+        it('does not lose content when parsing implicitly closes or moves elements: ' + html, function() {
+            const result = cleanHtml(html);
+            const content = source => {
+                const pending = [...parseFragment(source).childNodes];
+                let value = '';
+
+                while (pending.length) {
+                    const node = pending.shift();
+                    value += node.nodeName === '#text' ? node.value : '';
+                    pending.unshift(...(node.childNodes || []));
+                }
+
+                return value;
+            };
+
+            assert.strictEqual(content(result.html), content(html));
+            assert.strictEqual(cleanHtml(result.html).html, result.html);
+        });
+    }
+
+    for (const html of [
+        '<p class="one" class="two"></p><div></div>',
+        '<script>init()</script><div><p></p></div>',
+        '<style>div:empty{height:10px}</style><div></div>'
+    ]) {
+        it('keeps malformed or active content intact, including empty elements', function() {
+            const result = cleanHtml(html);
+
+            assert.strictEqual(result.html, html);
+            assert.ok(result.skippedReason);
+            assert.ok(Object.values(result.stats).every(value => value === 0));
+        });
+    }
+
+    it('never removes empty elements during unconditional text alignment normalization', function() {
+        const html = '<div class="theme"><p style="color:red">&nbsp;<br></p><div></div></div>' +
+            '<p style="text-align:center"></p>';
+
+        assert.strictEqual(normalizeTextAlignment(html),
+            html.replace('<p style="text-align:center">', '<p class="align-center">'));
+    });
+
+    it('keeps the original when removing an empty block would absorb adjacent text into an implicit paragraph', function() {
+        const html = '<p class="theme">Before<div></div>After</p>';
+        const result = cleanHtml(html);
+
+        assert.strictEqual(result.html, html);
+        assert.strictEqual(result.skippedReason, 'invalid-html');
+        assert.ok(Object.values(result.stats).every(value => value === 0));
+    });
+
+    it('allows adjacent text nodes to merge without changing their content or nesting', function() {
+        const result = cleanHtml('<section>A <div></div>B &amp; C</section>');
+
+        assert.strictEqual(result.html, '<section>A B &amp; C</section>');
+        assert.strictEqual(result.stats.removedEmptyElements, 1);
+        assert.strictEqual(result.skippedReason, null);
+    });
+});
+
 describe('WordPress Media & Text image fill cleanup', function() {
     const background = 'background-image:url(https://example.com/original.jpg);background-position:50% 50%';
     const image = '<img loading="lazy" src="#DOMAIN_NAME#original.jpg" alt="Photo &amp; view" ' +

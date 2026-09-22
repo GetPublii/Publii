@@ -1760,7 +1760,7 @@
         },
         "wpImport": {
             "cleanHtml": "Oczyść kod HTML",
-            "cleanHtmlInfo": "Usuwa zbędne klasy, style dekoracyjne i atrybuty edytora z nowo importowanych wpisów i stron. Zachowuje strukturę HTML, kursywę, pogrubienie oraz formatowanie Publii. Potrzebne style i złożone osadzenia mogą pozostać bez zmian. Wyrównanie tekstu jest dostosowywane do klas Publii niezależnie od tej opcji.",
+            "cleanHtmlInfo": "Usuwa zbędne klasy, style dekoracyjne, atrybuty edytora oraz puste akapity i kontenery z nowych wpisów i stron, także akapity służące tylko do tworzenia odstępów. Bloki Cover z obrazem są zamieniane na zwykłe obrazy z treścią poniżej, bez efektów tła. Zachowuje wyróżnienia, formatowanie Publii i kod funkcjonalny; złożona treść może pozostać bez zmian. Wyrównanie tekstu jest dostosowywane do klas Publii niezależnie od tej opcji.",
             "reportCleanup": "Czyszczenie HTML",
             "reportCleanupNote": "Czyszczenie obejmuje tylko nowo importowane wpisy i strony. Liczniki dotyczą wystąpień, nie unikalnych nazw. Kod funkcjonalny i style bez bezpiecznego odpowiednika są zachowywane.",
             "reportCleanupProcessed": "Sprawdzone wpisy i strony",
@@ -1770,6 +1770,8 @@
             "reportCleanupStyles": "Usunięte atrybuty stylów inline",
             "reportCleanupDeclarations": "Usunięte lub przekształcone deklaracje CSS",
             "reportCleanupAttributes": "Usunięte pozostałe atrybuty",
+            "reportCleanupEmptyElements": "Usunięte puste akapity i kontenery div",
+            "reportCleanupCovers": "Bloki Cover zamienione na obrazy i treść",
             "reportCleanupAlignment": "Zamiany wyrównania tekstu",
             "reportCleanupProtected": "Zachowane chronione fragmenty",
             "reportCleanupPreservedStyles": "Atrybuty stylów zachowane w całości lub częściowo",
