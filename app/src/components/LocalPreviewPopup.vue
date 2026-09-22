@@ -87,7 +87,7 @@
                                 :ariaDescribedby="portError ? 'local-preview-port-note local-preview-port-error' : 'local-preview-port-note'" />
 
                             <p-button
-                                intent="primary"
+                                appearance="secondary"
                                 size="small"
                                 loading-layout="overlay"
                                 :loading="isSavingPort"
@@ -382,7 +382,7 @@
                             </div>
 
                             <p-button
-                                intent="primary"
+                                appearance="secondary"
                                 size="small"
                                 loading-layout="overlay"
                                 :loading="isSavingMimeTypes"
@@ -400,10 +400,20 @@
                             {{ mimeTypeError }}
                         </p>
 
-                        <p class="local-preview-note">
+                        <p
+                            id="local-preview-built-in-types-label"
+                            class="local-preview-note">
                             {{ $t('localPreview.builtInFileTypes') }}
-                            <span class="local-preview-extensions">{{ builtInExtensions }}</span>
                         </p>
+                        <ul
+                            class="local-preview-list local-preview-extensions"
+                            aria-labelledby="local-preview-built-in-types-label">
+                            <li
+                                v-for="extension in builtInExtensions"
+                                :key="extension">
+                                {{ extension }}
+                            </li>
+                        </ul>
                     </div>
                 </section>
             </div>
@@ -504,7 +514,9 @@ export default {
             });
         },
         builtInExtensions () {
-            return this.builtInMimeTypes.map(item => item.extension).join(', ');
+            return this.builtInMimeTypes
+                .map(item => item.extension)
+                .sort((extensionA, extensionB) => extensionA.localeCompare(extensionB));
         },
         allSizesAreKnown () {
             return this.files.length > 0 && this.files.every(file => file.size !== null);
@@ -1112,6 +1124,19 @@ export default {
 
 .local-preview-list-extension {
     color: var(--text-primary-color);
+}
+
+.local-preview-extensions {
+    column-count: 5;
+    column-gap: var(--space-4);
+    column-width: 11rem;
+    color: var(--text-light-color);
+    margin-top: var(--space-3);
+
+    li {
+        break-inside: avoid;
+        margin-bottom: var(--space-2);
+    }
 }
 
 .local-preview-list-mime-type {

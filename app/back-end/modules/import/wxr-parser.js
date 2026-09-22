@@ -6,6 +6,7 @@ const { XMLParser } = require('fast-xml-parser');
 const download = require('image-downloader');
 const sizeOf = require('image-size');
 const automaticParagraphs = require('./automatic-paragraphs.js');
+const WordPressBlocks = require('./wordpress-blocks');
 const slug = require('./../../helpers/slug');
 const Author = require('./../../author.js');
 const Tag = require('./../../tag.js');
@@ -93,6 +94,7 @@ class WxrParser {
         this.siteName = siteName;
         this.importAuthors = false;
         this.autop = false;
+        this.wordPressBlocks = new WeakMap();
         this.cleanHtml = false;
         this.newContentItems = [];
         this.htmlCleanup = null;
@@ -803,7 +805,8 @@ class WxrParser {
                 url: WxrUtils.asString(item.link),
                 originalSlug: WxrUtils.asString(item['wp:post_name']),
                 slugStrategy: this.slugStrategy,
-                status: WxrUtils.asString(item['wp:status'])
+                status: WxrUtils.asString(item['wp:status']),
+                blocks: this.wordPressBlocks.get(item) || []
             }
         };
     }
@@ -1985,7 +1988,10 @@ class WxrParser {
     getImportedReportItems() {
         let reportItems = [];
         let query = this.appInstance.db.prepare(`
-            SELECT id, title, slug, text, status FROM posts WHERE id = @id
+            SELECT p.id, p.title, p.slug, p.text, p.status, pad.value AS additional_data
+            FROM posts AS p
+            LEFT JOIN posts_additional_data AS pad ON pad.post_id = p.id AND pad.key = '_core'
+            WHERE p.id = @id
         `);
 
         for (let item of this.getItems()) {
@@ -2010,6 +2016,21 @@ class WxrParser {
                 continue;
             }
 
+            let wordPressBlocks = WxrUtils.extractWordPressBlocks(row.text);
+
+            try {
+                const additionalData = JSON.parse(row.additional_data || '{}');
+                const savedBlocks = additionalData.wpImport && additionalData.wpImport.blocks;
+
+                if (Array.isArray(savedBlocks)) {
+                    wordPressBlocks = savedBlocks.filter(block => {
+                        return block && typeof block.name === 'string' && typeof block.markup === 'string';
+                    });
+                }
+            } catch (error) {
+                // Older or edited metadata can still be reported from the saved HTML.
+            }
+
             reportItems.push({
                 item,
                 sourceID,
@@ -2019,6 +2040,7 @@ class WxrParser {
                 title: WxrUtils.sanitizeTitle(row.title),
                 slug: WxrUtils.asString(row.slug),
                 text: WxrUtils.asString(row.text),
+                wordPressBlocks,
                 status: WxrUtils.asString(row.status),
                 sourceUrl: WxrUtils.asString(item.link).trim()
             });
@@ -2536,7 +2558,7 @@ class WxrParser {
                 unsupportedShortcodes.push(unsupportedShortcode);
             }
 
-            for (let block of WxrUtils.extractWordPressBlocks(reportItem.text)) {
+            for (let block of reportItem.wordPressBlocks) {
                 if (!DYNAMIC_WORDPRESS_BLOCKS.has(block.name) && !block.name.includes('/')) {
                     continue;
                 }
@@ -3074,6 +3096,8 @@ class WxrParser {
             return '';
         }
 
+        const hasBlocks = WordPressBlocks.getBlockComments(text).some(comment => !comment.closing);
+
         // Resolve classic [gallery] shortcodes while WXR attachment metadata is available.
         text = this.replaceGalleryShortcodes(text, item);
 
@@ -3086,7 +3110,20 @@ class WxrParser {
         // Replace <!-- more --> with Publii separator
         text = text.replace(/<!--more-->/g, '<hr id="read-more">');
 
-        if(this.autop) {
+        const blockComments = WordPressBlocks.getBlockComments(text);
+
+        if (item) {
+            const blocks = WxrUtils.extractWordPressBlocks(text, blockComments)
+                .filter(block => DYNAMIC_WORDPRESS_BLOCKS.has(block.name) || block.name.includes('/'))
+                .map(block => ({ name: block.name, markup: block.markup }));
+            this.wordPressBlocks.set(item, blocks);
+        }
+
+        // Block metadata is kept in wpImport for reports, independently of HTML cleanup.
+        text = WordPressBlocks.removeBlockComments(text, blockComments);
+
+        // Gutenberg already supplies block markup; classic wpautop must not reformat it.
+        if (this.autop && !hasBlocks) {
             console.log('(i) Used automatic paragraphs for the post content');
             text = automaticParagraphs(text);
         }

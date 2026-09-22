@@ -21,17 +21,18 @@
 
                 <p-button
                     :onClick="selectWXRFile"
+                    :appearance="filePath ? 'secondary' : 'default'"
                     :disabled="uploadDisabled"
                     :loading="checkingFile || importInProgress"
                     loading-layout="overlay"
-                    :aria-label="$t(
-                        importInProgress ? 'tools.wpImport.importingData' :
-                        checkingFile ? 'tools.wpImport.checkingWXRFile' :
-                        'tools.wpImport.selectWXRFileButton'
-                    )"
+                    :aria-label="
+                        importInProgress ? $t('tools.wpImport.importingData') :
+                        checkingFile ? $t('tools.wpImport.checkingWXRFile') :
+                        wxrFileButtonLabel
+                    "
                     slot="buttons"
                     icon="upload-file">
-                    {{ $t('tools.wpImport.selectWXRFileButton') }}
+                    {{ wxrFileButtonLabel }}
                 </p-button>
             </p-header>
 
@@ -49,7 +50,7 @@
                 }">
                 <field
                     id="wxr-file"
-                    :label="$t('tools.wpImport.selectWXRFileLabel')">
+                    :label="$t(filePath ? 'tools.wpImport.selectedWXRFile' : 'tools.wpImport.selectWXRFileLabel')">
                     <file-select
                         id="wxr-file"
                         :placeholder="$t('tools.wpImport.selectWXRFilePlaceholder')"
@@ -242,8 +243,14 @@
                                 <switcher
                                     slot="field"
                                     id="use-autop"
-                                    v-model="autoFormatContent" />
+                                    v-model="autoFormatContent"
+                                    :accessible-label="$t('tools.wpImport.addTagsToContentAutomatically')"
+                                    :description="$t('tools.wpImport.automaticParagraphsInfo')"
+                                    :disabled="importInProgress" />
                             </field>
+                            <small class="note">
+                                {{ $t('tools.wpImport.automaticParagraphsInfo') }}
+                            </small>
                             <field
                                 id="clean-imported-html"
                                 :label="$t('tools.wpImport.cleanHtml')"
@@ -280,7 +287,7 @@
                                 :loading="importInProgress"
                                 loading-layout="overlay"
                                 :aria-label="importInProgress ? $t('tools.wpImport.importingData') : $t('tools.wpImport.importData')"
-                                appearance="secondary"
+                                intent="primary"
                                 icon="download">
                                 {{ $t('tools.wpImport.importData') }}
                             </p-button>
@@ -400,6 +407,9 @@ export default {
         };
     },
     computed: {
+        wxrFileButtonLabel: function() {
+            return this.$t(this.filePath ? 'tools.wpImport.changeWXRFileButton' : 'tools.wpImport.selectWXRFileButton');
+        },
         importConfigCssClasses: function() {
             return {
                 'import-config': true,

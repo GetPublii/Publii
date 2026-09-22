@@ -429,6 +429,7 @@ export default {
             }
 
             const labels = {
+                blocks: 'reportBlocksNote',
                 htmlCleanup: 'reportCleanupNote',
                 seo: 'reportSeoNote'
             };

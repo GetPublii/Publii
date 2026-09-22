@@ -292,6 +292,105 @@ describeWithDatabase('WordPress WXR import', function() {
         fs.rmSync(temporaryDir, { recursive: true, force: true });
     });
 
+    for (const autop of [false, true]) {
+        for (const cleanHtml of [false, true]) {
+            it('stores safe formatting and Gutenberg diagnostics with autop=' + autop +
+                ' and cleanup=' + cleanHtml, async function() {
+                const codeExample = '<pre><code><!-- wp:example/sample /-->\nfirst();\nsecond();</code></pre>';
+                const blockContent = '<!-- wp:group --><div>' +
+                    '<!-- wp:paragraph --><p>First\nSecond</p><!-- /wp:paragraph -->' +
+                    '<!-- wp:code -->' + codeExample + '<!-- /wp:code -->' +
+                    '<!-- wp:latest-posts {"postsToShow":5} /-->' +
+                    '<!-- wp:vendor/widget {"id":"test"} /-->' +
+                    '<!-- Keep this comment --></div><!-- /wp:group -->';
+                const expectedBlockContent = '<div><p>First\nSecond</p>' + codeExample +
+                    '<!-- Keep this comment --></div>';
+                const classicContent = 'Line one\nLine two\n\nNext paragraph.';
+                const protectedContent = '<pre>first();\nsecond();</pre>\n\n' +
+                    '<textarea>Line one\n\nLine two</textarea>';
+                const source = fs.readFileSync(wxrFile, 'utf8')
+                    .replace('<p><a href="https://example.com/parent/child/">Child page</a></p>', blockContent)
+                    .replace('<p>Parent</p>', classicContent)
+                    .replace('<p>Child</p>', protectedContent);
+                fs.writeFileSync(wxrFile, source);
+
+                const importer = new Import(appInstance, 'test-site', wxrFile);
+                const result = await importer.importFile(
+                    'publii-author',
+                    'both',
+                    autop,
+                    ['post', 'page'],
+                    'wordpress',
+                    false,
+                    'none',
+                    cleanHtml
+                );
+                const readRows = () => appInstance.db.prepare(`
+                    SELECT p.title, p.text, pad.value AS additional_data
+                    FROM posts AS p
+                    LEFT JOIN posts_additional_data AS pad ON pad.post_id = p.id AND pad.key = '_core'
+                    ORDER BY p.id
+                `).all();
+                const rows = readRows();
+                const post = rows.find(row => row.title === 'Changed title');
+                const parent = rows.find(row => row.title === 'Parent');
+                const child = rows.find(row => row.title === 'Child');
+                const metadata = JSON.parse(post.additional_data).wpImport;
+
+                assert.strictEqual(post.text, expectedBlockContent);
+                assert.strictEqual(parent.text, autop
+                    ? '<p>Line one<br>\nLine two</p>\n<p>Next paragraph.</p>\n'
+                    : classicContent);
+                assert.ok(child.text.includes('<pre>first();\nsecond();</pre>'));
+                assert.ok(child.text.includes('<textarea>Line one\n\nLine two</textarea>'));
+                assert.doesNotMatch(child.text, /restore-line-break|PUBLIIAUTOP/);
+                assert.deepStrictEqual(metadata.blocks.map(block => block.name), ['latest-posts', 'vendor/widget']);
+                assert.deepStrictEqual(result.summary.report.dynamicBlocks.map(block => block.name), [
+                    'latest-posts', 'vendor/widget'
+                ]);
+
+                // A fresh parser must recover diagnostics after the comments have left the HTML.
+                const repeatedImport = new Import(appInstance, 'test-site', wxrFile);
+                const repeated = await repeatedImport.importFile(
+                    'publii-author', 'both', autop, ['post', 'page'], 'wordpress', false, 'none', cleanHtml
+                );
+                assert.strictEqual(repeated.summary.skipped.posts, 1);
+                assert.strictEqual(repeated.summary.skipped.pages, 2);
+                assert.deepStrictEqual(repeated.summary.report.dynamicBlocks, result.summary.report.dynamicBlocks);
+                assert.deepStrictEqual(readRows(), rows);
+            });
+        }
+    }
+
+    it('reports legacy Gutenberg markers when import metadata has no saved block diagnostics', async function() {
+        const importer = new Import(appInstance, 'test-site', wxrFile);
+        await importer.importFile('publii-author', 'both', false, ['post', 'page']);
+        const post = appInstance.db.prepare("SELECT id FROM posts WHERE title = 'Changed title'").get();
+        const metadata = appInstance.db.prepare(`
+            SELECT value FROM posts_additional_data WHERE post_id = ? AND key = '_core'
+        `).get(post.id);
+        const additionalData = JSON.parse(metadata.value);
+        delete additionalData.wpImport.blocks;
+        appInstance.db.prepare('UPDATE posts SET text = @text WHERE id = @id').run({
+            text: '<!-- wp:latest-posts /-->',
+            id: post.id
+        });
+        appInstance.db.prepare(`
+            UPDATE posts_additional_data SET value = @value WHERE post_id = @id AND key = '_core'
+        `).run({
+            value: JSON.stringify(additionalData),
+            id: post.id
+        });
+
+        const repeatedImport = new Import(appInstance, 'test-site', wxrFile);
+        const repeated = await repeatedImport.importFile('publii-author', 'both', false, ['post', 'page']);
+        assert.deepStrictEqual(repeated.summary.report.dynamicBlocks.map(block => block.name), ['latest-posts']);
+        assert.strictEqual(
+            appInstance.db.prepare('SELECT text FROM posts WHERE id = ?').get(post.id).text,
+            '<!-- wp:latest-posts /-->'
+        );
+    });
+
     for (const cleanHtml of [false, true]) {
         for (const autop of [false, true]) {
             it('converts inline alignment with cleanup=' + cleanHtml + ' and automatic paragraphs=' + autop, async function() {

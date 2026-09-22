@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const path = require('path');
 const { decode } = require('html-entities');
 const slug = require('../../helpers/slug');
+const WordPressBlocks = require('./wordpress-blocks');
 
 const SEO_PROVIDER_DEFINITIONS = {
     yoast: {
@@ -1227,24 +1228,12 @@ function extractShortcodes(html) {
     return results;
 }
 
-function extractWordPressBlocks(html) {
-    if (typeof html !== 'string' || !/<!--\s*wp:/i.test(html)) {
-        return [];
-    }
-
-    let results = [];
-    let blockRegexp = /<!--\s*wp:([a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)?)\b[^>]*-->/g;
-    let match;
-
-    while ((match = blockRegexp.exec(html)) !== null) {
-        results.push({
-            name: match[1].toLowerCase(),
-            markup: compactSnippet(match[0]),
-            index: match.index
-        });
-    }
-
-    return results;
+function extractWordPressBlocks(html, comments = WordPressBlocks.getBlockComments(html)) {
+    return comments.filter(comment => !comment.closing).map(comment => ({
+        name: comment.name,
+        markup: compactSnippet(comment.markup),
+        index: comment.start
+    }));
 }
 
 function extractLinkUrls(html) {
