@@ -280,13 +280,20 @@ export default {
     flex-shrink: 0;
     margin: 0;
 
-    &::v-deep .progress-orb-ring-track,
-    &::v-deep .progress-orb-ring-value {
-        stroke-width: 5;
-    }
-
+    &::v-deep .progress-orb-glow,
+    &::v-deep .progress-orb-shadow,
+    &::v-deep .progress-orb-disc,
     &::v-deep .progress-orb-message {
         display: none;
+    }
+
+    &::v-deep .progress-orb-ring-track,
+    &::v-deep .progress-orb-ring-value {
+        stroke-width: 4;
+    }
+
+    &::v-deep .progress-orb-ring-track {
+        stroke: var(--color-border-muted);
     }
 
     &.is-indeterminate::v-deep .progress-orb-ring {
