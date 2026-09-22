@@ -212,6 +212,7 @@
         "blockEditorHelpPanelDesc": "Możesz wstawić blok, klikając <span>+</span> lub naciskając klawisz <span>TAB</span> w nowym wierszu lub wpisując następujące skróty lub składnię Markdown w nowym wierszu:",
         "blocks": {
             "code": {
+                "plainText": "Zwykły tekst",
                 "idTooltip": "Ta wartość zostanie użyta jako ID tego kodu"
             },
             "cssClassesLabel": "Klasa CSS",

@@ -9,7 +9,7 @@
       :emitEvents="true"
       v-model="content"
       :lineNumbers="true"
-      :language="config.language">
+      :language="config.language || 'none'">
     </prism-editor>
 
     <top-menu
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import codeLanguages from '../../../../../../shared/code-languages';
 import AvailableConversions from './conversions.js';
 import Block from './../../Block.vue';
 import ConfigForm from './config-form.json';
@@ -51,9 +52,17 @@ export default {
       topMenuConfig: [
         {
           type: 'select',
+          id: 'code-language-' + this.id,
           label: this.$t('langs.language'),
           configKey: 'language',
-          clearable: true,
+          cssClasses: 'code-language-select',
+          clearable: false,
+          allowEmpty: false,
+          customLabel: this.getLanguageLabel,
+          internalSearch: false,
+          onSearchChange: this.filterLanguages,
+          showSelectedIcon: true,
+          optionHeight: 36,
           searchable: true,
           options: []
         }
@@ -62,76 +71,16 @@ export default {
   },
   computed: {
     availableLanguages () {
-      return [
-        'apacheconf',
-        'aspnet',
-        'bash',
-        'basic',
-        'batch',
-        'bbcode',
-        'c',
-        'cpp',
-        'cfscript',
-        'csharp',
-        'clike',
-        'css',
-        'dart',
-        'docker',
-        'elixir',
-        'elm',
-        'gdscript',
-        'git',
-        'glsl',
-        'go',
-        'graphql',
-        'haml',
-        'handlebars',
-        'haskell',
-        'html',
-        'http',
-        'ini',
-        'java',
-        'javascript',
-        'json',
-        'jsonp',
-        'jsx',
-        'kotlin',
-        'latex',
-        'less',
-        'lisp',
-        'lua',
-        'makefile',
-        'markdown',
-        'matlab',
-        'nasm',
-        'nginx',
-        'objectivec',
-        'pascal',
-        'perl',
-        'php',
-        'powershell',
-        'pug',
-        'python',
-        'r',
-        'regex',
-        'ruby',
-        'rust',
-        'sass',
-        'scss',
-        'scala',
-        'sql',
-        'swift',
-        'twig',
-        'typescript',
-        'vbnet',
-        'visual-basic',
-        'yaml',
-        'xml'
-      ]
+      return codeLanguages.map(language => language.value === 'markup' ? 'xml' : language.value);
     }
   },
   watch: {
     'config.language': function (newValue) {
+      if (!newValue) {
+        this.config.language = 'none';
+        return;
+      }
+
       localStorage.setItem('block-editor-last-selected-language', newValue);
     }
   },
@@ -143,6 +92,25 @@ export default {
     this.topMenuConfig[0].options = this.availableLanguages;
   },
   methods: {
+    getLanguageLabel (language) {
+      if (language === 'none') {
+        return this.$t('editor.blocks.code.plainText');
+      }
+
+      const value = language === 'xml' ? 'markup' : language;
+      const definition = codeLanguages.find(option => option.value === value);
+      return definition ? definition.text : language || '';
+    },
+    filterLanguages (search) {
+      const query = (search || '').trim().toLowerCase();
+
+      this.topMenuConfig[0].options = this.availableLanguages.filter(language => {
+        const value = language === 'xml' ? 'markup' : language;
+        const definition = codeLanguages.find(option => option.value === value);
+        const terms = [language, value, definition.text, this.getLanguageLabel(language)];
+        return terms.some(term => term.toLowerCase().includes(query));
+      });
+    },
     focus () {
       this.$refs['block'].$el.querySelector('pre').focus();
     },
@@ -179,16 +147,45 @@ export default {
       if (value !== null) {
         value = value.replace(/[^a-z0-9-]/gmi, '');
       } else {
-        value = 'html';
+        value = 'none';
       }
 
-      return value;
+      return value === 'xml' || codeLanguages.some(language => language.value === value) ? value : 'none';
     }
   }
 }
 </script>
 
 <style>
+
+.wrapper-ui-top-menu .multiselect.code-language-select {
+    flex: 0 0 240px;
+    width: 240px;
+
+    &.multiselect--active .multiselect__tags {
+        border-color: var(--input-border-focus);
+        box-shadow: var(--input-shadow-focus);
+    }
+
+    .multiselect__element .multiselect__option {
+        white-space: nowrap;
+    }
+
+    .top-menu-select-option {
+        align-items: center;
+        display: flex;
+        gap: var(--space-2);
+        justify-content: space-between;
+        min-height: 20px;
+    }
+
+    .top-menu-select-check {
+        color: var(--text-primary-color);
+        flex: 0 0 16px;
+        height: 16px;
+        width: 16px;
+    }
+}
 
 .publii-block-code {
     border-radius: calc(var(--radius-base) * 1.5);

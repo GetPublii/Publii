@@ -140,6 +140,7 @@
         "blockEditorHelpPanelDesc": "Sie können einen Block einfügen, indem Sie entweder in einer neuen Zeile auf die Schaltfläche <span>+</span> klicken oder die <span>TAB</span>-Taste drücken oder die folgenden Tastenkombinationen oder Markdown-Syntax in einer neuen Zeile eingeben:",
         "blocks": {
             "code": {
+                "plainText": "Klartext",
                 "idTooltip": "Dieser Wert wird als Code-ID verwendet"
             },
             "cssClassesLabel": "CSS-Klasse",

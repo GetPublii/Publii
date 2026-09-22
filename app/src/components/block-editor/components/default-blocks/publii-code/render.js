@@ -1,6 +1,6 @@
 function render (blockData) {
   let id = blockData.config.advanced.id ? ' id="' + blockData.config.advanced.id + '"' : '';
-  let languageToUse = blockData.config.language;
+  let languageToUse = blockData.config.language || 'none';
 
   if (languageToUse === 'xml') {
     languageToUse = 'markup';
@@ -8,7 +8,11 @@ function render (blockData) {
 
   let languageClass = ' language-' + languageToUse;
   let cssClasses = ' class="line-numbers ' + blockData.config.advanced.cssClasses + languageClass + '"';
-  let html = `<pre${id}${cssClasses}><code>${blockData.content.replace(/</gmi, '&lt;').replace(/>/gmi, '&gt;')}</code></pre>`;
+  let content = blockData.content
+    .replace(/&/g, '&amp;')
+    .replace(/</gmi, '&lt;')
+    .replace(/>/gmi, '&gt;');
+  let html = `<pre${id}${cssClasses}><code>${content}</code></pre>`;
   return html;
 };
 

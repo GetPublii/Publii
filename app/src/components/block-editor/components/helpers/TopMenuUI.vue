@@ -35,16 +35,46 @@
           </button>
         </template>
         <template v-else-if="uiElement.type === 'select'">
-          <label :key="'top-menu-element-label-' + index">
+          <label
+            :key="'top-menu-element-label-' + index"
+            :for="uiElement.id">
             {{ uiElement.label }}
           </label>
           <vue-select
             :key="'top-menu-element-' + index"
+            :id="uiElement.id"
             :class="uiElement.cssClasses"
             :options="uiElement.options"
             :clearable="uiElement.clearable"
+            :allow-empty="uiElement.allowEmpty"
+            :custom-label="uiElement.customLabel"
+            :internal-search="uiElement.internalSearch"
+            :option-height="uiElement.optionHeight"
             :searchable="uiElement.searchable"
-            v-model="$parent.config[uiElement.configKey]" />
+            @search-change="handleSelectSearch(uiElement, $event)"
+            v-model="$parent.config[uiElement.configKey]">
+            <template
+              v-if="uiElement.showSelectedIcon"
+              slot="option"
+              slot-scope="{ option }">
+              <span class="top-menu-select-option">
+                <span>{{ uiElement.customLabel(option) }}</span>
+                <svg
+                  v-if="option === $parent.config[uiElement.configKey]"
+                  class="top-menu-select-check"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  focusable="false">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
+            </template>
+          </vue-select>
         </template>
       </template>
       <button
@@ -147,6 +177,11 @@ export default {
     }
   },
   methods: {
+    handleSelectSearch (uiElement, search) {
+      if (uiElement.onSearchChange) {
+        uiElement.onSearchChange(search);
+      }
+    },
     makeConversion (outputType, convertCallback) {
       let transformedData = convertCallback(this.$parent.config, this.$parent.content, this.$parent.editor, this.$parent.$refs['block']);
       this.$bus.$emit('block-editor-convert-block', this.$parent.id, outputType, transformedData);
