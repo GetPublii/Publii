@@ -220,7 +220,7 @@ export default {
 
     &.button-disabled,
     &.button-disabled-with-events {
-        background-color: var(--popup-btn-cancel-bg-hover);
+        background-color: var(--button-disabled-bg);
         border-color: var(--input-border-color);
         color: var(--popup-btn-cancel-color);
         cursor: not-allowed;

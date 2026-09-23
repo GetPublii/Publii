@@ -154,6 +154,7 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
     --button-secondary-color-hover: var(--palette-brand-70);
     --button-danger-bg: var(--color-danger);
     --button-danger-bg-hover: #cd1613;
+    --button-disabled-bg: var(--palette-neutral-10);
 
     /* Content */
     --text-primary-color: var(--palette-neutral-75);
@@ -345,6 +346,7 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --button-secondary-color-hover: var(--palette-brand-15);
     --button-danger-bg: #ed0001;
     --button-danger-bg-hover: #a90001;
+    --button-disabled-bg: var(--popup-btn-cancel-bg-hover);
 
     /* Content */
     --text-primary-color: var(--palette-neutral-20);

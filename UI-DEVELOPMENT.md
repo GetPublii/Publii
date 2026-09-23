@@ -221,6 +221,8 @@ Button concerns are independent:
 
 `p-button` renders a native `<button type="button">`, so it is reachable with Tab and activates with Enter and Space. `disabled` maps to the native `disabled` attribute; `disabled-with-events` keeps the control interactive and exposes `aria-disabled` instead; `loading` exposes `aria-busy`. Keyboard focus shows the shared `--input-border-focus` ring through `:focus-visible`, and pointer clicks leave no lingering focus or hover style.
 
+Disabled button surfaces use `--button-disabled-bg`; keep this role separate from popup cancel hover styling. The light scheme uses `--palette-neutral-10`, while the dark scheme retains its existing disabled background.
+
 `btn-dropdown` is a split button: its main action and its menu toggle are separate native buttons, and the open list is a `role="menu"` of native `menuitem` buttons. Arrow Down on either part opens the list, Arrow Up and Down move between items, Home and End jump to the ends, Escape closes the list and returns focus to the toggle, and Tab closes it while moving on. Choosing an item with the keyboard returns focus to the main action; pointer interaction keeps the previous behaviour and shows no focus ring.
 
 Do not rebuild the old space-delimited `type` API:
