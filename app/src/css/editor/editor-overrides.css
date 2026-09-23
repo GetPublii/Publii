@@ -650,8 +650,8 @@ body .tox .tox-dialog__header {
 }
 body .tox .tox-dialog__title {
     color: var(--text-primary-color);
-    font-size: 1.8rem;
-    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-ui-lg);
+    font-weight: var(--font-weight-semibold);
     margin: 0 auto;
     text-align: center;
     text-transform: none;
