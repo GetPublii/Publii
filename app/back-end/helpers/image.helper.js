@@ -119,6 +119,22 @@ class ImageHelper {
         return mediaPath;
     }
 
+    /**
+     * Keep generated gallery thumbnails while their originals are referenced in saved content.
+     * The filename check works for HTML, Markdown and block editor JSON, regardless of conversion format.
+     */
+    static getUsedGalleryThumbnails(images, text) {
+        const referencedNames = new Set(
+            images.filter(filename => text.includes(filename)).map(filename => path.parse(filename).name)
+        );
+        const suffix = '-thumbnail';
+
+        return new Set(images.filter(filename => {
+            const name = path.parse(filename).name;
+            return name.endsWith(suffix) && referencedNames.has(name.slice(0, -suffix.length));
+        }));
+    }
+
     /*
      * Delete images connected with a specific post ID
      */

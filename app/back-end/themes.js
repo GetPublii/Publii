@@ -571,21 +571,21 @@ class Themes {
         let assetsToCheck = [
             {
                 dir: 'posts', 
-                configType: 'postConfig'
+                configTypes: ['postConfig', 'pageConfig']
             },
             {
                 dir: 'tags', 
-                configType: 'tagConfig'
+                configTypes: ['tagConfig']
             },
             {
                 dir: 'authors', 
-                configType: 'authorConfig'
+                configTypes: ['authorConfig']
             }
         ];
 
         for (let i = 0; i < assetsToCheck.length; i++) {
             let dirToCheck = assetsToCheck[i].dir;
-            let configToCheck = assetsToCheck[i].configType;
+            let configTypes = assetsToCheck[i].configTypes;
             let viewImagesDir = path.join(this.siteInputPath, 'media', dirToCheck, 'defaults');
 
             if(!UtilsHelper.dirExists(viewImagesDir)) {
@@ -593,7 +593,7 @@ class Themes {
             }
 
             let viewImages = fs.readdirSync(viewImagesDir);
-            let configImages = Object.values(configObject[configToCheck]);
+            let configImages = configTypes.flatMap(configType => Object.values(configObject[configType] || {}));
 
             // Iterate through images
             for (let i in viewImages) {

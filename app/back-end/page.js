@@ -482,22 +482,37 @@ class Page extends Model {
             galleryImages = fs.readdirSync(galleryImagesDir);
         }
 
-        // Get previous text if the page is cancelled and it is a not a new page
-        if (cancelEvent && pageDir !== 'temp') {
-            let textSqlQuery = `
-                    SELECT
-                        text
-                    FROM
-                        posts
-                    WHERE
-                        id = @id
-                `;
+        // Discarded edits must not remove images referenced by the saved version.
+        if (cancelEvent && this.id !== 0) {
+            const savedItem = this.db.prepare(`
+                SELECT
+                    p.text,
+                    pi.url AS featuredImage,
+                    pad.value AS viewSettings
+                FROM
+                    posts AS p
+                LEFT JOIN
+                    posts_images AS pi ON pi.id = p.featured_image_id
+                LEFT JOIN
+                    posts_additional_data AS pad
+                    ON pad.post_id = p.id AND pad.key = 'pageViewSettings'
+                WHERE
+                    p.id = @id
+            `).get({ id: this.id });
 
-            let textResult = this.db.prepare(textSqlQuery).get({ id: pageDir });
-
-            if (textResult && textResult.text) {
-                this.text = textResult.text;
+            if (!savedItem) {
+                return;
             }
+
+            try {
+                this.pageViewSettings = JSON.parse(savedItem.viewSettings || '{}') || {};
+            } catch (error) {
+                console.error('Cannot clean page images: saved view settings could not be read.', error);
+                return;
+            }
+
+            this.text = savedItem.text || '';
+            this.featuredImageFilename = savedItem.featuredImage || '';
         }
 
         this.cleanImages(images, imagesDir, cancelEvent);
@@ -514,29 +529,13 @@ class Page extends Model {
         let pageDir = this.id;
         let featuredImage = path.parse(this.featuredImageFilename).base;
 
-        // If page is cancelled - get the previous featured image
-        if (cancelEvent && this.id !== 0) {
-            let featuredImageSqlQuery = `
-                    SELECT
-                        url
-                    FROM
-                        posts_images
-                    WHERE
-                        post_id = @id
-                `;
-
-            let featuredImageResult = this.db.prepare(featuredImageSqlQuery).all({ 
-                id: this.id 
-            });
-
-            if (featuredImageResult && featuredImageResult.url) {
-                featuredImage = featuredImageResult.url;
-            }
-        }
-
         if (this.id === 0) {
             pageDir = 'temp';
         }
+
+        const usedGalleryThumbnails = path.basename(imagesDir) === 'gallery'
+            ? ImageHelper.getUsedGalleryThumbnails(images, this.text)
+            : new Set();
 
         let imagesInPageViewSettings = [];
         
@@ -558,7 +557,8 @@ class Page extends Model {
             if(
                 (cancelEvent && pageDir === 'temp') ||
                 (
-                    this.text.indexOf(imagePath) === -1 && 
+                    this.text.indexOf(imagePath) === -1 &&
+                    !usedGalleryThumbnails.has(imagePath) &&
                     imagesInPageViewSettings.indexOf(imagePath) === -1 &&
                     featuredImage !== imagePath
                 )

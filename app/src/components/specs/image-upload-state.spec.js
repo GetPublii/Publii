@@ -693,3 +693,65 @@ describe('Shared uploader contexts', () => {
     });
 
 });
+
+describe('Plugin image removal before saving', function () {
+    it('clears each upload control without requesting deletion of the saved file', async function () {
+        const compiler = require('../../../../node_modules/vue-template-compiler');
+        const source = fs.readFileSync(path.resolve(__dirname, '../ToolsPlugin.vue'), 'utf8');
+        const template = compiler.parseComponent(source).template.content;
+        const fields = [];
+        const visited = new Set();
+
+        function visit(node) {
+            if (!node || visited.has(node)) {
+                return;
+            }
+
+            visited.add(node);
+
+            if (node.tag === 'image-upload' || node.tag === 'small-image-upload') {
+                fields.push(node);
+            }
+
+            (node.children || []).forEach(visit);
+            (node.ifConditions || []).forEach(condition => visit(condition.block));
+        }
+
+        visit(compiler.compile(template).ast);
+        assert.equal(fields.length, 4);
+
+        for (const field of fields) {
+            const requests = [];
+            const plugin = loadComponent('ToolsPlugin.vue', {
+                BackToTools: {},
+                Repeater: {},
+                SupportedFeaturesCheck: {},
+                mainProcessAPI: { send: (...args) => requests.push(args) }
+            });
+            const callbackName = field.attrsMap[':onBeforeRemove'];
+            const onBeforeRemove = callbackName
+                ? plugin.methods[callbackName].bind({ $route: { params: { name: 'test-site' } } })
+                : undefined;
+            const uploader = field.tag === 'image-upload'
+                ? createUploader(Promise.resolve('/media/'), { props: { onBeforeRemove } })
+                : new Vue({
+                    ...loadComponent('basic-elements/SmallImageUpload.vue'),
+                    propsData: { onBeforeRemove }
+                });
+            let modelValue = 'saved.jpg';
+            uploader.filePath = '/media/saved.jpg';
+            uploader.fileName = 'saved.jpg';
+            uploader.isEmpty = false;
+            await Vue.nextTick();
+            uploader.$on('input', value => { modelValue = value; });
+
+            uploader.remove({ preventDefault() {} });
+            await Vue.nextTick();
+
+            assert.equal(modelValue, '', field.tag);
+            assert.equal(uploader.isEmpty, true, field.tag);
+            assert.equal(requests.length, 0, field.tag + ' must wait for settings to be saved before deleting files');
+            uploader.$destroy();
+        }
+    });
+});

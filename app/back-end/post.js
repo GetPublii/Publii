@@ -585,22 +585,37 @@ class Post extends Model {
             galleryImages = fs.readdirSync(galleryImagesDir);
         }
 
-        // Get previous text if the post is cancelled and it is a not a new post
-        if(cancelEvent && postDir !== 'temp') {
-            let textSqlQuery = `
-                    SELECT
-                        text
-                    FROM
-                        posts
-                    WHERE
-                        id = @id
-                `;
+        // Discarded edits must not remove images referenced by the saved version.
+        if (cancelEvent && this.id !== 0) {
+            const savedItem = this.db.prepare(`
+                SELECT
+                    p.text,
+                    pi.url AS featuredImage,
+                    pad.value AS viewSettings
+                FROM
+                    posts AS p
+                LEFT JOIN
+                    posts_images AS pi ON pi.id = p.featured_image_id
+                LEFT JOIN
+                    posts_additional_data AS pad
+                    ON pad.post_id = p.id AND pad.key = 'postViewSettings'
+                WHERE
+                    p.id = @id
+            `).get({ id: this.id });
 
-            let textResult = this.db.prepare(textSqlQuery).get({ id: postDir });
-
-            if(textResult && textResult.text) {
-                this.text = textResult.text;
+            if (!savedItem) {
+                return;
             }
+
+            try {
+                this.postViewSettings = JSON.parse(savedItem.viewSettings || '{}') || {};
+            } catch (error) {
+                console.error('Cannot clean post images: saved view settings could not be read.', error);
+                return;
+            }
+
+            this.text = savedItem.text || '';
+            this.featuredImageFilename = savedItem.featuredImage || '';
         }
 
         this.cleanImages(images, imagesDir, cancelEvent);
@@ -617,29 +632,13 @@ class Post extends Model {
         let postDir = this.id;
         let featuredImage = path.parse(this.featuredImageFilename).base;
 
-        // If post is cancelled - get the previous featured image
-        if (cancelEvent && this.id !== 0) {
-            let featuredImageSqlQuery = `
-                    SELECT
-                        url
-                    FROM
-                        posts_images
-                    WHERE
-                        post_id = @id
-                `;
-
-            let featuredImageResult = this.db.prepare(featuredImageSqlQuery).all({ 
-                id: this.id 
-            });
-
-            if(featuredImageResult && featuredImageResult.url) {
-                featuredImage = featuredImageResult.url;
-            }
-        }
-
         if(this.id === 0) {
             postDir = 'temp';
         }
+
+        const usedGalleryThumbnails = path.basename(imagesDir) === 'gallery'
+            ? ImageHelper.getUsedGalleryThumbnails(images, this.text)
+            : new Set();
 
         let imagesInPostViewSettings = [];
         
@@ -661,7 +660,8 @@ class Post extends Model {
             if(
                 (cancelEvent && postDir === 'temp') ||
                 (
-                    this.text.indexOf(imagePath) === -1 && 
+                    this.text.indexOf(imagePath) === -1 &&
+                    !usedGalleryThumbnails.has(imagePath) &&
                     imagesInPostViewSettings.indexOf(imagePath) === -1 &&
                     featuredImage !== imagePath
                 )

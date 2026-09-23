@@ -137,7 +137,6 @@
                                             imageType="pluginImages"
                                             :pluginDir="$route.params.pluginname"
                                             :addMediaFolderPath="false"
-                                            :onBeforeRemove="removePluginImage"
                                             :customCssClasses="field.customCssClasses"></image-upload>
 
                                         <small-image-upload
@@ -147,7 +146,6 @@
                                             imageType="pluginImages"
                                             :pluginDir="$route.params.pluginname"
                                             slot="field"
-                                            :onBeforeRemove="removePluginImage"
                                             :customCssClasses="field.customCssClasses"></small-image-upload>
 
                                         <radio-buttons
@@ -323,7 +321,6 @@
                                     imageType="pluginImages"
                                     :pluginDir="$route.params.pluginname"
                                     :addMediaFolderPath="false"
-                                    :onBeforeRemove="removePluginImage"
                                     :customCssClasses="field.customCssClasses"></image-upload>
 
                                 <small-image-upload
@@ -333,7 +330,6 @@
                                     imageType="pluginImages"
                                     :pluginDir="$route.params.pluginname"
                                     slot="field"
-                                    :onBeforeRemove="removePluginImage"
                                     :customCssClasses="field.customCssClasses"></small-image-upload>
 
                                 <radio-buttons
@@ -860,11 +856,6 @@ export default {
         },
         showPluginStandardOptions () {
             this.pluginStandardOptionsVisible = true;
-        },
-        removePluginImage (filePath) {
-            if (filePath) {
-                mainProcessAPI.send('app-image-upload-remove', filePath, this.$route.params.name);
-            }
         }
     },
     beforeDestroy () {
