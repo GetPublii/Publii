@@ -9,269 +9,100 @@
                     back>
                     {{ $t('ui.backToTools') }}
                 </p-button>
+
+                <p-button
+                    v-if="actions.canStart || actions.isRunning"
+                    ref="startButton"
+                    slot="buttons"
+                    :onClick="start"
+                    :disabled="actions.isRunning"
+                    intent="primary"
+                    icon="regenerate">
+                    {{ $t(actions.isCancelled ? 'tools.thumbnails.regenerateAgain' : 'tools.thumbnails.regenerate') }}
+                </p-button>
             </p-header>
 
-            <fields-group v-if="currentSiteHasTheme">
-                <p>
-                    {{ $t('tools.thumbnails.regenerateThumbnailsInfo') }}
-                </p>
-
-                <div class="result-wrapper">
+            <thumbnails-regeneration-panel @actions-change="setActions">
+                <template #cancel>
                     <p-button
-                        v-if="regeneratingInProgress"
-                        :onClick="abortRegenerate"
-                        intent="danger">
+                        v-if="actions.isRunning"
+                        ref="stopButton"
+                        :onClick="stop"
+                        appearance="clean-muted"
+                        size="small">
                         {{ $t('ui.cancel') }}
                     </p-button>
-
-                    <p-button
-                        :onClick="regenerate"
-                        appearance="secondary"
-                        :disabled="buttonBusy"
-                        :loading="buttonBusy"
-                        loading-layout="overlay"
-                        :aria-label="buttonBusy ? $t('tools.thumbnails.regeneratingThumbnails') : $t('tools.thumbnails.regenerateThumbnails')">
-                        {{ $t('tools.thumbnails.regenerateThumbnails') }}
-                    </p-button>
-
-                    <span
-                        v-if="resultLabel"
-                        :class="resultCssClass">
-                        {{ resultLabel }}
-                    </span>
-                </div>
-           
-
-            <div
-                v-if="regeneratingStarted"
-                class="regenerate-thumbnails-list-container">
-                <h4>{{ $t('tools.thumbnails.listRegeneratedFiles') }}</h4>
-
-                <ul
-                    class="regenerate-thumbnails-list">
-                    <li
-                        v-for="(file, index) in files"
-                        :key="index"
-                        class="item"
-                        :class="{ 'item-error': isFileError(file) }"
-                        :title="getFilePhrase(file)">
-                        {{ removeSiteDir(file) }}
-                    </li>
-                </ul>
-            </div>
-
-            <p v-if="!currentSiteHasTheme">
-                {{ $t('tools.thumbnails.regenerateThumbnailsNotNecessaryInfo') }}
-            </p>
-
-             </fields-group>
+                </template>
+            </thumbnails-regeneration-panel>
         </div>
     </section>
 </template>
 
 <script>
 import BackToTools from './mixins/BackToTools.js';
+import ThumbnailsRegenerationPanel from './ThumbnailsRegenerationPanel.vue';
+import { getThumbnailsRegeneration } from '../helpers/thumbnails-regeneration';
 
 export default {
     name: 'regenerate-thumbnails',
     mixins: [
         BackToTools
     ],
-    data: function() {
+    components: {
+        'thumbnails-regeneration-panel': ThumbnailsRegenerationPanel
+    },
+    data () {
         return {
-            regeneratingInProgress: false,
-            regeneratingStarted: false,
-            resultLabel: '',
-            resultCssClass: {
-                'error': false,
-                'success': false,
-                'warning': false
-            },
-            buttonBusy: false,
-            files: []
+            actions: {
+                canStart: false,
+                isRunning: false,
+                isCancelled: false
+            }
         };
     },
-    computed: {
-        currentSiteHasTheme: function() {
-            return !!this.$store.state.currentSite.config.theme;
-        }
-    },
     methods: {
-        isFileError (filePath) {
-            return !!(filePath && typeof filePath === 'object' && filePath.error);
-        },
-        getFilePhrase (filePath) {
-            if (filePath && typeof filePath === 'object') {
-                if (filePath.error === 'IMAGE_UNPROCESSABLE') {
-                    return this.$t('tools.thumbnails.imageUnprocessable', { file: filePath.file || '' });
-                }
+        setActions (actions) {
+            let buttonHadFocus = this.buttonHasFocus();
+            let runningChanged = actions.isRunning !== this.actions.isRunning;
 
-                if (filePath.translation) {
-                    return this.$t(filePath.translation);
-                }
-            }
+            this.actions = actions;
 
-            return filePath;
-        },
-        removeSiteDir (filePath) {
-            let phrase = this.getFilePhrase(filePath);
-
-            if (typeof phrase !== 'string') {
-                return '';
-            }
-
-            return phrase.replace(this.$store.state.currentSite.siteDir, '');
-        },
-        regenerate () {
-            if(this.regeneratingInProgress) {
+            // Move focus to Cancel when Start becomes disabled, and back when the run ends.
+            if (!buttonHadFocus || !runningChanged) {
                 return;
             }
 
-            this.buttonBusy = true;
-            this.regeneratingInProgress = true;
-            this.regeneratingStarted = true;
-            this.files = [];
-            this.resultLabel = this.$t('tools.thumbnails.regeneratingThumbnails');
-            this.resultCssClass = {
-                'result': true,
-                'error': false,
-                'success': false,
-                'warning': false
-            };
+            this.$nextTick(() => {
+                let button = actions.isRunning ? this.$refs.stopButton : this.$refs.startButton;
 
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
-
-            setTimeout(() => {
-                mainProcessAPI.send('app-site-regenerate-thumbnails', {
-                    name: this.$store.state.currentSite.config.name
-                });
-
-                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-error', (data) => {
-                    this.resultCssClass = {
-                        'result': true,
-                        'error': true,
-                        'success': false
-                    };
-                    this.resultLabel = data.message.translation ? this.$t(data.message.translation) : data.message;
-                    this.buttonBusy = false;
-                });
-
-                mainProcessAPI.receive('app-site-regenerate-thumbnails-progress', (data) => {
-                    this.resultLabel = this.$t('tools.thumbnails.progress') + data.value + '%';
-
-                    for(let file of data.files) {
-                        if (file) {
-                            this.files.unshift(file);
-                        }
-                    }
-                });
-
-                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
-                    let brokenCount = (data && data.brokenFilesCount) || 0;
-
-                    if (brokenCount > 0) {
-                        this.resultCssClass = {
-                            'result': true,
-                            'error': false,
-                            'success': false,
-                            'warning': true
-                        };
-                        this.resultLabel = this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', { count: brokenCount });
-                    } else {
-                        this.resultCssClass = {
-                            'result': true,
-                            'error': false,
-                            'success': true,
-                            'warning': false
-                        };
-                        this.resultLabel = this.$t('tools.thumbnails.thumbnailsCreated');
-                    }
-
-                    this.buttonBusy = false;
-                    this.regeneratingInProgress = false;
-                });
-            }, 350);
+                if (button && button.$el) {
+                    button.$el.focus();
+                }
+            });
         },
-        abortRegenerate () {
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
-            mainProcessAPI.send('app-site-abort-regenerate-thumbnails', true);
+        buttonHasFocus () {
+            let buttons = [this.$refs.stopButton, this.$refs.startButton];
 
-            this.resultCssClass = {
-                'result': true,
-                'error': false,
-                'success': false,
-                'warning': false
-            };
-            this.resultLabel = this.$t('tools.thumbnails.thumbnailsRegenerationCancelled');
-            this.buttonBusy = false;
-            this.regeneratingInProgress = false;
+            return buttons.some(button => button && button.$el === document.activeElement);
+        },
+        start () {
+            getThumbnailsRegeneration(this.$store).start(this.$store.state.currentSite.config.name);
+        },
+        stop () {
+            getThumbnailsRegeneration(this.$store).stop();
         }
-    },
-    beforeDestroy: function() {
-        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
-        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
-        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
     }
 }
 </script>
 
 <style scoped>
-
 .regenerate-thumbnails {
     margin: 0 auto;
     max-width: var(--wrapper-width);
-    user-select: none;
-
-    .result {
-        padding-left: var(--space-8);
-
-        &.error {
-            color: var(--color-danger);
-        }
-
-        &.success {
-            color: var(--color-success);
-        }
-
-        &.warning {
-            color: var(--color-danger);
-        }
-    }
 }
 
-.regenerate-thumbnails-list {  
-    list-style-type: decimal;
-    list-style-position: inside;
-    margin: 0;
-    padding: 0;
-    user-select: text;
-
-    .item {
-        font-size: var(--font-size-ui-md);
-        padding: var(--space-2) 0 var(--space-2) var(--space-2);
-
-        &:first-child {
-            border-top: none;
-        }
-    }
-}
-
-.regenerate-thumbnails-list-container {
-   border-top: 1px solid var(--border-light-color);
-   margin-top: var(--space-16);
-   padding: var(--space-12) 0 0;
-}
-
-.regenerate-thumbnails-list .item-error {
-    color: var(--color-danger);
-}
-
-.regenerate-thumbnails .result-wrapper {
-    align-items: center;
-    display: flex;
+.regenerate-thumbnails::v-deep .heading {
+    flex-wrap: wrap;
+    row-gap: var(--space-4);
 }
 </style>

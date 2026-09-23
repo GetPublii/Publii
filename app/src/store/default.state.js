@@ -1,3 +1,5 @@
+import { createInitialState as createThumbnailsRegenerationState } from '../helpers/thumbnails-regeneration';
+
 export default {
     // Application front-end status
     app: {
@@ -30,7 +32,9 @@ export default {
         sidebar: {
             status: false,
             syncInProgress: false
-        }
+        },
+        // Outlives the view which started it, the worker keeps running in the background
+        thumbnailsRegeneration: createThumbnailsRegenerationState()
     },
     // Data about installed themes and their location
     themes: [],

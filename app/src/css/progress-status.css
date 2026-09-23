@@ -1,0 +1,80 @@
+/* Compact orb and status text shared by preview and thumbnail regeneration. */
+.progress-status {
+    align-items: center;
+    display: flex;
+    gap: 2.6rem;
+}
+
+.progress-status .progress-status-orb {
+    --progress-orb-size: 6.4rem;
+    --progress-orb-energy: .8;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.progress-status-icon {
+    color: var(--progress-orb-color);
+    height: 36%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: color .5s ease;
+    width: 36%;
+}
+
+.progress-status-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.progress-status-heading {
+    align-items: baseline;
+    display: flex;
+    gap: 1.6rem;
+    justify-content: space-between;
+}
+
+.progress-status-title {
+    color: var(--headings-color);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-ui-lg);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -.015em;
+    line-height: 1.4;
+    margin: 0;
+    overflow-wrap: anywhere;
+    text-align: left;
+    text-transform: none;
+}
+
+.progress-status-percent {
+    flex-shrink: 0;
+    font-size: var(--font-size-ui-sm);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--font-weight-medium);
+    min-width: 4ch;
+    text-align: right;
+}
+
+.progress-status-message {
+    color: var(--text-light-color);
+    font-size: var(--font-size-ui-sm);
+    line-height: var(--line-height-base);
+    margin: .1rem 0 0;
+    min-height: 2rem;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .progress-status {
+        gap: 1.8rem;
+    }
+
+    .progress-status-heading {
+        gap: var(--space-4);
+    }
+}

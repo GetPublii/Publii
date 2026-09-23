@@ -204,7 +204,7 @@ class Image extends Model {
     /*
      * Save responsive images
      */
-    createResponsiveImages(originalPath, imageType = 'contentImages') {
+    createResponsiveImages(originalPath, imageType = 'contentImages', outputDirectory = null) {
         let defaultSiteConfig = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig));
         let themesHelper = new Themes(this.application, { site: this.site });
         let currentTheme = themesHelper.currentTheme();
@@ -323,6 +323,11 @@ class Image extends Model {
 
         if (imageType !== 'galleryImages') {
             targetImagesDir = path.join(targetImagesDir, 'responsive');
+        }
+
+        // Regeneration stages a complete set before replacing existing thumbnails.
+        if (outputDirectory) {
+            targetImagesDir = outputDirectory;
         }
 
         let promises = [];

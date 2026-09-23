@@ -128,6 +128,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-theme-updated',
             'app-files-selected',
             'app-site-regenerate-thumbnails-progress',
+            'app-site-regenerate-thumbnails-success',
+            'app-site-regenerate-thumbnails-error',
             'app-rendering-progress',
             'app-deploy-rendered',
             'app-connection-in-progress',
@@ -291,7 +293,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-local-preview:get-size',
             'app-local-preview:clear',
             'app-local-preview:get-mime-types',
-            'app-local-preview:set-mime-types'
+            'app-local-preview:set-mime-types',
+            'app-site:thumbnails-summary'
         ];
 
         if (validCommands.includes(command)) {

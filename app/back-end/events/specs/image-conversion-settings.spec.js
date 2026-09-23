@@ -26,6 +26,7 @@ async function saveSettings(previousAdvanced, nextAdvanced) {
             if (name === 'electron') {
                 return {
                     ipcMain: {
+                        handle() {},
                         on(channel, callback) {
                             handlers.set(channel, callback);
                         }

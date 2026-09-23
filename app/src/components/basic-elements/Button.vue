@@ -9,7 +9,7 @@
         @click="onClick">
         <icon
             v-if="icon"
-            size="s"
+            :size="iconSize"
             non-interactive
             :name="icon" />
 
@@ -64,6 +64,11 @@ export default {
         icon: {
             default: '',
             type: String
+        },
+        iconSize: {
+            default: 's',
+            type: String,
+            validator: value => ['xs', 's'].includes(value)
         },
         iconOnly: {
             default: false,

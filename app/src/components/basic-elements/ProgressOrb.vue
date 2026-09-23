@@ -111,6 +111,11 @@ export default {
             default: 'default',
             type: String,
             validator: value => ['default', 'small'].includes(value)
+        },
+        appearance: {
+            default: 'default',
+            type: String,
+            validator: value => ['default', 'flat'].includes(value)
         }
     },
     computed: {
@@ -125,7 +130,8 @@ export default {
                 'is-warning': this.phase === 'warning',
                 'is-error': this.phase === 'error',
                 'is-indeterminate': this.indeterminate,
-                'is-small': this.size === 'small'
+                'is-small': this.size === 'small',
+                'is-flat': this.appearance === 'flat'
             };
         },
         cloudPath () {
@@ -187,6 +193,33 @@ export default {
 
     &.is-error {
         --progress-orb-color: var(--color-danger);
+    }
+}
+
+/* Compact status panels retain the ring and supplied icon, with neutral idle feedback. */
+.progress-orb-wrapper.is-flat {
+    &.is-idle {
+        --progress-orb-color: var(--icon-secondary-color);
+    }
+
+    .progress-orb-glow,
+    .progress-orb-shadow,
+    .progress-orb-disc,
+    .progress-orb-message {
+        display: none;
+    }
+
+    .progress-orb-ring-track,
+    .progress-orb-ring-value {
+        stroke-width: 4;
+    }
+
+    .progress-orb-ring-track {
+        stroke: var(--color-border-muted);
+    }
+
+    &.is-indeterminate .progress-orb-ring {
+        animation-duration: 3s;
     }
 }
 

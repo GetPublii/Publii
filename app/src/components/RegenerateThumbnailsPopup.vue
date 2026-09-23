@@ -68,27 +68,83 @@
 </template>
 
 <script>
+import { getThumbnailsRegeneration } from '../helpers/thumbnails-regeneration';
+
 export default {
     name: 'regenerate-thumbnails-popup',
     data () {
         return {
             isVisible: false,
-            message: '',
-            progress: 0,
-            progressIntent: 'default',
-            regeneratingThumbnails: false,
-            regenerateIsDone: false,
+            // The popup shows only the run it has started itself
+            runStarted: false,
             savedSettingsCallback: false
         };
+    },
+    computed: {
+        regeneration () {
+            return getThumbnailsRegeneration(this.$store);
+        },
+        job () {
+            return this.$store.state.components.thumbnailsRegeneration;
+        },
+        regeneratingThumbnails () {
+            return this.runStarted && this.job.status === 'running';
+        },
+        regenerateIsDone () {
+            return this.runStarted && (this.job.status === 'done' || this.job.status === 'error');
+        },
+        brokenCount () {
+            return this.job.problems.length;
+        },
+        progress () {
+            return this.runStarted ? this.job.progress : 0;
+        },
+        progressIntent () {
+            if (!this.regenerateIsDone) {
+                return 'default';
+            }
+
+            if (this.job.status === 'error') {
+                return 'danger';
+            }
+
+            return this.brokenCount > 0 ? 'warning' : 'success';
+        },
+        message () {
+            if (!this.runStarted) {
+                return '';
+            }
+
+            if (this.job.status === 'error') {
+                return this.job.error && this.job.error.translation ? this.$t(this.job.error.translation) : this.job.error;
+            }
+
+            if (this.job.status === 'done') {
+                if (this.brokenCount > 0) {
+                    return this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', { count: this.brokenCount });
+                }
+
+                return this.$t('tools.thumbnails.thumbnailsCreated');
+            }
+
+            if (this.job.processed === 0) {
+                return this.$t('tools.thumbnails.regeneratingThumbnails');
+            }
+
+            return this.$t('tools.thumbnails.progress') + this.job.progress + '%';
+        }
+    },
+    watch: {
+        'job.status' (status) {
+            if (this.isVisible && this.runStarted && status === 'done' && this.savedSettingsCallback && this.brokenCount === 0) {
+                this.skip();
+            }
+        }
     },
     mounted () {
         this.$bus.$on('regenerate-thumbnails-display', (config) => {
             this.isVisible = true;
-            this.message = '';
-            this.progress = 0;
-            this.progressIntent = 'default';
-            this.regeneratingThumbnails = false;
-            this.regenerateIsDone = false;
+            this.runStarted = false;
             this.savedSettingsCallback = config.savedSettingsCallback || false;
         });
 
@@ -97,11 +153,7 @@ export default {
     methods: {
         skip () {
             this.isVisible = false;
-            this.message = '';
-            this.progress = 0;
-            this.progressIntent = 'default';
-            this.regeneratingThumbnails = false;
-            this.regenerateIsDone = false;
+            this.runStarted = false;
 
             if (this.savedSettingsCallback) {
                 this.$bus.$emit('regenerate-thumbnails-close', this.savedSettingsCallback);
@@ -112,49 +164,15 @@ export default {
                 return;
             }
 
-            this.regeneratingThumbnails = true;
-            this.message = this.$t('tools.thumbnails.regeneratingThumbnails');
+            this.runStarted = true;
 
-            setTimeout(() => {
-                mainProcessAPI.send('app-site-regenerate-thumbnails', {
-                    name: this.$store.state.currentSite.config.name
-                });
-
-                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-error', (data) => {
-                    this.progressIntent = 'danger';
-                    this.message = data.message.translation ? this.$t(data.message.translation) : data.message;
-                    this.regeneratingThumbnails = false;
-                    this.regenerateIsDone = true;
-                });
-
-                mainProcessAPI.receive('app-site-regenerate-thumbnails-progress', (data) => {
-                    this.progress = data.value;
-                    this.message = this.$t('tools.thumbnails.progress') + data.value + '%';
-                });
-
-                mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-success', (data) => {
-                    this.progress = 100;
-                    this.regeneratingThumbnails = false;
-                    this.regenerateIsDone = true;
-
-                    let brokenCount = (data && data.brokenFilesCount) || 0;
-
-                    if (brokenCount > 0) {
-                        this.progressIntent = 'warning';
-                        this.message = this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', { count: brokenCount });
-                    } else {
-                        this.progressIntent = 'success';
-                        this.message = this.$t('tools.thumbnails.thumbnailsCreated');
-                    }
-
-                    if (this.savedSettingsCallback && brokenCount === 0) {
-                        this.skip();
-                    }
-                });
-            }, 350);
+            // New settings need a fresh run, even when one started earlier is still in progress
+            this.regeneration.start(this.$store.state.currentSite.config.name, {
+                restart: true
+            });
         },
         onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && !event.isComposing && this.isVisible && !this.regeneratingThumbnails) {
+            if (e.code === 'Enter' && !e.isComposing && this.isVisible && !this.regeneratingThumbnails) {
                 this.onEnterKey();
             }
         },
@@ -166,18 +184,12 @@ export default {
             }
         },
         abortRegenerate () {
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
-            mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
-            mainProcessAPI.send('app-site-abort-regenerate-thumbnails', true);
+            this.regeneration.stop();
             this.skip();
         }
     },
     beforeDestroy: function() {
         this.$bus.$off('regenerate-thumbnails-display');
-        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-error');
-        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-progress');
-        mainProcessAPI.stopReceiveAll('app-site-regenerate-thumbnails-success');
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }

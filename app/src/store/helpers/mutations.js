@@ -405,6 +405,9 @@ export default {
     setSidebarStatus (state, newStatus) {
         state.components.sidebar.status = newStatus;
     },
+    setThumbnailsRegeneration (state, newState) {
+        state.components.thumbnailsRegeneration = newState;
+    },
     setSyncStatus (state, newStatus) {
         state.components.sidebar.syncInProgress = newStatus;
     },

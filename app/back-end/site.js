@@ -14,6 +14,7 @@ const { forkWorkerWithLogs } = require('./helpers/ipc.helper.js');
 const SiteLogs = require('./helpers/site-logs.js');
 const slug = require('./helpers/slug');
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
+const ImageConversion = require('../shared/image-conversion.js');
 const { shell } = require('electron');
 const CreateFromBackup = require('./../back-end/modules/backup/create-from-backup');
 
@@ -252,40 +253,12 @@ class Site {
             return;
         }
 
-        // Remove all old responsive directories
+        // Keep existing thumbnails until their replacements have been written successfully.
         let mediaPath = path.join(this.siteDir, 'input', 'media');
-        let catalogs = fs.readdirSync(path.join(mediaPath, 'posts'));
-        let tagCatalogs = fs.readdirSync(path.join(mediaPath, 'tags'));
-        let authorsCatalogs = fs.readdirSync(path.join(mediaPath, 'authors'));
-        let galleryCatalogs = [];
-        catalogs = catalogs.map(catalog => 'posts/' + catalog);
-        tagCatalogs = tagCatalogs.map(catalog => 'tags/' + catalog);
-        authorsCatalogs = authorsCatalogs.map(catalog => 'authors/' + catalog);
-        catalogs.push('website');
-        catalogs = catalogs.concat(tagCatalogs);
-        catalogs = catalogs.concat(authorsCatalogs);
-        catalogs = catalogs.filter((catalog) => !(catalog.indexOf('/.') > -1 || catalog.trim() === '' || !catalog || UtilsHelper.fileExists(path.join(mediaPath, catalog))));
+        let { catalogs, galleryCatalogs } = this.getThumbnailCatalogs(mediaPath);
 
-        for(let catalog of catalogs) {
-            if(catalog.indexOf('/.') > -1) {
-                continue;
-            }
-
-            let fullPath = path.join(mediaPath, catalog, 'responsive');
-
-            // remove the files form dir or create dir if not exists
-            UtilsHelper.emptyDirRecursively(fullPath);
-
-            // Add gallery catalogs
-            let galleryFullPath = path.join(mediaPath, catalog, 'gallery');
-
-            if(UtilsHelper.dirExists(galleryFullPath)) {
-                let galleryShortPath = path.join(catalog, 'gallery');
-                galleryCatalogs.push(galleryShortPath);
-
-                // Remove all gallery thumbnails
-                this.removeGalleryThumbnails(galleryFullPath);
-            }
+        for (let catalog of catalogs) {
+            fs.ensureDirSync(path.join(mediaPath, catalog, 'responsive'));
         }
 
         // Add gallery catalogs
@@ -294,8 +267,8 @@ class Site {
         // Count images for the process
         let numberOfImagesToRegenerate = this.getNumberOfImagesToRegenerate(mediaPath, catalogs);
 
-        // If there is no posts - abort
-        if(numberOfImagesToRegenerate === 0) {
+        // A site without originals may still have obsolete thumbnails to clean up.
+        if (numberOfImagesToRegenerate === 0 && !this.hasExistingThumbnails(mediaPath, catalogs)) {
             sender.send('app-site-regenerate-thumbnails-error', {
                 message: {
                     translation: 'core.site.noImagesToRegenerate'
@@ -311,12 +284,37 @@ class Site {
         this.numberOfImages = numberOfImagesToRegenerate;
         this.totalProgress = 0;
 
+        // Staging stays outside media, so unfinished files cannot be copied into a preview or upload.
+        let temporaryDirectory = fs.mkdtempSync(path.join(this.siteDir, 'input', '.publii-thumbnails-'));
+
         // For each image - create a new thumbnails (detect featured images)
-        let regenerateProcess = forkWorkerWithLogs(
-            __dirname + '/workers/thumbnails/regenerate',
-            SiteLogs.getWorkerLogsDirectory(this.application, this.name),
-            'regenerate'
-        );
+        let regenerateProcess;
+
+        try {
+            regenerateProcess = forkWorkerWithLogs(
+                __dirname + '/workers/thumbnails/regenerate',
+                SiteLogs.getWorkerLogsDirectory(this.application, this.name),
+                'regenerate'
+            );
+        } catch (error) {
+            fs.removeSync(temporaryDirectory);
+            db.close();
+            throw error;
+        }
+
+        // Also runs after a forced stop; the worker may not get a chance to clean up itself.
+        regenerateProcess.once('close', () => {
+            fs.rm(temporaryDirectory, {
+                recursive: true,
+                force: true,
+                maxRetries: 10,
+                retryDelay: 100
+            }, error => {
+                if (error) {
+                    console.log('(!) Could not remove temporary thumbnails:', error.message);
+                }
+            });
+        });
 
         regenerateProcess.send({
             type: 'dependencies',
@@ -327,9 +325,11 @@ class Site {
                     sitesDir: self.application.sitesDir
                 },
                 name: self.name,
+                temporaryDirectory: temporaryDirectory,
                 postImagesRef: self.postImagesRef,
                 totalProgress: self.totalProgress,
-                numberOfImages: self.numberOfImages
+                numberOfImages: self.numberOfImages,
+                numberOfCatalogs: catalogs.length
             },
             catalog: catalogs.shift(),
             mediaPath: mediaPath
@@ -349,6 +349,12 @@ class Site {
             if(data.type === 'progress') {
                 sender.send('app-site-regenerate-thumbnails-progress', {
                     value: data.value,
+                    processed: data.processed,
+                    total: data.total,
+                    image: data.image,
+                    thumbnails: data.thumbnails || 0,
+                    broken: !!data.broken,
+                    errorMessage: data.errorMessage || '',
                     files: data.files,
                     brokenFilesCount: data.brokenFilesCount || 0
                 });
@@ -366,8 +372,11 @@ class Site {
 
             if (data.type === 'finished') {
                 sender.send('app-site-regenerate-thumbnails-success', {
+                    processed: data.processed,
+                    total: data.total,
                     brokenFilesCount: data.brokenFilesCount || 0,
-                    brokenFiles: data.brokenFiles || []
+                    brokenFiles: data.brokenFiles || [],
+                    brokenImages: data.brokenImages || []
                 });
             }
         });
@@ -375,6 +384,113 @@ class Site {
         db.close();
 
         return regenerateProcess;
+    }
+
+    /**
+     * Returns the media catalogs whose images get thumbnails: posts, the website options, tags and authors,
+     * and separately the galleries inside them
+     *
+     * @param mediaPath
+     * @returns {{ catalogs: string[], galleryCatalogs: string[] }}
+     */
+    getThumbnailCatalogs(mediaPath) {
+        let readCatalogs = (directory) => {
+            let directoryPath = path.join(mediaPath, directory);
+
+            if (!UtilsHelper.dirExists(directoryPath)) {
+                return [];
+            }
+
+            return fs.readdirSync(directoryPath).map(catalog => directory + '/' + catalog);
+        };
+
+        let catalogs = [].concat(
+            readCatalogs('posts'),
+            ['website'],
+            readCatalogs('tags'),
+            readCatalogs('authors')
+        );
+
+        catalogs = catalogs.filter(catalog => {
+            if (catalog.indexOf('/.') > -1 || catalog.trim() === '') {
+                return false;
+            }
+
+            return UtilsHelper.dirExists(path.join(mediaPath, catalog));
+        });
+
+        let galleryCatalogs = catalogs
+            .map(catalog => path.join(catalog, 'gallery'))
+            .filter(galleryCatalog => UtilsHelper.dirExists(path.join(mediaPath, galleryCatalog)));
+
+        return {
+            catalogs,
+            galleryCatalogs
+        };
+    }
+
+    /**
+     * Checks whether regeneration has files to clean up even when no originals remain.
+     */
+    hasExistingThumbnails(mediaPath, catalogs) {
+        return catalogs.some(catalog => {
+            let isGallery = catalog.endsWith('gallery');
+            let targetDirectory = isGallery ? path.join(mediaPath, catalog) : path.join(mediaPath, catalog, 'responsive');
+
+            if (!UtilsHelper.dirExists(targetDirectory)) {
+                return false;
+            }
+
+            return fs.readdirSync(targetDirectory, { withFileTypes: true }).some(file => {
+                return file.isFile() && (!isGallery || file.name.includes('-thumbnail.'));
+            });
+        });
+    }
+
+    /**
+     * Describes what regenerating thumbnails would do, without changing any file
+     *
+     * @returns {object} status: ready, no-images, no-theme or no-responsive-images-config
+     */
+    getThumbnailsSummary() {
+        let themesHelper = new Themes(this.application, { site: this.name });
+        let themeName = themesHelper.currentTheme();
+
+        if (themeName === 'not selected') {
+            return {
+                status: 'no-theme'
+            };
+        }
+
+        let themeConfig = UtilsHelper.loadThemeConfig(path.join(this.siteDir, 'input'), themeName);
+        let themeDisplayName = themeConfig && themeConfig.name ? themeConfig.name : themeName;
+
+        if (!UtilsHelper.responsiveImagesConfigExists(themeConfig)) {
+            return {
+                status: 'no-responsive-images-config',
+                theme: themeDisplayName
+            };
+        }
+
+        let mediaPath = path.join(this.siteDir, 'input', 'media');
+        let { catalogs, galleryCatalogs } = this.getThumbnailCatalogs(mediaPath);
+        let allCatalogs = catalogs.concat(galleryCatalogs);
+        let images = this.getNumberOfImagesToRegenerate(mediaPath, allCatalogs);
+        let canRegenerate = images > 0 || this.hasExistingThumbnails(mediaPath, allCatalogs);
+        let siteConfigPath = path.join(this.siteDir, 'input', 'config', 'site.config.json');
+        let siteConfig = JSON.parse(JSON.stringify(defaultAstCurrentSiteConfig));
+
+        if (UtilsHelper.fileExists(siteConfigPath)) {
+            siteConfig = UtilsHelper.mergeObjects(siteConfig, JSON.parse(FileHelper.readFileSync(siteConfigPath)));
+        }
+
+        return {
+            status: canRegenerate ? 'ready' : 'no-images',
+            theme: themeDisplayName,
+            images: images,
+            format: ImageConversion.createContext(siteConfig.advanced).format,
+            responsiveImages: !!siteConfig.advanced.responsiveImages
+        };
     }
 
     /**

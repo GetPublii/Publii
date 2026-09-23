@@ -1,8 +1,9 @@
 <template>
     <div class="overlay" v-if="isVisible">
-        <div class="popup">
+        <div class="popup progress-status">
             <progress-orb
-                class="preview-orb"
+                class="progress-status-orb"
+                appearance="flat"
                 :phase="progressIntent === 'success' ? 'success' : 'rendering'"
                 :progress="progress"
                 :indeterminate="isPartialPreview && progressIntent !== 'success'"
@@ -10,26 +11,31 @@
                 :aria-label="$t('rendering.preparingPreview')"
                 aria-valuemin="0"
                 aria-valuemax="100"
-                :aria-valuenow="isPartialPreview && progressIntent !== 'success' ? null : progress">
+                :aria-valuenow="isPartialPreview && progressIntent !== 'success' ? null : progress"
+                :aria-valuetext="previewMessage">
                 <template #icon>
                     <icon
                         name="preview-layout"
-                        class="preview-orb-icon"
-                        focusable="false" />
+                        class="progress-status-icon"
+                        non-interactive
+                        aria-hidden="true" />
                 </template>
             </progress-orb>
 
-            <div class="heading">
-                <div class="preview-heading">
-                    <h1>{{ $t('rendering.preparingPreview') }}</h1>
+            <div class="progress-status-text">
+                <div class="progress-status-heading">
+                    <h1 class="progress-status-title">
+                        {{ $t('rendering.preparingPreview') }}
+                    </h1>
                     <span
                         v-if="!isPartialPreview"
-                        class="preview-progress-percent">
+                        class="progress-status-percent"
+                        aria-hidden="true">
                         {{ progress }}%
                     </span>
                 </div>
                 <p
-                    class="preview-progress-message"
+                    class="progress-status-message"
                     :title="previewMessage">
                     {{ previewMessage }}
                 </p>
@@ -221,11 +227,9 @@ export default {
 
 <style scoped>
 @import '../css/popup-common.css';
+@import '../css/progress-status.css';
 
 .popup {
-    align-items: center;
-    display: flex;
-    gap: 2.6rem;
     max-height: calc(100% - var(--space-8));
     max-width: calc(100% - var(--space-8));
     overflow-y: auto;
@@ -233,94 +237,10 @@ export default {
     width: 48rem;
 }
 
-.heading {
-    flex: 1;
-    min-width: 0;
-}
-
-.preview-heading {
-    align-items: baseline;
-    display: flex;
-    gap: 1.6rem;
-    justify-content: space-between;
-
-    h1 {
-        font-weight: var(--font-weight-semibold);
-        line-height: 1.4;
-        margin: 0;
-        overflow-wrap: anywhere;
-        text-align: left;
-    }
-}
-
-.preview-progress-percent {
-    flex-shrink: 0;
-    font-size: var(--font-size-ui-sm);
-    font-variant-numeric: tabular-nums;
-    font-weight: var(--font-weight-medium);
-    min-width: 4ch;
-    text-align: right;
-}
-
-.preview-progress-message {
-    color: var(--text-light-color);
-    font-size: var(--font-size-ui-sm);
-    line-height: var(--line-height-base);
-    margin: .6rem 0 0;
-    min-height: 2rem;
-    overflow: hidden;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.popup .preview-orb {
-    --progress-orb-size: 6.4rem;
-    --progress-orb-energy: .8;
-    flex-shrink: 0;
-    margin: 0;
-
-    &::v-deep .progress-orb-glow,
-    &::v-deep .progress-orb-shadow,
-    &::v-deep .progress-orb-disc,
-    &::v-deep .progress-orb-message {
-        display: none;
-    }
-
-    &::v-deep .progress-orb-ring-track,
-    &::v-deep .progress-orb-ring-value {
-        stroke-width: 4;
-    }
-
-    &::v-deep .progress-orb-ring-track {
-        stroke: var(--color-border-muted);
-    }
-
-    &.is-indeterminate::v-deep .progress-orb-ring {
-        animation-duration: 3s;
-    }
-}
-
 @media (max-width: 480px) {
     .popup {
-        gap: 1.8rem;
         padding: 2.4rem var(--space-8);
     }
-
-    .preview-heading {
-        gap: var(--space-4);
-    }
-}
-
-.preview-orb-icon {
-    color: var(--progress-orb-color);
-    height: 36%;
-    left: 50%;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    transition: color .5s ease;
-    width: 36%;
 }
 
 .message {

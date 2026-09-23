@@ -186,7 +186,7 @@ The basic elements registered in `app/src/main.js` are globally available in Vue
 | `field` | `spacing="normal|small"`; independent label-layout booleans |
 | `image-upload` | `size="default|small"` |
 | `progress-bar` | `intent="default|success|danger|warning"` |
-| `progress-orb` | `phase="idle|rendering|connecting|uploading|success|warning|error"`; numeric `progress`; independent `indeterminate` boolean; `message`; `size="default|small"` |
+| `progress-orb` | `phase="idle|rendering|connecting|uploading|success|warning|error"`; numeric `progress`; independent `indeterminate` boolean; `message`; `size="default|small"`; `appearance="default|flat"` |
 | `overlay` | `appearance="default|drop-zone"` |
 | `icon` | named `size`; `non-interactive` boolean; controlled custom classes when required |
 | `app-illustration` | allowlisted `name`; optional `scale` and `translate-y`; one inline, token-driven SVG symbol per illustration |
@@ -216,7 +216,7 @@ Button concerns are independent:
 | Size | `size` | `default`, `small`, `medium` |
 | Width | `width` | `auto`, `quarter`, `half`, `full` |
 | Layout | `layout` | `inline`, `bottom` |
-| Icon treatment | `icon`, `icon-only`, `icon-tone` | `icon-tone`: `default`, `primary` |
+| Icon treatment | `icon`, `icon-size`, `icon-only`, `icon-tone` | `icon-size`: `xs`, `s` (default); `icon-tone`: `default`, `primary` |
 | State | booleans | `active`, `back`, `disabled`, `disabled-with-events`, `loading`, `square` |
 
 `p-button` renders a native `<button type="button">`, so it is reachable with Tab and activates with Enter and Space. `disabled` maps to the native `disabled` attribute; `disabled-with-events` keeps the control interactive and exposes `aria-disabled` instead; `loading` exposes `aria-busy`. Keyboard focus shows the shared `--input-border-focus` ring through `:focus-visible`, and pointer clicks leave no lingering focus or hover style.
@@ -316,6 +316,8 @@ Commands live beside the field. The "Update to v.X" button only selects the upda
 ### Synchronization indicator
 
 `progress-orb` is the phase-aware activity indicator of the synchronization popup. It shows one phase at a time through the validated `phase`, keeps real progress visible in its ring through the numeric `progress`, switches the ring to a spinning arc with the independent `indeterminate` boolean, and prints the stage text passed as `message` under the disc, the same role the `progress-bar` message has. The drawn part is `aria-hidden`; the message is its only text. It is drawn with the empty-state illustration material: the disc uses `--bg-secondary`, `--color-surface-subtle`, and `--color-border-muted`, while the glow, shadow, ring, icon, and particles derive from `--color-primary` and the status roles through relative OKLCH and `color-mix()`, so the indicator follows the workspace accent and the color scheme without overrides. Its motion is CSS-only transform and opacity and stops under `prefers-reduced-motion`. Consumers own the surrounding layout: pass a class for margins and do not restyle its internals.
+
+`appearance="flat"` retains only the ring and the supplied icon for compact layouts such as preview preparation and thumbnail regeneration. Both use `progress-status.css` for the orb, heading, percentage and status text. The flat idle state is neutral. Regeneration starts from the page header; its small Cancel action sits at the right of the status panel, below the percentage. Focus moves from the header action to Cancel when the run starts, and returns when it ends. A cancelled run retains its processed count and a static neutral orb; Regenerate again starts a new run.
 
 The synchronization popup maps its own state to the phases: `idle` before the sync starts, `rendering` while the site is generated, `connecting` until the first upload progress arrives, `uploading` afterwards, then `success`, `warning` for a sync that finished with issues, and `error` for a failed connection or render. The minimized popup keeps `progress-bar` because it lives over the sidebar.
 

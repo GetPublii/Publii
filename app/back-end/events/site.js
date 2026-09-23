@@ -4,6 +4,7 @@ const FileHelper = require('../helpers/file.js');
 const slug = require('./../helpers/slug');
 const passwordSafeStorage = require('./../helpers/password-storage.js');
 const ipcMain = require('electron').ipcMain;
+const BrowserWindow = require('electron').BrowserWindow;
 const Site = require('../site.js');
 const Themes = require('../themes.js');
 const Database = require('better-sqlite3');
@@ -15,7 +16,7 @@ const PathValidator = require('../helpers/path-validator.js');
 const {
     createSafeSender,
     trackWorkerProcess,
-    abortWindowWorkerProcess
+    abortWorkerProcess
 } = require('../helpers/ipc.helper.js');
 const { resolveSpellcheckerLanguage } = require('../helpers/spellchecker-language.js');
 const SiteLogs = require('../helpers/site-logs.js');
@@ -28,6 +29,7 @@ class SiteEvents {
     constructor(appInstance) {
         let self = this;
         this.regenerateProcesses = new Map(); // webContentsId -> process
+        this.regenerateRequests = new Map(); // webContentsId -> latest requested run
         this.deletingSites = new Set(); // names of websites which are being removed
         this.appliedSpellcheckerLanguage = null;
 
@@ -39,7 +41,7 @@ class SiteEvents {
         // Workers and unpacked backups must not outlive the window which started them
         if (appInstance.windowManager && typeof appInstance.windowManager.onWindowDestroyed === 'function') {
             appInstance.windowManager.onWindowDestroyed(webContentsId => {
-                abortWindowWorkerProcess(self.regenerateProcesses, webContentsId);
+                self.stopThumbnailsRegeneration(webContentsId);
                 Site.removeTemporaryBackupFiles(appInstance, webContentsId);
             });
         }
@@ -573,17 +575,33 @@ class SiteEvents {
          * Regenerate thumbnails
          */
         ipcMain.on('app-site-regenerate-thumbnails', function(event, config) {
-            if (!config || !self.siteDirExists(appInstance, config.name)) {
-                return;
+            return self.startThumbnailsRegeneration(appInstance, event.sender, config);
+        });
+
+        /*
+         * Summary shown before thumbnails are regenerated
+         */
+        ipcMain.handle('app-site:thumbnails-summary', function(event, config) {
+            if (!config || typeof config.name !== 'string' || !self.siteDirExists(appInstance, config.name)) {
+                return {
+                    status: 'error'
+                };
             }
 
-            let site = new Site(appInstance, config, true);
-            let regenerateProcess = site.regenerateThumbnails(createSafeSender(event.sender));
-            trackWorkerProcess(self.regenerateProcesses, event.sender.id, regenerateProcess);
+            try {
+                let site = new Site(appInstance, config, true);
+                return site.getThumbnailsSummary();
+            } catch (error) {
+                console.log('(!) Thumbnails summary could not be prepared:', error && error.message);
+
+                return {
+                    status: 'error'
+                };
+            }
         });
 
         ipcMain.on('app-site-abort-regenerate-thumbnails', function(event) {
-            abortWindowWorkerProcess(self.regenerateProcesses, event.sender.id);
+            self.stopThumbnailsRegeneration(event.sender.id);
         });
 
         /*
@@ -811,9 +829,139 @@ class SiteEvents {
         });
     }
 
+    async startThumbnailsRegeneration(appInstance, webContents, config) {
+        if (!config || typeof config.runId !== 'string' || !config.runId) {
+            return;
+        }
+
+        let request = { runId: config.runId };
+        let sender = createSafeSender(webContents);
+        let completed = false;
+        let isCurrent = () => this.regenerateRequests.get(sender.id) === request;
+        let send = (channel, data) => {
+            if (!isCurrent()) {
+                return false;
+            }
+
+            if (channel !== 'app-site-regenerate-thumbnails-progress') {
+                completed = true;
+            }
+
+            return sender.send(channel, Object.assign({}, data, { runId: request.runId }));
+        };
+        let reportError = () => send('app-site-regenerate-thumbnails-error', {
+            message: { translation: 'tools.thumbnails.errorTitle' }
+        });
+
+        this.regenerateRequests.set(sender.id, request);
+
+        try {
+            let previous = this.regenerateProcesses.get(sender.id);
+
+            if (previous) {
+                // Keep the worker tracked until it exits, including after Stop, so a quick restart waits too.
+                await new Promise(resolve => {
+                    previous.once('close', resolve);
+                    abortWorkerProcess(previous);
+                });
+            }
+
+            // A newer Start, Stop or a closed window can cancel a request while it waits.
+            if (!isCurrent() || sender.isDestroyed()) {
+                return;
+            }
+
+            if (!this.siteDirExists(appInstance, config.name)) {
+                reportError();
+                this.regenerateRequests.delete(sender.id);
+                return;
+            }
+
+            let site = new Site(appInstance, config, true);
+            let worker = site.regenerateThumbnails(Object.assign({}, sender, { send }));
+
+            if (!worker) {
+                this.regenerateRequests.delete(sender.id);
+                return;
+            }
+
+            trackWorkerProcess(this.regenerateProcesses, sender.id, worker);
+            this.showRegenerateProgressInTaskbar(webContents, worker, isCurrent);
+
+            worker.on('error', error => {
+                console.log('(!) Thumbnails worker failed:', error && error.message);
+
+                if (!completed) {
+                    reportError();
+                }
+            });
+
+            worker.once('close', () => {
+                if (!completed) {
+                    reportError();
+                }
+
+                if (this.regenerateProcesses.get(sender.id) === worker) {
+                    this.regenerateProcesses.delete(sender.id);
+                }
+
+                if (isCurrent()) {
+                    this.regenerateRequests.delete(sender.id);
+                }
+            });
+        } catch (error) {
+            console.log('(!) Thumbnails regeneration could not start:', error && error.message);
+            reportError();
+
+            if (isCurrent()) {
+                this.regenerateRequests.delete(sender.id);
+            }
+        }
+    }
+
+    stopThumbnailsRegeneration(webContentsId) {
+        this.regenerateRequests.delete(webContentsId);
+        abortWorkerProcess(this.regenerateProcesses.get(webContentsId));
+    }
+
     /**
-     * Returns true when the provided siteName is a safe dir segment and
-     * points to an existing directory under sitesDir.
+     * Mirrors the regeneration progress on the Dock icon (macOS) and the taskbar button (Windows, Linux)
+     *
+     * @param webContents - window which started the regeneration
+     * @param regenerateProcess - worker process, or nothing when the regeneration could not start
+     */
+    showRegenerateProgressInTaskbar(webContents, regenerateProcess, isCurrent) {
+        let win = BrowserWindow.fromWebContents(webContents);
+
+        if (!win || !regenerateProcess) {
+            return;
+        }
+
+        let setProgress = (value) => {
+            if (!win.isDestroyed()) {
+                win.setProgressBar(value);
+            }
+        };
+
+        regenerateProcess.on('message', (data) => {
+            if (!isCurrent()) {
+                return;
+            }
+
+            if (data.type === 'progress' && data.total > 0) {
+                setProgress(Math.min(1, data.processed / data.total));
+            }
+
+            if (data.type === 'finished') {
+                setProgress(-1);
+            }
+        });
+
+        regenerateProcess.on('exit', () => setProgress(-1));
+    }
+
+    /**
+     * Returns true when siteName is a safe directory segment which exists under sitesDir.
      */
     siteDirExists(appInstance, siteName) {
         if (!PathValidator.isValidDirSegment(siteName)) {
