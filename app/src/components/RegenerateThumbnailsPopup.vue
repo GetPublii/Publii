@@ -1,62 +1,104 @@
 <template>
     <div
-        class="overlay"
-        v-if="isVisible">
-        <div class="popup">
-            <icon
-                name="blank-image"
-                customWidth="75"
-                customHeight="62" />
+        v-if="isVisible"
+        class="overlay">
+        <div
+            ref="dialog"
+            class="popup"
+            role="dialog"
+            aria-modal="true"
+            :aria-labelledby="titleId"
+            :aria-describedby="messageId"
+            tabindex="-1"
+            @keydown.stop="onDialogKeyDown">
+            <div class="progress-status">
+                <progress-orb
+                    class="progress-status-orb"
+                    appearance="flat"
+                    :phase="orbPhase"
+                    :progress="progress"
+                    :indeterminate="isPreparing"
+                    :role="regeneratingThumbnails ? 'progressbar' : null"
+                    :aria-hidden="regeneratingThumbnails ? null : 'true'"
+                    :aria-label="regeneratingThumbnails ? $t('tools.thumbnails.panelLabel') : null"
+                    :aria-valuemin="regeneratingThumbnails ? 0 : null"
+                    :aria-valuemax="regeneratingThumbnails ? 100 : null"
+                    :aria-valuenow="regeneratingThumbnails && !isPreparing ? progress : null"
+                    :aria-valuetext="regeneratingThumbnails ? message : null">
+                    <template #icon>
+                        <icon
+                            :name="orbIcon"
+                            class="progress-status-icon"
+                            :class="{ 'is-ready': !runStarted }"
+                            non-interactive
+                            aria-hidden="true" />
+                    </template>
+                </progress-orb>
 
-            <h1>
-                {{ $t('tools.thumbnails.themeOrThumbnailsSettingsChanged') }}
-            </h1>
+                <div class="progress-status-text">
+                    <div class="progress-status-heading">
+                        <h1
+                            :id="titleId"
+                            class="progress-status-title"
+                            aria-live="polite"
+                            aria-atomic="true">
+                            {{ title }}
+                        </h1>
+                        <span
+                            v-if="regeneratingThumbnails && !isPreparing"
+                            class="progress-status-percent"
+                            aria-hidden="true">
+                            {{ progress }}%
+                        </span>
+                    </div>
 
-            <p class="popup-info">
-                {{ $t('tools.thumbnails.processingRegenerateThumbnailsInfo') }}
-            </p>
-
-            <progress-bar
-                :intent="progressIntent"
-                :progress="progress"
-                :message="message" />
+                    <p
+                        :id="messageId"
+                        class="progress-status-message">
+                        {{ message }}
+                    </p>
+                </div>
+            </div>
 
             <div class="buttons">
-                <p-button
-                    v-if="!regenerateIsDone"
-                    @click.native="regenerate"
-                    :disabled="regeneratingThumbnails"
-                    size="medium"
-                    width="half"
-                    square>
-                    {{ $t('tools.thumbnails.regenerateThumbnails') }}
-                </p-button>
-
-                <p-button
-                    v-if="!regenerateIsDone && !regeneratingThumbnails"
-                    @click.native="skip"
-                    :disabled="regeneratingThumbnails"
-                    appearance="popup-cancel"
-                    size="medium"
-                    width="half"
-                    square>
-                    {{ $t('tools.thumbnails.skipRegeneration') }}
-                </p-button>
+                <template v-if="!regenerateIsDone && !regeneratingThumbnails">
+                    <p-button
+                        key="regenerate"
+                        ref="primaryAction"
+                        :onClick="regenerate"
+                        size="medium"
+                        width="half"
+                        square>
+                        {{ $t('tools.thumbnails.regenerate') }}
+                    </p-button>
+                    <p-button
+                        key="skip"
+                        :onClick="skip"
+                        appearance="popup-cancel"
+                        size="medium"
+                        width="half"
+                        square>
+                        {{ $t('tools.thumbnails.skipRegeneration') }}
+                    </p-button>
+                </template>
 
                 <p-button
                     v-if="regeneratingThumbnails"
-                    @click.native="abortRegenerate"
+                    key="cancel"
+                    ref="primaryAction"
+                    :onClick="abortRegenerate"
                     appearance="popup-cancel"
                     size="medium"
-                    width="half"
+                    width="full"
                     square>
                     {{ $t('ui.cancel') }}
                 </p-button>
 
                 <p-button
                     v-if="regenerateIsDone"
-                    @click.native="skip"
-                    :disabled="regeneratingThumbnails"
+                    key="done"
+                    ref="primaryAction"
+                    :onClick="skip"
                     size="medium"
                     width="full"
                     square>
@@ -77,6 +119,7 @@ export default {
             isVisible: false,
             // The popup shows only the run it has started itself
             runStarted: false,
+            reason: 'settings',
             savedSettingsCallback: false
         };
     },
@@ -87,11 +130,20 @@ export default {
         job () {
             return this.$store.state.components.thumbnailsRegeneration;
         },
+        titleId () {
+            return 'regenerate-thumbnails-title-' + this._uid;
+        },
+        messageId () {
+            return 'regenerate-thumbnails-message-' + this._uid;
+        },
         regeneratingThumbnails () {
             return this.runStarted && this.job.status === 'running';
         },
         regenerateIsDone () {
             return this.runStarted && (this.job.status === 'done' || this.job.status === 'error');
+        },
+        isPreparing () {
+            return this.regeneratingThumbnails && this.job.processed === 0;
         },
         brokenCount () {
             return this.job.problems.length;
@@ -99,64 +151,166 @@ export default {
         progress () {
             return this.runStarted ? this.job.progress : 0;
         },
-        progressIntent () {
+        orbPhase () {
+            if (this.regeneratingThumbnails) {
+                return 'rendering';
+            }
+
             if (!this.regenerateIsDone) {
-                return 'default';
+                return 'idle';
             }
 
             if (this.job.status === 'error') {
-                return 'danger';
+                return 'error';
             }
 
             return this.brokenCount > 0 ? 'warning' : 'success';
         },
-        message () {
+        orbIcon () {
+            if (this.orbPhase === 'success') {
+                return 'check';
+            }
+
+            if (this.orbPhase === 'warning' || this.orbPhase === 'error') {
+                return 'triangle-alert';
+            }
+
+            return 'image';
+        },
+        title () {
             if (!this.runStarted) {
-                return '';
+                return this.$t('tools.thumbnails.popupTitle');
             }
 
             if (this.job.status === 'error') {
-                return this.job.error && this.job.error.translation ? this.$t(this.job.error.translation) : this.job.error;
+                return this.$t('tools.thumbnails.errorTitle');
+            }
+
+            if (this.job.status === 'done') {
+                return this.$t(this.brokenCount > 0 ? 'tools.thumbnails.problemsTitle' : 'tools.thumbnails.doneTitle');
+            }
+
+            return this.$t('tools.thumbnails.regeneratingThumbnails');
+        },
+        message () {
+            if (!this.runStarted) {
+                const reasons = {
+                    settings: 'tools.thumbnails.popupSettingsInfo',
+                    theme: 'tools.thumbnails.popupThemeInfo',
+                    import: 'tools.thumbnails.popupImportInfo'
+                };
+
+                return this.$t(reasons[this.reason] || reasons.settings);
+            }
+
+            if (this.job.status === 'error') {
+                const error = this.job.error;
+
+                return error && error.translation ? this.$t(error.translation) : error;
             }
 
             if (this.job.status === 'done') {
                 if (this.brokenCount > 0) {
-                    return this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', { count: this.brokenCount });
+                    return this.$t('tools.thumbnails.thumbnailsCreatedWithErrors', {
+                        count: this.formatNumber(this.brokenCount)
+                    });
                 }
 
-                return this.$t('tools.thumbnails.thumbnailsCreated');
+                return [
+                    this.$t('tools.thumbnails.summaryImages', { count: this.formatNumber(this.job.total) }),
+                    this.$t('tools.thumbnails.summaryThumbnails', { count: this.formatNumber(this.job.thumbnails) })
+                ].join(' · ');
             }
 
-            if (this.job.processed === 0) {
-                return this.$t('tools.thumbnails.regeneratingThumbnails');
+            if (this.isPreparing) {
+                return this.$t('tools.thumbnails.preparingImages');
             }
 
-            return this.$t('tools.thumbnails.progress') + this.job.progress + '%';
+            return [
+                this.$t('tools.thumbnails.summaryImagesOf', {
+                    processed: this.formatNumber(this.job.processed),
+                    total: this.formatNumber(this.job.total)
+                }),
+                this.timeLeft
+            ].filter(Boolean).join(' · ');
+        },
+        timeLeft () {
+            const elapsed = Date.now() - this.job.startedAt;
+            const remainingImages = this.job.total - this.job.processed;
+
+            // Match the panel: wait for a useful sample before estimating the time
+            if (this.job.processed < 3 || elapsed < 3000 || remainingImages <= 0) {
+                return '';
+            }
+
+            const remaining = elapsed / this.job.processed * remainingImages;
+
+            if (remaining < 60000) {
+                return this.$t('tools.thumbnails.timeLeftUnderMinute');
+            }
+
+            return this.$t('tools.thumbnails.timeLeftMinutes', {
+                minutes: this.formatNumber(Math.ceil(remaining / 60000))
+            });
         }
     },
     watch: {
         'job.status' (status) {
-            if (this.isVisible && this.runStarted && status === 'done' && this.savedSettingsCallback && this.brokenCount === 0) {
+            if (!this.isVisible || !this.runStarted) {
+                return;
+            }
+
+            if (status === 'done' && this.savedSettingsCallback && this.brokenCount === 0) {
                 this.skip();
+            } else {
+                this.focusAction();
             }
         }
     },
     mounted () {
-        this.$bus.$on('regenerate-thumbnails-display', (config) => {
-            this.isVisible = true;
-            this.runStarted = false;
-            this.savedSettingsCallback = config.savedSettingsCallback || false;
-        });
-
-        document.body.addEventListener('keydown', this.onDocumentKeyDown);
+        this.$bus.$on('regenerate-thumbnails-display', this.show);
     },
     methods: {
+        show (config = {}) {
+            if (!this.isVisible) {
+                this.returnFocus = document.activeElement;
+            }
+
+            this.runStarted = false;
+            this.reason = config.reason || 'settings';
+            this.savedSettingsCallback = config.savedSettingsCallback || false;
+            this.isVisible = true;
+            this.focusAction();
+        },
+        focusAction () {
+            this.$nextTick(() => {
+                if (this.isVisible && this.$refs.primaryAction) {
+                    this.$refs.primaryAction.$el.focus({ preventScroll: true });
+                }
+            });
+        },
         skip () {
+            const callback = this.savedSettingsCallback;
             this.isVisible = false;
             this.runStarted = false;
+            this.savedSettingsCallback = false;
 
-            if (this.savedSettingsCallback) {
-                this.$bus.$emit('regenerate-thumbnails-close', this.savedSettingsCallback);
+            const returnFocus = this.returnFocus;
+            const dialog = this.$refs.dialog;
+            this.returnFocus = null;
+
+            // Wait until controls are enabled again, without taking focus from a new popup
+            this.$nextTick(() => {
+                const activeElement = document.activeElement;
+                const canRestore = activeElement === document.body || (dialog && dialog.contains(activeElement));
+
+                if (!this.isVisible && canRestore && returnFocus && returnFocus.isConnected) {
+                    returnFocus.focus({ preventScroll: true });
+                }
+            });
+
+            if (callback) {
+                this.$bus.$emit('regenerate-thumbnails-close', callback);
             }
         },
         regenerate () {
@@ -170,75 +324,115 @@ export default {
             this.regeneration.start(this.$store.state.currentSite.config.name, {
                 restart: true
             });
+            this.focusAction();
         },
-        onDocumentKeyDown (e) {
-            if (e.code === 'Enter' && !e.isComposing && this.isVisible && !this.regeneratingThumbnails) {
-                this.onEnterKey();
+        onDialogKeyDown (event) {
+            if (event.isComposing || event.defaultPrevented) {
+                return;
             }
-        },
-        onEnterKey () {
-            if (this.regenerateIsDone) {
-                this.skip();
-            } else {
-                this.regenerate();
+
+            if (event.key === 'Escape') {
+                event.preventDefault();
+
+                if (this.regeneratingThumbnails) {
+                    this.abortRegenerate();
+                } else {
+                    this.skip();
+                }
+
+                return;
+            }
+
+            if (event.key !== 'Tab') {
+                return;
+            }
+
+            const buttons = this.$refs.dialog.querySelectorAll('button:not([disabled])');
+            const first = buttons[0];
+            const last = buttons[buttons.length - 1];
+
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
             }
         },
         abortRegenerate () {
             this.regeneration.stop();
             this.skip();
+        },
+        formatNumber (value) {
+            try {
+                return new Intl.NumberFormat(this.$i18n.locale).format(value);
+            } catch (error) {
+                return String(value);
+            }
         }
     },
-    beforeDestroy: function() {
-        this.$bus.$off('regenerate-thumbnails-display');
-        document.body.removeEventListener('keydown', this.onDocumentKeyDown);
+    beforeDestroy () {
+        this.$bus.$off('regenerate-thumbnails-display', this.show);
     }
-}
+};
 </script>
 
 <style scoped>
 @import '../css/popup-common.css';
+@import '../css/progress-status.css';
 
 .overlay {
     z-index: var(--layer-alert);
 }
 
 .popup {
-    padding: var(--space-16) var(--space-16) 6rem var(--space-16);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100% - var(--space-16));
+    max-width: calc(100% - var(--space-16));
     width: 60rem;
-
-    h1 {
-        margin-top: var(--space-8);
-    }
-
-    svg {
-        fill: var(--icon-quaternary-color);
-
-    }
 }
 
-.popup-info {
-    font-size: var(--font-size-ui-md);
-    color: var(--text-light-color);
-    margin: -1.5rem 0 var(--space-16);
-}
-
-.message {
-    color: var(--text-primary-color);
-    font-weight: var(--font-weight-regular);
-    margin: 0;
+.progress-status {
+    min-height: 18rem;
+    overflow-y: auto;
     padding: var(--space-16);
-    position: relative;
-    text-align: left;
-
-    &.text-centered {
-        text-align: center;
-    }
 }
+
+.progress-status-icon.is-ready {
+    color: var(--color-primary);
+}
+
+.progress-status-message {
+    font-size: var(--font-size-ui-md);
+    line-height: 1.35;
+    margin-top: var(--space-2);
+    overflow: visible;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
 .buttons {
     display: flex;
-    margin: 0 -4rem -6rem -4rem;
-    position: relative;
-    text-align: center;
-    top: 1px;
+    flex-shrink: 0;
+}
+
+.buttons .button {
+    height: auto;
+    min-height: var(--button-height-large);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    padding: var(--space-2) var(--space-8);
+    white-space: normal;
+
+    &:focus-visible {
+        outline-offset: -2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .progress-status {
+        padding: var(--space-8);
+    }
 }
 </style>

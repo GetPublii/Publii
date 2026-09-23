@@ -2965,6 +2965,8 @@ export default {
                 newTheme = this.theme;
             }
 
+            const regenerationReason = newTheme !== this.$store.state.currentSite.config.theme ? 'theme' : 'settings';
+
             let newSettings = {};
             newSettings.name = this.name;
             newSettings.description = this.description;
@@ -3045,7 +3047,7 @@ export default {
                         mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-required-status', (data) => {
                             if (data.message) {
                                 this.$bus.$emit('regenerate-thumbnails-display', {
-                                    qualityChanged: false,
+                                    reason: regenerationReason,
                                     savedSettingsCallback: {
                                         newSettings,
                                         siteName,

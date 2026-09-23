@@ -61,7 +61,6 @@
 h1,
 h2 {
     font-size: var(--font-size-ui-lg);
-    font-weight: var(--font-weight-medium);
     margin: 0 0 7rem 0;
     text-align: center;
     text-transform: none;
@@ -69,6 +68,10 @@ h2 {
 
 h1 {
     margin: var(--space-4) 0 var(--space-12) 0;
+}
+
+h2 {
+    font-weight: var(--font-weight-semibold);
 }
 
 body[data-os="win"] {

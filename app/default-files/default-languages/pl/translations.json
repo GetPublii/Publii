@@ -1744,6 +1744,10 @@
         "pluginDeactivationError": "Nie udało się deaktywować wtyczki - spróbuj ponownie",
         "selectFileToLoad": "Wybierz plik do załadowania",
         "thumbnails": {
+            "popupTitle": "Zregenerować miniatury?",
+            "popupSettingsInfo": "Ustawienia obrazów zostały zmienione. Zregeneruj miniatury, aby zastosować zmiany.",
+            "popupThemeInfo": "Motyw został zmieniony. Zregeneruj miniatury, aby dopasować rozmiary obrazów.",
+            "popupImportInfo": "Obrazy zostały zaimportowane. Wygeneruj miniatury dla swojego motywu.",
             "processingRegenerateThumbnailsInfo": "Naciśnięcie przycisku Regeneruj miniatury rozpocznie generowanie nowych rozmiarów obrazów zdefiniowanych przez Twój nowy motyw.",
             "progress": "Postęp: ",
             "regenerateThumbnails": "Regeneruj miniatury",

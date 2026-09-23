@@ -1742,6 +1742,10 @@
         "pluginDeactivationError": "Cannot deactivate plugin - please try again",
         "selectFileToLoad": "Select file to load",
         "thumbnails": {
+            "popupTitle": "Regenerate thumbnails?",
+            "popupSettingsInfo": "Your image settings have changed. Regenerate thumbnails to apply them.",
+            "popupThemeInfo": "Your theme has changed. Regenerate thumbnails for the new image sizes.",
+            "popupImportInfo": "Your images have been imported. Generate thumbnails for your theme.",
             "processingRegenerateThumbnailsInfo": "Pressing the Regenerate thumbnails button will start generating new image sizes as defined by your new theme.",
             "progress": "Progress: ",
             "regenerateThumbnails": "Regenerate thumbnails",

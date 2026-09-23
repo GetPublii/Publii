@@ -725,7 +725,9 @@ export default {
 
             mainProcessAPI.receiveOnce('app-site-regenerate-thumbnails-required-status', (data) => {
                 if (data && data.message) {
-                    this.$bus.$emit('regenerate-thumbnails-display', {});
+                    this.$bus.$emit('regenerate-thumbnails-display', {
+                        reason: 'import'
+                    });
                     return;
                 }
 

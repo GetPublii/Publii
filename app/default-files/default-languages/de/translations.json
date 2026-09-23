@@ -1690,6 +1690,10 @@
         "pluginDeactivationError": "Plugin kann nicht deaktiviert werden - bitte erneut versuchen",
         "selectFileToLoad": "Datei zum Laden auswählen",
         "thumbnails": {
+            "popupTitle": "Vorschaubilder neu erstellen?",
+            "popupSettingsInfo": "Die Bildeinstellungen wurden geändert. Erstelle die Vorschaubilder neu, um die Änderungen anzuwenden.",
+            "popupThemeInfo": "Dein Theme wurde geändert. Erstelle die Vorschaubilder mit den neuen Bildgrößen neu.",
+            "popupImportInfo": "Deine Bilder wurden importiert. Erstelle Vorschaubilder für dein Theme.",
             "processingRegenerateThumbnailsInfo": "Wenn Sie auf die Schaltfläche 'Vorschaubilder neu erstellen' klicken, werden neue Bildgrößen generiert, die von Ihrem neuen Theme definiert werden.",
             "progress": "Fortschritt:",
             "regenerateThumbnails": "Vorschaubilder neu erstellen",

@@ -20,6 +20,7 @@
                     <icon
                         :name="orbIcon"
                         class="progress-status-icon"
+                        :class="{ 'is-ready': state === 'ready' }"
                         non-interactive
                         aria-hidden="true" />
                 </template>
@@ -518,6 +519,10 @@ export default {
     border-radius: calc(var(--radius-base) * 2);
     min-width: 0;
     padding: var(--space-8);
+}
+
+.progress-status-icon.is-ready {
+    color: var(--color-primary);
 }
 
 .thumbnails-regeneration-notes {
