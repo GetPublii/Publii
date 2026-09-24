@@ -39,7 +39,7 @@ html {
     --button-padding-inline-large: var(--space-8);
     --button-icon-size: 2rem;
     --button-icon-size-small: 1.6rem;
-    --button-icon-gap: var(--space-4);
+    --button-icon-gap: var(--space-3);
 
     /* Editor compatibility; editor normalization is intentionally deferred. */
     --editor-heading-letter-spacing: -0.03rem;

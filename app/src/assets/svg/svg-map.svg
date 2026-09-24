@@ -13,7 +13,7 @@
     </symbol>
 
     <symbol id="quick-preview" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
-  <path class="cls-1" d="M10.9444,1.5v6.6111h5.6667l-7.5556,10.3889v-6.6111H3.3889L10.9444,1.5"/>
+  <path d="M10.9444,1.5v6.6111h5.6667l-7.5556,10.3889v-6.6111H3.3889L10.9444,1.5"/>
     </symbol>
 
     <symbol id="full-preview-browser" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
@@ -142,14 +142,9 @@
         <path d="M22.735,18.321a11.9,11.9,0,0,1-2.885-7.13C19.851,1.941,15.309,0,11.5,0S3.15,1.964,3.15,11.323A11.324,11.324,0,0,1,.28,18.306,1,1,0,0,0,1,20H22a1,1,0,0,0,.734-1.679ZM3.024,18A12.444,12.444,0,0,0,5.15,11.323C5.15,2,9.93,2,11.5,2c4.273,0,6.35,3.006,6.35,9.191A12.9,12.9,0,0,0,20.008,18ZM9,22h4a2,2,0,0,1-4,0Z" />
     </symbol>
 
-    <symbol id="add-site" viewBox="0 0 24 24">
-        <path fill="#47AA6F" d="M13.1,10.9h3.3v2.2h-3.3v3.3h-2.2v-3.3H7.6v-2.2h3.3V7.6h2.2V10.9z M23,12c0,6.1-4.9,11-11,11S1,18.1,1,12
-    S5.9,1,12,1S23,5.9,23,12z M21,12c0-5-4-9-9-9s-9,4-9,9c0,5,4,9,9,9S21,17,21,12z"/>
-    </symbol>
-
-    <symbol id="add-site-mono" viewBox="0 0 24 24">
-        <path d="M13.1,10.9h3.3v2.2h-3.3v3.3h-2.2v-3.3H7.6v-2.2h3.3V7.6h2.2V10.9z M23,12c0,6.1-4.9,11-11,11S1,18.1,1,12
-    S5.9,1,12,1S23,5.9,23,12z M21,12c0-5-4-9-9-9s-9,4-9,9c0,5,4,9,9,9S21,17,21,12z"/>
+    <symbol id="add-site-mono"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus preview-icon">
+      <path d="M6,12h12"/>
+      <path d="M12,6v12"/>
     </symbol>
 
      <symbol id="upload-file" viewBox="0 0 24 24">
