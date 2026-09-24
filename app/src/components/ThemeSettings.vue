@@ -155,6 +155,7 @@
                                     :anchor="field.anchor"
                                     :wysiwyg="true"
                                     :miniEditorMode="true"
+                                    internal-links
                                     :customCssClasses="field.customCssClasses"></text-area>
 
                                 <image-upload
@@ -269,6 +270,7 @@
                                     :hideLabels="field.hideLabels"
                                     :anchor="field.anchor"
                                     :settings="custom"
+                                    internal-links
                                     imageType="optionImages"
                                     :customCssClasses="field.customCssClasses" />
 

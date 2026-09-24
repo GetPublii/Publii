@@ -319,6 +319,125 @@ describe('Mini editor selection ownership', () => {
         session.finish({});
         assert.deepEqual(e.calls, []);
     });
+
+    it('edits only the original link and preserves its formatting after another editor gains focus', () => {
+        const first = editor();
+        const second = editor();
+        const attributes = {
+            href: '#INTERNAL_LINK#/page/21',
+            title: 'Original title',
+            class: 'original-class'
+        };
+        const link = {
+            innerHTML: '<strong>Bold</strong>',
+            outerHTML: '<a href="#INTERNAL_LINK#/page/21"><strong>Bold</strong></a>',
+            textContent: 'Bold',
+            getAttribute: name => attributes[name] || null
+        };
+
+        first.dom.getParent = () => link;
+        first.dom.setAttribs = (target, updatedAttributes) => {
+            assert.equal(target, link);
+            Object.assign(attributes, updatedAttributes);
+        };
+        first.getBody = () => ({ contains: target => target === link });
+        first.selection.select = target => assert.equal(target, link);
+        first.selection.collapse = atStart => assert.equal(atStart, false);
+
+        const session = createSession(first);
+        const { instance: dialog } = popup();
+        dialog.$on('resolve', response => session.finish(response));
+        dialog.open(session.config);
+
+        assert.equal(dialog.type, 'page');
+        assert.equal(dialog.page, 21);
+        assert.equal(dialog.label, 'Bold');
+        second.focus();
+        dialog.type = 'author';
+        dialog.author = 'anna-nowak';
+        dialog.title = 'Updated title';
+        dialog.setLink();
+
+        assert.equal(attributes.href, '#INTERNAL_LINK#/author/anna-nowak');
+        assert.equal(attributes.title, 'Updated title');
+        assert.equal(attributes.class, 'original-class');
+        assert.equal(link.innerHTML, '<strong>Bold</strong>');
+        assert.deepEqual(first.calls, ['focus', 'restore', 'undo']);
+        assert.deepEqual(second.calls, ['focus']);
+    });
+
+    it('keeps inserted links and cancelled dialogs isolated across multiple WYSIWYG fields', () => {
+        const definition = loadComponent('basic-elements/TextArea', {
+            Vue,
+            LinkPopup: {},
+            createMiniEditorLinkSession: createSession
+        });
+
+        function createField(value) {
+            const instance = new Vue({
+                ...definition,
+                propsData: {
+                    value,
+                    wysiwyg: true,
+                    internalLinks: true
+                }
+            });
+            const targetEditor = editor();
+            const { instance: dialog } = popup();
+            const originalInsertContent = targetEditor.insertContent;
+            let savedContent = value;
+
+            targetEditor.getContent = () => savedContent;
+            targetEditor.insertContent = html => {
+                originalInsertContent(html);
+                savedContent = html;
+            };
+            instance.$refs.linkPopup = dialog;
+            dialog.$on('resolve', instance.resolveLinkPopup);
+
+            return { instance, targetEditor, dialog };
+        }
+
+        const first = createField('<p>First field</p>');
+        const second = createField('<p>Second field</p>');
+
+        first.instance.openLinkPopup(first.targetEditor);
+        assert.equal(first.dialog.isVisible, true);
+        assert.equal(second.dialog.isVisible, false);
+        second.targetEditor.focus();
+        first.dialog.type = 'page';
+        first.dialog.page = 21;
+        first.dialog.setLink();
+
+        const firstSavedContent = first.instance.content;
+        assert.equal(firstSavedContent, '<a href="#INTERNAL_LINK#/page/21"><strong>Bold</strong></a>');
+        assert.equal(second.instance.content, '<p>Second field</p>');
+        assert.equal(second.targetEditor.getContent(), '<p>Second field</p>');
+        assert.equal(first.instance._linkSession, null);
+
+        second.instance.openLinkPopup(second.targetEditor);
+        first.targetEditor.focus();
+        second.dialog.type = 'author';
+        second.dialog.author = 'anna-nowak';
+        second.dialog.setLink();
+
+        const secondSavedContent = second.instance.content;
+        assert.equal(secondSavedContent, '<a href="#INTERNAL_LINK#/author/anna-nowak"><strong>Bold</strong></a>');
+        assert.equal(first.instance.content, firstSavedContent);
+        assert.equal(first.targetEditor.getContent(), firstSavedContent);
+        assert.equal(second.instance._linkSession, null);
+
+        first.instance.openLinkPopup(first.targetEditor);
+        first.dialog.cancel();
+
+        assert.equal(first.instance.content, firstSavedContent);
+        assert.equal(second.instance.content, secondSavedContent);
+        assert.equal(first.dialog.isVisible, false);
+        assert.equal(second.dialog.isVisible, false);
+        assert.equal(first.instance._linkSession, null);
+        assert.equal(first.targetEditor.calls.filter(call => call === 'undo').length, 1);
+        assert.equal(second.targetEditor.calls.filter(call => call === 'undo').length, 1);
+    });
 });
 
 describe('Internal links in saved tag and author descriptions', () => {
