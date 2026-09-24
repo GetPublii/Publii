@@ -132,7 +132,7 @@ class GithubPages {
 
             try {
                 if (self.apiRateLimiting) {
-                    let result = self.getAPIRateLimit();
+                    let result = await self.getAPIRateLimit();
 
                     if(result.remaining < 10) {
                         process.send({
@@ -239,12 +239,9 @@ class GithubPages {
 
             this.waitForTimeout = false;
             sender.send('app-deploy-test-success');
-        }).catch(err => {
-            err = JSON.parse(err);
+        }).catch(async err => {
             this.waitForTimeout = false;
-            sender.send('app-deploy-test-error', {
-                message: stripTags((err.message).toString())
-            });
+            sender.send('app-deploy-test-error', await this.getTestConnectionError(err, user, repository));
         });
 
         setTimeout(function() {
@@ -260,6 +257,47 @@ class GithubPages {
         }, 10000);
     }
 
+    async getTestConnectionError(err, user, repository) {
+        if (err && err.status === 401) {
+            return {
+                noAdditionalMessage: true,
+                message: {
+                    translation: 'core.server.tokenOrServerAddressInvalid'
+                }
+            };
+        }
+
+        // GitHub responds with 404 for both a missing repository and a missing branch
+        if (err && err.status === 404) {
+            try {
+                await this.client.rest.repos.get({
+                    owner: user,
+                    repo: repository
+                });
+
+                return {
+                    noAdditionalMessage: true,
+                    message: {
+                        translation: 'core.server.branchDoesNotExist'
+                    }
+                };
+            } catch (repoErr) {
+                if (repoErr && repoErr.status === 404) {
+                    return {
+                        noAdditionalMessage: true,
+                        message: {
+                            translation: 'core.server.repositoryDoesNotExist'
+                        }
+                    };
+                }
+            }
+        }
+
+        return {
+            message: stripTags(String((err && err.message) || err || ''))
+        };
+    }
+
     async deploy() {
         let self = this;
 
@@ -272,9 +310,25 @@ class GithubPages {
             let trees = await this.listFolderFiles(remoteTree);
             let finalTree = await this.getNewTreeBasedOnDiffs(trees.remoteTree, trees.localTree);
             finalTree = await this.createBlobs(finalTree, false);
+
+            if (finalTree === false) {
+                setTimeout(function () {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
+
+                return;
+            }
+
             finalTree = await this.updateBlobsList(finalTree);
 
             let deltaTree = this.buildDeltaTree(finalTree, trees.remoteTree);
+
+            if (!deltaTree.length) {
+                console.log(`[${ new Date().toUTCString() }] (i) NO CHANGES DETECTED - SKIPPING COMMIT`);
+                this.finishSync();
+                return;
+            }
+
             let sha;
 
             try {
@@ -301,27 +355,7 @@ class GithubPages {
                 return;
             }
 
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 100,
-                    operations: false
-                }
-            });
-
-            process.send({
-                type: 'sender',
-                message: 'app-deploy-uploaded',
-                value: {
-                    progress: 100,
-                    status: true
-                }
-            });
-
-            setTimeout(function () {
-                process.kill(process.pid, 'SIGTERM');
-            }, 1000);
+            this.finishSync();
         } catch (err) {
             console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
 
@@ -337,6 +371,30 @@ class GithubPages {
                 process.kill(process.pid, 'SIGTERM');
             }, 1000);
         }
+    }
+
+    finishSync() {
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress: 100,
+                operations: false
+            }
+        });
+
+        process.send({
+            type: 'sender',
+            message: 'app-deploy-uploaded',
+            value: {
+                progress: 100,
+                status: true
+            }
+        });
+
+        setTimeout(function () {
+            process.kill(process.pid, 'SIGTERM');
+        }, 1000);
     }
 
     async apiRequest(requestData, method, extractor) {
@@ -634,7 +692,7 @@ class GithubPages {
                     }
                 });
 
-                return [];
+                return false;
             }
         }
 
