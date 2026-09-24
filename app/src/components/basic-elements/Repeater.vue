@@ -90,6 +90,7 @@
                                 :ref="'wysiwyg-' + index + '-' + subindex"
                                 :wysiwyg="true"
                                 :miniEditorMode="true"
+                                :internal-links="internalLinks"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></text-area>
 
                             <color-picker
@@ -279,6 +280,10 @@ export default {
         settings: {
             default: () => ({}),
             type: Object
+        },
+        internalLinks: {
+            default: false,
+            type: Boolean
         },
         customCssClasses: {
             default: '',

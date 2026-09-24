@@ -435,7 +435,7 @@ export default {
         display: block;
         flex-shrink: 0;
         font-family: -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-        font-size: 3.6rem;
+        font-size: 3.2rem;
         font-weight: var(--font-weight-bold);
         letter-spacing: var(--editor-heading-letter-spacing);
         line-height: 1.2;
