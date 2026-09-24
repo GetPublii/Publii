@@ -341,6 +341,12 @@ export default {
 
 <style scoped>
 
+.tools-custom-html ::v-deep .tabs > .content {
+    border-left: 0;
+    margin-left: 0;
+    padding-left: 0;
+}
+
 .editor-note {
    color: var(--color-text-muted);
 
