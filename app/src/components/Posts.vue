@@ -410,70 +410,23 @@
             v-if="emptySearchResults"
             :description="$t('post.noPostsMatchingYourCriteria')"></empty-state>
 
-        <div
+        <editor-selection
             v-if="dataLoaded && !hasPosts"
-            class="empty-state post">
-
-           <div>
-                <app-illustration
-                    name="wysiwyg-editor"
-                    height="286"
-                    scale="1.08"
-                    translate-y="0"
-                    width="331" />
-                <h3>{{ $t('post.editorWYSIWYG') }}</h3>
-                <p>{{ $t('post.editorWYSIWYGInfo') }}</p>
-                <p-button
-                    slot="button"
-                    icon="add-site-mono"
-                    :onClick="addNewPost.bind(this, 'tinymce')">
-                    {{ $t('post.addNewPost') }}
-                </p-button>
-           </div>
-
-           <div>
-                <app-illustration
-                    name="block-editor"
-                    height="286"
-                    scale="1.4"
-                    translate-y="-32"
-                    width="331" />
-                <h3>{{ $t('post.editorBlock') }}</h3>
-                <p>{{ $t('post.editorBlockInfo') }}</p>
-                <p-button
-                    slot="button"
-                    icon="add-site-mono"
-                    :onClick="addNewPost.bind(this, 'blockeditor')">
-                    {{ $t('post.addNewPost') }}
-                </p-button>
-           </div>
-
-           <div>
-                <app-illustration
-                    name="markdown-editor"
-                    height="286"
-                    scale="1.08"
-                    translate-y="0"
-                    width="331" />
-                <h3>{{ $t('post.editorMarkdown') }}</h3>
-                <p>{{ $t('post.editorMarkdownInfo') }}</p>
-                <p-button
-                    slot="button"
-                    icon="add-site-mono"
-                    :onClick="addNewPost.bind(this, 'markdown')">
-                    {{ $t('post.addNewPost') }}
-                </p-button>
-           </div>
-        </div>
+            content-type="post"
+            @select="addNewPost" />
     </section>
 </template>
 
 <script>
+import EditorSelection from './basic-elements/EditorSelection.vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 import Tooltip from '../helpers/tooltip.js';
 
 export default {
+    components: {
+        EditorSelection
+    },
     directives: {
         tooltip: Tooltip
     },
@@ -976,7 +929,6 @@ export default {
 <style scoped>
 @import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
-@import '../css/empty-states.css';
 
 /* Status icons inside links must receive hover despite the global SVG rule. */
 .title .post-status-icon {

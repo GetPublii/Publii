@@ -399,71 +399,24 @@
             :description="$t('page.noPagesMatchingYourCriteria')">
         </empty-state>
 
-        <div
+        <editor-selection
             v-if="dataLoaded && !hasPages"
-            class="empty-state page">
-
-           <div>
-                <app-illustration
-                    name="wysiwyg-editor"
-                    height="286"
-                    scale="1.08"
-                    translate-y="0"
-                    width="331" />
-                <h3>{{ $t('page.editorWYSIWYG') }}</h3>
-                <p>{{ $t('page.editorWYSIWYGInfo') }}</p>
-                <p-button
-                    slot="button"
-                    icon="add-site-mono"
-                    :onClick="addNewPage.bind(this, 'tinymce')">
-                    {{ $t('page.addNewPage') }}
-                </p-button>
-           </div>
-
-           <div>
-                <app-illustration
-                    name="block-editor"
-                    height="286"
-                    scale="1.4"
-                    translate-y="-32"
-                    width="331" />
-                <h3>{{ $t('page.editorBlock') }}</h3>
-                <p>{{ $t('page.editorBlockInfo') }}</p>
-                <p-button
-                    slot="button"
-                    icon="add-site-mono"
-                    :onClick="addNewPage.bind(this, 'blockeditor')">
-                    {{ $t('page.addNewPage') }}
-                </p-button>
-           </div>
-
-           <div>
-                <app-illustration
-                    name="markdown-editor"
-                    height="286"
-                    scale="1.08"
-                    translate-y="0"
-                    width="331" />
-                <h3>{{ $t('page.editorMarkdown') }}</h3>
-                <p>{{ $t('page.editorMarkdownInfo') }}</p>
-                <p-button
-                    slot="button"
-                    icon="add-site-mono"
-                    :onClick="addNewPage.bind(this, 'markdown')">
-                    {{ $t('page.addNewPage') }}
-                </p-button>
-           </div>
-        </div>
+            content-type="page"
+            @select="addNewPage" />
     </section>
 </template>
 
 <script>
+import EditorSelection from './basic-elements/EditorSelection.vue';
 import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 
 export default {
+    components: {
+        EditorSelection
+    },
     directives: {
         tooltip: Tooltip
     },
@@ -1258,7 +1211,6 @@ export default {
 <style scoped>
 @import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
-@import '../css/empty-states.css';
 
 .load-more-sentinel {
     grid-column: 1 / -1;
