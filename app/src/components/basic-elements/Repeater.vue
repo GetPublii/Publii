@@ -91,6 +91,7 @@
                                 :wysiwyg="true"
                                 :miniEditorMode="true"
                                 :internal-links="internalLinks"
+                                :selection-toolbar="selectionToolbar"
                                 :customCssClasses="itemConfig[subindex].customCssClasses"></text-area>
 
                             <color-picker
@@ -282,6 +283,10 @@ export default {
             type: Object
         },
         internalLinks: {
+            default: false,
+            type: Boolean
+        },
+        selectionToolbar: {
             default: false,
             type: Boolean
         },

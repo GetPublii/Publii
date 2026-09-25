@@ -287,22 +287,100 @@ describe('Mini editor selection ownership', () => {
     function editor() {
         const calls = [];
         const bookmark = { id: 'selection' };
-        return { calls, dom: { getParent: () => null, encode: s => s.replace(/</g, '&lt;'), createHTML: (tag, attrs, html) => `<a href="${attrs.href}">${html}</a>` },
-            selection: { getNode() {}, getBookmark: () => bookmark, getContent: options => options ? 'Bold' : '<strong>Bold</strong>', moveToBookmark: b => { assert.equal(b, bookmark); calls.push('restore'); } },
-            undoManager: { transact: cb => { calls.push('undo'); cb(); } }, focus: () => calls.push('focus'),
-            insertContent: html => calls.push(html), nodeChanged() {}, getContent: () => 'saved content'
+
+        return {
+            calls,
+            dom: {
+                getParent: () => null,
+                encode: value => value.replace(/</g, '&lt;'),
+                createHTML: (tag, attributes, html) => `<a href="${attributes.href}">${html}</a>`
+            },
+            selection: {
+                getNode() {},
+                getBookmark: () => bookmark,
+                getContent: options => options ? 'Bold' : '<strong>Bold</strong>',
+                isCollapsed: () => false,
+                moveToBookmark: value => {
+                    assert.equal(value, bookmark);
+                    calls.push('restore');
+                }
+            },
+            undoManager: {
+                transact: callback => {
+                    calls.push('undo');
+                    callback();
+                }
+            },
+            focus: () => calls.push('focus'),
+            execCommand: (command, ui, attributes) => {
+                assert.equal(command, 'mceInsertLink');
+                assert.equal(ui, false);
+                calls.push({ command, attributes: { ...attributes } });
+            },
+            insertContent: html => calls.push(html),
+            nodeChanged() {},
+            getContent: () => 'saved content'
         };
     }
-    it('restores the originating selection and keeps formatting in one undo transaction', () => {
-        const first = editor(), second = editor();
+
+    it('restores the originating selection and applies a native link in one undo transaction', () => {
+        const first = editor();
+        const second = editor();
         const session = createSession(first);
         second.focus();
         session.finish({ text: 'Bold', url: '/page', attributes: { href: '/page' } });
-        assert.deepEqual(first.calls, ['focus', 'restore', 'undo', '<a href="/page"><strong>Bold</strong></a>']);
+
+        assert.deepEqual(first.calls, [
+            'focus',
+            'restore',
+            'undo',
+            { command: 'mceInsertLink', attributes: { href: '/page' } }
+        ]);
         assert.deepEqual(second.calls, ['focus']);
         session.finish(false);
         assert.equal(first.calls.length, 4);
     });
+
+    it('keeps formatting outside the serialized selection instead of replacing that selection', () => {
+        const target = editor();
+        const formattedNode = {
+            innerHTML: '<strong><em><span style="text-decoration: underline;"><s>Formatted</s></span></em></strong>'
+        };
+        target.selection.getNode = () => formattedNode;
+        // A range inside the innermost text node contains none of its formatting wrappers.
+        target.selection.getContent = () => 'Formatted';
+        target.insertContent = () => assert.fail('Adding a link must not replace the formatted selection');
+        const originalHTML = formattedNode.innerHTML;
+        const attributes = {
+            href: '#INTERNAL_LINK#/page/21',
+            title: 'A formatted link',
+            class: 'custom-link',
+            target: '_blank',
+            rel: 'nofollow noopener noreferrer',
+            download: null
+        };
+        const session = createSession(target);
+        session.finish({ text: 'Formatted', url: attributes.href, attributes });
+
+        assert.equal(formattedNode.innerHTML, originalHTML);
+        assert.deepEqual(target.calls, [
+            'focus',
+            'restore',
+            'undo',
+            { command: 'mceInsertLink', attributes }
+        ]);
+        assert.notEqual(target.calls[3].attributes, attributes);
+    });
+
+    it('inserts a label at a collapsed caret without applying a link to an empty range', () => {
+        const target = editor();
+        target.selection.getContent = () => '';
+        target.selection.isCollapsed = () => true;
+        createSession(target).finish({ text: 'New link', url: '/page', attributes: { href: '/page' } });
+
+        assert.deepEqual(target.calls, ['focus', 'restore', 'undo', '<a href="/page">New link</a>']);
+    });
+
     it('cancels without changing content or undo history', () => {
         const e = editor();
         createSession(e).finish(false);
@@ -379,18 +457,25 @@ describe('Mini editor selection ownership', () => {
                 propsData: {
                     value,
                     wysiwyg: true,
-                    internalLinks: true
+                    internalLinks: true,
+                    selectionToolbar: true
                 }
             });
             const targetEditor = editor();
+            targetEditor.dispatch = event => targetEditor.calls.push(event);
             const { instance: dialog } = popup();
             const originalInsertContent = targetEditor.insertContent;
+            const originalExecCommand = targetEditor.execCommand;
             let savedContent = value;
 
             targetEditor.getContent = () => savedContent;
             targetEditor.insertContent = html => {
                 originalInsertContent(html);
                 savedContent = html;
+            };
+            targetEditor.execCommand = (command, ui, attributes) => {
+                originalExecCommand(command, ui, attributes);
+                savedContent = `<a href="${attributes.href}"><strong>Bold</strong></a>`;
             };
             instance.$refs.linkPopup = dialog;
             dialog.$on('resolve', instance.resolveLinkPopup);
@@ -404,6 +489,8 @@ describe('Mini editor selection ownership', () => {
         first.instance.openLinkPopup(first.targetEditor);
         assert.equal(first.dialog.isVisible, true);
         assert.equal(second.dialog.isVisible, false);
+        assert.deepEqual(first.targetEditor.calls, ['contexttoolbar-hide']);
+        assert.deepEqual(second.targetEditor.calls, []);
         second.targetEditor.focus();
         first.dialog.type = 'page';
         first.dialog.page = 21;
@@ -465,43 +552,87 @@ describe('Internal links in saved tag and author descriptions', () => {
 describe('Mini editor opt-in', () => {
     for (const internalLinks of [false, true]) {
         for (const simplifiedToolbar of [false, true]) {
-            it(`routes link commands only when enabled: internal=${internalLinks}, simplified=${simplifiedToolbar}`, async () => {
-                let configuration;
-                const definition = loadComponent('basic-elements/TextArea', {
-                    Vue, LinkPopup: {}, Utils: { debouncedFunction: callback => callback },
-                    hugerte: { init: config => { configuration = config; } }
+            for (const selectionToolbar of [undefined, false, true]) {
+                it(`routes link commands and selection menus only when enabled: internal=${internalLinks}, simplified=${simplifiedToolbar}, selection=${selectionToolbar}`, async () => {
+                    let configuration;
+                    let registeredToolbar;
+                    const definition = loadComponent('basic-elements/TextArea', {
+                        Vue,
+                        LinkPopup: {},
+                        Utils: { debouncedFunction: callback => callback },
+                        hugerte: {
+                            init: config => {
+                                configuration = config;
+                            }
+                        },
+                        registerMiniEditorSelectionToolbar: (editor, options) => {
+                            registeredToolbar = { editor, options };
+                        }
+                    });
+                    const instance = new Vue({
+                        ...definition,
+                        propsData: { internalLinks, simplifiedToolbar, selectionToolbar }
+                    });
+                    instance.$store = { state: { currentSite: { config: {} } } };
+                    instance.$t = key => key;
+                    instance.loadCustomFormatsFromTheme = () => [];
+                    instance.getTinyMCECSSFiles = () => '';
+                    await instance.initWysiwyg();
+
+                    const handlers = {};
+                    const buttons = {};
+                    const editor = {
+                        ui: {
+                            registry: {
+                                addButton: (name, settings) => {
+                                    buttons[name] = settings;
+                                }
+                            }
+                        },
+                        on: (event, handler) => {
+                            handlers[event] = handler;
+                        },
+                        getContent: () => '<a href="#INTERNAL_LINK#/post/12">Saved</a>'
+                    };
+                    await configuration.setup(editor);
+
+                    assert.equal(configuration.toolbar1.split(' ').includes('publiilink'), internalLinks);
+                    assert.equal(configuration.toolbar1.split(' ').includes('link'), !internalLinks);
+                    assert.ok(configuration.plugins.split(' ').includes('link'));
+
+                    if (selectionToolbar) {
+                        assert.equal(registeredToolbar.editor, editor);
+                        assert.equal(registeredToolbar.options.internalLinks, internalLinks);
+                        assert.equal(registeredToolbar.options.isLinkDialogOpen(), false);
+                        instance._linkSession = {};
+                        assert.equal(registeredToolbar.options.isLinkDialogOpen(), true);
+                        instance._linkSession = null;
+                    } else {
+                        assert.equal(registeredToolbar, undefined);
+                    }
+
+                    if (internalLinks) {
+                        let opened = 0;
+                        let prevented = 0;
+                        instance.openLinkPopup = target => {
+                            assert.equal(target, editor);
+                            opened++;
+                        };
+                        const preventDefault = () => prevented++;
+                        buttons.publiilink.onAction();
+                        handlers.BeforeExecCommand({ command: 'mceLink', preventDefault });
+                        handlers.BeforeExecCommand({ command: 'Bold', preventDefault });
+
+                        assert.equal(opened, 2);
+                        assert.equal(prevented, 1);
+                        handlers['change undo redo']();
+                        assert.equal(instance.content, editor.getContent());
+                    } else {
+                        assert.equal(handlers.BeforeExecCommand, undefined);
+                        assert.equal(buttons.publiilink, undefined);
+                    }
                 });
-                const p = new Vue({ ...definition, propsData: { internalLinks, simplifiedToolbar } });
-                p.$store = { state: { currentSite: { config: {} } } };
-                p.$t = key => key;
-                p.loadCustomFormatsFromTheme = () => [];
-                p.getTinyMCECSSFiles = () => '';
-                await p.initWysiwyg();
-                const handlers = {}, buttons = {};
-                const editor = {
-                    ui: { registry: { addButton: (name, settings) => { buttons[name] = settings; } } },
-                    on: (event, handler) => { handlers[event] = handler; },
-                    getContent: () => '<a href="#INTERNAL_LINK#/post/12">Saved</a>'
-                };
-                await configuration.setup(editor);
-                assert.equal(configuration.toolbar1.split(' ').includes('publiilink'), internalLinks);
-                assert.equal(configuration.toolbar1.split(' ').includes('link'), !internalLinks);
-                assert.ok(configuration.plugins.split(' ').includes('link')); // unlink and native shortcut remain available
-                if (internalLinks) {
-                    let opened = 0, prevented = 0;
-                    p.openLinkPopup = target => { assert.equal(target, editor); opened++; };
-                    buttons.publiilink.onAction();
-                    handlers.BeforeExecCommand({ command: 'mceLink', preventDefault: () => prevented++ });
-                    handlers.BeforeExecCommand({ command: 'Bold', preventDefault: () => prevented++ });
-                    assert.equal(opened, 2);
-                    assert.equal(prevented, 1);
-                    handlers['change undo redo']();
-                    assert.equal(p.content, editor.getContent());
-                } else {
-                    assert.equal(handlers.BeforeExecCommand, undefined);
-                    assert.equal(buttons.publiilink, undefined);
-                }
-            });
+            }
         }
     }
 });
