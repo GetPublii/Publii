@@ -51,8 +51,7 @@
 import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import { mapGetters } from 'vuex';
-import VersionComparator from '../helpers/version-comparator';
-import compare from 'node-version-compare';
+import VersionComparator from '../../shared/version-comparator';
 
 export default {
     directives: {
@@ -67,7 +66,7 @@ export default {
             'notifications'
         ]),
         isIncompatible () {
-            if (compare(this.pluginData.minimumPubliiVersion, this.$store.state.app.versionInfo.version) === 1) {
+            if (VersionComparator(this.pluginData.minimumPubliiVersion, this.$store.state.app.versionInfo.version) === 1) {
                 return true;
             }
 

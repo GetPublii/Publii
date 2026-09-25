@@ -2,23 +2,16 @@
     <dl
         class="credits-list"
         ref="content">
-        <template v-for="(licenseData, index) in licensesData">
-            <dt class="credits-item">
+        <template v-for="licenseData in licensesData">
+            <dt
+                class="credits-item"
+                :key="'item-' + licenseData.id">
                 {{ licenseData.name }}
 
                 <a
-                    v-if="licenseData.target !== '_blank'"
                     class="credits-toggle"
-                    @click.prevent="itemClicked($event, licenseData.id, licenseData.url)"
-                    :href="licenseData.href">
-                    {{ $t('publii.license') }}
-                </a>
-
-                <a
-                    v-if="licenseData.target === '_blank'"
-                    class="credits-toggle"
-                    :href="licenseData.href"
-                    target="_blank">
+                    href="#"
+                    @click.prevent="toggleLicense(licenseData)">
                     {{ $t('publii.license') }}
                 </a>
 
@@ -31,8 +24,11 @@
                 </a>
             </dt>
 
-            <dd :class="licenseData.cssClasses" :data-id="licenseData.id">
-                <pre></pre>
+            <dd
+                :class="{ 'credits-content': true, 'is-hidden': openedID !== licenseData.id }"
+                :data-id="licenseData.id"
+                :key="'content-' + licenseData.id">
+                <pre>{{ licenseTexts[licenseData.id] }}</pre>
             </dd>
         </template>
     </dl>
@@ -46,92 +42,49 @@ export default {
     ],
     data: function() {
         return {
-            openedID: -1
+            openedID: -1,
+            licenseTexts: {}
         };
     },
     computed: {
         licensesData: function() {
-            let licensesData = [];
-            let licensePackages = Object.keys(this.licenses).sort();
-            let licenseID = 1;
-
-            for(let licenseKey of licensePackages) {
-                let licenseObject = this.parseLicense(licenseKey, licenseID);
-                licensesData.push(licenseObject);
-                licenseID++;
-            }
-
-            return licensesData;
+            // Order and content of the list come from build/scripts/generate-licenses.js
+            return Object.keys(this.licenses).map((licenseName, index) => ({
+                id: index + 1,
+                name: licenseName,
+                url: this.licenses[licenseName].licenseFile,
+                homepage: this.licenses[licenseName].homepage,
+                openExternally: this.licenses[licenseName].openExternally === true
+            }));
         }
     },
-    mounted () {
-        (async () => {
-            this.appDirPath = await mainProcessAPI.invoke('app-credits-list:get-app-path');
-        });
-    },
     methods: {
-        itemClicked: function(e, id, licenseUrl) {
-            if(e.target.getAttribute('href') === '#') {
-                if(this.openedID === id) {
-                    this.openedID = -1;
-                    return;
+        toggleLicense: async function(licenseData) {
+            if (this.openedID === licenseData.id) {
+                this.openedID = -1;
+                return;
+            }
+
+            if (licenseData.openExternally) {
+                let isOpened = await mainProcessAPI.invoke('app-credits-list:open-license', licenseData.url);
+
+                if (!isOpened) {
+                    this.openedID = licenseData.id;
+                    this.$set(this.licenseTexts, licenseData.id, this.$t('core.credits.errorLoadingLicenseMsg'));
                 }
 
-                this.openedID = id;
-                this.loadLicense(e.target, licenseUrl);
-            }
-        },
-        loadLicense: function(link, licenseUrl) {
-            mainProcessAPI.send('app-license-load', {
-                url: licenseUrl
-            });
-
-            mainProcessAPI.receiveOnce('app-license-loaded', function(licenseText) {
-                if (licenseText.translation) {
-                    licenseText = this.$t(licenseText);
-                }
-
-                link.parentNode.nextElementSibling.querySelector('pre').innerText = licenseText;
-            });
-        },
-        parseLicense: function(licenseKey, licenseID) {
-            let licenseHomepage = this.licenses[licenseKey].url;
-            let licenseName = licenseKey.split('@')[0];
-            let licenseUrl = `licenses/${licenseName}/license.txt`;
-            let licenseExternal = false;
-            let licenseHref = '#';
-            let licenseTarget = '';
-
-            if(!licenseHomepage) {
-                licenseHomepage = this.licenses[licenseKey].repository;
+                return;
             }
 
-            if(this.licenses[licenseKey].licenseFile) {
-                licenseUrl = this.licenses[licenseKey].licenseFile;
+            this.openedID = licenseData.id;
+
+            let licenseText = await mainProcessAPI.invoke('app-credits-list:load-license', licenseData.url);
+
+            if (licenseText && licenseText.translation) {
+                licenseText = this.$t(licenseText.translation);
             }
 
-            if(this.licenses[licenseKey]['helper-text']) {
-                let appDirPath = remote.app.getAppPath();
-                licenseUrl = 'file://' + appDirPath + '/' + this.licenses[licenseKey].url;
-                licenseHomepage = false;
-                licenseExternal = true;
-                licenseHref = licenseUrl;
-                licenseTarget = '_blank';
-            }
-
-            return {
-                id: licenseID,
-                name: licenseName,
-                url: licenseUrl,
-                href: licenseHref,
-                homepage: licenseHomepage,
-                isExternal: licenseExternal,
-                target: licenseTarget,
-                cssClasses: {
-                    'credits-content': true,
-                    'is-hidden': parseInt(this.openedID, 10) !== licenseID
-                }
-            };
+            this.$set(this.licenseTexts, licenseData.id, licenseText);
         }
     }
 }

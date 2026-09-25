@@ -7,7 +7,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
 const Database = require('better-sqlite3');
-const compare = require('node-version-compare');
+const VersionComparator = require('../shared/version-comparator.js');
 const normalizePath = require('normalize-path');
 const url = require('url');
 // Electron classes
@@ -212,7 +212,7 @@ class App {
                     let userThemeData = JSON.parse(FileHelper.readFileSync(userThemeConfig, 'utf8'));
 
                     // If app theme is newer version than the existing one
-                    if(compare(appThemeData.version, userThemeData.version) === 1) {
+                    if(VersionComparator(appThemeData.version, userThemeData.version) === 1) {
                         // Remove all files from the theme dir
                         Utils.emptyDirRecursively(path.join(userThemesPath, file));
 

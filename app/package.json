@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.47.9",
+  "version": "0.48.0",
   "description": "Static Site CMS",
   "main": "main.js",
   "scripts": {
@@ -55,7 +55,6 @@
     "marked": "5.1.1",
     "mime": "3.0.0",
     "moment": "2.29.4",
-    "node-version-compare": "1.0.3",
     "normalize-path": "3.0.0",
     "parse5": "7.3.0",
     "prismjs": "1.30.0",

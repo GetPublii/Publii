@@ -1,47 +1,48 @@
 {
+    "chromium": {
+        "license": "BSD-3-Clause",
+        "homepage": "https://www.chromium.org/",
+        "licenseFile": "LICENSES.chromium.html",
+        "openExternally": true
+    },
     "electron": {
-        "url": "https://electronjs.org/"
+        "license": "MIT",
+        "homepage": "https://electronjs.org/"
     },
     "normalize.css": {
-        "url": "https://github.com/necolas/normalize.css"
+        "license": "MIT",
+        "homepage": "https://github.com/necolas/normalize.css"
     },
     "locutus": {
-        "url": "http://locutus.io/"
-    },
-    "codemirror": {
-        "url": "https://codemirror.net/"
-    },
-    "tinycolorpicker": {
-        "url": "http://www.dematte.at/tinyColorPicker/"
+        "license": "MIT",
+        "homepage": "http://locutus.io/"
     },
     "hugerte": {
-        "url": "https://hugerte.org/"
+        "license": "MIT",
+        "homepage": "https://hugerte.org/"
     },
     "libvips": {
-        "url": "https://github.com/jcupitt/libvips"
-    },
-    "handlebars": {
-        "url": "http://handlebarsjs.com/"
+        "license": "LGPL-2.1-or-later",
+        "homepage": "https://github.com/libvips/libvips"
     },
     "jquery": {
-        "url": "http://jquery.com/"
-    },
-    "jquery-ui": {
-        "url": "https://jqueryui.com/"
-    },
-    "nested-sortable": {
-        "url": "https://github.com/ilikenwf/nestedSortable"
-    },
-    "select2": {
-        "url": "https://select2.github.io/"
+        "license": "MIT",
+        "homepage": "http://jquery.com/"
     },
     "feathericons": {
-        "url": "https://feathericons.com"
+        "license": "MIT",
+        "homepage": "https://feathericons.com"
     },
     "tabler-icons": {
-        "url": "https://tabler-icons.io/"
+        "license": "MIT",
+        "homepage": "https://tabler-icons.io/"
     },
     "lucide": {
-        "url": "https://lucide.dev/"
+        "license": "ISC",
+        "homepage": "https://lucide.dev/"
+    },
+    "transliteration": {
+        "license": "MIT",
+        "homepage": "https://github.com/dzcpy/transliteration"
     }
 }

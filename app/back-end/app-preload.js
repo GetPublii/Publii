@@ -18,7 +18,6 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
     send: (channel, ...data) => {
         const validChannels = [
             'app-save-color-theme',
-            'app-license-load',
             'app-config-save',
             'app-sites-location-retry',
             'app-backup-set-location',
@@ -159,7 +158,6 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
     },
     receiveOnce: (channel, func) => {
         const validChannels = [
-            'app-license-loaded',
             'app-config-saved',
             'app-sites-location-retried',
             'app-file-selected',
@@ -254,7 +252,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-theme-mode:set-dark',
             'app-theme-mode:get-theme',
             'app-theme-mode:set-system',
-            'app-credits-list:get-app-path',
+            'app-credits-list:load-license',
+            'app-credits-list:open-license',
             'app-main-process-is-osx11-or-higher',
             'app-main-process-select-file',
             'app-main-process-create-slug',

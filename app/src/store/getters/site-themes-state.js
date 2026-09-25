@@ -9,7 +9,7 @@
  * @returns {object}
  */
 
-import VersionComparator from '../../helpers/version-comparator';
+import VersionComparator from '../../../shared/version-comparator';
 
 function isNewer (candidate, reference) {
     if (!candidate || !reference) {

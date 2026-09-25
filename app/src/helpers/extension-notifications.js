@@ -1,4 +1,4 @@
-const VersionComparator = require('./version-comparator');
+const VersionComparator = require('../../shared/version-comparator');
 
 /**
  * Combine update and discontinued notices into one row per installed extension.

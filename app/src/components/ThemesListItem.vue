@@ -44,7 +44,7 @@
 import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
 import { mapGetters } from 'vuex';
-import VersionComparator from '../helpers/version-comparator';
+import VersionComparator from '../../shared/version-comparator';
 
 export default {
     directives: {

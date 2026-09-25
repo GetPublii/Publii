@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.47.9",
+  "version": "0.48.0",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -20,6 +20,8 @@
     "pretest": "node build/scripts/check-test-runtime.js",
     "test": "npm run audit:design-system && node_modules/.bin/mocha \"build/scripts/specs/**/*.spec.js\" \"app/back-end/**/*.spec.js\" \"app/src/helpers/specs/**/*.spec.js\" \"app/src/components/specs/**/*.spec.js\" --reporter spec",
     "audit:design-system": "node build/scripts/audit-design-system.js",
+    "licenses": "node build/scripts/generate-licenses.js",
+    "licenses:check": "node build/scripts/generate-licenses.js --check",
     "prepare-editor": "npm run prepare-editor-css && npm run remove-vendor-dist-dir && npm run prepare-vendor-dist-dir && npm run copy-vendor-files",
     "remove-vendor-dist-dir": "rm -rf app/dist/vendor",
     "prepare-editor-css": "node build/scripts/prepare-editor-css.js",
@@ -72,6 +74,7 @@
       "default-files/default-languages/**/*",
       "default-files/gdpr-assets/**/*",
       "default-files/vendor/**/*",
+      "licenses/LICENSES.chromium.html",
       "**/node_modules/sharp/**/*",
       "**/node_modules/@img/**/*",
       "**/node_modules/@jsquash/**/*",

@@ -261,11 +261,6 @@ electronApp.on('ready', function () {
         BrowserWindow.fromWebContents(event.sender)?.close();
     });
 
-    // App credits list
-    ipcMain.handle('app-credits-list:get-app-path', () => {
-        return electronApp.getAppPath();
-    });
-
     // Use Electron API to create slugs
     ipcMain.handle('app-main-process-create-slug', (event, input) => {
         return createSlug(input);
