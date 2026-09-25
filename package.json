@@ -44,7 +44,7 @@
   "keywords": [],
   "devDependencies": {
     "css-loader": "6.8.1",
-    "electron": "43.7.1",
+    "electron": "43.7.5",
     "electron-builder": "26.15.3",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
@@ -59,7 +59,7 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "43.7.1",
+    "electronVersion": "43.7.5",
     "productName": "Publii",
     "copyright": "Copyright (C) 2016-2026 TidyCustoms. All rights reserved.",
     "asar": true,
