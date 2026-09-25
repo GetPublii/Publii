@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Publii
+Comment=Build and publish static websites
+Exec=publii %U
+Icon=net.tidycustoms.Publii
+Terminal=false
+StartupNotify=true
+StartupWMClass=Publii
+Categories=Office;Publishing;
+Keywords=CMS;blog;website;static;publishing;
