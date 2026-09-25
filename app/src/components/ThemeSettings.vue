@@ -156,6 +156,7 @@
                                     :wysiwyg="true"
                                     :miniEditorMode="true"
                                     internal-links
+                                    selection-toolbar
                                     :customCssClasses="field.customCssClasses"></text-area>
 
                                 <image-upload
@@ -271,6 +272,7 @@
                                     :anchor="field.anchor"
                                     :settings="custom"
                                     internal-links
+                                    selection-toolbar
                                     imageType="optionImages"
                                     :customCssClasses="field.customCssClasses" />
 

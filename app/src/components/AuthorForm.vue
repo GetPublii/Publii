@@ -71,6 +71,7 @@
                                     :wysiwyg="true"
                                     :miniEditorMode="true"
                                     internal-links
+                                    selection-toolbar
                                     :simplifiedToolbar="true"
                                     :rows="4"></text-area>
                             </label>

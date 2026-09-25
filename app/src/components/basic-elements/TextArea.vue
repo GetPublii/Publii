@@ -29,6 +29,7 @@ import Utils from './../../helpers/utils';
 import Vue from 'vue';
 import LinkPopup from './../post-editor/LinkPopup';
 import { createMiniEditorLinkSession } from './../../helpers/mini-editor-link';
+import { registerMiniEditorSelectionToolbar } from './../../helpers/mini-editor-toolbar';
 
 export default {
     name: 'text-area',
@@ -78,6 +79,10 @@ export default {
             type: Boolean
         },
         miniEditorMode: {
+            default: false,
+            type: Boolean
+        },
+        selectionToolbar: {
             default: false,
             type: Boolean
         },
@@ -245,6 +250,15 @@ export default {
                         });
                     }
 
+                    if (self.selectionToolbar) {
+                        registerMiniEditorSelectionToolbar(editor, {
+                            internalLinks: self.internalLinks,
+                            isLinkDialogOpen: () => !!self._linkSession,
+                            translate: key => self.$t(key),
+                            openExternal: url => mainProcessAPI.shellOpenExternal(url)
+                        });
+                    }
+
                     editor.on('init', async function () {
                         let iframe = document.querySelector('#' + self.editorID + '_ifr');
                         let iframeDocument = iframe.contentWindow.window.document;
@@ -270,6 +284,11 @@ export default {
             }
 
             this._linkSession = createMiniEditorLinkSession(editor);
+
+            if (this.selectionToolbar) {
+                editor.dispatch('contexttoolbar-hide');
+            }
+
             this.$refs.linkPopup.open(this._linkSession.config);
         },
         resolveLinkPopup (response) {

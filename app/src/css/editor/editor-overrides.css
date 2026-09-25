@@ -638,6 +638,54 @@ body .tox-hugerte {
 body .tox-hugerte-aux {
     z-index: var(--layer-dialog);
 }
+/* Mini editor context toolbars are rendered outside their field containers. */
+body .tox .tox-pop:has([data-mce-name="publiilink"]),
+body .tox .tox-pop:has([data-mce-name="publiiminipreview"]) {
+    .tox-tbtn {
+        background: transparent;
+        border-radius: var(--radius-base);
+        height: 34px;
+        isolation: isolate;
+        margin: 2px;
+        position: relative;
+        width: 34px;
+
+        &::before {
+            background: var(--color-control-surface-hover);
+            border-radius: inherit;
+            content: "";
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            transform: scale(.5);
+            transition: opacity .15s cubic-bezier(.4, 0, .2, 1),
+                transform .15s cubic-bezier(.4, 0, .2, 1);
+            z-index: -1;
+        }
+
+        &:not(:disabled):not(.tox-tbtn--disabled):not([aria-disabled="true"]):is(:hover, :focus-visible, :active, .tox-tbtn--enabled)::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        &:focus::after {
+            border-radius: inherit;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            &::before {
+                transform: none;
+                transition: none;
+            }
+        }
+    }
+
+    .tox-tbtn__icon-wrap svg {
+        height: 18px;
+        width: 18px;
+    }
+}
 body:has(.overlay > .popup-link-add) .tox-hugerte-aux .tox-pop {
     display: none;
 }

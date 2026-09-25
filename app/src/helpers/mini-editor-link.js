@@ -34,9 +34,11 @@ export function createMiniEditorLinkSession (editor) {
                     }
                     editor.selection.select(anchor);
                     editor.selection.collapse(false);
+                } else if (response.text === label && !editor.selection.isCollapsed()) {
+                    // Apply the link in place: serialized selections omit enclosing inline formats.
+                    editor.execCommand('mceInsertLink', false, { ...response.attributes });
                 } else {
-                    const content = response.text === label && html ? html :
-                        editor.dom.encode(response.text || response.url);
+                    const content = editor.dom.encode(response.text || response.url);
                     editor.insertContent(editor.dom.createHTML('a', response.attributes, content));
                 }
             });

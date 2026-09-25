@@ -18,10 +18,13 @@
             </strong>
         </span>
 
-        <span
+        <icon
             class="site-logo-icon-open"
-            name="sidebar-arrow">
-        </span>
+            name="chevrons-up-down"
+            customWidth="18"
+            customHeight="18"
+            aria-hidden="true"
+            focusable="false" />
 
     </div>
 </template>
@@ -115,7 +118,7 @@ export default {
     align-items: center;
     color: var(--sidebar-preview-btn-color);
     display: flex;
-    padding: 2.5rem var(--space-16) 0;
+    padding: 2.5rem var(--space-12) 0 var(--space-16);
     margin-bottom: 2.5rem;
     width: 100%;
     transition: var(--transition-default);
@@ -126,7 +129,7 @@ export default {
     &:hover {
 
         .site-logo-icon-open {
-            border-top-color: var(--sidebar-link-icon-hover);
+            color: var(--sidebar-link-icon-hover);
             opacity: 1;
         }
     }
@@ -146,14 +149,16 @@ export default {
     border-radius: 3px;
     color: var(--sidebar-icon);
     display: flex;
+    flex-shrink: 0;
     height: 20px;
     justify-content: center;
     width: 20px;
 }
 
 .site-logo-name {
+    flex: 1;
     margin: 0 0 0 var(--space-6);
-    width: calc(100% - 5rem);
+    min-width: 0;
 }
 
 .site-logo-link {
@@ -178,32 +183,17 @@ export default {
 }
 
 .site-logo-icon-open {
-    border-color: var(--sidebar-link-icon) transparent transparent;
-    border-style: solid;
-    border-width: 5px;
-    opacity: 1;
-    cursor: pointer;
-    height: 5px;
-    left: auto;
-    line-height: 1.1;
+    color: var(--sidebar-link-icon);
+    flex-shrink: 0;
+    margin-left: var(--space-4);
     opacity: var(--sidebar-link-opacity);
-    padding: 0;
-    position: absolute;
-    right: 4rem;
-    width: 5px;
-    text-align: center;
     transition: var(--transition-default);
-    transition-property: border-color, opacity;
-    bottom: 2px;
+    transition-property: color, opacity;
 }
 
 @media (max-width: 1600px) {
     html[data-auto-adjust-sidebar-width="true"] .site-logo {
         padding: 2.5rem var(--space-12) 0;
-    }
-
-    html[data-auto-adjust-sidebar-width="true"] .site-logo-icon-open {
-        right: var(--space-12);
     }
 }
 </style>
