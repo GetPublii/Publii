@@ -278,15 +278,17 @@ The appearance-owned compact spacing scale covers the recurring application rhyt
 
 ## Elevation & Depth
 
-Hierarchy relies primarily on surface contrast and borders. The shared `shadow-sm` and `shadow-md` roles are reserved for raised controls, panels, and overlays; `shadow-list-hover` owns the common hover elevation of installable-item lists, and `shadow-color` supports composed editor shadows. Unique popup and feedback effects remain locally owned rather than expanding the global elevation scale.
+Hierarchy relies primarily on surface contrast and borders. The shared `shadow-sm` and `shadow-md` roles are reserved for raised controls, panels, and overlays. Navigation tiles use `shadow-sm` at rest and `shadow-md` on hover or keyboard focus; `shadow-color` supports composed editor shadows. Unique popup and feedback effects remain locally owned rather than expanding the global elevation scale.
 
 Viewport-level stacking follows the shared order from panel and editor help through overlay, editor toolbar, popup, toast, dialog, and alert. Numeric `z-index` values remain valid only for local sibling ordering inside a component-owned stacking context.
 
 ## Shapes
 
-The appearance-owned base corner radius governs rectangular controls and containers. Circular controls and fully rounded search fields remain component-specific shapes.
+The appearance-owned base corner radius governs rectangular controls and containers. Navigation tiles, installed plugin/theme/language cards, and shared `FieldsGroup` panels use 1.5 times the base radius (9px in the current appearance). Circular controls and fully rounded search fields remain component-specific shapes.
 
 ## Components
+
+Navigation tiles in Tools, Server, and the installable-item lists use 1.5 times the base corner radius (9px in the current appearance), keep their base surface, and scale to 1.03 on hover and keyboard focus. Keyboard focus retains its visible outline. Enabled and disabled plugin tiles share the same hover elevation and scale; disabled plugins retain muted labels and their off switch state. Disabled plugin switches in Tools use two 850ms spring bounces on tile hover or keyboard focus. The animation stops when the switch itself is hovered or focused. Reduced motion suppresses the switch animation and tile scaling, and removes tile transitions.
 
 Buttons separate `intent`, `appearance`, `size`, `width`, and `layout`. Loading, active, disabled, square, back, and icon-only states are independent booleans; leading-icon layout is derived from the `icon` prop. Callers must not encode multiple concerns in a space-delimited variant string. Buttons are native button elements; keyboard focus is indicated by a 2px ring in the input focus role, while pointer interaction shows no focus ring.
 

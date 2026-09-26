@@ -145,7 +145,7 @@ export default {
 .plugin {
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: var(--radius-base);
+    border-radius: calc(var(--radius-base) * 1.5);
     box-shadow: var(--shadow-sm);
     height: 100%;
     margin: 0;

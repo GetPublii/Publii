@@ -111,24 +111,29 @@ export default {
 .add-more-plugins {
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: var(--radius-base);
+    border-radius: calc(var(--radius-base) * 1.5);
     box-shadow: var(--shadow-sm);
     height: 100%;
     transition: var(--transition-default);
     text-align: center;
 
-    &:hover {
-         background: var(--bg-primary);
-         border-color: var(--color-primary);
-         box-shadow: var(--shadow-list-hover);
+    &:hover,
+    &:has(> a:focus-visible) {
+         box-shadow: var(--shadow-md);
+         transform: scale(1.03);
 
          svg {
-             fill: var(--color-primary);
+             fill: var(--link-invert-color-hover);
          }
 
          h3 {
-             color: var(--color-primary);
+             color: var(--link-invert-color-hover);
          }
+    }
+
+    &:has(> a:focus-visible) {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
     }
 
     & > a {
@@ -152,6 +157,17 @@ export default {
     svg {
          fill: var(--icon-primary-color);
          transition: inherit;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .add-more-plugins:hover,
+    .add-more-plugins:has(> a:focus-visible) {
+        transform: none;
+    }
+
+    .add-more-plugins {
+        transition: none;
     }
 }
 </style>

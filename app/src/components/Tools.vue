@@ -197,25 +197,30 @@ export default {
 .tools-list-item {
      background-color: var(--bg-secondary);
      border: 1px solid transparent;
-     border-radius: var(--radius-base);
+     border-radius: calc(var(--radius-base) * 1.5);
      box-shadow: var(--shadow-sm);
      height: 100%;
      transition: var(--transition-default);
      text-align: center;
 
-     &:hover {
-        background: var(--bg-primary);
-        border-color: var(--color-primary);
+     &:hover,
+     &:has(> a:focus-visible) {
         box-shadow: var(--shadow-md);
+        transform: scale(1.03);
         cursor: pointer;
 
         svg {
-           fill: var(--color-primary);
+           fill: var(--link-invert-color-hover);
         }
 
         a {
-           color: var(--color-primary);
+           color: var(--link-invert-color-hover);
         }
+     }
+
+     &:has(> a:focus-visible) {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
      }
 
      a {
@@ -246,20 +251,9 @@ export default {
      }
 
      &.plugin-is-disabled {
-
          a {
              color: var(--text-light-color);
              cursor: default;
-         }
-
-         &:hover {
-            border-color: var(--border-light-color);
-            box-shadow: var(--shadow-sm);
-            
-            .tools-switcher {
-                  animation: tools-switcher-animation 3s linear infinite;
-
-            }
          }
      }
  }
@@ -268,10 +262,6 @@ export default {
    position: absolute;
    left: 1.5rem;
    bottom: 1rem;
-
-   &:hover {
-         animation: none !important;
-   }
 }
 
 .tools-description {
@@ -293,15 +283,6 @@ export default {
         font-size: var(--font-size-ui-md);
         font-style: italic;
     }
-}
-
-@keyframes tools-switcher-animation {
-  0% {transform:scale(1)}
-  16% {transform:scale(.8)}
-  33% {transform:scale(1)}
-  50% {transform:scale(.8)}
-  67% {transform:scale(1)}
-  84% {transform:scale(.8)}
 }
 
 /*
@@ -363,4 +344,43 @@ export default {
     }
 }
 
+@keyframes tools-switcher-spring {
+    0%, 75%, 100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    20% {
+        transform: translateY(-4px) rotate(-4deg);
+    }
+
+    43% {
+        transform: translateY(1px) rotate(2deg);
+    }
+
+    58% {
+        transform: translateY(-1px) rotate(0);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .tools-list-item.plugin-is-disabled {
+        &:hover,
+        &:has(> a:focus-visible) {
+            .tools-switcher:not(:hover):not(:focus-within) {
+                animation: tools-switcher-spring .85s ease-in-out 2;
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tools-list-item:hover,
+    .tools-list-item:has(> a:focus-visible) {
+        transform: none;
+    }
+
+    .tools-list-item {
+        transition: none;
+    }
+}
 </style>

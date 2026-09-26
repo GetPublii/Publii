@@ -49,7 +49,8 @@
                 v-if="deploymentMethodSelected === ''"
                 class="server-settings-grid">
 
-                 <div
+                 <button
+                    type="button"
                     @click="deploymentMethodSelected = 'ftp'"
                     :title="$t('sync.ftp')"
                     class="server-settings-grid-item">
@@ -59,9 +60,10 @@
                       name="ftp"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.ftp') }}</span>
-                </div>
+                </button>
 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 'sftp'"
                     :title="$t('sync.sftp')"
                     class="server-settings-grid-item">
@@ -71,9 +73,10 @@
                       name="sftp"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.sftp') }}</span>
-                </div>
+                </button>
 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 's3'"
                     :title="$t('sync.s3CompatibleStorage')"
                     class="server-settings-grid-item">
@@ -83,9 +86,10 @@
                       name="s3storage"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.s3CompatibleStorage') }}</span>
-                </div>
+                </button>
 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 'git'"
                     :title="$t('sync.git')"
                     class="server-settings-grid-item">
@@ -95,9 +99,10 @@
                       name="git"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.git') }}</span>
-                </div>
+                </button>
                 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 'github-pages'"
                     :title="$t('sync.github')"
                     class="server-settings-grid-item">
@@ -107,9 +112,10 @@
                       name="githubpages"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.githubPages') }}</span>
-                </div>
+                </button>
 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 'gitlab-pages'"
                     :title="$t('sync.gitlabPages')"
                     class="server-settings-grid-item">
@@ -119,9 +125,10 @@
                       name="gitlab"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.gitlabPages') }}</span>
-                </div>
+                </button>
 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 'netlify'"
                     :title="$t('sync.netlify')"
                     class="server-settings-grid-item">
@@ -131,9 +138,10 @@
                       name="netlify"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.netlify') }}</span>
-                </div>
+                </button>
 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 'google-cloud'"
                     :title="$t('sync.googleCloud')"
                     class="server-settings-grid-item">
@@ -143,9 +151,10 @@
                       name="googlecloud"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.googleCloud') }}</span>
-                </div>
+                </button>
 
-                <div
+                <button
+                    type="button"
                     @click="deploymentMethodSelected = 'manual'"
                     :title="$t('sync.manualDeployment')"
                     class="server-settings-grid-item">
@@ -155,7 +164,7 @@
                       name="zip"
                       iconset="svg-map-server"/>
                       <span>{{ $t('sync.manualDeployment') }}</span>
-                </div>
+                </button>
 
                 <a
                     href="https://getpublii.com/docs/deployment/"
@@ -1816,26 +1825,35 @@ export default {
 
 .server-settings-grid-item {
     align-items: center;
+    appearance: none;
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
-    border-radius: var(--radius-base);
+    border-radius: calc(var(--radius-base) * 1.5);
     box-shadow: var(--shadow-sm);
     color: var(--text-primary-color);
     display: flex;
     flex-direction: column;
     fill: var(--icon-primary-color);
+    font: inherit;
     font-weight: var(--font-weight-medium);
     justify-content: center;
     min-height: calc(8rem + 8vh);
+    padding: 0;
     position: relative;
+    text-align: center;
     transition: var(--transition-default);
 
-    &:hover {
-        background: var(--bg-primary);
-        border-color: var(--color-primary);
+    &:hover,
+    &:focus-visible {
         box-shadow: var(--shadow-md);
-        color: var(--color-primary);
+        transform: scale(1.03);
+        color: var(--link-invert-color-hover);
         cursor: pointer;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
     }
 
     & > svg {
@@ -1857,13 +1875,14 @@ export default {
             transition: inherit;
         }
 
-        &:hover {
+        &:hover,
+        &:focus-visible {
             svg {
-                fill: var(--color-primary);
+                fill: var(--link-invert-color-hover);
             }
 
             h3 {
-                color: var(--color-primary);
+                color: var(--link-invert-color-hover);
             }
         }
     }
@@ -1882,6 +1901,17 @@ export default {
 @media (max-width: 1400px) {
     .server-settings-grid-item > svg {
         transform: scale(0.9);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .server-settings-grid-item:hover,
+    .server-settings-grid-item:focus-visible {
+        transform: none;
+    }
+
+    .server-settings-grid-item {
+        transition: none;
     }
 }
 </style>

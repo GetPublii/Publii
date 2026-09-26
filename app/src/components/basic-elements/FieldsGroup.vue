@@ -25,7 +25,7 @@ export default {
 fieldset {
     background-color: var(--bg-secondary);
     border: none;
-    border-radius: var(--radius-base);
+    border-radius: calc(var(--radius-base) * 1.5);
     box-shadow: var(--shadow-sm);
     margin: 0 0 var(--space-12);
     position: relative;
