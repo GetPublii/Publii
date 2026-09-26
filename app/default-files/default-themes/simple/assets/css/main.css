@@ -788,8 +788,8 @@ textarea {
   color: var(--nav-link-color);
   display: block;
   padding: 0 0.6rem;
-  -webkit-transition: all 0.24s ease-out;
-  transition: all 0.24s ease-out;
+  -webkit-transition: color 0.24s ease-out;
+  transition: color 0.24s ease-out;
   cursor: pointer;
 }
 .navbar .navbar__menu li a:active, .navbar .navbar__menu li a:focus, .navbar .navbar__menu li a:hover,
@@ -797,7 +797,6 @@ textarea {
 .navbar .navbar__menu li span[role=button]:focus,
 .navbar .navbar__menu li span[role=button]:hover {
   color: var(--nav-link-color-hover);
-  outline: none;
 }
 .navbar .navbar__menu li span:not([role=button]) {
   color: var(--nav-link-color);
@@ -861,9 +860,6 @@ textarea {
   transition: opacity 0.15s, transform 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
   transition: opacity 0.15s, transform 0.3s cubic-bezier(0.275, 1.375, 0.8, 1), -webkit-transform 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
 }
-.navbar .navbar__submenu__submenu {
-  z-index: 2;
-}
 .navbar .navbar__submenu li {
   line-height: 1.5;
   font-size: 0.8789062495rem;
@@ -873,8 +869,8 @@ textarea {
   border-radius: calc(var(--border-radius) * 3);
   color: var(--nav-link-color-hover);
   padding: 0.5rem 1rem;
-  -webkit-transition: all 0.24s ease;
-  transition: all 0.24s ease;
+  -webkit-transition: background-color 0.24s ease, color 0.24s ease;
+  transition: background-color 0.24s ease, color 0.24s ease;
 }
 .navbar .navbar__submenu li a:active, .navbar .navbar__submenu li a:focus, .navbar .navbar__submenu li a:hover,
 .navbar .navbar__submenu li span[role=button]:active,
@@ -1005,8 +1001,8 @@ textarea {
   pointer-events: auto;
   position: fixed;
   top: 4.4rem;
-  -webkit-transition: all 0.3s cubic-bezier(0, 0, 0.3, 1);
-  transition: all 0.3s cubic-bezier(0, 0, 0.3, 1);
+  -webkit-transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
   width: 100%;
   z-index: 1001;
 }
@@ -1069,8 +1065,8 @@ textarea {
   height: 0;
   opacity: 0;
   overflow: hidden;
-  -webkit-transition: all 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
-  transition: all 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
+  -webkit-transition: height 0.3s cubic-bezier(0.275, 1.375, 0.8, 1), opacity 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
+  transition: height 0.3s cubic-bezier(0.275, 1.375, 0.8, 1), opacity 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
 }
 .navbar_mobile_overlay .navbar__submenu_wrapper.is-active {
   height: auto;
@@ -1087,8 +1083,8 @@ textarea {
   overflow: auto;
   position: fixed;
   top: 0;
-  -webkit-transition: all 0.3s cubic-bezier(0, 0, 0.3, 1);
-  transition: all 0.3s cubic-bezier(0, 0, 0.3, 1);
+  -webkit-transition: left 0.3s cubic-bezier(0, 0, 0.3, 1);
+  transition: left 0.3s cubic-bezier(0, 0, 0.3, 1);
   width: 80%;
   z-index: 1001;
 }
@@ -1152,8 +1148,8 @@ textarea {
   height: 0;
   opacity: 0;
   overflow: hidden;
-  -webkit-transition: all 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
-  transition: all 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
+  -webkit-transition: height 0.3s cubic-bezier(0.275, 1.375, 0.8, 1), opacity 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
+  transition: height 0.3s cubic-bezier(0.275, 1.375, 0.8, 1), opacity 0.3s cubic-bezier(0.275, 1.375, 0.8, 1);
 }
 .navbar_mobile_sidebar .navbar__submenu_wrapper.is-active {
   height: auto;
@@ -1166,8 +1162,8 @@ textarea {
   pointer-events: auto;
   position: fixed;
   top: 0;
-  -webkit-transition: all 0.3s cubic-bezier(0, 0, 0.3, 1);
-  transition: all 0.3s cubic-bezier(0, 0, 0.3, 1);
+  -webkit-transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
   width: 100%;
   z-index: 10;
 }

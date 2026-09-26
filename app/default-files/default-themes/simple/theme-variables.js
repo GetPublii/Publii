@@ -279,6 +279,12 @@ let fontParams = {
       weight: '400 700',
       hasItalic: true
     },
+    'inter': {
+      name: 'Inter',
+      family: '\'Inter\', sans-serif',
+      weight: '100 900',
+      hasItalic: true
+    },
     'jetbrainsmono': {
       name: 'JetBrains Mono',
       family: '\'JetBrains Mono\', monospace',

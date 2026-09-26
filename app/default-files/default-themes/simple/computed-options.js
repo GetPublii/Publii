@@ -45,6 +45,7 @@ module.exports = function (themeConfig) {
         'imbue': { hasItalic: false },
         'inclusivesans': { hasItalic: true },
         'instrumentsans': { hasItalic: true },
+        'inter': { hasItalic: true },
         'jetbrainsmono': { hasItalic: true },
         'jura': { hasItalic: false },
         'kalnia': { hasItalic: false },

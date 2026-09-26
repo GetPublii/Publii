@@ -46,7 +46,8 @@ window.addEventListener('scroll', () => {
     mobileMenuSidebarLogoUrl: null,
     relatedContainerForOverlayMenuSelector: null,
     // attributes 
-    ariaButtonAttribute: 'aria-haspopup',
+    ariaButtonAttribute: 'aria-expanded',
+    mobileMenuId: 'js-navbar-mobile',
     // CSS classes
     separatorItemClass: 'is-separator',
     parentItemClass: 'has-submenu',
@@ -302,6 +303,8 @@ window.addEventListener('scroll', () => {
     }
 
     initClosingMenuOnClickLink();
+    initMobileMenuEscape();
+    initMobileMenuFocusLeave();
 
     if (!config.isHoverMenu) {
       initAriaAttributes();
@@ -360,8 +363,79 @@ function initSubmenuPositions() {
   /**
    * Function used to init mobile menu - overlay mode
    */
+  /**
+   * The mobile menu (overlay or sidebar) is a copy of the header menu appended to the body, so it
+   * gets its own landmark: a nav named by the toggle that opens it (its aria-label, "Menu"); the
+   * template names the header nav differently ("Main navigation"), so the two landmarks stay
+   * distinct while the menu is open. While closed it is inert, out of reach of
+   * the keyboard and the screen reader whatever the theme's CSS does to hide it; the toggle points
+   * at it (aria-controls, aria-expanded); opening moves the focus to its first item, Escape
+   * closes it and gives the focus back to the toggle, and the focus leaving it (Tab past the last
+   * item, to anything but the toggle) closes it too, so nobody tabs on under the overlay.
+   */
+  function prepareMobileMenu(menuWrapper, button) {
+    var headerNav = document.querySelector(config.wrapperSelector);
+    var label = (button && button.getAttribute('aria-label')) || (headerNav && headerNav.getAttribute('aria-label')) || 'Menu';
+    var withId = menuWrapper.querySelectorAll('[id]');
+
+    for (var i = 0; i < withId.length; i++) {
+      withId[i].removeAttribute('id');
+    }
+
+    menuWrapper.id = config.mobileMenuId;
+    menuWrapper.setAttribute('aria-label', label);
+    menuWrapper.inert = true;
+
+    if (button) {
+      button.setAttribute('aria-controls', config.mobileMenuId);
+      button.setAttribute(config.ariaButtonAttribute, 'false');
+    }
+  }
+
+  function setMobileMenuOpen(menuWrapper, open) {
+    menuWrapper.inert = !open;
+
+    if (open) {
+      var first = menuWrapper.querySelector('a[href], button, [role="button"][tabindex]');
+
+      if (first) {
+        first.focus({ preventScroll: true });
+      }
+    }
+  }
+
+  function initMobileMenuEscape() {
+    document.addEventListener('keydown', function (e) {
+      var button = document.querySelector(config.buttonSelector);
+
+      if (e.key !== 'Escape' || !button || !button.classList.contains(config.openedMenuClass)) {
+        return;
+      }
+
+      closeMenu(null, true);
+      button.focus();
+    });
+  }
+
+  function initMobileMenuFocusLeave() {
+    document.addEventListener('focusin', function (e) {
+      var button = document.querySelector(config.buttonSelector);
+      var menuWrapper = document.getElementById(config.mobileMenuId);
+
+      if (!button || !menuWrapper || !button.classList.contains(config.openedMenuClass)) {
+        return;
+      }
+
+      if (menuWrapper.contains(e.target) || button.contains(e.target)) {
+        return;
+      }
+
+      closeMenu(null, true);
+    });
+  }
+
   function initMobileMenuOverlay() {
-    var menuWrapper = document.createElement('div');
+    var menuWrapper = document.createElement('nav');
     menuWrapper.classList.add(config.mobileMenuOverlayClass);
     menuWrapper.classList.add(config.hiddenElementClass);
     var menuContentHTML = document.querySelector(config.menuSelector).outerHTML;
@@ -378,12 +452,14 @@ function initSubmenuPositions() {
 
     // Init button events
     var button = document.querySelector(config.buttonSelector);
+    prepareMobileMenu(menuWrapper, button);
 
     button.addEventListener('click', function () {
       var relatedContainer = document.querySelector(config.relatedContainerForOverlayMenuSelector);
       menuWrapper.classList.toggle(config.hiddenElementClass);
       button.classList.toggle(config.openedMenuClass);
       button.setAttribute(config.ariaButtonAttribute, button.classList.contains(config.openedMenuClass));
+      setMobileMenuOpen(menuWrapper, button.classList.contains(config.openedMenuClass));
 
       if (button.classList.contains(config.openedMenuClass)) {
         document.documentElement.classList.add(config.noScrollClass);
@@ -406,7 +482,7 @@ function initSubmenuPositions() {
    */
   function initMobileMenuSidebar() {
     // Create menu structure
-    var menuWrapper = document.createElement('div');
+    var menuWrapper = document.createElement('nav');
     menuWrapper.classList.add(config.mobileMenuSidebarClass);
     menuWrapper.classList.add(config.hiddenElementClass);
     var menuContentHTML = '';
@@ -446,10 +522,12 @@ function initSubmenuPositions() {
       button.classList.remove(config.openedMenuClass);
       button.setAttribute(config.ariaButtonAttribute, false);
       document.documentElement.classList.remove(config.noScrollClass);
+      setMobileMenuOpen(menuWrapper, false);
     });
 
     // Init button events
     var button = document.querySelector(config.buttonSelector);
+    prepareMobileMenu(menuWrapper, button);
 
     button.addEventListener('click', function () {
       menuWrapper.classList.toggle(config.hiddenElementClass);
@@ -457,6 +535,7 @@ function initSubmenuPositions() {
       button.classList.toggle(config.openedMenuClass);
       button.setAttribute(config.ariaButtonAttribute, button.classList.contains(config.openedMenuClass));
       document.documentElement.classList.toggle(config.noScrollClass);
+      setMobileMenuOpen(menuWrapper, button.classList.contains(config.openedMenuClass));
     });
   }
 
@@ -618,6 +697,7 @@ function initSubmenuPositions() {
     button.classList.remove(config.openedMenuClass);
     button.setAttribute(config.ariaButtonAttribute, false);
     document.documentElement.classList.remove(config.noScrollClass);
+    setMobileMenuOpen(menuWrapper, false);
 
     if (relatedContainer) {
       relatedContainer.classList.remove(config.relatedContainerForOverlayMenuClass);

@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.4.0.0] - 2026-09-26
+### Added
+- Added the Inter variable font (Sans Serif group, weights 100 to 900, with italic).
+- Added an accessible name to the main navigation ("Main", editable in the theme translations).
+
+### Improved
+- Mobile menu accessibility: the menu is now a navigation landmark named after the menu button, it stays out of the keyboard focus order while closed, and the menu button reports its state with `aria-expanded` and `aria-controls`.
+- Opening the mobile menu moves focus into it; Escape or moving focus outside closes it, and Escape returns focus to the menu button.
+- Main menu links now show a visible keyboard focus outline.
+- Menu transitions now animate only the properties that change instead of `all`.
+
+### Fixed
+- Fixed submenus near the right edge of the window: they now open to the left instead of running off the screen.
+
+### Removed
+- Removed an unused submenu CSS rule.
+
 ## [3.3.0.0] - 2026-03-02
 ### Added
 - Full keyboard navigation support for the main menu (Tab, Enter, and Space keys).

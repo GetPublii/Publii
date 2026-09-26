@@ -2,7 +2,8 @@
     "partials": {
 
         "menu": {
-            "label": "Menu"
+            "label": "Menu",
+            "main": "Main"
         },
         
         "pagination": {

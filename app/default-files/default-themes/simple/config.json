@@ -1,6 +1,6 @@
 {
     "name": "Simple",
-    "version": "3.3.0.0",
+    "version": "3.4.0.0",
     "author": "TidyCustoms <https://tidycustoms.net/>",
     "menus": {
         "mainMenu": {
@@ -695,6 +695,11 @@
                     "group": "Sans Serif"
                 },
                 {
+                    "label": "Inter",
+                    "value": "inter",
+                    "group": "Sans Serif"
+                },
+                {
                     "label": "Jura",
                     "value": "jura",
                     "group": "Sans Serif"
@@ -1001,7 +1006,7 @@
             "dependencies": [
                 {
                     "field": "fontBody",
-                    "value": "albertsans,adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,bodonimoda,brygada1918,cabin,dmsans,exo,familjengrotesk,faustina,figtree,finlandica,gantari,glory,googlesanscode,hostgrotesk,inclusivesans,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,mulish,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,radiocanadabig,raleway,redhatdisplay,redhatmono,redhattext,rem,rokkitt,rubik,sourcecodepro,susemono,teachers,tourney,urbanist,victormono,wixmadefortext,worksans,zalandosans,zalandosansexpanded,yrsa"
+                    "value": "albertsans,adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,bodonimoda,brygada1918,cabin,dmsans,exo,familjengrotesk,faustina,figtree,finlandica,gantari,glory,googlesanscode,hostgrotesk,inclusivesans,instrumentsans,inter,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,mulish,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,radiocanadabig,raleway,redhatdisplay,redhatmono,redhattext,rem,rokkitt,rubik,sourcecodepro,susemono,teachers,tourney,urbanist,victormono,wixmadefortext,worksans,zalandosans,zalandosansexpanded,yrsa"
                 }
             ]
         },
@@ -1265,6 +1270,11 @@
                 {
                     "label": "Instrument Sans",
                     "value": "instrumentsans",
+                    "group": "Sans Serif"
+                },
+                {
+                    "label": "Inter",
+                    "value": "inter",
                     "group": "Sans Serif"
                 },
                 {
@@ -1574,7 +1584,7 @@
             "dependencies": [
                 {
                     "field": "fontHeadings",
-                    "value": "albertsans,adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,bodonimoda,brygada1918,cabin,dmsans,exo,familjengrotesk,faustina,figtree,finlandica,gantari,glory,googlesanscode,hostgrotesk,inclusivesans,instrumentsans,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,mulish,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,radiocanadabig,raleway,redhatdisplay,redhatmono,redhattext,rem,rokkitt,rubik,sourcecodepro,susemono,teachers,tourney,urbanist,victormono,wixmadefortext,worksans,zalandosans,zalandosansexpanded,yrsa"
+                    "value": "albertsans,adventpro,aleo,andadapro,archivonarrow,asap,besley,bitter,bodonimoda,brygada1918,cabin,dmsans,exo,familjengrotesk,faustina,figtree,finlandica,gantari,glory,googlesanscode,hostgrotesk,inclusivesans,instrumentsans,inter,jetbrainsmono,karla,labrada,librefranklin,lora,manuale,merriweathersans,montserrat,mulish,nunito,petrona,playfairdisplay,plusjakartasans,publicsans,radiocanadabig,raleway,redhatdisplay,redhatmono,redhattext,rem,rokkitt,rubik,sourcecodepro,susemono,teachers,tourney,urbanist,victormono,wixmadefortext,worksans,zalandosans,zalandosansexpanded,yrsa"
                 }
             ]
         },
