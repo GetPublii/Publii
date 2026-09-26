@@ -465,7 +465,7 @@ export default {
     background: var(--button-primary-bg);
     border: none;
     box-shadow: none;
-    border-bottom-left-radius: 6px;
+    border-bottom-left-radius: var(--radius-base);
     border-top: 1px solid var(--button-primary-bg);
     color: var(--white);
     cursor: pointer;
@@ -486,7 +486,7 @@ export default {
       background: var(--popup-btn-cancel-bg);
       border: none;
       border-top: 1px solid var(--input-border-color);
-      border-bottom-right-radius: 6px;
+      border-bottom-right-radius: var(--radius-base);
       color: var(--popup-btn-cancel-color);
 
       &:hover {

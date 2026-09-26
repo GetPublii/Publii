@@ -823,10 +823,10 @@ h1 {
     top: 1px;
 
     & > .button {
-        border-radius: 0 0 0 .6rem;
+        border-radius: 0 0 0 var(--radius-base);
 
         & + .button {
-            border-radius: 0 0 .6rem 0;
+            border-radius: 0 0 var(--radius-base) 0;
         }
     }
 }

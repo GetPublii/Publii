@@ -28,7 +28,7 @@
 .popup {
     background-color: var(--popup-bg);
     border: none;
-    border-radius: .6rem;
+    border-radius: var(--radius-base);
     display: inline-block;
     font-size: var(--font-size-ui-md);
     font-weight: var(--font-weight-regular);
