@@ -19,7 +19,13 @@
             
             <p-button
                 :onClick="loadSelectedFile"
+                class="button-icon"
                 appearance="secondary">
+                <icon
+                    name="refresh"
+                    customWidth="18"
+                    customHeight="18"
+                    non-interactive />
                 {{ $t('ui.reloadFile') }}
             </p-button>
         </div>
