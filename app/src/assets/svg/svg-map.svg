@@ -20,7 +20,6 @@
       <path d="M3.44,7H13.56A1.35,1.35,0,0,1,15,8.22v8.56A1.35,1.35,0,0,1,13.56,18H3.44A1.35,1.35,0,0,1,2,16.78V8.22A1.35,1.35,0,0,1,3.44,7ZM6,4.22a1.12,1.12,0,0,1,.42-.86,1.6,1.6,0,0,1,1-.36H17.56a1.6,1.6,0,0,1,1,.36,1.12,1.12,0,0,1,.42.86v8.56a1.12,1.12,0,0,1-.42.86,1.6,1.6,0,0,1-1,.36" />
     </symbol>
 
-    <!-- Lucide monitor-cog; license: app/licenses/lucide/license.txt -->
     <symbol
         id="local-preview-server"
         viewBox="0 0 24 24"
@@ -142,7 +141,7 @@
         <path d="M22.735,18.321a11.9,11.9,0,0,1-2.885-7.13C19.851,1.941,15.309,0,11.5,0S3.15,1.964,3.15,11.323A11.324,11.324,0,0,1,.28,18.306,1,1,0,0,0,1,20H22a1,1,0,0,0,.734-1.679ZM3.024,18A12.444,12.444,0,0,0,5.15,11.323C5.15,2,9.93,2,11.5,2c4.273,0,6.35,3.006,6.35,9.191A12.9,12.9,0,0,0,20.008,18ZM9,22h4a2,2,0,0,1-4,0Z" />
     </symbol>
 
-    <symbol id="add-site-mono"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus preview-icon">
+    <symbol id="add-site-mono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M6,12h12"/>
       <path d="M12,6v12"/>
     </symbol>
@@ -194,8 +193,9 @@
         <path d="M19,8A8,8,0,0,1,3,8H0L4,2.67,8,8H5a6,6,0,1,0,6-6,5.934,5.934,0,0,0-2.56.58L7.21.95A8.007,8.007,0,0,1,19,8Z" />
     </symbol>
 
-    <symbol id="plus" viewBox="0 0 20 20">
-        <path d="M11,9h3v2H11v3H9V11H6V9H9V6h2Zm9,1A10,10,0,1,1,10,0,10,10,0,0,1,20,10Zm-2,0a8,8,0,1,0-8,8A8.009,8.009,0,0,0,18,10Z" />
+    <symbol id="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6,12h12"/>
+      <path d="M12,6v12"/>
     </symbol>
 
     <symbol id="trash" viewBox="0 0 16 16">
@@ -319,7 +319,6 @@
     c0,0.5,0.5,1,1,1s1-0.5,1-1V7C18,6.5,17.5,6,17,6z"/>
     </symbol>
     
-    <!-- Text statistics icons (Lucide) -->
 
     <symbol
         id="whole-word"
