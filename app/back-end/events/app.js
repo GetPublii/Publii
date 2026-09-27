@@ -10,6 +10,7 @@ const PathValidator = require('../helpers/path-validator.js');
 const UtilsHelper = require('../helpers/utils.js');
 const SiteLogs = require('../helpers/site-logs.js');
 const ZipHelper = require('./../helpers/zip.helper.js');
+const getPluginSettingsLocks = require('../helpers/plugin-settings-locks.js');
 
 const { isValidDirSegment } = PathValidator;
 
@@ -19,6 +20,23 @@ const { isValidDirSegment } = PathValidator;
 
 class AppEvents {
     constructor(appInstance) {
+        const settingsLocks = getPluginSettingsLocks(appInstance);
+        const rejectPluginChange = (event, reply, pluginName) => {
+            const sites = settingsLocks.blockingSites(pluginName);
+
+            if (!sites.length) {
+                return false;
+            }
+
+            event.sender.send(reply, {
+                status: reply === 'app-plugin-uploaded' ? 'blocked' : false,
+                code: 'settings-open',
+                sites,
+                plugins: appInstance.plugins
+            });
+            return true;
+        };
+
         /*
          * Close app
          */
@@ -275,6 +293,10 @@ class AppEvents {
                     status: false,
                     plugins: appInstance.plugins
                 });
+                return;
+            }
+
+            if (rejectPluginChange(event, 'app-plugin-deleted', config.directory)) {
                 return;
             }
 
@@ -569,6 +591,11 @@ class AppEvents {
                         return;
                     }
 
+                    if (rejectPluginChange(event, 'app-plugin-uploaded', newPluginDir)) {
+                        UtilsHelper.removePathRecursively(zipPath);
+                        return;
+                    }
+
                     let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
 
                     try {
@@ -593,6 +620,10 @@ class AppEvents {
                 } else if (!isValidDirSegment(newPluginDir)) {
                     status = 'wrong-format';
                 } else {
+                    if (rejectPluginChange(event, 'app-plugin-uploaded', newPluginDir)) {
+                        return;
+                    }
+
                     let directoryPath = path.join(pluginsLoader.pluginsPath, newPluginDir);
 
                     try {

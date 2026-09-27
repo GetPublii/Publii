@@ -50,6 +50,9 @@ class Plugins {
                 name: pluginData.name,
                 version: pluginData.version,
                 author: pluginData.author,
+                description: typeof pluginData.description === 'string' ? pluginData.description : '',
+                hasSettings: (Array.isArray(pluginData.config) && pluginData.config.length > 0) ||
+                    !!pluginData.usePluginSettingsView,
                 minimumPubliiVersion: pluginData.minimumPubliiVersion,
                 assets: pluginData.assets,
                 path: path.join(pathToPlugins, filesAndDirs[i])
@@ -176,6 +179,63 @@ class Plugins {
         }
 
         return true;
+    }
+
+    /**
+     * Read without repairing or overwriting a damaged configuration.
+     * The tools list must distinguish a read failure from disabled plugins.
+     */
+    readSitePluginsState (siteName) {
+        if (!PathValidator.isValidDirSegment(siteName)) {
+            throw new Error('Invalid site');
+        }
+
+        const configDirectory = PathValidator.resolveValidPath(this.sitesDir, siteName, 'input', 'config');
+        const configPath = PathValidator.resolveValidPath(this.sitesDir, siteName, 'input', 'config', 'site.plugins.json');
+
+        if (!configDirectory || !configPath || !fs.statSync(configDirectory).isDirectory()) {
+            throw new Error('Invalid site configuration');
+        }
+
+        if (!fs.existsSync(configPath)) {
+            return {};
+        }
+
+        const config = JSON.parse(FileHelper.readFileSync(configPath, 'utf8'));
+
+        if (!config || typeof config !== 'object' || Array.isArray(config)) {
+            throw new Error('Invalid plugin state');
+        }
+
+        return config;
+    }
+
+    setSitePluginState (siteName, pluginName, enabled, currentVersion) {
+        if (!PathValidator.isValidDirSegment(pluginName) || typeof enabled !== 'boolean') {
+            return { status: false };
+        }
+
+        const config = this.readSitePluginsState(siteName);
+        const plugin = this.getPluginConfig(siteName, pluginName);
+
+        if (!plugin || !plugin.pluginData || plugin.pluginData.scope !== 'site') {
+            return { status: false };
+        }
+
+        const compareVersions = require('../shared/version-comparator');
+
+        if (enabled && compareVersions(plugin.pluginData.minimumPubliiVersion, currentVersion) === 1) {
+            return { status: false, code: 'incompatible' };
+        }
+
+        Object.defineProperty(config, pluginName, {
+            value: enabled,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+
+        return { status: this.saveSitePluginsConfig(siteName, config), enabled };
     }
 
     /**

@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
+const getPluginSettingsLocks = require('../../helpers/plugin-settings-locks.js');
 const { EventEmitter } = require('node:events');
 const Utils = require('../../helpers/utils.js');
 const defaultConfig = require('../../../config/AST.app.config.js');
@@ -57,6 +58,10 @@ describe('Notification center settings persistence', function () {
                 URL,
                 setTimeout,
                 require(name) {
+                    if (name === '../helpers/plugin-settings-locks.js') {
+                        return getPluginSettingsLocks;
+                    }
+
                     if (name === 'electron') {
                         return {
                             ipcMain: {
@@ -115,7 +120,12 @@ describe('Notification center settings persistence', function () {
             appConfigPath: path.join(base, 'app-config.json'),
             initPath: path.join(base, 'window-config.json'),
             basedir: base,
-            windowManager: { getAllWindows: () => [], releaseViewLocksForWindow () {}, broadcast () {} },
+            windowManager: {
+                getAllWindows: () => [],
+                releaseViewLocksForWindow() {},
+                broadcast() {},
+                onWindowDestroyed() {}
+            },
             initWindow() {
                 this.mainWindow = this._createWindow({});
                 this.mainWindow.webContents.emit('did-finish-load');

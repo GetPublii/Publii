@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
+const getPluginSettingsLocks = require('../../helpers/plugin-settings-locks.js');
 
 describe('Licence acceptance IPC', function () {
     let base;
@@ -27,6 +28,10 @@ describe('Licence acceptance IPC', function () {
             module: { exports: {} },
             console,
             require(name) {
+                if (name === '../helpers/plugin-settings-locks.js') {
+                    return getPluginSettingsLocks;
+                }
+
                 if (name === 'electron') {
                     return {
                         ipcMain: {

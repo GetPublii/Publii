@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
+const getPluginSettingsLocks = require('../../helpers/plugin-settings-locks.js');
 const AppFiles = require('../../helpers/app-files.js');
 const UtilsHelper = require('../../helpers/utils.js');
 
@@ -64,6 +65,10 @@ describe('Website location settings IPC', function () {
                 callback();
             },
             require(name) {
+                if (name === '../helpers/plugin-settings-locks.js') {
+                    return getPluginSettingsLocks;
+                }
+
                 if (name === 'electron') {
                     return {
                         ipcMain: {

@@ -1,6 +1,7 @@
 const ipcMain = require('electron').ipcMain;
 const Plugins = require('../plugins.js');
 const PathValidator = require('../helpers/path-validator.js');
+const getPluginSettingsLocks = require('../helpers/plugin-settings-locks.js');
 
 const { isValidDirSegment } = PathValidator;
 
@@ -10,6 +11,88 @@ const { isValidDirSegment } = PathValidator;
 
 class PluginEvents {
     constructor(appInstance) {
+        const settingsLocks = getPluginSettingsLocks(appInstance);
+        const ownsSite = (owner, data) => data &&
+            isValidDirSegment(data.siteName) &&
+            isValidDirSegment(data.pluginName) &&
+            (!appInstance.windowManager || appInstance.windowManager.getSiteForWindow(owner) === data.siteName);
+
+        ipcMain.handle('app-site-plugin-settings:open', (event, data) => {
+            if (!ownsSite(event.sender.id, data)) {
+                return { status: false };
+            }
+
+            try {
+                const plugins = new Plugins(appInstance.appDir, appInstance.sitesDir);
+                const config = plugins.getPluginConfig(data.siteName, data.pluginName);
+
+                if (!config || !config.pluginData || event.sender.isDestroyed()) {
+                    return { status: false };
+                }
+
+                return {
+                    status: true,
+                    lockId: settingsLocks.open(event.sender, data),
+                    config
+                };
+            } catch (error) {
+                return { status: false };
+            }
+        });
+
+        ipcMain.on('app-site-plugin-settings-close', (event, data) => {
+            if (data && typeof data.lockId === 'string') {
+                settingsLocks.close(event.sender.id, data.lockId);
+            }
+        });
+
+        ipcMain.handle('app-site-plugin-settings:save', (event, data) => {
+            if (!ownsSite(event.sender.id, data) || !settingsLocks.has(event.sender.id, data)) {
+                return false;
+            }
+
+            try {
+                const plugins = new Plugins(appInstance.appDir, appInstance.sitesDir);
+                const config = plugins.getPluginConfig(data.siteName, data.pluginName);
+
+                return !!(config && config.pluginData) &&
+                    plugins.savePluginConfig(data.siteName, data.pluginName, data.newConfig);
+            } catch (error) {
+                return false;
+            }
+        });
+
+        // Request-scoped replies cannot be consumed by an older Tools view.
+        ipcMain.handle('app-site-plugins:get-state', (event, data) => {
+            try {
+                const plugins = new Plugins(appInstance.appDir, appInstance.sitesDir);
+                const states = plugins.readSitePluginsState(data && data.siteName);
+
+                return { status: true, states };
+            } catch (error) {
+                return { status: false };
+            }
+        });
+
+        ipcMain.handle('app-site-plugins:set-state', (event, data) => {
+            try {
+                if (!data) {
+                    return { status: false };
+                }
+
+                const plugins = new Plugins(appInstance.appDir, appInstance.sitesDir);
+
+                return plugins.setSitePluginState(
+                    data.siteName,
+                    data.pluginName,
+                    data.enabled,
+                    require('../../package.json').version
+                );
+            } catch (error) {
+                return { status: false };
+            }
+        });
+
         // Get plugins status
         ipcMain.on('app-site-get-plugins-state', function (event, data) {
             if (!data || !isValidDirSegment(data.siteName)) {
@@ -74,7 +157,10 @@ class PluginEvents {
             }
 
             let pluginsInstance = new Plugins(appInstance.appDir, appInstance.sitesDir);
-            let result = pluginsInstance.savePluginConfig(data.siteName, data.pluginName, data.newConfig);
+            const config = pluginsInstance.getPluginConfig(data.siteName, data.pluginName);
+            const canSave = config && config.pluginData &&
+                (!data.lockId || settingsLocks.has(event.sender.id, data));
+            let result = !!canSave && pluginsInstance.savePluginConfig(data.siteName, data.pluginName, data.newConfig);
             event.sender.send('app-site-plugin-config-saved', result);
         });
     }
