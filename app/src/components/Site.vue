@@ -171,6 +171,10 @@ export default {
         height: 100%;
         position: absolute;
         width: 100%;
+
+        .v-leave-active {
+            transition: none;
+        }
     }
 
     .sidebar,

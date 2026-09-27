@@ -58,12 +58,19 @@ export default {
         hide () {
             this.isVisible = false;
         },
-        addNewWebsite (e) {
-            this.$router.push('/site/!');
+        async addNewWebsite () {
+            await this.$router.push('/site/!');
+            await this.$nextTick();
 
-            setTimeout(() => {
+            await new Promise(resolve => {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(resolve);
+                });
+            });
+
+            if (this.$route.params.name === '!') {
                 this.isVisible = false;
-            }, 500);
+            }
         }
     },
     beforeDestroy () {
