@@ -1,26 +1,26 @@
 export default {
     computed: {
+        collectionSelectionIds () {
+            return this.items.map(item => item.id);
+        },
+        collectionSelectedIds () {
+            const selected = new Set(this.selectedItems);
+            return this.collectionSelectionIds.filter(id => selected.has(id));
+        },
+        allVisibleSelected () {
+            return this.collectionSelectionIds.length > 0 &&
+                this.collectionSelectedIds.length === this.collectionSelectionIds.length;
+        },
+        someVisibleSelected () {
+            return this.collectionSelectedIds.length > 0 && !this.allVisibleSelected;
+        },
         anyCheckboxIsSelected () {
             return !!this.selectedItems.length;
         }
     },
     methods: {
-        toggleAllCheckboxes (useArrayIndexAsID = false) {
-            if(this.selectedItems.length > 0 && this.selectedItems.length >= this.items.length) {
-                this.selectedItems = [];
-            } else {
-                this.selectedItems = [];
-
-                if (!useArrayIndexAsID) {
-                    for (let item of this.items) {
-                        this.selectedItems.push(item.id);
-                    }
-                } else {
-                    for (let i = 0; i < this.items.length; i++) {
-                        this.selectedItems.push(i);
-                    }
-                }
-            }
+        toggleAllCheckboxes () {
+            this.selectedItems = this.allVisibleSelected ? [] : this.collectionSelectionIds.slice();
         },
         isChecked (id) {
             return this.selectedItems.indexOf(id) > -1;

@@ -82,8 +82,10 @@
                 <collection-cell>
                     <checkbox
                         value="all"
-                        :checked="anyCheckboxIsSelected"
-                        :onClick="toggleAllCheckboxes.bind(this, false)"
+                        :checked="allVisibleSelected"
+                        :indeterminate="someVisibleSelected"
+                        :disabled="hierarchyMode"
+                        :onClick="toggleAllCheckboxes"
                         @click.native="$bus.$emit('document-body-clicked')" />
                 </collection-cell>
 
@@ -227,6 +229,7 @@
                     <checkbox
                         :value="item.id"
                         :checked="isChecked(item.id)"
+                        :disabled="hierarchyMode"
                         :onClick="toggleSelection"
                         :key="'collection-row-checkbox-' + item.id" />
                 </collection-cell>

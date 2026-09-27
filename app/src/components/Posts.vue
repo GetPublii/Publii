@@ -79,8 +79,9 @@
                 <collection-cell>
                     <checkbox
                         value="all"
-                        :checked="anyCheckboxIsSelected"
-                        :onClick="toggleAllCheckboxes.bind(this, false)"
+                        :checked="allVisibleSelected"
+                        :indeterminate="someVisibleSelected"
+                        :onClick="toggleAllCheckboxes"
                         @click.native="$bus.$emit('document-body-clicked')" />
                 </collection-cell>
 

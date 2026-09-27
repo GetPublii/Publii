@@ -24,8 +24,9 @@
                 <collection-cell>
                     <checkbox
                         value="all"
-                        :checked="anyCheckboxIsSelected"
-                        :onClick="toggleAllCheckboxes.bind(this, false)" />
+                        :checked="allVisibleSelected"
+                        :indeterminate="someVisibleSelected"
+                        :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
                 <collection-cell>

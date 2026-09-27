@@ -25,8 +25,9 @@
                 <collection-cell>
                     <checkbox
                         value="all"
-                        :checked="anyCheckboxIsSelected"
-                        :onClick="toggleAllCheckboxes.bind(this, true)" />
+                        :checked="allVisibleSelected"
+                        :indeterminate="someVisibleSelected"
+                        :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
                 <collection-cell>
@@ -305,6 +306,9 @@ export default {
         };
     },
     computed: {
+        collectionSelectionIds () {
+            return this.items.map((item, index) => index);
+        },
         items () {
             return this.$store.state.currentSite.menuStructure;
         },

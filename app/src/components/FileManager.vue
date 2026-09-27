@@ -125,6 +125,7 @@
                         <checkbox
                             value="file-manager-all"
                             :checked="allVisibleSelected"
+                            :indeterminate="someVisibleSelected"
                             :onClick="toggleAllCheckboxes"
                             :disabled="busy || isLoading || !selectableFiles.length"
                             :aria-label="$t('file.manager.selectAll')" />
@@ -370,11 +371,8 @@ export default {
         canCopySelectedPaths () {
             return this.selectedFiles.length > 0 && this.selectedFiles.every(file => file.fullPath);
         },
-        allVisibleSelected () {
-            return (
-                this.selectableFiles.length > 0 &&
-                this.selectableFiles.every(file => this.selectedItems.includes(file.name))
-            );
+        collectionSelectionIds () {
+            return this.selectableFiles.map(file => file.name);
         }
     },
     watch: {
@@ -485,7 +483,7 @@ export default {
         },
         toggleAllCheckboxes () {
             if (this.busy || this.isLoading) return;
-            this.selectedItems = this.allVisibleSelected ? [] : this.selectableFiles.map(file => file.name);
+            CollectionCheckboxes.methods.toggleAllCheckboxes.call(this);
         },
         formatBytes (bytes) {
             if (!Number.isFinite(bytes) || bytes < 0) return '—';

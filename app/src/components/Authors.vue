@@ -22,7 +22,9 @@
                 <collection-cell>
                     <checkbox
                         value="all"
-                        :checked="anyCheckboxIsSelected"
+                        :checked="allVisibleSelected"
+                        :indeterminate="someVisibleSelected"
+                        :disabled="!collectionSelectionIds.length"
                         :onClick="toggleAllCheckboxes" />
                 </collection-cell>
 
@@ -200,6 +202,9 @@ export default {
         };
     },
     computed: {
+        collectionSelectionIds () {
+            return this.items.filter(item => item.id !== 1).map(item => item.id);
+        },
         items: function() {
             return this.$store.getters.siteAuthors(this.filterValue, this.orderBy, this.order);
         },

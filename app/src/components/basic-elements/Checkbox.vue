@@ -4,8 +4,9 @@
         :id="id || value"
         :value="value"
         :checked="checked"
+        :indeterminate.prop="indeterminate"
         :class="{ 'is-checked': checked }"
-        @click.prevent.stop="onClick(value)" />
+        @click.stop="handleClick" />
 </template>
 
 <script>
@@ -24,9 +25,28 @@ export default {
             default: false,
             type: Boolean
         },
+        indeterminate: {
+            default: false,
+            type: Boolean
+        },
         onClick: {
             default: () => false,
             type: Function
+        }
+    },
+    methods: {
+        handleClick (event) {
+            const input = event.target;
+
+            if (input.disabled) {
+                return;
+            }
+
+            this.onClick(this.value);
+            this.$nextTick(() => {
+                input.checked = this.checked;
+                input.indeterminate = this.indeterminate;
+            });
         }
     }
 }
@@ -54,7 +74,8 @@ input[type="checkbox"] {
         cursor: pointer;
     }
 
-    &.is-checked {
+    &.is-checked,
+    &:indeterminate {
         background: var(--color-primary);
         border-color: var(--color-primary);
 
@@ -69,6 +90,10 @@ input[type="checkbox"] {
             position: relative;
             top: 0;
         }
+    }
+
+    &:indeterminate::before {
+        content: '\2212';
     }
 }
 </style>
