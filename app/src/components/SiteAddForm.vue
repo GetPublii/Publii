@@ -88,17 +88,30 @@
                                 customWidth="60"
                                 customHeight="60"
                                 non-interactive
-                                name="backup" />
+                                name="blank-backup"
+                                aria-hidden="true"
+                                focusable="false" />
 
-                                <span>{{ $t('file.dragAndDropBackupFile') }}</span>
+                            <span>{{ $t('file.dragAndDropBackupFile') }}</span>
 
-                                <input
-                                    ref="input"
-                                    type="file"
-                                    class="backup-upload-input"
-                                    spellcheck="false"
-                                    :disabled="restoreInProgress"
-                                    @change="valueChanged">
+                            <p-button
+                                class="backup-upload-choose"
+                                appearance="clean"
+                                size="small"
+                                :disabled="restoreInProgress"
+                                :onClick="chooseBackupFile">
+                                <span aria-hidden="true">+</span>
+                                {{ $t('image.chooseFile') }}
+                            </p-button>
+
+                            <input
+                                ref="input"
+                                type="file"
+                                class="backup-upload-input"
+                                hidden
+                                :disabled="restoreInProgress"
+                                :aria-label="$t('image.chooseFile')"
+                                @change="valueChanged">
                         </div>
 
                         <overlay
@@ -133,17 +146,29 @@
                                 customWidth="60"
                                 customHeight="60"
                                 non-interactive
-                                name="importer"
-                                aria-hidden="true" />
+                                name="blank-importer"
+                                aria-hidden="true"
+                                focusable="false" />
 
                             <span>{{ $t('tools.wpImport.dragAndDropWXRFile') }}</span>
+
+                            <p-button
+                                class="backup-upload-choose"
+                                appearance="clean"
+                                size="small"
+                                :disabled="wordpressCheckInProgress"
+                                :aria-describedby="wordpressError ? 'site-create-wordpress-file-error' : null"
+                                :onClick="chooseWordPressFile">
+                                <span aria-hidden="true">+</span>
+                                {{ $t('image.chooseFile') }}
+                            </p-button>
 
                             <input
                                 ref="wordpress-input"
                                 type="file"
                                 accept=".xml,text/xml,application/xml"
                                 class="backup-upload-input"
-                                spellcheck="false"
+                                hidden
                                 :disabled="wordpressCheckInProgress"
                                 :aria-label="$t('tools.wpImport.selectWXRFileButton')"
                                 :aria-describedby="wordpressError ? 'site-create-wordpress-file-error' : null"
@@ -668,6 +693,11 @@ export default {
                 }
             });
         },
+        chooseBackupFile () {
+            if (!this.restoreInProgress) {
+                this.$refs.input.click();
+            }
+        },
         async valueChanged (e) {
             if (this.restoreInProgress || !e.target.files.length) {
                 return;
@@ -697,6 +727,11 @@ export default {
             let sourcePath = await mainProcessAPI.getPathForFile(event.dataTransfer.files[0]);
             sourcePath = await mainProcessAPI.normalizePath(sourcePath);
             this.analyzeWordPressFile(sourcePath);
+        },
+        chooseWordPressFile () {
+            if (!this.wordpressCheckInProgress) {
+                this.$refs['wordpress-input'].click();
+            }
         },
         async wordPressFileChanged (event) {
             if (this.wordpressCheckInProgress || !event.target.files.length) {
@@ -1091,8 +1126,9 @@ export default {
     padding: var(--space-8);
 
     .icon {
-        fill: var(--icon-primary-color);
-        margin-bottom: var(--space-6);
+        fill: var(--icon-quaternary-color);
+        flex-shrink: 0;
+        margin-bottom: var(--space-8);
     }
 
     & > .site-create-field-error {
@@ -1100,33 +1136,12 @@ export default {
     }
 }
 .site-create .backup-upload-input {
-    clear: both;
-    color: transparent; /* hack to remove the phrase "no file selected" from the file input */
-    display: block;
-    line-height: 1.6!important;
-    margin: var(--space-12) auto 0 auto!important;
-
-    &::-webkit-file-upload-button {
-        -webkit-appearance: none;
-        background: var(--button-secondary-bg);
-        border: 1px solid var(--button-secondary-bg);
-        border-radius: var(--radius-base);
-        color: var(--button-secondary-color);
-        cursor: pointer;
-        display: inline-block;
-        font-size: var(--font-size-ui-md);
-        font-weight: var(--font-weight-medium);
-        left: 50%;
-        padding: var(--space-3) var(--space-6);
-        position: relative;
-        transform: translate(-50%, 0);
-        outline: none;
-
-        &:hover {
-            background: var(--button-secondary-bg-hover);
-            border-color: var(--button-secondary-bg-hover);
-            color: var(--button-secondary-color-hover);
-        }
-    }
+    display: none;
+}
+.site-create .backup-upload-choose {
+    height: 2.8rem;
+    line-height: 2.8rem;
+    margin-top: var(--space-2);
+    max-width: 100%;
 }
 </style>

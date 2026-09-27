@@ -572,9 +572,9 @@ export default {
     display: block;
     fill: var(--icon-quaternary-color);
     flex-shrink: 0;
-    height: 4.6rem;
+    height: 4.7rem;
     max-width: 100%;
-    width: calc(4.6rem * 180 / 148);
+    width: calc(4.7rem * 180 / 148);
 }
 
 .upload-choose {
