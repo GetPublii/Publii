@@ -6,24 +6,29 @@
             'is-small': size === 'small'
         }"
         @focusout="handleFocusOut">
-        <button
-            ref="trigger"
-            type="button"
-            class="action-menu-trigger"
-            aria-haspopup="menu"
-            :aria-expanded="isOpen ? 'true' : 'false'"
-            :aria-controls="isOpen ? menuID : null"
-            :aria-label="triggerLabel"
-            v-tooltip="{ text: tooltipLabel, disabled: disabled || isOpen, describe: false }"
-            :disabled="disabled"
-            @click.stop="toggle($event)"
-            @keydown="handleTriggerKeydown">
-            <icon
-                :name="icon"
-                customWidth="18"
-                customHeight="18"
-                non-interactive />
-        </button>
+        <slot
+            name="trigger"
+            :attrs="triggerAttributes"
+            :is-open="isOpen"
+            :toggle="toggle"
+            :keydown="handleTriggerKeydown">
+            <button
+                ref="trigger"
+                v-bind="triggerAttributes"
+                type="button"
+                class="action-menu-trigger"
+                v-tooltip="{ text: tooltipLabel, disabled: disabled || isOpen, describe: false }"
+                :disabled="disabled"
+                @click.stop="toggle($event)"
+                @keydown="handleTriggerKeydown">
+                <icon
+                    :name="icon"
+                    :size="size === 'small' ? 'xs' : ''"
+                    :customWidth="size === 'small' ? '' : '18'"
+                    :customHeight="size === 'small' ? '' : '18'"
+                    non-interactive />
+            </button>
+        </slot>
 
         <div
             v-if="isOpen"
@@ -51,7 +56,8 @@
                         'action-menu-item': true,
                         'is-danger': item.intent === 'danger'
                     }"
-                    role="menuitem"
+                    :role="item.type === 'radio' ? 'menuitemradio' : 'menuitem'"
+                    :aria-checked="item.type === 'radio' ? (item.checked ? 'true' : 'false') : null"
                     tabindex="-1"
                     :disabled="item.disabled === true && !item.disabledReason"
                     :aria-disabled="item.disabled === true ? 'true' : null"
@@ -59,6 +65,7 @@
                     @click.stop="select(item, $event)">
                     <icon
                         v-if="item.icon"
+                        :class="item.iconClass"
                         :name="item.icon"
                         size="xs"
                         non-interactive />
@@ -66,6 +73,13 @@
                     <span class="action-menu-item-label">
                         {{ item.label }}
                     </span>
+                    <icon
+                        v-if="item.type === 'radio'"
+                        :class="{ 'action-menu-item-check': true, 'is-unchecked': !item.checked }"
+                        name="check"
+                        size="xs"
+                        non-interactive
+                        aria-hidden="true" />
                 </button>
             </template>
         </div>
@@ -125,6 +139,16 @@ export default {
         },
         triggerLabel () {
             return this.label || this.tooltipLabel;
+        },
+        triggerAttributes () {
+            return {
+                'data-action-menu-trigger': '',
+                disabled: this.disabled,
+                'aria-haspopup': 'menu',
+                'aria-expanded': this.isOpen ? 'true' : 'false',
+                'aria-controls': this.isOpen ? this.menuID : null,
+                'aria-label': this.triggerLabel
+            };
         },
         tooltipLabel () {
             return this.tooltip || this.$t('ui.moreOptions');
@@ -206,7 +230,7 @@ export default {
             }
         },
         updatePlacement () {
-            let trigger = this.$refs.trigger;
+            let trigger = this.triggerElement();
             let list = this.$refs.list;
 
             if (!trigger || !list) {
@@ -245,10 +269,15 @@ export default {
         getMenuItems () {
             return Array.from(this.$el.querySelectorAll('.action-menu-item:not(:disabled)'));
         },
+        triggerElement () {
+            return this.$refs.trigger || this.$el.querySelector('[data-action-menu-trigger]');
+        },
         focusTrigger () {
             this.$nextTick(() => {
-                if (this.$refs.trigger) {
-                    this.$refs.trigger.focus();
+                const trigger = this.triggerElement();
+
+                if (trigger && trigger.isConnected) {
+                    trigger.focus();
                 }
             });
         },
@@ -319,6 +348,8 @@ export default {
 </script>
 
 <style scoped>
+@import '../../css/content-status-icon.css';
+
 .action-menu {
     display: inline-block;
     position: relative;
@@ -412,7 +443,6 @@ export default {
     width: 100%;
 
     & > svg {
-        color: currentColor;
         fill: currentColor;
         flex-shrink: 0;
         height: 16px;
@@ -440,6 +470,14 @@ export default {
     &[aria-disabled="true"] {
         cursor: not-allowed;
         opacity: .5;
+    }
+}
+
+.action-menu-item-check {
+    margin-left: auto;
+
+    &.is-unchecked {
+        visibility: hidden;
     }
 }
 

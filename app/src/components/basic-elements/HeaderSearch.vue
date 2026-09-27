@@ -1,20 +1,31 @@
 <template>
     <div :class="cssClasses">
-        <icon
-            size="xs"
-            name="magnifier"
-            @click.native="open" />
+        <button
+            ref="open"
+            type="button"
+            class="search-open"
+            :aria-label="placeholder"
+            :aria-expanded="isOpen ? 'true' : 'false'"
+            @click="open">
+            <icon size="xs" name="magnifier" non-interactive aria-hidden="true" />
+        </button>
 
         <input
             type="search"
             v-model="value"
             :placeholder="placeholder"
+            :aria-label="placeholder"
+            :tabindex="isOpen ? 0 : -1"
             :spellcheck="$store.state.currentSite.config.spellchecking"
             ref="input-field"
-            @keyup="updateValue" />
+            @input="updateValue"
+            @keydown.esc.stop.prevent="close" />
 
-        <span
+        <button
             v-if="isOpen"
+            type="button"
+            class="search-close"
+            :aria-label="$t('ui.close')"
             @click.stop="close">
             <icon
                 name="close"
@@ -22,7 +33,7 @@
                 non-interactive
                 aria-hidden="true"
                 focusable="false" />
-        </span>
+        </button>
     </div>
 </template>
 
@@ -73,6 +84,7 @@ export default {
             this.value = '';
             this.$bus.$emit(this.onChangeEventName, '');
             this.$refs['input-field'].blur();
+            this.$refs.open.focus({ preventScroll: true });
         },
         updateValue: function() {
             this.$bus.$emit(this.onChangeEventName, this.value);
@@ -89,8 +101,17 @@ export default {
     position: relative;
     width: 100%;
 
-    & > svg {
+    & > .search-open {
+        align-items: center;
+        appearance: none;
+        background: transparent;
+        border: 0;
+        display: flex;
+        height: 16px;
+        padding: 0;
+        width: 16px;
         cursor: pointer;
+        color: var(--icon-primary-color);
         fill: var(--icon-primary-color);
         left: 1.5rem;
         position: absolute;
@@ -99,6 +120,7 @@ export default {
         z-index: 1;
         
         &:hover {
+            color: var(--icon-tertiary-color);
             fill: var(--icon-tertiary-color);
         }
     }
@@ -120,7 +142,10 @@ export default {
         width: calc(100% - 3rem); 
     }
 
-    & > span {
+    & > .search-close {
+        appearance: none;
+        background: transparent;
+        border: 0;
         align-items: center;
         animation: close-delay .3s ease-out .3s forwards;
         border-radius: 50%;
@@ -153,11 +178,12 @@ export default {
     }
 
     &.is-opened {
-        & > svg {
+        & > .search-open {
             left: 3rem;
             cursor: default;
             
             &:hover {
+                color: var(--icon-primary-color);
                 fill: var(--icon-primary-color);
             }
         }
@@ -169,9 +195,27 @@ export default {
             transform: scaleX(1);
         }
 
-        & > span {
+        & > .search-close {
              transition-delay: 0s
         }
+    }
+}
+
+.search button:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .search > input,
+    .search > .search-open,
+    .search > .search-close {
+        animation: none;
+        transition: none;
+    }
+
+    .search > .search-close {
+        opacity: 1;
     }
 }
 

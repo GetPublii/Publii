@@ -25,7 +25,7 @@ export default {
         position: fixed;
         z-index: 5;
 
-        .button {
+        ::v-deep .button {
             background: none;
             position: relative;
             z-index: 0;
@@ -77,7 +77,7 @@ export default {
 }
 
 @media (max-width: 1350px) {
-    .header .tools .button-small {
+    .header .tools ::v-deep .button-small {
         font-size: var(--font-size-ui-sm);
         padding: 0 var(--space-3);
 

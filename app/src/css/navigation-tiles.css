@@ -1,0 +1,72 @@
+.navigation-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+}
+
+.navigation-tile {
+    align-items: center;
+    appearance: none;
+    background-color: var(--bg-secondary);
+    border: 1px solid transparent;
+    border-radius: calc(var(--radius-base) * 1.5);
+    box-shadow: var(--shadow-sm);
+    color: var(--text-primary-color);
+    display: flex;
+    flex-direction: column;
+    fill: var(--icon-primary-color);
+    font: inherit;
+    font-weight: var(--font-weight-medium);
+    justify-content: center;
+    min-height: calc(8rem + 8vh);
+    padding: 0;
+    position: relative;
+    text-align: center;
+    transition: var(--transition-default);
+
+    &:hover,
+    &:focus-visible {
+        box-shadow: var(--shadow-md);
+        transform: scale(1.03);
+        color: var(--link-invert-color-hover);
+        cursor: pointer;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+
+    & > svg {
+        margin: 0 auto var(--space-4);
+        transition: inherit;
+    }
+
+}
+
+/*
+ * Responsive improvements
+ */
+
+ @media (max-height: 900px) {
+    .navigation-tile > svg {
+        transform: scale(0.9);
+    }
+}
+
+@media (max-width: 1400px) {
+    .navigation-tile > svg {
+        transform: scale(0.9);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navigation-tile:hover,
+    .navigation-tile:focus-visible {
+        transform: none;
+    }
+
+    .navigation-tile {
+        transition: none;
+    }
+}

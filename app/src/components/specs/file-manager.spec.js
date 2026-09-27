@@ -177,30 +177,34 @@ describe('File Manager UI and IPC', () => {
         options.mounted.call(f); options.beforeDestroy.call(f); resolve({status:true,files:[file('late.pdf')]}); await tick();
         assert.equal(f.items[0].name,'a.pdf');
         assert.equal(calls.unlisteners[0][0],f.searchEvent); assert.equal(calls.unlisteners[0][1],f.filterFiles);
-        assert.equal(calls.unlisteners[1][0], 'document-body-clicked');
-        assert.equal(calls.unlisteners[1][1], f.closeBulkDropdown);
-        assert.equal(calls.unlisteners[2][0], 'focus');
+        assert.equal(calls.unlisteners[1][0], 'focus');
     });
-    it('opens the bulk menu from the keyboard and restores focus with Escape', async () => {
+    it('uses shared bulk actions with disabled explanations and closes them when selection changes', async () => {
         const { instance: f } = setup();
-        const focused = [];
-        const first = { focus: () => focused.push('first') };
-        const last = { focus: () => focused.push('last') };
-        f.$refs.bulkDropdown = {
-            querySelector: () => first,
-            querySelectorAll: () => [first, last]
+        f.$store.state.currentSite.config = Vue.observable(f.$store.state.currentSite.config);
+        let closes = 0;
+        f.$refs.bulkMenu = {
+            close () {
+                closes += 1;
+            }
         };
-        f.$refs.bulkDropdownTrigger = { $el: { focus: () => focused.push('trigger') } };
-        f.openBulkDropdown({ type: 'keydown' });
+        f.selectedItems = ['a.pdf'];
         await tick();
-        assert.equal(f.bulkDropdownVisible, true);
-        assert.deepEqual(focused, ['first']);
+        assert.equal(closes, 1);
+        assert.deepEqual(Array.from(f.bulkActions, item => item.value), ['copy-urls', 'copy-paths']);
+        assert.equal(f.bulkActions[0].disabled, false);
+        assert.equal(f.bulkActions[1].disabled, false);
+        assert.equal(f.bulkActions[0].onClick, f.bulkCopyURLs);
+        assert.equal(f.bulkActions[1].onClick, f.bulkCopyLocalPaths);
 
-        const event = { preventDefault () {}, stopPropagation () {} };
-        f.handleBulkDropdownKeydown({ ...event, key: 'End' });
-        f.handleBulkDropdownKeydown({ ...event, key: 'Escape' });
-        assert.equal(f.bulkDropdownVisible, false);
-        assert.deepEqual(focused, ['first', 'last', 'trigger']);
+        f.$store.state.currentSite.config.domain = '';
+        assert.equal(f.bulkActions[0].disabled, true);
+        assert.equal(f.bulkActions[0].disabledReason, f.$t('file.manager.copyURLsUnavailable'));
+        assert.equal(f.bulkActions[1].disabled, false);
+
+        f.operation = 'copy';
+        await tick();
+        assert.equal(closes, 2);
     });
     it('copies an encoded public URL with the site subdirectory intact',async()=>{
         const {instance:f,calls}=setup(); f.dirPath='media/files'; await f.copyURL(file('Zażółć #1%.pdf'));

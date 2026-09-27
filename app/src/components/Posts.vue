@@ -18,56 +18,58 @@
                 defaultValue="tinymce" />
         </p-header>
 
-        <ul
+        <div
             v-if="dataLoaded && hasPosts"
-            class="filters">
-            <li
-                :class="filterCssClasses('all')"
-                @click="setFilter('')">
-                {{ $t('post.all') }} <span class="filter-count">({{ counters.all }})</span>
-            </li>
+            class="filters collection-filters"
+            role="group"
+            :aria-label="$t('post.status')">
+            <collection-filter-button
+                :label="$t('post.all')"
+                :count="counters.all"
+                :active="isFilterActive('all')"
+                @click="setFilter('')" />
 
-            <li
-                :class="filterCssClasses('published')"
-                @click="setFilter('is:published')">
-                {{ $t('post.published') }} <span class="filter-count">({{ counters.published }})</span>
-            </li>
+            <collection-filter-button
+                :label="$t('post.published')"
+                :count="counters.published"
+                :active="isFilterActive('published')"
+                @click="setFilter('is:published')" />
 
-            <li
+            <collection-filter-button
                 v-if="counters.featured"
-                :class="filterCssClasses('featured')"
-                @click="setFilter('is:featured')">
-                {{ $t('post.featured') }} <span class="filter-count">({{ counters.featured }})</span>
-            </li>
+                :label="$t('post.featured')"
+                :count="counters.featured"
+                :active="isFilterActive('featured')"
+                @click="setFilter('is:featured')" />
 
-            <li
+            <collection-filter-button
                 v-if="counters.hidden"
-                :class="filterCssClasses('hidden')"
-                @click="setFilter('is:hidden')">
-                {{ $t('post.hidden') }} <span class="filter-count">({{ counters.hidden }})</span>
-            </li>
+                :label="$t('post.hidden')"
+                :count="counters.hidden"
+                :active="isFilterActive('hidden')"
+                @click="setFilter('is:hidden')" />
 
-            <li
+            <collection-filter-button
                 v-if="counters.excluded"
-                :class="filterCssClasses('excluded')"
-                @click="setFilter('is:excluded')">
-                {{ $t('post.excluded') }} <span class="filter-count">({{ counters.excluded }})</span>
-            </li>
+                :label="$t('post.excluded')"
+                :count="counters.excluded"
+                :active="isFilterActive('excluded')"
+                @click="setFilter('is:excluded')" />
 
-            <li
+            <collection-filter-button
                 v-if="counters.drafts"
-                :class="filterCssClasses('draft')"
-                @click="setFilter('is:draft')">
-                {{ $t('post.drafts') }} <span class="filter-count">({{ counters.drafts }})</span>
-            </li>
+                :label="$t('post.drafts')"
+                :count="counters.drafts"
+                :active="isFilterActive('draft')"
+                @click="setFilter('is:draft')" />
 
-            <li
+            <collection-filter-button
                 v-if="counters.trashed"
-                :class="filterCssClasses('trashed')"
-                @click="setFilter('is:trashed')">
-                {{ $t('post.trashed') }} <span class="filter-count">({{counters.trashed }})</span>
-            </li>
-        </ul>
+                :label="$t('post.trashed')"
+                :count="counters.trashed"
+                :active="isFilterActive('trashed')"
+                @click="setFilter('is:trashed')" />
+        </div>
 
 
         <collection
@@ -192,98 +194,24 @@
                         {{ $t('post.duplicate') }}
                     </p-button>
 
-                    <div
+                    <action-menu
                         v-if="!trashVisible"
-                        class="dropdown-wrapper">
-                        <p-button
-                            icon="more"
-                            appearance="light"
-                            size="small"
-                            :active="bulkDropdownVisible"
-                            @click.native.stop="toggleBulkDropdown">
-                            {{ $t('ui.more') }}
-                        </p-button>
-
-                        <ul
-                            v-if="bulkDropdownVisible"
-                            class="dropdown">
-                            <li
-                                v-if="selectedPostsNeedsStatus('published')"
-                                @click="bulkPublish">
-                                <icon
-                                    size="xs"
-                                    name="publish-post" />
-                                {{ $t('post.publish') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('draft')"
-                                @click="bulkUnpublish">
-                                <icon
-                                    size="xs"
-                                    name="draft-post" />
-                                {{ $t('post.markAsDraft') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('featured')"
-                                @click="bulkFeatured">
-                                <icon
-                                    size="xs"
-                                    name="featured-post"
-                                    class="content-status-icon is-featured" />
-                                {{ $t('post.markAsFeatured') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsHaveStatus('featured')"
-                                @click="bulkUnfeatured">
-                                <icon
-                                    size="xs"
-                                    name="unfeatured-post" 
-                                    class="content-status-icon is-featured" />
-                                {{ $t('post.markAsUnfeatured') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('excluded_homepage')"
-                                @click="bulkExclude">
-                                <icon
-                                    size="xs"
-                                    name="excluded-post"
-                                    class="content-status-icon is-excluded" />
-                                {{ $t('post.excludeFromHomepage') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsHaveStatus('excluded_homepage')"
-                                @click="bulkInclude">
-                                <icon
-                                    size="xs"
-                                    name="included-post" 
-                                    class="content-status-icon is-excluded" />
-                                {{ $t('post.includeInHomepage') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsNeedsStatus('hidden')"
-                                @click="bulkHide">
-                                <icon
-                                    size="xs"
-                                    name="hidden-post" />
-                                {{ $t('ui.hide') }}
-                            </li>
-                            <li
-                                v-if="selectedPostsHaveStatus('hidden')"
-                                @click="bulkUnhide">
-                                <icon
-                                    size="xs"
-                                    name="unhidden-post" />
-                                {{ $t('ui.unhide') }}
-                            </li>
-                            <li
-                                @click="bulkConvertToPage">
-                                <icon
-                                    size="xs"
-                                    name="convert-to-page"/>
-                                {{ $t('post.convertToPage') }}
-                            </li>
-                        </ul>
-                    </div>
+                        align="left"
+                        :label="$t('ui.more')"
+                        :items="bulkActions">
+                        <template #trigger="{ attrs, isOpen, toggle, keydown }">
+                            <p-button
+                                v-bind="attrs"
+                                icon="more"
+                                appearance="light"
+                                size="small"
+                                :active="isOpen"
+                                @click.native.stop="toggle"
+                                @keydown.native="keydown">
+                                {{ $t('ui.more') }}
+                            </p-button>
+                        </template>
+                    </action-menu>
                 </div>
             </collection-header>
 
@@ -419,13 +347,15 @@
 
 <script>
 import EditorSelection from './basic-elements/EditorSelection.vue';
+import CollectionFilterButton from './basic-elements/CollectionFilterButton.vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 import Tooltip from '../helpers/tooltip.js';
 
 export default {
     components: {
-        EditorSelection
+        EditorSelection,
+        CollectionFilterButton
     },
     directives: {
         tooltip: Tooltip
@@ -437,7 +367,6 @@ export default {
     ],
     data () {
         return {
-            bulkDropdownVisible: false,
             dataLoaded: false,
             filterValue: '',
             selectedItems: [],
@@ -447,6 +376,76 @@ export default {
         };
     },
     computed: {
+        bulkActions () {
+            return [
+                {
+                    value: 'publish',
+                    label: this.$t('post.publish'),
+                    icon: 'publish-post',
+                    visible: this.selectedPostsNeedsStatus('published'),
+                    onClick: this.bulkPublish
+                },
+                {
+                    value: 'draft',
+                    label: this.$t('post.markAsDraft'),
+                    icon: 'draft-post',
+                    visible: this.selectedPostsNeedsStatus('draft'),
+                    onClick: this.bulkUnpublish
+                },
+                {
+                    value: 'featured',
+                    label: this.$t('post.markAsFeatured'),
+                    icon: 'featured-post',
+                    iconClass: 'content-status-icon is-featured',
+                    visible: this.selectedPostsNeedsStatus('featured'),
+                    onClick: this.bulkFeatured
+                },
+                {
+                    value: 'unfeatured',
+                    label: this.$t('post.markAsUnfeatured'),
+                    icon: 'unfeatured-post',
+                    iconClass: 'content-status-icon is-featured',
+                    visible: this.selectedPostsHaveStatus('featured'),
+                    onClick: this.bulkUnfeatured
+                },
+                {
+                    value: 'exclude',
+                    label: this.$t('post.excludeFromHomepage'),
+                    icon: 'excluded-post',
+                    iconClass: 'content-status-icon is-excluded',
+                    visible: this.selectedPostsNeedsStatus('excluded_homepage'),
+                    onClick: this.bulkExclude
+                },
+                {
+                    value: 'include',
+                    label: this.$t('post.includeInHomepage'),
+                    icon: 'included-post',
+                    iconClass: 'content-status-icon is-excluded',
+                    visible: this.selectedPostsHaveStatus('excluded_homepage'),
+                    onClick: this.bulkInclude
+                },
+                {
+                    value: 'hide',
+                    label: this.$t('ui.hide'),
+                    icon: 'hidden-post',
+                    visible: this.selectedPostsNeedsStatus('hidden'),
+                    onClick: this.bulkHide
+                },
+                {
+                    value: 'unhide',
+                    label: this.$t('ui.unhide'),
+                    icon: 'unhidden-post',
+                    visible: this.selectedPostsHaveStatus('hidden'),
+                    onClick: this.bulkUnhide
+                },
+                {
+                    value: 'convert',
+                    label: this.$t('post.convertToPage'),
+                    icon: 'convert-to-page',
+                    onClick: this.bulkConvertToPage
+                }
+            ];
+        },
         items () {
             return this.$store.getters.sitePosts(this.filterValue, this.orderBy, this.order);
         },
@@ -567,8 +566,6 @@ export default {
         this.$bus.$on('posts-filter-value-changed', (newValue) => {
             this.filterValue = newValue.trim().toLowerCase();
         });
-
-        this.$bus.$on('document-body-clicked', this.closeBulkDropdown);
 
         // It is available when user comes from Tags/Authors views
         let newFilterValue = localStorage.getItem('publii-posts-search-value');
@@ -693,18 +690,10 @@ export default {
                 this.$refs.search.updateValue();
             }
         },
-        filterCssClasses (type) {
-            if(type !== 'all') {
-                return {
-                    'filter-value': true,
-                    'filter-active': this.filterValue.indexOf('is:' + type) === 0
-                };
-            }
-
-            return {
-                'filter-value': true,
-                'filter-active': this.filterValue.indexOf('is:') === -1
-            };
+        isFilterActive (type) {
+            return type === 'all'
+                ? this.filterValue.indexOf('is:') === -1
+                : this.filterValue.indexOf('is:' + type) === 0;
         },
         getModificationDate (timestamp) {
             return this.$moment(timestamp).fromNow();
@@ -888,12 +877,6 @@ export default {
                 order: this.order
             });
         },
-        toggleBulkDropdown () {
-            this.bulkDropdownVisible = !this.bulkDropdownVisible;
-        },
-        closeBulkDropdown () {
-            this.bulkDropdownVisible = false;
-        },
         selectedPostsNeedsStatus (status) {
             let selectedPosts = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
 
@@ -921,7 +904,6 @@ export default {
         this.loadMoreObserver.disconnect();
         this.$bus.$off('site-loaded', this.whenSiteLoaded);
         this.$bus.$off('posts-filter-value-changed');
-        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
     }
 }
 </script>
@@ -982,80 +964,7 @@ export default {
     }
 }
 
-.filters {
-    font-size: 1.35rem;
-    list-style-type: none;
-    margin: -2.2rem 0 0 0;
-    padding: 0;
-    position: relative;
-    user-select: none;
-    z-index: 1;
+@import "../css/collection-filters.css";
 
-    .label {
-        color: var(--text-light-color);
-        float: left;
-        margin-right: var(--space-4);
-    }
 
-    .filter-value {
-        color: var(--text-light-color);
-        cursor: pointer;
-        display: inline-block;
-        margin-right: var(--space-4);
-        transition: var(--transition-default);
-
-        &.filter-active {
-            color: var(--link-primary-color);
-        }
-
-        &:hover {
-            color: var(--link-primary-color);
-        }
-
-        &:last-child {
-            border-right: none;
-        }
-    }
-}
-
-.tools {
-    
-    .dropdown-wrapper {
-        position: relative;
-
-        .dropdown {
-            background: var(--popup-bg);
-            border-radius: var(--radius-base);
-            box-shadow: var(--shadow-md);
-            left: 0;
-            list-style-type: none;
-            margin: 0;
-            padding: var(--space-4) 0;
-            position: absolute;
-            top: 4rem;
-            width: auto;
-            z-index: 1;
-
-            li {
-                color: var(--text-light-color);
-                cursor: pointer;
-                display: block;
-                font-size: var(--font-size-ui-md);
-                font-weight: var(--font-weight-medium);
-                padding: .8rem 2.4rem;
-                white-space: nowrap;
-
-                &:hover {
-                    background: var(--color-surface-subtle);
-                    color: var(--text-primary-color);
-                }
-
-                & > svg {
-                    margin-right: 4px;
-                    vertical-align: text-bottom;
-                }
-            }
-        }
-    }
-}
 </style>

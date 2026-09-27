@@ -164,58 +164,25 @@
                             :onClick="bulkDuplicate">
                             {{ $t('file.manager.duplicateFile') }}
                         </p-button>
-                        <div
-                            class="dropdown-wrapper"
-                            @focusout="handleBulkDropdownFocusOut">
-                            <p-button
-                                ref="bulkDropdownTrigger"
-                                icon="more"
-                                appearance="light"
-                                size="small"
-                                :active="bulkDropdownVisible"
-                                :disabled="busy || isLoading"
-                                aria-haspopup="menu"
-                                :aria-expanded="bulkDropdownVisible ? 'true' : 'false'"
-                                :aria-controls="bulkDropdownVisible ? 'file-bulk-menu-' + _uid : null"
-                                @click.native.stop="toggleBulkDropdown"
-                                @keydown.native.down.prevent="openBulkDropdown"
-                                @keydown.native.esc.stop.prevent="closeBulkDropdown(true)">
-                                {{ $t('ui.more') }}
-                            </p-button>
-                            <div
-                                v-if="bulkDropdownVisible"
-                                :id="'file-bulk-menu-' + _uid"
-                                ref="bulkDropdown"
-                                class="dropdown"
-                                role="menu"
-                                @keydown="handleBulkDropdownKeydown">
-                                <button
-                                    type="button"
-                                    role="menuitem"
-                                    tabindex="-1"
-                                    :aria-disabled="!canCopySelectedURLs ? 'true' : null"
-                                    v-tooltip="canCopySelectedURLs ? '' : $t('file.manager.copyURLsUnavailable')"
-                                    @click.stop="bulkCopyURLs">
-                                    <icon
-                                        size="xs"
-                                        name="link-2"
-                                        non-interactive />
-                                    {{ $t('file.manager.copyURLs') }}
-                                </button>
-                                <button
-                                    type="button"
-                                    role="menuitem"
-                                    tabindex="-1"
-                                    :disabled="!canCopySelectedPaths"
-                                    @click.stop="bulkCopyLocalPaths">
-                                    <icon
-                                        size="xs"
-                                        name="clipboard-copy"
-                                        non-interactive />
-                                    {{ $t('file.manager.copyLocalPaths') }}
-                                </button>
-                            </div>
-                        </div>
+                        <action-menu
+                            ref="bulkMenu"
+                            align="left"
+                            :label="$t('ui.more')"
+                            :items="bulkActions"
+                            :disabled="busy || isLoading">
+                            <template #trigger="{ attrs, isOpen, toggle, keydown }">
+                                <p-button
+                                    v-bind="attrs"
+                                    icon="more"
+                                    appearance="light"
+                                    size="small"
+                                    :active="isOpen"
+                                    @click.native.stop="toggle"
+                                    @keydown.native="keydown">
+                                    {{ $t('ui.more') }}
+                                </p-button>
+                            </template>
+                        </action-menu>
                     </div>
                 </collection-header>
                 <collection-row
@@ -327,7 +294,6 @@ export default {
             isRefreshing: false,
             loadError: false,
             operation: '',
-            bulkDropdownVisible: false,
             fileIsOver: false,
             failures: [],
             total: 0,
@@ -338,6 +304,25 @@ export default {
         };
     },
     computed: {
+        bulkActions () {
+            return [
+                {
+                    value: 'copy-urls',
+                    label: this.$t('file.manager.copyURLs'),
+                    icon: 'link-2',
+                    disabled: !this.canCopySelectedURLs,
+                    disabledReason: this.$t('file.manager.copyURLsUnavailable'),
+                    onClick: this.bulkCopyURLs
+                },
+                {
+                    value: 'copy-paths',
+                    label: this.$t('file.manager.copyLocalPaths'),
+                    icon: 'clipboard-copy',
+                    disabled: !this.canCopySelectedPaths,
+                    onClick: this.bulkCopyLocalPaths
+                }
+            ];
+        },
         busy () {
             return !!this.operation;
         },
@@ -395,11 +380,11 @@ export default {
     watch: {
         busy (value) {
             if (value) {
-                this.closeBulkDropdown();
+                this.closeBulkMenu();
             }
         },
         selectedItems () {
-            this.closeBulkDropdown();
+            this.closeBulkMenu();
         }
     },
     created () {
@@ -408,7 +393,6 @@ export default {
     },
     mounted () {
         this.$bus.$on(this.searchEvent, this.filterFiles);
-        this.$bus.$on('document-body-clicked', this.closeBulkDropdown);
         window.addEventListener('focus', this.refreshOnFocus);
         this.loadFiles();
     },
@@ -677,78 +661,19 @@ export default {
                 this.operation = '';
             }
         },
-        toggleBulkDropdown (event) {
-            if (this.bulkDropdownVisible) {
-                this.closeBulkDropdown();
-            } else {
-                this.openBulkDropdown(event);
+        closeBulkMenu () {
+            if (this.$refs.bulkMenu) {
+                this.$refs.bulkMenu.close();
             }
-        },
-        openBulkDropdown (event) {
-            if (this.busy || this.isLoading) {
-                return;
-            }
-
-            this.$bus.$emit('document-body-clicked');
-            this.bulkDropdownVisible = true;
-            if (event && (event.type === 'keydown' || event.detail === 0)) {
-                this.$nextTick(() => {
-                    const menu = this.$refs.bulkDropdown;
-                    const firstItem = menu && menu.querySelector('button:not(:disabled)');
-                    if (firstItem) {
-                        firstItem.focus();
-                    }
-                });
-            }
-        },
-        closeBulkDropdown (restoreFocus = false) {
-            this.bulkDropdownVisible = false;
-            if (restoreFocus === true && this.$refs.bulkDropdownTrigger) {
-                this.$refs.bulkDropdownTrigger.$el.focus();
-            }
-        },
-        handleBulkDropdownFocusOut (event) {
-            if (!event.currentTarget.contains(event.relatedTarget)) {
-                this.closeBulkDropdown();
-            }
-        },
-        handleBulkDropdownKeydown (event) {
-            if (event.key === 'Escape') {
-                event.preventDefault();
-                event.stopPropagation();
-                this.closeBulkDropdown(true);
-                return;
-            }
-
-            if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
-                return;
-            }
-
-            event.preventDefault();
-            const items = Array.from(this.$refs.bulkDropdown.querySelectorAll('button:not(:disabled)'));
-            if (!items.length) {
-                return;
-            }
-
-            const current = items.indexOf(document.activeElement);
-            let next = event.key === 'ArrowUp' ? current - 1 : current + 1;
-            if (event.key === 'Home') {
-                next = 0;
-            } else if (event.key === 'End') {
-                next = items.length - 1;
-            }
-            items[(next + items.length) % items.length].focus();
         },
         bulkCopyURLs () {
             if (this.busy || this.isLoading || !this.canCopySelectedURLs) {
                 return;
             }
 
-            this.closeBulkDropdown(true);
             return this.copySelectedFiles('url');
         },
         bulkCopyLocalPaths () {
-            this.closeBulkDropdown(true);
             return this.copySelectedFiles('path');
         },
         async copySelectedFiles (kind) {
@@ -1100,7 +1025,6 @@ export default {
         this.stopRequested = true;
         this.resolveConflict('stop');
         this.$bus.$off(this.searchEvent, this.filterFiles);
-        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
         window.removeEventListener('focus', this.refreshOnFocus);
     },
     beforeRouteLeave (to, from, next) {
@@ -1205,65 +1129,6 @@ export default {
         position: relative;
         display: flex;
         flex-direction: column;
-    }
-
-    .tools .dropdown-wrapper {
-        position: relative;
-
-        .dropdown {
-            background: var(--popup-bg);
-            border-radius: var(--radius-base);
-            box-shadow: var(--shadow-md);
-            left: 0;
-            padding: var(--space-4) 0;
-            position: absolute;
-            top: 4rem;
-            width: auto;
-            z-index: 1;
-
-            button {
-                background: none;
-                border: 0;
-                color: var(--text-light-color);
-                cursor: pointer;
-                display: block;
-                font-family: inherit;
-                font-size: var(--font-size-ui-md);
-                font-weight: var(--font-weight-medium);
-                padding: .8rem 2.4rem;
-                text-align: left;
-                white-space: nowrap;
-                width: 100%;
-
-                &:hover,
-                &:focus-visible {
-                    background: var(--color-surface-subtle);
-                    color: var(--text-primary-color);
-                }
-
-                &:focus-visible {
-                    outline: 2px solid var(--input-border-focus);
-                    outline-offset: -2px;
-                }
-
-                &:disabled,
-                &[aria-disabled="true"] {
-                    background: none;
-                    color: var(--text-light-color);
-                    cursor: not-allowed;
-                    opacity: .5;
-
-                    & > svg {
-                        fill: currentColor;
-                    }
-                }
-
-                & > svg {
-                    margin-right: 4px;
-                    vertical-align: text-bottom;
-                }
-            }
-        }
     }
 
     .file-list ::v-deep .collection-wrapper {

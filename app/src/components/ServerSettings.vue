@@ -47,13 +47,13 @@
 
             <div
                 v-if="deploymentMethodSelected === ''"
-                class="server-settings-grid">
+                class="server-settings-grid navigation-tiles">
 
                  <button
                     type="button"
                     @click="deploymentMethodSelected = 'ftp'"
                     :title="$t('sync.ftp')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                    <icon
                       customWidth="48"
                       customHeight="48"
@@ -66,7 +66,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 'sftp'"
                     :title="$t('sync.sftp')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                    <icon
                       customWidth="48"
                       customHeight="48"
@@ -79,7 +79,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 's3'"
                     :title="$t('sync.s3CompatibleStorage')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                    <icon
                       customWidth="48"
                       customHeight="48"
@@ -92,7 +92,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 'git'"
                     :title="$t('sync.git')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                     <icon
                       customWidth="84"
                       customHeight="48"
@@ -105,7 +105,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 'github-pages'"
                     :title="$t('sync.github')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                     <icon
                       customWidth="48"
                       customHeight="48"
@@ -118,7 +118,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 'gitlab-pages'"
                     :title="$t('sync.gitlabPages')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                     <icon
                       customWidth="48"
                       customHeight="48"
@@ -131,7 +131,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 'netlify'"
                     :title="$t('sync.netlify')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                    <icon
                       customWidth="54"
                       customHeight="48"
@@ -144,7 +144,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 'google-cloud'"
                     :title="$t('sync.googleCloud')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                     <icon
                       customWidth="48"
                       customHeight="48"
@@ -157,7 +157,7 @@
                     type="button"
                     @click="deploymentMethodSelected = 'manual'"
                     :title="$t('sync.manualDeployment')"
-                    class="server-settings-grid-item">
+                    class="navigation-tile server-settings-grid-item">
                    <icon
                       customWidth="48"
                       customHeight="48"
@@ -170,7 +170,7 @@
                     href="https://getpublii.com/docs/deployment/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="server-settings-grid-item deployment-others">
+                    class="navigation-tile server-settings-grid-item deployment-others">
 
                     <icon
                         customWidth="50"
@@ -1788,6 +1788,7 @@ export default {
 
 <style scoped>
 @import '../css/notifications.css';
+@import '../css/navigation-tiles.css';
 
 .server-settings {
     margin: 0 auto;
@@ -1817,101 +1818,29 @@ export default {
     }
 }
 
-.server-settings-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-8);
-}
-
-.server-settings-grid-item {
-    align-items: center;
-    appearance: none;
-    background-color: var(--bg-secondary);
-    border: 1px solid transparent;
-    border-radius: calc(var(--radius-base) * 1.5);
-    box-shadow: var(--shadow-sm);
-    color: var(--text-primary-color);
-    display: flex;
-    flex-direction: column;
-    fill: var(--icon-primary-color);
-    font: inherit;
-    font-weight: var(--font-weight-medium);
-    justify-content: center;
-    min-height: calc(8rem + 8vh);
-    padding: 0;
-    position: relative;
-    text-align: center;
-    transition: var(--transition-default);
-
-    &:hover,
-    &:focus-visible {
-        box-shadow: var(--shadow-md);
-        transform: scale(1.03);
-        color: var(--link-invert-color-hover);
-        cursor: pointer;
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--input-border-focus);
-        outline-offset: 2px;
-    }
-
-    & > svg {
-        margin: 0 auto var(--space-4);
+.server-settings-grid-item.deployment-others {
+    h3 {
+        color: var(--text-primary-color);
+        font-size: var(--font-size-ui-md);
+        font-weight: var(--font-weight-medium);
+        margin-bottom: 0;
         transition: inherit;
     }
 
-    &.deployment-others {
-        h3 {
-            color: var(--text-primary-color);
-            font-size: var(--font-size-ui-md);
-            font-weight: var(--font-weight-medium);
-            margin-bottom: 0;
-            transition: inherit;
-        }
+    svg {
+        fill: var(--icon-primary-color);
+        transition: inherit;
+    }
 
+    &:hover,
+    &:focus-visible {
         svg {
-            fill: var(--icon-primary-color);
-            transition: inherit;
+            fill: var(--link-invert-color-hover);
         }
 
-        &:hover,
-        &:focus-visible {
-            svg {
-                fill: var(--link-invert-color-hover);
-            }
-
-            h3 {
-                color: var(--link-invert-color-hover);
-            }
+        h3 {
+            color: var(--link-invert-color-hover);
         }
-    }
-}
-
-/*
- * Responsive improvements
- */
-
- @media (max-height: 900px) {
-    .server-settings-grid-item > svg {
-        transform: scale(0.9);
-    }
-}
-
-@media (max-width: 1400px) {
-    .server-settings-grid-item > svg {
-        transform: scale(0.9);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .server-settings-grid-item:hover,
-    .server-settings-grid-item:focus-visible {
-        transform: none;
-    }
-
-    .server-settings-grid-item {
-        transition: none;
     }
 }
 </style>

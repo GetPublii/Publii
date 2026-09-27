@@ -129,6 +129,23 @@
         <circle cx="12" cy="12" r="3"/>
     </symbol>
 
+    <symbol
+        id="hierarchy"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M9 6h11" />
+        <path d="M12 12h8" />
+        <path d="M15 18h5" />
+        <path d="M5 6v.01" />
+        <path d="M8 12v.01" />
+        <path d="M11 18v.01" />
+    </symbol>
+
     <symbol id="tools" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 2v6"/>
         <path d="M15 2v6"/>

@@ -1,0 +1,42 @@
+.collection-filters {
+    align-items: flex-start;
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    font-size: 1.35rem;
+    margin: -2.2rem 0 0 0;
+    min-height: 2.8rem;
+    padding: 0;
+    position: relative;
+    user-select: none;
+    z-index: 1;
+
+    .filter-value {
+        color: var(--text-light-color);
+        cursor: pointer;
+        transition: var(--transition-default);
+        white-space: nowrap;
+
+        &.filter-active {
+            color: var(--link-primary-color);
+        }
+
+        &:hover {
+            color: var(--link-primary-color);
+        }
+    }
+}
+
+.collection-filters button.filter-value {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    font: inherit;
+    padding: 0;
+}
+
+.collection-filters button.filter-value:focus-visible {
+    outline: 2px solid var(--input-border-focus);
+    outline-offset: 2px;
+}

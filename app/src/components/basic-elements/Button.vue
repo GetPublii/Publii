@@ -9,7 +9,7 @@
         @click="onClick">
         <icon
             v-if="icon"
-            :size="iconSize"
+            :size="resolvedIconSize"
             non-interactive
             :name="icon" />
 
@@ -66,9 +66,9 @@ export default {
             type: String
         },
         iconSize: {
-            default: 's',
+            default: '',
             type: String,
-            validator: value => ['xs', 's'].includes(value)
+            validator: value => ['', 'xs', 's'].includes(value)
         },
         iconOnly: {
             default: false,
@@ -122,6 +122,9 @@ export default {
         }
     },
     computed: {
+        resolvedIconSize () {
+            return this.iconSize || (this.size === 'small' ? 'xs' : 's');
+        },
         cssClasses: function() {
             return {
                 'button': true,

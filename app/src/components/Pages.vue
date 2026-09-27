@@ -21,36 +21,43 @@
                 defaultValue="tinymce" />
         </p-header>
 
-        <ul
+        <div
             v-if="dataLoaded && hasPages"
-            class="filters">
-            <li
-                :class="filterCssClasses('all')"
-                @click="setFilter('')">
-                {{ $t('page.all') }} <span class="filter-count">({{ counters.all }})</span>
-            </li>
+            class="filters collection-filters"
+            role="group"
+            :aria-label="$t('page.status')">
+            <collection-filter-button
+                :label="$t('page.all')"
+                :count="counters.all"
+                :active="isFilterActive('all')"
+                class="filter-all"
+                :disabled="hierarchyMode"
+                @click="setFilter('')" />
 
-            <li
-                :class="filterCssClasses('published')"
-                @click="setFilter('is:published')">
-                {{ $t('page.published') }} <span class="filter-count">({{ counters.published }})</span>
-            </li>
+            <collection-filter-button
+                :label="$t('page.published')"
+                :count="counters.published"
+                :active="isFilterActive('published')"
+                :disabled="hierarchyMode"
+                @click="setFilter('is:published')" />
 
-            <li
+            <collection-filter-button
                 v-if="counters.drafts"
-                :class="filterCssClasses('draft')"
-                @click="setFilter('is:draft')">
-                {{ $t('page.drafts') }} <span class="filter-count">({{ counters.drafts }})</span>
-            </li>
+                :label="$t('page.drafts')"
+                :count="counters.drafts"
+                :active="isFilterActive('draft')"
+                :disabled="hierarchyMode"
+                @click="setFilter('is:draft')" />
 
-            <li
+            <collection-filter-button
                 v-if="counters.trashed"
-                :class="filterCssClasses('trashed')"
-                @click="setFilter('is:trashed')">
-                {{ $t('page.trashed') }} <span class="filter-count">({{counters.trashed }})</span>
-            </li>
+                :label="$t('page.trashed')"
+                :count="counters.trashed"
+                :active="isFilterActive('trashed')"
+                :disabled="hierarchyMode"
+                @click="setFilter('is:trashed')" />
 
-            <li
+            <div
                 :class="{
                    'filter-value': true,
                    'is-hierarchy': true,
@@ -61,12 +68,12 @@
                     class="edit-page-hierarchy"
                     @click="toggleHierarchyMode">
                     <icon
-                        name="settings"
-                        size="xs" />
+                        name="hierarchy"
+                        size="s" />
                     {{ hierarchyMode ? $t('page.closeHierarchy') : $t('page.editHierarchy') }}
                 </a>
-            </li>
-        </ul>
+            </div>
+        </div>
 
         <collection
             v-if="dataLoaded && !emptySearchResults && hasPages"
@@ -190,46 +197,24 @@
                         {{ $t('page.duplicate') }}
                     </p-button>
 
-                    <div
+                    <action-menu
                         v-if="!trashVisible"
-                        class="dropdown-wrapper">
-                        <p-button
-                            icon="more"
-                            appearance="light"
-                            size="small"
-                            :active="bulkDropdownVisible"
-                            @click.native.stop="toggleBulkDropdown">
-                            {{ $t('ui.more') }}
-                        </p-button>
-
-                        <ul
-                            v-if="bulkDropdownVisible"
-                            class="dropdown">
-                            <li
-                                v-if="selectedPagesNeedsStatus('published')"
-                                @click="bulkPublish">
-                                <icon
-                                    size="xs"
-                                    name="publish-post" />
-                                {{ $t('page.publish') }}
-                            </li>
-                            <li
-                                v-if="selectedPagesNeedsStatus('draft')"
-                                @click="bulkUnpublish">
-                                <icon
-                                    size="xs"
-                                    name="draft-post" />
-                                {{ $t('page.markAsDraft') }}
-                            </li>
-                            <li
-                                @click="bulkConvertToPost">
-                                <icon
-                                    size="xs"
-                                    name="convert-to-page" />
-                                {{ $t('page.convertToPost') }}
-                            </li>
-                        </ul>
-                    </div>
+                        align="left"
+                        :label="$t('ui.more')"
+                        :items="bulkActions">
+                        <template #trigger="{ attrs, isOpen, toggle, keydown }">
+                            <p-button
+                                v-bind="attrs"
+                                icon="more"
+                                appearance="light"
+                                size="small"
+                                :active="isOpen"
+                                @click.native.stop="toggle"
+                                @keydown.native="keydown">
+                                {{ $t('ui.more') }}
+                            </p-button>
+                        </template>
+                    </action-menu>
                 </div>
             </collection-header>
 
@@ -408,6 +393,7 @@
 
 <script>
 import EditorSelection from './basic-elements/EditorSelection.vue';
+import CollectionFilterButton from './basic-elements/CollectionFilterButton.vue';
 import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
@@ -415,7 +401,8 @@ import CollectionOrdering from './mixins/CollectionOrdering.js';
 
 export default {
     components: {
-        EditorSelection
+        EditorSelection,
+        CollectionFilterButton
     },
     directives: {
         tooltip: Tooltip
@@ -427,7 +414,6 @@ export default {
     ],
     data () {
         return {
-            bulkDropdownVisible: false,
             dataLoaded: false,
             filterValue: '',
             selectedItems: [],
@@ -441,6 +427,30 @@ export default {
         };
     },
     computed: {
+        bulkActions () {
+            return [
+                {
+                    value: 'publish',
+                    label: this.$t('page.publish'),
+                    icon: 'publish-post',
+                    visible: this.selectedPagesNeedsStatus('published'),
+                    onClick: this.bulkPublish
+                },
+                {
+                    value: 'draft',
+                    label: this.$t('page.markAsDraft'),
+                    icon: 'draft-post',
+                    visible: this.selectedPagesNeedsStatus('draft'),
+                    onClick: this.bulkUnpublish
+                },
+                {
+                    value: 'convert',
+                    label: this.$t('page.convertToPost'),
+                    icon: 'convert-to-page',
+                    onClick: this.bulkConvertToPost
+                }
+            ];
+        },
         items () {
             let items = this.$store.getters.sitePages(this.filterValue, this.orderBy, this.order);
 
@@ -595,8 +605,6 @@ export default {
             this.filterValue = newValue.trim().toLowerCase();
         });
 
-        this.$bus.$on('document-body-clicked', this.closeBulkDropdown);
-
         // It is available when user comes from Tags/Authors views
         let newFilterValue = localStorage.getItem('publii-pages-search-value');
 
@@ -714,21 +722,10 @@ export default {
                 this.$refs.search.updateValue();
             }
         },
-        filterCssClasses (type) {
-            if(type !== 'all') {
-                return {
-                    'filter-value': true,
-                    'filter-active': this.filterValue.indexOf('is:' + type) === 0,
-                    'filter-inactive': !!this.hierarchyMode
-                };
-            }
-
-            return {
-                'filter-all': true,
-                'filter-value': true,
-                'filter-active': this.filterValue.indexOf('is:') === -1,
-                'filter-inactive': !!this.hierarchyMode
-            };
+        isFilterActive (type) {
+            return type === 'all'
+                ? this.filterValue.indexOf('is:') === -1
+                : this.filterValue.indexOf('is:' + type) === 0;
         },
         getModificationDate (timestamp) {
             return this.$moment(timestamp).fromNow();
@@ -904,12 +901,6 @@ export default {
                 orderBy: this.orderBy,
                 order: this.order
             });
-        },
-        toggleBulkDropdown () {
-            this.bulkDropdownVisible = !this.bulkDropdownVisible;
-        },
-        closeBulkDropdown () {
-            this.bulkDropdownVisible = false;
         },
         selectedPagesNeedsStatus (status) {
             let selectedPages = this.items.filter(item => this.selectedItems.indexOf(item.id) > -1);
@@ -1203,7 +1194,6 @@ export default {
         this.loadMoreObserver.disconnect();
         this.$bus.$off('site-loaded', this.whenSiteLoaded);
         this.$bus.$off('pages-filter-value-changed');
-        this.$bus.$off('document-body-clicked', this.closeBulkDropdown);
     }
 }
 </script>
@@ -1339,55 +1329,21 @@ export default {
     }
 }
 
+@import "../css/collection-filters.css";
+
 .filters {
-    display: flex;
-    font-size: 1.35rem;
-    list-style-type: none;
-    margin: -2.2rem 0 0 0;
-    padding: 0;
-    position: relative;
-    user-select: none;
-    z-index: 1;
+    .filter-value.is-hierarchy {
+        margin-left: auto;
 
-    .label {
-        color: var(--text-light-color);
-        float: left;
-        margin-right: var(--space-4);
-    }
-
-    .filter-value {
-        color: var(--text-light-color);
-        cursor: pointer;
-        display: inline-block;
-        margin-right: var(--space-4);
-        transition: var(--transition-default);
-
-        &.filter-active {
-            color: var(--link-primary-color);
-        }
-
-        &:hover {
-            color: var(--link-primary-color);
-        }
-
-        &:last-child {
-            border-right: none;
-        }
-
-        &.is-hierarchy {
-            margin-left: auto;
-            margin-right: 0;
-
-            a {
-                align-items: center;
-                display: inline-flex;
-                gap: 6px;
-                margin-top: 8px;
-            }
+        a {
+            align-items: center;
+            display: inline-flex;
+            gap: 6px;
+            margin-top: 8px;
         }
     }
 
-    .filter-inactive {
+    button.filter-value:disabled {
         filter: grayscale(1);
         opacity: 0.5;
         pointer-events: none;
@@ -1398,45 +1354,7 @@ export default {
     }
 }
 
-.tools {
-    .dropdown-wrapper {
-        position: relative;
 
-        .dropdown {
-            background: var(--popup-bg);
-            border-radius: var(--radius-base);
-            box-shadow: var(--shadow-md);
-            left: 0;
-            list-style-type: none;
-            margin: 0;
-            padding: var(--space-4) 0;
-            position: absolute;
-            top: 4rem;
-            width: auto;
-            z-index: 1;
-
-            li {
-                color: var(--text-light-color);
-                cursor: pointer;
-                display: block;
-                font-size: var(--font-size-ui-md);
-                font-weight: var(--font-weight-medium);
-                padding: .8rem 2.4rem;
-                white-space: nowrap;
-
-                &:hover {
-                    background: var(--color-surface-subtle);
-                    color: var(--text-primary-color);
-                }
-
-                & > svg {
-                    margin-right: 4px;
-                    vertical-align: text-bottom;
-                }
-            }
-        }
-    }
-}
 .collection-nested-arrow {
     display: block;
     border-radius: 0 0 0 2px;
