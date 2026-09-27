@@ -10,6 +10,8 @@
         <icon
             v-if="icon"
             :size="resolvedIconSize"
+            :customWidth="iconCustomWidth"
+            :customHeight="iconCustomHeight"
             non-interactive
             :name="icon" />
 
@@ -69,6 +71,14 @@ export default {
             default: '',
             type: String,
             validator: value => ['', 'xs', 's'].includes(value)
+        },
+        iconCustomWidth: {
+            default: '',
+            type: String
+        },
+        iconCustomHeight: {
+            default: '',
+            type: String
         },
         iconOnly: {
             default: false,

@@ -20,6 +20,8 @@
                     slot="buttons"
                     intent="primary"
                     icon="refresh"
+                    icon-custom-width="18"
+                    icon-custom-height="18"
                     :disabled="receivingNotificationsInProgress">
                     {{ $t('notifications.checkUpdates') }}
                 </p-button>
