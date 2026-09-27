@@ -12,7 +12,7 @@
                 :onClick="addTag"
                 slot="buttons"
                 intent="primary"
-                icon="add-site-mono">
+                icon="plus">
                 {{ $t('tag.addNewTag') }}
             </p-button>
         </p-header>
@@ -188,7 +188,7 @@
             :description="$t('tag.createFirstTag')">
             <p-button
                 slot="button"
-                icon="add-site-mono"
+                icon="plus"
                 :onClick="addTag">
                 {{ $t('tag.addNewTag') }}
             </p-button>

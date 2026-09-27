@@ -68,7 +68,7 @@
         </div>
 
         <p-button
-            icon="add-site-mono"
+            icon="plus"
             appearance="secondary"
             @click.native="addRule">
             {{ $t('settings.gConsentMode.addGroup') }}

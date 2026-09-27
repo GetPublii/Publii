@@ -12,7 +12,7 @@
             </p-button>
 
             <p-button
-                icon="add-site-mono"
+                icon="plus"
                 intent="primary"
                 slot="buttons"
                 :onClick="addNewWebsite">

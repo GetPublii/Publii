@@ -10,7 +10,7 @@
                 :onClick="addAuthor"
                 slot="buttons"
                 intent="primary"
-                icon="add-site-mono">
+                icon="plus">
                 {{ $t('author.addNewAuthor') }}
             </p-button>
         </p-header>

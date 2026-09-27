@@ -141,11 +141,6 @@
         <path d="M22.735,18.321a11.9,11.9,0,0,1-2.885-7.13C19.851,1.941,15.309,0,11.5,0S3.15,1.964,3.15,11.323A11.324,11.324,0,0,1,.28,18.306,1,1,0,0,0,1,20H22a1,1,0,0,0,.734-1.679ZM3.024,18A12.444,12.444,0,0,0,5.15,11.323C5.15,2,9.93,2,11.5,2c4.273,0,6.35,3.006,6.35,9.191A12.9,12.9,0,0,0,20.008,18ZM9,22h4a2,2,0,0,1-4,0Z" />
     </symbol>
 
-    <symbol id="add-site-mono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6,12h12"/>
-      <path d="M12,6v12"/>
-    </symbol>
-
      <symbol id="upload-file" viewBox="0 0 24 24">
         <path d="M11,19h2v2h-2V19z M12,4l-7,6.6L6.5,12L11,7.7V16h2V7.7l4.5,4.3l1.5-1.4L12,4z"/>
      </symbol>

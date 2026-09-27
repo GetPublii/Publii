@@ -13,7 +13,7 @@
                 :onClick="showAddMenuForm"
                 slot="buttons"
                 intent="primary"
-                icon="add-site-mono">
+                icon="plus">
                 {{ $t('menu.addNewMenu') }}
             </p-button>
         </p-header>
@@ -173,7 +173,7 @@
 
                         <div class="menu-toolbar">
                             <p-button
-                                icon="add-site-mono"
+                                icon="plus"
                                 appearance="secondary"
                                 :onClick="addMenuItem.bind(this, index)">
                                 {{ $t('menu.addMenuItem') }}
@@ -232,7 +232,7 @@
             :description="$t('menu.noMenusCreateNewOne')">
             <p-button
                 slot="button"
-                icon="add-site-mono"
+                icon="plus"
                 :onClick="showAddMenuForm">
                 {{ $t('menu.addNewMenu') }}
             </p-button>

@@ -114,7 +114,7 @@
                     :disabled="isUploading"
                     slot="buttons"
                     intent="primary"
-                    icon="add-site-mono">
+                    icon="plus">
                     <template v-if="!isUploading">{{ $t('image.addImages') }}</template>
                     <template v-if="isUploading">{{ $t('ui.loading') }}</template>
                 </p-button>

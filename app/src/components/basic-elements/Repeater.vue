@@ -233,7 +233,7 @@
             v-if="maxCount === -1 || content.length < maxCount"
             :onClick="addItem"
             appearance="secondary"
-            icon="add-site-mono">
+            icon="plus">
             {{ translation('add') }}
         </p-button>
     </div>
