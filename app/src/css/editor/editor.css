@@ -986,11 +986,17 @@ figure[class*="post__image"] img[class*="post__image"] {
     margin: 0 !important;
     display: block !important;
 }
-/* Fix misleading cursor on images and media that can be edited by double-click. */
+/* Fix misleading cursor on content that can be edited by double-click. */
 .mce-content-body figure[contentEditable=false][data-mce-selected],
 .mce-content-body img:not([data-mce-object]):not([data-mce-placeholder]),
 .mce-content-body [data-mce-object="iframe"],
 .mce-content-body [data-mce-object="video"],
-.mce-content-body [data-mce-object="audio"] {
+.mce-content-body [data-mce-object="audio"],
+.mce-content-body pre[class*="language-"] {
     cursor: pointer !important;
+}
+
+/* Let the native code-sample double-click handler receive clicks on syntax tokens. */
+.mce-content-body pre[class*="language-"] * {
+    pointer-events: none;
 }
