@@ -79,7 +79,12 @@ function setup(locale = 'en-gb') {
                 discontinued: { plugins: { Beta: { text: 'Retired plugin' } } }
             }
         },
-        state: { app: { versionInfo: { version: '0.48.0' } } }
+        state: {
+            app: {
+                config: {},
+                versionInfo: { version: '0.48.0' }
+            }
+        }
     };
     const route = { params: { name: 'demo' } };
     const context = {

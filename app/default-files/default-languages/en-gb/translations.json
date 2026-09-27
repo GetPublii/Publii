@@ -1251,6 +1251,7 @@
         "showModificationDate": "Show modification date",
         "showModificationDateAsColumn": "Show modification date as column",
         "showOnlyFeaturedPosts": "Show only featured posts",
+        "showPluginIconsOnTheListing": "Show plugin icons on the listing",
         "showPostTagsOnTheListing": "Show post tags on the listing",
         "showPostSlugsOnTheListing": "Show slugs across all listing views",
         "showPrivacyPolicyLink": "Show privacy policy link",

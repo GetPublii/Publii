@@ -165,6 +165,17 @@
                 </field>
 
                 <field
+                    id="show-plugin-icons"
+                    :label="$t('settings.showPluginIconsOnTheListing')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="show-plugin-icons"
+                        v-model="showPluginIcons"
+                        :accessibleLabel="$t('settings.showPluginIconsOnTheListing')" />
+                </field>
+
+                <field
                     id="wide-scrollbars"
                     :label="$t('settings.useWideScrollbars')"
                     :labelSeparated="false">
@@ -452,6 +463,7 @@ export default {
             showModificationDateAsColumn: false,
             showPostSlugs: false,
             showPostTags: true,
+            showPluginIcons: true,
             postsOrdering: 'id DESC',
             pagesOrdering: ' DESC',
             tagsOrdering: 'id DESC',
@@ -605,6 +617,7 @@ export default {
         this.showModificationDateAsColumn = this.$store.state.app.config.showModificationDateAsColumn;
         this.showPostSlugs = this.$store.state.app.config.showPostSlugs;
         this.showPostTags = this.$store.state.app.config.showPostTags;
+        this.showPluginIcons = this.$store.state.app.config.showPluginIcons !== false;
         this.postsOrdering = this.$store.state.app.config.postsOrdering;
         this.pagesOrdering = this.$store.state.app.config.pagesOrdering;
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
@@ -664,6 +677,7 @@ export default {
                 showModificationDateAsColumn: this.showModificationDateAsColumn,
                 showPostSlugs: this.showPostSlugs,
                 showPostTags: this.showPostTags,
+                showPluginIcons: this.showPluginIcons,
                 alwaysSaveSearchState: this.alwaysSaveSearchState,
                 postsOrdering: this.postsOrdering,
                 pagesOrdering: this.pagesOrdering,

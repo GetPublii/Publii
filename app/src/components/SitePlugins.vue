@@ -150,20 +150,22 @@
                         </collection-cell>
                         <collection-cell variant="titles">
                             <div class="item-identity">
-                                <img
-                                    v-if="!brokenIcons[item.directory]"
-                                    :src="item.thumbnail"
-                                    width="36"
-                                    height="36"
-                                    alt=""
-                                    @error="iconFailed(item.directory)" />
-                                <icon
-                                    v-else
-                                    name="tools"
-                                    customWidth="36"
-                                    customHeight="36"
-                                    non-interactive
-                                    aria-hidden="true" />
+                                <template v-if="showPluginIcons">
+                                    <img
+                                        v-if="!brokenIcons[item.directory]"
+                                        :src="item.thumbnail"
+                                        width="36"
+                                        height="36"
+                                        alt=""
+                                        @error="iconFailed(item.directory)" />
+                                    <icon
+                                        v-else
+                                        name="tools"
+                                        customWidth="36"
+                                        customHeight="36"
+                                        non-interactive
+                                        aria-hidden="true" />
+                                </template>
                                 <div class="item-copy">
                                     <div class="item-heading">
                                         <button
@@ -307,6 +309,9 @@ export default {
     },
     computed: {
         ...mapGetters(['sitePlugins', 'notifications']),
+        showPluginIcons () {
+            return this.$store.state.app.config.showPluginIcons !== false;
+        },
         siteName () {
             return this.$route.params.name;
         },

@@ -16,6 +16,7 @@ const AstAppConfig = {
     showModificationDateAsColumn: false,
     showPostSlugs: false,
     showPostTags: true,
+    showPluginIcons: true,
     postsOrdering: 'id DESC',
     pagesOrdering: ' DESC',
     tagsOrdering: 'id DESC',
