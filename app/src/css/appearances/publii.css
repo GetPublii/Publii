@@ -191,7 +191,6 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
 
     --sidebar-icon: var(--white);
 
-    --option-sidebar-bg: var(--white);
 
     /* Tabs */
     --tab-color: var(--palette-brand-90);
@@ -382,7 +381,6 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
 
     --sidebar-icon: var(--palette-neutral-5);
 
-    --option-sidebar-bg: var(--palette-neutral-50);
 
     /* Tabs */
     --tab-color: var(--palette-neutral-15);

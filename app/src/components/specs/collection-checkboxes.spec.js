@@ -10,6 +10,7 @@ const appRequire = createRequire(path.join(root, 'app/package.json'));
 const Vue = appRequire('vue');
 const VueI18n = appRequire('vue-i18n');
 Vue.use(VueI18n);
+const pluginHelpers = require('../../helpers/tools-list');
 const read = name => fs.readFileSync(path.join(root, 'app/src', name), 'utf8');
 const mixinContext = { module: { exports: {} } };
 vm.runInNewContext(
@@ -65,6 +66,7 @@ function loadComponent(name) {
         keepItemOutOfItsAncestors() {},
         ToolsPluginDetails: {},
         mapGetters: () => ({}),
+        ...pluginHelpers,
         ...filesContext.module.exports
     };
     vm.runInNewContext(
@@ -163,6 +165,18 @@ function header(instance) {
     return instance._render().componentOptions.propsData;
 }
 
+function plugin(name, enabled = false, stateKnown = true) {
+    return {
+        id: 'plugin-' + name,
+        directory: name,
+        name,
+        description: '',
+        enabled,
+        stateKnown,
+        incompatible: false
+    };
+}
+
 function file(name, isFile = true) {
     return { name, isFile, size: 1, fullPath: '/fixture/' + name };
 }
@@ -226,7 +240,8 @@ const listings = [
     ['Authors', [{ id: 1 }, { id: 2 }, { id: 3 }], [2, 3]],
     ['Menus', [{ name: 'Header' }, { name: 'Footer' }], [0, 1]],
     ['Backups', [{ id: 'first.zip' }, { id: 'second.zip' }], ['first.zip', 'second.zip']],
-    ['FileManager', [file('a.pdf'), file('b.pdf'), file('folder', false)], ['a.pdf', 'b.pdf']]
+    ['FileManager', [file('a.pdf'), file('b.pdf'), file('folder', false)], ['a.pdf', 'b.pdf']],
+    ['SitePlugins', [plugin('Alpha'), plugin('Beta')], ['Alpha', 'Beta']]
 ];
 
 for (const [name, items, ids] of listings) {
@@ -306,6 +321,30 @@ describe('Collection-specific selection constraints', function () {
         list.isLoading = true;
         header(list).onClick();
         assert.deepEqual(Array.from(list.selectedItems), ['b.pdf']);
+    });
+
+    it('limits Plugins selection to the current filter and known states', function () {
+        const { instance: list } = setup('SitePlugins', {
+            items: [plugin('Alpha', true), plugin('Beta'), plugin('Broken', false, false)],
+            statusFilter: 'enabled',
+            selectedItems: ['Beta']
+        });
+        assert.equal(header(list).checked, false);
+        assert.equal(header(list).indeterminate, false);
+        header(list).onClick();
+        assert.deepEqual(Array.from(list.selectedItems), ['Alpha']);
+        assert.deepEqual(Array.from(list.disableCandidates, item => item.directory), ['Alpha']);
+        list.statusFilter = 'any';
+        assert.equal(header(list).indeterminate, true);
+        header(list).onClick();
+        assert.deepEqual(Array.from(list.selectedItems), ['Alpha', 'Beta']);
+        assert.equal(header(list).checked, true);
+        for (const guard of ['isLoading', 'loadError', 'confirmationOpen']) {
+            list[guard] = true;
+            header(list).onClick();
+            assert.deepEqual(Array.from(list.selectedItems), ['Alpha', 'Beta']);
+            list[guard] = false;
+        }
     });
 
     it('keeps the existing Pages hierarchy transition and clears bulk selection on entry', function () {

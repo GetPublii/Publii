@@ -26,6 +26,8 @@ export default {
     data: function() {
         return {
             isVisible: false,
+            requestId: '',
+            displaySequence: 0,
             textCentered: false,
             message: '',
             buttonStyle: 'normal',
@@ -54,9 +56,15 @@ export default {
     },
     mounted: function() {
         this.$bus.$on('alert-display', (config) => {
+            const sequence = ++this.displaySequence;
+            this.requestId = config.requestId || '';
             document.body.classList.add('has-popup-visible');
 
             setTimeout(() => {
+                if (sequence !== this.displaySequence) {
+                    return;
+                }
+
                 this.isVisible = true;
                 this.message = config.message;
                 this.textCentered = config.textCentered || false;
@@ -76,10 +84,21 @@ export default {
             }, 0);
         });
 
+        this.$bus.$on('alert-dismiss', this.dismissRequest);
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
+        dismissRequest (requestId) {
+            if (requestId && requestId === this.requestId) {
+                this.displaySequence++;
+                this.requestId = '';
+                this.isVisible = false;
+                document.body.classList.remove('has-popup-visible');
+            }
+        },
         onOk: function() {
+            this.displaySequence++;
+            this.requestId = '';
             this.isVisible = false;
             document.body.classList.remove('has-popup-visible');
             this.okClick();
@@ -95,6 +114,7 @@ export default {
     },
     beforeDestroy () {
         this.$bus.$off('alert-display');
+        this.$bus.$off('alert-dismiss', this.dismissRequest);
         document.body.removeEventListener('keydown', this.onDocumentKeyDown);
     }
 }

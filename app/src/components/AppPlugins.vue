@@ -35,6 +35,7 @@
 
 <script>
 import PluginsList from './PluginsList';
+import escapeHTML from '../helpers/escape-html.js';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 import ExtensionInstallation from './mixins/ExtensionInstallation';
 
@@ -55,6 +56,23 @@ export default {
             return this.pickExtensionFile('plugin');
         },
         uploadedPlugin (data) {
+            if (data && data.code === 'settings-open') {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('plugins.settingsOpen', {
+                        sites: (data.sites || []).map(site => escapeHTML(site)).join(', ')
+                    })
+                });
+                return;
+            }
+
+            if (!data || !['added', 'updated', 'wrong-format'].includes(data.status)) {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('plugins.uploadPluginErrorMessage'),
+                    buttonStyle: 'danger'
+                });
+                return;
+            }
+
             this.$store.commit('replaceAppPlugins', data.plugins);
 
             let messageConfig = {

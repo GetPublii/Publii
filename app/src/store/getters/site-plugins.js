@@ -14,6 +14,11 @@
         return {
             scope: plugin.scope,
             name: plugin.name,
+            description: typeof plugin.description === 'string' ? plugin.description : '',
+            author: typeof plugin.author === 'string'
+                ? plugin.author
+                : (plugin.author && typeof plugin.author.name === 'string' ? plugin.author.name : ''),
+            hasSettings: plugin.hasSettings !== false,
             version: plugin.version,
             directory: plugin.directory,
             minimumPubliiVersion: plugin.minimumPubliiVersion,

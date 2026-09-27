@@ -1032,6 +1032,10 @@ export default {
 </script>
 
 <style scoped>
+section.content.file-manager {
+    padding-bottom: 0;
+}
+
 .file-manager {
     display: flex;
     flex-direction: column;

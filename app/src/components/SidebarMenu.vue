@@ -1,11 +1,12 @@
 <template>
     <ul class="sidebar-menu">
         <li
-            v-for="(item, index) in items"
-            :key="'sidebar-item-' + index"
-            :class="{ 'sidebar-menu-item': true, 'is-active': item.icon === activeMenuItem }"
-            @click="setActiveMenuItem(item.icon)">
-            <router-link :to="item.url">
+            v-for="item in items"
+            :key="item.section || item.icon"
+            :class="{ 'sidebar-menu-item': true, 'is-active': (item.section || item.icon) === activeMenuItem }">
+            <router-link
+                :to="item.url"
+                :aria-current="(item.section || item.icon) === activeMenuItem ? 'page' : null">
                 <icon
                     customWidth="18"
                     customHeight="18"
@@ -19,14 +20,24 @@
 <script>
 export default {
     name: 'sidebar-menu',
-    data () {
-        let activeMenuItem = this.$route.path.endsWith('/pages/') ? 'pages' : 'posts';
-
-        return {
-            activeMenuItem
-        };
-    },
     computed: {
+        activeMenuItem () {
+            const parts = this.$route.path.split('/');
+
+            if (parts[3] === 'settings') {
+                return parts[4] || 'settings';
+            }
+
+            if (parts[3] === 'tools' && parts[4] === 'plugins') {
+                return 'plugins';
+            }
+
+            if (parts[3] === 'tools' && parts[4] === 'file-manager' && this.$store.state.app.config.experimentalFileManagerInSidebar) {
+                return 'folder';
+            }
+
+            return parts[3] || 'posts';
+        },
         items: function() {
             let siteName = this.$route.params.name;
             let menuItems = [{
@@ -54,6 +65,11 @@ export default {
                 label: this.$t('ui.theme'),
                 url: '/site/' + siteName + '/settings/themes/'
             }, {
+                section: 'plugins',
+                icon: 'tools',
+                label: this.$t('plugins.plugins'),
+                url: '/site/' + siteName + '/plugins/'
+            }, {
                 icon: 'settings',
                 label: this.$t('settings.siteSettings'),
                 url: '/site/' + siteName + '/settings/'
@@ -62,7 +78,8 @@ export default {
                 label: this.$t('ui.server'),
                 url: '/site/' + siteName + '/settings/server/'
             }, {
-                icon: 'tools',
+                section: 'tools',
+                icon: 'toolbox',
                 label: this.$t('ui.tools'),
                 url: '/site/' + siteName + '/tools/'
             }];
@@ -79,29 +96,20 @@ export default {
         }
     },
     watch: {
-        '$route': function(newValue, oldValue) {
-            let pathElements = newValue.path.split('/');
-
-            
-
-            if (
-                pathElements[3] && 
-                pathElements[3] !== 'settings' && 
-                !(pathElements[3] === 'tools' && pathElements[4] === 'file-manager' && this.$store.state.app.config.experimentalFileManagerInSidebar)
-            ) {
-                this.setActiveMenuItem(pathElements[3]);
-            } else if (pathElements[3] === 'tools' && pathElements[4] === 'file-manager' && this.$store.state.app.config.experimentalFileManagerInSidebar) {
-                this.setActiveMenuItem('folder');
-            } else if(pathElements[3] === 'settings' && pathElements[4]) {
-                this.setActiveMenuItem(pathElements[4]);
-            } else if(pathElements[3] === 'settings' && !pathElements[4]) {
-                this.setActiveMenuItem(pathElements[3]);
-            }
+        activeMenuItem () {
+            this.$nextTick(this.revealActiveItem);
         }
     },
+    mounted () {
+        this.$nextTick(this.revealActiveItem);
+    },
     methods: {
-        setActiveMenuItem: function(newValue) {
-            this.activeMenuItem = newValue;
+        revealActiveItem () {
+            const activeLink = this.$el.querySelector('[aria-current="page"]');
+
+            if (activeLink) {
+                activeLink.scrollIntoView({ block: 'nearest' });
+            }
         }
     }
 }
@@ -139,6 +147,11 @@ export default {
                fill: var(--sidebar-link-icon-hover);
             }
         }
+    }
+
+    a:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
     }
 
     svg {
@@ -181,7 +194,7 @@ export default {
 @media (max-height: 736px) {
     .sidebar-menu {
         a {
-            padding: 0.6rem;
+            padding: 0.55rem;
         }
     }
 }

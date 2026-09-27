@@ -1,0 +1,24 @@
+/* Shared badges for extension notices in lists and the notification center. */
+.notification-item-name::after,
+.notification-discontinued-badge,
+.extension-notice-badge {
+    align-items: center;
+    border-radius: var(--radius-base);
+    color: var(--white);
+    display: inline-flex;
+    flex-shrink: 0;
+    font-size: var(--font-size-ui-xs);
+    font-weight: var(--font-weight-regular);
+    gap: var(--space-1);
+    padding: 0 var(--space-2);
+}
+
+.notification-discontinued-badge,
+.extension-notice-badge.is-discontinued {
+    background: var(--color-danger);
+}
+
+.extension-notice-badge.is-update {
+    background: var(--color-surface-notice);
+    color: var(--color-text-subtle);
+}

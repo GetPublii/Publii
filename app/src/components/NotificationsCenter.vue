@@ -530,6 +530,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/extension-notice-badges.css";
 
 .notifications {
     padding: var(--space-12) 0 var(--space-16);
@@ -721,23 +722,6 @@ export default {
                 flex-wrap: wrap;
                 row-gap: var(--space-1);
             }
-        }
-
-        .notification-item-name::after,
-        .notification-discontinued-badge {
-            align-items: center;
-            border-radius: var(--radius-base);
-            color: var(--white);
-            display: inline-flex;
-            flex-shrink: 0;
-            font-size: var(--font-size-ui-xs);
-            font-weight: var(--font-weight-semibold);
-            gap: var(--space-1);
-            padding: 0 var(--space-2);
-        }
-
-        .notification-discontinued-badge {
-            background: var(--color-danger);
         }
 
         .notification-discontinued-info {

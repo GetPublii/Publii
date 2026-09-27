@@ -1,17 +1,19 @@
 <template>
     <section class="content">
-        <div class="plugin-content">
+        <div
+            :key="settingsLockId"
+            class="plugin-content">
             <p-header :title="pluginName">
                 <p-button
                     :onClick="goBack"
                     slot="buttons"
                     appearance="clean"
                     back>
-                    {{ $t('ui.backToTools') }}
+                    {{ $t('ui.backToPlugins') }}
                 </p-button>
 
                 <p-button
-                    v-if="pluginHasConfig && hasPluginCustomOptions && pluginStandardOptionsVisible"
+                    v-if="settingsLockId && pluginHasConfig && hasPluginCustomOptions && pluginStandardOptionsVisible"
                     :onClick="showPluginCustomOptions"
                     slot="buttons"
                     appearance="clean"
@@ -21,7 +23,7 @@
                 </p-button>
 
                 <p-button
-                    v-if="pluginHasConfig && hasPluginCustomOptions && !pluginStandardOptionsVisible"
+                    v-if="settingsLockId && pluginHasConfig && hasPluginCustomOptions && !pluginStandardOptionsVisible"
                     :onClick="showPluginStandardOptions"
                     slot="buttons"
                     appearance="clean"
@@ -51,11 +53,11 @@
             </p-header>
 
             <supported-features-check
-                v-if="requiredFeatures"
+                v-if="settingsLockId && requiredFeatures"
                 :featuresToCheck="requiredFeatures" />
 
             <div
-                v-if="hasMessage"
+                v-if="settingsLockId && hasMessage"
                 :class="'msg msg-icon msg-' + messageInOptions.type">
                 <icon
                     :name="messageInOptions.type"
@@ -64,11 +66,11 @@
                 <div v-pure-html="messageInOptions.text"></div>
             </div>
 
-            <template v-if="!pluginHasConfig && !hasPluginCustomOptions">
+            <template v-if="settingsLockId && !pluginHasConfig && !hasPluginCustomOptions">
                 <p>{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
             </template>
 
-            <template v-if="pluginHasConfig && pluginStandardOptionsVisible">
+            <template v-if="settingsLockId && pluginHasConfig && pluginStandardOptionsVisible">
                 <fields-group
                     v-if="pluginSettingsDisplay === 'tabs'"
                     :title="pluginSettingsTabsLabel">
@@ -464,10 +466,11 @@
                     </p-button>
                 </p-footer>
             </template>
-            <template v-else>
-                <iframe 
+            <template v-else-if="settingsLockId && hasPluginCustomOptions">
+                <iframe
                     id="plugin-settings-root"
-                    :src="this.pluginPath + '/options/index.html'"></iframe>
+                    :src="pluginPath + '/options/index.html'"
+                    @load="applyCustomOptionsAppearance"></iframe>
             </template>
         </div>
     </section>
@@ -475,16 +478,12 @@
 
 <script>
 import { applyAppAppearance } from './../helpers/app-appearance';
-import BackToTools from './mixins/BackToTools.js';
 import SupportedFeaturesCheck from './basic-elements/SupportedFeaturesCheck.vue';
 import Repeater from './basic-elements/Repeater';
 import Vue from 'vue';
 
 export default {
     name: 'tools-plugin',
-    mixins: [
-        BackToTools
-    ],
     components: {
         'supported-features-check': SupportedFeaturesCheck,
         'repeater': Repeater
@@ -495,7 +494,7 @@ export default {
             pluginPath: '',
             settings: [],
             settingsValues: {},
-            buttonsLocked: false,
+            buttonsLocked: true,
             hasMessage: false,
             hasPluginCustomOptions: false,
             messageInOptions: null,
@@ -503,7 +502,13 @@ export default {
             pluginStandardOptionsVisible: true,
             pluginSettingsDisplay: 'fieldsets',
             pluginSettingsTabsLabel: '',
-            previewNotRequired: false
+            previewNotRequired: false,
+            settingsLockId: '',
+            settingsSiteName: '',
+            settingsPluginName: '',
+            settingsLoadSequence: 0,
+            settingsDisposed: false,
+            saveTimer: null
         };
     },
     computed: {
@@ -561,33 +566,75 @@ export default {
             return !!this.$store.state.currentSite.config.theme;
         }
     },
+    watch: {
+        async $route (to, from) {
+            if (to.name !== 'SitePlugin' ||
+                (to.params.name === from.params.name && to.params.pluginname === from.params.pluginname)) {
+                return;
+            }
+
+            const sequence = ++this.settingsLoadSequence;
+            this.closePluginSettings();
+            await this.$nextTick();
+
+            if (!this.settingsDisposed && sequence === this.settingsLoadSequence) {
+                this.loadPluginConfig(to.params.pluginname, to.params.name);
+            }
+        }
+    },
     async mounted () {
-        this.loadPluginConfig(this.$route.params.pluginname, this.$route.params.name);
-        document.getElementById('plugin-settings-root').addEventListener('load', async function () {
-            applyAppAppearance(
-                this.contentWindow.window.document,
-                await window.app.getCurrentAppTheme(),
-                window.app.getCurrentAppAppearance(),
-                window.app.getCurrentWorkspaceAccent()
-            );
-        }, false);
+        await this.$nextTick();
+
+        if (!this.settingsDisposed) {
+            this.loadPluginConfig(this.$route.params.pluginname, this.$route.params.name);
+        }
     },
     methods: {
-        loadPluginConfig (pluginName, siteName) {
-            mainProcessAPI.send('app-site-get-plugin-config', {
-                siteName,
-                pluginName
-            });
+        goBack () {
+            this.$router.push('/site/' + encodeURIComponent(this.$route.params.name) + '/plugins/');
+        },
+        async loadPluginConfig (pluginName, siteName) {
+            const sequence = ++this.settingsLoadSequence;
+            this.closePluginSettings();
+            this.removeAdditionalCss();
+            this.settings = [];
+            this.settingsValues = {};
+            this.pluginPath = '';
+            this.pluginStandardOptionsVisible = true;
+            this.hasPluginCustomOptions = false;
+            this.buttonsLocked = true;
+            let response;
 
-            mainProcessAPI.receiveOnce('app-site-get-plugin-config-retrieved', result => {
-                if (!result) {
-                    this.$bus.$emit('alert-display', {
-                        message: this.$t('tools.pluginLoadError'),
-                        buttonStyle: 'danger'
+            try {
+                response = await mainProcessAPI.invoke('app-site-plugin-settings:open', {
+                    siteName,
+                    pluginName
+                });
+            } catch (error) {
+                response = null;
+            }
+
+            if (this.settingsDisposed || sequence !== this.settingsLoadSequence) {
+                if (response && response.lockId) {
+                    mainProcessAPI.send('app-site-plugin-settings-close', {
+                        lockId: response.lockId
                     });
-                    return;
                 }
 
+                return;
+            }
+
+            if (!response || !response.status || !response.lockId || !response.config) {
+                this.showPluginLoadError();
+                return;
+            }
+
+            this.settingsLockId = response.lockId;
+            this.settingsSiteName = siteName;
+            this.settingsPluginName = pluginName;
+            const result = response.config;
+
+            try {
                 this.pluginName = result.pluginData.name;
                 this.hasPluginCustomOptions = !!result.pluginData.usePluginSettingsView;
                 this.hasMessage = !!result.pluginData.messageInOptions;
@@ -607,8 +654,48 @@ export default {
                     this.loadAdditionalCss();
                 }
 
-                this.loadSettings(result.pluginData.config, result.pluginConfig);
+                this.loadSettings(result.pluginData.config || [], result.pluginConfig || '{}');
+                this.buttonsLocked = false;
+            } catch (error) {
+                this.closePluginSettings();
+                this.removeAdditionalCss();
+                this.showPluginLoadError();
+            }
+        },
+        closePluginSettings () {
+            clearTimeout(this.saveTimer);
+            this.saveTimer = null;
+            const lockId = this.settingsLockId;
+            this.settingsLockId = '';
+            this.settingsSiteName = '';
+            this.settingsPluginName = '';
+            this.buttonsLocked = true;
+
+            if (lockId) {
+                mainProcessAPI.send('app-site-plugin-settings-close', { lockId });
+            }
+        },
+        showPluginLoadError () {
+            this.$bus.$emit('alert-display', {
+                message: this.$t('toolsPlugin.pluginSettingsLoadError'),
+                buttonStyle: 'danger'
             });
+        },
+        async applyCustomOptionsAppearance (event) {
+            const frame = event.target;
+            const lockId = this.settingsLockId;
+            const theme = await window.app.getCurrentAppTheme();
+
+            if (this.settingsDisposed || !lockId || lockId !== this.settingsLockId || !frame.isConnected) {
+                return;
+            }
+
+            applyAppAppearance(
+                frame.contentWindow.window.document,
+                theme,
+                window.app.getCurrentAppAppearance(),
+                window.app.getCurrentWorkspaceAccent()
+            );
         },
         getFieldLabel (field) {
             if (field.type === 'separator') {
@@ -771,18 +858,16 @@ export default {
                 $(document.body).append($('<link rel="stylesheet" id="custom-plugin-options-css" href="' + customCssPath + '" />'));
             }
         },
-        loadSettings (config, savedConfig) {
-            try {
-                this.settings = JSON.parse(JSON.stringify(config));
-                savedConfig = JSON.parse(savedConfig);
-            } catch (e) {
-                this.$bus.$emit('message-display', {
-                    message: this.$t('toolsPlugin.pluginSettingsLoadError'),
-                    type: 'warning',
-                    lifeTime: 3
-                });
-                return;
+        removeAdditionalCss () {
+            const stylesheet = document.querySelector('#custom-plugin-options-css');
+
+            if (stylesheet) {
+                stylesheet.remove();
             }
+        },
+        loadSettings (config, savedConfig) {
+            this.settings = JSON.parse(JSON.stringify(config));
+            savedConfig = JSON.parse(savedConfig);
 
             let settings = config.map(field => {
                 if (field.type !== 'separator') {
@@ -809,47 +894,70 @@ export default {
             this.save(true, renderingType, true);
         },
         save (showPreview = false, renderingType = false, renderFiles = false) {
-            this.$bus.$emit('plugin-settings-before-save');
+            if (this.settingsDisposed || !this.settingsLockId || this.buttonsLocked) {
+                return;
+            }
 
-            setTimeout(async () => {
-                await this.saveSettings(showPreview, renderingType, renderFiles);
+            const session = {
+                lockId: this.settingsLockId,
+                siteName: this.settingsSiteName,
+                pluginName: this.settingsPluginName
+            };
+            this.buttonsLocked = true;
+            this.$bus.$emit('plugin-settings-before-save');
+            this.saveTimer = setTimeout(() => {
+                this.saveTimer = null;
+                this.saveSettings(showPreview, renderingType, renderFiles, session);
             }, 500);
         },
-        async saveSettings (showPreview = false, renderingType = false, renderFiles = false) {
-            mainProcessAPI.send('app-site-save-plugin-config', {
-                siteName: this.$route.params.name,
-                pluginName: this.$route.params.pluginname,
-                newConfig: this.settingsValues
-            });
+        async saveSettings (showPreview, renderingType, renderFiles, session) {
+            if (this.settingsDisposed || !session || session.lockId !== this.settingsLockId) {
+                return;
+            }
 
-            mainProcessAPI.receiveOnce('app-site-plugin-config-saved', async (result) => {
-                if (result === true) {
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('toolsPlugin.pluginSettingsSaveSuccess'),
-                        type: 'success',
-                        lifeTime: 3
-                    });
+            let result = false;
 
-                    if (showPreview) {
-                        if (renderingType === 'homepage') {
-                            this.$bus.$emit('rendering-popup-display', {
-                                homepageOnly: true,
-                                showPreview: !renderFiles,
-                            });
-                        } else {
-                            this.$bus.$emit('rendering-popup-display', {
-                                showPreview: !renderFiles 
-                            });
-                        }
+            try {
+                result = await mainProcessAPI.invoke('app-site-plugin-settings:save', {
+                    ...session,
+                    newConfig: this.settingsValues
+                });
+            } catch (error) {
+                result = false;
+            }
+
+            if (this.settingsDisposed || session.lockId !== this.settingsLockId) {
+                return;
+            }
+
+            this.buttonsLocked = false;
+
+            if (result === true) {
+                this.$bus.$emit('message-display', {
+                    message: this.$t('toolsPlugin.pluginSettingsSaveSuccess'),
+                    type: 'success',
+                    lifeTime: 3
+                });
+
+                if (showPreview) {
+                    if (renderingType === 'homepage') {
+                        this.$bus.$emit('rendering-popup-display', {
+                            homepageOnly: true,
+                            showPreview: !renderFiles
+                        });
+                    } else {
+                        this.$bus.$emit('rendering-popup-display', {
+                            showPreview: !renderFiles
+                        });
                     }
-                } else {
-                    this.$bus.$emit('message-display', {
-                        message: this.$t('toolsPlugin.pluginSettingsSaveError'),
-                        type: 'warning',
-                        lifeTime: 3
-                    });
                 }
-            });
+            } else {
+                this.$bus.$emit('message-display', {
+                    message: this.$t('toolsPlugin.pluginSettingsSaveError'),
+                    type: 'warning',
+                    lifeTime: 3
+                });
+            }
         },
         showPluginCustomOptions () {
             this.pluginStandardOptionsVisible = false;
@@ -859,9 +967,10 @@ export default {
         }
     },
     beforeDestroy () {
-        if (document.querySelector('#custom-plugin-options-css')) {
-            $('#custom-plugin-options-css').remove();
-        }
+        this.settingsDisposed = true;
+        this.settingsLoadSequence++;
+        this.closePluginSettings();
+        this.removeAdditionalCss();
     }
 }
 </script>

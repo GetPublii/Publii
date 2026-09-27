@@ -115,13 +115,19 @@ export default {
                 }),
                 okLabel: this.$t('plugins.deletePlugin'),
                 isDanger: true,
-                okClick: function() {
-                    mainProcessAPI.send('app-plugin-delete', {
-                        name: pluginName,
-                        directory: pluginDirectory
-                    });
-
+                okClick: () => {
                     mainProcessAPI.receiveOnce('app-plugin-deleted', (data) => {
+                        if (!data || data.status !== true) {
+                            const settingsOpen = data && data.code === 'settings-open';
+                            this.$bus.$emit('alert-display', {
+                                message: settingsOpen ? this.$t('plugins.settingsOpen', {
+                                    sites: (data.sites || []).map(site => escapeHTML(site)).join(', ')
+                                }) : this.$t('plugins.removePluginErrorMessage'),
+                                buttonStyle: settingsOpen ? 'normal' : 'danger'
+                            });
+                            return;
+                        }
+
                         this.$bus.$emit('message-display', {
                             message: this.$t('plugins.removePluginSuccessMessage'),
                             type: 'success',
@@ -129,6 +135,11 @@ export default {
                         });
 
                         this.$store.commit('replaceAppPlugins', data.plugins);
+                    });
+
+                    mainProcessAPI.send('app-plugin-delete', {
+                        name: pluginName,
+                        directory: pluginDirectory
                     });
                 }
             };

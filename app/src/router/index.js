@@ -16,6 +16,7 @@ const Tags = () => import('../components/Tags');
 const Menus = () => import('../components/Menus');
 const Authors = () => import('../components/Authors');
 const Tools = () => import('../components/Tools');
+const SitePlugins = () => import('../components/SitePlugins');
 const ToolsPlugin = () => import('../components/ToolsPlugin');
 const LogViewer = () => import('../components/LogViewer');
 const RegenerateThumbnails = () => import('../components/RegenerateThumbnails');
@@ -156,8 +157,22 @@ export default new Router({
                     component: FileManager
                 },
                 {
-                    path: 'tools/plugins/:pluginname',
+                    path: 'plugins',
+                    component: SitePlugins
+                },
+                {
+                    path: 'plugins/:pluginname',
+                    name: 'SitePlugin',
                     component: ToolsPlugin
+                },
+                {
+                    path: 'tools/plugins/:pluginname',
+                    redirect: to => ({
+                        name: 'SitePlugin',
+                        params: to.params,
+                        query: to.query,
+                        hash: to.hash
+                    })
                 }
             ]
         },
