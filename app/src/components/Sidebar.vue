@@ -53,4 +53,11 @@ export default {
     margin-top: auto;
     position: static;
 }
+
+@media (max-height: 736px) {
+    .sidebar {
+        padding-bottom: var(--space-8);
+    }
+}
+
 </style>
