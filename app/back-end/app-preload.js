@@ -260,6 +260,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-main-process-create-slug',
             'app-main-process-select-files',
             'app-file-manager:list',
+            'app-plugin:get-usage',
             'app-site-plugins:get-state',
             'app-site-plugins:set-state',
             'app-site-plugin-settings:open',

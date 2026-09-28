@@ -62,6 +62,53 @@ class PluginEvents {
             }
         });
 
+        ipcMain.handle('app-plugin:get-usage', (event, data) => {
+            if (!data || !isValidDirSegment(data.pluginName)) {
+                return { status: false };
+            }
+
+            try {
+                const blockingSites = settingsLocks.blockingSites(data.pluginName);
+
+                if (blockingSites.length) {
+                    return {
+                        status: false,
+                        code: 'settings-open',
+                        sites: blockingSites
+                    };
+                }
+
+                if (appInstance.sitesLocationMissing) {
+                    return { status: false };
+                }
+
+                const plugins = new Plugins(appInstance.appDir, appInstance.sitesDir);
+                const sites = Object.entries(appInstance.sites).map(([name, site]) => ({
+                    name,
+                    title: site.displayName || name
+                }));
+                const enabledSites = sites.filter(site => {
+                    const states = plugins.readSitePluginsState(site.name);
+
+                    return Object.prototype.hasOwnProperty.call(states, data.pluginName) &&
+                        !!states[data.pluginName];
+                });
+
+                return {
+                    status: true,
+                    sites: enabledSites.map(site => {
+                        const duplicateTitle = sites.some(other =>
+                            other.name !== site.name && other.title === site.title
+                        );
+
+                        return duplicateTitle ? site.title + ' (' + site.name + ')' : site.title;
+                    })
+                };
+            } catch (error) {
+                return { status: false };
+            }
+        });
+
         // Request-scoped replies cannot be consumed by an older Tools view.
         ipcMain.handle('app-site-plugins:get-state', (event, data) => {
             try {

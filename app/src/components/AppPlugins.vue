@@ -57,9 +57,14 @@ export default {
         },
         uploadedPlugin (data) {
             if (data && data.code === 'settings-open') {
+                const sites = data.sites || [];
+                const messageKey = sites.length === 1
+                    ? 'plugins.settingsOpen'
+                    : 'plugins.settingsOpenMultiple';
+
                 this.$bus.$emit('alert-display', {
-                    message: this.$t('plugins.settingsOpen', {
-                        sites: (data.sites || []).map(site => escapeHTML(site)).join(', ')
+                    message: this.$t(messageKey, {
+                        sites: sites.map(site => '<strong>' + escapeHTML(site) + '</strong>').join(', ')
                     })
                 });
                 return;

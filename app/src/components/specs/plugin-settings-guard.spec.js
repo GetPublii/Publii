@@ -82,7 +82,7 @@ function setup (componentName = 'ToolsPlugin') {
         ...(options.data ? options.data() : {}),
         $nextTick: () => Promise.resolve(),
         $route: { params: { name: 'site-a', pluginname: 'plugin-a' } },
-        $t: (key, values) => values ? key + ': ' + values.sites : key,
+        $t: (key, values) => values ? key + ': ' + (values.sites ?? values.count ?? values.pluginName) : key,
         $bus: { $emit: (name, data) => events.push({ name, data }) },
         $store: { commit: (name, data) => commits.push({ name, data }) }
     };
@@ -290,17 +290,148 @@ describe('Plugin settings multi-window guard frontend', () => {
         assert.equal(harness.commits.length, 0);
         assert.equal(harness.events.length, 1);
         assert.equal(harness.events[0].name, 'alert-display');
-        assert.equal(harness.events[0].data.message, 'plugins.settingsOpen: &lt;img src=x&gt;, Second website');
+        assert.equal(harness.events[0].data.message, 'plugins.settingsOpenMultiple: <strong>&lt;img src=x&gt;</strong>, <strong>Second website</strong>');
     });
 
-    it('reports blocked or failed deletion without false success or catalog replacement', () => {
+    it('checks usage before confirmation and waits for explicit deletion confirmation', async () => {
+        const harness = setup('PluginsListItem');
+        const pending = harness.instance.deletePlugin('<Plugin>', 'plugin-a');
+        assert.equal(harness.calls[0].channel, 'app-plugin:get-usage');
+        assert.equal(harness.calls[0].data.pluginName, 'plugin-a');
+        assert.equal(harness.events.length, 0);
+        await harness.instance.deletePlugin('<Plugin>', 'plugin-a');
+        assert.equal(harness.calls.length, 1);
+        harness.calls[0].response.resolve({ status: true, sites: ['Zulu', '<Website>'] });
+        await pending;
+
+        const confirmation = harness.events[0].data;
+        assert.equal(confirmation.dialogLabel, 'plugins.deletePlugin');
+        assert.equal(confirmation.detailsLabel, 'plugins.enabledWebsites: 2');
+        assert.deepEqual(Array.from(confirmation.details), ['<Website>', 'Zulu']);
+        assert.ok(confirmation.message.includes('&lt;Plugin&gt;'));
+        assert.equal(harness.calls.length, 1);
+        assert.equal(harness.instance.isCheckingUsage, false);
+
+        confirmation.okClick();
+        assert.equal(harness.calls.at(-1).channel, 'app-plugin-delete');
+    });
+
+    it('shows open settings immediately without deletion confirmation or another request', async () => {
+        const harness = setup('PluginsListItem');
+        const pending = harness.instance.deletePlugin('A', 'plugin-a');
+        harness.calls[0].response.resolve({
+            status: false,
+            code: 'settings-open',
+            sites: ['<Website>', 'Second website']
+        });
+        await pending;
+
+        assert.equal(harness.events.length, 1);
+        assert.equal(harness.events[0].name, 'alert-display');
+        assert.equal(harness.events[0].data.message, 'plugins.settingsOpenMultiple: <strong>&lt;Website&gt;</strong>, <strong>Second website</strong>');
+        assert.equal(harness.calls.length, 1);
+        assert.equal(harness.calls[0].channel, 'app-plugin:get-usage');
+        assert.equal(harness.commits.length, 0);
+        assert.equal(harness.instance.isCheckingUsage, false);
+    });
+
+    it('distinguishes confirmed no usage from failed or unavailable usage checks', async () => {
+        for (const response of [{ status: true, sites: [] }, { status: false }, null]) {
+            const harness = setup('PluginsListItem');
+            const pending = harness.instance.deletePlugin('A', 'plugin-a');
+            harness.calls[0].response.resolve(response);
+            await pending;
+            const confirmation = harness.events[0].data;
+            const usageKnown = response && response.status;
+
+            assert.equal(confirmation.message.includes('plugins.notEnabledOnAnyWebsite'), !!usageKnown);
+            assert.equal(confirmation.message.includes('plugins.usageCheckError'), !usageKnown);
+            assert.equal(confirmation.details.length, 0);
+            assert.equal(harness.calls.length, 1);
+        }
+    });
+
+    it('reports a rejected usage request and ignores responses after leaving the manager', async () => {
+        const failed = setup('PluginsListItem');
+        const failedRequest = failed.instance.deletePlugin('A', 'plugin-a');
+        failed.calls[0].response.reject(new Error('Unavailable'));
+        await failedRequest;
+        assert.ok(failed.events[0].data.message.includes('plugins.usageCheckError'));
+        assert.equal(failed.instance.isCheckingUsage, false);
+
+        const closed = setup('PluginsListItem');
+        const closedRequest = closed.instance.deletePlugin('A', 'plugin-a');
+        closed.options.beforeDestroy.call(closed.instance);
+        closed.calls[0].response.resolve({ status: true, sites: ['Website'] });
+        await closedRequest;
+        assert.equal(closed.events.length, 0);
+    });
+
+    it('clears optional details for the next confirmation and ignores Enter while reading the list', () => {
+        let showConfirmation;
+        let confirmed = false;
+        const options = loadOptions('basic-elements/Confirm', {
+            document: {
+                activeElement: null,
+                body: {
+                    classList: { add () {} },
+                    addEventListener () {}
+                }
+            },
+            setTimeout (callback) {
+                callback();
+            }
+        });
+        const instance = {
+            ...options.data.call({ $t: key => key }),
+            $t: key => key,
+            $bus: {
+                $on (event, callback) {
+                    showConfirmation = callback;
+                }
+            },
+            $refs: {
+                cancelButton: { $el: { focus () {} } }
+            },
+            onEnterKey () {
+                confirmed = true;
+            }
+        };
+        options.mounted.call(instance);
+        showConfirmation({
+            message: 'Delete plugin?',
+            dialogLabel: 'Delete plugin',
+            isDanger: true,
+            detailsLabel: 'Enabled websites: 1',
+            details: ['<Website>']
+        });
+        assert.equal(instance.details[0], '<Website>');
+        options.methods.onDocumentKeyDown.call(instance, {
+            key: 'Enter',
+            code: 'Enter',
+            target: {
+                closest (selector) {
+                    return selector.includes('.confirmation-details');
+                }
+            }
+        });
+        assert.equal(confirmed, false);
+
+        showConfirmation({ message: 'Another confirmation' });
+        assert.equal(instance.details.length, 0);
+        assert.equal(instance.detailsLabel, '');
+    });
+
+    it('reports blocked or failed deletion without false success or catalog replacement', async () => {
         for (const response of [
             { status: false, code: 'settings-open', sites: ['<Website>'] },
             { status: false },
             null
         ]) {
             const harness = setup('PluginsListItem');
-            harness.instance.deletePlugin('A', 'plugin-a');
+            const pending = harness.instance.deletePlugin('A', 'plugin-a');
+            harness.calls.at(-1).response.resolve({ status: true, sites: [] });
+            await pending;
             harness.events[0].data.okClick();
             harness.replies.get('app-plugin-deleted')(response);
             assert.equal(harness.commits.length, 0);
@@ -309,9 +440,11 @@ describe('Plugin settings multi-window guard frontend', () => {
         }
     });
 
-    it('keeps successful deletion and catalog replacement unchanged', () => {
+    it('keeps successful deletion and catalog replacement unchanged', async () => {
         const harness = setup('PluginsListItem');
-        harness.instance.deletePlugin('A', 'plugin-a');
+        const pending = harness.instance.deletePlugin('A', 'plugin-a');
+        harness.calls.at(-1).response.resolve({ status: true, sites: [] });
+        await pending;
         harness.events[0].data.okClick();
         harness.replies.get('app-plugin-deleted')({ status: true, plugins: [] });
         assert.equal(harness.commits.length, 1);

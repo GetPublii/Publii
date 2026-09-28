@@ -146,6 +146,103 @@ describe('Central plugin manager settings protection', function () {
         fs.removeSync(base);
     });
 
+    it('reports open settings before reading usage and resumes checks after the last window closes', function () {
+        const secondEditor = sender(30, 'second');
+        const first = open();
+        const second = open(secondEditor, 'example', 'second');
+        const originalRead = Plugins.prototype.readSitePluginsState;
+        let reads = 0;
+
+        Plugins.prototype.readSitePluginsState = function (siteName) {
+            reads++;
+            return originalRead.call(this, siteName);
+        };
+
+        try {
+            const blocked = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+            assert.equal(blocked.status, false);
+            assert.equal(blocked.code, 'settings-open');
+            assert.deepEqual(Array.from(blocked.sites).sort(), ['Demo website', 'Second website']);
+            assert.equal(reads, 0);
+
+            const unrelated = invoke('app-plugin:get-usage', manager, { pluginName: 'other' });
+            assert.equal(unrelated.status, true);
+            assert.equal(reads, 2);
+
+            close(editor, first.lockId);
+            const stillBlocked = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+            assert.equal(stillBlocked.code, 'settings-open');
+            assert.deepEqual(Array.from(stillBlocked.sites), ['Second website']);
+            assert.equal(reads, 2);
+
+            close(secondEditor, second.lockId);
+            const available = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+            assert.equal(available.status, true);
+            assert.equal(available.sites.length, 0);
+            assert.equal(reads, 4);
+        } finally {
+            Plugins.prototype.readSitePluginsState = originalRead;
+        }
+    });
+
+    it('checks enabled plugins across closed websites without changing their configuration', function () {
+        const firstState = path.join(application.sitesDir, 'demo/input/config/site.plugins.json');
+        const secondState = path.join(application.sitesDir, 'second/input/config/site.plugins.json');
+        fs.outputJsonSync(firstState, { example: false, other: true });
+        fs.outputJsonSync(secondState, { example: true, other: false });
+        const before = fs.readFileSync(secondState, 'utf8');
+        const result = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+
+        assert.equal(result.status, true);
+        assert.deepEqual(Array.from(result.sites), ['Second website']);
+        assert.equal(fs.readFileSync(secondState, 'utf8'), before);
+        assert.equal(Array.from(windows.values()).includes('second'), false);
+
+        fs.outputJsonSync(firstState, { example: true });
+        const updated = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+        assert.deepEqual(Array.from(updated.sites), ['Demo website', 'Second website']);
+    });
+
+    it('does not count saved settings or a missing activation file as enabled usage', function () {
+        const result = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+
+        assert.equal(result.status, true);
+        assert.deepEqual(Array.from(result.sites), []);
+        assert.equal(fs.existsSync(configPath()), true);
+        assert.equal(fs.existsSync(path.join(application.sitesDir, 'demo/input/config/site.plugins.json')), false);
+    });
+
+    it('identifies websites with the same display name in the usage list', function () {
+        application.sites.demo.displayName = 'My website';
+        application.sites.second.displayName = 'My website';
+        fs.outputJsonSync(path.join(application.sitesDir, 'demo/input/config/site.plugins.json'), { example: true });
+        fs.outputJsonSync(path.join(application.sitesDir, 'second/input/config/site.plugins.json'), { example: true });
+        const result = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+
+        assert.deepEqual(Array.from(result.sites), ['My website (demo)', 'My website (second)']);
+    });
+
+    it('reports unreadable usage without returning a misleading empty list or repairing files', function () {
+        const statePath = path.join(application.sitesDir, 'second/input/config/site.plugins.json');
+        fs.outputFileSync(statePath, '{broken');
+        const result = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+
+        assert.equal(result.status, false);
+        assert.equal(result.sites, undefined);
+        assert.equal(fs.readFileSync(statePath, 'utf8'), '{broken');
+    });
+
+    it('rejects invalid usage requests and unavailable website locations', function () {
+        for (const payload of [undefined, {}, { pluginName: '../example' }]) {
+            assert.equal(invoke('app-plugin:get-usage', manager, payload).status, false);
+        }
+
+        application.sitesLocationMissing = true;
+        assert.equal(invoke('app-plugin:get-usage', manager, { pluginName: 'example' }).status, false);
+        const preload = fs.readFileSync(path.resolve(__dirname, '../../app-preload.js'), 'utf8');
+        assert.ok(preload.slice(preload.indexOf('    invoke:')).includes("'app-plugin:get-usage'"));
+    });
+
     it('opens real settings and blocks only their installed plugin', function () {
         const result = open();
 
@@ -250,7 +347,10 @@ describe('Central plugin manager settings protection', function () {
         assert.equal(reply.data, false);
     });
 
-    it('blocks removal until the last affected settings window closes', function () {
+    it('blocks removal when settings open after the usage check until the last window closes', function () {
+        const usage = invoke('app-plugin:get-usage', manager, { pluginName: 'example' });
+        assert.equal(usage.status, true);
+
         const secondEditor = sender(30, 'second');
         const first = open();
         const second = open(secondEditor, 'example', 'second');

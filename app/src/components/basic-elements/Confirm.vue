@@ -11,6 +11,21 @@
                 v-pure-html="message">
             </p>
 
+            <div
+                v-if="details.length"
+                class="confirmation-details">
+                <p :id="detailsLabelID">{{ detailsLabel }}</p>
+                <ul
+                    :aria-labelledby="detailsLabelID"
+                    tabindex="0">
+                    <li
+                        v-for="(detail, index) in details"
+                        :key="index">
+                        {{ detail }}
+                    </li>
+                </ul>
+            </div>
+
             <text-input
                 v-if="hasInput"
                 :type="inputIsPassword ? 'password' : 'text'"
@@ -75,6 +90,8 @@ export default {
             hasInput: false,
             inputIsPassword: false,
             message: '',
+            detailsLabel: '',
+            details: [],
             textCentered: false,
             okClick: () => false,
             cancelClick: () => false,
@@ -93,6 +110,9 @@ export default {
                 'message': true,
                 'text-centered': this.textCentered
             };
+        },
+        detailsLabelID () {
+            return 'confirm-details-' + this._uid;
         },
         choiceID () { return 'confirm-choice-' + this._uid; },
         inputErrorID () {
@@ -113,6 +133,8 @@ export default {
                 this.returnFocus = this.dialogLabel ? document.activeElement : null;
                 this.isVisible = true;
                 this.message = config.message;
+                this.detailsLabel = config.detailsLabel || '';
+                this.details = config.details || [];
                 this.textCentered = config.textCentered || false;
                 this.hasInput = config.hasInput || false;
                 this.inputIsPassword = config.inputIsPassword || false;
@@ -211,8 +233,8 @@ export default {
                     }
                     return;
                 }
-                // Native buttons handle Enter/Space themselves, including Cancel.
-                if (e.target.closest('button, select')) return;
+                // Native controls handle their own keys; reading details never confirms deletion.
+                if (e.target.closest('button, select, .confirmation-details')) return;
                 if (e.code === 'Enter') e.preventDefault();
             }
             if (e.code === 'Enter' && !e.isComposing && this.isVisible) {
@@ -266,6 +288,30 @@ export default {
     font-size: var(--font-size-ui-sm);
     margin: var(--space-2) 0 0;
     text-align: left;
+}
+
+.confirmation-details {
+    color: var(--text-primary-color);
+    text-align: left;
+
+    p {
+        font-weight: var(--font-weight-medium);
+        margin: 0 0 var(--space-2);
+    }
+
+    ul {
+        font-size: var(--font-size-ui-sm);
+        margin: 0;
+        max-height: 12rem;
+        overflow-wrap: anywhere;
+        overflow-y: auto;
+        padding-left: var(--space-8);
+
+        &:focus-visible {
+            outline: 2px solid var(--input-border-focus);
+            outline-offset: 2px;
+        }
+    }
 }
 
 .confirmation-choices {

@@ -30,6 +30,7 @@
                 class="plugin-delete extension-card-delete"
                 v-tooltip="{ text: $t('plugins.deletePlugin'), describe: false }"
                 :aria-label="$t('plugins.deletePlugin')"
+                :aria-busy="isCheckingUsage ? 'true' : null"
                 @click.stop.prevent="deletePlugin(name, directory)">
                     <icon
                         size="xs"
@@ -61,6 +62,12 @@ export default {
     props: [
         'pluginData'
     ],
+    data () {
+        return {
+            isCheckingUsage: false,
+            usageCheckDisposed: false
+        };
+    },
     computed: {
         ...mapGetters([
             'notifications'
@@ -108,20 +115,73 @@ export default {
         }
     },
     methods: {
-        deletePlugin (pluginName, pluginDirectory) {
-            let confirmConfig = {
-                message: this.$t('plugins.removePluginMessage', {
-                    pluginName: escapeHTML(pluginName)
-                }),
+        async deletePlugin (pluginName, pluginDirectory) {
+            if (this.isCheckingUsage || this.usageCheckDisposed) {
+                return;
+            }
+
+            this.isCheckingUsage = true;
+            let usage;
+
+            try {
+                usage = await mainProcessAPI.invoke('app-plugin:get-usage', {
+                    pluginName: pluginDirectory
+                });
+            } catch (error) {
+                usage = null;
+            } finally {
+                this.isCheckingUsage = false;
+            }
+
+            if (this.usageCheckDisposed) {
+                return;
+            }
+
+            if (usage && usage.code === 'settings-open') {
+                const sites = usage.sites || [];
+                const messageKey = sites.length === 1
+                    ? 'plugins.settingsOpen'
+                    : 'plugins.settingsOpenMultiple';
+
+                this.$bus.$emit('alert-display', {
+                    message: this.$t(messageKey, {
+                        sites: sites.map(site => '<strong>' + escapeHTML(site) + '</strong>').join(', ')
+                    })
+                });
+                return;
+            }
+
+            let message = this.$t('plugins.removePluginMessage', {
+                pluginName: escapeHTML(pluginName)
+            });
+            const usageKnown = usage && usage.status === true && Array.isArray(usage.sites);
+            const sites = usageKnown ? usage.sites.slice().sort((a, b) => a.localeCompare(b)) : [];
+
+            if (!usageKnown) {
+                message += '<br><br>' + this.$t('plugins.usageCheckError');
+            } else if (!sites.length) {
+                message += '<br><br>' + this.$t('plugins.notEnabledOnAnyWebsite');
+            }
+
+            const confirmConfig = {
+                dialogLabel: this.$t('plugins.deletePlugin'),
+                message,
+                detailsLabel: sites.length ? this.$t('plugins.enabledWebsites', { count: sites.length }) : '',
+                details: sites,
                 okLabel: this.$t('plugins.deletePlugin'),
                 isDanger: true,
                 okClick: () => {
                     mainProcessAPI.receiveOnce('app-plugin-deleted', (data) => {
                         if (!data || data.status !== true) {
                             const settingsOpen = data && data.code === 'settings-open';
+                            const sites = (data && data.sites) || [];
+                            const messageKey = sites.length === 1
+                                ? 'plugins.settingsOpen'
+                                : 'plugins.settingsOpenMultiple';
+
                             this.$bus.$emit('alert-display', {
-                                message: settingsOpen ? this.$t('plugins.settingsOpen', {
-                                    sites: (data.sites || []).map(site => escapeHTML(site)).join(', ')
+                                message: settingsOpen ? this.$t(messageKey, {
+                                    sites: sites.map(site => '<strong>' + escapeHTML(site) + '</strong>').join(', ')
                                 }) : this.$t('plugins.removePluginErrorMessage'),
                                 buttonStyle: settingsOpen ? 'normal' : 'danger'
                             });
@@ -146,6 +206,9 @@ export default {
 
             this.$bus.$emit('confirm-display', confirmConfig);
         }
+    },
+    beforeDestroy () {
+        this.usageCheckDisposed = true;
     }
 }
 </script>
