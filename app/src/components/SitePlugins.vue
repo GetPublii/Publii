@@ -11,6 +11,7 @@
                 <p-button
                     slot="buttons"
                     appearance="secondary"
+                    icon="tools"
                     :disabled="busy"
                     :onClick="managePlugins">
                     {{ $t('tools.list.managePlugins') }}
