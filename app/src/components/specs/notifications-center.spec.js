@@ -9,7 +9,7 @@ const getExtensionNotifications = require('../../helpers/extension-notifications
 
 Vue.use(VueI18n);
 
-function loadComponent(name, storage) {
+function loadComponent(name, storage, environment = {}) {
     const source = fs.readFileSync(path.join(__dirname, '..', name + '.vue'), 'utf8');
     const context = {
         module: { exports: {} },
@@ -26,7 +26,10 @@ function loadComponent(name, storage) {
         TopBarDropDown: {},
         TopBarDropDownItem: {},
         Tooltip: {},
-        localStorage: storage
+        localStorage: storage,
+        setTimeout,
+        clearTimeout,
+        ...environment
     };
     const script = source.match(/<script>([\s\S]*?)<\/script>/)[1];
     vm.runInNewContext(
@@ -214,14 +217,18 @@ describe('Notification Center extension notices', function () {
 
 
 describe('Application menu notification bell', function () {
-    function bellFixture(readStatus = '') {
+    function bellFixture(readStatus = '', options = {}) {
         const center = fixture('en-gb', readStatus);
         const dropdown = new Vue({
-            ...loadComponent('TopBarDropDown'),
-            i18n: center.instance.$i18n
+            ...loadComponent('TopBarDropDown', undefined, options.environment),
+            i18n: center.instance.$i18n,
+            beforeCreate() {
+                this.$store = center.instance.$store;
+                this.$route = Vue.observable({ path: '/site/sample/posts/' });
+                this.$bus = center.instance.$bus;
+            }
         });
-        dropdown.$store = center.instance.$store;
-        dropdown.$route = { path: '/site/sample/posts/' };
+        dropdown.notificationRevealed = options.revealed !== false;
         return { ...center, dropdown };
     }
 
@@ -258,5 +265,239 @@ describe('Application menu notification bell', function () {
         state.app.notifications.discontinued.themes = {};
         updateCounter();
         assert.equal(visibleBadge(dropdown), '1');
+    });
+
+    describe('delayed introduction', function () {
+        let instances;
+
+        beforeEach(function () {
+            instances = [];
+        });
+
+        afterEach(function () {
+            for (const instance of instances) {
+                instance.$destroy();
+            }
+        });
+
+        function introFixture() {
+            const timers = new Map();
+            const listeners = new Map();
+            let time = 0;
+            let nextTimer = 0;
+            const document = {
+                hidden: false,
+                addEventListener(name, callback) {
+                    listeners.set(name, callback);
+                },
+                removeEventListener(name, callback) {
+                    if (listeners.get(name) === callback) {
+                        listeners.delete(name);
+                    }
+                }
+            };
+            const environment = {
+                document,
+                setTimeout(callback, delay) {
+                    const id = ++nextTimer;
+                    timers.set(id, { callback, time: time + delay });
+                    return id;
+                },
+                clearTimeout(id) {
+                    timers.delete(id);
+                }
+            };
+            const result = bellFixture('', { revealed: false, environment });
+            instances.push(result.dropdown);
+
+            return {
+                ...result,
+                document,
+                timers,
+                listeners,
+                async mount() {
+                    for (const hook of result.dropdown.$options.mounted) {
+                        hook.call(result.dropdown);
+                    }
+
+                    await Vue.nextTick();
+                },
+                async advance(milliseconds) {
+                    const end = time + milliseconds;
+                    let next;
+
+                    while ((next = [...timers.entries()]
+                        .filter(([, timer]) => timer.time <= end)
+                        .sort((a, b) => a[1].time - b[1].time)[0])) {
+                        time = next[1].time;
+                        timers.delete(next[0]);
+                        next[1].callback();
+                        await Vue.nextTick();
+                    }
+
+                    time = end;
+                    await Vue.nextTick();
+                },
+                async setHidden(hidden) {
+                    document.hidden = hidden;
+                    listeners.get('visibilitychange')();
+                    await Vue.nextTick();
+                }
+            };
+        }
+
+        it('keeps the dots for three seconds while notifications remain available in the menu', async function () {
+            const context = introFixture();
+            await context.mount();
+            assert.equal(visibleBadge(context.dropdown), null);
+            assert.equal(context.dropdown.badgeValue, 2);
+            assert.equal(context.dropdown.triggerTooltip.text, context.dropdown.notificationCountText);
+            await context.advance(2999);
+            assert.equal(visibleBadge(context.dropdown), null);
+            await context.advance(1);
+            assert.equal(visibleBadge(context.dropdown), '!');
+            assert.equal(context.dropdown.notificationIntroPlaying, true);
+            await context.advance(1160);
+            assert.equal(context.dropdown.notificationIntroPlaying, false);
+            assert.equal(context.timers.size, 0);
+        });
+
+        it('starts the delay when notifications arrive and does not restart it when the count changes', async function () {
+            const context = introFixture();
+            context.state.app.notificationsCount = 0;
+            await context.mount();
+            await context.advance(5000);
+            assert.equal(context.timers.size, 0);
+            context.state.app.notificationsCount = 1;
+            await Vue.nextTick();
+            await context.advance(2000);
+            context.state.app.notificationsCount = 2;
+            await Vue.nextTick();
+            await context.advance(1000);
+            assert.equal(context.dropdown.notificationIntroPlaying, true);
+        });
+
+        for (const interaction of ['triggerHovered', 'triggerFocused', 'submenuIsOpen']) {
+            it('waits until ' + interaction + ' ends without restarting the delay', async function () {
+                const context = introFixture();
+                context.dropdown[interaction] = true;
+                await context.mount();
+                await context.advance(4000);
+                assert.equal(visibleBadge(context.dropdown), null);
+                assert.equal(context.dropdown.notificationRevealed, false);
+                context.dropdown[interaction] = false;
+                await Vue.nextTick();
+                assert.equal(visibleBadge(context.dropdown), '!');
+                assert.equal(context.dropdown.notificationIntroPlaying, true);
+            });
+        }
+
+        it('cancels a pending reveal if all notifications are read', async function () {
+            const context = introFixture();
+            await context.mount();
+            await context.advance(2000);
+            context.state.app.notificationsCount = 0;
+            await Vue.nextTick();
+            await context.advance(2000);
+            assert.equal(context.dropdown.notificationRevealed, false);
+            assert.equal(context.timers.size, 0);
+        });
+
+        it('waits for a visible website view before introducing the bell', async function () {
+            const context = introFixture();
+            context.dropdown.$route.path = '/app-settings';
+            await context.mount();
+            await context.advance(4000);
+            assert.equal(context.timers.size, 0);
+            context.dropdown.$route.path = '/site/sample/posts/';
+            await Vue.nextTick();
+            await context.advance(2000);
+            await context.setHidden(true);
+            await context.advance(4000);
+            assert.equal(context.dropdown.notificationRevealed, false);
+            await context.setHidden(false);
+            await context.advance(2999);
+            assert.equal(context.dropdown.notificationRevealed, false);
+            await context.advance(1);
+            assert.equal(context.dropdown.notificationIntroPlaying, true);
+        });
+
+        it('does not replay the introduction when changing websites, reopening the menu or receiving later updates', async function () {
+            const context = introFixture();
+            await context.mount();
+            await context.advance(3000);
+            context.dropdown.submenuIsOpen = true;
+            await Vue.nextTick();
+            assert.equal(context.dropdown.notificationIntroPlaying, false);
+            context.dropdown.submenuIsOpen = false;
+            context.dropdown.$route.path = '/app-themes';
+            await Vue.nextTick();
+            context.dropdown.$route.path = '/site/another/posts/';
+            await Vue.nextTick();
+            assert.equal(visibleBadge(context.dropdown), '!');
+            assert.equal(context.dropdown.notificationIntroPlaying, false);
+            context.state.app.notificationsCount = 0;
+            await Vue.nextTick();
+            context.state.app.notificationsCount = 1;
+            await Vue.nextTick();
+            assert.equal(visibleBadge(context.dropdown), '!');
+            assert.equal(context.dropdown.notificationIntroPlaying, false);
+            assert.equal(context.timers.size, 0);
+        });
+
+        it('does not replay after the header is remounted on returning from an editor', async function () {
+            const context = introFixture();
+            await context.mount();
+            await context.advance(3000);
+            const options = context.dropdown.$options;
+            context.dropdown.$destroy();
+            const remounted = new Vue(options);
+            instances.push(remounted);
+
+            for (const hook of remounted.$options.mounted) {
+                hook.call(remounted);
+            }
+
+            await Vue.nextTick();
+            assert.equal(visibleBadge(remounted), '!');
+            assert.equal(remounted.notificationIntroPlaying, false);
+            assert.equal(context.timers.size, 0);
+        });
+
+        it('uses the same delayed introduction for the notification consent prompt', async function () {
+            const context = introFixture();
+            context.dropdown.$store.getters.notificationsStatus = false;
+            await context.mount();
+            assert.equal(visibleBadge(context.dropdown), null);
+            await context.advance(3000);
+            assert.equal(visibleBadge(context.dropdown), '!');
+            assert.equal(context.dropdown.hasNotificationPrompt, true);
+        });
+
+        it('does not reveal a bell when notification consent is rejected', async function () {
+            const context = introFixture();
+            context.dropdown.$store.getters.notificationsStatus = 'rejected';
+            await context.mount();
+            await context.advance(4000);
+            assert.equal(visibleBadge(context.dropdown), null);
+            assert.equal(context.timers.size, 0);
+        });
+
+        it('cleans up the delay, animation timer and visibility listener on destruction', async function () {
+            const pending = introFixture();
+            await pending.mount();
+            pending.dropdown.$destroy();
+            assert.equal(pending.timers.size, 0);
+            assert.equal(pending.listeners.size, 0);
+            await pending.advance(4000);
+            assert.equal(pending.dropdown.notificationRevealed, false);
+
+            const playing = introFixture();
+            await playing.mount();
+            await playing.advance(3000);
+            playing.dropdown.$destroy();
+            assert.equal(playing.timers.size, 0);
+            assert.equal(playing.listeners.size, 0);
+        });
     });
 });

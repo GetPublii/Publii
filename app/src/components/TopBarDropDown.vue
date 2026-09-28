@@ -10,36 +10,32 @@
             :aria-label="triggerLabel"
             :aria-expanded="submenuIsOpen ? 'true' : 'false'"
             :aria-controls="'topbar-app-submenu-' + _uid"
+            @mouseenter="triggerHovered = true"
+            @mouseleave="triggerHovered = false"
+            @focus="triggerFocused = true"
+            @blur="triggerFocused = false"
             @click="toggleSubmenu">
             <span
-                v-if="hasNotificationUpdates"
+                v-if="showNotificationBell"
                 class="topbar-app-settings-bell"
+                :class="{ 'is-entering': notificationIntroPlaying }"
                 aria-hidden="true">
                 <icon
+                    class="topbar-app-settings-bell-icon"
                     name="notification"
                     customWidth="22"
                     customHeight="22" />
                 <span
                     class="topbar-app-settings-bell-badge"
-                    :class="{ 'is-exclamation': notificationBellBadgeValue === '!' }">
-                    {{ notificationBellBadgeValue }}
+                    :class="{ 'is-exclamation': displayedBellBadge === '!' }">
+                    {{ displayedBellBadge }}
                 </span>
             </span>
 
             <span
-                v-else-if="hasNotificationPrompt"
-                class="topbar-app-settings-bell"
-                aria-hidden="true">
-                <icon
-                    name="notification"
-                    customWidth="22"
-                    customHeight="22" />
-                <span class="topbar-app-settings-bell-badge is-exclamation">!</span>
-            </span>
-
-            <span
-                v-else
+                v-if="!showNotificationBell || notificationIntroPlaying"
                 class="topbar-app-settings-icon"
+                :class="{ 'is-leaving': notificationIntroPlaying }"
                 aria-hidden="true">
             </span>
         </button>
@@ -103,6 +99,12 @@ import getExtensionNotifications from '../helpers/extension-notifications';
 import { mapGetters } from 'vuex';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
+const NOTIFICATION_REVEAL_DELAY = 3000;
+const NOTIFICATION_INTRO_DURATION = 1160;
+
+// The header is remounted after closing an editor; keep the introduction scoped to this window.
+let notificationIntroductionShown = false;
+
 export default {
     directives: {
         tooltip: Tooltip
@@ -113,7 +115,15 @@ export default {
     },
     data: function() {
         return {
-            submenuIsOpen: false
+            submenuIsOpen: false,
+            triggerHovered: false,
+            triggerFocused: false,
+            notificationWindowVisible: false,
+            notificationRevealed: notificationIntroductionShown,
+            notificationDelayElapsed: false,
+            notificationIntroPlaying: false,
+            notificationRevealTimer: null,
+            notificationIntroTimer: null
         };
     },
     computed: {
@@ -127,6 +137,21 @@ export default {
         },
         hasNotificationPrompt () {
             return this.insideWebsiteUI && !this.submenuIsOpen && this.notificationsStatus === false;
+        },
+        notificationRevealEligible () {
+            return this.notificationWindowVisible && this.insideWebsiteUI && (
+                this.notificationsStatus === false ||
+                (this.notificationsStatus === 'accepted' && this.notificationsCount > 0)
+            );
+        },
+        notificationInteractionActive () {
+            return this.submenuIsOpen || this.triggerHovered || this.triggerFocused;
+        },
+        showNotificationBell () {
+            return this.notificationRevealed && (this.hasNotificationUpdates || this.hasNotificationPrompt);
+        },
+        displayedBellBadge () {
+            return this.hasNotificationPrompt ? '!' : this.notificationBellBadgeValue;
         },
         notificationBellBadgeValue () {
             const notifications = this.$store.state.app.notifications;
@@ -204,10 +229,75 @@ export default {
             return this.$route.path.indexOf('/site/') === 0;
         }
     },
-    mounted: function(e) {
+    watch: {
+        notificationRevealEligible () {
+            this.scheduleNotificationReveal();
+        },
+        notificationInteractionActive () {
+            this.revealNotification();
+        },
+        showNotificationBell (visible) {
+            if (!visible) {
+                this.finishNotificationIntro();
+            }
+        }
+    },
+    mounted () {
         this.$bus.$on('document-body-clicked', this.hideSubmenu);
+        document.addEventListener('visibilitychange', this.updateNotificationVisibility);
+        this.updateNotificationVisibility();
+        this.scheduleNotificationReveal();
     },
     methods: {
+        updateNotificationVisibility () {
+            this.notificationWindowVisible = !document.hidden;
+
+            if (!this.notificationWindowVisible) {
+                this.finishNotificationIntro();
+            }
+        },
+        scheduleNotificationReveal () {
+            if (this.notificationRevealed) {
+                return;
+            }
+
+            if (!this.notificationRevealEligible) {
+                clearTimeout(this.notificationRevealTimer);
+                this.notificationRevealTimer = null;
+                this.notificationDelayElapsed = false;
+                return;
+            }
+
+            if (this.notificationRevealTimer !== null || this.notificationDelayElapsed) {
+                return;
+            }
+
+            this.notificationRevealTimer = setTimeout(() => {
+                this.notificationRevealTimer = null;
+                this.notificationDelayElapsed = true;
+                this.revealNotification();
+            }, NOTIFICATION_REVEAL_DELAY);
+        },
+        revealNotification () {
+            if (
+                this.notificationRevealed ||
+                !this.notificationDelayElapsed ||
+                !this.notificationRevealEligible ||
+                this.notificationInteractionActive
+            ) {
+                return;
+            }
+
+            notificationIntroductionShown = true;
+            this.notificationRevealed = true;
+            this.notificationIntroPlaying = true;
+            this.notificationIntroTimer = setTimeout(this.finishNotificationIntro, NOTIFICATION_INTRO_DURATION);
+        },
+        finishNotificationIntro () {
+            clearTimeout(this.notificationIntroTimer);
+            this.notificationIntroTimer = null;
+            this.notificationIntroPlaying = false;
+        },
         closeFromKeyboard () {
             if (this.submenuIsOpen) {
                 this.hideSubmenu();
@@ -226,6 +316,9 @@ export default {
         }
     },
     beforeDestroy () {
+        clearTimeout(this.notificationRevealTimer);
+        this.finishNotificationIntro();
+        document.removeEventListener('visibilitychange', this.updateNotificationVisibility);
         this.$bus.$off('document-body-clicked', this.hideSubmenu);
     }
 }
@@ -256,6 +349,7 @@ export default {
     justify-content: center;
     margin: 0;
     padding: 0;
+    position: relative;
     text-align: left;
     width: 100%;
 
@@ -274,9 +368,17 @@ export default {
     border-radius: 50%;
     display: block;
     height: 3px;
+    left: 50%;
+    margin-left: -1.5px;
+    margin-top: -1.5px;
     pointer-events: none;
-    position: relative;
+    position: absolute;
+    top: 50%;
     width: 3px;
+
+    &.is-leaving {
+        animation: topbar-dots-leave 90ms ease-out both;
+    }
 
     &:after,
     &:before {
@@ -329,6 +431,104 @@ export default {
     &.is-exclamation {
         font-size: var(--font-size-ui-xs);
         font-weight: var(--font-weight-bold);
+    }
+}
+
+.topbar-app-settings-bell.is-entering {
+    .topbar-app-settings-bell-icon {
+        animation: topbar-bell-enter 1100ms cubic-bezier(.37, 0, .63, 1) both;
+        transform-origin: 50% 20%;
+    }
+
+    .topbar-app-settings-bell-badge {
+        animation: topbar-badge-enter 600ms 100ms cubic-bezier(.37, 0, .63, 1) both;
+    }
+}
+
+@keyframes topbar-dots-leave {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes topbar-bell-enter {
+    0% {
+        opacity: 0;
+        transform: scale(.72) rotate(-18deg);
+    }
+
+    16% {
+        opacity: 1;
+        transform: scale(1.14) rotate(16deg);
+    }
+
+    32% {
+        transform: scale(.98) rotate(-12deg);
+    }
+
+    48% {
+        transform: scale(1.02) rotate(8deg);
+    }
+
+    64% {
+        transform: scale(1) rotate(-5deg);
+    }
+
+    80% {
+        transform: scale(1) rotate(2.5deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+@keyframes topbar-badge-enter {
+    0% {
+        opacity: 0;
+        transform: scale(.35);
+    }
+
+    40% {
+        opacity: 1;
+        transform: scale(1.24);
+    }
+
+    65% {
+        transform: scale(.92);
+    }
+
+    82% {
+        transform: scale(1.04);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes topbar-notification-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .topbar-app-settings-bell.is-entering {
+        .topbar-app-settings-bell-icon,
+        .topbar-app-settings-bell-badge {
+            animation: topbar-notification-fade-in 100ms ease-out both;
+        }
     }
 }
 
