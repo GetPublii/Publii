@@ -118,8 +118,7 @@ export default {
     align-items: center;
     color: var(--sidebar-preview-btn-color);
     display: flex;
-    padding: 2.5rem var(--space-12) 0 var(--space-16);
-    margin-bottom: 2.5rem;
+    padding: var(--space-4) 0 var(--space-3) var(--space-4);
     width: 100%;
     transition: var(--transition-default);
     transition-property: color;
@@ -191,9 +190,4 @@ export default {
     transition-property: color, opacity;
 }
 
-@media (max-width: 1600px) {
-    html[data-auto-adjust-sidebar-width="true"] .site-logo {
-        padding: 2.5rem var(--space-12) 0;
-    }
-}
 </style>

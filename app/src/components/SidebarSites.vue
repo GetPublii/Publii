@@ -56,7 +56,7 @@ export default {
     cursor: pointer;
     display: block;
     font-weight: var(--font-weight-medium);
-    margin: var(--space-4) calc(-1 * var(--app-sidebar-margin)) var(--space-2);
+    margin: var(--space-8) 0;
     position: relative;
     order: 1;
 
@@ -87,5 +87,11 @@ export default {
 .site-switch:focus-visible {
     outline: 2px solid var(--sidebar-link-color);
     outline-offset: -2px;
+}
+
+@media (max-height: 736px) {
+   .site-switch  {
+         margin: var(--space-6) 0;
+    }
 }
 </style>
