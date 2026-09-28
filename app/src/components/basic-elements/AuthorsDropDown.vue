@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-select
+    <ordered-select
         ref="dropdown"
         :options="authors"
         :options-limit="100"
@@ -12,12 +12,17 @@
         :multiple="multiple"
         :id="anchor"
         :class="customCssClasses.replace(/[^a-z0-9\-\_\s]/gmi, '')"
-        :placeholder="placeholder"></v-select>
+        :placeholder="placeholder"></ordered-select>
 </div>
 </template>
 
 <script>
+import OrderedSelect from './OrderedSelect.vue';
+
 export default {
+    components: {
+        OrderedSelect
+    },
     name: 'authors-dropdown',
     props: {
         multiple: {
@@ -76,7 +81,7 @@ export default {
             return this.authorNamesById.get(value);
         },
         closeDropdown () {
-            this.$refs['dropdown'].isOpen = false;
+            this.$refs['dropdown'].deactivate();
         }
     }
 }

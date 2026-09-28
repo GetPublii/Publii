@@ -1,5 +1,5 @@
 <template>
-    <v-select
+    <ordered-select
         ref="dropdown"
         :class="'posts-dropdown ' + customCssClasses.replace(/[^a-z0-9\-\_\s]/gmi, '')"
         :id="anchor"
@@ -11,11 +11,16 @@
         :show-labels="false"
         :multiple="multiple"
         @select="closeDropdown()"
-        :placeholder="placeholder"></v-select>
+        :placeholder="placeholder"></ordered-select>
 </template>
 
 <script>
+import OrderedSelect from './OrderedSelect.vue';
+
 export default {
+    components: {
+        OrderedSelect
+    },
     name: 'posts-dropdown',
     props: {
         multiple: {
@@ -89,7 +94,7 @@ export default {
             return this.postTitlesById.get(value);
         },
         closeDropdown () {
-            this.$refs['dropdown'].isOpen = false;
+            this.$refs['dropdown'].deactivate();
         }
     }
 }

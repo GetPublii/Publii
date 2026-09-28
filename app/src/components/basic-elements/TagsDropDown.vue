@@ -1,5 +1,5 @@
 <template>
-    <v-select
+    <ordered-select
         ref="dropdown"
         :options="tagPages"
         :options-limit="100"
@@ -11,11 +11,16 @@
         :multiple="multiple"
         :id="anchor"
         :class="customCssClasses.replace(/[^a-z0-9\-\_\s]/gmi, '')"
-        :placeholder="placeholder"></v-select>
+        :placeholder="placeholder"></ordered-select>
 </template>
 
 <script>
+import OrderedSelect from './OrderedSelect.vue';
+
 export default {
+    components: {
+        OrderedSelect
+    },
     name: 'tags-dropdown',
     props: {
         multiple: {
@@ -84,7 +89,7 @@ export default {
             return tag.name;
         },
         closeDropdown () {
-            this.$refs['dropdown'].isOpen = false;
+            this.$refs['dropdown'].deactivate();
         }
     }
 }

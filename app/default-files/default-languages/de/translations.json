@@ -131,6 +131,14 @@
         "oct": "Okt.",
         "sep": "Sep."
     },
+    "contentSelect": {
+        "reorder": "Reihenfolge ändern: {name}",
+        "moveEarlier": "Nach vorne verschieben",
+        "moveLater": "Nach hinten verschieben",
+        "remove": "{name} entfernen",
+        "position": "{name}: Position {position} von {total}.",
+        "unavailable": "Nicht verfügbares Element (ID: {id})"
+    },
     "editor": {
         "addHeading": "Überschrift hinzufügen",
         "addLabel": "Label hinzufügen",

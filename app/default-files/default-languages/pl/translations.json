@@ -203,6 +203,14 @@
         "oct": "Paź",
         "sep": "Wrz"
     },
+    "contentSelect": {
+        "reorder": "Zmień pozycję: {name}",
+        "moveEarlier": "Przesuń wcześniej",
+        "moveLater": "Przesuń później",
+        "remove": "Usuń: {name}",
+        "position": "{name}: pozycja {position} z {total}.",
+        "unavailable": "Niedostępny element (ID: {id})"
+    },
     "editor": {
         "addHeading": "Dodaj nagłówek",
         "addLabel": "Dodaj etykietę",

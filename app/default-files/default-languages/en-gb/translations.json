@@ -203,6 +203,14 @@
         "oct": "Oct",
         "sep": "Sep"
     },
+    "contentSelect": {
+        "reorder": "Reorder {name}",
+        "moveEarlier": "Move earlier",
+        "moveLater": "Move later",
+        "remove": "Remove {name}",
+        "position": "{name}: position {position} of {total}.",
+        "unavailable": "Unavailable item (ID: {id})"
+    },
     "editor": {
         "addHeading": "Add heading",
         "addLabel": "Add label",
