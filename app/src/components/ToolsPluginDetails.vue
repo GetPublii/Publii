@@ -27,10 +27,20 @@
                     {{ $t('tools.list.requiresVersion', { version: plugin.minimumPubliiVersion }) }}
                 </p>
                 <p v-if="plugin.hasUpdate">
-                    {{ $t('tools.list.updateVersion', { version: plugin.updateVersion }) }}
+                    <span class="extension-notice-badge is-update">
+                        {{ $t('tools.list.updateVersion', { version: plugin.updateVersion }) }}
+                    </span>
                 </p>
                 <p v-if="plugin.isDiscontinued">
-                    {{ plugin.discontinuedText || $t('tools.list.discontinued') }}
+                    <span class="extension-notice-badge is-discontinued">
+                        <span aria-hidden="true">!</span>
+                        {{ $t('tools.list.discontinued') }}
+                    </span>
+                    <span
+                        v-if="plugin.discontinuedText"
+                        class="notice-description">
+                        {{ plugin.discontinuedText }}
+                    </span>
                 </p>
                 <p v-if="!plugin.hasSettings">{{ $t('toolsPlugin.thisPluginHasNoOptions') }}</p>
                 <div class="details-links">
@@ -122,6 +132,7 @@ export default {
 
 <style scoped>
 @import '../css/popup-common.css';
+@import '../css/extension-notice-badges.css';
 
 .plugin-details {
     display: flex;
@@ -164,7 +175,18 @@ dd {
 }
 
 .notice {
-    color: var(--color-danger);
+    color: var(--text-light-color);
+    font-size: var(--font-size-ui-xs);
+}
+
+.extension-notice-badge {
+    max-width: 100%;
+}
+
+.notice-description {
+    color: var(--text-light-color);
+    display: block;
+    margin-top: var(--space-2);
 }
 
 .details-links {
