@@ -30,7 +30,7 @@ html {
     --app-sidebar-margin: var(--space-12);
 
     /* Shared action sizing, independent of the selected appearance. */
-    --button-height: 4.2rem;
+    --button-height: 4rem;
     --button-height-small: 3.6rem;
     --button-height-large: 5.2rem;
     --button-height-sidebar: 4.8rem;
