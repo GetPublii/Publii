@@ -27,10 +27,12 @@ function loadComponent(file, globals = {}) {
 }
 
 function createUploader(mediaPath = Promise.resolve('/media/'), options = {}) {
-    const api = options.api || {
+    const api = {
         normalizePath: async value => value,
         getPathForFile: file => file.path,
-        invoke: async () => ({ baseImage: { newPath: '/media/new.png' } })
+        existsSync: async () => true,
+        invoke: async () => ({ baseImage: { newPath: '/media/new.png' } }),
+        ...options.api
     };
     const definition = loadComponent('basic-elements/ImageUpload.vue', {
         mainProcessAPI: api,
@@ -115,7 +117,7 @@ function createForm(kind) {
 }
 
 async function flushUpdates() {
-    await Vue.nextTick();
+    await new Promise(resolve => setImmediate(resolve));
     await Vue.nextTick();
 }
 
@@ -753,5 +755,214 @@ describe('Plugin image removal before saving', function () {
             assert.equal(requests.length, 0, field.tag + ' must wait for settings to be saved before deleting files');
             uploader.$destroy();
         }
+    });
+});
+
+
+describe('Missing local image previews', () => {
+    let uploader;
+
+    afterEach(() => {
+        uploader.$destroy();
+    });
+
+    for (const context of uploadContexts) {
+        it(`shows an empty upload for a missing ${context.name} without changing its saved value`, async () => {
+            const checkedPaths = [];
+            const emittedValues = [];
+            const value = context.props.addMediaFolderPath ? 'media/website/missing.png' : 'missing.png';
+            uploader = createUploader(undefined, {
+                realMediaPath: true,
+                props: context.props,
+                api: {
+                    existsSync: async filePath => {
+                        checkedPaths.push(filePath);
+                        return false;
+                    }
+                }
+            });
+            uploader.$on('input', newValue => emittedValues.push(newValue));
+            uploader.value = value;
+            await flushUpdates();
+
+            assert.equal(uploader.value, value);
+            assert.equal(uploader.imageValue, value);
+            assert.equal(uploader.filePath, '/site/input/media/' + context.folder + '/missing.png');
+            assert.equal(uploader.isEmpty, true);
+            assert.equal(uploader.backgroundImage, false);
+            assert.equal(uploader.wrapperCssClasses['is-empty'], true);
+            assert.equal(uploader.inputCssClasses['is-empty'], true);
+            assert.deepEqual(checkedPaths, [uploader.filePath]);
+            assert.deepEqual(emittedValues, []);
+        });
+    }
+
+    it('does not check empty values or remote images on the local filesystem', async () => {
+        const checkedPaths = [];
+        uploader = createUploader(undefined, {
+            api: {
+                existsSync: async filePath => {
+                    checkedPaths.push(filePath);
+                    return false;
+                }
+            }
+        });
+
+        for (const value of ['http://example.test/photo.png', 'https://example.test/photo.png', '']) {
+            uploader.value = value;
+            await flushUpdates();
+            assert.equal(uploader.isEmpty, !value);
+            assert.equal(uploader.filePath, value);
+        }
+
+        assert.deepEqual(checkedPaths, []);
+    });
+
+    it('preserves the existing preview and value when the file check fails', async () => {
+        uploader = createUploader(undefined, {
+            api: {
+                existsSync: async () => {
+                    throw new Error('IPC unavailable');
+                }
+            }
+        });
+        const values = [];
+        uploader.$on('input', value => values.push(value));
+        uploader.value = 'saved.png';
+        await flushUpdates();
+
+        assert.equal(uploader.value, 'saved.png');
+        assert.equal(uploader.isEmpty, false);
+        assert.equal(uploader.filePath, '/media/saved.png');
+        assert.deepEqual(values, []);
+    });
+
+    it('does not restore a cleared value when an existence check finishes late', async () => {
+        let resolveCheck;
+        uploader = createUploader(undefined, {
+            api: {
+                existsSync: () => new Promise(resolve => {
+                    resolveCheck = resolve;
+                })
+            }
+        });
+        uploader.value = 'saved.png';
+        await flushUpdates();
+        uploader.value = '';
+        await flushUpdates();
+        resolveCheck(true);
+        await flushUpdates();
+
+        assert.equal(uploader.filePath, '');
+        assert.equal(uploader.isEmpty, true);
+        assert.equal(uploader.value, '');
+    });
+
+    it('does not hide a successful replacement when an older missing-file check finishes', async () => {
+        let resolveCheck;
+        uploader = createUploader(undefined, {
+            api: {
+                existsSync: () => new Promise(resolve => {
+                    resolveCheck = resolve;
+                })
+            }
+        });
+        uploader.$on('input', value => { uploader.value = value; });
+        uploader.value = 'missing.png';
+        await flushUpdates();
+        await uploader.drop(dropEvent());
+        resolveCheck(false);
+        await flushUpdates();
+
+        assert.equal(uploader.value, 'new.png');
+        assert.equal(uploader.filePath, '/media/new.png');
+        assert.equal(uploader.isEmpty, false);
+    });
+
+    it('ignores an existence result from the previous item with the same image name', async () => {
+        let resolvePreviousCheck;
+        uploader = createUploader(undefined, {
+            realMediaPath: true,
+            props: { imageType: 'tagImages', itemId: 7 },
+            api: {
+                existsSync: filePath => filePath.includes('/tags/7/')
+                    ? new Promise(resolve => { resolvePreviousCheck = resolve; })
+                    : Promise.resolve(true)
+            }
+        });
+        uploader.value = 'photo.png';
+        await flushUpdates();
+        uploader.itemId = 8;
+        await flushUpdates();
+        resolvePreviousCheck(false);
+        await flushUpdates();
+
+        assert.equal(uploader.filePath, '/site/input/media/tags/8/photo.png');
+        assert.equal(uploader.isEmpty, false);
+    });
+
+    it('ignores an existence result after the uploader is destroyed', async () => {
+        let resolveCheck;
+        uploader = createUploader(undefined, {
+            api: {
+                existsSync: () => new Promise(resolve => { resolveCheck = resolve; })
+            }
+        });
+        uploader.value = 'saved.png';
+        await flushUpdates();
+        uploader.$destroy();
+        resolveCheck(true);
+        await flushUpdates();
+
+        assert.equal(uploader.filePath, '/media/saved.png');
+        assert.equal(uploader.isEmpty, true);
+    });
+
+    it('keeps the empty appearance and original value after a failed replacement', async () => {
+        uploader = createUploader(undefined, {
+            api: {
+                existsSync: async () => false,
+                invoke: async () => ({ error: true })
+            }
+        });
+        uploader.$on('input', value => { uploader.value = value; });
+        uploader.value = 'missing.png';
+        await flushUpdates();
+        await uploader.drop(dropEvent());
+
+        assert.equal(uploader.value, 'missing.png');
+        assert.equal(uploader.filePath, '/media/missing.png');
+        assert.equal(uploader.isEmpty, true);
+        assert.equal(uploader.backgroundImage, false);
+    });
+
+    it('checks programmatically assigned local images while preserving their model format', async () => {
+        uploader = createUploader(undefined, {
+            props: { addMediaFolderPath: true },
+            api: { existsSync: async () => false }
+        });
+        const values = [];
+        uploader.$on('input', value => values.push(value));
+        await uploader.setImage('missing.png', true);
+
+        assert.equal(uploader.filePath, '/media/missing.png');
+        assert.equal(uploader.isEmpty, true);
+        assert.equal(uploader.backgroundImage, false);
+        assert.deepEqual(values, ['media/website/missing.png']);
+    });
+
+    it('shows a restored file after an explicit refresh of the same saved value', async () => {
+        let exists = false;
+        uploader = createUploader(undefined, {
+            api: { existsSync: async () => exists }
+        });
+        uploader.value = 'saved.png';
+        await flushUpdates();
+        assert.equal(uploader.isEmpty, true);
+        exists = true;
+        await uploader.syncValue(uploader.value, true);
+
+        assert.equal(uploader.isEmpty, false);
+        assert.equal(uploader.filePath, '/media/saved.png');
     });
 });

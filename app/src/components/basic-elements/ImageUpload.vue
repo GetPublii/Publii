@@ -177,7 +177,7 @@ export default {
             };
         },
         backgroundImage () {
-            if (this.filePath !== '') {
+            if (this.filePath !== '' && !this.isEmpty) {
                 if (this.filePath.indexOf('https://') === 0 || this.filePath.indexOf('http://') === 0) {
                     return 'background-image: url(\'' + this.filePath + '\');';
                 }
@@ -262,16 +262,35 @@ export default {
                 return;
             }
 
-            this.applyImage(nextPath);
+            // Keep the value available while checking, without showing an unverified local preview.
+            const isLocal = !!nextPath && !/^https?:\/\//.test(nextPath);
+            this.applyImage(nextPath, false, isLocal);
+            const isMissing = await this.isLocalFileMissing(nextPath);
+
+            if (this.isCurrentPreview(version, mediaPath) && (this.value || '') === newValue) {
+                this.applyImage(nextPath, false, isMissing);
+            }
         },
         isCurrentPreview (version, mediaPath) {
             return !this._isDestroyed &&
                 this.previewVersion === version &&
                 this.mediaPath === mediaPath;
         },
-        applyImage (newPath, emitInput = false) {
+        async isLocalFileMissing (filePath) {
+            if (!filePath || /^https?:\/\//.test(filePath)) {
+                return false;
+            }
+
+            try {
+                return await mainProcessAPI.existsSync(filePath) === false;
+            } catch (error) {
+                // An unsuccessful check is not confirmation that the file is missing.
+                return false;
+            }
+        },
+        applyImage (newPath, emitInput = false, isMissing = false) {
             this.filePath = newPath;
-            this.isEmpty = !newPath;
+            this.isEmpty = !newPath || isMissing;
 
             if (emitInput) {
                 this.$emit('input', this.imageValue);
@@ -429,9 +448,10 @@ export default {
             const version = ++this.previewVersion;
             const mediaPath = this.mediaPath;
             const nextPath = addMedia && newPath ? await mediaPath + newPath : newPath;
+            const isMissing = await this.isLocalFileMissing(nextPath);
 
             if (this.isCurrentPreview(version, mediaPath)) {
-                this.applyImage(nextPath, true);
+                this.applyImage(nextPath, true, isMissing);
             }
         }
     }
