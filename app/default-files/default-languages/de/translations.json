@@ -1679,6 +1679,10 @@
         "removeFromSite": "{name} von dieser Website entfernen…",
         "removeFromSiteErrorMessage": "Das Theme konnte nicht von dieser Website entfernt werden.",
         "removeFromSiteSuccessMessage": "Das Theme wurde von dieser Website entfernt.",
+        "openBackups": "Zu den Backups",
+        "changeConfirm": "Theme wechseln",
+        "changeConfirmTitle": "Zum Theme „{themeName}“ wechseln?",
+        "changeConfirmMessage": "Beiträge, Seiten und ihre Bilder bleiben erhalten. Das neue Theme verwendet seine eigenen Einstellungen.<br><br>Bilder und andere Dateien, die in den Einstellungen des bisherigen Themes hinzugefügt wurden, können gelöscht werden. Ein Wechsel zurück stellt gelöschte Dateien nicht wieder her.<br><br>Erstellen Sie vor dem Wechsel ein Backup, damit Sie den vorherigen Zustand vollständig wiederherstellen können.",
         "themeChangeAppliedOnSave": "Der Theme-Wechsel wird beim Speichern der Einstellungen angewendet.",
         "themeOptions": "Theme-Optionen",
         "updateTo": "Auf v.{version} aktualisieren"

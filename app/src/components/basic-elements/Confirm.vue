@@ -6,9 +6,26 @@
             :role="dialogLabel ? 'dialog' : null"
             :aria-modal="dialogLabel ? 'true' : null"
             :aria-label="dialogLabel || null">
+            <h1 v-if="title">{{ title }}</h1>
+
             <p
                 :class="cssClasses"
                 v-pure-html="message">
+            </p>
+
+            <p
+                v-if="link"
+                class="confirmation-link">
+                <router-link
+                    :to="link.to"
+                    @click.native.capture="onLinkClick">
+                    <span>{{ link.label }}</span>
+                    <icon
+                        name="arrow-right"
+                        size="xs"
+                        non-interactive
+                        aria-hidden="true" />
+                </router-link>
             </p>
 
             <div
@@ -86,6 +103,8 @@ export default {
         return {
             isVisible: false,
             dialogLabel: '',
+            title: '',
+            link: null,
             choices: [], choice: '', choiceLabel: '', checkLabel: '', checkValue: false,
             hasInput: false,
             inputIsPassword: false,
@@ -125,6 +144,8 @@ export default {
 
             setTimeout(() => {
                 this.dialogLabel = config.dialogLabel || '';
+                this.title = config.title || '';
+                this.link = config.link || null;
                 this.choices = config.choices || [];
                 this.choice = config.choice || (this.choices[0] && this.choices[0].value) || '';
                 this.choiceLabel = config.choiceLabel || '';
@@ -172,6 +193,19 @@ export default {
         document.body.addEventListener('keydown', this.onDocumentKeyDown);
     },
     methods: {
+        onLinkClick (event) {
+            if (event.defaultPrevented || event.button > 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                return;
+            }
+
+            if (this.link && typeof this.link.onClick === 'function') {
+                this.link.onClick();
+            }
+
+            this.isVisible = false;
+            document.body.classList.remove('has-popup-visible');
+            this.restoreDialogFocus();
+        },
         onOk () {
             if (this.hasInput && this.validate) {
                 let validation = this.validate(this.$refs.input.content);
@@ -234,7 +268,7 @@ export default {
                     return;
                 }
                 // Native controls handle their own keys; reading details never confirms deletion.
-                if (e.target.closest('button, select, .confirmation-details')) return;
+                if (e.target.closest('button, select, a[href], .confirmation-details')) return;
                 if (e.code === 'Enter') e.preventDefault();
             }
             if (e.code === 'Enter' && !e.isComposing && this.isVisible) {
@@ -280,6 +314,21 @@ export default {
 
     & + * {
         margin-top: var(--space-8);
+    }
+}
+
+.confirmation-link {
+    margin: var(--space-8) 0 0;
+    text-align: left;
+
+    a {
+        align-items: center;
+        display: inline-flex;
+        gap: var(--space-2);
+    }
+
+    .icon {
+        flex-shrink: 0;
     }
 }
 

@@ -841,6 +841,18 @@
         <path d="m9 6 6 6-6 6" />
     </symbol>
 
+    <symbol
+        id="arrow-right"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M5 12h14" />
+        <path d="m12 5 7 7-7 7" />
+    </symbol>
+
     <symbol id="arrow-left" viewBox="0 0 24 24">
        <path d="M10.21,12l4.64-4.65a.49.49,0,0,0-.7-.7l-5,5a.48.48,0,0,0,0,.7l5,5a.48.48,0,0,0,.7,0,.48.48,0,0,0,0-.7Z"/>
     </symbol>

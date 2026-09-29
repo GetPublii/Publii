@@ -2925,6 +2925,41 @@ export default {
             });
         },
         checkBeforeSave (showPreview, renderingType, renderFiles) {
+            const currentThemeDirectory = this.$store.state.currentSite.config.theme;
+            const selectedTheme = this.theme.match(/^(install-use-|use-)(.+)$/);
+
+            if (currentThemeDirectory && selectedTheme && selectedTheme[2] !== currentThemeDirectory) {
+                const availableThemes = selectedTheme[1] === 'install-use-'
+                    ? this.siteThemesState.library
+                    : this.siteThemesState.siteCopies;
+                const theme = availableThemes.find(item => item.directory === selectedTheme[2]);
+                const title = this.$t('theme.changeConfirmTitle', {
+                    themeName: theme ? theme.name : selectedTheme[2]
+                });
+
+                this.$bus.$emit('confirm-display', {
+                    hasInput: false,
+                    isDanger: true,
+                    dialogLabel: title,
+                    title,
+                    message: this.$t('theme.changeConfirmMessage'),
+                    link: {
+                        label: this.$t('theme.openBackups'),
+                        to: '/site/' + encodeURIComponent(this.$store.state.currentSite.config.name) + '/tools/backups',
+                        onClick: () => {
+                            this.theme = '';
+                            this.rememberSettingsDraft();
+                        }
+                    },
+                    okClick: () => {
+                        this.save(showPreview, renderingType, renderFiles);
+                    },
+                    okLabel: this.$t('theme.changeConfirm'),
+                    cancelLabel: this.$t('ui.cancel')
+                });
+                return;
+            }
+
             if (
                 this.$store.state.currentSite.config.theme && (
                     this.theme === 'install-use-' + this.$store.state.currentSite.config.theme

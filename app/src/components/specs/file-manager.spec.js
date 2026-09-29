@@ -471,6 +471,49 @@ describe('Shared confirmation compatibility', () => {
             options.methods.onOk.call(ctx); assert.deepEqual(calls.at(-1),config.expected); assert.equal(ctx.isVisible,false);
         }
     });
+    it('leaves Enter on a navigation link to the native link action', () => {
+        const options = confirm();
+        const documentKeyDown = options.methods.onDocumentKeyDown;
+        documentKeyDown.call({
+            isVisible: true,
+            dialogLabel: 'Theme change',
+            onEnterKey() {
+                throw new Error('Following a link must not confirm the theme change');
+            }
+        }, {
+            key: 'Enter',
+            code: 'Enter',
+            isComposing: false,
+            target: {
+                closest(selector) {
+                    return selector.includes('a[href]') ? {} : null;
+                }
+            },
+            preventDefault() {
+                throw new Error('The navigation link must keep its native keyboard action');
+            }
+        });
+    });
+
+    it('dismisses a navigation confirmation after preserving its draft without accepting or cancelling', () => {
+        const options = confirm();
+        const calls = [];
+        const instance = {
+            isVisible: true,
+            link: { onClick: () => calls.push('draft') },
+            restoreDialogFocus: () => calls.push('focus'),
+            okClick() {
+                throw new Error('Navigation must not accept');
+            },
+            cancelClick() {
+                throw new Error('Navigation must not cancel the draft');
+            }
+        };
+        options.methods.onLinkClick.call(instance, { button: 0 });
+        assert.equal(instance.isVisible, false);
+        assert.deepEqual(calls, ['draft', 'focus']);
+    });
+
     it('does not schedule an old Enter timeout over the next queued File Manager dialog', () => {
         const options = confirm(); let accepted = false;
         options.methods.onEnterKey.call({dialogLabel:'Files',onOk(){accepted=true;return true;}});

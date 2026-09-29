@@ -263,6 +263,10 @@ Describe each action as data rather than markup:
 
 ### Prompt dialogs
 
+The shared `confirm` dialog accepts an optional plain-text `title`, rendered as an `h1` using `popup-common.css`. Keep the body in `message` and provide `dialogLabel` for managed keyboard and focus behavior. Omitting `title` preserves the existing message-only layout.
+
+An optional `link` object (`label`, router `to`, and optional `onClick`) adds a navigation link below the message. Its callback runs before navigation so callers can preserve an unsaved draft; following the link dismisses the dialog without confirming its main action.
+
 The shared `confirm` dialog accepts an optional `validate` callback together with `hasInput`. It receives the current value and returns `true` or an error message. The dialog shows the message under the field, keeps itself open, and clears the message as soon as the value changes. Use it instead of closing the dialog and reporting the problem in a toast:
 
 ```js
