@@ -305,6 +305,7 @@ export default {
 }
 
 .post-editor-actions {
+    align-self: end;
     display: flex;
     margin-left: auto;
 

@@ -3,7 +3,7 @@
     background: var(--popup-bg);
     border: 1px solid var(--border-light-color);
     border-radius: calc(var(--radius-base) * 2);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
     font-size: var(--font-size-ui-md);
