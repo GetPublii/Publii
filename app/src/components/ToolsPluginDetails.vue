@@ -9,7 +9,7 @@
             tabindex="-1"
             @keydown.stop="onKeydown">
             <div class="details-content">
-                <h2 :id="'plugin-details-title-' + _uid">{{ plugin.name }}</h2>
+                <h1 :id="'plugin-details-title-' + _uid">{{ plugin.name }}</h1>
                 <p class="description">{{ plugin.description || $t('tools.list.noDescription') }}</p>
                 <dl>
                     <template v-if="plugin.author">
@@ -145,14 +145,9 @@ export default {
 .details-content {
     overflow-y: auto;
     overflow-wrap: anywhere;
-    padding: var(--space-12);
+    padding: var(--space-16);
     text-align: left;
     user-select: text;
-}
-
-h2 {
-    margin: 0 0 var(--space-6);
-    text-align: left;
 }
 
 .description {
