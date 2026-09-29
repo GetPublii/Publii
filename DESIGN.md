@@ -278,7 +278,7 @@ The appearance-owned compact spacing scale covers the recurring application rhyt
 
 ## Elevation & Depth
 
-Hierarchy relies primarily on surface contrast and borders. The shared `shadow-sm` and `shadow-md` roles are reserved for raised controls, panels, and overlays. Navigation tiles use `shadow-sm` at rest and `shadow-md` on hover or keyboard focus; `shadow-color` supports composed editor shadows. Unique popup and feedback effects remain locally owned rather than expanding the global elevation scale.
+Hierarchy relies primarily on surface contrast and borders. The shared `shadow-sm` and `shadow-md` roles are reserved for raised controls, panels, and overlays. Upward-opening button menus use `shadow-md-up`, which mirrors the vertical offsets of `shadow-md` in each color scheme. Navigation tiles use `shadow-sm` at rest and `shadow-md` on hover or keyboard focus; `shadow-color` supports composed editor shadows. Unique popup and feedback effects remain locally owned rather than expanding the global elevation scale.
 
 Viewport-level stacking follows the shared order from panel and editor help through overlay, editor toolbar, popup, toast, dialog, and alert. Numeric `z-index` values remain valid only for local sibling ordering inside a component-owned stacking context.
 

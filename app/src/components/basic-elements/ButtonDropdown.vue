@@ -409,9 +409,8 @@ export default {
         }
 
         .button-dropdown {
-            border-radius: var(--radius-base);
             bottom: calc(100% + .9rem);
-            box-shadow: 0 -1px 5px oklch(from var(--black) l c h / 12.5%);
+            box-shadow: var(--shadow-md-up);
             top: unset;
         }
     }
@@ -528,8 +527,9 @@ export default {
 }
 
 .button-dropdown {
-    background: var(--bg-secondary);
-    border-radius: var(--radius-base) var(--radius-base);
+    background: var(--popup-bg);
+    border: 1px solid var(--border-light-color);
+    border-radius: var(--radius-base);
     box-shadow: var(--shadow-md);
     overflow: hidden;
     position: absolute;

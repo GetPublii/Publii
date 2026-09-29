@@ -143,7 +143,7 @@ Use `--radius-base` for ordinary rectangular controls and containers. Circles an
 
 Fields draw their focus ring with `--input-shadow-focus` and their invalid ring with `--input-shadow-invalid`; both share one inset shape, and the invalid ring stays visible while the field is focused. Flag a shared `text-input`, `dropdown`, or `file-select` with the `invalid` prop, which sets the `is-invalid` class and `aria-invalid` for you; a plain field takes `aria-invalid="true"` or sits inside an `is-invalid` wrapper, which the global rule in `forms.css` styles the same way.
 
-Use `--shadow-sm`, `--shadow-md`, and `--shadow-list-hover` for their documented elevation roles. Keep a unique effect local rather than adding a global shadow token without a shared role.
+Use `--shadow-sm`, `--shadow-md`, and `--shadow-list-hover` for their documented elevation roles. Use `--shadow-md-up` for the upward-opening `ButtonDropdown` variant; it preserves each color scheme's medium shadow while reversing its vertical offsets. Keep a unique effect local rather than adding a global shadow token without a shared role.
 
 Use `--transition-default` for the standard UI transition. Use the named `--layer-*` tokens for viewport-level surfaces. Numeric `z-index` values are allowed only for local sibling ordering inside a component-owned stacking context.
 
