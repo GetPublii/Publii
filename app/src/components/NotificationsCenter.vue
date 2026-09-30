@@ -368,6 +368,7 @@
 
 <script>
 import getExtensionNotifications from '../helpers/extension-notifications';
+import { SEEN_NOTIFICATIONS_STORAGE_KEY, getUnreadNotificationIDs, readSeenNotificationIDs } from '../helpers/notification-attention';
 import { mapGetters } from 'vuex';
 import GoToLastOpenedWebsite from './mixins/GoToLastOpenedWebsite';
 
@@ -393,6 +394,9 @@ export default {
             'notifications',
             'notificationsStatus'
         ]),
+        notificationAttentionIDs () {
+            return getUnreadNotificationIDs(this.$store.state);
+        },
         hasPubliiUpdate () {
             let currentBuild = this.$store.state.app.versionInfo.build;
             
@@ -450,11 +454,39 @@ export default {
             return this.$store.state.app.notificationsReadStatus.split(';');
         }
     },
+    watch: {
+        notificationAttentionIDs () {
+            this.acknowledgeNotifications();
+        }
+    },
     mounted () {
         this.$bus.$on('app-receiving-notifications', this.receivingNotifications);
         this.$bus.$on('app-received-notifications', this.receivedNotifications);
+        document.addEventListener('visibilitychange', this.acknowledgeNotifications);
+        this.acknowledgeNotifications();
     },
     methods: {
+        async acknowledgeNotifications () {
+            await this.$nextTick();
+
+            if (!this._isMounted || this._isDestroyed || this._isBeingDestroyed || document.hidden) {
+                return;
+            }
+
+            const seenIDs = new Set([
+                ...readSeenNotificationIDs(localStorage),
+                ...this.$store.state.app.notificationsSeenIDs
+            ]);
+            const unseenIDs = this.notificationAttentionIDs.filter(id => !seenIDs.has(id));
+
+            if (unseenIDs.length === 0) {
+                return;
+            }
+
+            const ids = [...seenIDs, ...unseenIDs];
+            this.$store.commit('setNotificationsSeenIDs', ids);
+            localStorage.setItem(SEEN_NOTIFICATIONS_STORAGE_KEY, JSON.stringify(ids));
+        },
         checkUpdates () {
             if (this.receivingNotificationsInProgress) {
                 return;
@@ -530,6 +562,7 @@ export default {
         }
     },
     beforeDestroy () {
+        document.removeEventListener('visibilitychange', this.acknowledgeNotifications);
         this.$bus.$off('app-receiving-notifications', this.receivingNotifications);
         this.$bus.$off('app-received-notifications', this.receivedNotifications);
     }

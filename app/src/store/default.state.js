@@ -1,4 +1,5 @@
 import { createInitialState as createThumbnailsRegenerationState } from '../helpers/thumbnails-regeneration';
+import { readSeenNotificationIDs } from '../helpers/notification-attention';
 
 export default {
     // Application front-end status
@@ -8,6 +9,7 @@ export default {
         notifications: {},
         notificationsCount: 0,
         notificationsReadStatus: '',
+        notificationsSeenIDs: readSeenNotificationIDs(localStorage),
         versionInfo: {
             number: 0,
             build: 0,

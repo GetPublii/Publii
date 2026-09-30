@@ -611,6 +611,9 @@ export default {
     setNotificationsReadStatus (state, status) {
         state.app.notificationsReadStatus = status;
     },
+    setNotificationsSeenIDs (state, ids) {
+        state.app.notificationsSeenIDs = ids;
+    },
     updateCurrentSiteItem(state, { itemType, itemID, field, value, type, subfield }) {
         let itemArray;
 

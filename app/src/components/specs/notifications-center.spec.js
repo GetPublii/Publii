@@ -6,6 +6,7 @@ const Vue = require('vue');
 const VueI18n = require('vue-i18n');
 const compiler = require('vue-template-compiler');
 const getExtensionNotifications = require('../../helpers/extension-notifications');
+const notificationAttention = require('../../helpers/notification-attention');
 
 Vue.use(VueI18n);
 
@@ -14,6 +15,16 @@ function loadComponent(name, storage, environment = {}) {
     const context = {
         module: { exports: {} },
         getExtensionNotifications,
+        ...notificationAttention,
+        document: {
+            hidden: false,
+            addEventListener() {},
+            removeEventListener() {}
+        },
+        window: {
+            addEventListener() {},
+            removeEventListener() {}
+        },
         mapGetters: keys => Object.fromEntries(keys.map(key => [key, function () {
             return this.$store.getters[key];
         }])),
@@ -44,14 +55,20 @@ function descendants(node) {
     return [node, ...(node.children || []).flatMap(descendants)];
 }
 
-function fixture(locale = 'en-gb', readStatus = '') {
+function fixture(locale = 'en-gb', readStatus = '', options = {}) {
     const translations = require('../../../default-files/default-languages/' + locale + '/translations.json');
-    const storage = new Map();
-    const options = loadComponent('NotificationsCenter', {
+    const storage = options.storage || new Map();
+    const localStorage = {
+        getItem: key => storage.get(key) || null,
         setItem: (key, value) => storage.set(key, value)
-    });
+    };
+    const component = loadComponent('NotificationsCenter', localStorage, options.environment);
     const state = Vue.observable({
         app: {
+            config: {
+                notificationsStatus: 'accepted'
+            },
+            notificationsSeenIDs: notificationAttention.readSeenNotificationIDs(localStorage),
             notificationsReadStatus: readStatus,
             notificationsCount: 0,
             versionInfo: { version: '1.0', build: '1' },
@@ -69,7 +86,12 @@ function fixture(locale = 'en-gb', readStatus = '') {
     const store = {
         state,
         getters: {
-            notificationsStatus: 'accepted',
+            get notificationsStatus() {
+                return state.app.config.notificationsStatus;
+            },
+            set notificationsStatus(value) {
+                state.app.config.notificationsStatus = value;
+            },
             get notifications() {
                 return state.app.notifications;
             },
@@ -84,19 +106,24 @@ function fixture(locale = 'en-gb', readStatus = '') {
             if (name === 'setNotificationsCount') {
                 state.app.notificationsCount = value;
             }
+            if (name === 'setNotificationsSeenIDs') {
+                state.app.notificationsSeenIDs = value;
+            }
         }
     };
     const instance = new Vue({
-        ...options,
-        i18n: new VueI18n({ locale, messages: { [locale]: translations } })
+        ...component,
+        i18n: new VueI18n({ locale, messages: { [locale]: translations } }),
+        beforeCreate() {
+            this.$store = store;
+            this.$bus = new Vue();
+        }
     });
-    instance.$store = store;
-    instance.$bus = new Vue();
     const topbar = loadComponent('TopBar');
     const updateCounter = () => topbar.methods.updateNotificationsCounters.call({ $store: store });
     instance.$bus.$on('app-update-notifications-counters', updateCounter);
     updateCounter();
-    return { instance, state, storage, updateCounter };
+    return { instance, state, storage, localStorage, updateCounter };
 }
 
 describe('Notification Center extension notices', function () {
@@ -244,9 +271,9 @@ describe('Notification Center extension notices', function () {
 
 describe('Application menu notification bell', function () {
     function bellFixture(readStatus = '', options = {}) {
-        const center = fixture('en-gb', readStatus);
+        const center = fixture('en-gb', readStatus, options);
         const dropdown = new Vue({
-            ...loadComponent('TopBarDropDown', undefined, options.environment),
+            ...loadComponent('TopBarDropDown', center.localStorage, options.environment),
             i18n: center.instance.$i18n,
             beforeCreate() {
                 this.$store = center.instance.$store;
@@ -263,6 +290,120 @@ describe('Application menu notification bell', function () {
         const badge = nodes.find(node => node.data && node.data.staticClass === 'topbar-app-settings-bell-badge');
         return badge ? badge.children.map(child => child.text || '').join('').trim() : null;
     }
+
+    async function openCenter(instance) {
+        instance._isMounted = true;
+
+        for (const hook of instance.$options.mounted) {
+            hook.call(instance);
+        }
+
+        await Vue.nextTick();
+        await Vue.nextTick();
+    }
+
+    it('keeps attention after opening only the menu or another application view', async function () {
+        const { dropdown, state, storage } = bellFixture();
+        dropdown.submenuIsOpen = true;
+        await Vue.nextTick();
+        dropdown.submenuIsOpen = false;
+        dropdown.$route.path = '/app-themes';
+        await Vue.nextTick();
+        dropdown.$route.path = '/site/sample/posts/';
+        await Vue.nextTick();
+        assert.equal(visibleBadge(dropdown), '!');
+        assert.equal(state.app.notificationsSeenIDs.length, 0);
+        assert.equal(storage.has(notificationAttention.SEEN_NOTIFICATIONS_STORAGE_KEY), false);
+    });
+
+    it('dismisses attention after displaying the center without reading or removing notifications', async function () {
+        const { instance, dropdown, state, updateCounter } = bellFixture();
+        Vue.set(state.app.notifications, 'publii', { version: '2.0', build: '2' });
+        Vue.set(state.app.notifications, 'news', [{
+            id: 'news-1',
+            validFrom: '2000-01-01',
+            validTo: '2100-01-01'
+        }]);
+        updateCounter();
+        await openCenter(instance);
+        assert.equal(visibleBadge(dropdown), null);
+        assert.equal(dropdown.triggerTooltip.text, dropdown.$t('ui.openApplicationMenu'));
+        assert.equal(dropdown.badgeValue, 4);
+        assert.equal(state.app.notificationsReadStatus, '');
+        assert.equal(instance.newsToDisplay.length, 1);
+        assert.equal(instance.hasPubliiUpdate, true);
+        assert.equal(instance.themeNotifications[0].isUnread, true);
+        assert.equal(instance.pluginNotifications[0].isUnread, true);
+        instance.markAsRead('news');
+        assert.equal(instance.newsToDisplay.length, 0);
+        assert.equal(state.app.notificationsCount, 3);
+        instance.$destroy();
+    });
+
+    it('remembers a visit after restarting and detects a different update with the same count', async function () {
+        const first = bellFixture();
+        await openCenter(first.instance);
+        first.instance.$destroy();
+        const reopened = bellFixture('', { storage: first.storage });
+        assert.equal(visibleBadge(reopened.dropdown), null);
+        reopened.state.app.notifications.themes.sample.version = '3.0';
+        reopened.updateCounter();
+        assert.equal(reopened.state.app.notificationsCount, 2);
+        assert.deepEqual([...reopened.dropdown.unseenNotificationIDs], ['THEME-sample-3.0']);
+        assert.equal(reopened.dropdown.notificationBellBadgeValue, 2);
+    });
+
+    it('acknowledges notifications received while the center is visible, including a delayed first response', async function () {
+        const { instance, state } = bellFixture();
+        state.app.notifications = {};
+        await openCenter(instance);
+        assert.equal(state.app.notificationsSeenIDs.length, 0);
+        Vue.set(state.app.notifications, 'publii', { version: '2.0', build: '2' });
+        await Vue.nextTick();
+        await Vue.nextTick();
+        assert.equal(state.app.notificationsSeenIDs.includes('PUBLII-2.0-2'), true);
+        state.app.notifications.publii.build = '3';
+        await Vue.nextTick();
+        await Vue.nextTick();
+        assert.equal(state.app.notificationsSeenIDs.includes('PUBLII-2.0-3'), true);
+        instance.$destroy();
+    });
+
+    it('does not acknowledge a hidden center or a response arriving after leaving it', async function () {
+        const listeners = new Map();
+        const document = {
+            hidden: true,
+            addEventListener(name, callback) {
+                listeners.set(name, callback);
+            },
+            removeEventListener(name) {
+                listeners.delete(name);
+            }
+        };
+        const { instance, state } = bellFixture('', { environment: { document } });
+        await openCenter(instance);
+        assert.equal(state.app.notificationsSeenIDs.length, 0);
+        document.hidden = false;
+        await listeners.get('visibilitychange')();
+        assert.equal(state.app.notificationsSeenIDs.length, 3);
+        Vue.set(state.app.notifications, 'publii', { version: '2.0', build: '2' });
+        instance.$destroy();
+        await Vue.nextTick();
+        await Vue.nextTick();
+        assert.equal(state.app.notificationsSeenIDs.includes('PUBLII-2.0-2'), false);
+        assert.equal(listeners.size, 0);
+    });
+
+    it('dismisses the consent prompt after a visit without accepting or rejecting consent', async function () {
+        const { instance, dropdown, state } = bellFixture();
+        state.app.config.notificationsStatus = false;
+        await openCenter(instance);
+        assert.equal(visibleBadge(dropdown), null);
+        assert.equal(dropdown.badgeValue, '!');
+        assert.equal(state.app.config.notificationsStatus, false);
+        assert.equal(state.app.notificationsSeenIDs.includes('NOTIFICATIONS-CONSENT'), true);
+        instance.$destroy();
+    });
 
     it('shows an exclamation mark for an unread discontinued notice without changing the menu or tooltip', function () {
         const { dropdown } = bellFixture();
@@ -488,6 +629,38 @@ describe('Application menu notification bell', function () {
             assert.equal(visibleBadge(remounted), '!');
             assert.equal(remounted.notificationIntroPlaying, false);
             assert.equal(context.timers.size, 0);
+        });
+
+        it('introduces the bell again for a new version after the center was visited', async function () {
+            const context = introFixture();
+            await context.mount();
+            await context.advance(3000);
+            await openCenter(context.instance);
+            context.instance.$destroy();
+            assert.equal(visibleBadge(context.dropdown), null);
+            context.state.app.notifications.themes.sample.version = '3.0';
+            context.updateCounter();
+            await Vue.nextTick();
+            await context.advance(2999);
+            assert.equal(visibleBadge(context.dropdown), null);
+            await context.advance(1);
+            assert.equal(visibleBadge(context.dropdown), '2');
+            assert.equal(context.dropdown.notificationIntroPlaying, true);
+        });
+
+        it('synchronizes a visit from another window without changing the unread count', async function () {
+            const context = introFixture();
+            await context.mount();
+            await context.advance(3000);
+            const ids = notificationAttention.getUnreadNotificationIDs(context.state);
+            context.localStorage.setItem(
+                notificationAttention.SEEN_NOTIFICATIONS_STORAGE_KEY,
+                JSON.stringify(ids)
+            );
+            context.dropdown.syncSeenNotifications({ key: notificationAttention.SEEN_NOTIFICATIONS_STORAGE_KEY });
+            await Vue.nextTick();
+            assert.equal(visibleBadge(context.dropdown), null);
+            assert.equal(context.dropdown.badgeValue, 2);
         });
 
         it('uses the same delayed introduction for the notification consent prompt', async function () {

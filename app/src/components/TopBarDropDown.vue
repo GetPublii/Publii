@@ -96,6 +96,7 @@
 <script>
 import Tooltip from '../helpers/tooltip.js';
 import getExtensionNotifications from '../helpers/extension-notifications';
+import { SEEN_NOTIFICATIONS_STORAGE_KEY, getUnreadNotificationIDs, readSeenNotificationIDs } from '../helpers/notification-attention';
 import { mapGetters } from 'vuex';
 import TopBarDropDownItem from './TopBarDropDownItem';
 
@@ -103,7 +104,7 @@ const NOTIFICATION_REVEAL_DELAY = 3000;
 const NOTIFICATION_INTRO_DURATION = 1160;
 
 // The header is remounted after closing an editor; keep the introduction scoped to this window.
-let notificationIntroductionShown = false;
+const introducedNotificationIDs = new Set();
 
 export default {
     directives: {
@@ -119,7 +120,7 @@ export default {
             triggerHovered: false,
             triggerFocused: false,
             notificationWindowVisible: false,
-            notificationRevealed: notificationIntroductionShown,
+            notificationRevealed: false,
             notificationDelayElapsed: false,
             notificationIntroPlaying: false,
             notificationRevealTimer: null,
@@ -131,15 +132,23 @@ export default {
             'notificationsStatus', 
             'notificationsCount'
         ]),
+        unseenNotificationIDs () {
+            const seenIDs = new Set(this.$store.state.app.notificationsSeenIDs);
+            return getUnreadNotificationIDs(this.$store.state).filter(id => !seenIDs.has(id));
+        },
+        hasUnseenNotifications () {
+            return this.unseenNotificationIDs.length > 0;
+        },
         hasNotificationUpdates () {
-            return this.insideWebsiteUI && !this.submenuIsOpen &&
+            return this.insideWebsiteUI && !this.submenuIsOpen && this.hasUnseenNotifications &&
                 this.notificationsStatus === 'accepted' && this.notificationsCount > 0;
         },
         hasNotificationPrompt () {
-            return this.insideWebsiteUI && !this.submenuIsOpen && this.notificationsStatus === false;
+            return this.insideWebsiteUI && !this.submenuIsOpen && this.hasUnseenNotifications &&
+                this.notificationsStatus === false;
         },
         notificationRevealEligible () {
-            return this.notificationWindowVisible && this.insideWebsiteUI && (
+            return this.notificationWindowVisible && this.insideWebsiteUI && this.hasUnseenNotifications && (
                 this.notificationsStatus === false ||
                 (this.notificationsStatus === 'accepted' && this.notificationsCount > 0)
             );
@@ -155,7 +164,10 @@ export default {
         },
         notificationBellBadgeValue () {
             const notifications = this.$store.state.app.notifications;
-            const readNotificationIDs = this.$store.state.app.notificationsReadStatus.split(';');
+            const readNotificationIDs = [
+                ...this.$store.state.app.notificationsReadStatus.split(';'),
+                ...this.$store.state.app.notificationsSeenIDs
+            ];
             const hasUnreadDiscontinuedNotice = ['theme', 'plugin'].some(type => {
                 const collection = type + 's';
                 const extensionNotifications = getExtensionNotifications({
@@ -230,6 +242,9 @@ export default {
         }
     },
     watch: {
+        unseenNotificationIDs () {
+            this.updateNotificationReveal();
+        },
         notificationRevealEligible () {
             this.scheduleNotificationReveal();
         },
@@ -245,10 +260,35 @@ export default {
     mounted () {
         this.$bus.$on('document-body-clicked', this.hideSubmenu);
         document.addEventListener('visibilitychange', this.updateNotificationVisibility);
+        window.addEventListener('storage', this.syncSeenNotifications);
+        this.syncSeenNotifications();
+        this.updateNotificationReveal();
         this.updateNotificationVisibility();
         this.scheduleNotificationReveal();
     },
     methods: {
+        syncSeenNotifications (event) {
+            if (event && event.key !== SEEN_NOTIFICATIONS_STORAGE_KEY) {
+                return;
+            }
+
+            const ids = readSeenNotificationIDs(localStorage);
+
+            if (JSON.stringify(ids) !== JSON.stringify(this.$store.state.app.notificationsSeenIDs)) {
+                this.$store.commit('setNotificationsSeenIDs', ids);
+            }
+        },
+        updateNotificationReveal () {
+            this.notificationRevealed = this.unseenNotificationIDs.some(id => introducedNotificationIDs.has(id));
+
+            if (this.notificationRevealed) {
+                this.unseenNotificationIDs.forEach(id => introducedNotificationIDs.add(id));
+            } else {
+                this.finishNotificationIntro();
+            }
+
+            this.scheduleNotificationReveal();
+        },
         updateNotificationVisibility () {
             this.notificationWindowVisible = !document.hidden;
 
@@ -288,7 +328,7 @@ export default {
                 return;
             }
 
-            notificationIntroductionShown = true;
+            this.unseenNotificationIDs.forEach(id => introducedNotificationIDs.add(id));
             this.notificationRevealed = true;
             this.notificationIntroPlaying = true;
             this.notificationIntroTimer = setTimeout(this.finishNotificationIntro, NOTIFICATION_INTRO_DURATION);
@@ -319,6 +359,7 @@ export default {
         clearTimeout(this.notificationRevealTimer);
         this.finishNotificationIntro();
         document.removeEventListener('visibilitychange', this.updateNotificationVisibility);
+        window.removeEventListener('storage', this.syncSeenNotifications);
         this.$bus.$off('document-body-clicked', this.hideSubmenu);
     }
 }
