@@ -97,7 +97,7 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
     --color-surface-notice: var(--palette-neutral-10);
     --color-surface-strong: var(--palette-neutral-50);
     --color-border-subtle: var(--palette-neutral-5);
-    --color-border-default: var(--palette-neutral-15);
+    --color-border-default: var(--palette-neutral-20);
     --color-border-muted: var(--palette-neutral-10);
     --color-border-emphasis: var(--palette-neutral-55);
     --color-border-strong: var(--palette-neutral-50);
@@ -290,7 +290,7 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --color-surface-notice: var(--palette-neutral-45);
     --color-surface-strong: var(--palette-neutral-35);
     --color-border-subtle: var(--palette-neutral-48);
-    --color-border-default: var(--palette-neutral-45);
+    --color-border-default: var(--palette-neutral-40);
     --color-border-muted: var(--palette-neutral-45);
     --color-border-emphasis: var(--palette-neutral-20);
     --color-border-strong: var(--palette-neutral-35);
@@ -368,12 +368,12 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
     --collection-bg-hover: var(--palette-neutral-50);
 
     /* Site sidebar */
-    --sidebar-bg-top: var(--palette-neutral-65);
-    --sidebar-bg-bottom: var(--palette-neutral-60);
+    --sidebar-bg-top: var(--palette-neutral-80);
+    --sidebar-bg-bottom: var(--palette-neutral-70);
     --sidebar-link-color: var(--palette-neutral-15);
     --sidebar-link-color-hover: var(--palette-neutral-10);
     --sidebar-link-color-active: var(--palette-neutral-10);
-    --sidebar-link-bg-hover: var(--palette-neutral-55);
+    --sidebar-link-bg-hover: var(--palette-neutral-49);
     --sidebar-link-bg-active: var(--palette-neutral-49);
     --sidebar-link-opacity: 1;
     --sidebar-link-icon: var(--palette-neutral-20);
