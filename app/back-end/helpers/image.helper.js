@@ -6,7 +6,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const normalizePath = require('normalize-path');
 const Utils = require('./utils.js');
-const slug = require('./slug');
 
 class ImageHelper {
     constructor(postInstance) {
@@ -69,21 +68,13 @@ class ImageHelper {
      * Store image on the app data
      */
     store() {
-        let self = this;
-        // Check if the image not exist
-        let directoryPath = this.getMediaPath();
-        let fileNameData = path.parse(this.fileName);
-        let finalFileName = slug(fileNameData.name, false, true) + fileNameData.ext;
-        let finalFilePath = path.join(directoryPath, finalFileName);
-
-        // Save image data in DB
-        let simplifiedFilePath = normalizePath(finalFilePath).replace(this.getMediaPath(), '');
-        simplifiedFilePath = simplifiedFilePath.replace('/', '').replace('\\', '');
+        // Preserve the filename chosen during upload or imported with existing site data.
+        const fileName = path.basename(this.fileName);
 
         let imagesSqlQuery = this.db.prepare(`INSERT INTO posts_images VALUES(null, @id, @path, '', '', @data)`);
         imagesSqlQuery.run({
             id: this.postID, 
-            path: simplifiedFilePath, 
+            path: fileName,
             data: JSON.stringify(this.featuredImageData)
         });
         let featuredImageId = this.db.prepare('SELECT last_insert_rowid() AS id').get().id;
