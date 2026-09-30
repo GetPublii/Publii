@@ -99,6 +99,7 @@
                                 appearance="clean"
                                 size="small"
                                 :disabled="restoreInProgress"
+                                :aria-describedby="backupError ? 'site-create-backup-file-error' : null"
                                 :onClick="chooseBackupFile">
                                 <span aria-hidden="true">+</span>
                                 {{ $t('image.chooseFile') }}
@@ -111,7 +112,16 @@
                                 hidden
                                 :disabled="restoreInProgress"
                                 :aria-label="$t('image.chooseFile')"
+                                :aria-describedby="backupError ? 'site-create-backup-file-error' : null"
                                 @change="valueChanged">
+
+                            <span
+                                v-if="backupError"
+                                id="site-create-backup-file-error"
+                                class="site-create-field-error"
+                                role="alert">
+                                {{ backupError }}
+                            </span>
                         </div>
 
                         <overlay
@@ -336,6 +346,7 @@ export default {
             nameCheckToken: 0,
             overlayIsVisible: false,
             backupFile: null,
+            backupError: '',
             backupIsOver: false,
             tabsActiveIndex: 0,
             restoreInProgress: false,
@@ -673,6 +684,8 @@ export default {
                 return;
             }
 
+            this.backupError = '';
+
             if (typeof e === 'string') {
                 this.backupFile = e;
             } else {
@@ -681,16 +694,17 @@ export default {
 
             this.restoreInProgress = true;
 
-            mainProcessAPI.send('app-site-check-website-to-restore', {
-                backupPath: this.backupFile
+            mainProcessAPI.receiveOnce('app-site-backup-checked', (data) => {
+                if (!data || data.status !== 'success') {
+                    this.handleCreateFromBackupError(data && data.type);
+                    return;
+                }
+
+                this.askForWebsiteName(data.data.displayName);
             });
 
-            mainProcessAPI.receiveOnce('app-site-backup-checked', (data) => {
-                if (data.status === 'error') {
-                    this.handleCreateFromBackupError(data.type);
-                } else if (data.status === 'success') {
-                    this.askForWebsiteName(data.data.displayName);
-                }
+            mainProcessAPI.send('app-site-check-website-to-restore', {
+                backupPath: this.backupFile
             });
         },
         chooseBackupFile () {
@@ -803,35 +817,21 @@ export default {
             this.$root.applyWorkspaceAccent(this.workspaceAccent);
         },
         handleCreateFromBackupError (problemType) {
-            if (problemType === 'unsupported-format') {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('site.restoreFromBackup.unsupportedFormat'),
-                    buttonStyle: 'danger'
-                });
-            }
+            const messages = {
+                'unsupported-format': 'site.restoreFromBackup.unsupportedFormat',
+                'unpack-error': 'site.restoreFromBackup.unpackError',
+                'invalid-backup-content': 'site.restoreFromBackup.invalidBackupContent',
+                'invalid-site-data': 'site.restoreFromBackup.invalidSiteData'
+            };
 
-            if (problemType === 'unpack-error') {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('site.restoreFromBackup.unpackError'),
-                    buttonStyle: 'danger'
-                });
-            }
-
-            if (problemType === 'invalid-backup-content') {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('site.restoreFromBackup.invalidBackupContent'),
-                    buttonStyle: 'danger'
-                });
-            }
-
-            if (problemType === 'invalid-site-data') {
-                this.$bus.$emit('alert-display', {
-                    message: this.$t('site.restoreFromBackup.invalidSiteData'),
-                    buttonStyle: 'danger'
-                });
-            }
-
+            this.backupError = this.$t(messages[problemType] || 'site.restoreFromBackup.restoreFailed');
             this.restoreInProgress = false;
+
+            this.$nextTick(() => {
+                if (this.$refs.input) {
+                    this.$refs.input.value = '';
+                }
+            });
         },
         askForWebsiteName (siteName) {
             this.$bus.$emit('confirm-display', {
@@ -969,12 +969,18 @@ export default {
     }
 
     .backup {
-        border: 2px dashed var(--input-border-color);
+        background-color: var(--bg-primary);
+        border: 1px solid var(--input-border-color);
         border-radius: var(--radius-base);
         color: var(--color-text-subtle);
         height: calc(404px - 46px);
         margin-bottom: 46px;
         position: relative;
+
+        &:not(.backup-is-over):not(.restore-in-progress):hover,
+        &:not(.backup-is-over):not(.restore-in-progress):focus-within {
+            background-color: var(--collection-bg-hover);
+        }
 
         &.backup-is-over,
         &.restore-in-progress {
@@ -982,7 +988,7 @@ export default {
         }
 
         .overlay.has-border {
-            inset: -2px;
+            inset: -1px;
             pointer-events: none;
         }
 

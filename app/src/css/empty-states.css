@@ -26,7 +26,7 @@
 
     .illustration {
         height: auto;
-        max-width: clamp(320px, 20vw, 420px);
+        max-width: clamp(220px, 18vw, 360px);
         width: 100%;
     }
 
