@@ -34,6 +34,7 @@
                     <action-menu
                         ref="noticeMenu"
                         align="left"
+                        text-size="medium"
                         :label="activeNoticeLabel || $t('tools.list.moreFilters')"
                         :items="noticeActions"
                         :disabled="busy">

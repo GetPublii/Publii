@@ -168,6 +168,7 @@
                         <action-menu
                             ref="bulkMenu"
                             align="left"
+                            text-size="medium"
                             :label="$t('ui.more')"
                             :items="bulkActions"
                             :disabled="busy || isLoading">

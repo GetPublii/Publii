@@ -202,6 +202,7 @@
                     <action-menu
                         v-if="!trashVisible"
                         align="left"
+                        text-size="medium"
                         :label="$t('ui.more')"
                         :items="bulkActions">
                         <template #trigger="{ attrs, isOpen, toggle, keydown }">

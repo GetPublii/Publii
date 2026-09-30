@@ -36,6 +36,7 @@
             :id="menuID"
             :class="{
                 'action-menu-list': true,
+                'has-medium-text': textSize === 'medium',
                 'is-placed': isPlaced
             }"
             :style="listStyle"
@@ -115,6 +116,11 @@ export default {
             default: 'default',
             type: String,
             validator: value => ['default', 'small'].includes(value)
+        },
+        textSize: {
+            default: 'small',
+            type: String,
+            validator: value => ['small', 'medium'].includes(value)
         },
         align: {
             default: 'right',
@@ -414,7 +420,7 @@ export default {
     border-radius: calc(var(--radius-base) * 1.5);
     box-shadow: var(--shadow-md);
     min-width: 16rem;
-    padding: var(--space-4) 0 var(--space-3);
+    padding: var(--space-4);
     position: fixed;
     visibility: hidden;
 
@@ -428,6 +434,7 @@ export default {
     appearance: none;
     background: transparent;
     border: none;
+    border-radius: calc(1.5 * var(--radius-base));
     color: var(--text-light-color);
     cursor: pointer;
     display: flex;
@@ -437,7 +444,7 @@ export default {
     gap: var(--space-3);
     line-height: var(--line-height-base);
     margin: 0;
-    padding: var(--space-3) var(--space-8);
+    padding: var(--space-3);
     text-align: left;
     white-space: nowrap;
     width: 100%;
@@ -471,6 +478,10 @@ export default {
         cursor: not-allowed;
         opacity: .5;
     }
+}
+
+.action-menu-list.has-medium-text .action-menu-item {
+    font-size: var(--font-size-ui-md);
 }
 
 .action-menu-item-check {

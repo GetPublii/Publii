@@ -76,18 +76,15 @@ export default {
     }
 }
 
+@media (max-width: 1600px) {
+    .header .tools {
+        padding: var(--space-3) 0;
+    }
+}
+
 @media (max-width: 1350px) {
     .header .tools ::v-deep .button-small {
-        font-size: var(--font-size-ui-sm);
-        padding: 0 var(--space-3);
-
-        &.button-icon {
-            padding-left: 3.6rem;
-
-            & > svg {
-                display: none;
-            }
-        }
+        --button-control-padding: var(--space-3);
     }
 }
 </style>
