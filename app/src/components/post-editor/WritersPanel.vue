@@ -283,13 +283,11 @@ export default {
     }
 
     h2 {
-        border-bottom: 1px solid var(--border-light-color);
         color: var(--headings-color);
         font-size: var(--font-size-ui-md);
         font-weight: var(--font-weight-semibold);
         line-height: 1.5;
-        margin: 0 0 var(--space-6);
-        padding: 0 0 var(--space-4);
+        margin: var(--space-2) 0 var(--space-6);
         text-transform: none;
     }
 
