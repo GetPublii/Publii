@@ -4,11 +4,16 @@
         type="button"
         :disabled="disabled"
         :aria-disabled="disabledWithEvents ? 'true' : null"
-        :aria-busy="loading ? 'true' : null"
+        :aria-busy="loading || iconLoading ? 'true' : null"
         :title="title"
         @click="onClick">
         <icon
             v-if="icon"
+            :key="iconAnimationID"
+            :class="{
+                'button-icon-spinning': isIconSpinning,
+                'button-icon-half-turn': isIconSpinning && iconLoadingAnimation === 'half-turn'
+            }"
             :size="resolvedIconSize"
             :customWidth="iconCustomWidth"
             :customHeight="iconCustomHeight"
@@ -66,6 +71,15 @@ export default {
         icon: {
             default: '',
             type: String
+        },
+        iconLoading: {
+            default: false,
+            type: Boolean
+        },
+        iconLoadingAnimation: {
+            default: 'spin',
+            type: String,
+            validator: value => ['spin', 'half-turn'].includes(value)
         },
         iconSize: {
             default: '',
@@ -131,6 +145,23 @@ export default {
             validator: value => ['auto', 'quarter', 'half', 'full'].includes(value)
         }
     },
+    data () {
+        return {
+            isIconSpinning: false,
+            iconAnimationID: 0
+        };
+    },
+    watch: {
+        iconLoading: 'updateIconAnimation'
+    },
+    created () {
+        this._iconAnimationTimer = null;
+        this._iconAnimationStartedAt = 0;
+
+        if (this.iconLoading) {
+            this.updateIconAnimation(true);
+        }
+    },
     computed: {
         resolvedIconSize () {
             return this.iconSize || (this.size === 'small' ? 'xs' : 's');
@@ -165,6 +196,33 @@ export default {
                 'button-active': this.active,
                 'button-back': this.back
             }
+        }
+    },
+    methods: {
+        updateIconAnimation (running) {
+            clearTimeout(this._iconAnimationTimer);
+            this._iconAnimationTimer = null;
+
+            if (running) {
+                this._iconAnimationStartedAt = Date.now();
+                this.iconAnimationID++;
+                this.isIconSpinning = true;
+                return;
+            }
+
+            if (this.isIconSpinning) {
+                const duration = this.iconLoadingAnimation === 'half-turn' ? 300 : 800;
+                const remaining = Math.max(0, duration - (Date.now() - this._iconAnimationStartedAt));
+                this._iconAnimationTimer = setTimeout(() => {
+                    this.isIconSpinning = false;
+                    this._iconAnimationTimer = null;
+                }, remaining);
+            }
+        }
+    },
+    beforeDestroy () {
+        if (this._iconAnimationTimer !== null) {
+            clearTimeout(this._iconAnimationTimer);
         }
     }
 }
@@ -609,6 +667,42 @@ export default {
         & > svg {
             fill: var(--icon-tertiary-color);
         }
+    }
+}
+
+.button-icon-spinning::v-deep use {
+    animation: button-icon-spin .8s linear infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.button-icon-half-turn::v-deep use {
+    animation: button-icon-half-turn .3s ease-out 1 forwards;
+}
+
+@keyframes button-icon-half-turn {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-180deg);
+    }
+}
+
+@keyframes button-icon-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .button-icon-spinning::v-deep use {
+        animation: none;
     }
 }
 

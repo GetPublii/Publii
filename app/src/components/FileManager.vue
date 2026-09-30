@@ -58,7 +58,7 @@
                 </button>
             </div>
             <p-button
-                v-if="!showEmptyState"
+                v-if="!showEmptyState || isRefreshing"
                 class="refresh-button"
                 appearance="clean"
                 size="small"
@@ -66,6 +66,7 @@
                 :onClick="refreshFiles">
                 <span class="refresh-content">
                     <icon
+                        :key="refreshAnimationID"
                         name="refresh"
                         :class="{ 'is-refreshing': isRefreshing }"
                         size="xs"
@@ -294,6 +295,7 @@ export default {
             order: 'ASC',
             isLoading: false,
             isRefreshing: false,
+            refreshAnimationID: 0,
             loadError: false,
             operation: '',
             fileIsOver: false,
@@ -388,6 +390,7 @@ export default {
     },
     created () {
         this._readID = 0;
+        this._refreshTimer = null;
         this._disposed = false;
     },
     mounted () {
@@ -423,12 +426,21 @@ export default {
                 return;
             }
 
+            const startedAt = Date.now();
+            clearTimeout(this._refreshTimer);
+            this._refreshTimer = null;
+            const animationID = ++this.refreshAnimationID;
             this.isRefreshing = true;
 
             try {
                 await this.loadFiles();
             } finally {
-                this.isRefreshing = false;
+                if (!this._disposed && animationID === this.refreshAnimationID) {
+                    this._refreshTimer = setTimeout(() => {
+                        this.isRefreshing = false;
+                        this._refreshTimer = null;
+                    }, Math.max(0, 800 - (Date.now() - startedAt)));
+                }
             }
         },
         async loadFiles () {
@@ -1020,6 +1032,7 @@ export default {
     },
     beforeDestroy () {
         this._disposed = true;
+        clearTimeout(this._refreshTimer);
         this._readID++;
         this.stopRequested = true;
         this.resolveConflict('stop');
@@ -1074,7 +1087,7 @@ section.content.file-manager {
         gap: 6px;
 
         .is-refreshing {
-            animation: file-manager-refresh .8s linear .2s infinite;
+            animation: file-manager-refresh .8s linear infinite;
         }
     }
 

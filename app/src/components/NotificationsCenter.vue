@@ -22,7 +22,8 @@
                     icon="refresh"
                     icon-custom-width="18"
                     icon-custom-height="18"
-                    :disabled="receivingNotificationsInProgress">
+                    :disabled="receivingNotificationsInProgress"
+                    :icon-loading="receivingNotificationsInProgress">
                     {{ $t('notifications.checkUpdates') }}
                 </p-button>
             </p-header>
@@ -455,6 +456,10 @@ export default {
     },
     methods: {
         checkUpdates () {
+            if (this.receivingNotificationsInProgress) {
+                return;
+            }
+
             this.$bus.$emit('app-get-forced-notifications');
         },
         async giveConsent () {

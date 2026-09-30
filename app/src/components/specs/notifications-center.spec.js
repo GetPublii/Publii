@@ -100,6 +100,32 @@ function fixture(locale = 'en-gb', readStatus = '') {
 }
 
 describe('Notification Center extension notices', function () {
+    it('ties the refresh icon and click blocking to notification retrieval events', function () {
+        const { instance } = fixture();
+        const requests = [];
+        instance.$options.mounted.forEach(hook => hook.call(instance));
+        instance.$bus.$on('app-get-forced-notifications', () => {
+            requests.push('retrieve');
+            instance.$bus.$emit('app-receiving-notifications');
+        });
+        const refreshButton = () => descendants(instance._render()).find(node =>
+            node.tag === 'p-button' && node.data.attrs.icon === 'refresh'
+        );
+
+        assert.equal(refreshButton().data.attrs['icon-loading'], false);
+        instance.checkUpdates();
+        assert.equal(refreshButton().data.attrs['icon-loading'], true);
+        assert.equal(refreshButton().data.attrs.disabled, true);
+        instance.checkUpdates();
+        assert.equal(requests.length, 1);
+        instance.$bus.$emit('app-received-notifications');
+        assert.equal(refreshButton().data.attrs['icon-loading'], false);
+        assert.equal(refreshButton().data.attrs.disabled, false);
+        instance.checkUpdates();
+        assert.equal(requests.length, 2);
+        instance.$destroy();
+    });
+
     for (const locale of ['en-gb', 'pl', 'de']) {
         it(locale + ': renders combined rows, status text and only valid download actions', function () {
             const { instance } = fixture(locale);

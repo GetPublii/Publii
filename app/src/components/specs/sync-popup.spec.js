@@ -43,6 +43,19 @@ function setup(componentName, protocol = 'ftp', locale = 'en-gb') {
     const compilation = compiler.compile(parsed.template.content);
     assert.deepEqual(compilation.errors, []);
     const context = { module: { exports: {} }, mainProcessAPI: api, document: { body }, Utils: { getValidUrl: u => u }, BackToTools: {}, setTimeout: () => {} };
+    const timers = new Map();
+    let timerID = 0;
+    context.clearTimeout = id => timers.delete(id);
+
+    if (componentName === 'LogViewer') {
+        context.Date = { now: () => 0 };
+        context.setTimeout = (callback, delay) => {
+            const id = ++timerID;
+            timers.set(id, { callback, delay });
+            return id;
+        };
+    }
+
     vm.runInNewContext(parsed.script.content.replace(/^import .*;\s*$/gm, '').replace('export default', 'module.exports ='), context);
     const component = context.module.exports;
     const i18n = new VueI18n({ locale, fallbackLocale: 'en-gb', messages: JSON.parse(JSON.stringify(languages)) });
@@ -59,7 +72,16 @@ function setup(componentName, protocol = 'ftp', locale = 'en-gb') {
     instance.$router = { push: route => calls.routes.push(route) };
     instance.$route = { path: '/site/demo/posts', query: {}, params: { name: 'demo' } };
     instance.isVisible = true;
-    return { instance, calls, listeners, component, busListeners, body };
+    return {
+        instance,
+        calls,
+        listeners,
+        component,
+        busListeners,
+        body,
+        timers,
+        runtime: context
+    };
 }
 
 function allNodes(node) {
@@ -401,6 +423,92 @@ describe('Synchronization popup and log viewer', () => {
         v.component.watch['$route.query.file'].call(v.instance);
         assert.equal(v.instance.selectedFile, 'deployment-process.log');
         assert.equal(v.calls.sends.at(-1)[1].filename, 'deployment-process.log');
+    });
+
+    it('reload starts a real read, blocks duplicates and unlocks before the animation ends', () => {
+        const v = logViewer('deployment-process.log');
+        assert.equal(screen(v.instance).buttons.at(-1).disabled, true);
+        v.instance.loadSelectedFile();
+        assert.equal(v.calls.sends.length, 1);
+        v.ready();
+        v.files();
+        assert.equal(v.instance.isReloading, false);
+        v.listeners['app-log-file-loaded']({ fileContent: 'Initial log' });
+
+        v.instance.loadSelectedFile();
+        assert.equal(v.instance.isLoading, true);
+        assert.equal(v.instance.isReloading, true);
+        assert.equal(v.instance.reloadAnimationID, 1);
+        assert.equal(screen(v.instance).buttons.at(-1).disabled, true);
+        v.instance.loadSelectedFile();
+        assert.equal(v.calls.sends.filter(call => call[0] === 'app-log-file-load').length, 2);
+
+        v.listeners['app-log-file-loaded']({ fileContent: 'Updated log' });
+        assert.equal(v.content, 'Updated log');
+        assert.equal(screen(v.instance).buttons.at(-1).disabled, false);
+        assert.equal(v.instance.isReloading, true);
+        assert.equal(v.calls.emits.length, 0);
+        assert.equal(v.timers.size, 1);
+
+        v.instance.loadSelectedFile();
+        assert.equal(v.calls.sends.filter(call => call[0] === 'app-log-file-load').length, 3);
+        assert.equal(v.instance.reloadAnimationID, 2);
+        assert.equal(v.timers.size, 0);
+        v.listeners['app-log-file-loaded']({ fileContent: 'Newest log' });
+        assert.equal(v.content, 'Newest log');
+        const timer = Array.from(v.timers.values())[0];
+        assert.equal(timer.delay, 800);
+        timer.callback();
+        assert.equal(v.instance.isReloading, false);
+        assert.equal(v.calls.emits.length, 0);
+    });
+
+    it('adds no animation delay after a slow log reload and clears timers on exit', () => {
+        const v = logViewer('deployment-process.log');
+        let now = 0;
+        v.runtime.Date = { now: () => now };
+        v.ready();
+        v.files();
+        v.listeners['app-log-file-loaded']({ fileContent: 'Initial log' });
+        v.instance.loadSelectedFile();
+        now = 1200;
+        assert.equal(v.instance.isReloading, true);
+        v.listeners['app-log-file-loaded']({ fileContent: 'Updated log' });
+        assert.equal(v.instance.canReload, true);
+        assert.equal(Array.from(v.timers.values())[0].delay, 0);
+        v.component.beforeDestroy.call(v.instance);
+        assert.equal(v.timers.size, 0);
+        assert.equal(v.instance.isReloading, false);
+    });
+
+    it('queues a route change while reading a log and discards the older response', () => {
+        const v = logViewer('deployment-process.log');
+        v.ready();
+        v.files();
+        v.instance.$route.query.file = 'other.log';
+        v.component.watch['$route.query.file'].call(v.instance);
+        assert.equal(v.calls.sends.filter(call => call[0] === 'app-log-file-load').length, 1);
+
+        v.listeners['app-log-file-loaded']({ fileContent: 'Old file' });
+        assert.equal(v.content, undefined);
+        assert.equal(v.calls.sends.at(-1)[1].filename, 'other.log');
+        assert.equal(v.instance.isLoading, true);
+        v.listeners['app-log-file-loaded']({ fileContent: 'Selected file' });
+        assert.equal(v.content, 'Selected file');
+        assert.equal(v.instance.isLoading, false);
+    });
+
+    it('ignores a log reload response after leaving the view', () => {
+        const v = logViewer('deployment-process.log');
+        v.ready();
+        v.files();
+        v.listeners['app-log-file-loaded']({ fileContent: 'Initial log' });
+        v.instance.loadSelectedFile();
+        v.component.beforeDestroy.call(v.instance);
+        v.listeners['app-log-file-loaded']({ fileContent: 'Late response' });
+        assert.equal(v.content, 'Initial log');
+        assert.equal(v.timers.size, 0);
+        assert.equal(v.calls.emits.length, 0);
     });
 
     it('log viewer asks for logs of the current website and groups them apart from the application logs', () => {

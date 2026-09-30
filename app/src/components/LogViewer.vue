@@ -15,14 +15,19 @@
                 id="selectedFile"
                 v-model="selectedFile"
                 :items="files"
+                :disabled="!editorReady || isLoading"
                 :onChange="loadFile"></dropdown>
             
             <p-button
                 :onClick="loadSelectedFile"
                 class="button-icon"
-                appearance="secondary">
+                appearance="secondary"
+                :disabled="!canReload"
+                :aria-busy="isLoading ? 'true' : null">
                 <icon
+                    :key="reloadAnimationID"
                     name="refresh"
+                    :class="{ 'is-reloading': isReloading }"
                     customWidth="18"
                     customHeight="18"
                     non-interactive />
@@ -52,18 +57,31 @@ export default {
             files: {},
             availableFiles: [],
             selectedFile: '',
-            editorReady: false
+            editorReady: false,
+            isLoading: false,
+            isReloading: false,
+            reloadAnimationID: 0
         };
     },
     computed: {
         siteName () {
             return this.$store.state.currentSite.config.name;
+        },
+        canReload () {
+            return this.editorReady &&
+                this.availableFiles.includes(this.selectedFile) &&
+                !this.isLoading;
         }
     },
     watch: {
         '$route.query.file' () {
             this.loadRequestedFile();
         }
+    },
+    created () {
+        this._pendingFile = null;
+        this._reloadTimer = null;
+        this._disposed = false;
     },
     mounted () {
         this.$bus.$on('log-viewer-editor-loaded', this.onEditorLoaded);
@@ -90,6 +108,10 @@ export default {
             mainProcessAPI.send('app-log-files-load', this.siteName);
 
             mainProcessAPI.receiveOnce('app-log-files-loaded', (data) => {
+                if (this._disposed) {
+                    return;
+                }
+
                 let siteFiles = Array.isArray(data.siteFiles) ? data.siteFiles : [];
                 let appFiles = Array.isArray(data.appFiles) ? data.appFiles : [];
                 let toItems = files => files.reduce((items, file) => {
@@ -118,34 +140,93 @@ export default {
                 this.loadRequestedFile();
             });
         },
-        loadFile (filename) {
+        loadFile (filename, reload = false) {
+            if (this._disposed || !this.editorReady) {
+                return;
+            }
+
+            if (this.isLoading) {
+                this._pendingFile = filename;
+                return;
+            }
+
+            this.stopReloadAnimation();
+
             if (filename === '') {
                 this.$refs.codemirror.editor.setValue('');
                 return;
             }
 
-            mainProcessAPI.send('app-log-file-load', {
-                site: this.siteName,
-                filename: filename
-            });
+            if (!this.availableFiles.includes(filename)) {
+                return;
+            }
 
-            mainProcessAPI.receiveOnce('app-log-file-loaded', (data) => {
-                if(typeof data.fileContent === 'string') {
-                    if(data.fileContent.trim() !== '') {
-                        this.$refs.codemirror.editor.setValue(data.fileContent);
-                    } else {
-                        this.$refs.codemirror.editor.setValue(this.$t('tools.logFileEmpty'));
-                    }
+            const siteName = this.siteName;
+            const startedAt = Date.now();
+            this.isLoading = true;
+            this.isReloading = reload;
+
+            if (reload) {
+                this.reloadAnimationID++;
+            }
+
+            mainProcessAPI.receiveOnce('app-log-file-loaded', data => {
+                if (this._disposed) {
+                    return;
+                }
+
+                this.isLoading = false;
+
+                if (this._pendingFile !== null) {
+                    const pendingFile = this._pendingFile;
+                    this._pendingFile = null;
+                    this.loadFile(pendingFile);
+                    return;
+                }
+
+                if (siteName !== this.siteName) {
+                    this.stopReloadAnimation();
+                    return;
+                }
+
+                if (reload) {
+                    this._reloadTimer = setTimeout(() => {
+                        this.isReloading = false;
+                        this._reloadTimer = null;
+                    }, Math.max(0, 800 - (Date.now() - startedAt)));
+                }
+
+                if (typeof data.fileContent === 'string') {
+                    const content = data.fileContent.trim() !== ''
+                        ? data.fileContent
+                        : this.$t('tools.logFileEmpty');
+                    this.$refs.codemirror.editor.setValue(content);
                 }
 
                 this.$refs.codemirror.editor.refresh();
             });
+
+            mainProcessAPI.send('app-log-file-load', {
+                site: siteName,
+                filename: filename
+            });
         },
         loadSelectedFile () {
-            this.loadFile(this.selectedFile);
+            if (!this.canReload || this._disposed) {
+                return;
+            }
+
+            this.loadFile(this.selectedFile, true);
+        },
+        stopReloadAnimation () {
+            clearTimeout(this._reloadTimer);
+            this._reloadTimer = null;
+            this.isReloading = false;
         }
     },
     beforeDestroy () {
+        this._disposed = true;
+        this.stopReloadAnimation();
         this.$bus.$off('log-viewer-editor-loaded', this.onEditorLoaded);
     }
 }
@@ -158,6 +239,26 @@ export default {
 
     .button {
         margin-left: var(--space-4);
+    }
+
+    .is-reloading {
+        animation: log-viewer-reload .8s linear infinite;
+    }
+}
+
+@keyframes log-viewer-reload {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+
+    to {
+        transform: translateY(-50%) rotate(-360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tools-log-viewer-selector .is-reloading {
+        animation: none;
     }
 }
 </style>

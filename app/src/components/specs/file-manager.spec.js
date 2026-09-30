@@ -35,6 +35,16 @@ function setup(locale='en-gb', platform='darwin') {
     const globals = {module:{exports:{}},...helpers,CollectionSortButton:{},Tooltip:{},mainProcessAPI:api,BackToTools:mixin('BackToTools'),CollectionCheckboxes:mixin('CollectionCheckboxes'),CollectionOrdering:mixin('CollectionOrdering'),
         navigator:{clipboard:{writeText:async text=>calls.copies.push(text)}},document,
         window:{addEventListener:(...a)=>calls.listeners.push(a),removeEventListener:(...a)=>calls.unlisteners.push(a)}};
+    const timers = new Map();
+    let timerID = 0;
+
+    globals.setTimeout = (callback, delay) => {
+        const id = ++timerID;
+        timers.set(id, { callback, delay });
+        return id;
+    };
+    globals.clearTimeout = id => timers.delete(id);
+
     vm.runInNewContext(source.script.content.replace(/^import .*;\s*$/gm,'').replace('export default','module.exports ='),globals);
     const options = {...globals.module.exports,render:new Function(template.render),staticRenderFns:template.staticRenderFns.map(s=>new Function(s))};
     const instance = new Vue({...options,i18n:new VueI18n({locale,fallbackLocale:'en-gb',messages:JSON.parse(JSON.stringify(messages)),silentTranslationWarn:true})});
@@ -43,8 +53,159 @@ function setup(locale='en-gb', platform='darwin') {
     instance.$bus={$emit:(...args)=>calls.emits.push(args),$on:(...a)=>calls.listeners.push(a),$off:(...a)=>calls.unlisteners.push(a)};
     instance.items=rows.slice(); instance.$refs.search={value:'',isOpen:false};
     instance.$refs.conflict={focus(){}};
-    return {instance, calls, api, options, rows, clipboard: globals.navigator.clipboard};
+    return {
+        instance,
+        calls,
+        api,
+        options,
+        rows,
+        clipboard: globals.navigator.clipboard,
+        timers,
+        runtime: globals
+    };
 }
+
+describe('File Manager refresh feedback', () => {
+    it('blocks only a pending read and restarts refresh immediately during the animation tail', async () => {
+        const { instance, calls, api, timers, runtime } = setup();
+        const reads = [];
+        runtime.Date = { now: () => 0 };
+        api.invoke = channel => {
+            calls.requests.push(channel);
+            return new Promise(resolve => reads.push(resolve));
+        };
+
+        const firstRefresh = instance.refreshFiles();
+        assert.equal(instance.isLoading, true);
+        assert.equal(instance.isRefreshing, true);
+        assert.equal(instance.refreshAnimationID, 1);
+        await instance.refreshFiles();
+        assert.equal(calls.requests.length, 1);
+
+        reads[0]({ status: true, files: [file('updated.pdf')] });
+        await firstRefresh;
+        assert.equal(instance.items[0].name, 'updated.pdf');
+        assert.equal(instance.isLoading, false);
+        assert.equal(instance.isRefreshing, true);
+        assert.equal(calls.emits.length, 0);
+        assert.equal(timers.size, 1);
+
+        const secondRefresh = instance.refreshFiles();
+        assert.equal(calls.requests.length, 2);
+        assert.equal(instance.isLoading, true);
+        assert.equal(instance.refreshAnimationID, 2);
+        assert.equal(timers.size, 0);
+
+        reads[1]({ status: true, files: [file('newer.pdf')] });
+        await secondRefresh;
+        assert.equal(instance.items[0].name, 'newer.pdf');
+        assert.equal(instance.isLoading, false);
+        assert.equal(calls.emits.length, 0);
+        const timer = Array.from(timers.values())[0];
+        assert.equal(timer.delay, 800);
+        timer.callback();
+        assert.equal(instance.isRefreshing, false);
+    });
+
+    it('keeps refreshing during a slow read and adds no further animation delay', async () => {
+        const { instance, api, calls, timers, runtime } = setup();
+        let now = 0;
+        let resolveRead;
+        runtime.Date = { now: () => now };
+        api.invoke = () => new Promise(resolve => {
+            resolveRead = resolve;
+        });
+
+        const refresh = instance.refreshFiles();
+        now = 1200;
+        assert.equal(instance.isRefreshing, true);
+        assert.equal(calls.emits.length, 0);
+        resolveRead({ status: true, files: [] });
+        await refresh;
+
+        assert.equal(instance.items.length, 0);
+        assert.equal(calls.emits.length, 0);
+        const timer = Array.from(timers.values())[0];
+        assert.equal(timer.delay, 0);
+        timer.callback();
+        assert.equal(instance.isRefreshing, false);
+    });
+
+    it('reports read failures without announcing success', async () => {
+        for (const rejected of [false, true]) {
+            const { instance, api, calls, options } = setup();
+            api.invoke = async () => {
+                if (rejected) {
+                    throw new Error('Read failed');
+                }
+
+                return { status: false, code: 'permission' };
+            };
+
+            await instance.refreshFiles();
+
+            assert.equal(calls.emits.length, 1);
+            assert.equal(calls.emits[0][1].type, 'warning');
+            assert.equal(calls.emits[0][1].message, instance.$t('file.manager.loadError'));
+            options.beforeDestroy.call(instance);
+        }
+    });
+
+    it('does not announce initial or automatic focus refreshes', async () => {
+        const { instance, calls } = setup();
+
+        await instance.loadFiles();
+        instance.refreshOnFocus();
+        await tick();
+
+        assert.equal(calls.requests.length, 2);
+        assert.equal(calls.emits.length, 0);
+        assert.equal(instance.isRefreshing, false);
+    });
+
+    it('ignores a manual refresh superseded by a directory change', async () => {
+        const { instance, api, calls, options } = setup();
+        const reads = [];
+        api.invoke = () => new Promise(resolve => reads.push(resolve));
+
+        const refresh = instance.refreshFiles();
+        instance.changeDirectory('media/files');
+        reads[1]({ status: true, files: [file('media.pdf')] });
+        await tick();
+        reads[0]({ status: true, files: [file('root.pdf')] });
+        await refresh;
+
+        assert.equal(instance.items[0].name, 'media.pdf');
+        assert.equal(calls.emits.length, 0);
+        options.beforeDestroy.call(instance);
+    });
+
+    it('ignores a refresh result after leaving the view', async () => {
+        const { instance, api, calls, options, timers } = setup();
+        let resolveRead;
+        api.invoke = () => new Promise(resolve => {
+            resolveRead = resolve;
+        });
+
+        const refresh = instance.refreshFiles();
+        options.beforeDestroy.call(instance);
+        resolveRead({ status: true, files: [file('late.pdf')] });
+        await refresh;
+
+        assert.equal(instance.items[0].name, 'a.pdf');
+        assert.equal(calls.emits.length, 0);
+        assert.equal(timers.size, 0);
+    });
+
+    it('clears the remaining animation timer when the view is destroyed', async () => {
+        const { instance, options, timers } = setup();
+
+        await instance.refreshFiles();
+        assert.equal(timers.size, 1);
+        options.beforeDestroy.call(instance);
+        assert.equal(timers.size, 0);
+    });
+});
 
 describe('File Manager UI and IPC', () => {
     it('compiles the template without errors',()=>assert.deepEqual(template.errors,[]));

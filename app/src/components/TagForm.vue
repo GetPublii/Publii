@@ -197,6 +197,9 @@
                                         v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
                                         :aria-label="$t('ui.updateSlug')"
                                         icon="refresh"
+                                        :disabled="isUpdatingSlug"
+                                        :icon-loading="isUpdatingSlug"
+                                        icon-loading-animation="half-turn"
                                         appearance="secondary">
                                     </p-button>
                                 </div>
@@ -400,6 +403,7 @@ export default {
     data: function() {
         return {
             errors: [],
+            isUpdatingSlug: false,
             hasFeaturedImage: false,
             openedItem: 'basic',
             currentTagIsHidden: false,
@@ -705,8 +709,16 @@ export default {
 			return this.$t('theme.leaveBlankToUseDefault');
         },
         async updateSlug () {
-            if (this.tagData.name.trim() !== '') {
+            if (this.isUpdatingSlug || this.tagData.name.trim() === '') {
+                return;
+            }
+
+            this.isUpdatingSlug = true;
+
+            try {
                 this.tagData.slug = await mainProcessAPI.invoke('app-main-process-create-slug', this.tagData.name);
+            } finally {
+                this.isUpdatingSlug = false;
             }
         }
     },

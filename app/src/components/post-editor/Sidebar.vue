@@ -366,6 +366,9 @@
                                                 v-tooltip="{ text: $t('ui.updateSlug'), describe: false }"
                                                 :aria-label="$t('ui.updateSlug')"
                                                 icon="refresh"
+                                                :disabled="isUpdatingSlug"
+                                                :icon-loading="isUpdatingSlug"
+                                                icon-loading-animation="half-turn"
                                                 appearance="secondary">
                                             </p-button>
                                         </div>
@@ -598,6 +601,7 @@ export default {
     data () {
         return {
             openedItem: 'status',
+            isUpdatingSlug: false,
             tagIsRestricted: false,
             initialParentPage: null,
             parentPage: 0,
@@ -894,8 +898,18 @@ export default {
             this.$parent.postData.creationDate.timestamp = 0;
             this.$parent.postData.creationDate.text = '';
         },
-        updateSlug () {
-            this.$bus.$emit('update-post-slug', true);
+        async updateSlug () {
+            if (this.isUpdatingSlug) {
+                return;
+            }
+
+            this.isUpdatingSlug = true;
+
+            try {
+                await this.$parent.updateSlug(true);
+            } finally {
+                this.isUpdatingSlug = false;
+            }
         },
         hierarchySave () {
             mainProcessAPI.send('app-pages-hierarchy-save', {
