@@ -124,16 +124,17 @@ export default {
     padding: 0;
 
     a {
+        align-items: center;
         border-radius: var(--radius-base);
         color: var(--sidebar-link-color);
-        display: block;
+        display: flex;
         font-size: var(--font-size-ui-md);
         font-weight: var(--font-weight-regular);
+        gap: 1.15rem;
         line-height: 2;
         margin: 0;
         opacity: var(--sidebar-link-opacity);
-        position: relative;
-        padding: var(--space-3) .6rem;
+        padding: 0.65rem .45rem 0.65rem 1.45rem;
         transition: var(--transition-default);
 
         &:active,
@@ -156,20 +157,13 @@ export default {
 
     svg {
         fill: var(--sidebar-link-icon);
-        left: 1rem;
-        margin-right: 2.3rem;
-        position: relative;
+        flex-shrink: 0;
         transition: var(--transition-default);
-        top: .5rem;
     }
 }
 
 .sidebar-menu-item {
     margin: 0 0 .2rem;
-
-    a {
-        display: flex;
-    }
 
     &.is-active {
         a {
@@ -194,7 +188,7 @@ export default {
 @media (max-height: 736px) {
     .sidebar-menu {
         a {
-            padding: 0.55rem;
+            padding: .55rem .55rem .55rem 1.55rem;
         }
     }
 }
