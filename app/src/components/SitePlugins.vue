@@ -65,7 +65,8 @@
                         @click="clearNoticeFilter">
                         <icon
                             name="close"
-                            size="xs"
+                            customWidth="18"
+                            customHeight="18"
                             non-interactive
                             aria-hidden="true" />
                     </button>
@@ -117,6 +118,7 @@
                         </collection-cell>
                         <div v-if="selectedItems.length" class="tools bulk-actions" role="group" :aria-label="$t('tools.list.bulkActions')">
                             <p-button
+                                icon="power"
                                 appearance="light"
                                 size="small"
                                 :disabled="busy || !enableCandidates.length"
@@ -124,6 +126,7 @@
                                 {{ $t('tools.list.enableCount', { count: enableCandidates.length }) }}
                             </p-button>
                             <p-button
+                                icon="power-off"
                                 appearance="light"
                                 size="small"
                                 :disabled="busy || !disableCandidates.length"
