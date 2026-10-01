@@ -124,8 +124,8 @@ html[data-app-appearance="publii"][data-color-scheme="light"] {
 
     --overlay: oklch(from var(--shadow-color) l c h / 35%);
 
-    --tooltip-bg: var(--bg-secondary);
-    --tooltip-color: var(--text-primary-color);
+    --tooltip-bg: var(--palette-neutral-75);
+    --tooltip-color: var(--white);
 
     --icon-primary-color: var(--palette-neutral-70);
     --icon-secondary-color: var(--palette-neutral-55);
@@ -317,8 +317,8 @@ html[data-app-appearance="publii"][data-color-scheme="dark"] {
 
     --overlay: oklch(20% 0.0117 278 / 85%);
 
-    --tooltip-bg: var(--bg-secondary);
-    --tooltip-color: var(--text-primary-color);
+    --tooltip-bg: var(--palette-neutral-45);
+    --tooltip-color: var(--palette-neutral-5);
 
     --icon-primary-color: var(--palette-neutral-20);
     --icon-secondary-color: var(--palette-neutral-25);

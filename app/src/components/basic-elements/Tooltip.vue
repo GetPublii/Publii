@@ -109,9 +109,8 @@ export default {
 <style scoped>
 .app-tooltip {
     background: var(--tooltip-bg);
-    border: 1px solid var(--border-light-color);
     border-radius: var(--radius-base);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-lg);
     box-sizing: border-box;
     color: var(--tooltip-color);
     font-family: var(--font-family-sans);

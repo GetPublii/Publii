@@ -1,6 +1,9 @@
 <template>
     <div
-        v-tooltip="switchDescription"
+        v-tooltip="{
+            text: switchDescription,
+            placement: 'bottom'
+        }"
         role="button"
         tabindex="0"
         @keydown.enter.prevent="toggle"
