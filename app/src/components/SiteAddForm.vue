@@ -387,7 +387,10 @@ export default {
             return this.nameErrorMessage(this.wordpressSiteNameError);
         },
         defaultSiteConfig () {
-            return JSON.parse(JSON.stringify(defaultSiteConfig));
+            let config = JSON.parse(JSON.stringify(defaultSiteConfig));
+            config.advanced.urls.cleanUrls = true;
+
+            return config;
         },
         tabsItems () {
             return [

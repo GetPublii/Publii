@@ -110,7 +110,12 @@ class Site {
             'displayName': this.displayName,
             'author': this.author,
             'logo': this.logo,
-            'theme': 'simple'
+            'theme': 'simple',
+            'advanced': {
+                'urls': {
+                    'cleanUrls': true
+                }
+            }
         };
 
         this.uuid = siteConfig.uuid;
