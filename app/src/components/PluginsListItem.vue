@@ -11,39 +11,68 @@
                 alt="">
         </span>
 
-        <figcaption class="plugin-name extension-card-caption">
-            <h3>
-                <span>{{ name }}</span>
-                <span class="plugin-version extension-card-version">
-                    {{ version }}
-                </span>
-                <span 
-                    v-if="isIncompatible"
-                    class="plugin-is-incompatible"
-                    tabindex="0"
-                    v-tooltip="$t('plugins.isIncompatibleTitle', { supportedVersion: pluginData.minimumPubliiVersion, currentVersion: $store.state.app.versionInfo.version })">
-                    {{ $t('plugins.isIncompatible') }}
-                </span>
-             </h3>
-            <button
-                type="button"
-                class="plugin-delete extension-card-delete"
-                v-tooltip="{ text: $t('plugins.deletePlugin'), describe: false }"
-                :aria-label="$t('plugins.deletePlugin')"
-                :aria-busy="isCheckingUsage ? 'true' : null"
-                @click.stop.prevent="deletePlugin(name, directory)">
+        <figcaption class="plugin-caption">
+            <div class="plugin-name extension-card-caption">
+                <h3>
+                    <span>{{ name }}</span>
+                    <span class="plugin-version extension-card-version">
+                        {{ version }}
+                    </span>
+                    <span
+                        v-if="isIncompatible"
+                        class="plugin-is-incompatible"
+                        tabindex="0"
+                        v-tooltip="$t('plugins.isIncompatibleTitle', { supportedVersion: pluginData.minimumPubliiVersion, currentVersion: $store.state.app.versionInfo.version })">
+                        {{ $t('plugins.isIncompatible') }}
+                    </span>
+                </h3>
+                <button
+                    type="button"
+                    class="plugin-delete extension-card-delete"
+                    v-tooltip="{ text: $t('plugins.deletePlugin'), describe: false }"
+                    :aria-label="$t('plugins.deletePlugin')"
+                    :aria-busy="isCheckingUsage ? 'true' : null"
+                    @click.stop.prevent="deletePlugin(name, directory)">
                     <icon
                         size="xs"
                         non-interactive
                         aria-hidden="true"
                         name="trash" />
-            </button>
+                </button>
+            </div>
 
-            <span 
+            <div
                 v-if="hasUpdateAvailable"
-                class="plugin-new-version-available">
-                {{ $t('plugins.newVersionAvailable') }}: <strong>{{ updateVersion }}</strong>   
-            </span>
+                class="plugin-update">
+                <div class="plugin-update-heading">
+                    <span class="plugin-update-icon">
+                        <icon
+                            customWidth="18"
+                            customHeight="18"
+                            non-interactive
+                            aria-hidden="true"
+                            name="refresh" />
+                    </span>
+                    <div class="plugin-update-details">
+                        <strong class="plugin-update-title">
+                            {{ $t('theme.groupUpdateAvailable') }}
+                        </strong>
+                        <span class="plugin-update-version">
+                            {{ $t('notifications.latestVersion') }}: {{ updateVersion }}
+                        </span>
+                    </div>
+                </div>
+
+                <p-button
+                    v-if="updateDownloadLink"
+                    class="plugin-update-download"
+                    intent="primary"
+                    size="small"
+                    width="full"
+                    :onClick="downloadUpdate">
+                    {{ $t(updateIsFree ? 'notifications.downloadUpdate' : 'theme.openMyDownloads') }}
+                </p-button>
+            </div>
         </figcaption>
     </figure>
 </template>
@@ -91,30 +120,38 @@ export default {
         version () {
             return this.pluginData.version;
         },
-        updateVersion () {
-            let availablePlugin = this.notifications.plugins[this.directory];
+        availablePlugin () {
+            if (!this.notifications || !this.notifications.plugins) {
+                return null;
+            }
 
-            if (!availablePlugin) {
+            return this.notifications.plugins[this.directory] || null;
+        },
+        updateVersion () {
+            return this.availablePlugin ? this.availablePlugin.version : '';
+        },
+        updateDownloadLink () {
+            if (!this.availablePlugin || !this.availablePlugin.links || !this.availablePlugin.links.download) {
                 return '';
             }
 
-            return availablePlugin.version;
+            return this.availablePlugin.links.download;
+        },
+        updateIsFree () {
+            return !this.availablePlugin || this.availablePlugin.free !== false;
         },
         hasUpdateAvailable () {
-            if (!this.notifications || !this.notifications.plugins) {
+            if (!this.availablePlugin) {
                 return false;
             }
 
-            let availablePlugin = this.notifications.plugins[this.directory];
-
-            if (!availablePlugin) {
-                return false;
-            }
-
-            return VersionComparator(availablePlugin.version, this.version) === 1;
+            return VersionComparator(String(this.availablePlugin.version), String(this.version)) === 1;
         }
     },
     methods: {
+        downloadUpdate () {
+            mainProcessAPI.shellOpenExternal(this.updateDownloadLink);
+        },
         async deletePlugin (pluginName, pluginDirectory) {
             if (this.isCheckingUsage || this.usageCheckDisposed) {
                 return;
@@ -217,11 +254,13 @@ export default {
 @import "../css/extension-card.css";
 
 .plugin {
+    align-self: start;
     background-color: var(--bg-secondary);
     border: 1px solid transparent;
     border-radius: calc(var(--radius-base) * 1.5);
     box-shadow: var(--shadow-sm);
-    height: 100%;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
     margin: 0;
     overflow: hidden;
     padding: var(--space-4);
@@ -237,6 +276,15 @@ export default {
     }
 }
 
+.plugin::before {
+    content: "";
+    grid-area: 1 / 1 / 3 / 2;
+    /* Keep the original card height while updates use the thumbnail space. */
+    margin-bottom: 6rem;
+    padding-bottom: 75%;
+    pointer-events: none;
+}
+
 .plugin-thumbnail {
     display: block;
     max-height: 50%;
@@ -249,17 +297,23 @@ export default {
 
 .plugin-thumbnail-wrapper {
     display: block;
-    padding-bottom: 75%;
+    grid-area: 1 / 1;
+    min-height: 6rem;
     position: relative;
     transition: var(--transition-default);
     width: 100%;
 }
 
-.plugin-name {
+.plugin-caption {
+    align-self: end;
     background: var(--color-surface-subtle);
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 var(--radius-base) var(--radius-base);
+    grid-area: 2 / 1;
+    position: relative;
     text-align: left;
+}
 
+.plugin-name {
     & > h3 {
          font-size: var(--font-size-ui-md);
          font-weight: var(--font-weight-medium);
@@ -291,18 +345,59 @@ export default {
     text-transform: uppercase;
 }
 
-.plugin-new-version-available {
-    background: var(--color-highlight-surface);
-    left: 1rem;
-    padding: var(--space-8);
-    position: absolute;
-    right: 0;
-    top: 1rem;
-    width: calc(100% - 2rem);
+.plugin-update {
+    background: var(--button-secondary-bg);
+    border-radius: var(--radius-base);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin: 0;
+    padding: var(--space-6);
+}
 
-    strong {
-        color: var(--headings-color);
-    }
+.plugin-update-heading {
+    align-items: center;
+    display: flex;
+    gap: var(--space-4);
+}
+
+.plugin-update-icon {
+    align-items: center;
+    background: var(--button-secondary-bg-hover);
+    border-radius: 50%;
+    color: var(--button-secondary-color);
+    display: flex;
+    flex: 0 0 3.2rem;
+    height: 3.2rem;
+    justify-content: center;
+}
+
+.plugin-update-details {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.plugin-update-title {
+    color: var(--headings-color);
+    display: block;
+    font-size: var(--font-size-ui-md);
+    font-weight: var(--font-weight-medium);
+}
+
+.plugin-update-version {
+    color: var(--text-light-color);
+    display: block;
+    font-size: var(--font-size-ui-xs);
+    font-weight: var(--font-weight-regular);
+}
+
+.plugin-update-download {
+    height: auto;
+    min-height: var(--button-height-small);
+    overflow-wrap: anywhere;
+    padding: var(--space-2) var(--button-padding-inline-small);
+    text-align: center;
+    white-space: normal;
 }
 
 .plugin-is-incompatible:focus-visible {
