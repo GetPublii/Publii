@@ -81,6 +81,7 @@
       "node_modules/@napi-rs/**/*",
       "node_modules/better-sqlite3/**/*"
     ],
+    "beforeBuild": "./build/scripts/beforeBuild.js",
     "afterPack": "./build/scripts/afterPack.js",
     "files": [
       "**/*",
