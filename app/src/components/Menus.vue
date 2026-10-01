@@ -1,22 +1,27 @@
 <template>
-    <section :class="{
-        'content': true,
-        'menu': true,
-        'menus-list-view': true,
-        'no-scroll': editorVisible,
-        'is-dragging': dragInProgress
-    }">
-        <p-header
+    <section
+        class="collection-page"
+        :class="{
+            'content': true,
+            'menu': true,
+            'menus-list-view': true,
+            'no-scroll': editorVisible,
+            'is-dragging': dragInProgress
+        }">
+        <div
             v-if="!showEmptyState"
-            :title="$t('menu.menu')">
-            <p-button
-                :onClick="showAddMenuForm"
-                slot="buttons"
-                intent="primary"
-                icon="plus">
-                {{ $t('menu.addNewMenu') }}
-            </p-button>
-        </p-header>
+            class="collection-page-header">
+            <p-header
+                :title="$t('menu.menu')">
+                <p-button
+                    :onClick="showAddMenuForm"
+                    slot="buttons"
+                    intent="primary"
+                    icon="plus">
+                    {{ $t('menu.addNewMenu') }}
+                </p-button>
+            </p-header>
+        </div>
 
         <collection
             v-if="!showEmptyState"
@@ -765,6 +770,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/collection-page.css";
 .menu {
     overflow: auto;
     overflow-x: hidden!important;

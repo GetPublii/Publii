@@ -1009,16 +1009,8 @@ section.content.site-plugins-page {
     position: relative;
 }
 
-.site-plugins-list ::v-deep .collection-wrapper {
-    flex: 1;
-    min-height: 0;
-    position: relative;
-}
-
 .site-plugins-list ::v-deep .collection {
     grid-template-columns: auto minmax(0, 1fr) minmax(9rem, 15rem) auto auto !important;
-    top: 0;
-    width: 100%;
 }
 
 .site-plugins-list ::v-deep .col {

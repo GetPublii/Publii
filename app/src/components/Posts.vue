@@ -1,76 +1,78 @@
 <template>
-    <section class="content">
-        <p-header
-            v-if="hasPosts"
-            :title="$t('ui.posts')">
-            <header-search
-                slot="search"
-                ref="search"
-                :placeholder="$t('post.filterOrSearchPosts')"
-                onChangeEventName="posts-filter-value-changed" />
-
-            <btn-dropdown
-                slot="buttons"
-                intent="primary"
-                localStorageKey="publii-current-editor"
-                :previewIcon="true"
-                :items="dropdownItems"
-                defaultValue="tinymce" />
-        </p-header>
-
+    <section class="content collection-page">
         <div
-            v-if="dataLoaded && hasPosts"
-            class="filters collection-filters"
-            role="group"
-            :aria-label="$t('post.status')">
-            <collection-filter-button
-                :label="$t('post.all')"
-                :count="counters.all"
-                :active="isFilterActive('all')"
-                @click="setFilter('')" />
+            v-if="hasPosts"
+            class="collection-page-header">
+            <p-header
+                :title="$t('ui.posts')">
+                <header-search
+                    slot="search"
+                    ref="search"
+                    :placeholder="$t('post.filterOrSearchPosts')"
+                    onChangeEventName="posts-filter-value-changed" />
 
-            <collection-filter-button
-                :label="$t('post.published')"
-                :count="counters.published"
-                :active="isFilterActive('published')"
-                @click="setFilter('is:published')" />
+                <btn-dropdown
+                    slot="buttons"
+                    intent="primary"
+                    localStorageKey="publii-current-editor"
+                    :previewIcon="true"
+                    :items="dropdownItems"
+                    defaultValue="tinymce" />
+            </p-header>
 
-            <collection-filter-button
-                v-if="counters.featured"
-                :label="$t('post.featured')"
-                :count="counters.featured"
-                :active="isFilterActive('featured')"
-                @click="setFilter('is:featured')" />
+            <div
+                v-if="dataLoaded && hasPosts"
+                class="filters collection-filters"
+                role="group"
+                :aria-label="$t('post.status')">
+                <collection-filter-button
+                    :label="$t('post.all')"
+                    :count="counters.all"
+                    :active="isFilterActive('all')"
+                    @click="setFilter('')" />
 
-            <collection-filter-button
-                v-if="counters.hidden"
-                :label="$t('post.hidden')"
-                :count="counters.hidden"
-                :active="isFilterActive('hidden')"
-                @click="setFilter('is:hidden')" />
+                <collection-filter-button
+                    :label="$t('post.published')"
+                    :count="counters.published"
+                    :active="isFilterActive('published')"
+                    @click="setFilter('is:published')" />
 
-            <collection-filter-button
-                v-if="counters.excluded"
-                :label="$t('post.excluded')"
-                :count="counters.excluded"
-                :active="isFilterActive('excluded')"
-                @click="setFilter('is:excluded')" />
+                <collection-filter-button
+                    v-if="counters.featured"
+                    :label="$t('post.featured')"
+                    :count="counters.featured"
+                    :active="isFilterActive('featured')"
+                    @click="setFilter('is:featured')" />
 
-            <collection-filter-button
-                v-if="counters.drafts"
-                :label="$t('post.drafts')"
-                :count="counters.drafts"
-                :active="isFilterActive('draft')"
-                @click="setFilter('is:draft')" />
+                <collection-filter-button
+                    v-if="counters.hidden"
+                    :label="$t('post.hidden')"
+                    :count="counters.hidden"
+                    :active="isFilterActive('hidden')"
+                    @click="setFilter('is:hidden')" />
 
-            <collection-filter-button
-                v-if="counters.trashed"
-                :label="$t('post.trashed')"
-                :count="counters.trashed"
-                :active="isFilterActive('trashed')"
-                @click="setFilter('is:trashed')" />
+                <collection-filter-button
+                    v-if="counters.excluded"
+                    :label="$t('post.excluded')"
+                    :count="counters.excluded"
+                    :active="isFilterActive('excluded')"
+                    @click="setFilter('is:excluded')" />
+
+                <collection-filter-button
+                    v-if="counters.drafts"
+                    :label="$t('post.drafts')"
+                    :count="counters.drafts"
+                    :active="isFilterActive('draft')"
+                    @click="setFilter('is:draft')" />
+
+                <collection-filter-button
+                    v-if="counters.trashed"
+                    :label="$t('post.trashed')"
+                    :count="counters.trashed"
+                    :active="isFilterActive('trashed')"
+                    @click="setFilter('is:trashed')" />
+            </div>
         </div>
-
 
         <collection
             v-if="dataLoaded && !emptySearchResults && hasPosts"
@@ -895,6 +897,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/collection-page.css";
 @import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
 

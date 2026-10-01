@@ -1,19 +1,28 @@
 <template>
-    <section :class="{ 'content': true, 'authors': true, 'authors-list-view': true, 'no-scroll': editorVisible }">
-        <p-header :title="$t('ui.authors')">
-            <header-search
-                slot="search"
-                :placeholder="$t('author.filterOrSearchAuthors')"
-                onChangeEventName="authors-filter-value-changed" />
+    <section
+        class="collection-page"
+        :class="{
+            'content': true,
+            'authors': true,
+            'authors-list-view': true,
+            'no-scroll': editorVisible
+        }">
+        <div class="collection-page-header">
+            <p-header :title="$t('ui.authors')">
+                <header-search
+                    slot="search"
+                    :placeholder="$t('author.filterOrSearchAuthors')"
+                    onChangeEventName="authors-filter-value-changed" />
 
-            <p-button
-                :onClick="addAuthor"
-                slot="buttons"
-                intent="primary"
-                icon="plus">
-                {{ $t('author.addNewAuthor') }}
-            </p-button>
-        </p-header>
+                <p-button
+                    :onClick="addAuthor"
+                    slot="buttons"
+                    intent="primary"
+                    icon="plus">
+                    {{ $t('author.addNewAuthor') }}
+                </p-button>
+            </p-header>
+        </div>
 
         <collection
             v-if="!emptySearchResults"
@@ -410,6 +419,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/collection-page.css";
 @import "../css/collection-sorting.css";
 
 .authors {

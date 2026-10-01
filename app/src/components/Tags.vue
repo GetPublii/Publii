@@ -1,21 +1,30 @@
 <template>
-    <section :class="{ 'content': true, 'tags-list-view': true, 'no-scroll': editorVisible }">
-        <p-header
+    <section
+        class="collection-page"
+        :class="{
+            'content': true,
+            'tags-list-view': true,
+            'no-scroll': editorVisible
+        }">
+        <div
             v-if="!showEmptyState"
-            :title="$t('ui.tags')">
-            <header-search
-                slot="search"
-                :placeholder="$t('tag.filterOrSearchTags')"
-                onChangeEventName="tags-filter-value-changed" />
+            class="collection-page-header">
+            <p-header
+                :title="$t('ui.tags')">
+                <header-search
+                    slot="search"
+                    :placeholder="$t('tag.filterOrSearchTags')"
+                    onChangeEventName="tags-filter-value-changed" />
 
-            <p-button
-                :onClick="addTag"
-                slot="buttons"
-                intent="primary"
-                icon="plus">
-                {{ $t('tag.addNewTag') }}
-            </p-button>
-        </p-header>
+                <p-button
+                    :onClick="addTag"
+                    slot="buttons"
+                    intent="primary"
+                    icon="plus">
+                    {{ $t('tag.addNewTag') }}
+                </p-button>
+            </p-header>
+        </div>
 
         <collection
             v-if="!emptySearchResults && hasTags"
@@ -520,6 +529,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/collection-page.css";
 @import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
 

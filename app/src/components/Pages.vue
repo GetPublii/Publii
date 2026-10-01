@@ -1,79 +1,84 @@
 <template>
-    <section :class="{ 
-        'content': true, 
-        'hierarchy-mode-enabled': hierarchyMode 
-    }">
-        <p-header
-            v-if="hasPages"
-            :title="$t('ui.pages')">
-            <header-search
-                :inert="hierarchyMode ? '' : null"
-                slot="search"
-                ref="search"
-                :placeholder="$t('page.filterOrSearchPages')"
-                onChangeEventName="pages-filter-value-changed" />
-
-            <btn-dropdown
-                :inert="hierarchyMode ? '' : null"
-                slot="buttons"
-                intent="primary"
-                localStorageKey="publii-current-page-editor"
-                :previewIcon="true"
-                :items="dropdownItems"
-                defaultValue="tinymce" />
-        </p-header>
-
+    <section
+        class="collection-page"
+        :class="{
+            'content': true,
+            'hierarchy-mode-enabled': hierarchyMode
+        }">
         <div
-            v-if="dataLoaded && hasPages"
-            class="filters collection-filters"
-            role="group"
-            :aria-label="$t('page.status')">
-            <collection-filter-button
-                :label="$t('page.all')"
-                :count="counters.all"
-                :active="isFilterActive('all')"
-                class="filter-all"
-                :disabled="hierarchyMode"
-                @click="setFilter('')" />
+            v-if="hasPages"
+            class="collection-page-header">
+            <p-header
+                :title="$t('ui.pages')">
+                <header-search
+                    :inert="hierarchyMode ? '' : null"
+                    slot="search"
+                    ref="search"
+                    :placeholder="$t('page.filterOrSearchPages')"
+                    onChangeEventName="pages-filter-value-changed" />
 
-            <collection-filter-button
-                :label="$t('page.published')"
-                :count="counters.published"
-                :active="isFilterActive('published')"
-                :disabled="hierarchyMode"
-                @click="setFilter('is:published')" />
-
-            <collection-filter-button
-                v-if="counters.drafts"
-                :label="$t('page.drafts')"
-                :count="counters.drafts"
-                :active="isFilterActive('draft')"
-                :disabled="hierarchyMode"
-                @click="setFilter('is:draft')" />
-
-            <collection-filter-button
-                v-if="counters.trashed"
-                :label="$t('page.trashed')"
-                :count="counters.trashed"
-                :active="isFilterActive('trashed')"
-                :disabled="hierarchyMode"
-                @click="setFilter('is:trashed')" />
+                <btn-dropdown
+                    :inert="hierarchyMode ? '' : null"
+                    slot="buttons"
+                    intent="primary"
+                    localStorageKey="publii-current-page-editor"
+                    :previewIcon="true"
+                    :items="dropdownItems"
+                    defaultValue="tinymce" />
+            </p-header>
 
             <div
-                :class="{
-                   'filter-value': true,
-                   'is-hierarchy': true,
-                   'is-hierarchy-active': !!hierarchyMode
-                }">
-                <a
-                    href="#"
-                    class="edit-page-hierarchy"
-                    @click.prevent="toggleHierarchyMode">
-                    <icon
-                        name="hierarchy"
-                        size="s" />
-                    {{ hierarchyMode ? $t('page.closeHierarchy') : $t('page.editHierarchy') }}
-                </a>
+                v-if="dataLoaded && hasPages"
+                class="filters collection-filters"
+                role="group"
+                :aria-label="$t('page.status')">
+                <collection-filter-button
+                    :label="$t('page.all')"
+                    :count="counters.all"
+                    :active="isFilterActive('all')"
+                    class="filter-all"
+                    :disabled="hierarchyMode"
+                    @click="setFilter('')" />
+
+                <collection-filter-button
+                    :label="$t('page.published')"
+                    :count="counters.published"
+                    :active="isFilterActive('published')"
+                    :disabled="hierarchyMode"
+                    @click="setFilter('is:published')" />
+
+                <collection-filter-button
+                    v-if="counters.drafts"
+                    :label="$t('page.drafts')"
+                    :count="counters.drafts"
+                    :active="isFilterActive('draft')"
+                    :disabled="hierarchyMode"
+                    @click="setFilter('is:draft')" />
+
+                <collection-filter-button
+                    v-if="counters.trashed"
+                    :label="$t('page.trashed')"
+                    :count="counters.trashed"
+                    :active="isFilterActive('trashed')"
+                    :disabled="hierarchyMode"
+                    @click="setFilter('is:trashed')" />
+
+                <div
+                    :class="{
+                       'filter-value': true,
+                       'is-hierarchy': true,
+                       'is-hierarchy-active': !!hierarchyMode
+                    }">
+                    <a
+                        href="#"
+                        class="edit-page-hierarchy"
+                        @click.prevent="toggleHierarchyMode">
+                        <icon
+                            name="hierarchy"
+                            size="s" />
+                        {{ hierarchyMode ? $t('page.closeHierarchy') : $t('page.editHierarchy') }}
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -1210,6 +1215,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/collection-page.css";
 @import '../css/content-status-icon.css';
 @import "../css/collection-sorting.css";
 

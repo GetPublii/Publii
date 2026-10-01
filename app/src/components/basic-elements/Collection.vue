@@ -38,8 +38,13 @@ export default {
 /*
  * Collection element
  */
- .collection-wrapper {
-     &:after {
+.collection-wrapper {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    position: relative;
+
+    &:after {
         background: linear-gradient(transparent, var(--bg-site));
         bottom: 0;
         content: "";
@@ -50,7 +55,7 @@ export default {
         right: 5px;
         z-index: var(--layer-panel);
     }
- }
+}
 
 .collection {
     border-top: 1px solid var(--color-border-default);
@@ -61,8 +66,8 @@ export default {
     overflow: auto;
     padding-bottom: var(--space-12);
     position: absolute;
-    top: 12rem;
-    width: calc(100% - 8rem);
+    top: 0;
+    width: 100%;
 
     ::v-deep a:focus-visible {
         outline: 2px solid var(--input-border-focus);

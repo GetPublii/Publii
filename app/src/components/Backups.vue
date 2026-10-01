@@ -1,30 +1,33 @@
 <template>
-    <section class="content backups">
-        <p-header
+    <section class="content backups collection-page">
+        <div
             v-if="!noBackups"
-            :title="$t('file.backups')">
+            class="collection-page-header">
+            <p-header
+                :title="$t('file.backups')">
 
-            <p-button
-                :onClick="goBack"
-                slot="buttons"
-                appearance="clean"
-                back>
-                {{ $t('ui.backToTools') }}
-            </p-button>
+                <p-button
+                    :onClick="goBack"
+                    slot="buttons"
+                    appearance="clean"
+                    back>
+                    {{ $t('ui.backToTools') }}
+                </p-button>
 
-            <p-button
-                :onClick="createBackup"
-                slot="buttons"
-                intent="primary"
-                :disabled="backupActionsDisabled"
-                :loading="activeOperation === 'create'"
-                loading-layout="overlay"
-                :aria-label="activeOperation === 'create' ? $t('file.creatingBackup') : null"
-                icon="plus">
-                {{ $t('file.createBackup') }}
-            </p-button>
+                <p-button
+                    :onClick="createBackup"
+                    slot="buttons"
+                    intent="primary"
+                    :disabled="backupActionsDisabled"
+                    :loading="activeOperation === 'create'"
+                    loading-layout="overlay"
+                    :aria-label="activeOperation === 'create' ? $t('file.creatingBackup') : null"
+                    icon="plus">
+                    {{ $t('file.createBackup') }}
+                </p-button>
 
-        </p-header>
+            </p-header>
+        </div>
 
         <empty-state
             v-if="noBackups"
@@ -523,6 +526,7 @@ export default {
 }
 </script>
 <style scoped>
+@import "../css/collection-page.css";
 .backup-status {
     color: var(--text-light-color);
     font-size: var(--font-size-ui-xs);

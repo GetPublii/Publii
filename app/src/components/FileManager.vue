@@ -1147,17 +1147,6 @@ section.content.file-manager {
         flex-direction: column;
     }
 
-    .file-list ::v-deep .collection-wrapper {
-        flex: 1;
-        min-height: 0;
-        position: relative;
-    }
-
-    .file-list ::v-deep .collection {
-        top: 0;
-        width: 100%;
-    }
-
     .file-link {
         overflow-wrap: anywhere;
     }

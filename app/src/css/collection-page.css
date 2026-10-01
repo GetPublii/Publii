@@ -1,0 +1,23 @@
+section.content.collection-page {
+    display: flex;
+    flex-direction: column;
+}
+
+section.content.collection-page:has(> .collection-wrapper) {
+    padding-bottom: 0;
+}
+
+.collection-page-header {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    min-height: 9rem;
+}
+
+.collection-page-header > .heading {
+    flex-shrink: 0;
+}
+
+.collection-page-header > .collection-filters {
+    margin-bottom: var(--space-4);
+}
