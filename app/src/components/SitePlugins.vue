@@ -263,6 +263,7 @@
 </template>
 
 <script>
+import focusReturnTarget from '../helpers/focus-return-target.js';
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import ToolsPluginDetails from './ToolsPluginDetails.vue';
@@ -658,7 +659,7 @@ export default {
             this.$router.push('/site/' + encodeURIComponent(this.siteName) + '/plugins/' + encodeURIComponent(item.directory));
         },
         showDetails (item) {
-            this.returnFocus = document.activeElement;
+            this.returnFocus = focusReturnTarget(document.activeElement);
             this.detailsDirectory = item.directory;
         },
         closeDetails () {

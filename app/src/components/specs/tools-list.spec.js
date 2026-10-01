@@ -101,6 +101,7 @@ function setup(locale = 'en-gb') {
         getExtensionNotifications,
         mainProcessAPI: api,
         document: { activeElement: null },
+        focusReturnTarget: require('../../helpers/focus-return-target'),
         escapeHTML: value => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
         mapGetters(names) {
             return Object.fromEntries(names.map(name => [name, function () {
@@ -587,6 +588,27 @@ describe('Site Plugins collection', () => {
         assert.equal(list.detailsDirectory, 'Beta');
         assert.deepEqual(routes, ['/site/demo/plugins/Alpha']);
         assert.ok(!list.pluginActions(list.detailsPlugin).some(action => action.label === 'Delete'));
+    });
+
+    it('returns focus to the persistent row trigger after closing details opened from its menu', async () => {
+        const { instance: list, document } = setup();
+        const trigger = {
+            isConnected: true,
+            focus() {
+                document.activeElement = this;
+            }
+        };
+        const menuItem = {
+            isConnected: true,
+            closest: () => ({ querySelector: () => trigger })
+        };
+        document.activeElement = menuItem;
+        list.showDetails(list.items[0]);
+        menuItem.isConnected = false;
+        document.activeElement = null;
+        list.closeDetails();
+        await Vue.nextTick();
+        assert.equal(document.activeElement, trigger);
     });
 
     it('explains unavailable settings and hints activation only when it would make settings available', () => {

@@ -89,6 +89,28 @@ describe('Nonmodal sidebar keyboard navigation', () => {
         assert.equal(f.listeners.size, 0);
     });
 
+    it('retains an explicit opener when the menu has already closed before insertion', () => {
+        const f = fixture();
+        f.binding.value.trigger = f.trigger;
+        f.document.activeElement = f.document.body;
+        f.mount();
+        assert.equal(f.document.activeElement, f.input);
+        f.unmount();
+        assert.equal(f.document.activeElement, f.trigger);
+    });
+
+    it('updates the opener when the same record is opened through another control', () => {
+        const f = fixture();
+        f.binding.value.trigger = f.trigger;
+        f.mount();
+        const nextTrigger = f.control();
+        f.binding.value.trigger = nextTrigger;
+        f.directive.componentUpdated(f.element, f.binding, f.vnode);
+        f.flush();
+        f.unmount();
+        assert.equal(f.document.activeElement, nextTrigger);
+    });
+
     it('leaves Tab native and respects Escape consumed by nested controls or composition', () => {
         const f = fixture();
         f.mount();

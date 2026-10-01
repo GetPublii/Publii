@@ -265,6 +265,7 @@
                     <div v-if="hierarchyMode">
                         <a
                             v-if="!subpageSelected"
+                            :ref="'hierarchy-move-' + item.id"
                             href="#"
                             class="page-item-select"
                             :title="$t('page.moveItem')"
@@ -274,6 +275,7 @@
                         
                         <a
                             v-if="subpageSelected && item.id === subpageSelected"
+                            :ref="'hierarchy-unselect-' + item.id"
                             href="#"
                             class="page-item-unselect"
                             :title="$t('page.unselectItem')"
@@ -946,10 +948,27 @@ export default {
         selectItem (id) {
             this.subpageSelected = id;
             this.subpageSelectedChildren = this.items.filter(item => item.parentIds.indexOf(id) > -1).map(item => item.id);
+            this.focusHierarchyAction(id, true);
         },
         unselectItem () {
+            const id = this.subpageSelected;
             this.subpageSelected = false;
             this.subpageSelectedChildren = [];
+            this.focusHierarchyAction(id, false);
+        },
+        focusHierarchyAction (id, selected) {
+            this.$nextTick(() => {
+                if (!this.hierarchyMode || this.subpageSelected !== (selected ? id : false)) {
+                    return;
+                }
+
+                const refs = this.$refs[(selected ? 'hierarchy-unselect-' : 'hierarchy-move-') + id];
+                const control = Array.isArray(refs) ? refs[0] : refs;
+
+                if (control && control.isConnected) {
+                    control.focus({ preventScroll: true });
+                }
+            });
         },
         findAndRemoveItem(pages, selectedItem) {
             for (let i = 0; i < pages.length; i++) {

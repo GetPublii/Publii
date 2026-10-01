@@ -153,7 +153,8 @@
         <transition>
             <author-form
                 v-if="editorVisible"
-                :form-animation="formAnimation" />
+                :form-animation="formAnimation"
+                :return-focus="editorTrigger" />
         </transition>
 
         <empty-state
@@ -163,6 +164,7 @@
 </template>
 
 <script>
+import focusReturnTarget from '../helpers/focus-return-target.js';
 import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
@@ -187,6 +189,7 @@ export default {
         return {
             formAnimation: false,
             editorVisible: false,
+            editorTrigger: null,
             filterValue: '',
             selectedItems: [],
             orderBy: 'id',
@@ -259,6 +262,7 @@ export default {
     },
     methods: {
         addAuthor () {
+            this.editorTrigger = focusReturnTarget(document.activeElement);
             this.$bus.$on('show-author-item-editor', () => ({
                 id: 0,
                 name: '',
@@ -280,6 +284,7 @@ export default {
             this.editorVisible = true;
         },
         editAuthor (item) {
+            this.editorTrigger = focusReturnTarget(document.activeElement);
             if (document.querySelector('.authors-list-view .item.is-edited')) {
                 document.querySelector('.authors-list-view .item.is-edited').classList.remove('is-edited');
             }

@@ -1,6 +1,6 @@
 <template>
     <div
-        v-sidebar-keyboard="{ key: authorData.id, close }"
+        v-sidebar-keyboard="{ key: authorData.id, trigger: returnFocus, close }"
         role="dialog"
         :aria-labelledby="'sidebar-title-' + _uid"
         tabindex="-1"
@@ -452,7 +452,8 @@ export default {
     },
     name: 'author-form-sidebar',
     props: [
-        'formAnimation'
+        'formAnimation',
+        'returnFocus'
     ],
     data () {
         return {
@@ -536,7 +537,10 @@ export default {
                 params.additionalData = {};
             }
 
-            this.openedItem = 'basic';
+            if (this.authorData.id !== (params.id || 0)) {
+                this.openedItem = 'basic';
+            }
+
             this.errors = [];
             this.authorData.id = params.id || 0;
             this.authorData.name = params.name || '';

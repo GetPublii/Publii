@@ -1,6 +1,11 @@
 const panels = new WeakMap();
 
 function rememberTrigger(element, state) {
+    if (state.opener) {
+        state.trigger = state.opener;
+        return;
+    }
+
     const active = element.ownerDocument.activeElement;
 
     if (!active || active === element.ownerDocument.body || element.contains(active)) {
@@ -27,6 +32,7 @@ export default {
     inserted (element, binding, vnode) {
         const state = {
             trigger: null,
+            opener: binding.value.trigger,
             key: binding.value.key,
             close: binding.value.close,
             parent: element.parentElement,
@@ -52,8 +58,9 @@ export default {
         const state = panels.get(element);
         state.close = binding.value.close;
 
-        if (state.key !== binding.value.key) {
+        if (state.key !== binding.value.key || state.opener !== binding.value.trigger) {
             state.key = binding.value.key;
+            state.opener = binding.value.trigger;
             rememberTrigger(element, state);
             focusPanel(element, vnode);
         }

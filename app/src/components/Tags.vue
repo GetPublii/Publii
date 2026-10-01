@@ -188,12 +188,14 @@
         <transition>
             <tag-form
                 v-if="editorVisible"
-                :form-animation="formAnimation" />
+                :form-animation="formAnimation"
+                :return-focus="editorTrigger" />
         </transition>
     </section>
 </template>
 
 <script>
+import focusReturnTarget from '../helpers/focus-return-target.js';
 import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 import escapeHTML from '../helpers/escape-html.js';
 import Tooltip from '../helpers/tooltip.js';
@@ -218,6 +220,7 @@ export default {
         return {
             formAnimation: false,
             editorVisible: false,
+            editorTrigger: null,
             filterValue: '',
             orderBy: this.$store.state.ordering.tags.orderBy,
             order: this.$store.state.ordering.tags.order,
@@ -349,6 +352,7 @@ export default {
             }
         },
         addTag () {
+            this.editorTrigger = focusReturnTarget(document.activeElement);
             this.$bus.$on('show-tag-item-editor', () => ({
                 id: 0,
                 name: '',
@@ -365,6 +369,7 @@ export default {
             this.editorVisible = true;
         },
         editTag (item) {
+            this.editorTrigger = focusReturnTarget(document.activeElement);
             if (document.querySelector('.tags-list-view .item.is-edited')) {
                 document.querySelector('.tags-list-view .item.is-edited').classList.remove('is-edited');
             }
