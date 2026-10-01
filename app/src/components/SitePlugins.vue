@@ -965,7 +965,7 @@ section.content.site-plugins-page {
 }
 
 .filters {
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
 }
 
 .notice-filter-control {

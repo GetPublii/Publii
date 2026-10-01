@@ -61,7 +61,7 @@ export default {
     overflow: auto;
     padding-bottom: var(--space-12);
     position: absolute;
-    top: 12.5rem;
+    top: 12rem;
     width: calc(100% - 8rem);
 
     ::v-deep a:focus-visible {

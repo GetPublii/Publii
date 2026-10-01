@@ -1345,12 +1345,12 @@ export default {
 .filters {
     .filter-value.is-hierarchy {
         margin-left: auto;
+        margin-top: 4px;
 
         a {
             align-items: center;
             display: inline-flex;
             gap: 6px;
-            margin-top: 8px;
         }
     }
 

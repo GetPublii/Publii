@@ -130,7 +130,7 @@ export default {
         border-radius: 30px;
         box-shadow: none;
         font-size: var(--font-size-ui-md);
-        height: 4.4rem;
+        height: 4.2rem;
         opacity: 0;
         padding: 0 5rem 0 6rem;
         pointer-events: none;

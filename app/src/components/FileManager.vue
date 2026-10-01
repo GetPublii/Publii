@@ -1066,9 +1066,9 @@ section.content.file-manager {
         justify-content: space-between;
         font-size: 1.35rem;
         line-height: var(--line-height-base);
-        min-height: calc(1.35rem * var(--line-height-base) + 8px);
+        min-height: 2.8rem;
         margin-top: -2.2rem;
-        margin-bottom: var(--space-6);
+        margin-bottom: var(--space-4);
     }
 
     .refresh-button {
@@ -1077,7 +1077,7 @@ section.content.file-manager {
         font-size: inherit;
         height: auto;
         line-height: inherit;
-        margin-top: 8px;
+        margin-top: 4px;
         padding: 0;
     }
 
