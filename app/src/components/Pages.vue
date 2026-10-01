@@ -7,12 +7,14 @@
             v-if="hasPages"
             :title="$t('ui.pages')">
             <header-search
+                :inert="hierarchyMode ? '' : null"
                 slot="search"
                 ref="search"
                 :placeholder="$t('page.filterOrSearchPages')"
                 onChangeEventName="pages-filter-value-changed" />
 
             <btn-dropdown
+                :inert="hierarchyMode ? '' : null"
                 slot="buttons"
                 intent="primary"
                 localStorageKey="publii-current-page-editor"
@@ -66,7 +68,7 @@
                 <a
                     href="#"
                     class="edit-page-hierarchy"
-                    @click="toggleHierarchyMode">
+                    @click.prevent="toggleHierarchyMode">
                     <icon
                         name="hierarchy"
                         size="s" />
@@ -81,6 +83,7 @@
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
+                        :aria-label="$t('ui.selectAllVisibleItems')"
                         value="all"
                         :checked="allVisibleSelected"
                         :indeterminate="someVisibleSelected"
@@ -90,74 +93,54 @@
                 </collection-cell>
 
                 <collection-cell>
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('title')">
-                        <template v-if="orderBy === 'title'">
-                            <strong>{{ $t('page.title') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('page.title') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('page.title')"
+                        :active="orderBy === 'title'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('title')" />
                 </collection-cell>
 
                 <collection-cell>
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('created')">
-                        <template v-if="orderBy === 'created'">
-                            <strong>{{ $t('page.publicationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('page.publicationDate') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('page.publicationDate')"
+                        :active="orderBy === 'created'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('created')" />
                 </collection-cell>
 
                 <collection-cell
                     v-if="showModificationDate && showModificationDateAsColumn">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('modified')">
-                        <template v-if="orderBy === 'modified'">
-                            <strong>{{ $t('page.modificationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('page.modificationDate') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('page.modificationDate')"
+                        :active="orderBy === 'modified'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('modified')" />
                 </collection-cell>
 
                 <collection-cell min-width="110px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('author')">
-                        <template v-if="orderBy === 'author'">
-                            <strong>{{ $t('author.author') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('author.author') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('author.author')"
+                        :active="orderBy === 'author'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('author')" />
                 </collection-cell>
 
                 <collection-cell variant="identifier">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('id')">
-                        <template v-if="orderBy === 'id'">
-                            <strong>{{ $t('ui.id') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('ui.id') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('ui.id')"
+                        :active="orderBy === 'id'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('id')" />
                 </collection-cell>
 
                 <div
@@ -228,6 +211,7 @@
                 :key="'collection-row-' + item.id">
                 <collection-cell>
                     <checkbox
+                        :aria-label="$t('ui.selectItem', { name: item.title })"
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :disabled="hierarchyMode"
@@ -251,7 +235,9 @@
                         <a
                             v-tooltip.focus="item.isDraft ? $t('page.thisPageIsADraft') : ''"
                             href="#"
-                            @click.prevent.stop="editPage(item.id, item.editor)">
+                            :aria-disabled="hierarchyMode ? 'true' : null"
+                            :tabindex="hierarchyMode ? -1 : null"
+                            @click.prevent.stop="!hierarchyMode && editPage(item.id, item.editor)">
 
                             {{ item.title }}
 
@@ -396,6 +382,7 @@
 </template>
 
 <script>
+import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 import EditorSelection from './basic-elements/EditorSelection.vue';
 import CollectionFilterButton from './basic-elements/CollectionFilterButton.vue';
 import Tooltip from '../helpers/tooltip.js';
@@ -405,6 +392,7 @@ import CollectionOrdering from './mixins/CollectionOrdering.js';
 
 export default {
     components: {
+        CollectionSortButton,
         EditorSelection,
         CollectionFilterButton
     },

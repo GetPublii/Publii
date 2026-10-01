@@ -12,6 +12,7 @@ function loadComponent(name, bindings = {}) {
         module: { exports: {} },
         Vue,
         SidebarScrollFade: {},
+        SidebarKeyboard: {},
         Tooltip: {},
         Utils: {
             debouncedFunction: callback => callback

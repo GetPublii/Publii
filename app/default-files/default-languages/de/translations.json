@@ -1955,6 +1955,8 @@
         "thisPluginHasNoOptions": "Dieses Plugin hat keine zusätzlichen Optionen..."
     },
     "ui": {
+        "selectAllVisibleItems": "Alle sichtbaren Einträge auswählen",
+        "selectItem": "{name} auswählen",
         "aboutPublii": "Über Publii",
         "alternativeText": "Alternativer Text",
         "appConfiguration": "App-Einstellungen",

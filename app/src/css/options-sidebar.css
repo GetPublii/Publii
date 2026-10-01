@@ -405,3 +405,26 @@ body[data-os="linux"] .options-sidebar-container:not(.post-editor-sidebar) {
         outline-offset: 2px;
     }
 }
+
+button.options-sidebar-header,
+button.options-sidebar-close {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    font-family: inherit;
+    text-align: left;
+
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+}
+
+button.options-sidebar-header {
+    border-top: 1px solid var(--border-light-color);
+    margin: 0;
+}
+
+button.options-sidebar-close:hover {
+    background: var(--input-border-color);
+}

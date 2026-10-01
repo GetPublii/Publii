@@ -10,6 +10,7 @@ function setup(name, items) {
     const context = {
         module: { exports: {} },
         CollectionFilterButton: {},
+        CollectionSortButton: {},
         EditorSelection: {},
         CollectionOrdering: {},
         CollectionCheckboxes: {},

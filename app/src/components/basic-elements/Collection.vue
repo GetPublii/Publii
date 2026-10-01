@@ -64,6 +64,11 @@ export default {
     top: 12.5rem;
     width: calc(100% - 8rem);
 
+    ::v-deep a:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+
     .content {
         display: contents;
     }

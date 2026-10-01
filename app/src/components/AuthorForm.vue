@@ -1,17 +1,23 @@
 <template>
     <div
+        v-sidebar-keyboard="{ key: authorData.id, close }"
+        role="dialog"
+        :aria-labelledby="'sidebar-title-' + _uid"
+        tabindex="-1"
         :data-animate="formAnimation ? 'true' : 'false'"
         class="options-sidebar-container">
         <div
             :key="'author-view-' + authorData.id"
             class="options-sidebar">
             <div class="options-sidebar-heading">
-                <h2>
+                <h2 :id="'sidebar-title-' + _uid">
                     <template v-if="authorData.id">{{ $t('author.editAuthor') }}</template>
                     <template v-if="!authorData.id">{{ $t('author.addNewAuthor') }}</template>
                 </h2>
 
-                <span
+                <button
+                    type="button"
+                    :aria-label="$t('ui.close')"
                     class="options-sidebar-close"
                     name="sidebar-close"
                     @click.prevent="close()">
@@ -21,7 +27,7 @@
                         non-interactive
                         aria-hidden="true"
                         focusable="false" />
-                </span>
+                </button>
             </div>
 
             <div
@@ -37,7 +43,10 @@
                 </div>
 
                 <div class="options-sidebar-item">
-                    <div
+                    <button
+                        type="button"
+                        :aria-expanded="openedItem === 'basic' ? 'true' : 'false'"
+                        :aria-controls="'sidebar-basic-' + _uid"
                         :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'basic' }"
                         @click="openItem('basic')">
                         <icon
@@ -46,12 +55,14 @@
                             name="sidebar-status"/>
 
                         <span class="options-sidebar-label">{{ $t('ui.basicInformation') }}</span>
-                    </div>
+                    </button>
 
                     <div
                         class="author-settings"
                         style="max-height: none;"
-                        ref="basic-content-wrapper">
+                        ref="basic-content-wrapper"
+                        :id="'sidebar-basic-' + _uid"
+                        :inert="openedItem !== 'basic' ? '' : null">
                         <div
                             class="author-settings-content"
                             ref="basic-content">
@@ -97,7 +108,10 @@
                 </div>
 
                 <div class="options-sidebar-item">
-                    <div
+                    <button
+                        type="button"
+                        :aria-expanded="openedItem === 'image' ? 'true' : 'false'"
+                        :aria-controls="'sidebar-image-' + _uid"
                         :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'image' }"
                         @click="openItem('image')">
                         <icon
@@ -106,11 +120,13 @@
                             name="sidebar-image"/>
 
                         <span class="options-sidebar-label">{{ $t('author.avatarAndFeaturedImage') }}</span>
-                    </div>
+                    </button>
 
                     <div
                         class="author-settings"
-                        ref="image-content-wrapper">
+                        ref="image-content-wrapper"
+                        :id="'sidebar-image-' + _uid"
+                        :inert="openedItem !== 'image' ? '' : null">
                         <div
                             class="author-settings-content"
                             ref="image-content">
@@ -193,7 +209,10 @@
                 </div>
 
                 <div class="options-sidebar-item">
-                    <div
+                    <button
+                        type="button"
+                        :aria-expanded="openedItem === 'seo' ? 'true' : 'false'"
+                        :aria-controls="'sidebar-seo-' + _uid"
                         :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'seo' }"
                         @click="openItem('seo')">
                         <icon
@@ -202,11 +221,13 @@
                             name="sidebar-seo"/>
 
                         <span class="options-sidebar-label">{{ $t('ui.seo') }}</span>
-                    </div>
+                    </button>
 
                     <div
                         class="author-settings"
-                        ref="seo-content-wrapper">
+                        ref="seo-content-wrapper"
+                        :id="'sidebar-seo-' + _uid"
+                        :inert="openedItem !== 'seo' ? '' : null">
                         <div
                             class="author-settings-content"
                             ref="seo-content">
@@ -278,7 +299,10 @@
                 </div>
 
                 <div class="options-sidebar-item">
-                    <div
+                    <button
+                        type="button"
+                        :aria-expanded="openedItem === 'other' ? 'true' : 'false'"
+                        :aria-controls="'sidebar-other-' + _uid"
                         :class="{ 'options-sidebar-header': true, 'is-open': openedItem === 'other' }"
                         @click="openItem('other')">
                         <icon
@@ -287,11 +311,13 @@
                             name="sidebar-options"/>
 
                         <span class="options-sidebar-label">{{ $t('ui.otherOptions') }}</span>
-                    </div>
+                    </button>
 
                     <div
                         class="author-settings"
-                        ref="other-content-wrapper">
+                        ref="other-content-wrapper"
+                        :id="'sidebar-other-' + _uid"
+                        :inert="openedItem !== 'other' ? '' : null">
                         <div
                             class="author-settings-content"
                             ref="other-content">
@@ -412,6 +438,7 @@
 </template>
 
 <script>
+import SidebarKeyboard from '../helpers/sidebar-keyboard.js';
 import SidebarScrollFade from '../helpers/sidebar-scroll-fade.js';
 import Tooltip from '../helpers/tooltip.js';
 import Utils from './../helpers/utils';
@@ -419,6 +446,7 @@ import Vue from 'vue';
 
 export default {
     directives: {
+        sidebarKeyboard: SidebarKeyboard,
         sidebarScrollFade: SidebarScrollFade,
         tooltip: Tooltip
     },
@@ -508,6 +536,7 @@ export default {
                 params.additionalData = {};
             }
 
+            this.openedItem = 'basic';
             this.errors = [];
             this.authorData.id = params.id || 0;
             this.authorData.name = params.name || '';

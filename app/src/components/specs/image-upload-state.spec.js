@@ -11,6 +11,7 @@ function loadComponent(file, globals = {}) {
         module: { exports: {} },
         Vue,
         SidebarScrollFade: {},
+        SidebarKeyboard: {},
         Tooltip: {},
         Utils: { debouncedFunction: callback => callback },
         PButton: {},

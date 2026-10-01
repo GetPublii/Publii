@@ -69,6 +69,11 @@ input[type="checkbox"] {
     width: 1.9rem;
     z-index: 1;
 
+    &:focus-visible {
+        outline: 2px solid var(--input-border-focus);
+        outline-offset: 2px;
+    }
+
     &:hover {
         border: 1px solid var(--color-primary);
         cursor: pointer;

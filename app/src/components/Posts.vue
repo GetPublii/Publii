@@ -78,6 +78,7 @@
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
+                        :aria-label="$t('ui.selectAllVisibleItems')"
                         value="all"
                         :checked="allVisibleSelected"
                         :indeterminate="someVisibleSelected"
@@ -86,74 +87,54 @@
                 </collection-cell>
 
                 <collection-cell>
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('title')">
-                        <template v-if="orderBy === 'title'">
-                            <strong>{{ $t('post.title') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('post.title') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'title' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'title' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('post.title')"
+                        :active="orderBy === 'title'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('title')" />
                 </collection-cell>
 
                 <collection-cell>
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('created')">
-                        <template v-if="orderBy === 'created'">
-                            <strong>{{ $t('post.publicationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('post.publicationDate') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'created' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'created' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('post.publicationDate')"
+                        :active="orderBy === 'created'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('created')" />
                 </collection-cell>
 
                 <collection-cell
                     v-if="showModificationDate && showModificationDateAsColumn">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('modified')">
-                        <template v-if="orderBy === 'modified'">
-                            <strong>{{ $t('post.modificationDate') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('post.modificationDate') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'modified' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'modified' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('post.modificationDate')"
+                        :active="orderBy === 'modified'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('modified')" />
                 </collection-cell>
 
                 <collection-cell min-width="110px">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('author')">
-                        <template v-if="orderBy === 'author'">
-                            <strong>{{ $t('author.author') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('author.author') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'author' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'author' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('author.author')"
+                        :active="orderBy === 'author'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('author')" />
                 </collection-cell>
 
                 <collection-cell variant="identifier">
-                    <span
-                        class="col-sortable-title"
-                        @click="ordering('id')">
-                        <template v-if="orderBy === 'id'">
-                            <strong>{{ $t('ui.id') }}</strong>
-                        </template>
-                        <template v-else>{{ $t('ui.id') }}</template>
-
-                        <span class="order-descending" v-if="orderBy === 'id' && order === 'ASC'"></span>
-                        <span class="order-ascending" v-if="orderBy === 'id' && order === 'DESC'"></span>
-                    </span>
+                    <collection-sort-button
+                        :label="$t('ui.id')"
+                        :active="orderBy === 'id'"
+                        :order="order"
+                        :reserve-width="false"
+                        :disabled="anyCheckboxIsSelected"
+                        @click="ordering('id')" />
                 </collection-cell>
 
                 <div
@@ -224,6 +205,7 @@
                 :key="'collection-row-' + item.id">
                 <collection-cell>
                     <checkbox
+                        :aria-label="$t('ui.selectItem', { name: item.title })"
                         :value="item.id"
                         :checked="isChecked(item.id)"
                         :onClick="toggleSelection"
@@ -348,6 +330,7 @@
 </template>
 
 <script>
+import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 import EditorSelection from './basic-elements/EditorSelection.vue';
 import CollectionFilterButton from './basic-elements/CollectionFilterButton.vue';
 import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
@@ -356,6 +339,7 @@ import Tooltip from '../helpers/tooltip.js';
 
 export default {
     components: {
+        CollectionSortButton,
         EditorSelection,
         CollectionFilterButton
     },

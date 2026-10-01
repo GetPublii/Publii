@@ -2008,6 +2008,8 @@
         "thisPluginHasNoOptions": "Ta wtyczka nie ma dodatkowych opcji..."
     },
     "ui": {
+        "selectAllVisibleItems": "Zaznacz wszystkie widoczne elementy",
+        "selectItem": "Zaznacz {name}",
         "aboutPublii": "O Publii",
         "alternativeText": "Tekst alternatywny",
         "appConfiguration": "Konfiguracja aplikacji",

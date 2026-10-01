@@ -2006,6 +2006,8 @@
         "thisPluginHasNoOptions": "This plugin has no additional options..."
     },
     "ui": {
+        "selectAllVisibleItems": "Select all visible items",
+        "selectItem": "Select {name}",
         "aboutPublii": "About Publii",
         "alternativeText": "Alternative text",
         "appConfiguration": "Application configuration",

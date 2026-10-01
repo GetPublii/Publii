@@ -51,6 +51,7 @@
             <collection-header slot="header">
                 <collection-cell>
                     <checkbox
+                        :aria-label="$t('ui.selectAllVisibleItems')"
                         value="all"
                         :checked="allVisibleSelected"
                         :indeterminate="someVisibleSelected"
@@ -87,6 +88,7 @@
                 :key="item.name">
                 <collection-cell>
                     <checkbox
+                        :aria-label="$t('ui.selectItem', { name: item.name })"
                         :id="item.name"
                         :value="item.id"
                         :checked="isChecked(item.id)"
