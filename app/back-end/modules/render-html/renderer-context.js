@@ -294,7 +294,7 @@ class RendererContext {
     }
 
     setGlobalContext(context, additionalContexts, paginationData, itemSlug, itemConfig, itemContext) {
-        let addIndexHtml = this.renderer.previewMode || this.siteConfig.advanced.urls.addIndex;
+        let addIndexHtml = URLHelper.usesIndexHtml(this.renderer);
         let fullURL = normalizePath(this.siteConfig.domain);
         let searchUrl = fullURL + '/' + this.siteConfig.advanced.urls.searchPage;
         let errorUrl = fullURL + '/' + this.siteConfig.advanced.urls.errorPage;
@@ -829,7 +829,7 @@ class RendererContext {
             }
         }
 
-        if (this.renderer.previewMode) {
+        if (URLHelper.isFilePreview(this.renderer)) {
             tagsUrl += 'index.html';
         }
 
@@ -843,7 +843,7 @@ class RendererContext {
             postsUrl = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/';
         }
 
-        if (this.renderer.previewMode) {
+        if (URLHelper.isFilePreview(this.renderer)) {
             postsUrl += 'index.html';
         }
 

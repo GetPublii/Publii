@@ -1,5 +1,6 @@
 const path = require('path');
 const ContentHelper = require('./../helpers/content');
+const URLHelper = require('./../helpers/url');
 
 /**
  * Page item for the renderer
@@ -140,7 +141,7 @@ class PageItem {
 
             pageURL = this.siteConfig.domain + '/' + pageSlug + '/';
 
-            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
+            if (URLHelper.usesIndexHtml(this.renderer)) {
                 pageURL += 'index.html';
             }
         }
@@ -148,7 +149,7 @@ class PageItem {
         if (this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage === this.page.id) {
             pageURL = this.siteConfig.domain + '/';
 
-            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
+            if (URLHelper.usesIndexHtml(this.renderer)) {
                 pageURL += 'index.html';
             }
         }

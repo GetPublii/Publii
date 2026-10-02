@@ -301,7 +301,8 @@ class PreviewEvents {
      */
     showPreview (siteName, mode) {
         let siteUrl = this.app.previewServer.getSiteUrl(siteName);
-        let file = 'index.html';
+        // The homepage is served for the directory - like on the server
+        let file = '';
 
         if (mode === 'tag' || mode === 'post' || mode === 'page' || mode === 'author') {
             file = 'preview.html';

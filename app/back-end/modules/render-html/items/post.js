@@ -1,5 +1,6 @@
 const path = require('path');
 const ContentHelper = require('./../helpers/content');
+const URLHelper = require('./../helpers/url');
 
 /**
  * Post item for the renderer
@@ -73,7 +74,7 @@ class PostItem {
                 postURL = this.siteConfig.domain + '/' + this.siteConfig.advanced.urls.postsPrefix + '/' + this.post.slug + '/';
             }
 
-            if (this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex) {
+            if (URLHelper.usesIndexHtml(this.renderer)) {
                 postURL += 'index.html';
             }
         }

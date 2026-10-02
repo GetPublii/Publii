@@ -27,7 +27,7 @@ class TagItem {
      * Prepares final tag data
      */
     prepareData() {
-        let addIndexHtml = this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex;
+        let addIndexHtml = URLHelper.usesIndexHtml(this.renderer);
         let tagAdditionalData = this.tag.additional_data ? JSON.parse(this.tag.additional_data) : {};
         let tagURL = URLHelper.createTagPermalink(this.renderer.siteConfig.domain, this.renderer.siteConfig.advanced.urls, this.tag.slug, addIndexHtml);
 

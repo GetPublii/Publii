@@ -31,7 +31,7 @@ class AuthorItem {
      * Prepares final author data
      */
     prepareData() {
-        let addIndexHtml = this.renderer.previewMode || this.renderer.siteConfig.advanced.urls.addIndex ? 'index.html' : '';
+        let addIndexHtml = URLHelper.usesIndexHtml(this.renderer) ? 'index.html' : '';
         let authorConfig = this.author.config ? JSON.parse(this.author.config) : {};
         let additionalData = this.author.additional_data ? JSON.parse(this.author.additional_data) : {};
 

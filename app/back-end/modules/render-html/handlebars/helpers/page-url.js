@@ -5,6 +5,8 @@
  *
  * @returns {string} URL for the specific page in the pagination for the given context
  */
+const URLHelper = require('./../../helpers/url');
+
 function pageURLHelper(rendererInstance, Handlebars) {
     Handlebars.registerHelper('pageUrl', function (context, number) {
         let path = [rendererInstance.siteConfig.domain];
@@ -25,15 +27,17 @@ function pageURLHelper(rendererInstance, Handlebars) {
             path.push(number);
         }
 
-        if(rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+        let addIndexHtml = URLHelper.usesIndexHtml(rendererInstance);
+
+        if (addIndexHtml) {
             path.push('index.html');
         }
 
         // Connect the URL parts
         path = path.join('/');
 
-        // Add trailing slash only if adding index.html is disabled and there is no preview mode active
-        if (!rendererInstance.previewMode && !rendererInstance.siteConfig.advanced.urls.addIndex) {
+        // Add trailing slash only if adding index.html is disabled
+        if (!addIndexHtml) {
             path += '/';
         }
 

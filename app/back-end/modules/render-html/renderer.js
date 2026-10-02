@@ -754,7 +754,7 @@ class Renderer {
         // When we have blog pagination
         if (hasBlogPagination) {
             console.time('BLOG PAGINATION');
-            let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
+            let addIndexHtml = URLHelper.usesIndexHtml(this);
 
             // If user set postsPerPage field to -1 - set it for calculations to 999
             postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
@@ -1518,7 +1518,7 @@ class Renderer {
 
                 this.templateHelper.saveOutputTagFile(tagSlug, output, tagID !== false);
             } else {
-                let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
+                let addIndexHtml = URLHelper.usesIndexHtml(this);
 
                 // If user set postsPerPage field to -1 - set it for calculations to 999
                 postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;
@@ -1745,7 +1745,7 @@ class Renderer {
 
                 this.templateHelper.saveOutputAuthorFile(authorUsername, output, authorID !== false);
             } else {
-                let addIndexHtml = this.previewMode || this.siteConfig.advanced.urls.addIndex;
+                let addIndexHtml = URLHelper.usesIndexHtml(this);
 
                 // If user set postsPerPage field to -1 - set it for calculations to 999
                 postsPerPage = postsPerPage == -1 ? 999 : postsPerPage;

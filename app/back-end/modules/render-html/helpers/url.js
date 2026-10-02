@@ -23,6 +23,29 @@ class URLHelper {
     }
 
     /**
+     * Checks if the preview is rendered for the filesystem (file:///) - without the local server
+     * a directory URL cannot be opened, so every URL has to point to index.html
+     *
+     * @param renderer
+     * @returns {boolean}
+     */
+    static isFilePreview(renderer) {
+        return !!renderer.previewMode && !renderer.previewUrl;
+    }
+
+    /**
+     * Checks if index.html has to be a part of the URLs - because of the "Always add index.html in URLs"
+     * option or because of the preview rendered for the filesystem. The preview on the local server
+     * uses the same URLs as the website on the server.
+     *
+     * @param renderer
+     * @returns {boolean}
+     */
+    static usesIndexHtml(renderer) {
+        return URLHelper.isFilePreview(renderer) || !!renderer.siteConfig.advanced.urls.addIndex;
+    }
+
+    /**
      * Creates an URL for a given tag
      *
      * @param domain

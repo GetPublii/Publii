@@ -52,6 +52,7 @@ const EXTENSION_PATTERN = /^\.[a-z0-9][a-z0-9_+-]{0,15}$/;
 const MIME_TYPE_PATTERN = /^[a-z0-9][a-z0-9!#$&^_.+-]{0,63}\/[a-z0-9][a-z0-9!#$&^_.+-]{0,63}$/;
 
 const STATUS_MESSAGES = {
+    301: 'Moved Permanently',
     400: 'Bad Request',
     403: 'Forbidden',
     404: 'Not Found',
@@ -451,8 +452,13 @@ class PreviewServer extends EventEmitter {
 
         let stats = await this._stat(filePath);
 
-        // No directory listings
         if (stats && stats.isDirectory()) {
+            if (rawPath[rawPath.length - 1] !== '/') {
+                let query = req.url.indexOf('?') !== -1 ? req.url.slice(req.url.indexOf('?')) : '';
+                this._sendRedirect(req, res, rawPath + '/' + query);
+                return;
+            }
+
             filePath = path.join(filePath, 'index.html');
             stats = await this._stat(filePath);
         }
@@ -555,6 +561,10 @@ class PreviewServer extends EventEmitter {
         }
 
         return { start, end };
+    }
+
+    _sendRedirect (req, res, location) {
+        this._sendError(req, res, 301, { 'Location': location });
     }
 
     _sendError (req, res, statusCode, additionalHeaders = {}) {

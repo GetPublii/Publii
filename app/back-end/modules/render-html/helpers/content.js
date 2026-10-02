@@ -581,7 +581,7 @@ class ContentHelper {
             let url = '#INTERNAL_LINK#/frontpage/1';
             let link = renderer.siteConfig.domain;
 
-            if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
+            if (URLHelper.usesIndexHtml(renderer)) {
                 link = link + '/index.html';
             }
 
@@ -599,7 +599,7 @@ class ContentHelper {
                 link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.postsPrefix + '/';
             }
 
-            if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
+            if (URLHelper.usesIndexHtml(renderer)) {
                 link = link + (link.endsWith('/') ? '' : '/') + 'index.html';
             }
 
@@ -617,7 +617,7 @@ class ContentHelper {
                 link = renderer.siteConfig.domain + '/' + renderer.siteConfig.advanced.urls.postsPrefix + '/' + renderer.siteConfig.advanced.urls.tagsPrefix + '/';
             }
 
-            if (renderer.previewMode || renderer.siteConfig.advanced.urls.addIndex) {
+            if (URLHelper.usesIndexHtml(renderer)) {
                 link = link + 'index.html';
             }
 

@@ -1,5 +1,6 @@
 const Handlebars = require('handlebars');
 const slug = require('./../../../../helpers/slug');
+const URLHelper = require('./../../helpers/url');
 
 /**
  * Helper for creating URLs in menu
@@ -31,11 +32,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
                 } else {
                     output = baseUrl + '/' + this.link + '/';
                 }
-                // In the preview mode we have to load URLs with
-                // index.html as filesystem on OS doesn't behave
-                // as the server environment and not redirect to
-                // a proper URL
-                if(rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+                // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+                if (URLHelper.usesIndexHtml(rendererInstance)) {
                     output += 'index.html';
                 }
             } else {
@@ -55,11 +53,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
             if (rendererInstance.siteConfig.advanced.usePageAsFrontpage && rendererInstance.siteConfig.advanced.pageAsFrontpage === this.linkID) {
                 output = baseUrl + '/';
 
-                // In the preview mode we have to load URLs with
-                // index.html as filesystem on OS doesn't behave
-                // as the server environment and not redirect to
-                // a proper URL
-                if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+                // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+                if (URLHelper.usesIndexHtml(rendererInstance)) {
                     output += 'index.html';
                 }   
             } else {
@@ -78,11 +73,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
 
                 if (rendererInstance.siteConfig.advanced.urls.cleanUrls) {
                     output = baseUrl + '/' + pageSlug + '/';
-                    // In the preview mode we have to load URLs with
-                    // index.html as filesystem on OS doesn't behave
-                    // as the server environment and not redirect to
-                    // a proper URL
-                    if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+                    // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+                    if (URLHelper.usesIndexHtml(rendererInstance)) {
                         output += 'index.html';
                     }
                 } else {
@@ -103,11 +95,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
                 output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/' + this.link + '/';
             }
 
-            // In the preview mode we have to load URLs with
-            // index.html as filesystem on OS doesn't behave
-            // as the server environment and not redirect to
-            // a proper URL
-            if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+            // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+            if (URLHelper.usesIndexHtml(rendererInstance)) {
                 output += 'index.html';
             }
         }
@@ -120,11 +109,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
                 output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/' + rendererInstance.siteConfig.advanced.urls.authorsPrefix + '/' + slug(this.link) + '/';
             }
 
-            // In the preview mode we have to load URLs with
-            // index.html as filesystem on OS doesn't behave
-            // as the server environment and not redirect to
-            // a proper URL
-            if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+            // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+            if (URLHelper.usesIndexHtml(rendererInstance)) {
                 output += 'index.html';
             }
         }
@@ -133,11 +119,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
         if (this.type === 'frontpage') {
             output = baseUrl + '/';
 
-            // In the preview mode we have to load URLs with
-            // index.html as filesystem on OS doesn't behave
-            // as the server environment and not redirect to
-            // a proper URL
-            if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+            // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+            if (URLHelper.usesIndexHtml(rendererInstance)) {
                 output += 'index.html';
             }
         }
@@ -150,11 +133,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
                 output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/';
             }
 
-            // In the preview mode we have to load URLs with
-            // index.html as filesystem on OS doesn't behave
-            // as the server environment and not redirect to
-            // a proper URL
-            if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+            // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+            if (URLHelper.usesIndexHtml(rendererInstance)) {
                 output += 'index.html';
             }
         }
@@ -167,11 +147,8 @@ function menuURLHelper(rendererInstance, Handlebars) {
                 output = baseUrl + '/' + rendererInstance.siteConfig.advanced.urls.postsPrefix + '/' + rendererInstance.siteConfig.advanced.urls.tagsPrefix + '/';
             }
 
-            // In the preview mode we have to load URLs with
-            // index.html as filesystem on OS doesn't behave
-            // as the server environment and not redirect to
-            // a proper URL
-            if (rendererInstance.previewMode || rendererInstance.siteConfig.advanced.urls.addIndex) {
+            // The preview rendered for the filesystem needs index.html - see URLHelper.usesIndexHtml()
+            if (URLHelper.usesIndexHtml(rendererInstance)) {
                 output += 'index.html';
             }
         }

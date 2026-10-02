@@ -101,10 +101,31 @@ describe('Preview server', function () {
 
         it('serves index.html for directories', async function () {
             assert.equal((await request('/my-site/')).body, '<h1>Homepage</h1>');
-            assert.equal((await request('/my-site')).body, '<h1>Homepage</h1>');
-            assert.equal((await request('/my-site/dir')).body, '<h1>Subpage</h1>');
             assert.equal((await request('/my-site/dir/')).body, '<h1>Subpage</h1>');
             assert.equal((await request('/my-site/dir/nieistniejacy/')).status, 404);
+        });
+
+        // Like on a server - relative URLs inside of the pages are resolved against the directory
+        it('redirects directories without the trailing slash', async function () {
+            let response = await request('/my-site');
+
+            assert.equal(response.status, 301);
+            assert.equal(response.headers.location, '/my-site/');
+            assert.equal(response.headers['cache-control'], 'no-store');
+            assert.equal(response.headers['x-content-type-options'], 'nosniff');
+
+            response = await request('/my-site/dir?page=2');
+            assert.equal(response.status, 301);
+            assert.equal(response.headers.location, '/my-site/dir/?page=2');
+
+            response = await request('/my-site/dir', { method: 'HEAD' });
+            assert.equal(response.status, 301);
+            assert.equal(response.body, '');
+
+            // Files and missing paths are not redirected
+            assert.equal((await request('/my-site/index.html')).status, 200);
+            assert.equal((await request('/my-site/missing')).status, 404);
+            assert.equal((await request('/other-site')).status, 404);
         });
 
         it('answers HEAD requests without a body', async function () {
