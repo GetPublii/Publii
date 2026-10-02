@@ -262,6 +262,32 @@ class EditorBridge {
         });
     }
 
+    setupImageFocus (editor) {
+        // HugeRTE focuses the body after selecting a non-editable figure.
+        // Focus it first without revealing the entire, possibly tall image.
+        editor.on('click', event => {
+            const target = event.target;
+
+            if (event.button !== 0 || !target.closest('figure.image') || target.closest('figcaption')) {
+                return;
+            }
+
+            editor.getBody().focus({ preventScroll: true });
+        }, true);
+
+        editor.on('CloseWindow', event => {
+            const data = event.dialog?.getData?.();
+
+            if (!data || typeof data.classes !== 'string' || typeof data.caption !== 'boolean' || !data.src) {
+                return;
+            }
+
+            // WindowManager calls editor.focus() after CloseWindow. Preserve
+            // the viewport when returning from the image properties dialog.
+            editor.getBody().focus({ preventScroll: true });
+        });
+    }
+
     setupMediaDoubleClick (editor) {
         editor.on('dblclick', event => {
             const target = event.target;
@@ -275,12 +301,12 @@ class EditorBridge {
             }
 
             if (target.tagName === 'IMG' && !target.hasAttribute('data-mce-object') && !target.hasAttribute('data-mce-placeholder')) {
-                const figure = target.closest('figure');
+                const figure = target.closest('figure.image');
 
-                if (figure && figure.getAttribute('contenteditable') === 'false') {
-                    figure.removeAttribute('contenteditable');
-                    setTimeout(() => figure.setAttribute('contenteditable', 'false'), 100);
-                }
+                // Keep the selection outside a non-editable captioned image so
+                // the dialog can restore it when focus returns to the editor.
+                event.preventDefault();
+                editor.selection.select(figure || target);
 
                 editor.execCommand('mceImage');
             }
@@ -401,6 +427,7 @@ class EditorBridge {
         this.tinymceEditor = editor;
         this.addEditorButtons();
         this.setupImageFigureClassTranslation(editor);
+        this.setupImageFocus(editor);
         this.setupIframeWrappers(editor);
         this.setupMediaDoubleClick(editor);
         editor.on('remove', () => this.hideImageUploadProgress());
