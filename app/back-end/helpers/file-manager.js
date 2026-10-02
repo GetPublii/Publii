@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const { randomUUID } = require('crypto');
 const PathValidator = require('./path-validator');
+const { isGeneratedRootFile } = require('../../shared/root-file-conflicts');
 
 // Request/reply operations for FileManager. Legacy file-list events also serve
 // editors and retain their existing response format in events/file-manager.js.
@@ -74,7 +75,14 @@ class FileManager {
         try {
             const { directory } = await this.directory(config);
             if (!FileManager.validNewName(config.name)) return { status: false, code: 'invalid-name' };
-            await fs.writeFile(this.target(directory, config.name), '', { flag: 'wx' });
+            const target = this.target(directory, config.name);
+            if (await this.stat(target)) {
+                return { status: false, code: 'exists' };
+            }
+            if (isGeneratedRootFile(config.dirPath, config.name) && config.confirmedRootFile !== config.name) {
+                return { status: false, code: 'root-file-conflict', name: config.name };
+            }
+            await fs.writeFile(target, '', { flag: 'wx' });
             return { status: true, name: config.name };
         } catch (error) { return this.error(error); }
     }
@@ -123,6 +131,9 @@ class FileManager {
                 if (path.extname(source).toLowerCase() !== path.extname(name).toLowerCase()) {
                     return { status: false, code: 'extension', name };
                 }
+                if (isGeneratedRootFile(config.dirPath, name) && config.confirmedRootFile !== name) {
+                    return { status: false, code: 'root-file-conflict', name };
+                }
                 // Stage outside input so an overlapping preview/sync cannot publish
                 // a partially copied file. Failed replacement leaves the original intact.
                 temporary = path.join(path.dirname(input), '.publii-file-' + randomUUID());
@@ -136,7 +147,25 @@ class FileManager {
                 return { status: true, name };
             }
             if (existing && config.policy !== 'keep-both') {
-                return { status: false, code: 'exists', name, revision: FileManager.revision(existing) };
+                return {
+                    status: false,
+                    code: 'exists',
+                    name,
+                    revision: FileManager.revision(existing),
+                    rootFileConflict: isGeneratedRootFile(config.dirPath, name)
+                };
+            }
+
+            const parsed = path.parse(name);
+            let firstSuffix = 1;
+            if (existing && config.policy === 'keep-both') {
+                // Keep the requested copy separate even if the original disappears.
+                firstSuffix = 2;
+                name = parsed.name + ' (2)' + parsed.ext;
+                target = this.target(directory, name);
+            }
+            if (isGeneratedRootFile(config.dirPath, name) && config.confirmedRootFile !== name) {
+                return { status: false, code: 'root-file-conflict', name };
             }
             // Publish completed copies atomically on filesystems supporting hard
             // links. Staging stays outside input during overlapping preview/sync.
@@ -148,8 +177,7 @@ class FileManager {
                     return { status: false, code: 'changed' };
                 }
             }
-            const parsed = path.parse(name);
-            for (let suffix = 1; suffix <= 10000; suffix++) {
+            for (let suffix = firstSuffix; suffix <= 10000; suffix++) {
                 try {
                     try {
                         await fs.link(temporary, target);
@@ -165,8 +193,13 @@ class FileManager {
                     if (error.code !== 'EEXIST') throw error;
                     if (config.policy !== 'keep-both') {
                         const current = await this.stat(target);
-                        return { status: false, code: 'exists', name,
-                            revision: current && FileManager.revision(current) };
+                        return {
+                            status: false,
+                            code: 'exists',
+                            name,
+                            revision: current && FileManager.revision(current),
+                            rootFileConflict: isGeneratedRootFile(config.dirPath, name)
+                        };
                     }
                     name = parsed.name + ' (' + (suffix + 1) + ')' + parsed.ext;
                     target = this.target(directory, name);

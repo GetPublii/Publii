@@ -277,6 +277,7 @@ import CollectionCheckboxes from './mixins/CollectionCheckboxes.js';
 import CollectionOrdering from './mixins/CollectionOrdering.js';
 import CollectionSortButton from './basic-elements/CollectionSortButton.vue';
 import { fileWebsiteURL, sortFiles } from '../helpers/file-manager.js';
+import { isGeneratedRootFile } from '../../shared/root-file-conflicts.js';
 
 export default {
     directives: {
@@ -801,16 +802,43 @@ export default {
             });
         },
         async createFile (name, context) {
-            if (this.busy || !this.currentContext(context)) return;
+            if (this.busy || !this.currentContext(context)) {
+                return;
+            }
+
             this.operation = 'create';
             this.failures = [];
-            const result = await this.request('create', { ...context, name: name.trim() });
-            this.notify(
-                result.status ? this.$t('file.manager.created') : this.errorMessage(result.code),
-                !result.status
-            );
-            this.operation = '';
-            if (this.currentContext(context)) await this.loadFiles();
+
+            try {
+                const config = { ...context, name: name.trim() };
+                let result = await this.request('create', config);
+                if (!this.currentContext(context)) {
+                    return;
+                }
+
+                if (result.code === 'root-file-conflict') {
+                    const choice = await this.confirmRootFile(result.name);
+                    if (choice !== 'add' || !this.currentContext(context)) {
+                        return;
+                    }
+
+                    result = await this.request('create', {
+                        ...config,
+                        confirmedRootFile: result.name
+                    });
+                }
+
+                if (!this.currentContext(context)) {
+                    return;
+                }
+                this.notify(
+                    result.status ? this.$t('file.manager.created') : this.errorMessage(result.code),
+                    !result.status
+                );
+                await this.loadFiles();
+            } finally {
+                this.operation = '';
+            }
         },
         bulkDelete () {
             this.confirmDelete(this.items.filter(file => this.selectedItems.includes(file.name) && file.isFile));
@@ -897,14 +925,24 @@ export default {
                     });
                     return;
                 }
+                const rootFileConflict = isGeneratedRootFile(context.dirPath, target.name);
+                let message = this.$t('file.manager.replaceConfirm', {
+                    filename: this.quotedName(target.name),
+                    source: this.quotedName(source.split(/[/\\]/).pop())
+                });
+                if (rootFileConflict) {
+                    message += '<br><br>' + this.rootFileWarning(target.name);
+                }
                 this.$bus.$emit('confirm-display', {
                     dialogLabel: this.$t('file.manager.replaceFile'),
-                    message: this.$t('file.manager.replaceConfirm', {
-                        filename: this.quotedName(target.name),
-                        source: this.quotedName(source.split(/[/\\]/).pop())
-                    }),
+                    message,
+                    isDanger: rootFileConflict,
+                    focusDialog: rootFileConflict,
                     okLabel: this.$t('file.manager.replace'),
-                    okClick: () => this.uploadQueue([source], context, target)
+                    okClick: () => this.uploadQueue([source], context, {
+                        ...target,
+                        confirmedRootFile: rootFileConflict ? target.name : undefined
+                    })
                 });
             } catch (_) {
                 this.operation = '';
@@ -925,19 +963,66 @@ export default {
             let skipped = 0;
             for (const source of paths.slice()) {
                 if (this.stopRequested || !this.currentContext(context)) break;
-                const config = { ...context, source, policy: replacement ? 'replace' : 'skip', ...(replacement || {}) };
+                let config = {
+                    ...context,
+                    source,
+                    policy: replacement ? 'replace' : 'skip',
+                    ...(replacement || {})
+                };
                 let result = await this.request('upload', config);
-                if (!this.currentContext(context)) break;
-                if (!replacement && result.code === 'exists' && !this.stopRequested) {
-                    let choice = rememberedChoice || (await this.chooseConflict(result));
-                    if (this.applyToAll && choice !== 'stop') rememberedChoice = choice;
-                    if (choice === 'stop') break;
-                    if (choice === 'skip') {
-                        skipped++;
-                        this.completed++;
-                        continue;
+                let skipFile = false;
+
+                while (!result.status && this.currentContext(context) && !this.stopRequested) {
+                    if (result.code === 'root-file-conflict') {
+                        const choice = await this.confirmRootFile(result.name);
+                        if (choice !== 'add') {
+                            skipFile = true;
+                            break;
+                        }
+                        config.confirmedRootFile = result.name;
+                    } else if (!replacement && result.code === 'exists') {
+                        // A remembered choice for ordinary duplicates must not approve
+                        // a generated filename that the user has not reviewed.
+                        const choice = rememberedChoice && !result.rootFileConflict
+                            ? rememberedChoice
+                            : await this.chooseConflict(result);
+                        if (this.applyToAll && choice !== 'stop') {
+                            rememberedChoice = choice;
+                        }
+                        if (choice === 'stop') {
+                            break;
+                        }
+                        if (choice === 'skip') {
+                            skipFile = true;
+                            break;
+                        }
+                        config = {
+                            ...config,
+                            policy: choice,
+                            revision: result.revision,
+                            confirmedRootFile: result.rootFileConflict ? result.name : config.confirmedRootFile
+                        };
+                    } else {
+                        break;
                     }
-                    result = await this.request('upload', { ...config, policy: choice, revision: result.revision });
+
+                    if (!this.currentContext(context) || this.stopRequested) {
+                        break;
+                    }
+                    result = await this.request('upload', config);
+                }
+
+                if (!this.currentContext(context) || (this.stopRequested && !result.status)) {
+                    break;
+                }
+                if (skipFile) {
+                    if (replacement) {
+                        this.operation = '';
+                        return;
+                    }
+                    skipped++;
+                    this.completed++;
+                    continue;
                 }
                 if (result.status) added++;
                 else this.failures.push({ name: source.split(/[/\\]/).pop(), code: result.code });
@@ -968,20 +1053,43 @@ export default {
             this.notify(summary, this.failures.length > 0, this.failures);
             if (this.currentContext(context)) await this.loadFiles();
         },
+        rootFileWarning (name) {
+            return this.$t('file.manager.rootFileConflict', { filename: this.quotedName(name) });
+        },
+        confirmRootFile (name) {
+            this.conflict = { name };
+            return new Promise(resolve => {
+                this._conflictDecision = resolve;
+                this.$bus.$emit('confirm-display', {
+                    dialogLabel: this.$t('file.manager.rootFileConflictTitle'),
+                    title: this.$t('file.manager.rootFileConflictTitle'),
+                    message: this.rootFileWarning(name),
+                    focusDialog: true,
+                    isDanger: true,
+                    okLabel: this.$t('file.manager.addAnyway'),
+                    cancelLabel: this.$t('ui.cancel'),
+                    okClick: () => this.resolveConflict('add'),
+                    cancelClick: () => this.resolveConflict('cancel')
+                });
+            });
+        },
         chooseConflict (result) {
             this.conflict = result;
             return new Promise(resolve => {
                 this._conflictDecision = resolve;
                 this.$bus.$emit('confirm-display', {
                     dialogLabel: this.$t('file.manager.duplicateTitle'),
-                    message: this.$t('file.manager.duplicate', { filename: this.quotedName(result.name) }),
+                    message: this.$t('file.manager.duplicate', { filename: this.quotedName(result.name) }) +
+                        (result.rootFileConflict ? '<br><br>' + this.rootFileWarning(result.name) : ''),
+                    isDanger: !!result.rootFileConflict,
+                    focusDialog: !!result.rootFileConflict,
                     choiceLabel: this.$t('file.manager.duplicateTitle'),
                     choices: ['skip', 'replace', 'keep-both'].map(value => ({
                         value,
                         label: this.$t('file.manager.' + (value === 'keep-both' ? 'keepBoth' : value))
                     })),
                     choice: 'skip',
-                    checkLabel: this.$t('file.manager.applyToAll'),
+                    checkLabel: result.rootFileConflict ? '' : this.$t('file.manager.applyToAll'),
                     okLabel: this.$t('ui.ok'),
                     cancelLabel: this.$t('file.manager.stopRemaining'),
                     okClick: (choice, applyToAll) => {

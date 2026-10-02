@@ -16,6 +16,7 @@ const messages = Object.fromEntries(['en-gb','pl','de'].map(locale => [locale, J
 const helperContext = {URL, Intl, exports:{}};
 vm.runInNewContext(read('app/src/helpers/file-manager.js').replace(/export function /g, 'function ') + '\nexports.fileWebsiteURL = fileWebsiteURL; exports.sortFiles = sortFiles;', helperContext);
 const helpers = helperContext.exports;
+const { isGeneratedRootFile } = require('../../../shared/root-file-conflicts');
 function mixin(name) {
     const context = { module: { exports: {} } };
     vm.runInNewContext(read('app/src/components/mixins/' + name + '.js').replace('export default', 'module.exports ='), context);
@@ -32,7 +33,7 @@ function setup(locale='en-gb', platform='darwin') {
         invoke:async (channel, data, ...rest)=>{ calls.requests.push([channel, data, ...rest]); return channel === 'app-file-manager:list' ? {status:true,files:rows.slice()} : {status:true}; },
         getPathForFile:file=>file.path, shellOpenPath:async()=>'', shellShowItemInFolder:async name=>calls.folders.push(name)};
     const document = {body:{classList:{contains:()=>false}},createElement:()=>({style:{},textContent:'',get outerHTML(){return '<strong>'+this.textContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</strong>';}})};
-    const globals = {module:{exports:{}},...helpers,CollectionSortButton:{},Tooltip:{},mainProcessAPI:api,BackToTools:mixin('BackToTools'),CollectionCheckboxes:mixin('CollectionCheckboxes'),CollectionOrdering:mixin('CollectionOrdering'),
+    const globals = {module:{exports:{}},isGeneratedRootFile,...helpers,CollectionSortButton:{},Tooltip:{},mainProcessAPI:api,BackToTools:mixin('BackToTools'),CollectionCheckboxes:mixin('CollectionCheckboxes'),CollectionOrdering:mixin('CollectionOrdering'),
         navigator:{clipboard:{writeText:async text=>calls.copies.push(text)}},document,
         window:{addEventListener:(...a)=>calls.listeners.push(a),removeEventListener:(...a)=>calls.unlisteners.push(a)}};
     const timers = new Map();
@@ -758,5 +759,273 @@ describe('File row menu disabled action explanations', () => {
         const { instance: manager } = setup();
         const menu = menuFor([{ label: 'Delete', disabled: true }], manager.$i18n);
         assert.equal(menuItems(menu)[0].data.attrs.disabled, true);
+    });
+});
+
+describe('File Manager root conflict confirmations with filesystem operations', () => {
+    const os = require('node:os');
+    const FileManager = require('../../../back-end/helpers/file-manager');
+    let base;
+    let rootFiles;
+    let harness;
+
+    async function waitFor(predicate) {
+        const deadline = Date.now() + 3000;
+        while (!predicate()) {
+            assert.ok(Date.now() < deadline, 'expected file operation or dialog');
+            await tick();
+        }
+    }
+
+    function dialogs() {
+        return harness.calls.emits.filter(([event]) => event === 'confirm-display').map(([, dialog]) => dialog);
+    }
+
+    function uploadSource(name, content = 'uploaded content') {
+        const source = path.join(base, name);
+        fs.writeFileSync(source, content);
+        return source;
+    }
+
+    beforeEach(() => {
+        base = fs.mkdtempSync(path.join(os.tmpdir(), 'publii-root-dialog-test-'));
+        rootFiles = path.join(base, 'demo/input/root-files');
+        fs.mkdirSync(rootFiles, { recursive: true });
+        fs.mkdirSync(path.join(base, 'demo/input/media/files'), { recursive: true });
+        harness = setup();
+        const manager = new FileManager({ sitesDir: base }, () => 'txt');
+        harness.api.invoke = async (channel, data) => {
+            harness.calls.requests.push([channel, { ...data }]);
+            return manager[channel.split(':')[1]](data);
+        };
+    });
+
+    afterEach(() => {
+        harness.options.beforeDestroy.call(harness.instance);
+        fs.rmSync(base, { recursive: true, force: true });
+    });
+
+    for (const entry of ['picker', 'drop']) {
+        it(`${entry}: waits for Add anyway before uploading a generated root filename`, async () => {
+            const { instance: manager } = harness;
+            const source = uploadSource('index.html');
+            manager.pickFiles = async () => ({ canceled: false, filePaths: [source] });
+            const upload = entry === 'picker'
+                ? manager.uploadFiles()
+                : manager.dropFiles({ dataTransfer: { files: [{ path: source }] } });
+            await waitFor(() => dialogs().length === 1);
+            const dialog = dialogs()[0];
+            assert.equal(dialog.title, 'Potential file conflict');
+            assert.equal(dialog.focusDialog, true);
+            assert.equal(dialog.isDanger, true);
+            assert.equal(dialog.okLabel, 'Add anyway');
+            assert.equal(dialog.cancelLabel, 'Cancel');
+            assert.ok(dialog.message.includes('index.html'));
+            assert.equal(fs.existsSync(path.join(rootFiles, 'index.html')), false);
+            assert.equal(manager.busy, true);
+            dialog.okClick();
+            await upload;
+            assert.equal(fs.readFileSync(path.join(rootFiles, 'index.html'), 'utf8'), 'uploaded content');
+            assert.equal(dialogs().length, 1);
+            assert.equal(manager.busy, false);
+        });
+    }
+
+    it('warns before manually creating an empty file and handles cancel without a success message', async () => {
+        const { instance: manager, calls } = harness;
+        const cancelled = manager.createFile(' robots.txt ', manager.context());
+        await waitFor(() => dialogs().length === 1);
+        assert.equal(fs.existsSync(path.join(rootFiles, 'robots.txt')), false);
+        dialogs()[0].cancelClick();
+        await cancelled;
+        assert.equal(manager.busy, false);
+        assert.equal(calls.emits.some(([event]) => event === 'message-display'), false);
+
+        const confirmed = manager.createFile(' robots.txt ', manager.context());
+        await waitFor(() => dialogs().length === 2);
+        dialogs()[1].okClick();
+        await confirmed;
+        assert.equal(fs.readFileSync(path.join(rootFiles, 'robots.txt'), 'utf8'), '');
+        assert.equal(manager.busy, false);
+    });
+
+    it('cancels one warned upload and continues the rest of the batch', async () => {
+        const { instance: manager, calls } = harness;
+        const upload = manager.uploadQueue([
+            uploadSource('index.html'),
+            uploadSource('ordinary.txt')
+        ], manager.context());
+        await waitFor(() => dialogs().length === 1);
+        dialogs()[0].cancelClick();
+        await upload;
+        assert.equal(fs.existsSync(path.join(rootFiles, 'index.html')), false);
+        assert.equal(fs.readFileSync(path.join(rootFiles, 'ordinary.txt'), 'utf8'), 'uploaded content');
+        assert.equal(manager.completed, 2);
+        assert.equal(manager.failures.length, 0);
+        assert.ok(calls.emits.at(-1)[1].message.includes('Skipped: 1'));
+    });
+
+    for (const choice of ['replace', 'keep-both', 'skip']) {
+        it(`${choice}: combines the existing duplicate prompt with the generated-file warning`, async () => {
+            const { instance: manager } = harness;
+            fs.writeFileSync(path.join(rootFiles, 'index.html'), 'old homepage');
+            const upload = manager.uploadQueue([uploadSource('index.html')], manager.context());
+            await waitFor(() => dialogs().length === 1);
+            const dialog = dialogs()[0];
+            assert.ok(dialog.message.includes('already exists'));
+            assert.ok(dialog.message.includes('Publii may generate'));
+            assert.equal(dialog.isDanger, true);
+            assert.equal(dialog.choice, 'skip');
+            assert.equal(dialog.checkLabel, '');
+            dialog.okClick(choice, false);
+            await upload;
+            assert.equal(dialogs().length, 1);
+            assert.equal(fs.readFileSync(path.join(rootFiles, 'index.html'), 'utf8'), choice === 'replace' ? 'uploaded content' : 'old homepage');
+            assert.equal(fs.existsSync(path.join(rootFiles, 'index (2).html')), choice === 'keep-both');
+        });
+    }
+
+    it('does not apply a remembered Replace choice to a generated filename without showing its warning', async () => {
+        const { instance: manager } = harness;
+        for (const name of ['ordinary.txt', 'index.html', 'another.txt']) {
+            fs.writeFileSync(path.join(rootFiles, name), 'old content');
+        }
+        const upload = manager.uploadQueue([
+            uploadSource('ordinary.txt'),
+            uploadSource('index.html'),
+            uploadSource('another.txt')
+        ], manager.context());
+        await waitFor(() => dialogs().length === 1);
+        dialogs()[0].okClick('replace', true);
+        await waitFor(() => dialogs().length === 2);
+        assert.ok(dialogs()[1].message.includes('Publii may generate'));
+        assert.equal(fs.readFileSync(path.join(rootFiles, 'index.html'), 'utf8'), 'old content');
+        dialogs()[1].okClick('skip', false);
+        await upload;
+        assert.equal(dialogs().length, 2);
+        assert.equal(fs.readFileSync(path.join(rootFiles, 'index.html'), 'utf8'), 'old content');
+        assert.equal(fs.readFileSync(path.join(rootFiles, 'another.txt'), 'utf8'), 'uploaded content');
+    });
+
+    it('includes the warning in the explicit Replace dialog instead of opening another dialog', async () => {
+        const { instance: manager } = harness;
+        fs.writeFileSync(path.join(rootFiles, 'index.html'), 'old homepage');
+        await manager.loadFiles();
+        manager.pickFiles = async () => ({ canceled: false, filePaths: [uploadSource('replacement.html')] });
+        await manager.replaceFile(manager.items[0]);
+        const dialog = dialogs()[0];
+        assert.ok(dialog.message.includes('Publii may generate'));
+        assert.equal(dialog.isDanger, true);
+        await dialog.okClick();
+        assert.equal(dialogs().length, 1);
+        assert.equal(fs.readFileSync(path.join(rootFiles, 'index.html'), 'utf8'), 'uploaded content');
+    });
+
+    it('keeps media/files creation and upload free of root warnings', async () => {
+        const { instance: manager } = harness;
+        manager.dirPath = 'media/files';
+        await manager.createFile('robots.txt', manager.context());
+        await manager.uploadQueue([uploadSource('index.html')], manager.context());
+        assert.equal(dialogs().length, 0);
+        assert.equal(fs.existsSync(path.join(base, 'demo/input/media/files/robots.txt')), true);
+        assert.equal(fs.existsSync(path.join(base, 'demo/input/media/files/index.html')), true);
+    });
+
+    for (const operation of ['create', 'upload']) {
+        for (const change of ['site', 'destroy']) {
+            it(`${operation}: ignores approval after ${change}`, async () => {
+                const { instance: manager, options, calls } = harness;
+                const pending = operation === 'create'
+                    ? manager.createFile('index.html', manager.context())
+                    : manager.uploadQueue([uploadSource('index.html')], manager.context());
+                await waitFor(() => dialogs().length === 1);
+                if (change === 'site') {
+                    manager.$store.state.currentSite.config.name = 'other';
+                } else {
+                    options.beforeDestroy.call(manager);
+                }
+                dialogs()[0].okClick();
+                await pending;
+                assert.equal(fs.existsSync(path.join(rootFiles, 'index.html')), false);
+                assert.equal(calls.requests.length, 1);
+                assert.equal(manager.busy, false);
+            });
+        }
+    }
+
+    it('finishes and counts an in-flight upload when Stop remaining files is requested', async () => {
+        const { instance: manager, api } = harness;
+        const invoke = api.invoke;
+        api.invoke = async (channel, config) => {
+            const result = await invoke(channel, config);
+            if (channel.endsWith(':upload') && result.status) {
+                manager.stopUpload();
+            }
+            return result;
+        };
+        await manager.uploadQueue([uploadSource('first.txt'), uploadSource('second.txt')], manager.context());
+        assert.equal(fs.existsSync(path.join(rootFiles, 'first.txt')), true);
+        assert.equal(fs.existsSync(path.join(rootFiles, 'second.txt')), false);
+        assert.equal(manager.completed, 1);
+        assert.equal(manager.busy, false);
+    });
+});
+
+describe('File conflict dialog without an initially selected action', () => {
+    function setupConfirmation() {
+        let display;
+        let focused;
+        const dialog = { focus: () => { focused = 'dialog'; } };
+        const parsed = compiler.parseComponent(read('app/src/components/basic-elements/Confirm.vue'));
+        const context = {
+            module: { exports: {} },
+            document: {
+                activeElement: null,
+                body: {
+                    classList: { add() {} },
+                    addEventListener() {}
+                }
+            },
+            setTimeout: callback => callback()
+        };
+        vm.runInNewContext(parsed.script.content.replace('export default', 'module.exports ='), context);
+        const definition = context.module.exports;
+        const instance = {
+            ...definition.data.call({ $t: key => key }),
+            $t: key => key,
+            $bus: { $on: (event, callback) => { display = callback; } },
+            $refs: {
+                dialog,
+                okButton: { $el: { focus: () => { focused = 'ok'; } } },
+                cancelButton: { $el: { focus: () => { focused = 'cancel'; } } }
+            }
+        };
+        definition.mounted.call(instance);
+        return { definition, instance, display, focused: () => focused };
+    }
+
+    it('focuses the warning container and preserves the default for subsequent confirmations', () => {
+        const harness = setupConfirmation();
+        harness.display({ dialogLabel: 'File conflict', focusDialog: true, isDanger: true });
+        assert.equal(harness.focused(), 'dialog');
+        harness.display({ dialogLabel: 'Delete file', isDanger: true });
+        assert.equal(harness.focused(), 'cancel');
+        assert.equal(harness.instance.focusDialog, false);
+        harness.display({ dialogLabel: 'Ordinary confirmation' });
+        assert.equal(harness.focused(), 'ok');
+    });
+
+    it('does not choose an action when Enter is pressed before moving to a button', () => {
+        const { definition, instance, display } = setupConfirmation();
+        display({ dialogLabel: 'File conflict', focusDialog: true });
+        let prevented = false;
+        instance.onEnterKey = () => assert.fail('An action must be selected first');
+        definition.methods.onDocumentKeyDown.call(instance, {
+            key: 'Enter',
+            code: 'Enter',
+            target: instance.$refs.dialog,
+            preventDefault: () => { prevented = true; }
+        });
+        assert.equal(prevented, true);
     });
 });

@@ -198,3 +198,133 @@ describe('File Manager filesystem operations', () => {
         assert.equal(await fs.readFile(source, 'utf8'), 'new PDF');
     });
 });
+
+describe('File Manager generated root filenames', () => {
+    const filenames = [
+        '404.html', 'feed.json', 'feed.xml', 'files.publii.json', 'index.html',
+        'robots.txt', 'search.html', 'sitemap.xml', 'sitemap.xsl'
+    ];
+    let base;
+    let root;
+    let source;
+    let manager;
+    const context = { siteName: 'demo', dirPath: 'root-files' };
+
+    beforeEach(async () => {
+        base = await fs.mkdtemp(path.join(os.tmpdir(), 'publii-root-conflict-test-'));
+        root = path.join(base, 'demo/input/root-files');
+        source = path.join(base, 'upload');
+        await fs.ensureDir(root);
+        await fs.ensureDir(path.join(base, 'demo/input/media/files'));
+        await fs.writeFile(source, 'uploaded content');
+        manager = new FileManager({ sitesDir: base }, () => 'txt');
+    });
+
+    afterEach(async () => {
+        await fs.remove(base);
+    });
+
+    for (const name of filenames) {
+        it(`${name}: requires an explicit choice for upload and creation before the first sync`, async () => {
+            const config = { ...context, name };
+            assert.equal(await fs.pathExists(path.join(base, 'demo/output')), false);
+            for (const operation of ['create', 'upload']) {
+                const request = operation === 'upload' ? { ...config, source } : config;
+                const warning = await manager[operation](request);
+                assert.equal(warning.code, 'root-file-conflict');
+                assert.equal(warning.name, name);
+                assert.equal(await fs.pathExists(path.join(root, name)), false);
+
+                const wrongConfirmation = await manager[operation]({
+                    ...request,
+                    confirmedRootFile: 'some-other-file.html'
+                });
+                assert.equal(wrongConfirmation.code, 'root-file-conflict');
+                const approved = await manager[operation]({ ...request, confirmedRootFile: name });
+                assert.equal(approved.status, true);
+                assert.equal(await fs.readFile(path.join(root, name), 'utf8'), operation === 'upload' ? 'uploaded content' : '');
+                await fs.unlink(path.join(root, name));
+            }
+        });
+    }
+
+    it('allows the same filenames in media/files without a warning', async () => {
+        for (const name of filenames) {
+            const config = { siteName: 'demo', dirPath: 'media/files', name };
+            assert.equal((await manager.create(config)).status, true);
+            const target = path.join(base, 'demo/input/media/files', name);
+            await fs.unlink(target);
+            assert.equal((await manager.upload({ ...config, source })).status, true);
+        }
+    });
+
+    it('preserves ordinary root filenames and checks generated names regardless of case', async () => {
+        for (const name of ['.htaccess', 'CNAME', 'verification.html', 'index (2).html', 'index.html.txt', 'llms.txt']) {
+            assert.equal((await manager.upload({ ...context, source, name })).status, true);
+        }
+        for (const name of ['INDEX.HTML', 'Robots.TXT', 'Files.Publii.JSON']) {
+            assert.equal((await manager.upload({ ...context, source, name })).code, 'root-file-conflict');
+        }
+    });
+
+    it('reports one combined duplicate conflict and protects the original until replacement is confirmed', async () => {
+        source = path.join(base, 'index.html');
+        await fs.writeFile(source, 'new homepage');
+        const original = path.join(root, 'index.html');
+        await fs.writeFile(original, 'original homepage');
+        const duplicate = await manager.upload({ ...context, source });
+        assert.equal(duplicate.code, 'exists');
+        assert.equal(duplicate.rootFileConflict, true);
+        const replacement = { ...context, source, policy: 'replace', revision: duplicate.revision };
+        assert.equal((await manager.upload(replacement)).code, 'root-file-conflict');
+        assert.equal(await fs.readFile(original, 'utf8'), 'original homepage');
+        assert.equal((await manager.upload({ ...replacement, confirmedRootFile: 'index.html' })).status, true);
+        assert.equal(await fs.readFile(original, 'utf8'), 'new homepage');
+    });
+
+    it('does not let confirmation bypass changed-file protection or truncate an existing file during creation', async () => {
+        source = path.join(base, 'robots.txt');
+        await fs.writeFile(source, 'replacement');
+        const original = path.join(root, 'robots.txt');
+        await fs.writeFile(original, 'original');
+        const duplicate = await manager.upload({ ...context, source });
+        await fs.writeFile(original, 'changed externally');
+        const result = await manager.upload({
+            ...context,
+            source,
+            policy: 'replace',
+            revision: duplicate.revision,
+            confirmedRootFile: 'robots.txt'
+        });
+        assert.equal(result.code, 'changed');
+        assert.equal((await manager.create({ ...context, name: 'robots.txt', confirmedRootFile: 'robots.txt' })).code, 'exists');
+        assert.equal(await fs.readFile(original, 'utf8'), 'changed externally');
+    });
+
+    it('keeps plugin-created files under the existing duplicate policy without an output directory', async () => {
+        await fs.writeFile(path.join(root, 'llms.txt'), 'plugin output');
+        const result = await manager.upload({ ...context, source, name: 'llms.txt' });
+        assert.equal(result.code, 'exists');
+        assert.equal(result.rootFileConflict, false);
+        assert.equal(await fs.readFile(path.join(root, 'llms.txt'), 'utf8'), 'plugin output');
+    });
+
+    it('keeps both and duplicates generated filenames using safe numbered names without another warning', async () => {
+        const original = path.join(root, 'index.html');
+        await fs.writeFile(original, 'original homepage');
+        await fs.writeFile(path.join(root, 'index (2).html'), 'existing copy');
+        const result = await manager.upload({ ...context, source, name: 'index.html', policy: 'keep-both' });
+        assert.equal(result.status, true);
+        assert.equal(result.name, 'index (3).html');
+        const revision = FileManager.revision(await fs.lstat(original));
+        const copy = await manager.upload({
+            ...context,
+            source: original,
+            name: 'index.html',
+            policy: 'keep-both',
+            sourceRevision: revision
+        });
+        assert.equal(copy.name, 'index (4).html');
+        assert.equal(await fs.readFile(original, 'utf8'), 'original homepage');
+    });
+});

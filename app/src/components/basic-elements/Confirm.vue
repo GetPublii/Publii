@@ -3,6 +3,7 @@
         v-if="isVisible"
         class="overlay">
         <div class="popup" ref="dialog"
+            :tabindex="focusDialog ? -1 : null"
             :role="dialogLabel ? 'dialog' : null"
             :aria-modal="dialogLabel ? 'true' : null"
             :aria-label="dialogLabel || null">
@@ -103,6 +104,7 @@ export default {
         return {
             isVisible: false,
             dialogLabel: '',
+            focusDialog: false,
             title: '',
             link: null,
             choices: [], choice: '', choiceLabel: '', checkLabel: '', checkValue: false,
@@ -144,6 +146,7 @@ export default {
 
             setTimeout(() => {
                 this.dialogLabel = config.dialogLabel || '';
+                this.focusDialog = config.focusDialog === true;
                 this.title = config.title || '';
                 this.link = config.link || null;
                 this.choices = config.choices || [];
@@ -184,7 +187,11 @@ export default {
                     if (config.hasInput) {
                         this.$refs.input.$el.querySelector('input').focus();
                     } else if (this.dialogLabel) {
-                        this.$refs[this.isDanger ? 'cancelButton' : 'okButton'].$el.focus();
+                        if (this.focusDialog) {
+                            this.$refs.dialog.focus({ preventScroll: true });
+                        } else {
+                            this.$refs[this.isDanger ? 'cancelButton' : 'okButton'].$el.focus();
+                        }
                     }
                 }, 100);
             }, 0);
@@ -258,13 +265,18 @@ export default {
                     const controls = Array.from(this.$refs.dialog.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), [href], [tabindex="0"]'));
                     const first = controls[0];
                     const last = controls[controls.length - 1];
-                    if (e.shiftKey && (document.activeElement === first || !this.$refs.dialog.contains(document.activeElement))) {
+                    const dialogHasFocus = document.activeElement === this.$refs.dialog;
+                    if (e.shiftKey && (document.activeElement === first || dialogHasFocus || !this.$refs.dialog.contains(document.activeElement))) {
                         e.preventDefault();
                         if (last) last.focus();
-                    } else if (!e.shiftKey && (document.activeElement === last || !this.$refs.dialog.contains(document.activeElement))) {
+                    } else if (!e.shiftKey && (document.activeElement === last || dialogHasFocus || !this.$refs.dialog.contains(document.activeElement))) {
                         e.preventDefault();
                         if (first) first.focus();
                     }
+                    return;
+                }
+                if (this.focusDialog && e.target === this.$refs.dialog && e.code === 'Enter') {
+                    e.preventDefault();
                     return;
                 }
                 // Native controls handle their own keys; reading details never confirms deletion.
