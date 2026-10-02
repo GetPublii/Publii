@@ -387,10 +387,13 @@ export default {
             return this.nameErrorMessage(this.wordpressSiteNameError);
         },
         defaultSiteConfig () {
-            let config = JSON.parse(JSON.stringify(defaultSiteConfig));
-            config.advanced.urls.cleanUrls = true;
-
-            return config;
+            return Utils.deepMerge(JSON.parse(JSON.stringify(defaultSiteConfig)), {
+                advanced: {
+                    urls: {
+                        cleanUrls: true
+                    }
+                }
+            });
         },
         tabsItems () {
             return [
