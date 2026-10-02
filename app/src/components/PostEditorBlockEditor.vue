@@ -174,7 +174,9 @@ export default {
             });
 
             mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
-                this.filesList = data.map(file => file.name);
+                this.filesList = data
+                    .filter(file => !file.isCatalog)
+                    .map(file => file.name);
 
                 mainProcessAPI.send('app-file-manager-list', {
                     siteName: this.$store.state.currentSite.config.name,
@@ -182,7 +184,11 @@ export default {
                 }); 
 
                 mainProcessAPI.receiveOnce('app-file-manager-listed', (data) => {
-                    this.filesList = this.filesList.concat(data.map(file => 'media/files/' + file.name));
+                    this.filesList = this.filesList.concat(
+                        data
+                            .filter(file => !file.isCatalog)
+                            .map(file => 'media/files/' + file.name)
+                    );
 
                     this.$bus.$emit('block-editor-set-current-site-data', {
                         tags: this.$store.state.currentSite.tags,
