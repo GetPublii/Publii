@@ -262,7 +262,71 @@ class EditorBridge {
         });
     }
 
+    setupImageCaptionUndo (editor) {
+        let imageLosingCaption = null;
+
+        editor.on('BeforeExecCommand', event => {
+            if (event.command !== 'mceUpdateImage') {
+                return;
+            }
+
+            imageLosingCaption = null;
+
+            if (!event.value || event.value.caption !== false || !event.value.src) {
+                return;
+            }
+
+            const figure = editor.selection.getNode().closest('figure.image');
+            const image = figure && figure.querySelector('img');
+
+            if (image && image.parentNode === figure) {
+                imageLosingCaption = image;
+            }
+        });
+
+        editor.on('AfterSetSelectionRange', () => {
+            if (!imageLosingCaption || !imageLosingCaption.parentNode || imageLosingCaption.closest('figure.image')) {
+                return;
+            }
+
+            imageLosingCaption = null;
+            // Removing the figure leaves an inline image at the document root.
+            // Normalize it inside the image command, before its undo snapshot.
+            editor.nodeChanged();
+        });
+
+        editor.on('ExecCommand CloseWindow', () => {
+            imageLosingCaption = null;
+        });
+    }
+
     setupImageFocus (editor) {
+        let imageDialog = null;
+
+        editor.on('OpenWindow', event => {
+            const data = event.dialog?.getData?.();
+
+            if (!data || typeof data.classes !== 'string' || typeof data.caption !== 'boolean' || !data.src) {
+                return;
+            }
+
+            const selected = editor.selection.getNode();
+            const figure = selected.closest('figure.image');
+            const image = figure ? figure.querySelector('img') : selected;
+
+            if (image && image.tagName === 'IMG' && !image.hasAttribute('data-mce-object') && !image.hasAttribute('data-mce-placeholder')) {
+                imageDialog = event.dialog;
+            }
+        });
+
+        editor.on('BeforeExecCommand', event => {
+            if (imageDialog && event.command.toLowerCase() === 'mcefocus' && !event.value) {
+                // Save focuses the editor before mceUpdateImage is dispatched.
+                // Handle that focus command before it can reveal the whole image.
+                editor.getBody().focus({ preventScroll: true });
+            }
+        });
+
         // HugeRTE focuses the body after selecting a non-editable figure.
         // Focus it first without revealing the entire, possibly tall image.
         editor.on('click', event => {
@@ -276,6 +340,10 @@ class EditorBridge {
         }, true);
 
         editor.on('CloseWindow', event => {
+            if (event.dialog === imageDialog) {
+                imageDialog = null;
+            }
+
             const data = event.dialog?.getData?.();
 
             if (!data || typeof data.classes !== 'string' || typeof data.caption !== 'boolean' || !data.src) {
@@ -427,6 +495,7 @@ class EditorBridge {
         this.tinymceEditor = editor;
         this.addEditorButtons();
         this.setupImageFigureClassTranslation(editor);
+        this.setupImageCaptionUndo(editor);
         this.setupImageFocus(editor);
         this.setupIframeWrappers(editor);
         this.setupMediaDoubleClick(editor);
