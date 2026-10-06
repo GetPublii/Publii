@@ -95,7 +95,7 @@
       "app/node_modules/publii-block-editor"
     ],
     "linux": {
-      "icon": "./build/installation/icon.icns",
+      "icon": "./build/installation/icons",
       "target": [
         "rpm",
         "AppImage",
