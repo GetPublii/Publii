@@ -300,6 +300,25 @@ class EditorBridge {
         });
     }
 
+    setupMarginFocus (editor) {
+        editor.on('init', () => {
+            const doc = editor.getDoc();
+            const focusMargin = event => {
+                if (event.target === doc.documentElement) {
+                    // HugeRTE focuses the body before placing the caret on a margin click.
+                    // Prevent that focus from scrolling back to the previous caret.
+                    editor.getBody().focus({ preventScroll: true });
+                }
+            };
+
+            doc.addEventListener('mousedown', focusMargin, true);
+
+            editor.on('remove', () => {
+                doc.removeEventListener('mousedown', focusMargin, true);
+            });
+        });
+    }
+
     setupImageFocus (editor) {
         let imageDialog = null;
 
@@ -497,6 +516,7 @@ class EditorBridge {
         this.setupImageFigureClassTranslation(editor);
         this.setupImageCaptionUndo(editor);
         this.setupImageFocus(editor);
+        this.setupMarginFocus(editor);
         this.setupIframeWrappers(editor);
         this.setupMediaDoubleClick(editor);
         editor.on('remove', () => this.hideImageUploadProgress());
@@ -505,29 +525,11 @@ class EditorBridge {
             $('.tox-hugerte').addClass('is-loaded');
             this.initEditorDragNDropImages(editor);
 
-            // Scroll the editor to bottom in order to avoid issues
-            // with the text under gradient
             let iframe = document.getElementById('post-editor_ifr');
 
             if (document.getElementById('app').classList.contains('use-wide-scrollbars')) {
                 iframe.contentWindow.document.documentElement.classList.add('use-wide-scrollbars');
             }
-
-            iframe.contentWindow.window.document.body.addEventListener("keydown", function(e) {
-                let selectedNode = $(editor.selection.getNode());
-                let selectedNodeHeight = selectedNode.outerHeight();
-
-                if(selectedNodeHeight > iframe.contentWindow.window.outerHeight * .75) {
-                    selectedNodeHeight = 0;
-                }
-
-                let cursorPos = selectedNode.position().top + selectedNodeHeight;
-                let iframeContentHeight = iframe.contentWindow.window.document.body.scrollHeight;
-
-                if(cursorPos > iframeContentHeight - 150) {
-                    iframe.contentWindow.scrollTo(0, iframeContentHeight);
-                }
-            }, false);
 
             // Handle Enter key in figcaption to exit figure
             iframe.contentWindow.window.document.body.addEventListener("keydown", function (e) {
