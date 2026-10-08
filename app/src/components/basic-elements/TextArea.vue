@@ -213,6 +213,13 @@ export default {
                 branding: false,
                 body_id: 'tinymce',
                 xss_sanitization: false,
+                // Isolate the editor preview without changing published iframe permissions.
+                iframe_attrs: {
+                    name: 'publii-wysiwyg-editor',
+                    sandbox: 'allow-scripts allow-same-origin allow-forms allow-presentation'
+                },
+                content_security_policy: "script-src 'none'; frame-src http: https:; object-src 'none';",
+                sandbox_iframes: false,
                 paste_as_text: true,
                 element_format : 'html',
                 fix_list_elements : true,

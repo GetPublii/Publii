@@ -142,7 +142,7 @@ describe('Preview server', function () {
 
                 assert.equal(response.headers['x-content-type-options'], 'nosniff');
                 assert.equal(response.headers['cache-control'], 'no-store');
-                assert.equal(response.headers['referrer-policy'], 'no-referrer');
+                assert.equal(response.headers['referrer-policy'], 'strict-origin-when-cross-origin');
             }
         });
 
