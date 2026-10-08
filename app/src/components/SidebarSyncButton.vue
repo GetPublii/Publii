@@ -20,9 +20,11 @@
                 aria-haspopup="dialog"
                 v-tooltip="{
                     title: $t('localPreview.settings'),
-                    text: localPreviewIsRunning
-                        ? $t('localPreview.serverIsRunning')
-                        : $t('localPreview.serverStopped'),
+                    text: !localPreviewIsEnabled
+                        ? $t('localPreview.serverDisabled')
+                        : localPreviewIsRunning
+                            ? $t('localPreview.serverIsRunning')
+                            : $t('localPreview.serverStopped'),
                     offsetX: '75%'
                 }"
                 @click="showLocalPreviewPopup">
@@ -115,6 +117,9 @@ export default {
         },
         localPreviewIsRunning: function() {
             return this.$store.state.app.localPreview.running;
+        },
+        localPreviewIsEnabled: function() {
+            return this.$store.state.app.config.previewServerEnabled !== false;
         },
         status: function() {
             let status = this.$store.state.components.sidebar.status;

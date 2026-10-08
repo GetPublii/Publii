@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const { pathToFileURL } = require('url');
 const electron = require('electron');
 const shell = electron.shell;
 const ipcMain = electron.ipcMain;
@@ -140,11 +141,12 @@ class PreviewEvents {
         this.invalidatePreviewSize(site);
 
         try {
-            if (showPreview) {
+            if (showPreview && this.isServerEnabled()) {
                 // Address of the preview is a part of the rendered files, so it must be known before rendering
                 previewUrl = await this.enablePreview(site);
             } else {
-                // Generated preview files use file:/// URLs, which cannot work on the local server
+                // Generated preview files and the preview opened from the disk use file:/// URLs,
+                // which cannot work on the local server
                 await this.app.previewServer.disableSite(site);
             }
         } catch (error) {
@@ -240,7 +242,7 @@ class PreviewEvents {
                     });
 
                     if (showPreview && !sender.isDestroyed()) {
-                        self.showPreview(site, mode);
+                        self.showPreview(site, mode, previewUrl);
                     }
                 } else {
                     let errorDesc = {
@@ -293,31 +295,39 @@ class PreviewEvents {
         });
     }
 
+    // The local server can be switched off in the app settings - previews are opened from the disk then
+    isServerEnabled () {
+        return this.app.appConfig.previewServerEnabled !== false;
+    }
+
     /**
      * Displays preview of the website in the default browser
      *
      * @param siteName
      * @param mode
+     * @param previewUrl - address of the website on the local server, false for the preview rendered for the disk
      */
-    showPreview (siteName, mode) {
-        let siteUrl = this.app.previewServer.getSiteUrl(siteName);
-        // The homepage is served for the directory - like on the server
-        let file = '';
+    showPreview (siteName, mode, previewUrl) {
+        let isItemPreview = mode === 'tag' || mode === 'post' || mode === 'page' || mode === 'author';
+        let url;
 
-        if (mode === 'tag' || mode === 'post' || mode === 'page' || mode === 'author') {
-            file = 'preview.html';
-        }
+        if (previewUrl) {
+            let siteUrl = this.app.previewServer.getSiteUrl(siteName);
 
-        // The preview could be disabled during the rendering
-        if (!siteUrl) {
-            return;
-        }
+            // The preview could be disabled during the rendering
+            if (!siteUrl) {
+                return;
+            }
 
-        let url = siteUrl + '/' + file;
+            // The homepage is served for the directory - like on the server
+            url = siteUrl + '/' + (isItemPreview ? 'preview.html' : '');
 
-        // Only the local preview server can be opened here
-        if (!PreviewServer.isPreviewUrl(url)) {
-            return;
+            // Only the local preview server can be opened here
+            if (!PreviewServer.isPreviewUrl(url)) {
+                return;
+            }
+        } else {
+            url = pathToFileURL(path.join(this.getPreviewDir(siteName), isItemPreview ? 'preview.html' : 'index.html')).href;
         }
 
         setTimeout(function() {

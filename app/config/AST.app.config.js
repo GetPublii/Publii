@@ -26,6 +26,7 @@ const AstAppConfig = {
     language: 'en-gb',
     languageType: 'default',
     enableAdvancedPreview: false,
+    previewServerEnabled: true,
     previewServerPort: 3000,
     previewServerMimeTypes: [],
     editorFontSize: 18,

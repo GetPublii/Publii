@@ -3,6 +3,8 @@ const fs = require('fs-extra');
 const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
+const EventEmitter = require('node:events');
+const { pathToFileURL } = require('node:url');
 const getDirectorySize = require('../../helpers/directory-size.js');
 
 describe('Local preview files IPC', function () {
@@ -17,6 +19,9 @@ describe('Local preview files IPC', function () {
     let appliedMimeTypes;
     let configNotifications;
     let pendingDisabling;
+    let enabledPreviews;
+    let workers;
+    let openedUrls;
 
     // Results come from another realm, so they are compared as plain data
     function plain (value) {
@@ -43,6 +48,9 @@ describe('Local preview files IPC', function () {
         appliedMimeTypes = [];
         configNotifications = [];
         pendingDisabling = null;
+        enabledPreviews = [];
+        workers = [];
+        openedUrls = [];
 
         application = {
             sitesDir: sitesDir,
@@ -55,6 +63,13 @@ describe('Local preview files IPC', function () {
             previewServer: {
                 isSiteEnabled () {
                     return false;
+                },
+                async enableSite (siteName, dir, options) {
+                    enabledPreviews.push({ siteName, dir, options });
+                    return 'http://127.0.0.1:3000/' + siteName;
+                },
+                getSiteUrl (siteName) {
+                    return enabledPreviews.some(preview => preview.siteName === siteName) ? 'http://127.0.0.1:3000/' + siteName : null;
                 },
                 async disableSite (siteName) {
                     disabledPreviews.push(siteName);
@@ -75,10 +90,20 @@ describe('Local preview files IPC', function () {
         const context = {
             module: { exports: {} },
             console: { log () {} },
+            // The worker path is built from the directory of preview.js
+            __dirname: path.join(__dirname, '..'),
+            // The browser is opened with a delay
+            setTimeout (callback) {
+                callback();
+            },
             require (name) {
                 if (name === 'electron') {
                     return {
-                        shell: {},
+                        shell: {
+                            openExternal (url) {
+                                openedUrls.push(url);
+                            }
+                        },
                         ipcMain: {
                             on () {},
                             handle (channel, handler) {
@@ -95,8 +120,33 @@ describe('Local preview files IPC', function () {
                     };
                 }
 
-                if (name === 'fs-extra' || name === 'path') {
+                if (name === 'fs-extra' || name === 'path' || name === 'url') {
                     return require(name);
+                }
+
+                if (name === 'striptags') {
+                    return value => value;
+                }
+
+                if (name === '../helpers/ipc.helper.js') {
+                    return {
+                        createSafeSender: webContents => webContents,
+                        trackWorkerProcess () {},
+                        abortWindowWorkerProcess () {},
+                        forkWorkerWithLogs () {
+                            let worker = new EventEmitter();
+                            worker.messages = [];
+                            worker.send = message => worker.messages.push(message);
+                            workers.push(worker);
+                            return worker;
+                        }
+                    };
+                }
+
+                if (name === '../helpers/site-logs.js') {
+                    return {
+                        getWorkerLogsDirectory: () => sitesDir
+                    };
                 }
 
                 if (name === '../helpers/path-validator.js' || name === '../modules/preview-server/preview-server.js') {
@@ -278,6 +328,85 @@ describe('Local preview files IPC', function () {
         assert.deepEqual(plain(results), [{ status: true }, { status: true }]);
         assert.deepEqual(disabledPreviews, ['demo']);
         assert.equal(events.clearingSites.has('demo'), false);
+    });
+
+    describe('rendering the preview', function () {
+        let replies;
+        let sender;
+
+        beforeEach(function () {
+            replies = [];
+            sender = {
+                id: 1,
+                isDestroyed: () => false,
+                send (channel, payload) {
+                    replies.push({ channel, payload });
+                }
+            };
+        });
+
+        function finishRendering () {
+            workers[0].emit('message', { type: 'app-rendering-results', result: true });
+            workers[0].emit('exit');
+        }
+
+        it('serves the preview from the local server and opens it in the browser', async function () {
+            await events.renderSite('demo', false, false, false, sender, true);
+
+            assert.equal(enabledPreviews.length, 1);
+            assert.equal(enabledPreviews[0].dir, path.join(sitesDir, 'demo', 'preview'));
+            assert.deepEqual(plain(enabledPreviews[0].options), { port: 3000, portFallback: true });
+            assert.equal(workers.length, 1);
+            assert.equal(workers[0].messages[0].previewUrl, 'http://127.0.0.1:3000/demo');
+            assert.equal(workers[0].messages[0].previewMode, true);
+
+            finishRendering();
+
+            assert.deepEqual(openedUrls, ['http://127.0.0.1:3000/demo/']);
+            assert.deepEqual(plain(replies), [{ channel: 'app-preview-rendered', payload: { status: true } }]);
+            assert.equal(events.renderingSites.has('demo'), false);
+        });
+
+        it('opens the single item preview file on the local server', async function () {
+            await events.renderSite('demo', 12, { title: 'Draft' }, 'post', sender, true);
+            finishRendering();
+
+            assert.deepEqual(openedUrls, ['http://127.0.0.1:3000/demo/preview.html']);
+        });
+
+        it('renders the preview for the disk when the local server is disabled', async function () {
+            application.appConfig.previewServerEnabled = false;
+
+            await events.renderSite('demo', false, false, false, sender, true);
+
+            assert.deepEqual(enabledPreviews, []);
+            assert.deepEqual(disabledPreviews, ['demo']);
+            assert.equal(workers[0].messages[0].previewUrl, false);
+            assert.equal(workers[0].messages[0].previewMode, true);
+
+            finishRendering();
+
+            assert.deepEqual(openedUrls, [pathToFileURL(path.join(sitesDir, 'demo', 'preview', 'index.html')).href]);
+            assert.deepEqual(plain(replies), [{ channel: 'app-preview-rendered', payload: { status: true } }]);
+
+            openedUrls = [];
+            workers = [];
+            await events.renderSite('demo', 12, { title: 'Draft' }, 'page', sender, true);
+            finishRendering();
+
+            assert.deepEqual(openedUrls, [pathToFileURL(path.join(sitesDir, 'demo', 'preview', 'preview.html')).href]);
+        });
+
+        it('generates preview files for the disk without opening the browser', async function () {
+            await events.renderSite('demo', false, false, false, sender, false);
+
+            assert.deepEqual(enabledPreviews, []);
+            assert.equal(workers[0].messages[0].previewUrl, false);
+
+            finishRendering();
+
+            assert.deepEqual(openedUrls, []);
+        });
     });
 
     it('does not clear preview files during the rendering', async function () {

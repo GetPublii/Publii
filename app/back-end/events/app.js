@@ -157,6 +157,10 @@ class AppEvents {
             fs.writeFileSync(appInstance.appConfigPath, JSON.stringify(config, null, 4));
             appInstance.appConfig = config;
             appInstance.notifyAppConfigChanged(event.sender.id);
+
+            if (config.previewServerEnabled === false && appInstance.previewServer) {
+                appInstance.previewServer.stop().catch(error => console.log('Unable to stop the local preview:', error));
+            }
         });
 
         /*

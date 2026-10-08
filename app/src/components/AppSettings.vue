@@ -358,6 +358,21 @@
                 </field>
 
                 <field
+                    id="use-local-preview-server"
+                    :label="$t('settings.useLocalPreviewServer')"
+                    :labelSeparated="false">
+                    <switcher
+                        slot="field"
+                        id="use-local-preview-server"
+                        v-model="previewServerEnabled" />
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.useLocalPreviewServerDesc') }}
+                    </small>
+                </field>
+
+                <field
                     id="enable-advanced-preview"
                     :label="$t('settings.enableAdvancedPreview')"
                     :labelSeparated="false">
@@ -471,6 +486,7 @@ export default {
             originalSitesLocation: '',
             theme: 'default',
             enableAdvancedPreview: false,
+            previewServerEnabled: true,
             locations: {
                 sites: '',
                 backups: ''
@@ -623,6 +639,7 @@ export default {
         this.tagsOrdering = this.$store.state.app.config.tagsOrdering;
         this.authorsOrdering = this.$store.state.app.config.authorsOrdering;
         this.enableAdvancedPreview = this.$store.state.app.config.enableAdvancedPreview;
+        this.previewServerEnabled = this.$store.state.app.config.previewServerEnabled !== false;
         this.editorFontSize = this.$store.state.app.config.editorFontSize;
         this.editorFontFamily = this.$store.state.app.config.editorFontFamily;
         this.experimentalFeatureAppAutoBeautifySourceCode = this.$store.state.app.config.experimentalFeatureAppAutoBeautifySourceCode;
@@ -684,6 +701,7 @@ export default {
                 tagsOrdering: this.tagsOrdering,
                 authorsOrdering: this.authorsOrdering,
                 enableAdvancedPreview: this.enableAdvancedPreview,
+                previewServerEnabled: this.previewServerEnabled,
                 editorFontFamily: this.editorFontFamily,
                 editorFontSize: this.editorFontSize,
                 experimentalFeatureAppAutoBeautifySourceCode: this.experimentalFeatureAppAutoBeautifySourceCode,

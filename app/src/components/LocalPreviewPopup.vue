@@ -14,7 +14,15 @@
             </header>
 
             <div class="local-preview-content">
+                <p
+                    v-if="!serverEnabled"
+                    class="local-preview-note local-preview-disabled-note"
+                    role="status">
+                    {{ $t('localPreview.serverDisabledInfo') }}
+                </p>
+
                 <section
+                    v-if="serverEnabled"
                     class="local-preview-section"
                     aria-labelledby="local-preview-server-title">
                     <h3 id="local-preview-server-title">
@@ -114,6 +122,7 @@
                 </section>
 
                 <section
+                    v-if="serverEnabled"
                     class="local-preview-section"
                     aria-labelledby="local-preview-active-title">
                     <h3 id="local-preview-active-title">
@@ -289,6 +298,7 @@
                 </section>
 
                 <section
+                    v-if="serverEnabled"
                     class="local-preview-section"
                     aria-labelledby="local-preview-file-types-title">
                     <h3 id="local-preview-file-types-title">
@@ -468,6 +478,9 @@ export default {
     computed: {
         localPreview () {
             return this.$store.state.app.localPreview;
+        },
+        serverEnabled () {
+            return this.$store.state.app.config.previewServerEnabled !== false;
         },
         isRunning () {
             return this.localPreview.running;
@@ -876,6 +889,10 @@ export default {
     scrollbar-gutter: stable both-edges;
     text-align: left;
     user-select: text;
+}
+
+.local-preview-disabled-note {
+    margin: 0;
 }
 
 .local-preview-section {

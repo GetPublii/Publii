@@ -221,4 +221,23 @@ describe('Website location settings IPC', function () {
         ]);
         assert.deepEqual(configNotifications, []);
     });
+
+    // Without the option the popup no longer offers stopping the server, so it is stopped with the settings
+    it('stops the local preview server when it is switched off in the settings', function () {
+        let stops = 0;
+        application.previewServer = {
+            async stop () {
+                stops++;
+            }
+        };
+
+        save({ sitesLocation: application.sitesDir, previewServerEnabled: true });
+        assert.equal(stops, 0);
+        assert.equal(replies[replies.length - 1].payload.status, true);
+
+        save({ sitesLocation: application.sitesDir, previewServerEnabled: false });
+        assert.equal(stops, 1);
+        assert.equal(replies[replies.length - 1].payload.status, true);
+        assert.equal(fs.readJsonSync(application.appConfigPath).previewServerEnabled, false);
+    });
 });
