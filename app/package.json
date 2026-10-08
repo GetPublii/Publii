@@ -44,7 +44,7 @@
     "fflate": "0.8.3",
     "fs-extra": "11.1.1",
     "ftp": "0.3.10",
-    "handlebars": "4.7.9",
+    "handlebars": "4.7.10",
     "html-minifier": "4.0.0",
     "image-downloader": "4.3.0",
     "image-size": "1.2.1",
