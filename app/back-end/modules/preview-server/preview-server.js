@@ -582,7 +582,7 @@ class PreviewServer extends EventEmitter {
         return Object.assign({
             'X-Content-Type-Options': 'nosniff',
             'Cache-Control': 'no-store',
-            'Referrer-Policy': 'no-referrer'
+            'Referrer-Policy': 'strict-origin-when-cross-origin'
         }, headers);
     }
 
