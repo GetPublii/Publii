@@ -208,6 +208,11 @@ class EditorBridge {
             setTimeout(() => this.normalizeImageFigures(), 80);
         });
 
+        // Work on the serialization clone, preserving the editing DOM and Undo.
+        editor.on('PreProcess', event => {
+            this.normalizeNestedImageFigures(event.node);
+        });
+
         editor.on('PreInit', () => {
             editor.serializer.addNodeFilter('figure', figures => {
                 figures.forEach(figure => {
@@ -428,16 +433,67 @@ class EditorBridge {
                 return;
             }
 
-            // The media dialog replaces the selected placeholder, keeping its
-            // parent wrapper. Normalizing that fragment would nest a new div.
+            // The media dialog replaces the placeholder but retains its parent.
+            // Reuse that wrapper when the resolver supplies another plain one.
             const selected = editor.selection.getNode();
+            const mediaType = selected.getAttribute('data-mce-object');
+            const wrapperSelector = {
+                iframe: '.post__iframe, .post__video',
+                video: '.post__video',
+                audio: '.post__audio'
+            }[mediaType];
 
-            if (
-                event.selection &&
-                selected.getAttribute('data-mce-object') === 'iframe' &&
-                selected.closest('.post__iframe, .post__video')
-            ) {
-                return;
+            const existingWrapper = ['iframe', 'video', 'audio'].includes(mediaType) && selected.closest(wrapperSelector);
+
+            if (event.selection && existingWrapper) {
+                const template = editor.getDoc().createElement('template');
+                template.innerHTML = event.content;
+                const wrapper = template.content.firstElementChild;
+                const isBareEmbed = wrapper && ['IFRAME', 'VIDEO', 'AUDIO'].includes(wrapper.tagName);
+                const embed = isBareEmbed ? wrapper : wrapper && wrapper.firstElementChild;
+                const containsOnly = (parent, child) => Array.from(parent.childNodes).every(node => {
+                    return node === child || (node.nodeType === 3 && node.textContent.trim() === '');
+                });
+                const isDefaultWrapper = wrapper && wrapper.attributes.length === 1 && (
+                    (wrapper.tagName === 'DIV' && wrapper.className.trim() === 'post__iframe') ||
+                    (wrapper.tagName === 'FIGURE' && wrapper.className.trim() === 'post__video') ||
+                    (wrapper.tagName === 'FIGURE' && wrapper.className.trim() === 'post__audio')
+                );
+
+                const isSingleEmbed = embed && ['IFRAME', 'VIDEO', 'AUDIO'].includes(embed.tagName) &&
+                    containsOnly(template.content, wrapper) &&
+                    (isBareEmbed || (isDefaultWrapper && containsOnly(wrapper, embed)));
+                const canChangeType = ['DIV', 'FIGURE'].includes(existingWrapper.tagName) &&
+                    containsOnly(existingWrapper, selected);
+
+                if (isSingleEmbed && (embed.tagName.toLowerCase() === mediaType || canChangeType)) {
+                    if (embed.tagName.toLowerCase() !== mediaType) {
+                        const wrapperTag = isBareEmbed
+                            ? (embed.tagName === 'IFRAME' ? 'div' : 'figure')
+                            : wrapper.tagName.toLowerCase();
+                        const wrapperClass = isBareEmbed
+                            ? { IFRAME: 'post__iframe', VIDEO: 'post__video', AUDIO: 'post__audio' }[embed.tagName]
+                            : wrapper.className.trim();
+
+                        // Keep the placeholder selected: deleting a selected block
+                        // can merge the following paragraph into its container.
+                        const replacement = editor.dom.rename(existingWrapper, wrapperTag);
+                        replacement.classList.remove('post__iframe', 'post__video', 'post__audio');
+                        replacement.classList.add(wrapperClass);
+                        editor.selection.select(selected);
+                    }
+
+                    if (!isBareEmbed) {
+                        wrapper.replaceWith(...wrapper.childNodes);
+                        event.content = template.innerHTML;
+                    }
+
+                    return;
+                }
+
+                if (mediaType === 'iframe') {
+                    return;
+                }
             }
 
             event.content = wrapIframes(event.content);
@@ -465,6 +521,35 @@ class EditorBridge {
                     wrapper.remove();
                 }
             });
+        });
+    }
+
+    normalizeNestedImageFigures (root) {
+        Array.from(root.querySelectorAll('figure')).reverse().forEach(outer => {
+            const inner = outer.firstElementChild;
+            const hasCustomAttributes = Array.from(outer.attributes).some(attribute => {
+                return attribute.name !== 'class' && attribute.name !== 'contenteditable' && !attribute.name.startsWith('data-mce-');
+            });
+            const hasCustomClasses = Array.from(outer.classList).some(className => {
+                return className !== 'image' && className !== 'post__image';
+            });
+            const containsOnlyFigure = Array.from(outer.childNodes).every(node => {
+                return node === inner || (node.nodeType === 3 && node.textContent.trim() === '');
+            });
+
+            if (
+                !inner || inner.tagName !== 'FIGURE' || hasCustomAttributes || hasCustomClasses ||
+                !containsOnlyFigure || !inner.matches('figure.image, figure.post__image') ||
+                inner.querySelector('iframe, video, audio, object, embed, [data-mce-object], [data-mce-placeholder]')
+            ) {
+                return;
+            }
+
+            const image = inner.querySelector('img');
+
+            if (image && image.closest('figure') === inner) {
+                outer.replaceWith(...outer.childNodes);
+            }
         });
     }
 
@@ -803,10 +888,6 @@ class EditorBridge {
 
                     // Remove empty paragraphs after figures
                     e.content = e.content.replace(/<\/figure>\s*<p>\s*(&nbsp;|\u00a0)?\s*<\/p>/gi, '</figure>');
-
-                    // Clean up double figures
-                    e.content = e.content.replace(/<figure[^>]*>\s*<figure[^>]*>/gi, '<figure class="post__image">');
-                    e.content = e.content.replace(/<\/figure>\s*<\/figure>/gi, '</figure>');
                 }
             });
         });
