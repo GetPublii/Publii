@@ -1593,6 +1593,7 @@
         "siteID": "ID witryny",
         "siteIsInSync": "Witryna zsynchronizowana",
         "storedSecretNotFound": "Publii nie może odczytać tej zapisanej wartości z systemowego pęku kluczy. Kliknij „Zmień”, wpisz ją ponownie i zapisz ustawienia.",
+        "storedSecretsNotFoundNotice": "Z powodu zmiany sposobu przechowywania haseł Publii nie może odczytać zapisanych danych logowania do serwera dla tej strony. Wprowadź je ponownie w ustawieniach serwera, aby synchronizacja działała poprawnie.",
         "syncFTPNoPasswordMsg": "Bez hasła nie można zsynchronizować witryny. Proszę spróbować ponownie",
         "showSyncProgress": "Pokaż postęp synchronizacji",
         "syncInProgress": "Trwa synchronizacja",

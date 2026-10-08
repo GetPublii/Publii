@@ -1527,6 +1527,7 @@
         "siteID": "Website-ID",
         "siteIsInSync": "Website ist synchronisiert",
         "storedSecretNotFound": "Publii kann diesen gespeicherten Wert nicht aus dem Schlüsselbund des Systems lesen. Klicken Sie auf „Ändern“, geben Sie ihn erneut ein und speichern Sie die Einstellungen.",
+        "storedSecretsNotFoundNotice": "Aufgrund einer Änderung bei der Speicherung von Passwörtern kann Publii die gespeicherten Server-Zugangsdaten dieser Website nicht lesen. Geben Sie sie in den Servereinstellungen erneut ein, damit die Synchronisierung korrekt funktioniert.",
         "syncFTPNoPasswordMsg": "Ihre Website kann ohne das Passwort nicht synchronisiert werden. Bitte erneut versuchen",
         "syncInProgress": "Synchronisierung läuft",
         "syncInProgressMessage": "Während des Synchronisierungsvorgangs können Sie den Website-Namen nicht ändern.",

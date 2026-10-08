@@ -626,8 +626,21 @@ class SiteEvents {
                     'publii-s3-id': deployment.s3 && deployment.s3.id,
                     'publii-s3-key': deployment.s3 && deployment.s3.key
                 };
+                // Only secrets of the selected protocol are read - other protocols can keep unused placeholders
+                let protocolSecrets = {
+                    'ftp': ['publii'],
+                    'ftp+tls': ['publii'],
+                    'sftp': ['publii'],
+                    'sftp+key': ['publii-passphrase'],
+                    'git': ['publii-git-password'],
+                    'github-pages': ['publii-gh-token'],
+                    'gitlab-pages': ['publii-gl-token'],
+                    'netlify': ['publii-netlify-id', 'publii-netlify-token'],
+                    's3': ['publii-s3-id', 'publii-s3-key']
+                };
+                let types = Object.prototype.hasOwnProperty.call(protocolSecrets, deployment.protocol) ? protocolSecrets[deployment.protocol] : [];
 
-                for (let type of Object.keys(secrets)) {
+                for (let type of types) {
                     // Only placeholders point to the secrets stored in the keychain
                     if (typeof secrets[type] !== 'string' || !secrets[type].startsWith(type + ' ')) {
                         continue;

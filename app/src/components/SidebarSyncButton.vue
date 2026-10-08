@@ -94,6 +94,7 @@
 <script>
 import Tooltip from '../helpers/tooltip.js';
 import Utils from '../helpers/utils.js';
+import { checkSiteSecrets } from '../helpers/site-secrets-check.js';
 import SidebarIcons from './configs/sidebar-icons.js';
 
 export default {
@@ -280,7 +281,7 @@ export default {
                 showPreview: false
             });
         },
-        syncWebsite: function(e) {
+        syncWebsite: async function(e) {
             if (e && e.screenX === 0 && e.screenY === 0) {
                 return;
             }
@@ -299,12 +300,35 @@ export default {
                     return;
                 }
 
+                if (await this.showSecretsNotice()) {
+                    return;
+                }
+
                 this.$bus.$emit('sync-popup-display');
             } else if (this.redirectTo === 'site-settings') {
                 let siteName = this.$store.state.currentSite.config.name;
 
                 this.$router.push('/site/' + siteName + '/settings/server');
             }
+        },
+        // Shown once per website when its saved credentials cannot be read from the system keychain
+        async showSecretsNotice () {
+            let siteName = this.$store.state.currentSite.config.name;
+            let result = await checkSiteSecrets(this.$store.state.currentSite.config);
+
+            if (!result.isFirstCheck || !result.missing.length) {
+                return false;
+            }
+
+            this.$bus.$emit('confirm-display', {
+                message: this.$t('sync.storedSecretsNotFoundNotice'),
+                okLabel: this.$t('settings.openServerSettings'),
+                okClick: () => {
+                    this.$router.push('/site/' + siteName + '/settings/server');
+                }
+            });
+
+            return true;
         },
         checkDeploymentConfig() {
             let config = this.$store.state.currentSite.config;

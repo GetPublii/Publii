@@ -1591,6 +1591,7 @@
         "siteID": "Site ID",
         "siteIsInSync": "Site is in sync",
         "storedSecretNotFound": "Publii cannot read this saved value from the system keychain. Click \"Change\", enter it again and save the settings.",
+        "storedSecretsNotFoundNotice": "Due to a change in how Publii stores passwords, the saved server credentials of this website cannot be read. Enter them again in the server settings, so that syncing works correctly.",
         "syncFTPNoPasswordMsg": "Your website cannot be synced without the password. Please try again",
         "showSyncProgress": "Show sync progress",
         "syncInProgress": "Sync in progress",

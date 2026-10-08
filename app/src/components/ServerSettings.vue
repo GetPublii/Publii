@@ -1242,6 +1242,7 @@
 import Tooltip from '../helpers/tooltip.js';
 import Vue from 'vue';
 import Utils from './../helpers/utils.js';
+import { checkSiteSecrets, recheckMissingSecrets } from './../helpers/site-secrets-check.js';
 import defaultDeploymentSettings from './configs/defaultDeploymentSettings.js';
 import s3RegionsList from './configs/s3Regions.js';
 import s3ACLs from './configs/s3ACLs.js';
@@ -1254,7 +1255,7 @@ export default {
     data () {
         return {
             isLoaded: false,
-            secretsStatus: {},
+            missingSecrets: [],
             domain: '',
             httpProtocols: {
                 'https': 'https://',
@@ -1358,7 +1359,7 @@ export default {
             this.deploymentSettings.manual.output = 'catalog';
         }
 
-        this.loadSecretsStatus();
+        this.checkSecrets();
 
         setTimeout(() => {
             this.setPortValue();
@@ -1461,7 +1462,7 @@ export default {
             mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {
                 if(data.status === true) {
                     this.saved(newSettings);
-                    this.loadSecretsStatus();
+                    this.recheckSecrets();
                 }
 
                 if(data.message === 'success-save') {
@@ -1744,17 +1745,24 @@ export default {
 
             return '';
         },
-        async loadSecretsStatus () {
-            try {
-                let status = await mainProcessAPI.invoke('app-site:secrets-status', this.$store.state.currentSite.config.name);
-                this.secretsStatus = status || {};
-            } catch (e) {
-                this.secretsStatus = {};
+        // The keychain is read only during the first check of the website
+        async checkSecrets () {
+            let result = await checkSiteSecrets(this.$store.state.currentSite.config);
+            this.missingSecrets = result.missing;
+
+            if (result.isFirstCheck && result.missing.length) {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('sync.storedSecretsNotFoundNotice'),
+                    okLabel: this.$t('ui.iUnderstand')
+                });
             }
+        },
+        async recheckSecrets () {
+            this.missingSecrets = await recheckMissingSecrets(this.$store.state.currentSite.config);
         },
         // Placeholder is saved in the site config, but its secret cannot be read from the system keychain
         isSecretMissing (secretType) {
-            return this.secretsStatus[secretType] === false;
+            return this.missingSecrets.indexOf(secretType) > -1;
         },
         setHiddenPasswords (deploymentSettings) {
             let passwordKey = this.$store.state.currentSite.config.name;
