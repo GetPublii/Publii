@@ -600,6 +600,50 @@ class SiteEvents {
             }
         });
 
+        /*
+         * Tells which secrets from the site config can be read from the system keychain - secrets never leave the main process
+         */
+        ipcMain.handle('app-site:secrets-status', async function(event, siteName) {
+            let status = {};
+
+            if (typeof siteName !== 'string' || !self.siteDirExists(appInstance, siteName)) {
+                return status;
+            }
+
+            try {
+                let configFile = path.join(appInstance.sitesDir, siteName, 'input', 'config', 'site.config.json');
+                let siteConfig = JSON.parse(FileHelper.readFileSync(configFile, 'utf8'));
+                let deployment = siteConfig.deployment || {};
+                let account = siteConfig.uuid ? siteConfig.uuid : slug(siteName);
+                let secrets = {
+                    'publii': deployment.password,
+                    'publii-passphrase': deployment.passphrase,
+                    'publii-git-password': deployment.git && deployment.git.password,
+                    'publii-gh-token': deployment.github && deployment.github.token,
+                    'publii-gl-token': deployment.gitlab && deployment.gitlab.token,
+                    'publii-netlify-id': deployment.netlify && deployment.netlify.id,
+                    'publii-netlify-token': deployment.netlify && deployment.netlify.token,
+                    'publii-s3-id': deployment.s3 && deployment.s3.id,
+                    'publii-s3-key': deployment.s3 && deployment.s3.key
+                };
+
+                for (let type of Object.keys(secrets)) {
+                    // Only placeholders point to the secrets stored in the keychain
+                    if (typeof secrets[type] !== 'string' || !secrets[type].startsWith(type + ' ')) {
+                        continue;
+                    }
+
+                    let secret = await passwordSafeStorage.getPassword(type, account);
+                    // Previous versions could save the placeholder itself as the secret
+                    status[type] = typeof secret === 'string' && secret !== '' && !secret.startsWith(type + ' ');
+                }
+            } catch (error) {
+                console.log('(!) Unable to check secrets of the website:', error && error.message);
+            }
+
+            return status;
+        });
+
         ipcMain.on('app-site-abort-regenerate-thumbnails', function(event) {
             self.stopThumbnailsRegeneration(event.sender.id);
         });
@@ -984,6 +1028,15 @@ class SiteEvents {
         }
 
         if (!settings.deployment.askforpassword || type !== 'publii') {
+            // Placeholder of another account (e.g. after renaming a website without UUID) is never saved as the secret,
+            // the server settings ask to enter the secret again
+            if (typeof newPassword === 'string' && newPassword.startsWith(type + ' ')) {
+                return {
+                    newPassword: '',
+                    toSave: type + ' ' + account
+                };
+            }
+
             let existingPassword = await passwordSafeStorage.getPassword(type, account);
 
             if (newPassword !== '') {

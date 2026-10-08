@@ -1590,6 +1590,7 @@
         "siteFieldCantBeEmpty": "The Site ID field cannot be empty",
         "siteID": "Site ID",
         "siteIsInSync": "Site is in sync",
+        "storedSecretNotFound": "Publii cannot read this saved value from the system keychain. Click \"Change\", enter it again and save the settings.",
         "syncFTPNoPasswordMsg": "Your website cannot be synced without the password. Please try again",
         "showSyncProgress": "Show sync progress",
         "syncInProgress": "Sync in progress",

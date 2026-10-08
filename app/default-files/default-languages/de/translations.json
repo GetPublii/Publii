@@ -1526,6 +1526,7 @@
         "siteFieldCantBeEmpty": "Das Feld Website-ID darf nicht leer sein",
         "siteID": "Website-ID",
         "siteIsInSync": "Website ist synchronisiert",
+        "storedSecretNotFound": "Publii kann diesen gespeicherten Wert nicht aus dem Schlüsselbund des Systems lesen. Klicken Sie auf „Ändern“, geben Sie ihn erneut ein und speichern Sie die Einstellungen.",
         "syncFTPNoPasswordMsg": "Ihre Website kann ohne das Passwort nicht synchronisiert werden. Bitte erneut versuchen",
         "syncInProgress": "Synchronisierung läuft",
         "syncInProgressMessage": "Während des Synchronisierungsvorgangs können Sie den Website-Namen nicht ändern.",

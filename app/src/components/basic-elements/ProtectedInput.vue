@@ -6,7 +6,7 @@
             type="password"
             :spellcheck="false"
             :readonly="locked"
-            :invalid="isInvalid"
+            :invalid="isInvalid || (missing && locked)"
             v-model="innerValue" />
 
         <p-button
@@ -22,6 +22,12 @@
             :onClick="cancel">
             {{ $t('ui.cancel') }}
         </p-button>
+
+        <small
+            v-if="missing && locked"
+            class="protected-input-note">
+            {{ $t('sync.storedSecretNotFound') }}
+        </small>
     </div>
 </template>
 
@@ -44,6 +50,11 @@ export default {
             type: String
         },
         'isInvalid': {
+            default: false,
+            type: Boolean
+        },
+        // the placeholder is saved, but its secret cannot be read from the system keychain
+        'missing': {
             default: false,
             type: Boolean
         }
@@ -96,10 +107,21 @@ export default {
 .protected-input {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-4);
+    row-gap: var(--space-2);
 
     .input-wrapper {
         flex: 1;
     }
+}
+
+.protected-input-note {
+    color: var(--color-danger);
+    flex-basis: 100%;
+    font-size: 1.35rem;
+    font-style: italic;
+    line-height: 1.4;
+    user-select: text;
 }
 </style>

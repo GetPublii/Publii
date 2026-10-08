@@ -1592,6 +1592,7 @@
         "siteFieldCantBeEmpty": "Pole ID witryny nie może być puste",
         "siteID": "ID witryny",
         "siteIsInSync": "Witryna zsynchronizowana",
+        "storedSecretNotFound": "Publii nie może odczytać tej zapisanej wartości z systemowego pęku kluczy. Kliknij „Zmień”, wpisz ją ponownie i zapisz ustawienia.",
         "syncFTPNoPasswordMsg": "Bez hasła nie można zsynchronizować witryny. Proszę spróbować ponownie",
         "showSyncProgress": "Pokaż postęp synchronizacji",
         "syncInProgress": "Trwa synchronizacja",

@@ -404,6 +404,7 @@
                         id="password"
                         key="password"
                         secretType="publii"
+                        :missing="isSecretMissing('publii')"
                         :isInvalid="errors.indexOf('password') > -1"
                         @keyup.native="cleanError('password')"
                         v-model="deploymentSettings.password" />
@@ -473,6 +474,7 @@
                         id="passphrase"
                         key="passphrase"
                         secretType="publii-passphrase"
+                        :missing="isSecretMissing('publii-passphrase')"
                         v-model="deploymentSettings.passphrase" />
 
                     <small
@@ -601,6 +603,7 @@
                         id="gh-token"
                         key="gh-token"
                         secretType="publii-gh-token"
+                        :missing="isSecretMissing('publii-gh-token')"
                         :isInvalid="errors.indexOf('github-token') > -1"
                         @keyup.native="cleanError('github-token')"
                         v-model="deploymentSettings.github.token" />
@@ -691,6 +694,7 @@
                         id="git-password"
                         key="git-password"
                         secretType="publii-git-password"
+                        :missing="isSecretMissing('publii-git-password')"
                         :isInvalid="errors.indexOf('git-password') > -1"
                         @keyup.native="cleanError('git-password')"
                         v-model="deploymentSettings.git.password" />
@@ -871,6 +875,7 @@
                         id="gl-token"
                         key="gl-token"
                         secretType="publii-gl-token"
+                        :missing="isSecretMissing('publii-gl-token')"
                         :isInvalid="errors.indexOf('gitlab-token') > -1"
                         @keyup.native="cleanError('gitlab-token')"
                         v-model="deploymentSettings.gitlab.token" />
@@ -891,6 +896,7 @@
                         id="netlify-id"
                         key="netlify-id"
                         secretType="publii-netlify-id"
+                        :missing="isSecretMissing('publii-netlify-id')"
                         :isInvalid="errors.indexOf('netlify-id') > -1"
                         @keyup.native="cleanError('netlify-id')"
                         v-model="deploymentSettings.netlify.id" />
@@ -911,6 +917,7 @@
                         id="netlify-token"
                         key="netlify-token"
                         secretType="publii-netlify-token"
+                        :missing="isSecretMissing('publii-netlify-token')"
                         :isInvalid="errors.indexOf('netlify-token') > -1"
                         @keyup.native="cleanError('netlify-token')"
                         v-model="deploymentSettings.netlify.token" />
@@ -971,6 +978,7 @@
                         id="s3-id"
                         key="s3-id"
                         secretType="publii-s3-id"
+                        :missing="isSecretMissing('publii-s3-id')"
                         :isInvalid="errors.indexOf('s3-id') > -1"
                         @keyup.native="cleanError('s3-id')"
                         v-model="deploymentSettings.s3.id" />
@@ -991,6 +999,7 @@
                         id="s3-key"
                         key="s3-key"
                         secretType="publii-s3-key"
+                        :missing="isSecretMissing('publii-s3-key')"
                         :isInvalid="errors.indexOf('s3-key') > -1"
                         @keyup.native="cleanError('s3-key')"
                         v-model="deploymentSettings.s3.key" />
@@ -1245,6 +1254,7 @@ export default {
     data () {
         return {
             isLoaded: false,
+            secretsStatus: {},
             domain: '',
             httpProtocols: {
                 'https': 'https://',
@@ -1348,6 +1358,8 @@ export default {
             this.deploymentSettings.manual.output = 'catalog';
         }
 
+        this.loadSecretsStatus();
+
         setTimeout(() => {
             this.setPortValue();
             this.isLoaded = true;
@@ -1449,6 +1461,7 @@ export default {
             mainProcessAPI.receiveOnce('app-site-config-saved', (data) => {
                 if(data.status === true) {
                     this.saved(newSettings);
+                    this.loadSecretsStatus();
                 }
 
                 if(data.message === 'success-save') {
@@ -1730,6 +1743,18 @@ export default {
             }
 
             return '';
+        },
+        async loadSecretsStatus () {
+            try {
+                let status = await mainProcessAPI.invoke('app-site:secrets-status', this.$store.state.currentSite.config.name);
+                this.secretsStatus = status || {};
+            } catch (e) {
+                this.secretsStatus = {};
+            }
+        },
+        // Placeholder is saved in the site config, but its secret cannot be read from the system keychain
+        isSecretMissing (secretType) {
+            return this.secretsStatus[secretType] === false;
         },
         setHiddenPasswords (deploymentSettings) {
             let passwordKey = this.$store.state.currentSite.config.name;
