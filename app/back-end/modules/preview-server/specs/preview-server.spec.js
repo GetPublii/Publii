@@ -231,8 +231,24 @@ describe('Preview server', function () {
             let response = await request('/my-site/', { headers: { 'Sec-Fetch-Site': 'cross-site' } });
             assert.equal(response.status, 403);
 
+            response = await request('/my-site/style.css', { headers: { 'Sec-Fetch-Site': 'cross-site', 'Sec-Fetch-Mode': 'no-cors', 'Sec-Fetch-Dest': 'style' } });
+            assert.equal(response.status, 403);
+
             response = await request('/my-site/', { headers: { 'Sec-Fetch-Site': 'none' } });
             assert.equal(response.status, 200);
+        });
+
+        it('accepts cross-site top-level navigations', async function () {
+            let response = await request('/my-site/style.css', { headers: { 'Sec-Fetch-Site': 'cross-site', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Dest': 'document' } });
+            assert.equal(response.status, 200);
+            assert.equal(response.body, 'body { color: red; }');
+        });
+
+        it('rejects cross-site navigations in frames', async function () {
+            for (let dest of ['iframe', 'frame', 'object', 'embed']) {
+                let response = await request('/my-site/', { headers: { 'Sec-Fetch-Site': 'cross-site', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Dest': dest } });
+                assert.equal(response.status, 403, dest);
+            }
         });
 
         it('does not let the previewed websites register service workers', async function () {

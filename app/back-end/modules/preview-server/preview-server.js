@@ -394,8 +394,9 @@ class PreviewServer extends EventEmitter {
             return;
         }
 
-        // Requests without this header (older browsers) are accepted
-        if (req.headers['sec-fetch-site'] === 'cross-site') {
+        // Requests without this header (older browsers) are accepted, top-level navigations too
+        // (links from other websites, "Open in New Tab" in the developer tools of Firefox)
+        if (req.headers['sec-fetch-site'] === 'cross-site' && !this._isTopLevelNavigation(req)) {
             this._sendError(req, res, 403);
             return;
         }
@@ -584,6 +585,11 @@ class PreviewServer extends EventEmitter {
             'Cache-Control': 'no-store',
             'Referrer-Policy': 'strict-origin-when-cross-origin'
         }, headers);
+    }
+
+    // Foreign website can open the preview in a tab, but it cannot read it or embed it (iframes, images, scripts)
+    _isTopLevelNavigation (req) {
+        return req.headers['sec-fetch-mode'] === 'navigate' && req.headers['sec-fetch-dest'] === 'document';
     }
 
     // Separator protects against directories with a similar name (/preview vs /preview-secret)
