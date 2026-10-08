@@ -711,6 +711,20 @@ class App {
     _createWindow (windowParams, { isNewWindow = false, initialSite = '', skipSplashScreen = isNewWindow } = {}) {
         let win = new BrowserWindow(windowParams);
         this._dropMessagesToClosedWindow(win.webContents);
+
+        // Keep the editor's CSP in place when imported content tries to replace its document.
+        // Child media frames and plugin settings frames retain their normal navigation.
+        win.webContents.on('will-frame-navigate', event => {
+            if (
+                event.frame &&
+                event.frame.name === 'publii-wysiwyg-editor' &&
+                event.url !== 'about:blank' &&
+                event.url !== 'about:srcdoc'
+            ) {
+                event.preventDefault();
+            }
+        });
+
         win.loadURL('file:///' + this.basedir + '/dist/index.html');
 
         // Keyboard shortcut listener

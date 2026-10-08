@@ -25,6 +25,13 @@ export default {
     // Keep the TinyMCE iframe body id - Publii and theme editor.css files target body#tinymce (HugeRTE defaults to "hugerte")
     body_id: 'tinymce',
     xss_sanitization: false,
+    // Isolate the editor preview without changing published iframe permissions.
+    iframe_attrs: {
+        name: 'publii-wysiwyg-editor',
+        sandbox: 'allow-scripts allow-same-origin allow-forms allow-presentation'
+    },
+    content_security_policy: "script-src 'none'; frame-src http: https:; object-src 'none';",
+    sandbox_iframes: false,
     paste_as_text: false,
     keep_styles: false,
     image_class_list: [
