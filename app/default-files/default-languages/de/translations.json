@@ -1384,6 +1384,10 @@
         "yourThemeDoNotSupport": "Ihr derzeitiges Theme unterstützt eine benötigte Funktion nicht: {featureName}"
     },
     "sync": {
+        "stagePrepare": "Dateien vorbereiten",
+        "stageConnect": "Verbinden",
+        "stageUpload": "Hochladen",
+        "stageOutput": "Dateien speichern",
         "accessID": "Zugriffs-ID",
         "accessIDFieldCantBeEmpty": "Das Feld für die Zugriffs-ID darf nicht leer sein",
         "acl": "ACL",

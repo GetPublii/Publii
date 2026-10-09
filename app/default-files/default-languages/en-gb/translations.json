@@ -1436,6 +1436,10 @@
         "yourThemeDoNotSupport": "Your current theme does not support the required feature: {featureName}"
     },
     "sync": {
+        "stagePrepare": "Prepare files",
+        "stageConnect": "Connect",
+        "stageUpload": "Upload",
+        "stageOutput": "Save files",
         "visitWebsiteManualUnavailable": "This action is unavailable for manual deployment.",
         "visitWebsiteMissingAddress": "Set and save the website address in Server Settings first.",
         "accessID": "Access ID",

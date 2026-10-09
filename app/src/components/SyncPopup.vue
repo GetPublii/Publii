@@ -10,12 +10,7 @@
         <div class="popup sync">
             <div
                 v-if="isInSync && noIssues && !isMinimized"
-                class="sync-success">
-
-                <progress-orb
-                    class="sync-orb"
-                    phase="success"
-                    :progress="100" />
+                class="sync-success sync-full-view">
 
                 <!-- Separate state headings so v-pure-html content cannot leak into another state. -->
                 <div class="heading" key="success-heading">
@@ -51,24 +46,30 @@
                     </p>
                 </div>
 
+                <sync-progress
+                    phase="success"
+                    :progress="100"
+                    :is-manual="isManual" />
+
                 <div class="buttons">
                     <p-button
+                        size="medium"
                         v-if="isManual"
                         intent="success"
-                        size="medium"
                         :onClick="showFolder">
                         {{ $t('sync.showInFolder') }}
                     </p-button>
 
                     <p-button
+                        size="medium"
                         v-if="!isManual"
                         intent="success"
-                        size="medium"
                         :onClick="openWebsite">
                         {{ $t('sync.visitYourWebsite') }}
                     </p-button>
 
                     <p-button
+                        size="medium"
                         :onClick="close"
                         appearance="clean-muted">
                         {{ $t('ui.close') }}
@@ -78,11 +79,7 @@
 
             <div
                 v-if="isInSync && !noIssues && !isMinimized"
-                class="sync-success">
-                <progress-orb
-                    class="sync-orb"
-                    phase="warning"
-                    :progress="100" />
+                class="sync-success sync-full-view">
 
                 <div class="heading" key="warning-heading">
                     <h1>{{ $t('sync.filesNotSyncedErrorText') }}</h1>
@@ -92,6 +89,11 @@
                     </p>
                 </div>
 
+                <sync-progress
+                    phase="warning"
+                    :progress="100"
+                    :is-manual="isManual" />
+
                 <div class="buttons">
                     <p-button
                         size="medium"
@@ -100,6 +102,7 @@
                     </p-button>
 
                     <p-button
+                        size="medium"
                         :onClick="close"
                         appearance="clean-muted">
                         {{ $t('ui.close') }}
@@ -109,32 +112,40 @@
 
             <div
                 v-if="properConfig && !isInSync && !isMinimized"
-                class="sync-todo">
-                <progress-orb
-                    class="sync-orb"
-                    :phase="orbPhase"
-                    :progress="orbProgress"
-                    :indeterminate="orbIndeterminate"
-                    :message="orbMessage" />
-
+                class="sync-todo sync-full-view">
                 <div class="heading" key="preparation-heading">
                     <h1>{{ isManual ? $t('sync.websiteFilesPreparation') : $t('sync.websiteSynchronization') }}</h1>
 
                     <p
+                        key="sync-preparation-description"
                         class="description"
                         v-pure-html="$t('sync.websiteSynchronizationInfo')">
                     </p>
                 </div>
 
+                <sync-progress
+                    :phase="syncPhase"
+                    :progress="syncProgress"
+                    :operations="uploadingOperations"
+                    :indeterminate="syncIndeterminate"
+                    :message="syncMessage"
+                    :is-manual="isManual"
+                    :error-stage="renderingProgressIntent === 'danger' ? 'rendering' : 'connecting'" />
+
                 <div class="buttons">
                     <p-button
-                        :onClick="startSync"
                         size="medium"
+                        key="start-sync"
+                        ref="startSyncButton"
+                        :onClick="startSync"
                         :disabled="syncInProgress">
                         {{ syncButtonLabel }}
                     </p-button>
 
                     <p-button
+                        size="medium"
+                        key="cancel-sync"
+                        ref="cancelSyncButton"
                         :onClick="cancelSync"
                         appearance="clean-muted">
                         {{ $t('ui.cancel') }}
@@ -225,9 +236,13 @@
 
 <script>
 import Utils from './../helpers/utils.js';
+import SyncProgress from './SyncProgress.vue';
 
 export default {
     name: 'sync-popup',
+    components: {
+        SyncProgress
+    },
     data () {
         return {
             isVisible: false,
@@ -239,6 +254,7 @@ export default {
             renderingProgressIntent: 'default',
             messageFromUploader: '',
             uploadingProgress: 0,
+            uploadingOperations: null,
             uploadingProgressIntent: 'default',
             syncInProgress: false,
             isInSync: false,
@@ -292,7 +308,7 @@ export default {
         showsUploadMessage: function() {
             return !this.isManual && !this.renderingInProgress && (this.uploadInProgress || this.syncInProgress || this.isInSync || this.uploadError);
         },
-        orbPhase: function() {
+        syncPhase: function() {
             if (this.uploadError || this.renderingProgressIntent === 'danger' || this.uploadingProgressIntent === 'danger') {
                 return 'error';
             }
@@ -311,8 +327,8 @@ export default {
 
             return 'idle';
         },
-        orbProgress: function() {
-            switch (this.orbPhase) {
+        syncProgress: function() {
+            switch (this.syncPhase) {
                 case 'rendering':
                     return this.renderingProgress;
                 case 'uploading':
@@ -325,10 +341,10 @@ export default {
                     return 0;
             }
         },
-        orbIndeterminate: function() {
-            return this.orbPhase === 'connecting' || (this.orbPhase === 'uploading' && this.isManual);
+        syncIndeterminate: function() {
+            return this.syncPhase === 'connecting' || (this.syncPhase === 'uploading' && this.isManual);
         },
-        orbMessage: function() {
+        syncMessage: function() {
             if (this.uploadError) {
                 return this.messageFromUploader;
             }
@@ -391,6 +407,21 @@ export default {
         }
     },
     watch: {
+        syncInProgress (inProgress) {
+            const startButton = this.$refs.startSyncButton;
+
+            if (!inProgress || !startButton || document.activeElement !== startButton.$el) {
+                return;
+            }
+
+            this.$nextTick(() => {
+                const cancelButton = this.$refs.cancelSyncButton;
+
+                if (cancelButton) {
+                    cancelButton.$el.focus();
+                }
+            });
+        },
         'isVisible': function (newValue) {
             if (newValue === false) {
                 this.$store.commit('setSyncStatus', false);
@@ -411,6 +442,7 @@ export default {
             this.messageFromUploader = '';
             this.uploadInProgress = false;
             this.uploadingProgress = 0;
+            this.uploadingOperations = null;
             this.uploadingProgressIntent = 'default';
             this.syncInProgress = false;
             this.isInSync = false;
@@ -527,6 +559,7 @@ export default {
             }
 
             this.syncInProgress = true;
+            this.uploadingOperations = null;
             this.uploadInProgress = false;
             this.renderingInProgress = false;
 
@@ -621,6 +654,7 @@ export default {
             }
 
             this.uploadingProgress = data.progress;
+            this.uploadingOperations = Array.isArray(data.operations) ? [...data.operations] : null;
             this.messageFromUploader = this.$t('sync.uploadingWebsite');
 
             if(data.operations) {
@@ -957,8 +991,37 @@ export default {
     }
 }
 
-.sync-orb {
-    margin: 0 auto var(--space-8);
+.sync-full-view {
+    --button-height-large: 4.8rem;
+
+    margin: 0 auto;
+    max-width: calc(100vw - 6.4rem);
+    width: 88rem;
+
+    .heading h1 {
+        text-align: center;
+    }
+
+    .heading .description {
+        margin: 0 auto;
+        max-width: 58rem;
+        padding: 0;
+        text-align: center;
+    }
+
+    .buttons {
+        align-items: center;
+        flex-direction: column;
+        gap: var(--space-2);
+        justify-content: center;
+        margin-top: var(--space-16);
+        top: 0;
+    }
+
+    .buttons .button {
+        max-width: 100%;
+        min-width: 10rem;
+    }
 }
 
 .minimize-popup {

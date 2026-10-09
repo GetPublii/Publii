@@ -42,7 +42,15 @@ function setup(componentName, protocol = 'ftp', locale = 'en-gb') {
     const parsed = compiler.parseComponent(source);
     const compilation = compiler.compile(parsed.template.content);
     assert.deepEqual(compilation.errors, []);
-    const context = { module: { exports: {} }, mainProcessAPI: api, document: { body }, Utils: { getValidUrl: u => u }, BackToTools: {}, setTimeout: () => {} };
+    const context = {
+        module: { exports: {} },
+        mainProcessAPI: api,
+        document: { body },
+        Utils: { getValidUrl: u => u },
+        SyncProgress: {},
+        BackToTools: {},
+        setTimeout: () => {}
+    };
     const timers = new Map();
     let timerID = 0;
     context.clearTimeout = id => timers.delete(id);
@@ -100,6 +108,38 @@ function screen(instance) {
 }
 
 describe('Synchronization popup and log viewer', () => {
+    it('keeps raw operation counts without changing minimized progress or messages', () => {
+        const { instance: s } = setup('SyncPopup');
+        s.uploadingProgressUpdate({ progress: 57, operations: [5450, 10000] });
+        assert.deepEqual(Array.from(s.uploadingOperations), [5450, 10000]);
+        assert.equal(s.uploadingProgress, 57);
+        assert.equal(s.messageFromUploader, 'Uploading website (5450 of 10000 operations done)');
+
+        s.uploadingProgressUpdate({ progress: 55, operations: [5300, 10000] });
+        assert.deepEqual(Array.from(s.uploadingOperations), [5450, 10000]);
+
+        s.uploadingProgressUpdate({ progress: 98, operations: false });
+        assert.equal(s.uploadingOperations, null);
+    });
+
+    it('clears the operation counter when reopened, restarted or retried', () => {
+        const { instance: s, component, busListeners } = setup('SyncPopup');
+        component.mounted.call(s);
+        s.uploadingOperations = [5, 10];
+        s.isVisible = false;
+        busListeners['sync-popup-display']();
+        assert.equal(s.uploadingOperations, null);
+
+        s.uploadingOperations = [5, 10];
+        s.startSync();
+        assert.equal(s.uploadingOperations, null);
+
+        s.uploadingOperations = [5, 10];
+        s.showError();
+        s.startSync();
+        assert.equal(s.uploadingOperations, null);
+    });
+
     for (const locale of ['en-gb', 'pl']) {
         for (const protocol of ['ftp', 'ftp+tls', 'sftp', 's3', 'google-cloud', 'netlify', 'git', 'github-pages', 'gitlab-pages', 'manual']) {
             it(`${locale}: ${protocol} idle, busy and success content`, () => {
@@ -110,8 +150,11 @@ describe('Synchronization popup and log viewer', () => {
                 assert.equal(screen(s).headings[0], t(manual ? 'sync.websiteFilesPreparation' : 'sync.websiteSynchronization'));
                 s.startSync();
                 assert.equal(calls.sends[0][0], 'app-deploy-render');
-                assert.equal(screen(s).buttons[0].label, t(manual ? 'sync.preparingWebsiteFiles' : 'sync.syncingWebsite'));
+                assert.deepEqual(screen(s).buttons.map(button => button.label), [t(manual ? 'sync.preparingWebsiteFiles' : 'sync.syncingWebsite'), t('ui.cancel')]);
                 assert.equal(screen(s).buttons[0].disabled, true);
+                assert.notEqual(screen(s).buttons[1].disabled, true);
+                const description = screen(s).nodes.find(node => node.key === 'sync-preparation-description');
+                assert.equal(description.data.directives[0].value, t('sync.websiteSynchronizationInfo'));
                 s.startUpload();
                 listeners['app-deploy-uploaded'](manual ? { status: true, type: 'catalog', path: '/output/demo-files' } : { status: true });
                 listeners['app-sync-is-done-saved']();
@@ -119,6 +162,7 @@ describe('Synchronization popup and log viewer', () => {
                 assert.equal(screen(s).headings[0], t(key));
                 assert.equal(s.messageFromUploader, t(key));
                 assert.deepEqual(screen(s).buttons.map(b => b.label), [t(manual ? 'sync.showInFolder' : 'sync.visitYourWebsite'), t('ui.close')]);
+                assert.equal(screen(s).buttons[0].intent, 'success');
                 screen(s).buttons[0].onClick();
                 assert.equal(s.isVisible, false);
                 assert.equal(manual ? calls.folders[0] : calls.external[0], manual ? '/output/demo-files' : 'https://example.test');
@@ -134,17 +178,19 @@ describe('Synchronization popup and log viewer', () => {
             calls.sends.length = 0;
             s.showError({ additionalMessage: 'Output unavailable' });
             const prefix = protocol === 'manual' ? "Couldn't prepare website files" : "Couldn't connect to the server";
-            assert.equal(s.orbMessage, prefix + '.');
-            assert.equal(s.orbPhase, 'error');
+            assert.equal(s.syncMessage, prefix + '.');
+            assert.equal(s.syncPhase, 'error');
             assert.equal(calls.emits.at(-1)[1].message, prefix + ': Output unavailable');
             assert.equal(screen(s).buttons[0].label, protocol === 'manual' ? 'Retry preparation' : 'Retry upload');
             assert.equal(screen(s).buttons[0].disabled, false);
             screen(s).buttons[0].onClick();
             assert.deepEqual(calls.sends.map(c => c[0]), ['app-deploy-upload']);
             assert.equal(s.uploadError, false);
-            assert.notEqual(s.orbPhase, 'error');
+            assert.notEqual(s.syncPhase, 'error');
+            assert.deepEqual(screen(s).buttons.map(button => button.label), [s.$t(protocol === 'manual' ? 'sync.preparingWebsiteFiles' : 'sync.syncingWebsite'), s.$t('ui.cancel')]);
             assert.equal(screen(s).buttons[0].disabled, true);
-            if (protocol === 'manual') assert.equal(s.orbMessage, s.$t('file.preparingFilesInOutputDir'));
+            assert.notEqual(screen(s).buttons[1].disabled, true);
+            if (protocol === 'manual') assert.equal(s.syncMessage, s.$t('file.preparingFilesInOutputDir'));
         });
         it(`${protocol}: generic failure text`, () => {
             const { instance: s, calls } = setup('SyncPopup', protocol);
@@ -325,7 +371,7 @@ describe('Synchronization popup and log viewer', () => {
         s.isVisible = true;
         s.startSync();
         calls.sends.length = 0;
-        s.cancelSync();
+        screen(s).buttons.find(button => button.label === 'Cancel').onClick();
         assert.deepEqual(calls.sends.map(c => c[0]), ['app-deploy-render-abort', 'app-deploy-abort']);
         listeners['app-deploy-aborted']();
         assert.equal(s.isVisible, false);

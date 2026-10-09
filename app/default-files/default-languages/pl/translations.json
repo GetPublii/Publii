@@ -1438,6 +1438,10 @@
         "yourThemeDoNotSupport": "Twój obecnie używany motyw nie wspiera wymaganej funkcji: {featureName}"
     },
     "sync": {
+        "stagePrepare": "Przygotowanie",
+        "stageConnect": "Połączenie",
+        "stageUpload": "Przesyłanie",
+        "stageOutput": "Zapis plików",
         "visitWebsiteManualUnavailable": "Ta funkcja jest niedostępna przy ręcznym publikowaniu.",
         "visitWebsiteMissingAddress": "Najpierw ustaw i zapisz adres witryny w ustawieniach serwera.",
         "accessID": "ID dostępowe",
