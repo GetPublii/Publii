@@ -81,12 +81,20 @@ class Files {
 
         // Check for overrided asset files
         if (UtilsHelper.dirExists(overridesPath)) {
-            list([overridesPath], {
+            await list([overridesPath], {
                 recurse: true,
                 flatten: true
             }).then(files => {
+                let overrideDynamicAssetsPath = path.join(overridesPath, 'dynamic');
+
                 files.filter(item => {
                     let filename = path.parse(item.path).base;
+
+                    // Dynamic assets from the override are handled by copyDynamicAssetsFiles()
+                    if (item.path.indexOf(overrideDynamicAssetsPath) > -1) {
+                        return false;
+                    }
+
                     return themeConfig.files.ignoreAssets.indexOf(filename) === -1
                 }).forEach(item => {
                     if (item.mode.dir === false) {
@@ -113,12 +121,14 @@ class Files {
      * @param outputDir
      * @param themeConfig
      */
-     static copyDynamicAssetsFiles(themeDir, outputDir, themeConfig) {
+    static async copyDynamicAssetsFiles(themeDir, outputDir, themeConfig) {
         if (!themeConfig.files.useDynamicAssets) {
             return;
         }
 
+        let overridesDir = themeDir.replace(/[\\\/]{1,1}$/, '') + '-override';
         let dynamicAssetsPath = path.join(themeDir, themeConfig.files.assetsPath, 'dynamic');
+        let overrideDynamicAssetsPath = path.join(overridesDir, themeConfig.files.assetsPath, 'dynamic');
         let outputPath = path.join(outputDir, themeConfig.files.assetsPath, 'dynamic');
 
         // Create the dynamic assets directory or clean up it
@@ -127,33 +137,56 @@ class Files {
         // Create list of files to copy
         let filesToCopy = [];
         let filesMappingPath = path.join(themeDir, 'dynamic-assets-mapping.js');
+        let overridedFilesMappingPath = UtilsHelper.fileIsOverrided(themeDir, filesMappingPath);
+
+        if (overridedFilesMappingPath) {
+            filesMappingPath = overridedFilesMappingPath;
+        }
 
         if (fs.existsSync(filesMappingPath)) {
             filesToCopy = UtilsHelper.requireWithNoCache(filesMappingPath, themeConfig);
         }
 
-        // Copy each directory and file from the assets catalog
-        list([dynamicAssetsPath], {
+        // Copy each directory and file from the dynamic assets catalog
+        await Files.copyDynamicAssetsDir(dynamicAssetsPath, outputPath, filesToCopy);
+
+        // Copy overrided dynamic assets - they are copied after the theme files, so they can replace them
+        await Files.copyDynamicAssetsDir(overrideDynamicAssetsPath, outputPath, filesToCopy);
+    }
+
+    /**
+     * Copy files listed in the dynamic assets mapping from the given directory
+     *
+     * @param sourcePath
+     * @param outputPath
+     * @param filesToCopy
+     */
+    static async copyDynamicAssetsDir(sourcePath, outputPath, filesToCopy) {
+        if (!UtilsHelper.dirExists(sourcePath)) {
+            return;
+        }
+
+        let files = await list([sourcePath], {
             recurse: true,
             flatten: true
-        }).then(files => {
-            files.filter(item => {
-                let filename = normalizePath(item.path.replace(dynamicAssetsPath, ''));
-                return filesToCopy.indexOf(filename) > -1
-            }).forEach(item => {
-                if (item.mode.dir === false) {
-                    let filePath = normalizePath(item.path);
-                    let destinationPath = filePath.replace(
-                        normalizePath(dynamicAssetsPath),
-                        normalizePath(outputPath)
-                    );
+        });
 
-                    fs.copySync(
-                        filePath,
-                        destinationPath
-                    );
-                }
-            });
+        files.filter(item => {
+            let filename = normalizePath(item.path.replace(sourcePath, ''));
+            return filesToCopy.indexOf(filename) > -1
+        }).forEach(item => {
+            if (item.mode.dir === false) {
+                let filePath = normalizePath(item.path);
+                let destinationPath = filePath.replace(
+                    normalizePath(sourcePath),
+                    normalizePath(outputPath)
+                );
+
+                fs.copySync(
+                    filePath,
+                    destinationPath
+                );
+            }
         });
     }
 
