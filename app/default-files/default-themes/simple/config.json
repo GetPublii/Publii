@@ -235,6 +235,13 @@
             "size": "small thin "
         },
         {
+            "name": "showHeader",
+            "group": "Post list",
+            "label": "Show Header text",
+            "value": true,
+            "type": "checkbox"
+        },
+        {
             "name": "feedFeaturedImage",
             "group": "Post list",
             "label": "Show Featured Image",
