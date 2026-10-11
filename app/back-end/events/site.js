@@ -7,7 +7,7 @@ const ipcMain = require('electron').ipcMain;
 const BrowserWindow = require('electron').BrowserWindow;
 const Site = require('../site.js');
 const Themes = require('../themes.js');
-const Database = require('better-sqlite3');
+const openDatabase = require('../helpers/db.connection.js');
 const DBUtils = require('../helpers/db.utils.js');
 const UtilsHelper = require('../helpers/utils.js');
 const normalizePath = require('normalize-path');
@@ -119,7 +119,7 @@ class SiteEvents {
                     );
 
                     let dbPath = path.join(appInstance.sitesDir, config.settings.name, 'input', 'db.sqlite');
-                    appInstance.setDbForSite(config.settings.name, new DBUtils(new Database(dbPath)));
+                    appInstance.setDbForSite(config.settings.name, new DBUtils(openDatabase(dbPath)));
 
                     if (appInstance.windowManager) {
                         appInstance.windowManager.renameSiteLock(config.site, config.settings.name, event.sender.id);
@@ -555,7 +555,7 @@ class SiteEvents {
                 }
             }
 
-            appInstance.setDbForSite(config.name, new DBUtils(new Database(dbPath)));
+            appInstance.setDbForSite(config.name, new DBUtils(openDatabase(dbPath)));
 
             if (appInstance.windowManager) {
                 appInstance.windowManager.setWindowSite(event.sender.id, config.name);
@@ -724,7 +724,7 @@ class SiteEvents {
                     if (dbWasOpened) {
                         try {
                             let dbPath = path.join(appInstance.sitesDir, siteName, 'input', 'db.sqlite');
-                            appInstance.setDbForSite(siteName, new DBUtils(new Database(dbPath)));
+                            appInstance.setDbForSite(siteName, new DBUtils(openDatabase(dbPath)));
                         } catch (dbError) {
                             console.log('(!) Unable to reopen the database of the website:', dbError);
                         }

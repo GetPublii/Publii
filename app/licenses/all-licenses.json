@@ -433,14 +433,6 @@
         "homepage": "https://github.com/gr2m/before-after-hook",
         "licenseFile": "node_modules/before-after-hook/LICENSE"
     },
-    "better-sqlite3": {
-        "versions": [
-            "13.0.3"
-        ],
-        "license": "MIT",
-        "homepage": "http://github.com/WiseLibs/better-sqlite3",
-        "licenseFile": "node_modules/better-sqlite3/LICENSE"
-    },
     "bignumber.js": {
         "versions": [
             "9.3.1"
@@ -714,7 +706,7 @@
     },
     "dompurify": {
         "versions": [
-            "3.4.14"
+            "3.4.16"
         ],
         "license": "(MPL-2.0 OR Apache-2.0)",
         "homepage": "https://github.com/cure53/DOMPurify",
@@ -1103,7 +1095,7 @@
     },
     "handlebars": {
         "versions": [
-            "4.7.9"
+            "4.7.10"
         ],
         "license": "MIT",
         "homepage": "https://handlebarsjs.com/",
@@ -1238,7 +1230,7 @@
     },
     "@img/sharp-wasm32": {
         "versions": [
-            "0.35.4"
+            "0.35.5"
         ],
         "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
         "homepage": "https://sharp.pixelplumbing.com",
@@ -1737,7 +1729,7 @@
     },
     "moment": {
         "versions": [
-            "2.29.4"
+            "2.31.0"
         ],
         "license": "MIT",
         "homepage": "https://momentjs.com",
@@ -1814,14 +1806,6 @@
         "license": "MIT",
         "homepage": "https://github.com/nodable/val-parsers",
         "licenseFile": "licenses/@nodable/entities/license.txt"
-    },
-    "node-addon-api": {
-        "versions": [
-            "8.9.2"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/nodejs/node-addon-api",
-        "licenseFile": "node_modules/node-addon-api/LICENSE.md"
     },
     "node-fetch": {
         "versions": [
@@ -2219,7 +2203,7 @@
     },
     "sharp": {
         "versions": [
-            "0.35.4"
+            "0.35.5"
         ],
         "license": "Apache-2.0",
         "homepage": "https://sharp.pixelplumbing.com",

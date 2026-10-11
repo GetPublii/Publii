@@ -78,8 +78,7 @@
       "**/node_modules/sharp/**/*",
       "**/node_modules/@img/**/*",
       "**/node_modules/@jsquash/**/*",
-      "node_modules/@napi-rs/**/*",
-      "node_modules/better-sqlite3/**/*"
+      "node_modules/@napi-rs/**/*"
     ],
     "beforeBuild": "./build/scripts/beforeBuild.js",
     "afterPack": "./build/scripts/afterPack.js",

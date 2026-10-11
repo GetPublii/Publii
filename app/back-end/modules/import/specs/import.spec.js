@@ -2,13 +2,13 @@ const assert = require('assert');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const Database = require('better-sqlite3');
+const openDatabase = require('../../../helpers/db.connection.js');
 const Import = require('../import.js');
 
 let sqliteAvailable = true;
 
 try {
-    let databaseProbe = new Database(':memory:');
+    let databaseProbe = openDatabase(':memory:');
     databaseProbe.close();
 } catch (e) {
     sqliteAvailable = false;
@@ -184,7 +184,7 @@ describeWithDatabase('WordPress WXR import', function() {
             path.join(siteDir, 'input', 'themes', 'simple', 'config.json')
         );
 
-        let database = new Database(path.join(siteDir, 'input', 'db.sqlite'));
+        let database = openDatabase(path.join(siteDir, 'input', 'db.sqlite'));
         database.exec(fs.readFileSync(path.join(__dirname, '../../../sql/1.0.0.sql'), 'utf8'));
         database.prepare(`
             INSERT INTO authors (name, username, password, config, additional_data)

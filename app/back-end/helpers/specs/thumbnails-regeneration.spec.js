@@ -175,8 +175,8 @@ describe('Thumbnail regeneration', function () {
             __dirname: path.join(appDirectory, 'back-end'),
             console,
             require(name) {
-                if (name === 'better-sqlite3') {
-                    return class Database {};
+                if (name === './helpers/db.connection.js') {
+                    return () => ({});
                 }
 
                 if (name === './helpers/db.utils.js') {
@@ -722,8 +722,8 @@ describe('Thumbnail regeneration', function () {
             __dirname: path.join(appDirectory, 'back-end'),
             console,
             require(name) {
-                if (name === 'better-sqlite3') {
-                    return class Database {};
+                if (name === './helpers/db.connection.js') {
+                    return () => ({});
                 }
 
                 if (name === './helpers/db.utils.js') {

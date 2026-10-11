@@ -133,10 +133,8 @@ describe('Website removal IPC', function () {
                     return value => 'slug-' + value;
                 }
 
-                if (name === 'better-sqlite3') {
-                    return function (dbPath) {
-                        this.path = dbPath;
-                    };
+                if (name === '../helpers/db.connection.js') {
+                    return dbPath => ({ path: dbPath });
                 }
 
                 if (name === '../helpers/db.utils.js') {

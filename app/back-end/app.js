@@ -6,7 +6,6 @@
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
-const Database = require('better-sqlite3');
 const VersionComparator = require('../shared/version-comparator.js');
 const normalizePath = require('normalize-path');
 const url = require('url');
@@ -24,6 +23,7 @@ const Languages = require('./languages.js');
 const Plugins = require('./plugins.js');
 // Helper classes
 const DBUtils = require('./helpers/db.utils.js');
+const openDatabase = require('./helpers/db.connection.js');
 const Site = require('./site.js');
 const Utils = require('./helpers/utils.js');
 const FileHelper = require('./helpers/file.js');
@@ -268,7 +268,7 @@ class App {
 
         // Open DB for this site if not already open
         if (!this.dbMap.has(site)) {
-            const db = new DBUtils(new Database(dbPath));
+            const db = new DBUtils(openDatabase(dbPath));
             db.exec(`CREATE INDEX IF NOT EXISTS posts_additional_data__post_id_key ON posts_additional_data(post_id, key);`);
             this.dbMap.set(site, db);
         }

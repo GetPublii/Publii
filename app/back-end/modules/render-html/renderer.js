@@ -23,7 +23,7 @@ const normalizePath = require('normalize-path');
 
 // Internal packages
 const DBUtils = require('./../../helpers/db.utils.js');
-const Database = require('better-sqlite3');
+const openDatabase = require('./../../helpers/db.connection.js');
 const URLHelper = require('./helpers/url.js');
 const ContentHelper = require('./helpers/content.js');
 const FilesHelper = require('./helpers/files.js');
@@ -640,7 +640,7 @@ class Renderer {
      */
     loadDataFromDB() {
         const dbPath = path.join(this.inputDir, 'db.sqlite');
-        this.db = new DBUtils(new Database(dbPath));
+        this.db = new DBUtils(openDatabase(dbPath));
     }
 
     /*

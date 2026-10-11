@@ -33,7 +33,6 @@
     "@napi-rs/keyring": "1.3.0",
     "@octokit/rest": "22.0.0",
     "basic-ftp": "6.0.1",
-    "better-sqlite3": "13.0.3",
     "codemirror": "5.65.13",
     "codemirror-revisedsearch": "1.0.12",
     "count-files": "2.6.2",

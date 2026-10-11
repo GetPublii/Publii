@@ -5,7 +5,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const WxrParser = require('./wxr-parser');
-const Database = require('better-sqlite3');
+const openDatabase = require('../../helpers/db.connection.js');
 const DBUtils = require('../../helpers/db.utils.js');
 
 class Import {
@@ -55,7 +55,7 @@ class Import {
             }
         }
 
-        this.appInstance.db = new DBUtils(new Database(dbPath));
+        this.appInstance.db = new DBUtils(openDatabase(dbPath));
         this.appInstance.getDbForSite = siteName => (siteName === importedSite ? importContext.db : false);
     }
 
