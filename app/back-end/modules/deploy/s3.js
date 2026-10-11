@@ -121,7 +121,7 @@ class S3 {
                     process.kill(process.pid, 'SIGTERM');
                 }, 1000);
             }
-        }, 20000);
+        }, 15000);
     }
 
     async downloadFilesList() {
@@ -438,7 +438,7 @@ class S3 {
                     }
                 });
             }
-        }, 10000);
+        }, 15000);
     }
 
     sendProgress (progress, showOperations = true) {

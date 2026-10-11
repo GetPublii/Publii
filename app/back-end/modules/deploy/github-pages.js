@@ -302,7 +302,7 @@ class GithubPages {
                     }
                 });
             }
-        }, 10000);
+        }, 15000);
     }
 
     async getTestConnectionError(err, user, repository) {

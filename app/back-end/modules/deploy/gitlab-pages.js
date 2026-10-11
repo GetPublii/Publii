@@ -71,8 +71,7 @@ class GitlabPages {
 
                 // Detect a case when repository name is only similar to the provided repository name (not equal)
                 if (projects[0].name !== repository && projects[0].path !== repository) {
-                    this.waitForTimeout = false;
-                    sender.send('app-deploy-test-error', {
+                    this.finishConnectionTest(sender, 'app-deploy-test-error', {
                         message: {
                             translation: 'core.server.repositoryDoesNotExist'
                         }
@@ -82,8 +81,7 @@ class GitlabPages {
                 }
 
                 if(!projectID) {
-                    this.waitForTimeout = false;
-                    sender.send('app-deploy-test-error', {
+                    this.finishConnectionTest(sender, 'app-deploy-test-error', {
                         message: {
                             translation: 'core.server.repositoryDoesNotExist'
                         }
@@ -94,8 +92,7 @@ class GitlabPages {
 
                 this.client.Branches.show(projectID, branchName).then(branch => {
                     if(!branch) {
-                        this.waitForTimeout = false;
-                        sender.send('app-deploy-test-error', {
+                        this.finishConnectionTest(sender, 'app-deploy-test-error', {
                             message: {
                                 translation: 'core.server.branchDoesNotExist'
                             }
@@ -104,44 +101,48 @@ class GitlabPages {
                         return;
                     }
 
-                    this.waitForTimeout = false;
-                    sender.send('app-deploy-test-success');
+                    this.finishConnectionTest(sender, 'app-deploy-test-success');
                 }).catch(err => {
-                    this.waitForTimeout = false;
-                    sender.send('app-deploy-test-error', {
+                    this.finishConnectionTest(sender, 'app-deploy-test-error', {
                         message: {
                             translation: 'core.server.branchDoesNotExist'
                         }
                     });
                 });
             }).catch(err => {
-                this.waitForTimeout = false;
-                sender.send('app-deploy-test-error', {
+                this.finishConnectionTest(sender, 'app-deploy-test-error', {
                     message: {
                         translation: 'core.server.repositoryDoesNotExist'
                     }
                 });
             });
         }).catch(err => {
-            this.waitForTimeout = false;
-            sender.send('app-deploy-test-error', {
+            this.finishConnectionTest(sender, 'app-deploy-test-error', {
                 message: {
                     translation: 'core.server.tokenOrServerAddressInvalid'
                 }
             });
         });
 
-        setTimeout(function() {
-            if(this.waitForTimeout === true) {
-                sender.send('app-deploy-test-error', {
-                    message: {
-                        translation: 'core.server.requestTimeout'
-                    }
-                });
+        setTimeout(() => {
+            this.finishConnectionTest(sender, 'app-deploy-test-error', {
+                message: {
+                    translation: 'core.server.requestTimeout'
+                }
+            });
+        }, 15000);
+    }
 
-                this.waitForTimeout = false;
-            }
-        }, 10000);
+    /*
+     * Replies to the connection test only once - a reply which arrives after the timeout is ignored
+     */
+    finishConnectionTest (sender, channel, ...args) {
+        if (this.waitForTimeout === false) {
+            return;
+        }
+
+        this.waitForTimeout = false;
+        sender.send(channel, ...args);
     }
 
     async initConnection () {
