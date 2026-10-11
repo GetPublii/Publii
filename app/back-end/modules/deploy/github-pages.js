@@ -10,7 +10,6 @@ const slug = require('./../../helpers/slug');
 const { Octokit } = require("@octokit/rest");
 const list = require('./../../helpers/files-list.js');
 const crypto = require('crypto');
-const countFiles = require('count-files');
 const moment = require('moment');
 const normalizePath = require('normalize-path');
 const stripTags = require('striptags');
@@ -110,69 +109,10 @@ class GithubPages {
             );
         }
 
-        countFiles(self.deployment.inputDir, async function (err, results) {
-            let numberOfFiles = parseInt(results.files + results.dirs, 10);
-
-            if(numberOfFiles > 4000) {
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: {
-                            translation: 'core.server.tooManyFilesInfo',
-                            translationVars: {
-                                numberOfFiles: numberOfFiles
-                            }
-                        }
-                    }
-                });
-
-                return;
-            }
-
-            try {
-                if (self.apiRateLimiting) {
-                    let result = await self.getAPIRateLimit();
-
-                    if(result.remaining < 10) {
-                        process.send({
-                            type: 'web-contents',
-                            message: 'app-connection-error',
-                            value: {
-                                additionalMessage: {
-                                    translation: 'core.server.requestLimitExceededInfo',
-                                    translationVars: {
-                                        remaining: parseInt(result.remaining, 10),
-                                        resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
-                                    }
-                                }
-                            }
-                        });
-
-                        return;
-                    }
-                }
-
-                await self.deploy();
-            } catch (err) {
-                console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: 'E2 ' + stripTags((err).toString())
-                    }
-                });
-
-                setTimeout(function () {
-                    process.kill(process.pid, 'SIGTERM');
-                }, 1000);
-            }
-        });
-
-        setTimeout(function() {
+        setTimeout(() => {
             if(this.waitForTimeout === true) {
+                this.waitForTimeout = false;
+
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error',
@@ -182,8 +122,107 @@ class GithubPages {
                         }
                     }
                 });
+
+                setTimeout(function () {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
             }
         }, 15000);
+
+        let numberOfFiles = this.countOutputFiles();
+
+        if (numberOfFiles === false) {
+            return;
+        }
+
+        if(numberOfFiles > 4000) {
+            this.waitForTimeout = false;
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: {
+                        translation: 'core.server.tooManyFilesInfo',
+                        translationVars: {
+                            numberOfFiles: numberOfFiles
+                        }
+                    }
+                }
+            });
+
+            return;
+        }
+
+        try {
+            if (self.apiRateLimiting) {
+                let result = await self.getAPIRateLimit();
+
+                if(result.remaining < 10) {
+                    self.waitForTimeout = false;
+
+                    process.send({
+                        type: 'web-contents',
+                        message: 'app-connection-error',
+                        value: {
+                            additionalMessage: {
+                                translation: 'core.server.requestLimitExceededInfo',
+                                translationVars: {
+                                    remaining: parseInt(result.remaining, 10),
+                                    resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
+                                }
+                            }
+                        }
+                    });
+
+                    return;
+                }
+            }
+
+            await self.deploy();
+        } catch (err) {
+            self.waitForTimeout = false;
+            console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: 'E2 ' + stripTags((err).toString())
+                }
+            });
+
+            setTimeout(function () {
+                process.kill(process.pid, 'SIGTERM');
+            }, 1000);
+        }
+    }
+
+    /*
+     * Counts files and directories in the output directory (without following symlinks),
+     * returns false when the directory cannot be read
+     */
+    countOutputFiles() {
+        try {
+            return fs.readdirSync(this.deployment.inputDir, { recursive: true }).length;
+        } catch (err) {
+            this.waitForTimeout = false;
+            console.log(`[${ new Date().toUTCString() }] ERROR: ${err.toString()}`);
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: 'E3 ' + stripTags(err.toString())
+                }
+            });
+
+            setTimeout(function () {
+                process.kill(process.pid, 'SIGTERM');
+            }, 1000);
+
+            return false;
+        }
     }
 
     async testConnection(app, deploymentConfig, siteName, uuid, sender) {
@@ -226,8 +265,14 @@ class GithubPages {
                 return null;
             }
         ).then(result => {
+            // The timeout below has already replied
+            if (this.waitForTimeout === false) {
+                return;
+            }
+
+            this.waitForTimeout = false;
+
             if(result === null) {
-                this.waitForTimeout = false;
                 sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.branchDoesNotExist'
@@ -237,22 +282,25 @@ class GithubPages {
                 return;
             }
 
-            this.waitForTimeout = false;
             sender.send('app-deploy-test-success');
         }).catch(async err => {
+            if (this.waitForTimeout === false) {
+                return;
+            }
+
             this.waitForTimeout = false;
             sender.send('app-deploy-test-error', await this.getTestConnectionError(err, user, repository));
         });
 
-        setTimeout(function() {
+        setTimeout(() => {
             if(this.waitForTimeout === true) {
+                this.waitForTimeout = false;
+
                 sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
                     }
                 });
-
-                this.waitForTimeout = false;
             }
         }, 10000);
     }
@@ -357,6 +405,7 @@ class GithubPages {
 
             this.finishSync();
         } catch (err) {
+            this.waitForTimeout = false;
             console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
 
             process.send({

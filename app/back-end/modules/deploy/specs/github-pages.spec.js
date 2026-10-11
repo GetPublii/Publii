@@ -29,10 +29,14 @@ describe('GitHub Pages deployment', function () {
     let remoteTree;
     let localTree;
     let rateLimitRemaining;
-    let pendingCountFiles;
+    let inputFiles;
+    let readdirError;
+    let readdirCalls;
     let apiErrors;
+    let apiDelays;
     let repositoryError;
     let octokitClient;
+    let testReplies;
 
     function httpError (status, message) {
         return Object.assign(new Error(message), { name: 'HttpError', status: status });
@@ -106,6 +110,11 @@ describe('GitHub Pages deployment', function () {
                 throw apiErrors[name];
             }
 
+            // A pending promise simulates a slow or hanging API request
+            if (apiDelays[name]) {
+                await apiDelays[name];
+            }
+
             let data = apiResponse(name, requestData);
             return extractor ? extractor(data) : data;
         };
@@ -132,17 +141,33 @@ describe('GitHub Pages deployment', function () {
                 }
             }, 'demo', 'uuid-1', {
                 send (channel, payload) {
-                    resolve({
+                    let reply = {
                         channel: channel,
                         payload: payload === undefined ? payload : JSON.parse(JSON.stringify(payload))
-                    });
+                    };
+
+                    testReplies.push(reply);
+                    resolve(reply);
                 }
             });
         });
     }
 
+    function flushPromises () {
+        return new Promise(resolve => setImmediate(resolve));
+    }
+
     function sentMessages () {
         return messages.map(message => message.message);
+    }
+
+    function timeoutReported () {
+        return messages.some(message => {
+            return message.message === 'app-connection-error' &&
+                   message.value &&
+                   message.value.additionalMessage &&
+                   message.value.additionalMessage.translation === 'core.server.requestTimeout';
+        });
     }
 
     function runTimers () {
@@ -157,8 +182,12 @@ describe('GitHub Pages deployment', function () {
         remoteTree = [];
         localTree = [];
         rateLimitRemaining = 5000;
-        pendingCountFiles = null;
+        inputFiles = ['index.html'];
+        readdirError = null;
+        readdirCalls = [];
         apiErrors = {};
+        apiDelays = {};
+        testReplies = [];
         repositoryError = null;
         octokitClient = {
             rest: {
@@ -198,7 +227,18 @@ describe('GitHub Pages deployment', function () {
                 }
 
                 if (name === 'fs-extra') {
-                    return { writeFileSync () {} };
+                    return {
+                        writeFileSync () {},
+                        readdirSync (dir, options) {
+                            readdirCalls.push(JSON.parse(JSON.stringify({ dir: dir, options: options })));
+
+                            if (readdirError) {
+                                throw readdirError;
+                            }
+
+                            return inputFiles;
+                        }
+                    };
                 }
 
                 if (name === './../../helpers/file.js') {
@@ -207,12 +247,6 @@ describe('GitHub Pages deployment', function () {
 
                 if (name === '@octokit/rest') {
                     return { Octokit: function () { return octokitClient; } };
-                }
-
-                if (name === 'count-files') {
-                    return function (dir, callback) {
-                        pendingCountFiles = callback(null, { files: 1, dirs: 0 });
-                    };
                 }
 
                 if (name === 'moment') {
@@ -304,18 +338,140 @@ describe('GitHub Pages deployment', function () {
         };
 
         await deployment.initConnection();
-        await pendingCountFiles;
+        runTimers();
 
         assert.equal(deployed, false);
         assert.equal(messages[messages.length - 1].value.additionalMessage.translation, 'core.server.requestLimitExceededInfo');
+        assert.equal(timeoutReported(), false);
+        assert.equal(kills, 0);
+    });
+
+    it('counts the output files recursively and deploys when the limit is not exceeded', async function () {
+        let deployment = createDeployment();
+        let deployed = false;
+        inputFiles = new Array(4000).fill('file');
+
+        // The first API call of the real deployment clears the connection timeout
+        deployment.deploy = async function () {
+            deployed = true;
+            await this.getLatestSHA();
+        };
+
+        await deployment.initConnection();
+        runTimers();
+
+        assert.deepEqual(readdirCalls, [{ dir: '/input', options: { recursive: true } }]);
+        assert.equal(deployed, true);
+        assert.deepEqual(apiCalls, ['getRef']);
+        assert.equal(sentMessages().includes('app-connection-error'), false);
+        assert.equal(kills, 0);
+    });
+
+    it('stops before the deployment when the output directory has too many files', async function () {
+        let deployment = createDeployment(true);
+        let deployed = false;
+        inputFiles = new Array(4001).fill('file');
+
+        deployment.deploy = async function () {
+            deployed = true;
+        };
+
+        await deployment.initConnection();
+        runTimers();
+
+        assert.equal(deployed, false);
+        assert.deepEqual(apiCalls, []);
+        assert.deepEqual(messages[messages.length - 1].value.additionalMessage, {
+            translation: 'core.server.tooManyFilesInfo',
+            translationVars: { numberOfFiles: 4001 }
+        });
+        assert.equal(timeoutReported(), false);
+        assert.equal(kills, 0);
+    });
+
+    it('reports a timeout and stops the worker when the connection is not established in time', async function () {
+        let deployment = createDeployment();
+
+        // Simulates a deployment whose first API request never responds
+        deployment.deploy = async function () {};
+
+        await deployment.initConnection();
+        runTimers();
+
+        assert.deepEqual(messages[messages.length - 1], {
+            type: 'web-contents',
+            message: 'app-connection-error',
+            value: {
+                additionalMessage: {
+                    translation: 'core.server.requestTimeout'
+                }
+            }
+        });
+        assert.equal(kills, 0);
+
+        // The worker is stopped by the nested timer
+        runTimers();
+
+        assert.equal(kills, 1);
+        assert.equal(messages.filter(message => message.message === 'app-connection-error').length, 1);
+    });
+
+    it('reports an error when the output directory cannot be read', async function () {
+        let deployment = createDeployment(true);
+        let deployed = false;
+        readdirError = Object.assign(new Error('ENOENT: no such file or directory, scandir \'/input\''), { code: 'ENOENT' });
+
+        deployment.deploy = async function () {
+            deployed = true;
+        };
+
+        await deployment.initConnection();
+        runTimers();
+
+        assert.equal(deployed, false);
+        assert.deepEqual(apiCalls, []);
+        assert.equal(messages[messages.length - 1].message, 'app-connection-error');
+        assert.equal(messages[messages.length - 1].value.additionalMessage, 'E3 Error: ENOENT: no such file or directory, scandir \'/input\'');
+        assert.equal(timeoutReported(), false);
+        assert.equal(kills, 1);
     });
 
     describe('connection test', function () {
         it('confirms a connection to an existing branch', async function () {
             let reply = await testConnection(createDeployment());
+            runTimers();
 
             assert.deepEqual(reply, { channel: 'app-deploy-test-success', payload: undefined });
             assert.deepEqual(apiCalls, ['getRef']);
+            assert.equal(testReplies.length, 1);
+        });
+
+        it('reports a timeout when the branch request does not respond in time', async function () {
+            apiDelays.getRef = new Promise(() => {});
+
+            let reply = testConnection(createDeployment());
+            runTimers();
+
+            assert.deepEqual(await reply, {
+                channel: 'app-deploy-test-error',
+                payload: { message: { translation: 'core.server.requestTimeout' } }
+            });
+            assert.equal(testReplies.length, 1);
+        });
+
+        it('ignores a reply which arrives after the timeout', async function () {
+            let respond;
+            apiDelays.getRef = new Promise(resolve => {
+                respond = resolve;
+            });
+
+            let reply = testConnection(createDeployment());
+            runTimers();
+            respond();
+            await reply;
+            await flushPromises();
+
+            assert.deepEqual(testReplies.map(item => item.channel), ['app-deploy-test-error']);
         });
 
         it('reports invalid credentials', async function () {

@@ -17,7 +17,6 @@ module.exports = {
      */
     declaredLicenses: {
         'exif-parser@0.1.12': 'MIT',
-        'nanobus@3.3.0': 'MIT',
         'component-props@1.1.1': 'MIT'
     },
 
