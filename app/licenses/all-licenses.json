@@ -16,14 +16,6 @@
         "homepage": "https://github.com/TooTallNate/proxy-agents",
         "licenseFile": "node_modules/agent-base/LICENSE"
     },
-    "any-base": {
-        "versions": [
-            "1.1.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/HarasimowiczKamil/any-base",
-        "licenseFile": "node_modules/any-base/LICENSE"
-    },
     "arrify": {
         "versions": [
             "2.0.1"
@@ -423,14 +415,6 @@
         "license": "MIT",
         "homepage": "https://github.com/MikeMcl/bignumber.js",
         "licenseFile": "node_modules/bignumber.js/LICENCE.md"
-    },
-    "bmp-ts": {
-        "versions": [
-            "1.0.9"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/hipstersmoothie/bmp-ts",
-        "licenseFile": "node_modules/bmp-ts/LICENSE"
     },
     "@borewit/text-codec": {
         "versions": [
@@ -964,14 +948,6 @@
         "homepage": "https://github.com/ljharb/get-proto#readme",
         "licenseFile": "node_modules/get-proto/LICENSE"
     },
-    "gifwrap": {
-        "versions": [
-            "0.10.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jtlapp/gifwrap#readme",
-        "licenseFile": "node_modules/gifwrap/LICENSE"
-    },
     "@gitbeaker/core": {
         "versions": [
             "43.8.0"
@@ -1179,14 +1155,6 @@
         "homepage": "https://gitlab.com/demsking/image-downloader",
         "licenseFile": "node_modules/image-downloader/LICENSE"
     },
-    "image-q": {
-        "versions": [
-            "4.0.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/ibezkrovnyi/image-quantization/tree/main/packages/image-q",
-        "licenseFile": "node_modules/image-q/LICENSE"
-    },
     "image-size": {
         "versions": [
             "1.2.1"
@@ -1276,14 +1244,6 @@
         "homepage": "https://isomorphic-git.org/",
         "licenseFile": "node_modules/isomorphic-git/LICENSE.md"
     },
-    "jimp": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/jimp/LICENSE"
-    },
     "@jimp/core": {
         "versions": [
             "1.6.1"
@@ -1292,14 +1252,6 @@
         "homepage": "https://github.com/jimp-dev/jimp",
         "licenseFile": "node_modules/@jimp/core/LICENSE"
     },
-    "@jimp/diff": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/diff/LICENSE"
-    },
     "@jimp/file-ops": {
         "versions": [
             "1.6.1"
@@ -1307,22 +1259,6 @@
         "license": "MIT",
         "homepage": "https://github.com/jimp-dev/jimp",
         "licenseFile": "node_modules/@jimp/file-ops/LICENSE"
-    },
-    "@jimp/js-bmp": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/js-bmp/LICENSE"
-    },
-    "@jimp/js-gif": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/js-gif/LICENSE"
     },
     "@jimp/js-jpeg": {
         "versions": [
@@ -1340,54 +1276,6 @@
         "homepage": "https://github.com/jimp-dev/jimp",
         "licenseFile": "node_modules/@jimp/js-png/LICENSE"
     },
-    "@jimp/js-tiff": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/js-tiff/LICENSE"
-    },
-    "@jimp/plugin-blit": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-blit/LICENSE"
-    },
-    "@jimp/plugin-blur": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-blur/LICENSE"
-    },
-    "@jimp/plugin-circle": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-circle/LICENSE"
-    },
-    "@jimp/plugin-color": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-color/LICENSE"
-    },
-    "@jimp/plugin-contain": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-contain/LICENSE"
-    },
     "@jimp/plugin-cover": {
         "versions": [
             "1.6.1"
@@ -1404,70 +1292,6 @@
         "homepage": "https://github.com/jimp-dev/jimp",
         "licenseFile": "node_modules/@jimp/plugin-crop/LICENSE"
     },
-    "@jimp/plugin-displace": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-displace/LICENSE"
-    },
-    "@jimp/plugin-dither": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-dither/LICENSE"
-    },
-    "@jimp/plugin-fisheye": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-fisheye/LICENSE"
-    },
-    "@jimp/plugin-flip": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-flip/LICENSE"
-    },
-    "@jimp/plugin-hash": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-hash/LICENSE"
-    },
-    "@jimp/plugin-mask": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-mask/LICENSE"
-    },
-    "@jimp/plugin-print": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-print/LICENSE"
-    },
-    "@jimp/plugin-quantize": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-quantize/LICENSE"
-    },
     "@jimp/plugin-resize": {
         "versions": [
             "1.6.1"
@@ -1475,22 +1299,6 @@
         "license": "MIT",
         "homepage": "https://github.com/jimp-dev/jimp",
         "licenseFile": "node_modules/@jimp/plugin-resize/LICENSE"
-    },
-    "@jimp/plugin-rotate": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-rotate/LICENSE"
-    },
-    "@jimp/plugin-threshold": {
-        "versions": [
-            "1.6.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jimp-dev/jimp",
-        "licenseFile": "node_modules/@jimp/plugin-threshold/LICENSE"
     },
     "@jimp/types": {
         "versions": [
@@ -1867,14 +1675,6 @@
         "homepage": "https://github.com/octokit/types.ts",
         "licenseFile": "node_modules/@octokit/types/LICENSE"
     },
-    "omggif": {
-        "versions": [
-            "1.0.10"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/deanm/omggif",
-        "licenseFile": "licenses/omggif/license.txt"
-    },
     "once": {
         "versions": [
             "1.4.0"
@@ -1906,30 +1706,6 @@
         "license": "MIT",
         "homepage": "https://github.com/blakeembrey/param-case",
         "licenseFile": "node_modules/param-case/LICENSE"
-    },
-    "parse-bmfont-ascii": {
-        "versions": [
-            "1.0.6"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mattdesl/parse-bmfont-ascii",
-        "licenseFile": "licenses/parse-bmfont-ascii/license.txt"
-    },
-    "parse-bmfont-binary": {
-        "versions": [
-            "1.0.6"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/Jam3/parse-bmfont-binary",
-        "licenseFile": "node_modules/parse-bmfont-binary/LICENSE.md"
-    },
-    "parse-bmfont-xml": {
-        "versions": [
-            "1.1.6"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mattdesl/parse-bmfont-xml",
-        "licenseFile": "node_modules/parse-bmfont-xml/LICENSE.md"
     },
     "parse5": {
         "versions": [
@@ -1971,17 +1747,8 @@
         "homepage": "https://github.com/sindresorhus/pify",
         "licenseFile": "node_modules/pify/license"
     },
-    "pixelmatch": {
-        "versions": [
-            "5.3.0"
-        ],
-        "license": "ISC",
-        "homepage": "https://github.com/mapbox/pixelmatch#readme",
-        "licenseFile": "node_modules/pixelmatch/LICENSE"
-    },
     "pngjs": {
         "versions": [
-            "6.0.0",
             "7.0.0"
         ],
         "license": "MIT",
@@ -2085,14 +1852,6 @@
         "homepage": "https://github.com/ChALkeR/safer-buffer",
         "licenseFile": "node_modules/safer-buffer/LICENSE"
     },
-    "sax": {
-        "versions": [
-            "1.6.0"
-        ],
-        "license": "BlueOak-1.0.0",
-        "homepage": "https://github.com/isaacs/sax-js",
-        "licenseFile": "node_modules/sax/LICENSE.md"
-    },
     "semver": {
         "versions": [
             "7.8.5"
@@ -2172,14 +1931,6 @@
         "license": "MIT",
         "homepage": "https://github.com/feross/simple-get",
         "licenseFile": "node_modules/simple-get/LICENSE"
-    },
-    "simple-xml-to-json": {
-        "versions": [
-            "1.2.7"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/nirgit/simple-xml-to-json",
-        "licenseFile": "node_modules/simple-xml-to-json/license"
     },
     "slug": {
         "versions": [
@@ -2532,7 +2283,6 @@
     },
     "@types/node": {
         "versions": [
-            "16.9.1",
             "24.13.2"
         ],
         "license": "MIT",
@@ -2642,14 +2392,6 @@
         "license": "MIT",
         "homepage": "https://github.com/blakeembrey/upper-case",
         "licenseFile": "node_modules/upper-case/LICENSE"
-    },
-    "utif2": {
-        "versions": [
-            "4.1.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/photopea/UTIF.js",
-        "licenseFile": "node_modules/utif2/LICENSE"
     },
     "util-deprecate": {
         "versions": [
@@ -2795,30 +2537,6 @@
         "license": "MIT",
         "homepage": "https://github.com/NaturalIntelligence/xml-naming",
         "licenseFile": "licenses/xml-naming/license.txt"
-    },
-    "xml-parse-from-string": {
-        "versions": [
-            "1.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/Jam3/xml-parse-from-string",
-        "licenseFile": "node_modules/xml-parse-from-string/LICENSE.md"
-    },
-    "xml2js": {
-        "versions": [
-            "0.5.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/Leonidas-from-XIV/node-xml2js",
-        "licenseFile": "node_modules/xml2js/LICENSE"
-    },
-    "xmlbuilder": {
-        "versions": [
-            "11.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "http://github.com/oozcitak/xmlbuilder-js",
-        "licenseFile": "node_modules/xmlbuilder/LICENSE"
     },
     "xregexp": {
         "versions": [
