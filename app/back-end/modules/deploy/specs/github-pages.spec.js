@@ -454,6 +454,22 @@ describe('GitHub Pages deployment', function () {
         assert.equal(kills, 0);
     });
 
+    it('reports an error and stops the worker when the repository does not exist', async function () {
+        let deployment = createDeployment();
+        apiErrors.getRef = httpError(404, 'Not Found');
+
+        await deployment.initConnection();
+        runTimers();
+
+        assert.deepEqual(apiCalls, ['getRef']);
+        let errors = messages.filter(message => message.message === 'app-connection-error');
+        assert.equal(errors.length, 1);
+        assert.equal(errors[0].value.additionalMessage.indexOf('E1 ') === 0, true);
+        assert.equal(errors[0].value.additionalMessage.indexOf('404') > -1, true);
+        assert.equal(timeoutReported(), false);
+        assert.equal(kills, 1);
+    });
+
     it('reports a timeout and stops the worker when the connection is not established in time', async function () {
         let deployment = createDeployment();
 
