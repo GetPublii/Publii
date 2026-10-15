@@ -23,6 +23,7 @@ export default {
         user: '',
         repo: '',
         branch: '',
+        folder: '',
         token: '',
         parallelOperations: 1,
         apiRateLimiting: 1

@@ -314,6 +314,71 @@ describe('GitHub Pages deployment', function () {
         assert.equal(kills, 1);
     });
 
+    it('deploys to the configured folder and leaves files outside of it untouched', async function () {
+        remoteTree = [
+            remoteFile('public/index.html', 'sha-1'),
+            remoteFile('public/old.html', 'sha-2'),
+            remoteFile('README.md', 'sha-3'),
+            remoteFile('.github/workflows/deploy.yml', 'sha-4')
+        ];
+        localTree = [localFile('public/index.html', 'sha-changed')];
+        let deployment = createDeployment();
+        deployment.folder = 'public';
+        let createdTrees = [];
+        let createTree = deployment.createTree.bind(deployment);
+
+        deployment.createTree = function (tree, baseTreeSHA) {
+            createdTrees.push(JSON.parse(JSON.stringify({ tree, baseTreeSHA })));
+            return createTree(tree, baseTreeSHA);
+        };
+
+        await deployment.deploy();
+        runTimers();
+
+        assert.deepEqual(createdTrees, [{
+            tree: [{
+                path: 'public/index.html',
+                mode: '100644',
+                type: 'blob',
+                sha: 'uploaded-/input/public/index.html'
+            }, {
+                path: 'public/old.html',
+                mode: '100644',
+                type: 'blob',
+                sha: null
+            }],
+            baseTreeSHA: 'tree-sha'
+        }]);
+        assert.equal(sentMessages().includes('app-deploy-uploaded'), true);
+    });
+
+    it('normalizes the configured folder path', function () {
+        let deployment = createDeployment();
+
+        assert.equal(deployment.normalizeFolder('/public/'), 'public');
+        assert.equal(deployment.normalizeFolder('docs\\site'), 'docs/site');
+        assert.equal(deployment.normalizeFolder('../../etc'), 'etc');
+        assert.equal(deployment.normalizeFolder('a/./b//c'), 'a/b/c');
+        assert.equal(deployment.normalizeFolder(''), '');
+        assert.equal(deployment.normalizeFolder(undefined), '');
+        assert.equal(deployment.normalizeFolder(42), '');
+    });
+
+    it('prefixes local paths with the configured folder only', function () {
+        let deployment = createDeployment();
+        deployment.folder = 'public';
+
+        assert.equal(deployment.getRemotePath('index.html'), 'public/index.html');
+        assert.equal(deployment.isInsideFolder('public/index.html'), true);
+        assert.equal(deployment.isInsideFolder('publicx/index.html'), false);
+        assert.equal(deployment.isInsideFolder('README.md'), false);
+
+        deployment.folder = '';
+
+        assert.equal(deployment.getRemotePath('index.html'), 'index.html');
+        assert.equal(deployment.isInsideFolder('README.md'), true);
+    });
+
     it('leaves the repository untouched when the API rate limit is too low for the upload', async function () {
         remoteTree = [remoteFile('index.html', 'sha-1'), remoteFile('about.html', 'sha-2')];
         localTree = [localFile('index.html', 'sha-changed'), localFile('about.html', 'sha-2')];

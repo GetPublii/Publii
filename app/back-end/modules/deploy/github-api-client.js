@@ -126,13 +126,15 @@ class GithubApiClient {
         }
 
         let response;
+        let timeoutController = new AbortController();
+        let timeoutTimer = setTimeout(() => timeoutController.abort(), this.timeout);
 
         try {
             response = await fetch(this.baseUrl + endpoint, {
                 method: method,
                 headers: headers,
                 body: body !== null ? JSON.stringify(body) : undefined,
-                signal: AbortSignal.timeout(this.timeout)
+                signal: timeoutController.signal
             });
         } catch (err) {
             if (err && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
@@ -141,6 +143,8 @@ class GithubApiClient {
 
             let cause = err && err.cause && err.cause.message ? ': ' + err.cause.message : '';
             throw new GithubApiError(`Network error (${method} ${endpoint})${cause}`);
+        } finally {
+            clearTimeout(timeoutTimer);
         }
 
         let responseText = await response.text();

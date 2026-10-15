@@ -35,6 +35,7 @@ class GithubPages {
         this.repository = '';
         this.user = '';
         this.branch = '';
+        this.folder = '';
         this.filesToUpdate = 0;
         this.filesUpdated = 0;
         this.waitForTimeout = false;
@@ -47,6 +48,7 @@ class GithubPages {
         this.repository = this.deployment.siteConfig.deployment.github.repo;
         this.user = this.deployment.siteConfig.deployment.github.user;
         this.branch = 'heads/' + this.deployment.siteConfig.deployment.github.branch;
+        this.folder = this.normalizeFolder(this.deployment.siteConfig.deployment.github.folder);
         this.parallelOperations = parseInt(this.deployment.siteConfig.deployment.github.parallelOperations, 10);
         this.apiRateLimiting = !!this.deployment.siteConfig.deployment.github.apiRateLimiting;
         this.waitForTimeout = true;
@@ -586,6 +588,37 @@ class GithubPages {
         return localTree;
     }
 
+    /*
+     * Normalizes the optional repository subfolder: slashes are unified,
+     * empty, "." and ".." segments are removed, so the result is always
+     * a safe, relative path (or an empty string for the repository root)
+     */
+    normalizeFolder(folder) {
+        if (!folder || typeof folder !== 'string') {
+            return '';
+        }
+
+        return folder.split(/[\\/]+/)
+                     .filter(segment => segment !== '' && segment !== '.' && segment !== '..')
+                     .join('/');
+    }
+
+    getRemotePath(relativePath) {
+        if (this.folder) {
+            return this.folder + '/' + relativePath;
+        }
+
+        return relativePath;
+    }
+
+    isInsideFolder(remotePath) {
+        if (!this.folder) {
+            return true;
+        }
+
+        return remotePath.indexOf(this.folder + '/') === 0;
+    }
+
     buildDeltaTree(localTree, remoteTree) {
         let delta = [];
         let localPaths = new Set();
@@ -605,7 +638,8 @@ class GithubPages {
         }
 
         for (let remoteFile of remoteTree) {
-            if (remoteFile.type === 'blob' && !localPaths.has(remoteFile.path)) {
+            // Files outside of the configured folder are not managed by Publii
+            if (remoteFile.type === 'blob' && this.isInsideFolder(remoteFile.path) && !localPaths.has(remoteFile.path)) {
                 delta.push({
                     path: remoteFile.path,
                     mode: remoteFile.mode,
@@ -648,7 +682,7 @@ class GithubPages {
 
                                      return {
                                          fullPath: normalizePath(file.path),
-                                         path: normalizePath(path.relative(this.deployment.inputDir, file.path)),
+                                         path: this.getRemotePath(normalizePath(path.relative(this.deployment.inputDir, file.path))),
                                          mode: file.mode.exec ? '100755' : '100644',
                                          type: 'blob',
                                          size: fileSize,

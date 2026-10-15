@@ -596,6 +596,23 @@
 
                 <field
                     v-if="deploymentMethodSelected === 'github-pages'"
+                    id="gh-folder"
+                    :label="$t('sync.githubFolder')">
+                    <text-input
+                        slot="field"
+                        id="gh-folder"
+                        key="gh-folder"
+                        :spellcheck="false"
+                        v-model="deploymentSettings.github.folder" />
+                    <small
+                        slot="note"
+                        class="note"
+                        v-pure-html="$t('sync.githubFolderNote')">
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'github-pages'"
                     id="gh-token"
                     :label="$t('sync.token')">
                     <protected-input
@@ -1440,6 +1457,40 @@ export default {
 
             return this.httpProtocolSelected + '://' + domain;
         },
+        normalizeGithubFolder (value) {
+            if (!value || typeof value !== 'string') {
+                return '';
+            }
+
+            return value.split(/[\\/]+/)
+                        .filter(segment => segment !== '' && segment !== '.' && segment !== '..')
+                        .join('/');
+        },
+        getGithubFolderWarning () {
+            if (this.deploymentMethodSelected !== 'github-pages') {
+                return false;
+            }
+
+            let storedDeployment = this.$store.state.currentSite.config.deployment;
+
+            // Do not warn when GitHub Pages was not used before
+            if (!storedDeployment || storedDeployment.protocol !== 'github-pages' || !storedDeployment.github) {
+                return false;
+            }
+
+            let oldFolder = this.normalizeGithubFolder(storedDeployment.github.folder);
+            let newFolder = this.normalizeGithubFolder(this.deploymentSettings.github.folder);
+
+            if (oldFolder === newFolder) {
+                return false;
+            }
+
+            if (newFolder === '') {
+                return this.$t('sync.githubFolderRemovedWarning');
+            }
+
+            return this.$t('sync.githubFolderChangedWarning');
+        },
         save () {
             if(!this.validate()) {
                 this.$bus.$emit('message-display', {
@@ -1451,6 +1502,8 @@ export default {
                 return;
             }
 
+            // The warning is calculated before the store is updated with the new settings
+            let githubFolderWarning = this.getGithubFolderWarning();
             let newSettings = this.getDeploymentSettings();
 
             mainProcessAPI.send('app-site-config-save', {
@@ -1471,6 +1524,13 @@ export default {
                         type: 'success',
                         lifeTime: 3
                     });
+
+                    if (githubFolderWarning) {
+                        this.$bus.$emit('alert-display', {
+                            message: githubFolderWarning,
+                            okLabel: this.$t('ui.iUnderstand')
+                        });
+                    }
                 }
 
                 if(data.message === 'no-keyring') {
