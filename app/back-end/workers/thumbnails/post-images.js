@@ -26,7 +26,9 @@ process.on('message', async function(msg){
                     type: 'finished',
                     result: {
                         error: true,
-                        translation: 'core.images.invalidImageFile',
+                        translation: error.code === 'SHARP_UNAVAILABLE'
+                            ? 'core.images.imageUnprocessable'
+                            : 'core.images.invalidImageFile',
                         file: typeof imageData.path === 'string' ? path.basename(imageData.path) : ''
                     }
                 });

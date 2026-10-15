@@ -1,6 +1,17 @@
 const childProcess = require('child_process');
 const path = require('path');
 
+function createUnavailableError(message, cause) {
+    const error = new Error(message);
+    error.code = 'SHARP_UNAVAILABLE';
+
+    if (cause) {
+        error.cause = cause;
+    }
+
+    return error;
+}
+
 class SharpQueue {
     constructor() {
         this.child = null;
@@ -36,7 +47,10 @@ class SharpQueue {
                     this.consecutiveFailures = 0;
                     entry.resolve(msg.destinationPath);
                 } else {
-                    entry.reject(new Error(msg.error || 'sharp-job-failed'));
+                    const error = msg.code === 'SHARP_UNAVAILABLE'
+                        ? createUnavailableError(msg.error || 'sharp-unavailable')
+                        : new Error(msg.error || 'sharp-job-failed');
+                    entry.reject(error);
                 }
             } else if (msg.type === 'sharp-unavailable') {
                 this.permanentlyDisabled = true;
@@ -51,7 +65,7 @@ class SharpQueue {
             this.child = null;
             this.consecutiveFailures++;
 
-            let error = new Error('sharp-process-died:' + info);
+            let error = createUnavailableError('sharp-process-died:' + info);
             let stillPending = Array.from(this.pending.values());
             this.pending.clear();
 
@@ -72,14 +86,14 @@ class SharpQueue {
 
     process(job) {
         if (this.permanentlyDisabled) {
-            return Promise.reject(new Error('sharp-disabled'));
+            return Promise.reject(createUnavailableError('sharp-disabled'));
         }
 
         if (!this.child) {
             try {
                 this.spawn();
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(createUnavailableError(err.message || 'sharp-spawn-failed', err));
             }
         }
 
@@ -92,7 +106,7 @@ class SharpQueue {
                 this.child.send({ type: 'job', id, job });
             } catch (err) {
                 this.pending.delete(id);
-                reject(err);
+                reject(createUnavailableError(err.message || 'sharp-send-failed', err));
             }
         });
     }

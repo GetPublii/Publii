@@ -104,7 +104,13 @@ process.on('message', function (msg) {
     }
 
     if (!sharp) {
-        process.send({ type: 'job-result', id: msg.id, success: false, error: 'sharp-unavailable' });
+        process.send({
+            type: 'job-result',
+            id: msg.id,
+            success: false,
+            error: 'sharp-unavailable',
+            code: 'SHARP_UNAVAILABLE'
+        });
         return;
     }
 
