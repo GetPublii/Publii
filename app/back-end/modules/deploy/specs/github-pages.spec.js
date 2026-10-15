@@ -35,7 +35,7 @@ describe('GitHub Pages deployment', function () {
     let apiErrors;
     let apiDelays;
     let repositoryError;
-    let octokitClient;
+    let apiClient;
     let testReplies;
 
     function httpError (status, message) {
@@ -189,7 +189,7 @@ describe('GitHub Pages deployment', function () {
         apiDelays = {};
         testReplies = [];
         repositoryError = null;
-        octokitClient = {
+        apiClient = {
             rest: {
                 repos: {
                     async get () {
@@ -245,8 +245,8 @@ describe('GitHub Pages deployment', function () {
                     return { readFileSync: () => 'Y29udGVudA==' };
                 }
 
-                if (name === '@octokit/rest') {
-                    return { Octokit: function () { return octokitClient; } };
+                if (name === './github-api-client.js') {
+                    return function () { return apiClient; };
                 }
 
                 if (name === 'moment') {

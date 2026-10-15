@@ -7,7 +7,7 @@ const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
-const { Octokit } = require("@octokit/rest");
+const GithubApiClient = require('./github-api-client.js');
 const list = require('./../../helpers/files-list.js');
 const crypto = require('crypto');
 const moment = require('moment');
@@ -26,12 +26,10 @@ class GithubPages {
         }
 
         this.connection = false;
-        this.client = new Octokit({
+        this.client = new GithubApiClient({
             baseUrl: `https://${this.serverURL}`,
-            request: {
-                timeout: 30000
-            },
-            userAgent: "Publii"
+            timeout: 30000,
+            userAgent: 'Publii'
         });
         this.token = '';
         this.repository = '';
@@ -62,13 +60,11 @@ class GithubPages {
             this.token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
-        this.client = new Octokit({
+        this.client = new GithubApiClient({
             auth: this.token,
             baseUrl: `https://${this.serverURL}`,
-            request: {
-                timeout: 30000
-            },
-            userAgent: "Publii"
+            timeout: 30000,
+            userAgent: 'Publii'
         });
 
         process.send({
@@ -241,13 +237,11 @@ class GithubPages {
             token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
-        this.client = new Octokit({
+        this.client = new GithubApiClient({
             auth: token,
             baseUrl: `https://${this.serverURL}`,
-            request: {
-                timeout: 30000
-            },
-            userAgent: "Publii"
+            timeout: 30000,
+            userAgent: 'Publii'
         });
 
         this.apiRequest(
