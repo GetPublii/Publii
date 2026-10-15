@@ -154,6 +154,7 @@
             "retrievingHandlerOfRemoteFilesTree": "Retrieving remote file tree handler...",
             "retrievingRemoteFilesTree": "Retrieving the remote file tree...",
             "tokenOrServerAddressInvalid": "Provided credentials or server/repository address are invalid.",
+            "tooBigFilesInfo": "The following files exceed the maximum file size supported by the GitHub API (30 MB): {files}. Remove these files from your website or reduce their size and try again.",
             "tooManyFilesInfo": "Your website contains over 4000 items ({numberOfFiles} files and directories). Currently our GitHub Pages implementation only supports websites with up to 4000 items."
         },
         "site": {

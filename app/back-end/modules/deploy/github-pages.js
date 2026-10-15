@@ -353,6 +353,31 @@ class GithubPages {
             let remoteTree = await this.getTreeData(treeSHA);
             let trees = await this.listFolderFiles(remoteTree);
             let finalTree = await this.getNewTreeBasedOnDiffs(trees.remoteTree, trees.localTree);
+            let tooBigFiles = this.getTooBigFiles(finalTree);
+
+            if (tooBigFiles.length) {
+                this.waitForTimeout = false;
+
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-connection-error',
+                    value: {
+                        additionalMessage: {
+                            translation: 'core.server.tooBigFilesInfo',
+                            translationVars: {
+                                files: tooBigFiles.join(', ')
+                            }
+                        }
+                    }
+                });
+
+                setTimeout(function () {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
+
+                return;
+            }
+
             finalTree = await this.createBlobs(finalTree, false);
 
             if (finalTree === false) {
@@ -650,6 +675,18 @@ class GithubPages {
         }
 
         return delta;
+    }
+
+    /*
+     * GitHub API rejects blobs larger than ~40 MB of base64 payload,
+     * which equals ~30 MB of raw file content; only files which would
+     * be uploaded during this sync are checked
+     */
+    getTooBigFiles(files) {
+        const maxFileSize = 30 * 1024 * 1024;
+
+        return files.filter(file => file.getBlob && file.size > maxFileSize)
+                    .map(file => `${file.path} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
     }
 
     findRemoteFile(filePath, remoteTree) {

@@ -352,6 +352,37 @@ describe('GitHub Pages deployment', function () {
         assert.equal(sentMessages().includes('app-deploy-uploaded'), true);
     });
 
+    it('stops before the upload when a file exceeds the GitHub API size limit', async function () {
+        remoteTree = [remoteFile('index.html', 'sha-1')];
+        localTree = [
+            localFile('index.html', 'sha-1'),
+            Object.assign(localFile('media/movie.mp4', false), { size: 31 * 1024 * 1024 }),
+            Object.assign(localFile('media/archive.zip', false), { size: 64 * 1024 * 1024 })
+        ];
+
+        await createDeployment().deploy();
+        runTimers();
+
+        assert.deepEqual(apiCalls, ['getRef', 'getCommit', 'getTree']);
+        assert.deepEqual(messages[messages.length - 1].value.additionalMessage, {
+            translation: 'core.server.tooBigFilesInfo',
+            translationVars: {
+                files: 'media/movie.mp4 (31.0 MB), media/archive.zip (64.0 MB)'
+            }
+        });
+        assert.equal(sentMessages().includes('app-deploy-uploaded'), false);
+        assert.equal(kills, 1);
+    });
+
+    it('checks the size limit only for files which would be uploaded', function () {
+        let deployment = createDeployment();
+        let bigUnchangedFile = Object.assign(localFile('movie.mp4', 'sha-1'), { size: 31 * 1024 * 1024, getBlob: false });
+        let bigNewFile = Object.assign(localFile('new.mp4', false), { size: 31 * 1024 * 1024, getBlob: true });
+        let fileAtTheLimit = Object.assign(localFile('limit.bin', false), { size: 30 * 1024 * 1024, getBlob: true });
+
+        assert.deepEqual(deployment.getTooBigFiles([bigUnchangedFile, bigNewFile, fileAtTheLimit]), ['new.mp4 (31.0 MB)']);
+    });
+
     it('normalizes the configured folder path', function () {
         let deployment = createDeployment();
 

@@ -154,6 +154,7 @@
             "retrievingHandlerOfRemoteFilesTree": "Pobieranie obsługi zdalnego drzewa plików...",
             "retrievingRemoteFilesTree": "Pobieranie zdalnego drzewa plików...",
             "tokenOrServerAddressInvalid": "Podane dane autoryzacyjne lub adres serwera/repozytorium są nieprawidłowe.",
+            "tooBigFilesInfo": "Następujące pliki przekraczają maksymalny rozmiar pliku obsługiwany przez API GitHuba (30 MB): {files}. Usuń te pliki z witryny lub zmniejsz ich rozmiar i spróbuj ponownie.",
             "tooManyFilesInfo": "Twoja witryna zawiera ponad 4000 elementów ({numberOfFiles} plików i katalogów). Aktualnie nasza implementacja GitHub Pages wspiera witryny zawierające do 4000 elementów"
         },
         "site": {
