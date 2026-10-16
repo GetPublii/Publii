@@ -16,6 +16,7 @@ describe('GitLab Pages deployment', function () {
     let branchRequests;
     let remoteFilesContent;
     let fileRequests;
+    let commitRequests;
     let testReplies;
 
     // A pending promise in apiDelays simulates a slow or hanging API request
@@ -60,6 +61,13 @@ describe('GitLab Pages deployment', function () {
         });
     }
 
+    function testError (translation) {
+        return {
+            channel: 'app-deploy-test-error',
+            payload: { message: { translation: translation } }
+        };
+    }
+
     function createDeployment (repository) {
         let deploymentCalls = [];
         let deployment = new GitlabPages({
@@ -92,6 +100,16 @@ describe('GitLab Pages deployment', function () {
         return { deployment, deploymentCalls };
     }
 
+    function connectionError (additionalMessage) {
+        return {
+            type: 'web-contents',
+            message: 'app-connection-error',
+            value: {
+                additionalMessage: additionalMessage
+            }
+        };
+    }
+
     function flushPromises () {
         return new Promise(resolve => setImmediate(resolve));
     }
@@ -119,18 +137,14 @@ describe('GitLab Pages deployment', function () {
         branchRequests = [];
         remoteFilesContent = '[{"path":"index.html"}]';
         fileRequests = [];
+        commitRequests = [];
         testReplies = [];
 
         const client = {
             Projects: {
                 all (options) {
-                    if (options.search) {
-                        apiCalls.push('searchProjects');
-                        return apiResponse('searchProjects', projects);
-                    }
-
-                    apiCalls.push('listProjects');
-                    return apiResponse('listProjects', [{ id: 1 }]);
+                    apiCalls.push('searchProjects');
+                    return apiResponse('searchProjects', options.search ? projects : []);
                 },
                 show (projectPath) {
                     apiCalls.push('showProject');
@@ -150,6 +164,13 @@ describe('GitLab Pages deployment', function () {
                     apiCalls.push('showRaw');
                     fileRequests.push({ projectId: projectId, filePath: filePath, ref: ref });
                     return apiResponse('showRaw', remoteFilesContent);
+                }
+            },
+            Commits: {
+                create (projectId, branchName, message, actions) {
+                    apiCalls.push('createCommit');
+                    commitRequests.push({ projectId: projectId, branch: branchName, message: message, actions: actions });
+                    return apiResponse('createCommit', { id: 'commit-sha' });
                 }
             }
         };
@@ -195,21 +216,60 @@ describe('GitLab Pages deployment', function () {
             runTimers();
 
             assert.deepEqual(reply, { channel: 'app-deploy-test-success', payload: undefined });
-            assert.deepEqual(apiCalls, ['listProjects', 'searchProjects', 'showBranch']);
+            assert.deepEqual(apiCalls, ['searchProjects', 'showBranch']);
             assert.deepEqual(branchRequests, [1]);
             assert.equal(testReplies.length, 1);
         });
 
         it('reports invalid credentials', async function () {
-            apiErrors.listProjects = httpError(401, '401 Unauthorized');
+            apiErrors.searchProjects = httpError(401, '401 Unauthorized');
 
             let reply = await testConnection(new GitlabPages());
 
-            assert.deepEqual(reply, {
-                channel: 'app-deploy-test-error',
-                payload: { message: { translation: 'core.server.tokenOrServerAddressInvalid' } }
-            });
-            assert.deepEqual(apiCalls, ['listProjects']);
+            assert.deepEqual(reply, testError('core.server.tokenOrServerAddressInvalid'));
+            assert.deepEqual(apiCalls, ['searchProjects']);
+        });
+
+        it('reports an invalid server address on a network error', async function () {
+            apiErrors.searchProjects = httpError(0, 'Network error (GET /projects): getaddrinfo ENOTFOUND gitlab.example.com');
+
+            let reply = await testConnection(new GitlabPages());
+
+            assert.deepEqual(reply, testError('core.server.tokenOrServerAddressInvalid'));
+        });
+
+        it('reports an invalid server address on a server error', async function () {
+            apiErrors.showProject = httpError(502, 'HTTP 502 (GET /projects/group%2Fdemo)');
+
+            let reply = await testConnection(new GitlabPages(), { repo: 'group/demo' });
+
+            assert.deepEqual(reply, testError('core.server.tokenOrServerAddressInvalid'));
+        });
+
+        it('reports insufficient token permissions when the project request is forbidden', async function () {
+            apiErrors.showProject = httpError(403, '403 Forbidden');
+
+            let reply = await testConnection(new GitlabPages(), { repo: 'group/demo' });
+
+            assert.deepEqual(reply, testError('core.server.tokenPermissionsInsufficient'));
+            assert.deepEqual(apiCalls, ['showProject']);
+        });
+
+        it('reports insufficient token permissions when the project search is forbidden', async function () {
+            apiErrors.searchProjects = httpError(403, '403 Forbidden');
+
+            let reply = await testConnection(new GitlabPages());
+
+            assert.deepEqual(reply, testError('core.server.tokenPermissionsInsufficient'));
+        });
+
+        it('reports insufficient token permissions when the branch request is forbidden', async function () {
+            apiErrors.showBranch = httpError(403, '403 Forbidden');
+
+            let reply = await testConnection(new GitlabPages());
+
+            assert.deepEqual(reply, testError('core.server.tokenPermissionsInsufficient'));
+            assert.deepEqual(apiCalls, ['searchProjects', 'showBranch']);
         });
 
         it('reports a repository whose name only resembles the configured one', async function () {
@@ -217,11 +277,8 @@ describe('GitLab Pages deployment', function () {
 
             let reply = await testConnection(new GitlabPages());
 
-            assert.deepEqual(reply, {
-                channel: 'app-deploy-test-error',
-                payload: { message: { translation: 'core.server.repositoryDoesNotExist' } }
-            });
-            assert.deepEqual(apiCalls, ['listProjects', 'searchProjects']);
+            assert.deepEqual(reply, testError('core.server.repositoryDoesNotExist'));
+            assert.deepEqual(apiCalls, ['searchProjects']);
         });
 
         it('checks the exactly matching project when the search returns similar names first', async function () {
@@ -252,7 +309,7 @@ describe('GitLab Pages deployment', function () {
             let reply = await testConnection(new GitlabPages(), { repo: 'group/subgroup/demo' });
 
             assert.deepEqual(reply, { channel: 'app-deploy-test-success', payload: undefined });
-            assert.deepEqual(apiCalls, ['listProjects', 'showProject', 'showBranch']);
+            assert.deepEqual(apiCalls, ['showProject', 'showBranch']);
             assert.deepEqual(projectRequests, ['group/subgroup/demo']);
             assert.deepEqual(branchRequests, [7]);
         });
@@ -269,11 +326,8 @@ describe('GitLab Pages deployment', function () {
 
             let reply = await testConnection(new GitlabPages(), { repo: 'group/missing' });
 
-            assert.deepEqual(reply, {
-                channel: 'app-deploy-test-error',
-                payload: { message: { translation: 'core.server.repositoryDoesNotExist' } }
-            });
-            assert.deepEqual(apiCalls, ['listProjects', 'showProject']);
+            assert.deepEqual(reply, testError('core.server.repositoryDoesNotExist'));
+            assert.deepEqual(apiCalls, ['showProject']);
         });
 
         it('reports a missing branch', async function () {
@@ -281,11 +335,8 @@ describe('GitLab Pages deployment', function () {
 
             let reply = await testConnection(new GitlabPages());
 
-            assert.deepEqual(reply, {
-                channel: 'app-deploy-test-error',
-                payload: { message: { translation: 'core.server.branchDoesNotExist' } }
-            });
-            assert.deepEqual(apiCalls, ['listProjects', 'searchProjects', 'showBranch']);
+            assert.deepEqual(reply, testError('core.server.branchDoesNotExist'));
+            assert.deepEqual(apiCalls, ['searchProjects', 'showBranch']);
         });
 
         it('reports a timeout when the branch request does not respond in time', async function () {
@@ -294,10 +345,7 @@ describe('GitLab Pages deployment', function () {
             let reply = testConnection(new GitlabPages());
             runTimers();
 
-            assert.deepEqual(await reply, {
-                channel: 'app-deploy-test-error',
-                payload: { message: { translation: 'core.server.requestTimeout' } }
-            });
+            assert.deepEqual(await reply, testError('core.server.requestTimeout'));
             assert.equal(testReplies.length, 1);
         });
 
@@ -365,13 +413,7 @@ describe('GitLab Pages deployment', function () {
 
             assert.deepEqual(apiCalls, ['searchProjects']);
             assert.deepEqual(deploymentCalls, []);
-            assert.deepEqual(messages, [{
-                type: 'web-contents',
-                message: 'app-connection-error',
-                value: {
-                    additionalMessage: { translation: 'core.server.repositoryDoesNotExist' }
-                }
-            }]);
+            assert.deepEqual(messages, [connectionError({ translation: 'core.server.repositoryDoesNotExist' })]);
         });
 
         it('reports the API error message when the project cannot be looked up', async function () {
@@ -382,13 +424,62 @@ describe('GitLab Pages deployment', function () {
             await flushPromises();
 
             assert.deepEqual(deploymentCalls, []);
-            assert.deepEqual(messages, [{
-                type: 'web-contents',
-                message: 'app-connection-error',
-                value: {
-                    additionalMessage: '401 Unauthorized'
-                }
+            assert.deepEqual(messages, [connectionError('401 Unauthorized')]);
+        });
+
+        it('reports insufficient token permissions when the project request is forbidden', async function () {
+            apiErrors.showProject = httpError(403, '403 Forbidden');
+            let { deployment } = createDeployment('group/demo');
+
+            deployment.downloadFilesList();
+            await flushPromises();
+
+            assert.deepEqual(messages, [connectionError({ translation: 'core.server.tokenPermissionsInsufficient' })]);
+        });
+    });
+
+    describe('commits', function () {
+        it('creates a commit on the configured branch and continues with the next step', async function () {
+            let { deployment } = createDeployment('group/demo');
+            let operations = [{ action: 'delete', file_path: 'public/old.html' }];
+            let nextSteps = 0;
+            deployment.projectID = 7;
+
+            deployment.makeCommit(operations, () => nextSteps++, '[skip ci] Publii - remove files');
+            await flushPromises();
+
+            assert.deepEqual(commitRequests, [{
+                projectId: 7,
+                branch: 'main',
+                message: '[skip ci] Publii - remove files',
+                actions: operations
             }]);
+            assert.equal(nextSteps, 1);
+            assert.deepEqual(messages, []);
+        });
+
+        it('reports insufficient token permissions when the commit is forbidden', async function () {
+            apiErrors.createCommit = httpError(403, '403 Forbidden');
+            let { deployment } = createDeployment('group/demo');
+            let nextSteps = 0;
+            deployment.projectID = 7;
+
+            deployment.makeCommit([], () => nextSteps++, 'Publii - deployment');
+            await flushPromises();
+
+            assert.equal(nextSteps, 0);
+            assert.deepEqual(messages, [connectionError({ translation: 'core.server.tokenPermissionsInsufficient' })]);
+        });
+
+        it('reports the API error message when the commit fails for another reason', async function () {
+            apiErrors.createCommit = httpError(400, '{"base":["A file with this name already exists"]}');
+            let { deployment } = createDeployment('group/demo');
+            deployment.projectID = 7;
+
+            deployment.makeCommit([], () => {}, 'Publii - deployment');
+            await flushPromises();
+
+            assert.deepEqual(messages, [connectionError('{"base":["A file with this name already exists"]}')]);
         });
     });
 });

@@ -154,6 +154,7 @@
             "retrievingHandlerOfRemoteFilesTree": "Pobieranie obsługi zdalnego drzewa plików...",
             "retrievingRemoteFilesTree": "Pobieranie zdalnego drzewa plików...",
             "tokenOrServerAddressInvalid": "Podane dane autoryzacyjne lub adres serwera/repozytorium są nieprawidłowe.",
+            "tokenPermissionsInsufficient": "Token dostępu nie ma wystarczających uprawnień. Token GitLaba typu fine-grained wymaga dla projektu uprawnień Project (Read), Branch (Read), Repository (Read) i Commit (Create). Jeśli token jest ograniczony do jednego projektu, w polu repozytorium podaj pełną ścieżkę projektu (np. moja-grupa/moja-witryna).",
             "tooBigFilesInfo": "Następujące pliki przekraczają maksymalny rozmiar pliku obsługiwany przez API GitHuba (30 MB): {files}. Usuń te pliki z witryny lub zmniejsz ich rozmiar i spróbuj ponownie.",
             "tooManyFilesInfo": "Twoja witryna zawiera ponad 4000 elementów ({numberOfFiles} plików i katalogów). Aktualnie nasza implementacja GitHub Pages wspiera witryny zawierające do 4000 elementów"
         },
@@ -1573,7 +1574,7 @@
         "remotePathMatchServerRootPathNote": "Ścieżka powinna odpowiadać ścieżce głównej serwera np. /public_html/, /public_html/blog/.",
         "repository": "Repozytorium",
         "repositoryFieldCantBeEmpty": "Pole repozytorium nie może być puste",
-        "repositoryGitLabNote": "Nazwa projektu lub, dla projektów w grupach, pełna ścieżka projektu wraz z grupami, np. <strong>moja-grupa/moja-podgrupa/moja-witryna</strong>.",
+        "repositoryGitLabNote": "Nazwa projektu lub, dla projektów w grupach, pełna ścieżka projektu wraz z grupami, np. <strong>moja-grupa/moja-podgrupa/moja-witryna</strong>. Token dostępu typu fine-grained ograniczony do jednego projektu wymaga podania pełnej ścieżki.",
         "repositoryUrl": "URL repozytorium",
         "repositoryUrlFieldCantBeEmpty": "Adres URL repozytorium nie może być pusty",
         "repositoryUrlNote": "URL do Twojego repozytorium Git przechowującego pliki witryny",

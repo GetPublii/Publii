@@ -62,32 +62,26 @@ class GitlabPages {
             });
         };
 
-        // The first request only verifies the token and the server address
-        this.client.Projects.all({
-            owned: true,
-            perPage: 1
-        }).then(() => {
-            return this.findProject(repository).then(project => {
-                if (!project) {
-                    replyWithError('core.server.repositoryDoesNotExist');
+        // The project request also verifies the token and the server address,
+        // so a token limited to a single project is enough
+        this.findProject(repository).then(project => {
+            if (!project) {
+                replyWithError('core.server.repositoryDoesNotExist');
+                return;
+            }
+
+            return this.client.Branches.show(project.id, branchName).then(branch => {
+                if (!branch) {
+                    replyWithError('core.server.branchDoesNotExist');
                     return;
                 }
 
-                return this.client.Branches.show(project.id, branchName).then(branch => {
-                    if (!branch) {
-                        replyWithError('core.server.branchDoesNotExist');
-                        return;
-                    }
-
-                    this.finishConnectionTest(sender, 'app-deploy-test-success');
-                }).catch(() => {
-                    replyWithError('core.server.branchDoesNotExist');
-                });
-            }).catch(() => {
-                replyWithError('core.server.repositoryDoesNotExist');
+                this.finishConnectionTest(sender, 'app-deploy-test-success');
+            }).catch(err => {
+                replyWithError(this.getTestConnectionError(err, 'core.server.branchDoesNotExist'));
             });
-        }).catch(() => {
-            replyWithError('core.server.tokenOrServerAddressInvalid');
+        }).catch(err => {
+            replyWithError(this.getTestConnectionError(err, 'core.server.repositoryDoesNotExist'));
         });
 
         setTimeout(() => {
@@ -109,6 +103,37 @@ class GitlabPages {
 
         this.waitForTimeout = false;
         sender.send(channel, ...args);
+    }
+
+    /*
+     * 404 means that the requested resource does not exist, 403 - that the token
+     * lacks permissions; any other error points at the token or the server address
+     */
+    getTestConnectionError (err, notFoundTranslation) {
+        let status = err && err.status;
+
+        if (status === 404) {
+            return notFoundTranslation;
+        }
+
+        if (status === 403) {
+            return 'core.server.tokenPermissionsInsufficient';
+        }
+
+        return 'core.server.tokenOrServerAddressInvalid';
+    }
+
+    /*
+     * Message for the sync popup - a 403 means that the token lacks permissions
+     */
+    getConnectionErrorMessage (err) {
+        if (err && err.status === 403) {
+            return {
+                translation: 'core.server.tokenPermissionsInsufficient'
+            };
+        }
+
+        return stripTags(String((err && err.message) || err || ''));
     }
 
     async initConnection () {
@@ -200,7 +225,7 @@ class GitlabPages {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: stripTags(String((err && err.message) || err || ''))
+                    additionalMessage: this.getConnectionErrorMessage(err)
                 }
             });
         });
@@ -480,7 +505,7 @@ class GitlabPages {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: stripTags(String((err && err.message) || err || ''))
+                    additionalMessage: this.getConnectionErrorMessage(err)
                 }
             });
         });

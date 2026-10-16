@@ -154,6 +154,7 @@
             "retrievingHandlerOfRemoteFilesTree": "Retrieving remote file tree handler...",
             "retrievingRemoteFilesTree": "Retrieving the remote file tree...",
             "tokenOrServerAddressInvalid": "Provided credentials or server/repository address are invalid.",
+            "tokenPermissionsInsufficient": "The access token does not have sufficient permissions. A fine-grained GitLab token requires the Project (Read), Branch (Read), Repository (Read) and Commit (Create) permissions for the project. If the token is limited to a single project, enter the full project path (e.g. my-group/my-site) in the repository field.",
             "tooBigFilesInfo": "The following files exceed the maximum file size supported by the GitHub API (30 MB): {files}. Remove these files from your website or reduce their size and try again.",
             "tooManyFilesInfo": "Your website contains over 4000 items ({numberOfFiles} files and directories). Currently our GitHub Pages implementation only supports websites with up to 4000 items."
         },
@@ -1571,7 +1572,7 @@
         "remotePathMatchServerRootPathNote": "Path should match your server root path e.g. /public_html/, /public_html/blog/.",
         "repository": "Repository",
         "repositoryFieldCantBeEmpty": "The repository field cannot be empty",
-        "repositoryGitLabNote": "Project name, or the full project path including groups for projects stored in groups, e.g. <strong>my-group/my-subgroup/my-site</strong>.",
+        "repositoryGitLabNote": "Project name, or the full project path including groups for projects stored in groups, e.g. <strong>my-group/my-subgroup/my-site</strong>. A fine-grained access token limited to a single project requires the full path.",
         "repositoryUrl": "Repository URL",
         "repositoryUrlFieldCantBeEmpty": "Repository URL cannot be empty",
         "repositoryUrlNote": "A URL to your Git repository used to store your website files",
