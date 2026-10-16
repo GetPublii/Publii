@@ -1573,6 +1573,7 @@
         "remotePathMatchServerRootPathNote": "Ścieżka powinna odpowiadać ścieżce głównej serwera np. /public_html/, /public_html/blog/.",
         "repository": "Repozytorium",
         "repositoryFieldCantBeEmpty": "Pole repozytorium nie może być puste",
+        "repositoryGitLabNote": "Nazwa projektu lub, dla projektów w grupach, pełna ścieżka projektu wraz z grupami, np. <strong>moja-grupa/moja-podgrupa/moja-witryna</strong>.",
         "repositoryUrl": "URL repozytorium",
         "repositoryUrlFieldCantBeEmpty": "Adres URL repozytorium nie może być pusty",
         "repositoryUrlNote": "URL do Twojego repozytorium Git przechowującego pliki witryny",

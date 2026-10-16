@@ -856,6 +856,11 @@
                         class="note">
                         {{ $t('sync.fieldIsCaseSensitive') }}
                     </small>
+                    <small
+                        slot="note"
+                        class="note"
+                        v-pure-html="$t('sync.repositoryGitLabNote')">
+                    </small>
                 </field>
 
                 <field

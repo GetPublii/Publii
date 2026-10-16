@@ -1,12 +1,12 @@
 /*
- * Class used to upload files to the Github Pages
+ * Class used to upload files to the GitLab Pages
  */
 
 const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
-const { Gitlab } = require('@gitbeaker/rest');
+const GitlabApiClient = require('./gitlab-api-client.js');
 const stripTags = require('striptags');
 
 class GitlabPages {
@@ -14,7 +14,6 @@ class GitlabPages {
         this.deployment = deploymentInstance;
         this.connection = false;
         this.repository = '';
-        this.user = '';
         this.branch = '';
         this.projectID = '';
         this.filesToUpdate = 0;
@@ -34,7 +33,7 @@ class GitlabPages {
     }
 
     async testConnection (app, deploymentConfig, siteName, uuid, sender) {
-        let repository = deploymentConfig.gitlab.repo;
+        let repository = this.normalizeRepository(deploymentConfig.gitlab.repo);
         let branchName = deploymentConfig.gitlab.branch;
         let token = deploymentConfig.gitlab.token;
         let account = slug(siteName);
@@ -48,80 +47,47 @@ class GitlabPages {
             token = await passwordSafeStorage.getPassword('publii-gl-token', account);
         }
 
-        this.client = new Gitlab({
+        this.client = new GitlabApiClient({
             host: deploymentConfig.gitlab.server,
             token: token,
-            rejectUnauthorized: deploymentConfig.rejectUnauthorized
+            rejectUnauthorized: deploymentConfig.rejectUnauthorized,
+            timeout: 30000
         });
 
+        let replyWithError = (translation) => {
+            this.finishConnectionTest(sender, 'app-deploy-test-error', {
+                message: {
+                    translation: translation
+                }
+            });
+        };
+
+        // The first request only verifies the token and the server address
         this.client.Projects.all({
             owned: true,
-            maxPages: 1,
-            perPage: 1,
-            pagination: 'offset'
-        }).then(project => {
-            this.client.Projects.all({
-                search: repository,
-                owned: true,
-                maxPages: 1,
-                perPage: 1,
-                pagination: 'offset'
-            }).then(projects => {
-                let projectID = projects[0].id;
-
-                // Detect a case when repository name is only similar to the provided repository name (not equal)
-                if (projects[0].name !== repository && projects[0].path !== repository) {
-                    this.finishConnectionTest(sender, 'app-deploy-test-error', {
-                        message: {
-                            translation: 'core.server.repositoryDoesNotExist'
-                        }
-                    });
-
+            perPage: 1
+        }).then(() => {
+            return this.findProject(repository).then(project => {
+                if (!project) {
+                    replyWithError('core.server.repositoryDoesNotExist');
                     return;
                 }
 
-                if(!projectID) {
-                    this.finishConnectionTest(sender, 'app-deploy-test-error', {
-                        message: {
-                            translation: 'core.server.repositoryDoesNotExist'
-                        }
-                    });
-
-                    return;
-                }
-
-                this.client.Branches.show(projectID, branchName).then(branch => {
-                    if(!branch) {
-                        this.finishConnectionTest(sender, 'app-deploy-test-error', {
-                            message: {
-                                translation: 'core.server.branchDoesNotExist'
-                            }
-                        });
-
+                return this.client.Branches.show(project.id, branchName).then(branch => {
+                    if (!branch) {
+                        replyWithError('core.server.branchDoesNotExist');
                         return;
                     }
 
                     this.finishConnectionTest(sender, 'app-deploy-test-success');
-                }).catch(err => {
-                    this.finishConnectionTest(sender, 'app-deploy-test-error', {
-                        message: {
-                            translation: 'core.server.branchDoesNotExist'
-                        }
-                    });
+                }).catch(() => {
+                    replyWithError('core.server.branchDoesNotExist');
                 });
-            }).catch(err => {
-                this.finishConnectionTest(sender, 'app-deploy-test-error', {
-                    message: {
-                        translation: 'core.server.repositoryDoesNotExist'
-                    }
-                });
+            }).catch(() => {
+                replyWithError('core.server.repositoryDoesNotExist');
             });
-        }).catch(err => {
-            this.finishConnectionTest(sender, 'app-deploy-test-error', {
-                message: {
-                    translation: 'core.server.tokenOrServerAddressInvalid'
-                }
-            });
+        }).catch(() => {
+            replyWithError('core.server.tokenOrServerAddressInvalid');
         });
 
         setTimeout(() => {
@@ -146,8 +112,7 @@ class GitlabPages {
     }
 
     async initConnection () {
-        this.repository = this.deployment.siteConfig.deployment.gitlab.repo;
-        this.user = this.deployment.siteConfig.deployment.gitlab.user;
+        this.repository = this.normalizeRepository(this.deployment.siteConfig.deployment.gitlab.repo);
         this.branch = this.deployment.siteConfig.deployment.gitlab.branch;
         this.remoteFilesList = [];
         this.filesToRemove = [];
@@ -165,10 +130,11 @@ class GitlabPages {
             token = await passwordSafeStorage.getPassword('publii-gl-token', account);
         }
 
-        this.client = new Gitlab({
+        this.client = new GitlabApiClient({
             host: this.deployment.siteConfig.deployment.gitlab.server,
             token: token,
-            rejectUnauthorized: this.deployment.siteConfig.deployment.rejectUnauthorized
+            rejectUnauthorized: this.deployment.siteConfig.deployment.rejectUnauthorized,
+            timeout: 30000
         });
 
         this.setUploadProgress(6);
@@ -187,23 +153,27 @@ class GitlabPages {
     }
 
     downloadFilesList () {
-        this.client.Projects.all({
-            search: this.repository,
-            owned: true,
-            maxPages: 1,
-            perPage: 1,
-            pagination: 'offset'
-        }).then(projects => {
-            this.projectID = projects[0].id;
+        this.findProject(this.repository).then(project => {
+            if (!project) {
+                console.log(`[${ new Date().toUTCString() }] (!) PROJECT NOT FOUND: ${this.repository}`);
 
-            this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
-                let remoteListToCheck = '';
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-connection-error',
+                    value: {
+                        additionalMessage: {
+                            translation: 'core.server.repositoryDoesNotExist'
+                        }
+                    }
+                });
 
-                if (typeof response === 'Buffer') {
-                    remoteListToCheck = response.toString();
-                } else {
-                    remoteListToCheck = response;
-                }
+                return;
+            }
+
+            this.projectID = project.id;
+
+            return this.client.RepositoryFiles.showRaw(this.projectID, 'publii-files.json', this.branch).then(response => {
+                let remoteListToCheck = typeof response === 'string' ? response : String(response || '');
 
                 try {
                     if (remoteListToCheck.length) {
@@ -215,25 +185,54 @@ class GitlabPages {
                     this.remoteFilesList = [];
                 }
 
-                this.deployment.checkLocalListWithRemoteList(response);
+                this.deployment.checkLocalListWithRemoteList(remoteListToCheck);
                 console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE DOWNLOADED`);
             }).catch(err => {
                 console.log(`[${ new Date().toUTCString() }] (!) REMOTE FILE NOT DOWNLOADED`);
-                console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING publii-files.json: ${err.error}`);
+                console.log(`[${ new Date().toUTCString() }] (!) ERROR WHILE DOWNLOADING publii-files.json: ${err && err.message}`);
                 this.deployment.compareFilesList(false);
             });
         }).catch(err => {
-            console.log(`[${ new Date().toUTCString() }] downloadFilesList: ${err.error}`);
+            console.log(`[${ new Date().toUTCString() }] downloadFilesList: ${err && err.message}`);
             console.warn(`[${ new Date().toUTCString() }] ${err}`);
 
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: stripTags((err.message).toString())
+                    additionalMessage: stripTags(String((err && err.message) || err || ''))
                 }
             });
         });
+    }
+
+    /*
+     * A project stored in groups is configured as its full path (group/subgroup/project)
+     * and looked up directly; a bare name is searched among the owned projects
+     */
+    findProject (repository) {
+        if (repository.indexOf('/') > -1) {
+            return this.client.Projects.show(repository);
+        }
+
+        return this.client.Projects.all({
+            search: repository,
+            owned: true,
+            perPage: 100
+        }).then(projects => {
+            if (!Array.isArray(projects)) {
+                return null;
+            }
+
+            // The search also returns projects with similar names
+            return projects.find(project => project.path === repository) ||
+                   projects.find(project => project.name === repository) ||
+                   null;
+        });
+    }
+
+    normalizeRepository (repository) {
+        return String(repository || '').trim().replace(/^\/+|\/+$/g, '');
     }
 
     startSync () {
@@ -481,7 +480,7 @@ class GitlabPages {
                 type: 'web-contents',
                 message: 'app-connection-error',
                 value: {
-                    additionalMessage: stripTags((err.message).toString())
+                    additionalMessage: stripTags(String((err && err.message) || err || ''))
                 }
             });
         });
