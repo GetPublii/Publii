@@ -4,13 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const { 
-    S3Client, 
-    ListObjectsCommand, 
-    GetObjectCommand, 
-    PutObjectCommand, 
-    DeleteObjectCommand 
-} = require("@aws-sdk/client-s3");
+const S3ApiClient = require('./s3-api-client.js');
 const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
 const mime = require('mime');
@@ -22,6 +16,7 @@ class S3 {
         this.connection = false;
         this.econnresetCounter = 0;
         this.waitForTimeout = false;
+        this.errorReported = false;
         this.softUploadErrors = {};
         this.hardUploadErrors = [];
     }
@@ -58,26 +53,21 @@ class S3 {
 
         if (s3Provider === 'aws') {
             connectionParams = {
-                credentials: {
-                    accessKeyId: s3Id,
-                    secretAccessKey: s3Key,
-                },
-                region: region
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
+                region: region,
+                bucket: this.bucket
             }
         } else {
             connectionParams = {
-                credentials: {
-                    accessKeyId: s3Id,
-                    secretAccessKey: s3Key,
-                },
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
                 endpoint: s3Endpoint,
                 region: customRegion,
-                requestChecksumCalculation: 'WHEN_REQUIRED',
-                responseChecksumValidation: 'WHEN_REQUIRED'
+                bucket: this.bucket
             }
         }
 
-        this.connection = new S3Client(connectionParams);
         this.sendProgress(6, false);
 
         process.send({
@@ -85,26 +75,24 @@ class S3 {
             message: 'app-connection-in-progress'
         });
 
-        let params = {
-            Bucket: this.bucket,
-            Prefix: this.prefix,
-            MaxKeys: 1
-        };
-
         try {
-            await this.connection.send(new ListObjectsCommand(params));
+            this.connection = new S3ApiClient(connectionParams);
+            await this.connection.listObjects({
+                prefix: this.prefix,
+                maxKeys: 1
+            });
             this.waitForTimeout = false;
-          
+
             process.send({
                 type: 'web-contents',
                 message: 'app-connection-success'
             });
-          
+
             this.deployment.setInput();
             this.deployment.setOutput(true);
             this.deployment.prepareLocalFilesList();
             this.sendProgress(7, false);
-          
+
             await this.downloadFilesList();
         } catch (err) {
             this.onError(err);
@@ -131,61 +119,50 @@ class S3 {
             fileName = this.prefix + fileName;
         }
 
-        let params = {
-            Bucket: this.bucket,
-            Key: fileName,
-        };
-
         try {
-            let data = await this.connection.send(new GetObjectCommand(params));
+            let remoteFile = await this.connection.getObject(fileName);
             console.log(`[${new Date().toUTCString()}] <- files.publii.json`);
             this.sendProgress(8, false);
-            let remoteFile = await this.s3streamToString(data.Body);
-            this.deployment.checkLocalListWithRemoteList(remoteFile);
+            this.deployment.checkLocalListWithRemoteList(remoteFile.toString('utf-8'));
           } catch (err) {
             console.log(`[${new Date().toUTCString()}] <- files.publii.json`);
-        
-            if (err.name !== 'NoSuchKey') {
+
+            if (err.code !== 'NoSuchKey' && err.code !== 'NotFound') {
                 this.onError(err);
                 return;
             }
-        
+
             this.sendProgress(8, false);
             this.deployment.compareFilesList(false);
         }
     }
 
-    async uploadNewFileList() {    
+    async uploadNewFileList() {
         this.sendProgress(99);
         let fileName = 'files.publii.json';
-        
+
         if (typeof this.prefix === 'string' && this.prefix !== '') {
             fileName = this.prefix + fileName;
         }
-        
+
         let filePath = path.join(this.deployment.inputDir, 'files.publii.json');
-    
+
         fs.readFile(filePath, async (err, fileContent) => {
             if (err) {
                 this.onError(err);
                 return;
             }
-        
+
             let fileACL = this.deployment.siteConfig.deployment.s3.acl || 'public-read';
-        
-            let params = {
-                ACL: fileACL,
-                Body: fileContent,
-                Bucket: this.bucket,
-                Key: fileName,
-                ContentType: mime.getType(fileName) || 'application/json'
-            };
-    
+
             try {
-                await this.connection.send(new PutObjectCommand(params));
+                await this.connection.putObject(fileName, fileContent, {
+                    acl: fileACL,
+                    contentType: mime.getType(fileName) || 'application/json'
+                });
                 console.log(`[${new Date().toUTCString()}] -> ${fileName}`);
                 this.sendProgress(100, false);
-        
+
                 process.send({
                     type: 'sender',
                     message: 'app-deploy-uploaded',
@@ -194,7 +171,7 @@ class S3 {
                         issues: this.hardUploadErrors.length > 0
                     }
                 });
-        
+
                 setTimeout(() => {
                     process.kill(process.pid, 'SIGTERM');
                 }, 1000);
@@ -226,7 +203,7 @@ class S3 {
 
     async uploadFileObject(input) {
         let filePath = path.join(this.deployment.inputDir, input);
-        
+
         fs.readFile(filePath, async (err, fileContent) => {
             if (err) {
                 this.onError(err);
@@ -234,7 +211,7 @@ class S3 {
             }
 
             let fileName = input;
-            
+
             if (typeof this.prefix === 'string' && this.prefix !== '') {
                 fileName = this.prefix + fileName;
             }
@@ -244,17 +221,13 @@ class S3 {
             let otherCacheControl = this.deployment.siteConfig.deployment.s3.otherCacheControl || 'public, max-age=2592000';
             let fileExtension = path.extname(fileName).substring(1);
             let cacheControl = fileExtension === 'html' ? htmlCacheControl : otherCacheControl;
-            let params = {
-                ACL: fileACL,
-                Body: fileContent,
-                Bucket: this.bucket,
-                Key: fileName,
-                CacheControl: cacheControl,
-                ContentType: mime.getType(fileExtension) || 'application/octet-stream'
-            };
 
             try {
-                await this.connection.send(new PutObjectCommand(params));
+                await this.connection.putObject(fileName, fileContent, {
+                    acl: fileACL,
+                    cacheControl: cacheControl,
+                    contentType: mime.getType(fileExtension) || 'application/octet-stream'
+                });
                 this.deployment.currentOperationNumber++;
                 console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${fileName}`);
                 this.deployment.progressOfUploading += this.deployment.progressPerFile;
@@ -308,13 +281,8 @@ class S3 {
             key = this.prefix + input;
         }
 
-        let params = {
-            Bucket: this.bucket,
-            Key: key
-        };
-    
         try {
-            await this.connection.send(new DeleteObjectCommand(params));
+            await this.connection.deleteObject(key);
             this.deployment.currentOperationNumber++;
             console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
             this.deployment.progressOfDeleting += this.deployment.progressPerFile;
@@ -322,7 +290,7 @@ class S3 {
             await this.removeFile();
         } catch (err) {
             // Handle case when specific file no longer exists in the bucket - don't block sync
-            if (err.name === 'NoSuchKey') {
+            if (err.code === 'NoSuchKey' || err.code === 'NotFound') {
                 this.deployment.currentOperationNumber++;
                 console.log(`[${ new Date().toUTCString() }] DEL ${input} - NoSuchKey`);
                 this.deployment.progressOfDeleting += this.deployment.progressPerFile;
@@ -332,25 +300,44 @@ class S3 {
             }
 
             console.error(`[${new Date().toUTCString()}] Error deleting ${input}`, err);
-            this.onError(err, true);
+            this.onError(err);
         }
     }
 
+    /*
+     * Silent mode is used for the errors which are retried (the file uploads) - every other error
+     * ends the synchronization with a message
+     */
     onError(err, silentMode = false) {
         console.log(`[${ new Date().toUTCString() }] S3 ERROR: ${err.message}`);
 
-        if(this.waitForTimeout && !silentMode) {
-            this.waitForTimeout = false;
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-error'
-            });
-
-            setTimeout(function () {
-                process.kill(process.pid, 'SIGTERM');
-            }, 1000);
+        if (silentMode) {
+            return;
         }
+
+        this.waitForTimeout = false;
+        this.reportError(err);
+    }
+
+    // Reports the error to the sync popup once and ends the deployment process
+    reportError(err) {
+        if (this.errorReported) {
+            return;
+        }
+
+        this.errorReported = true;
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-error',
+            value: {
+                additionalMessage: stripTags(String((err && err.message) || err || ''))
+            }
+        });
+
+        setTimeout(function () {
+            process.kill(process.pid, 'SIGTERM');
+        }, 1000);
     }
 
     prepareFilePath(filePath) {
@@ -389,56 +376,68 @@ class S3 {
 
         if (s3Provider === 'aws') {
             connectionParams = {
-                credentials: {
-                    accessKeyId: s3Id,
-                    secretAccessKey: s3Key,
-                },
-                region: region
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
+                region: region,
+                bucket: bucket
             }
         } else {
             connectionParams = {
-                credentials: {
-                    accessKeyId: s3Id,
-                    secretAccessKey: s3Key,
-                },
+                accessKeyId: s3Id,
+                secretAccessKey: s3Key,
                 endpoint: s3Endpoint,
                 region: customRegion,
-                requestChecksumCalculation: 'WHEN_REQUIRED',
-                responseChecksumValidation: 'WHEN_REQUIRED'
+                bucket: bucket
             }
         }
 
-        this.connection = new S3Client(connectionParams);
+        // Replies only once - a reply which arrives after the timeout is ignored
+        let finishConnectionTest = (channel, ...args) => {
+            if (waitForTimeout === false) {
+                return;
+            }
 
-        let testParams = {
-            Bucket: bucket,
-            Prefix: prefix,
-            MaxKeys: 1
+            waitForTimeout = false;
+            this.closeConnection();
+            sender.send(channel, ...args);
+        };
+
+        let replyWithError = (err) => {
+            finishConnectionTest('app-deploy-test-error', {
+                message: stripTags((err.message).toString())
+            });
         };
 
         try {
-            await this.connection.send(new ListObjectsCommand(testParams));
+            this.connection = new S3ApiClient(connectionParams);
         } catch (err) {
-            waitForTimeout = false;
-            sender.send('app-deploy-test-error', {
-                message: stripTags((err.message).toString())
-            });
-
+            replyWithError(err);
             return;
         }
 
-        waitForTimeout = false;
-        sender.send('app-deploy-test-success');
+        this.connection.listObjects({
+            prefix: prefix,
+            maxKeys: 1
+        }).then(() => {
+            finishConnectionTest('app-deploy-test-success');
+        }).catch(err => {
+            replyWithError(err);
+        });
 
         setTimeout(function() {
-            if (waitForTimeout === true) {
-                sender.send('app-deploy-test-error', {
-                    message: {
-                        translation: 'core.server.requestTimeout'
-                    }
-                });
-            }
+            finishConnectionTest('app-deploy-test-error', {
+                message: {
+                    translation: 'core.server.requestTimeout'
+                }
+            });
         }, 15000);
+    }
+
+    // The connection test runs in the main process - the idle keep-alive sockets are closed right away
+    closeConnection () {
+        if (this.connection && typeof this.connection.close === 'function') {
+            this.connection.close();
+        }
     }
 
     sendProgress (progress, showOperations = true) {
@@ -456,16 +455,6 @@ class S3 {
                 operations
             }
         });
-    }
-
-    async s3streamToString (stream) {
-        let chunks = [];
-        
-        for await (let chunk of stream) {
-            chunks.push(chunk);
-        }
-
-        return Buffer.concat(chunks).toString('utf-8');
     }
 }
 
