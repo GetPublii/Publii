@@ -1,29 +1,4 @@
 {
-    "abort-controller": {
-        "versions": [
-            "3.0.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mysticatea/abort-controller#readme",
-        "licenseFile": "node_modules/abort-controller/LICENSE"
-    },
-    "agent-base": {
-        "versions": [
-            "6.0.2",
-            "7.1.4"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/TooTallNate/proxy-agents",
-        "licenseFile": "node_modules/agent-base/LICENSE"
-    },
-    "arrify": {
-        "versions": [
-            "2.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/sindresorhus/arrify",
-        "licenseFile": "node_modules/arrify/license"
-    },
     "asn1": {
         "versions": [
             "0.2.6"
@@ -39,22 +14,6 @@
         "license": "MIT",
         "homepage": "https://github.com/rogierschouten/async-lock",
         "licenseFile": "node_modules/async-lock/LICENSE"
-    },
-    "async-retry": {
-        "versions": [
-            "1.3.3"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/vercel/async-retry",
-        "licenseFile": "node_modules/async-retry/LICENSE.md"
-    },
-    "asynckit": {
-        "versions": [
-            "0.4.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/alexindigo/asynckit#readme",
-        "licenseFile": "node_modules/asynckit/LICENSE"
     },
     "available-typed-arrays": {
         "versions": [
@@ -128,14 +87,6 @@
         "homepage": "https://github.com/holepunchto/bare-url",
         "licenseFile": "node_modules/bare-url/LICENSE"
     },
-    "base64-js": {
-        "versions": [
-            "1.5.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/beatgammit/base64-js",
-        "licenseFile": "node_modules/base64-js/LICENSE"
-    },
     "basic-ftp": {
         "versions": [
             "6.0.1"
@@ -152,14 +103,6 @@
         "homepage": "https://github.com/joyent/node-bcrypt-pbkdf",
         "licenseFile": "node_modules/bcrypt-pbkdf/LICENSE"
     },
-    "bignumber.js": {
-        "versions": [
-            "9.3.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/MikeMcl/bignumber.js",
-        "licenseFile": "node_modules/bignumber.js/LICENCE.md"
-    },
     "@borewit/text-codec": {
         "versions": [
             "0.2.2"
@@ -167,14 +110,6 @@
         "license": "MIT",
         "homepage": "https://github.com/Borewit/text-codec",
         "licenseFile": "node_modules/@borewit/text-codec/LICENSE.txt"
-    },
-    "buffer-equal-constant-time": {
-        "versions": [
-            "1.0.1"
-        ],
-        "license": "BSD-3-Clause",
-        "homepage": "https://github.com/goinstant/buffer-equal-constant-time",
-        "licenseFile": "node_modules/buffer-equal-constant-time/LICENSE.txt"
     },
     "buffer-from": {
         "versions": [
@@ -279,14 +214,6 @@
         "homepage": "https://github.com/NextStepWebs/codemirror-spell-checker",
         "licenseFile": "node_modules/codemirror-spell-checker/LICENSE"
     },
-    "combined-stream": {
-        "versions": [
-            "1.0.8"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/felixge/node-combined-stream",
-        "licenseFile": "node_modules/combined-stream/License"
-    },
     "commander": {
         "versions": [
             "2.20.3"
@@ -367,14 +294,6 @@
         "homepage": "https://github.com/ljharb/define-data-property#readme",
         "licenseFile": "node_modules/define-data-property/LICENSE"
     },
-    "delayed-stream": {
-        "versions": [
-            "1.0.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/felixge/node-delayed-stream",
-        "licenseFile": "node_modules/delayed-stream/License"
-    },
     "detect-libc": {
         "versions": [
             "2.1.2"
@@ -415,14 +334,6 @@
         "homepage": "https://github.com/es-shims/dunder-proto#readme",
         "licenseFile": "node_modules/dunder-proto/LICENSE"
     },
-    "duplexify": {
-        "versions": [
-            "4.1.3"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mafintosh/duplexify",
-        "licenseFile": "node_modules/duplexify/LICENSE"
-    },
     "easymde": {
         "versions": [
             "2.18.0"
@@ -430,14 +341,6 @@
         "license": "MIT",
         "homepage": "https://github.com/Ionaru/easy-markdown-editor",
         "licenseFile": "node_modules/easymde/LICENSE"
-    },
-    "ecdsa-sig-formatter": {
-        "versions": [
-            "1.0.11"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/Brightspace/node-ecdsa-sig-formatter#readme",
-        "licenseFile": "node_modules/ecdsa-sig-formatter/LICENSE"
     },
     "electron": {
         "license": "MIT",
@@ -493,14 +396,6 @@
         "homepage": "https://github.com/ljharb/es-object-atoms#readme",
         "licenseFile": "node_modules/es-object-atoms/LICENSE"
     },
-    "es-set-tostringtag": {
-        "versions": [
-            "2.1.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/es-shims/es-set-tostringtag#readme",
-        "licenseFile": "node_modules/es-set-tostringtag/LICENSE"
-    },
     "escape-html": {
         "versions": [
             "1.0.3"
@@ -509,14 +404,6 @@
         "homepage": "https://github.com/component/escape-html",
         "licenseFile": "node_modules/escape-html/LICENSE"
     },
-    "event-target-shim": {
-        "versions": [
-            "5.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mysticatea/event-target-shim",
-        "licenseFile": "node_modules/event-target-shim/LICENSE"
-    },
     "exif-parser": {
         "versions": [
             "0.1.12"
@@ -524,14 +411,6 @@
         "license": "MIT",
         "homepage": "http://github.com/bwindels/exif-parser",
         "licenseFile": "node_modules/exif-parser/LICENSE.md"
-    },
-    "extend": {
-        "versions": [
-            "3.0.2"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/justmoon/node-extend",
-        "licenseFile": "node_modules/extend/LICENSE"
     },
     "extend-shallow": {
         "versions": [
@@ -611,14 +490,6 @@
         "homepage": "https://github.com/Raynos/for-each",
         "licenseFile": "node_modules/for-each/LICENSE"
     },
-    "form-data": {
-        "versions": [
-            "2.5.5"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/form-data/form-data",
-        "licenseFile": "node_modules/@types/request/node_modules/form-data/License"
-    },
     "fs-extra": {
         "versions": [
             "11.1.1"
@@ -643,22 +514,6 @@
         "homepage": "https://github.com/Raynos/function-bind",
         "licenseFile": "node_modules/function-bind/LICENSE"
     },
-    "gaxios": {
-        "versions": [
-            "6.7.1"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/gaxios",
-        "licenseFile": "node_modules/gaxios/LICENSE"
-    },
-    "gcp-metadata": {
-        "versions": [
-            "6.1.1"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/gcp-metadata",
-        "licenseFile": "node_modules/gcp-metadata/LICENSE"
-    },
     "get-intrinsic": {
         "versions": [
             "1.3.0"
@@ -675,54 +530,6 @@
         "homepage": "https://github.com/ljharb/get-proto#readme",
         "licenseFile": "node_modules/get-proto/LICENSE"
     },
-    "google-auth-library": {
-        "versions": [
-            "9.15.1"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/google-auth-library-nodejs",
-        "licenseFile": "node_modules/google-auth-library/LICENSE"
-    },
-    "@google-cloud/paginator": {
-        "versions": [
-            "5.0.2"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/nodejs-paginator",
-        "licenseFile": "node_modules/@google-cloud/paginator/LICENSE"
-    },
-    "@google-cloud/projectify": {
-        "versions": [
-            "4.0.0"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/nodejs-projectify",
-        "licenseFile": "node_modules/@google-cloud/projectify/LICENSE"
-    },
-    "@google-cloud/promisify": {
-        "versions": [
-            "3.0.1"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/nodejs-promisify",
-        "licenseFile": "node_modules/@google-cloud/promisify/LICENSE"
-    },
-    "@google-cloud/storage": {
-        "versions": [
-            "7.19.0"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/nodejs-storage",
-        "licenseFile": "node_modules/@google-cloud/storage/LICENSE"
-    },
-    "google-logging-utils": {
-        "versions": [
-            "0.0.2"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/gax-nodejs",
-        "licenseFile": "node_modules/google-logging-utils/LICENSE"
-    },
     "gopd": {
         "versions": [
             "1.2.0"
@@ -738,14 +545,6 @@
         "license": "ISC",
         "homepage": "https://github.com/isaacs/node-graceful-fs",
         "licenseFile": "node_modules/graceful-fs/LICENSE"
-    },
-    "gtoken": {
-        "versions": [
-            "7.1.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/google/node-gtoken",
-        "licenseFile": "node_modules/gtoken/LICENSE"
     },
     "handlebars": {
         "versions": [
@@ -795,14 +594,6 @@
         "homepage": "https://mths.be/he",
         "licenseFile": "node_modules/he/LICENSE-MIT.txt"
     },
-    "html-entities": {
-        "versions": [
-            "2.6.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mdevils/html-entities",
-        "licenseFile": "node_modules/html-entities/LICENSE"
-    },
     "html-minifier": {
         "versions": [
             "4.0.0"
@@ -810,23 +601,6 @@
         "license": "MIT",
         "homepage": "https://kangax.github.io/html-minifier/",
         "licenseFile": "node_modules/html-minifier/LICENSE"
-    },
-    "http-proxy-agent": {
-        "versions": [
-            "5.0.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/TooTallNate/node-http-proxy-agent",
-        "licenseFile": "licenses/http-proxy-agent/license.txt"
-    },
-    "https-proxy-agent": {
-        "versions": [
-            "5.0.1",
-            "7.0.6"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/TooTallNate/proxy-agents",
-        "licenseFile": "node_modules/https-proxy-agent/LICENSE"
     },
     "hugerte": {
         "license": "MIT",
@@ -905,14 +679,6 @@
         "license": "MIT",
         "homepage": "https://github.com/jonschlinkert/is-extendable",
         "licenseFile": "node_modules/is-extendable/LICENSE"
-    },
-    "is-stream": {
-        "versions": [
-            "2.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/sindresorhus/is-stream",
-        "licenseFile": "node_modules/is-stream/license"
     },
     "is-typed-array": {
         "versions": [
@@ -1033,14 +799,6 @@
         "licenseFile": "licenses/jquery/license.txt",
         "vendor": true
     },
-    "json-bigint": {
-        "versions": [
-            "1.0.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/sidorares/json-bigint",
-        "licenseFile": "node_modules/json-bigint/LICENSE"
-    },
     "jsonfile": {
         "versions": [
             "6.1.0"
@@ -1064,22 +822,6 @@
         "license": "Apache-2.0",
         "homepage": "https://github.com/jamsinclair/jSquash",
         "licenseFile": "node_modules/@jsquash/webp/LICENSE"
-    },
-    "jwa": {
-        "versions": [
-            "2.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/brianloveswords/node-jwa",
-        "licenseFile": "node_modules/jwa/LICENSE"
-    },
-    "jws": {
-        "versions": [
-            "4.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/brianloveswords/node-jws",
-        "licenseFile": "node_modules/jws/LICENSE"
     },
     "libvips": {
         "license": "LGPL-2.1-or-later",
@@ -1155,22 +897,6 @@
         "license": "MIT",
         "homepage": "https://github.com/broofa/mime",
         "licenseFile": "node_modules/mime/LICENSE"
-    },
-    "mime-db": {
-        "versions": [
-            "1.52.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jshttp/mime-db",
-        "licenseFile": "node_modules/mime-db/LICENSE"
-    },
-    "mime-types": {
-        "versions": [
-            "2.1.35"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jshttp/mime-types",
-        "licenseFile": "node_modules/mime-types/LICENSE"
     },
     "mimic-response": {
         "versions": [
@@ -1252,14 +978,6 @@
         "homepage": "https://github.com/nodable/val-parsers",
         "licenseFile": "licenses/@nodable/entities/license.txt"
     },
-    "node-fetch": {
-        "versions": [
-            "2.7.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/bitinn/node-fetch",
-        "licenseFile": "node_modules/node-fetch/LICENSE.md"
-    },
     "normalize-path": {
         "versions": [
             "3.0.0"
@@ -1281,14 +999,6 @@
         "license": "ISC",
         "homepage": "https://github.com/isaacs/once",
         "licenseFile": "node_modules/once/LICENSE"
-    },
-    "p-limit": {
-        "versions": [
-            "3.1.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/sindresorhus/p-limit",
-        "licenseFile": "node_modules/p-limit/license"
     },
     "pako": {
         "versions": [
@@ -1394,22 +1104,6 @@
         "license": "MIT",
         "homepage": "https://github.com/stevenvachon/relateurl",
         "licenseFile": "node_modules/relateurl/license"
-    },
-    "retry": {
-        "versions": [
-            "0.13.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/tim-kos/node-retry",
-        "licenseFile": "node_modules/retry/License"
-    },
-    "retry-request": {
-        "versions": [
-            "7.0.2"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/stephenplusplus/retry-request",
-        "licenseFile": "node_modules/retry-request/license"
     },
     "safe-buffer": {
         "versions": [
@@ -1523,22 +1217,6 @@
         "homepage": "https://github.com/theophilusx/ssh2-sftp-client",
         "licenseFile": "node_modules/ssh2-sftp-client/LICENSE"
     },
-    "stream-events": {
-        "versions": [
-            "1.0.5"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/stephenplusplus/stream-events",
-        "licenseFile": "licenses/stream-events/license.txt"
-    },
-    "stream-shift": {
-        "versions": [
-            "1.0.3"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mafintosh/stream-shift",
-        "licenseFile": "node_modules/stream-shift/LICENSE"
-    },
     "streamx": {
         "versions": [
             "2.22.1"
@@ -1580,14 +1258,6 @@
         "homepage": "https://github.com/Borewit/strtok3",
         "licenseFile": "node_modules/strtok3/LICENSE.txt"
     },
-    "stubs": {
-        "versions": [
-            "3.0.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/stephenplusplus/stubs",
-        "licenseFile": "licenses/stubs/license.txt"
-    },
     "tabler-icons": {
         "license": "MIT",
         "homepage": "https://tabler-icons.io/",
@@ -1609,14 +1279,6 @@
         "license": "MIT",
         "homepage": "https://github.com/mafintosh/tar-stream",
         "licenseFile": "node_modules/tar-fs/node_modules/tar-stream/LICENSE"
-    },
-    "teeny-request": {
-        "versions": [
-            "9.0.0"
-        ],
-        "license": "Apache-2.0",
-        "homepage": "https://github.com/googleapis/teeny-request#readme",
-        "licenseFile": "node_modules/teeny-request/LICENSE"
     },
     "text-decoder": {
         "versions": [
@@ -1666,22 +1328,6 @@
         "homepage": "https://github.com/Borewit/tokenizer-token",
         "licenseFile": "licenses/@tokenizer/token/license.txt"
     },
-    "@tootallnate/once": {
-        "versions": [
-            "2.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/TooTallNate/once",
-        "licenseFile": "node_modules/@tootallnate/once/LICENSE"
-    },
-    "tr46": {
-        "versions": [
-            "0.0.3"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/Sebmaster/tr46.js#readme",
-        "licenseFile": "licenses/tr46/license.txt"
-    },
     "transliteration": {
         "license": "MIT",
         "homepage": "https://github.com/dzcpy/transliteration",
@@ -1720,14 +1366,6 @@
         "homepage": "https://github.com/substack/typedarray",
         "licenseFile": "node_modules/typedarray/LICENSE"
     },
-    "@types/caseless": {
-        "versions": [
-            "0.12.5"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/caseless",
-        "licenseFile": "node_modules/@types/caseless/LICENSE"
-    },
     "@types/codemirror": {
         "versions": [
             "5.60.15"
@@ -1752,22 +1390,6 @@
         "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/marked",
         "licenseFile": "node_modules/@types/marked/LICENSE"
     },
-    "@types/node": {
-        "versions": [
-            "24.13.2"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node",
-        "licenseFile": "node_modules/@types/node/LICENSE"
-    },
-    "@types/request": {
-        "versions": [
-            "2.48.13"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/request",
-        "licenseFile": "node_modules/@types/request/LICENSE"
-    },
     "@types/tern": {
         "versions": [
             "0.23.9"
@@ -1775,14 +1397,6 @@
         "license": "MIT",
         "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/tern",
         "licenseFile": "node_modules/@types/tern/LICENSE"
-    },
-    "@types/tough-cookie": {
-        "versions": [
-            "4.0.5"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/tough-cookie",
-        "licenseFile": "node_modules/@types/tough-cookie/LICENSE"
     },
     "@types/trusted-types": {
         "versions": [
@@ -1815,14 +1429,6 @@
         "license": "MIT",
         "homepage": "https://github.com/sindresorhus/uint8array-extras",
         "licenseFile": "node_modules/uint8array-extras/license"
-    },
-    "undici-types": {
-        "versions": [
-            "7.18.2"
-        ],
-        "license": "MIT",
-        "homepage": "https://undici.nodejs.org",
-        "licenseFile": "node_modules/undici-types/LICENSE"
     },
     "unescape": {
         "versions": [
@@ -1863,15 +1469,6 @@
         "license": "MIT",
         "homepage": "https://github.com/TooTallNate/util-deprecate",
         "licenseFile": "node_modules/util-deprecate/LICENSE"
-    },
-    "uuid": {
-        "versions": [
-            "8.3.2",
-            "9.0.1"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/uuidjs/uuid",
-        "licenseFile": "node_modules/uuid/LICENSE.md"
     },
     "vue": {
         "versions": [
@@ -1945,22 +1542,6 @@
         "homepage": "https://github.com/GoogleChromeLabs/wasm-feature-detect",
         "licenseFile": "node_modules/wasm-feature-detect/LICENSE"
     },
-    "webidl-conversions": {
-        "versions": [
-            "3.0.1"
-        ],
-        "license": "BSD-2-Clause",
-        "homepage": "https://github.com/jsdom/webidl-conversions",
-        "licenseFile": "node_modules/webidl-conversions/LICENSE.md"
-    },
-    "whatwg-url": {
-        "versions": [
-            "5.0.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/jsdom/whatwg-url",
-        "licenseFile": "node_modules/whatwg-url/LICENSE.txt"
-    },
     "which-typed-array": {
         "versions": [
             "1.1.19"
@@ -2000,14 +1581,6 @@
         "license": "MIT",
         "homepage": "http://xregexp.com/",
         "licenseFile": "licenses/xregexp/license.txt"
-    },
-    "yocto-queue": {
-        "versions": [
-            "0.1.0"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/sindresorhus/yocto-queue",
-        "licenseFile": "node_modules/yocto-queue/license"
     },
     "zod": {
         "versions": [

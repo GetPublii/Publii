@@ -1,310 +1,394 @@
 /*
- * Class used to upload files to the FTP(S) server
+ * Class used to upload files to the Google Cloud Storage bucket
  */
 
 const fs = require('fs-extra');
 const path = require('path');
-const FileHelper = require('./../../helpers/file.js');
-const { Storage } = require('@google-cloud/storage');
+const GcsApiClient = require('./gcs-api-client.js');
 const normalizePath = require('normalize-path');
+const mime = require('mime');
 const stripTags = require('striptags');
 
 class GoogleCloud {
     constructor(deploymentInstance = false) {
         this.deployment = deploymentInstance;
         this.connection = false;
-        this.debugOutput = [];
-        this.econnresetCounter = 0;
+        this.prefix = '';
+        this.waitForTimeout = false;
+        this.errorReported = false;
         this.softUploadErrors = {};
         this.hardUploadErrors = [];
     }
 
-    async initConnection() {
-        let self = this;
-        let bucketName = this.deployment.siteConfig.deployment.google.bucket;
-        let keyFilePath = normalizePath(this.deployment.siteConfig.deployment.google.key);
-        this.prefix = this.deployment.siteConfig.deployment.google.prefix;
+    // The credentials come from the service account key file downloaded from the Google Cloud console
+    readKeyFile (keyFilePath) {
+        keyFilePath = typeof keyFilePath === 'string' ? normalizePath(keyFilePath.trim()) : '';
 
-        if(!fs.existsSync(keyFilePath)) {
-            process.send({
-                type: 'web-contents',
-                message: 'app-connection-error'
-            });
-
-            return;
+        if (keyFilePath === '' || !fs.existsSync(keyFilePath)) {
+            throw Object.assign(new Error(`The service account key file does not exist: ${keyFilePath}`), { code: 'KeyFileNotFound' });
         }
 
-        let keyData = require(keyFilePath); 
+        let keyData;
 
-        let gcs = new Storage({
-            projectId: keyData.project_id,
-            credentials: {
-                client_email: keyData.client_email,
-                private_key: keyData.private_key
-            }
-        });
+        try {
+            keyData = JSON.parse(fs.readFileSync(keyFilePath, 'utf8'));
+        } catch (err) {
+            throw Object.assign(new Error(`The service account key file is not a valid JSON file: ${keyFilePath}`), { code: 'KeyFileInvalid' });
+        }
 
-        this.connection = gcs.bucket(bucketName);
-        this.connection.setMetadata({
-            website: {
-                mainPageSuffix: "index.html",
-                notFoundPage: "404.html"
-            }
-        });
+        return {
+            clientEmail: keyData && keyData.client_email,
+            privateKey: keyData && keyData.private_key
+        };
+    }
 
-        process.send({
-            type: 'web-contents',
-            message: 'app-uploading-progress',
-            value: {
-                progress: 6,
-                operations: false
-            }
+    createConnection (googleConfig) {
+        let credentials = this.readKeyFile(googleConfig.key);
+
+        return new GcsApiClient({
+            clientEmail: credentials.clientEmail,
+            privateKey: credentials.privateKey,
+            bucket: googleConfig.bucket
         });
+    }
+
+    async initConnection() {
+        let googleConfig = this.deployment.siteConfig.deployment.google;
+        this.prefix = googleConfig.prefix;
+        this.waitForTimeout = true;
+
+        this.sendProgress(6, false);
 
         process.send({
             type: 'web-contents',
             message: 'app-connection-in-progress'
         });
 
-        process.send({
-            type: 'web-contents',
-            message: 'app-connection-success'
-        });
+        // Registered before the first request - a hanging connection must not leave the sync popup waiting forever
+        setTimeout(() => {
+            if(this.waitForTimeout === true) {
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-connection-error'
+                });
 
-        self.deployment.setInput();
-        self.deployment.setOutput(true);
-        self.deployment.prepareLocalFilesList();
-
-        process.send({
-            type: 'web-contents',
-            message: 'app-uploading-progress',
-            value: {
-                progress: 7,
-                operations: false
+                setTimeout(() => {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
             }
-        });
+        }, 15000);
 
-        self.downloadFilesList();
-    }
-
-    downloadFilesList() {
-        let self = this;
-        let fileToDownload = normalizePath(path.join(this.deployment.outputDir, 'files.publii.json'));
-
-        if(typeof this.prefix === 'string' && this.prefix !== '') {
-            fileToDownload = normalizePath(path.join(this.deployment.outputDir, this.prefix, 'files.publii.json'));
-        }
-
-        this.connection.file(fileToDownload).download({
-            destination: path.join(self.deployment.configDir, 'temp-files-remote.json')
-        }, function(err) {
-            if (!err) {
-                let downloadedFilePath = path.join(self.deployment.configDir, 'temp-files-remote.json');
-                let downloadedFile = FileHelper.readFileSync(downloadedFilePath);
-                self.deployment.checkLocalListWithRemoteList(downloadedFile);
-            } else {
-                self.deployment.compareFilesList(false);
-            }
-        });
-    }
-
-    uploadNewFileList() {
-        let self = this;
-        let fileToUpload = normalizePath(path.join(this.deployment.inputDir, 'files.publii.json'));
-        let fileDestination = 'files.publii.json';
-
-        if(typeof this.prefix === 'string' && this.prefix !== '') {
-            fileDestination = normalizePath(path.join(this.prefix, 'files.publii.json'));
-        }
-
-        process.send({
-            type: 'web-contents',
-            message: 'app-uploading-progress',
-            value: {
-                progress: 99,
-                operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
-            }
-        });
-
-        this.connection.upload(fileToUpload, {
-            destination: fileDestination
-        }, function(err) {
-            console.log(`[${ new Date().toUTCString() }] -> files.publii.json`);
-
-            if (err) {
-                console.log(`[${ new Date().toUTCString() }] ${err}`);
-            }
+        try {
+            this.connection = this.createConnection(googleConfig);
+            await this.connection.listObjects({
+                prefix: this.remotePath(''),
+                maxResults: 1
+            });
+            await this.setWebsiteConfiguration();
+            this.waitForTimeout = false;
 
             process.send({
                 type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 100,
-                    operations: false
-                }
+                message: 'app-connection-success'
             });
 
-            process.send({
-                type: 'sender',
-                message: 'app-deploy-uploaded',
-                value: {
-                    status: true
-                }
-            });
+            this.deployment.setInput();
+            this.deployment.setOutput(true);
+            this.deployment.prepareLocalFilesList();
+            this.sendProgress(7, false);
 
-            setTimeout(function () {
-                process.kill(process.pid, 'SIGTERM');
-            }, 1000);
-        });
+            await this.downloadFilesList();
+        } catch (err) {
+            this.onError(err);
+        }
     }
 
-    uploadFile(input, output) {
-        let self = this;
-
-        if (typeof this.prefix === 'string' && this.prefix !== '') {
-            output = normalizePath(path.join(this.prefix, output));
+    /*
+     * The bucket serves index.html for the directories and 404.html for the missing pages;
+     * a key without the bucket permissions still uploads the files, so a failure is only logged
+     */
+    async setWebsiteConfiguration () {
+        try {
+            await this.connection.patchBucket({
+                website: {
+                    mainPageSuffix: 'index.html',
+                    notFoundPage: '404.html'
+                }
+            });
+        } catch (err) {
+            console.log(`[${ new Date().toUTCString() }] (i) GCS WEBSITE CONFIGURATION NOT UPDATED: ${err.message}`);
         }
+    }
 
-        if (output[0] === '/') {
-            output = output.substr(1);
+    async downloadFilesList() {
+        let fileName = this.remotePath('files.publii.json');
+
+        try {
+            let remoteFile = await this.connection.getObject(fileName);
+            console.log(`[${new Date().toUTCString()}] <- files.publii.json`);
+            this.sendProgress(8, false);
+            this.deployment.checkLocalListWithRemoteList(remoteFile.toString('utf-8'));
+        } catch (err) {
+            console.log(`[${new Date().toUTCString()}] <- files.publii.json`);
+
+            if (!this.isNotFoundError(err)) {
+                this.onError(err);
+                return;
+            }
+
+            this.sendProgress(8, false);
+            this.deployment.compareFilesList(false);
         }
+    }
 
-        this.connection.upload(input, {
-            destination: output,
-            public: true
-        }, function(err) {
+    async uploadNewFileList() {
+        this.sendProgress(99);
+        let fileName = this.remotePath('files.publii.json');
+        let filePath = path.join(this.deployment.inputDir, 'files.publii.json');
+
+        fs.readFile(filePath, async (err, fileContent) => {
             if (err) {
-                console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${output}`);
-                console.log(`[${ new Date().toUTCString() }] ${err}`);
+                this.onError(err);
+                return;
+            }
 
-                setTimeout(() => {
-                    if(!self.softUploadErrors[input]) {
-                        self.softUploadErrors[input] = 1;
-                    } else {
-                        self.softUploadErrors[input]++;
-                    }
-
-                    if(self.softUploadErrors[input] <= 5) {
-                        self.uploadFile(input, output);
-                    } else {
-                        self.hardUploadErrors.push(input);
-
-                        self.deployment.currentOperationNumber++;
-                        console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${output}`);
-                        self.deployment.progressOfUploading += self.deployment.progressPerFile;
-
-                        process.send({
-                            type: 'web-contents',
-                            message: 'app-uploading-progress',
-                            value: {
-                                progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                                operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
-                            }
-                        });
-
-                        self.deployment.uploadFile();
-                    }
-                }, 500);
-            } else {
-                self.deployment.currentOperationNumber++;
-                console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${output}`);
-                self.deployment.progressOfUploading += self.deployment.progressPerFile;
+            try {
+                // The files list is not public - only the site files get the public ACL
+                await this.connection.uploadObject(fileName, fileContent, {
+                    contentType: 'application/json'
+                });
+                console.log(`[${new Date().toUTCString()}] -> ${fileName}`);
+                this.sendProgress(100, false);
 
                 process.send({
-                    type: 'web-contents',
-                    message: 'app-uploading-progress',
+                    type: 'sender',
+                    message: 'app-deploy-uploaded',
                     value: {
-                        progress: 8 + Math.floor(self.deployment.progressOfUploading),
-                        operations: [self.deployment.currentOperationNumber, self.deployment.operationsCounter]
+                        status: true,
+                        issues: this.hardUploadErrors.length > 0
                     }
                 });
 
-                self.deployment.uploadFile();
+                setTimeout(() => {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
+            } catch (uploadErr) {
+                console.log(`[${new Date().toUTCString()}] -> ${fileName}`);
+                this.onError(uploadErr);
             }
         });
     }
 
+    /*
+     * Uploads the local file (input) as the object given by the output path;
+     * a failed upload is retried a few times before it is counted as a hard error
+     */
+    uploadFile(input, output) {
+        let fileName = this.remotePath(output);
+
+        fs.readFile(input, async (err, fileContent) => {
+            if (err) {
+                this.onError(err);
+                return;
+            }
+
+            try {
+                await this.connection.uploadObject(fileName, fileContent, {
+                    contentType: mime.getType(fileName) || 'application/octet-stream',
+                    predefinedAcl: 'publicRead'
+                });
+                this.deployment.currentOperationNumber++;
+                console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${fileName}`);
+                this.deployment.progressOfUploading += this.deployment.progressPerFile;
+                this.sendProgress(8 + Math.floor(this.deployment.progressOfUploading));
+                this.deployment.uploadFile();
+            } catch (uploadErr) {
+                console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${fileName}`);
+                this.onError(uploadErr, true);
+
+                setTimeout(() => {
+                    if (!this.softUploadErrors[input]) {
+                        this.softUploadErrors[input] = 1;
+                    } else {
+                        this.softUploadErrors[input]++;
+                    }
+
+                    if (this.softUploadErrors[input] <= 5) {
+                        this.uploadFile(input, output);
+                    } else {
+                        this.hardUploadErrors.push(input);
+                        this.deployment.currentOperationNumber++;
+                        console.log(`[${ new Date().toUTCString() }] UPL HARD ERR ${input} -> ${fileName}`);
+                        this.deployment.progressOfUploading += this.deployment.progressPerFile;
+                        this.sendProgress(8 + Math.floor(this.deployment.progressOfUploading));
+                        this.deployment.uploadFile();
+                    }
+                }, 500);
+            }
+        });
+    }
+
+    // The bucket has no directories - they are skipped
     uploadDirectory(input, output) {
         this.deployment.uploadFile();
     }
 
-    removeFile(input) {
-        let self = this;
+    async removeFile(input) {
+        let fileName = this.remotePath(input);
 
-        if(typeof this.prefix === 'string' && this.prefix !== '') {
-            input = normalizePath(path.join(this.prefix, input));
-        }
-
-        if(input[0] === '/') {
-            input = input.substr(1);
-        }
-
-        this.connection.file(input).delete(function (err) {
-            self.deployment.currentOperationNumber++;
-            console.log(`[${ new Date().toUTCString() }] DEL ${input}`);
-
-            if (err) {
-                console.log(`[${ new Date().toUTCString() }] ERROR REMOVE FILE: ${input}`);
-                console.log(`[${ new Date().toUTCString() }] ${err}`);
+        try {
+            await this.connection.deleteObject(fileName);
+            this.deployment.currentOperationNumber++;
+            console.log(`[${ new Date().toUTCString() }] DEL ${fileName}`);
+            this.deployment.progressOfDeleting += this.deployment.progressPerFile;
+            this.sendProgress(8 + Math.floor(this.deployment.progressOfDeleting));
+            this.deployment.removeFile();
+        } catch (err) {
+            // The object no longer exists in the bucket - the sync is not blocked
+            if (this.isNotFoundError(err)) {
+                this.deployment.currentOperationNumber++;
+                console.log(`[${ new Date().toUTCString() }] DEL ${fileName} - notFound`);
+                this.deployment.progressOfDeleting += this.deployment.progressPerFile;
+                this.sendProgress(8 + Math.floor(this.deployment.progressOfDeleting));
+                this.deployment.removeFile();
+                return;
             }
 
-            self.deployment.progressOfDeleting += self.deployment.progressPerFile;
-
-            process.send({
-                type: 'web-contents',
-                message: 'app-uploading-progress',
-                value: {
-                    progress: 8 + Math.floor(self.deployment.progressOfDeleting),
-                    operations: [self.deployment.currentOperationNumber ,self.deployment.operationsCounter]
-                }
-            });
-
-            self.deployment.removeFile();
-        });
+            console.error(`[${new Date().toUTCString()}] Error deleting ${fileName}`, err);
+            this.onError(err);
+        }
     }
 
     removeDirectory(input) {
         this.deployment.removeFile();
     }
 
-    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
-        let bucketName = deploymentConfig.google.bucket;
-        let keyFilePath = normalizePath(deploymentConfig.google.key);
-        let waitForTimeout = true;
+    /*
+     * Silent mode is used for the errors which are retried (the file uploads) - every other error
+     * ends the synchronization with a message
+     */
+    onError(err, silentMode = false) {
+        console.log(`[${ new Date().toUTCString() }] GCS ERROR: ${err.message}`);
 
-        if(!fs.existsSync(keyFilePath)) {
-            waitForTimeout = false;
-            sender.send('app-deploy-test-error');
+        if (silentMode) {
             return;
         }
 
-        let keyData = require(keyFilePath); 
+        this.waitForTimeout = false;
+        this.reportError(err);
+    }
 
-        let gcs = new Storage({
-            projectId: keyData.project_id,
-            credentials: {
-                client_email: keyData.client_email,
-                private_key: keyData.private_key
+    // Reports the error to the sync popup once and ends the deployment process
+    reportError(err) {
+        if (this.errorReported) {
+            return;
+        }
+
+        this.errorReported = true;
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-connection-error',
+            value: {
+                additionalMessage: stripTags(String((err && err.message) || err || ''))
             }
         });
 
-        let bucket = gcs.bucket(bucketName);
+        setTimeout(function () {
+            process.kill(process.pid, 'SIGTERM');
+        }, 1000);
+    }
 
-        bucket.getMetadata().then(data => {
+    isNotFoundError (err) {
+        return !!err && (err.status === 404 || err.code === 'notFound');
+    }
+
+    // The optional prefix (a directory inside the bucket) is put in front of every object name
+    remotePath(filePath) {
+        let remotePath = String(filePath || '');
+
+        if (typeof this.prefix === 'string' && this.prefix.trim() !== '') {
+            remotePath = path.join(this.prefix.trim(), remotePath);
+        }
+
+        remotePath = normalizePath(remotePath);
+
+        if (remotePath[0] === '/') {
+            remotePath = remotePath.substr(1);
+        }
+
+        return remotePath;
+    }
+
+    async testConnection(app, deploymentConfig, siteName, uuid, sender) {
+        let googleConfig = deploymentConfig.google;
+        let waitForTimeout = true;
+        this.prefix = googleConfig.prefix;
+
+        // Replies only once - a reply which arrives after the timeout is ignored
+        let finishConnectionTest = (channel, ...args) => {
+            if (waitForTimeout === false) {
+                return;
+            }
+
             waitForTimeout = false;
-            sender.send('app-deploy-test-success');
-        }).catch(err => {
-            waitForTimeout = false;
-            sender.send('app-deploy-test-error', {
+            this.closeConnection();
+            sender.send(channel, ...args);
+        };
+
+        let replyWithError = (err) => {
+            finishConnectionTest('app-deploy-test-error', {
                 message: stripTags((err.message).toString())
             });
+        };
+
+        try {
+            this.connection = this.createConnection(googleConfig);
+        } catch (err) {
+            replyWithError(err);
+            return;
+        }
+
+        this.connection.listObjects({
+            prefix: this.remotePath(''),
+            maxResults: 1
+        }).then(() => {
+            finishConnectionTest('app-deploy-test-success');
+        }).catch(err => {
+            replyWithError(err);
         });
 
         setTimeout(function() {
-            if(waitForTimeout === true) {
-                sender.send('app-deploy-test-error');
-            }
+            finishConnectionTest('app-deploy-test-error', {
+                message: {
+                    translation: 'core.server.requestTimeout'
+                }
+            });
         }, 15000);
+    }
+
+    // The connection test runs in the main process - the idle keep-alive sockets are closed right away
+    closeConnection () {
+        if (this.connection && typeof this.connection.close === 'function') {
+            this.connection.close();
+        }
+    }
+
+    sendProgress (progress, showOperations = true) {
+        let operations = [this.deployment.currentOperationNumber, this.deployment.operationsCounter];
+
+        if (!showOperations) {
+            operations = false;
+        }
+
+        process.send({
+            type: 'web-contents',
+            message: 'app-uploading-progress',
+            value: {
+                progress,
+                operations
+            }
+        });
     }
 }
 
