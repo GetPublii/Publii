@@ -16,6 +16,7 @@ const { fork } = require('node:child_process');
 const { createRequire } = require('node:module');
 const sharp = require('sharp');
 const sharpQueue = require('../sharp-queue');
+const napiImageQueue = require('../napi-image-queue');
 
 const appDirectory = path.resolve(__dirname, '../../..');
 const siteRequire = createRequire(path.join(appDirectory, 'back-end/site.js'));
@@ -148,6 +149,7 @@ describe('Thumbnail regeneration', function () {
 
     afterEach(function () {
         sharpQueue.shutdown();
+        napiImageQueue.shutdown();
         fs.rmSync(directory, { recursive: true, force: true });
     });
 
@@ -582,7 +584,7 @@ describe('Thumbnail regeneration', function () {
         assert.equal(finished[0].total, 2);
     });
 
-    for (const engine of ['sharp', 'jimp']) {
+    for (const engine of ['sharp', 'jimp', 'napi']) {
         it(`replaces complete thumbnails and removes obsolete sizes using ${engine}`, async function () {
             application.appConfig.resizeEngine = engine;
             addFile('posts/1/a.jpg');

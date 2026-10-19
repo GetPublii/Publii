@@ -13,6 +13,7 @@ const Utils = require('./helpers/utils.js');
 const slug = require('./helpers/slug');
 const getJimp = require('./helpers/jimp-webp.js');
 const sharpQueue = require('./helpers/sharp-queue.js');
+const napiImageQueue = require('./helpers/napi-image-queue.js');
 const ImageConversion = require('../shared/image-conversion.js');
 // Default config
 const defaultAstCurrentSiteConfig = require('./../config/AST.currentSite.config');
@@ -393,7 +394,7 @@ class Image extends Model {
 
                 return this.processImage(job).catch(err => {
                     brokenFileFlag.broken = true;
-                    console.log('Image unprocessable (both sharp and jimp failed):', originalPath, '-', err && err.message);
+                    console.log('Image unprocessable (both ' + this.resizeEngine() + ' and jimp failed):', originalPath, '-', err && err.message);
                     return { error: 'IMAGE_UNPROCESSABLE', file: originalPath, message: err && err.message };
                 });
             });
@@ -406,12 +407,20 @@ class Image extends Model {
     }
 
     processImage(job) {
-        if (this.shouldUseJimp() || !sharpQueue.isAvailable()) {
+        const engine = this.resizeEngine();
+
+        if (engine === 'jimp') {
             return this.processWithJimp(job);
         }
 
-        return sharpQueue.process(job).catch(err => {
-            console.log('Sharp failed, falling back to jimp for', job.originalPath, '-', err && err.message);
+        const queue = engine === 'napi' ? napiImageQueue : sharpQueue;
+
+        if (!queue.isAvailable()) {
+            return this.processWithJimp(job);
+        }
+
+        return queue.process(job).catch(err => {
+            console.log(engine + ' failed, falling back to jimp for', job.originalPath, '-', err && err.message);
             return this.processWithJimp(job);
         });
     }
@@ -525,10 +534,19 @@ class Image extends Model {
     }
 
     /*
+     * Resize engine selected in the app settings: 'sharp' (default), 'napi' or 'jimp'
+     */
+    resizeEngine() {
+        const engine = this.appInstance.appConfig && this.appInstance.appConfig.resizeEngine;
+
+        return ['jimp', 'napi'].includes(engine) ? engine : 'sharp';
+    }
+
+    /*
      * Detect if Jimp should be used
      */
     shouldUseJimp() {
-        return this.appInstance.appConfig.resizeEngine && this.appInstance.appConfig.resizeEngine === 'jimp';
+        return this.resizeEngine() === 'jimp';
     }
 }
 

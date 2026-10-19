@@ -594,6 +594,14 @@
         "homepage": "https://mths.be/he",
         "licenseFile": "node_modules/he/LICENSE-MIT.txt"
     },
+    "html-entities": {
+        "versions": [
+            "2.6.0"
+        ],
+        "license": "MIT",
+        "homepage": "https://github.com/mdevils/html-entities",
+        "licenseFile": "node_modules/html-entities/LICENSE"
+    },
     "html-minifier": {
         "versions": [
             "4.0.0"
@@ -945,6 +953,14 @@
         "license": "MIT",
         "homepage": "https://github.com/nodejs/nan",
         "licenseFile": "node_modules/nan/LICENSE.md"
+    },
+    "@napi-rs/image": {
+        "versions": [
+            "1.15.0"
+        ],
+        "license": "MIT",
+        "homepage": "https://github.com/Brooooooklyn/Image",
+        "licenseFile": "node_modules/@napi-rs/image/LICENSE"
     },
     "@napi-rs/keyring": {
         "versions": [

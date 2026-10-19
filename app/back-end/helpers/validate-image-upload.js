@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const sharpQueue = require('./sharp-queue.js');
+const napiImageQueue = require('./napi-image-queue.js');
+const NativeImageQueue = require('./native-image-queue.js');
 const getJimp = require('./jimp-webp.js');
 const { extensions } = require('../../config/image-upload-formats.js');
 
@@ -11,7 +13,34 @@ const fallbackMimeTypes = {
     avif: 'image/avif'
 };
 
-async function validateImageUpload(filePath) {
+// Formats the @napi-rs/image worker can decode (SVG is rendered). GIF is
+// accepted by its extension with this engine, as every format is with Jimp.
+const napiFormats = ['jpeg', 'png', 'webp', 'avif', 'tiff', 'svg'];
+
+async function validateWithJimp(filePath, expectedFormat) {
+    const buffer = await fs.promises.readFile(filePath);
+    const Jimp = await getJimp();
+    const image = await Jimp.fromBuffer(buffer, {
+        'image/jpeg': { tolerantDecoding: false }
+    });
+
+    if (
+        image.mime !== fallbackMimeTypes[expectedFormat] ||
+        !(image.bitmap.width > 0) ||
+        !(image.bitmap.height > 0)
+    ) {
+        throw new Error('Invalid image contents');
+    }
+}
+
+/**
+ * Rejects uploads whose contents do not match a supported image format.
+ *
+ * @param {string} filePath
+ * @param {string} engine - resize engine selected in the app settings ('sharp' or 'napi');
+ *                          the Jimp engine does not validate uploads
+ */
+async function validateImageUpload(filePath, engine = 'sharp') {
     const extension = path.extname(filePath).slice(1).toLowerCase();
 
     if (!extensions.includes(extension)) {
@@ -24,6 +53,10 @@ async function validateImageUpload(filePath) {
         throw new Error('Expected an image file');
     }
 
+    if (stat.size === 0) {
+        throw new Error('Empty image file');
+    }
+
     let expectedFormat = extension;
 
     if (extension === 'jpg') {
@@ -32,33 +65,31 @@ async function validateImageUpload(filePath) {
         expectedFormat = 'tiff';
     }
 
+    const usesNapi = engine === 'napi';
+
+    if (usesNapi && !napiFormats.includes(expectedFormat)) {
+        return;
+    }
+
+    const queue = usesNapi ? napiImageQueue : sharpQueue;
+
     try {
-        await sharpQueue.process({
+        await queue.process({
             operation: 'validate-image',
             originalPath: filePath,
             expectedFormat
         });
     } catch (error) {
         // A decoder rejecting the contents is different from a missing/crashed native worker.
-        // Keep Sharp's validation policy and only use formats our Jimp build can fully decode.
-        if (error.code !== 'SHARP_UNAVAILABLE' || !fallbackMimeTypes[expectedFormat]) {
+        // Keep the native validation policy and only use formats our Jimp build can fully decode.
+        if (!NativeImageQueue.isEngineUnavailable(error) || !fallbackMimeTypes[expectedFormat]) {
             throw error;
         }
 
-        const buffer = await fs.promises.readFile(filePath);
-        const Jimp = await getJimp();
-        const image = await Jimp.fromBuffer(buffer, {
-            'image/jpeg': { tolerantDecoding: false }
-        });
-
-        if (
-            image.mime !== fallbackMimeTypes[expectedFormat] ||
-            !(image.bitmap.width > 0) ||
-            !(image.bitmap.height > 0)
-        ) {
-            throw new Error('Invalid image contents');
-        }
+        await validateWithJimp(filePath, expectedFormat);
     }
 }
+
+validateImageUpload.isEngineUnavailable = NativeImageQueue.isEngineUnavailable;
 
 module.exports = validateImageUpload;

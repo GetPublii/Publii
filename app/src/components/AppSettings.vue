@@ -527,6 +527,7 @@ export default {
         imageResizeEngines () {
             return {
                 'sharp': 'Sharp',
+                'napi': '@napi-rs/image',
                 'jimp': 'Jimp'
             };
         },

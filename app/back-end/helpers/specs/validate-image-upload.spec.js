@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
 const sharp = require('sharp');
 const validate = require('../validate-image-upload');
 const sharpQueue = require('../sharp-queue');
+const napiImageQueue = require('../napi-image-queue');
 
 const repo = path.resolve(__dirname, '../../../..');
 
@@ -20,6 +21,7 @@ describe('Image-only upload validation', function () {
 
     afterEach(function () {
         sharpQueue.shutdown();
+        napiImageQueue.shutdown();
         fs.rmSync(directory, { recursive: true, force: true });
     });
 
@@ -113,6 +115,14 @@ describe('Image-only upload validation', function () {
             ['sharp', false, 'galleryImages', true],
             ['sharp', false, 'optionImages', false],
             ['sharp', false, 'pluginImages', false],
+            ['napi', true, 'optionImages', true],
+            ['napi', true, 'featuredImages', true],
+            ['napi', true, 'contentImages', true],
+            ['napi', true, 'tagImages', true],
+            ['napi', true, 'authorImages', true],
+            ['napi', false, 'galleryImages', true],
+            ['napi', false, 'optionImages', false],
+            ['napi', false, 'pluginImages', false],
             ['jimp', true, 'optionImages', false],
             ['jimp', true, 'featuredImages', false],
             ['jimp', true, 'contentImages', false],
