@@ -228,15 +228,42 @@ describe('@napi-rs/image resize engine', function () {
     }
 
     it('bakes the EXIF orientation into thumbnails', async function () {
-        const rotated = await sharp(sources.jpg).withMetadata({ orientation: 6 }).toBuffer();
+        // Left half red, right half blue; orientation 6 displays it rotated 90° clockwise: red on top.
+        const halves = Buffer.alloc(120 * 80 * 3);
+
+        for (let y = 0; y < 80; y++) {
+            for (let x = 0; x < 120; x++) {
+                const offset = (y * 120 + x) * 3;
+                halves[offset] = x < 60 ? 255 : 0;
+                halves[offset + 2] = x < 60 ? 0 : 255;
+            }
+        }
+
+        const rotated = await sharp(halves, { raw: { width: 120, height: 80, channels: 3 } })
+            .jpeg()
+            .withMetadata({ orientation: 6 })
+            .toBuffer();
         assert.equal((await sharp(rotated).metadata()).orientation, 6);
         const image = createImage('rotated.jpg', rotated);
         const results = await Promise.all(image.createResponsiveImages(image.path));
 
-        // 120x80 pixels displayed as 80x120: "small" fits the width, "large" never enlarges.
+        async function colourAt(file, x, y) {
+            const { data, info } = await sharp(file).raw().toBuffer({ resolveWithObject: true });
+            const offset = (y * info.width + x) * info.channels;
+
+            if (data[offset] > 200 && data[offset + 2] < 60) {
+                return 'red';
+            }
+
+            return data[offset + 2] > 200 && data[offset] < 60 ? 'blue' : 'mixed';
+        }
+
+        // 120x80 pixels displayed as 80x120: "small" fits the width, "square" crops the centre, "large" never enlarges.
         for (const [index, [width, height]] of [[60, 90], [32, 32], [80, 120]].entries()) {
             const metadata = await assertThumbnail(results[index], 'jpeg', width, height, false);
             assert.equal(metadata.orientation, undefined);
+            assert.equal(await colourAt(results[index], Math.floor(width / 2), Math.floor(height / 4)), 'red', results[index]);
+            assert.equal(await colourAt(results[index], Math.floor(width / 2), Math.floor(height * 3 / 4)), 'blue', results[index]);
         }
     });
 
@@ -323,7 +350,9 @@ describe('@napi-rs/image resize engine', function () {
                 assert.deepEqual(fs.readFileSync(file), buffer, name);
             }
 
-            assert.equal(fs.readdirSync(directory).length, Object.keys(valid).length);
+            // Only the uploads and the website created in beforeEach may exist: validation writes nothing.
+            const entries = fs.readdirSync(directory).filter(name => name !== 'test-site').sort();
+            assert.deepEqual(entries, Object.keys(valid).sort());
         });
 
         it('rejects documents, renamed files and damaged image contents', async function () {
@@ -379,11 +408,17 @@ describe('@napi-rs/image resize engine', function () {
                 fs.writeFileSync(renamed, sources.png);
                 await assert.rejects(validate(renamed, 'napi'), /Invalid image contents/);
 
-                for (const name of ['image.tiff', 'image.svg']) {
-                    const file = path.join(directory, name);
-                    fs.writeFileSync(file, 'not an image');
-                    await assert.rejects(validate(file, 'napi'), { code: 'NAPI_UNAVAILABLE' });
-                }
+                const svg = path.join(directory, 'image.svg');
+                fs.writeFileSync(svg, 'not an image');
+                await assert.rejects(validate(svg, 'napi'), { code: 'NAPI_UNAVAILABLE' });
+
+                // GIF and TIFF headers are checked without the native worker.
+                const gif = path.join(directory, 'image.gif');
+                fs.writeFileSync(gif, Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64'));
+                await validate(gif, 'napi');
+                const tiff = path.join(directory, 'image.tiff');
+                fs.writeFileSync(tiff, 'not an image');
+                await assert.rejects(validate(tiff, 'napi'), error => error.code !== 'NAPI_UNAVAILABLE');
             } finally {
                 napiImageQueue.process = originalProcess;
             }

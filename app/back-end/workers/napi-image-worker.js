@@ -47,6 +47,18 @@ async function createTransformer(originalPath, svg = false) {
     return svg ? engine.Transformer.fromSvg(buffer) : new engine.Transformer(buffer);
 }
 
+/*
+ * EXIF is parsed only on request: the orientation rotate() will apply has to
+ * come from the same parser, so the geometry is computed on the rotated size.
+ */
+async function readMetadata(transformer) {
+    try {
+        return await transformer.metadata(true);
+    } catch (err) {
+        return transformer.metadata(false);
+    }
+}
+
 async function validateImage(job) {
     const svg = job.expectedFormat === 'svg';
     const transformer = await createTransformer(job.originalPath, svg);
@@ -107,7 +119,7 @@ function encode(transformer, job) {
 
 async function resizeImage(job) {
     const transformer = await createTransformer(job.originalPath);
-    const metadata = await transformer.metadata(false);
+    const metadata = await readMetadata(transformer);
     const transposed = TRANSPOSED_ORIENTATIONS.includes(metadata.orientation);
     const geometry = computeResizeGeometry({
         sourceWidth: transposed ? metadata.height : metadata.width,

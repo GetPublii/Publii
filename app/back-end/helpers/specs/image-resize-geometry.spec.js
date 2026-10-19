@@ -49,6 +49,7 @@ describe('Thumbnail resize geometry', function () {
 
     it('rejects unknown source dimensions', function () {
         assert.throws(() => geometry(60, null, false, 0, 80));
-        assert.throws(() => geometry(60, null, false, undefined, undefined));
+        assert.throws(() => geometry(60, null, false, 120, NaN));
+        assert.throws(() => computeResizeGeometry({ width: 60, height: null, crop: false }));
     });
 });

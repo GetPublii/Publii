@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const sizeOf = require('image-size');
 const sharpQueue = require('./sharp-queue.js');
 const napiImageQueue = require('./napi-image-queue.js');
 const NativeImageQueue = require('./native-image-queue.js');
@@ -13,9 +14,23 @@ const fallbackMimeTypes = {
     avif: 'image/avif'
 };
 
-// Formats the @napi-rs/image worker can decode (SVG is rendered). GIF is
-// accepted by its extension with this engine, as every format is with Jimp.
-const napiFormats = ['jpeg', 'png', 'webp', 'avif', 'tiff', 'svg'];
+// The @napi-rs/image worker decodes these formats (SVG is rendered). It does
+// not read GIF and only some TIFF variants (JPEG- or deflate-compressed ones
+// fail), so with this engine those two are checked by their headers only.
+const napiDecodedFormats = ['jpeg', 'png', 'webp', 'avif', 'svg'];
+const napiHeaderFormats = ['gif', 'tiff'];
+
+function validateHeader(filePath, expectedFormat) {
+    const dimensions = sizeOf(filePath);
+
+    if (
+        dimensions.type !== expectedFormat ||
+        !(dimensions.width > 0) ||
+        !(dimensions.height > 0)
+    ) {
+        throw new Error('Invalid image contents');
+    }
+}
 
 async function validateWithJimp(filePath, expectedFormat) {
     const buffer = await fs.promises.readFile(filePath);
@@ -67,8 +82,13 @@ async function validateImageUpload(filePath, engine = 'sharp') {
 
     const usesNapi = engine === 'napi';
 
-    if (usesNapi && !napiFormats.includes(expectedFormat)) {
+    if (usesNapi && napiHeaderFormats.includes(expectedFormat)) {
+        validateHeader(filePath, expectedFormat);
         return;
+    }
+
+    if (usesNapi && !napiDecodedFormats.includes(expectedFormat)) {
+        throw new Error('Unsupported image format for this engine');
     }
 
     const queue = usesNapi ? napiImageQueue : sharpQueue;
