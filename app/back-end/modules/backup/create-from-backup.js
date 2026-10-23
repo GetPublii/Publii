@@ -3,6 +3,7 @@ const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const tar = require('tar-fs');
 const Utils = require('./../../helpers/utils.js');
+const { normalizeTarEntryMode } = require('./../../helpers/tar-entry-mode.js');
 
 class CreateFromBackup {
     constructor (appInstance, backupPath, webContentsId = null) {
@@ -70,6 +71,7 @@ class CreateFromBackup {
                     type: 'unpack-error'
                 });
             }).pipe(tar.extract(this.tempDir, {
+                map: normalizeTarEntryMode,
                 finish: () => {
                 let backupTestResult = this.verifyBackup(this.tempDir);
     
@@ -105,7 +107,21 @@ class CreateFromBackup {
                         catalogName: siteNameData.catalogName
                     }
                 });
-            }}));
+            }})).on('error', (err) => {
+                // Without this listener an invalid archive crashes the main process
+                console.log('[CREATE FROM BACKUP] Unable to unpack the backup:', err);
+
+                try {
+                    this.removeBackupFilesIfNecessary();
+                } catch (cleanupErr) {
+                    console.log('[CREATE FROM BACKUP] Unable to clean the temp directory:', cleanupErr);
+                }
+
+                resolve({
+                    status: 'error',
+                    type: 'unpack-error'
+                });
+            });
         });
 
         let results = await extractOperation;

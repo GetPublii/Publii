@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const tar = require('tar-fs');
 const CreateFromBackup = require('./create-from-backup.js');
 
 describe('Creating a website from a backup - temp directories', () => {
@@ -57,6 +58,46 @@ describe('Creating a website from a backup - temp directories', () => {
         creator.removeBackupFilesIfNecessary();
 
         assert.deepEqual(fs.readdirSync(creator.tempDir), []);
+    });
+
+    it('unpacks a backup created on Windows', async () => {
+        let siteDir = path.join(appDir, 'windows-site');
+        let archivePath = path.join(appDir, 'windows.tar');
+
+        for (let dir of ['config', 'media', 'themes']) {
+            fs.mkdirSync(path.join(siteDir, 'input', dir), { recursive: true });
+        }
+
+        fs.writeFileSync(path.join(siteDir, 'input', 'db.sqlite'), 'db');
+        fs.writeFileSync(path.join(siteDir, 'input', 'config', 'site.config.json'), JSON.stringify({ name: 'demo', displayName: 'Demo' }));
+
+        // Windows reports every entry, directories included, as 0666
+        await new Promise((resolve, reject) => {
+            tar.pack(siteDir, { map: header => { header.mode = 0o666; return header; } })
+                .on('error', reject)
+                .pipe(fs.createWriteStream(archivePath))
+                .on('error', reject)
+                .on('close', resolve);
+        });
+
+        let creator = new CreateFromBackup(app, archivePath, 3);
+        let result = await creator.prepareBackupToRestore();
+
+        assert.equal(result.status, 'success');
+        assert.deepEqual(result.data, { displayName: 'Demo', catalogName: 'demo' });
+
+        if (process.platform !== 'win32') {
+            assert.equal(fs.statSync(path.join(creator.tempDir, 'input', 'config')).mode & 0o700, 0o700);
+        }
+    });
+
+    it('reports an invalid archive instead of crashing', async () => {
+        let archivePath = path.join(appDir, 'broken.tar');
+        fs.writeFileSync(archivePath, Buffer.alloc(1024, 0x41));
+
+        let result = await new CreateFromBackup(app, archivePath, 3).prepareBackupToRestore();
+
+        assert.deepEqual(result, { status: 'error', type: 'unpack-error' });
     });
 
     it('removes the unpacked backup of the given window only', () => {
