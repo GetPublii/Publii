@@ -27,6 +27,7 @@ const DBUtils = require('./helpers/db.utils.js');
 const Site = require('./site.js');
 const Utils = require('./helpers/utils.js');
 const FileHelper = require('./helpers/file.js');
+const WindowBounds = require('./helpers/window-bounds.js');
 // List of the Event classes
 const EventClasses = require('./events/_modules.js');
 // Migration classes
@@ -505,24 +506,7 @@ class App {
         }
 
         if (!this.windowBounds) {
-            let screens = screen.getAllDisplays();
-            let width = screens[0].workAreaSize.width;
-            let height = screens[0].workAreaSize.height;
-
-            for (let i = 0; i < screens.length; i++) {
-                if (screens[i].width < width) {
-                    width = screens[i].width;
-                }
-
-                if (screens[i].height < height) {
-                    height = screens[i].height;
-                }
-            }
-
-            this.windowBounds = {
-                width: width,
-                height: height
-            };
+            this.windowBounds = WindowBounds.smallestWorkArea(screen.getAllDisplays());
         } else {
             let screens = screen.getAllDisplays();
             let isInsideScreenBounds = false;
@@ -668,15 +652,25 @@ class App {
         return false;
     }
 
+    // Once the window manager has added its frame, keep the whole window inside the work area
+    _keepWindowInWorkArea (win) {
+        if (win.isDestroyed() || win.isMaximized() || win.isFullScreen()) {
+            return;
+        }
+
+        let bounds = win.getBounds();
+        let fitted = WindowBounds.shrinkIntoWorkArea(bounds, screen.getDisplayMatching(bounds).workArea);
+        win.setMinimumSize(fitted.minWidth, fitted.minHeight);
+        win.setSize(fitted.width, fitted.height);
+    }
+
     // Build common window params (platform chrome, background color, preload)
     _buildWindowParams (baseParams = {}) {
-        let windowParams = Object.assign({
-            width: 1400,
-            height: 900
-        }, baseParams);
+        let display = Number.isFinite(baseParams.x) && Number.isFinite(baseParams.y)
+            ? screen.getDisplayNearestPoint({ x: baseParams.x, y: baseParams.y })
+            : screen.getPrimaryDisplay();
+        let windowParams = Object.assign({}, baseParams, WindowBounds.fitWindowToWorkArea(baseParams, display.workArea));
 
-        windowParams.minWidth = 1200;
-        windowParams.minHeight = 700;
         windowParams.webPreferences = {
             nodeIntegration: false,
             contextIsolation: true,
@@ -711,6 +705,7 @@ class App {
     _createWindow (windowParams, { isNewWindow = false, initialSite = '', skipSplashScreen = isNewWindow } = {}) {
         let win = new BrowserWindow(windowParams);
         this._dropMessagesToClosedWindow(win.webContents);
+        win.once('ready-to-show', () => this._keepWindowInWorkArea(win));
 
         // Keep the editor's CSP in place when imported content tries to replace its document.
         // Child media frames and plugin settings frames retain their normal navigation.
@@ -1075,13 +1070,15 @@ class App {
         }
     }
 
-    // Restore zoom level for a specific window
+    // Restore zoom level for a specific window, zoomed out further when the window is smaller than the designed layout
     _setZoomLevel (win) {
         let zoom = parseFloat(this.appConfig.uiZoomLevel);
 
-        if (zoom && zoom > 0 && zoom <= 2.5) {
-            win.webContents.setZoomFactor(zoom);
+        if (!zoom || zoom < 0 || zoom > 2.5) {
+            zoom = 1;
         }
+
+        win.webContents.setZoomFactor(zoom * WindowBounds.fitZoom(win.getContentBounds()));
     }
 
     // Legacy alias kept for any remaining external callers

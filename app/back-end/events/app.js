@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const FileHelper = require('../helpers/file.js');
-const ipcMain = require('electron').ipcMain;
+const { ipcMain, BrowserWindow } = require('electron');
 const Themes = require('../themes.js');
 const Languages = require('../languages.js');
 const Plugins = require('../plugins.js');
@@ -714,7 +714,7 @@ class AppEvents {
                 console.log('(!) App was unable to save the UI zoom level');
             }
 
-            event.sender.setZoomFactor(zoomLevel);
+            appInstance._setZoomLevel(BrowserWindow.fromWebContents(event.sender));
             appInstance.notifyAppConfigChanged(event.sender.id);
         });
 
