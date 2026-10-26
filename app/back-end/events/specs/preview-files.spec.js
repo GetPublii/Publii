@@ -397,10 +397,36 @@ describe('Local preview files IPC', function () {
             assert.deepEqual(openedUrls, [pathToFileURL(path.join(sitesDir, 'demo', 'preview', 'preview.html')).href]);
         });
 
-        it('generates preview files for the disk without opening the browser', async function () {
+        it('generates preview files for the local server without opening the browser', async function () {
+            await events.renderSite('demo', false, false, false, sender, false);
+
+            assert.equal(enabledPreviews.length, 1);
+            assert.deepEqual(disabledPreviews, []);
+            assert.equal(workers[0].messages[0].previewUrl, 'http://127.0.0.1:3000/demo');
+
+            finishRendering();
+
+            assert.deepEqual(openedUrls, []);
+            assert.deepEqual(plain(replies), [{ channel: 'app-preview-rendered', payload: { status: true } }]);
+            assert.deepEqual(disabledPreviews, []);
+        });
+
+        it('disables the preview enabled only for the generated files which have failed', async function () {
+            await events.renderSite('demo', false, false, false, sender, false);
+
+            workers[0].emit('message', { type: 'app-rendering-results', result: false });
+            workers[0].emit('exit');
+
+            assert.deepEqual(disabledPreviews, ['demo']);
+        });
+
+        it('generates preview files for the disk when the local server is disabled', async function () {
+            application.appConfig.previewServerEnabled = false;
+
             await events.renderSite('demo', false, false, false, sender, false);
 
             assert.deepEqual(enabledPreviews, []);
+            assert.deepEqual(disabledPreviews, ['demo']);
             assert.equal(workers[0].messages[0].previewUrl, false);
 
             finishRendering();
