@@ -278,3 +278,58 @@ describe('Website relocation data safety', function () {
         assert.deepEqual(fs.readdirSync(destination), ['keep.txt']);
     });
 });
+
+describe('Previews location check', function () {
+    let base;
+    let sites;
+    let location;
+    let helper;
+
+    beforeEach(function () {
+        base = fs.mkdtempSync(path.join(os.tmpdir(), 'publii-previews-location-test-'));
+        sites = path.join(base, 'sites');
+        location = path.join(base, 'previews');
+        fs.ensureDirSync(path.join(sites, 'demo'));
+        fs.ensureDirSync(location);
+        helper = new AppFiles({});
+    });
+
+    afterEach(function () {
+        fs.removeSync(base);
+    });
+
+    it('accepts an empty folder and ignores files created by the operating system', function () {
+        assert.deepEqual(helper.checkPreviewsLocation(location, [sites]), { status: true });
+
+        fs.outputFileSync(path.join(location, '.DS_Store'), '');
+        fs.outputFileSync(path.join(location, 'Desktop.ini'), '');
+        assert.deepEqual(helper.checkPreviewsLocation(location, [sites, '', null]), { status: true });
+    });
+
+    it('rejects a missing folder, a file and an empty path', function () {
+        fs.outputFileSync(path.join(base, 'file.txt'), 'data');
+
+        assert.equal(helper.checkPreviewsLocation(path.join(base, 'missing'), []).reason, 'previews-location-missing');
+        assert.equal(helper.checkPreviewsLocation(path.join(base, 'file.txt'), []).reason, 'previews-location-missing');
+        assert.equal(helper.checkPreviewsLocation('', []).reason, 'previews-location-missing');
+        assert.equal(helper.checkPreviewsLocation(undefined, []).reason, 'previews-location-missing');
+    });
+
+    it('rejects a folder with files before it is used', function () {
+        fs.outputFileSync(path.join(location, 'demo', 'index.html'), 'data');
+
+        assert.equal(helper.checkPreviewsLocation(location, [sites]).reason, 'previews-location-not-empty');
+    });
+
+    it('rejects folders overlapping the reserved locations, also through links and before they exist', function () {
+        assert.equal(helper.checkPreviewsLocation(sites, [sites]).reason, 'previews-location-overlap');
+        assert.equal(helper.checkPreviewsLocation(path.join(sites, 'demo'), [sites]).reason, 'previews-location-overlap');
+        // The parent folder is reported as overlapping, even though it is not empty as well
+        assert.equal(helper.checkPreviewsLocation(base, [sites]).reason, 'previews-location-overlap');
+        assert.equal(helper.checkPreviewsLocation(location, [path.join(location, 'backups')]).reason, 'previews-location-overlap');
+
+        const link = path.join(base, 'link');
+        fs.symlinkSync(sites, link, 'junction');
+        assert.equal(helper.checkPreviewsLocation(link, [sites]).reason, 'previews-location-overlap');
+    });
+});

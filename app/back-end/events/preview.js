@@ -227,6 +227,7 @@ class PreviewEvents {
             postData: postData,
             previewMode: previewMode,
             previewUrl: previewUrl,
+            previewDir: this.getPreviewDir(site),
             mode: mode
         });
 
@@ -551,7 +552,19 @@ class PreviewEvents {
         return isValidDirSegment(siteName) && Object.prototype.hasOwnProperty.call(this.app.sites, siteName);
     }
 
+    // Location selected in the app settings - previews of all websites are stored in its subdirectories
+    getPreviewsLocation () {
+        let location = this.app.appConfig ? this.app.appConfig.previewsLocation : '';
+        return typeof location === 'string' ? location.trim() : '';
+    }
+
     getPreviewDir (siteName) {
+        let previewsLocation = this.getPreviewsLocation();
+
+        if (previewsLocation !== '') {
+            return path.join(previewsLocation, siteName);
+        }
+
         return path.join(this.app.sitesDir, siteName, 'preview');
     }
 }

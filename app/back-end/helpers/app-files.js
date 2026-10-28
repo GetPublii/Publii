@@ -136,6 +136,70 @@ class AppFilesHelper {
     }
 
     /**
+     * Check a folder selected as the previews location. A subfolder is created there for every website,
+     * so the folder has to be empty and separated from the sites and backups locations.
+     *
+     * @param location - folder selected by the user
+     * @param reservedLocations - folders which cannot contain the previews location nor be placed inside of it
+     * @returns {object} status; reason: previews-location-missing | previews-location-overlap | previews-location-not-empty
+     */
+    checkPreviewsLocation(location, reservedLocations = []) {
+        if (typeof location !== 'string' || location.trim() === '' || !Utils.dirExists(location)) {
+            return { status: false, reason: 'previews-location-missing' };
+        }
+
+        let realLocation;
+
+        try {
+            realLocation = fs.realpathSync(location);
+        } catch (error) {
+            return { status: false, reason: 'previews-location-missing' };
+        }
+
+        for (const reserved of reservedLocations) {
+            if (typeof reserved !== 'string' || reserved.trim() === '') {
+                continue;
+            }
+
+            if (this.pathsOverlap(realLocation, this.resolveRealPath(reserved))) {
+                return { status: false, reason: 'previews-location-overlap' };
+            }
+        }
+
+        // Files created by the operating system do not mean that the folder is in use
+        const ignoredEntries = ['.ds_store', 'thumbs.db', 'desktop.ini'];
+        const entries = fs.readdirSync(realLocation).filter(entry => !ignoredEntries.includes(entry.toLowerCase()));
+
+        if (entries.length > 0) {
+            return { status: false, reason: 'previews-location-not-empty' };
+        }
+
+        return { status: true };
+    }
+
+    /**
+     * Real path of a folder which may not exist yet - links in its existing ancestors are resolved,
+     * so it can be compared with real paths (i.e. the temporary directory on macOS is a link).
+     */
+    resolveRealPath(target) {
+        let existing = path.resolve(target);
+        const missingSegments = [];
+
+        while (!Utils.dirExists(existing)) {
+            const parent = path.dirname(existing);
+
+            if (parent === existing) {
+                return path.resolve(target);
+            }
+
+            missingSegments.unshift(path.basename(existing));
+            existing = parent;
+        }
+
+        return path.join(fs.realpathSync(existing), ...missingSegments);
+    }
+
+    /**
      * Replace the settings file only after the complete new file was written.
      */
     saveConfig(config) {

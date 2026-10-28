@@ -220,7 +220,7 @@
                         {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
-                        v-if="locations.sites !== '' && !checkSitesCatalog"
+                        v-if="locations.sites !== '' && !sitesLocationExists"
                         slot="note"
                         class="note is-invalid">
                         {{ $t('settings.selectedDirInvalid') }}
@@ -243,7 +243,28 @@
                         {{ $t('sync.duringSyncYouCantChangeFilesLocation') }}
                     </small>
                     <small
-                        v-if="locations.backups !== '' && !checkBackupsCatalog"
+                        v-if="locations.backups !== '' && !backupsLocationExists"
+                        slot="note"
+                        class="note is-invalid">
+                        {{ $t('settings.selectedDirInvalid') }}
+                    </small>
+                </field>
+
+                <field
+                    id="previews-location"
+                    :label="$t('settings.previewsLocation')">
+                    <dir-select
+                        id="previews-location"
+                        :placeholder="$t('settings.leaveBlankForDefaultPreviewsDir')"
+                        v-model="locations.previews"
+                        slot="field" />
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('settings.previewsLocationDesc') }}
+                    </small>
+                    <small
+                        v-if="locations.previews !== '' && !previewsLocationExists"
                         slot="note"
                         class="note is-invalid">
                         {{ $t('settings.selectedDirInvalid') }}
@@ -489,17 +510,21 @@ export default {
             previewServerEnabled: true,
             locations: {
                 sites: '',
-                backups: ''
+                backups: '',
+                previews: ''
             },
             unwatchBackupsLocation: null,
+            unwatchPreviewsLocation: null,
             editorFontSize: 18,
             editorFontFamily: 'serif',
             experimentalFeatureAppAutoBeautifySourceCode: false,
             experimentalFeatureAppFtpAlt: false,
             experimentalFileManagerInSidebar: false,
             changeSitesLocationWithoutCopying: false,
-            sitesLocationExists: false,
-            backupsLocationExists: false
+            // Assumed valid until the check of the selected folder is done - otherwise the note would blink after opening
+            sitesLocationExists: true,
+            backupsLocationExists: true,
+            previewsLocationExists: true
         };
     },
     computed: {
@@ -597,20 +622,17 @@ export default {
                 'sans-serif': this.$t('settings.editorFontFamilySansSerif'),
                 'serif': this.$t('settings.editorFontFamilySerif')
             };
-        },
-        isSitesLocationExists () {
-            return this.sitesLocationExists;
-        },
-        isBackupsLocationExists () {
-            return this.backupsLocationExists;
         }
     },
     watch: {
-        'locations.sites': async function (newValue) {
-            this.checkSitesCatalog();
+        'locations.sites': async function () {
+            this.sitesLocationExists = await this.checkSitesCatalog();
         },
-        'locations.backups': async function (newValue) {
-            this.checkBackupsCatalog();
+        'locations.backups': async function () {
+            this.backupsLocationExists = await this.checkBackupsCatalog();
+        },
+        'locations.previews': async function () {
+            this.previewsLocationExists = await this.checkPreviewsCatalog();
         },
         'uiZoomLevel': async function (newValue) {
             await this.setUIZoomLevel();
@@ -620,6 +642,7 @@ export default {
         this.locations.sites = this.$store.state.app.config.sitesLocation;
         this.originalSitesLocation = this.locations.sites;
         this.locations.backups = this.$store.state.app.config.backupsLocation;
+        this.locations.previews = this.$store.state.app.config.previewsLocation || '';
         this.alwaysSaveSearchState = this.$store.state.app.config.alwaysSaveSearchState;
         this.wideScrollbars = this.$store.state.app.config.wideScrollbars;
         this.showTooltips = this.$store.state.app.config.showTooltips !== false;
@@ -652,6 +675,7 @@ export default {
 
         Vue.nextTick(() => {
             this.unwatchBackupsLocation = this.$watch('locations.backups', this.detectBackupLocationChange);
+            this.unwatchPreviewsLocation = this.$watch('locations.previews', this.detectPreviewsLocationChange);
         });
     },
     methods: {
@@ -687,6 +711,7 @@ export default {
                 autoAdjustSidebarWidth: this.autoAdjustSidebarWidth,
                 sitesLocation: this.locations.sites.trim(),
                 backupsLocation: this.locations.backups.trim(),
+                previewsLocation: this.locations.previews.trim(),
                 wideScrollbars: this.wideScrollbars,
                 showTooltips: this.showTooltips,
                 notificationsStatus: this.notificationsStatus ? 'accepted' : 'rejected',
@@ -743,7 +768,11 @@ export default {
                     'website-symlink': 'settings.sitesLocationErrorSymlink',
                     'destination-exists': 'settings.sitesLocationErrorExists',
                     'other-windows-open': 'settings.sitesLocationErrorOtherWindows',
-                    'backups-location-other-windows': 'settings.backupsLocationErrorOtherWindows'
+                    'backups-location-other-windows': 'settings.backupsLocationErrorOtherWindows',
+                    'previews-location-other-windows': 'settings.previewsLocationErrorOtherWindows',
+                    'previews-location-missing': 'settings.previewsLocationErrorMissing',
+                    'previews-location-overlap': 'settings.previewsLocationErrorOverlap',
+                    'previews-location-not-empty': 'settings.previewsLocationErrorNotEmpty'
                 };
 
                 if (data.reason && relocationAlerts[data.reason]) {
@@ -786,11 +815,24 @@ export default {
                 this.unwatchBackupsLocation();
             }
         },
+        detectPreviewsLocationChange (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.$bus.$emit('alert-display', {
+                    message: this.$t('settings.previewsLocationChangedConfirmMsg'),
+                    okLabel: this.$t('ui.iUnderstand'),
+                });
+
+                this.unwatchPreviewsLocation();
+            }
+        },
         async checkSitesCatalog () {
             return await mainProcessAPI.existsSync(this.locations.sites);
         },
         async checkBackupsCatalog () {
             return await mainProcessAPI.existsSync(this.locations.backups);
+        },
+        async checkPreviewsCatalog () {
+            return await mainProcessAPI.existsSync(this.locations.previews);
         },
         async setUIZoomLevel () {
             this.$store.commit('setAppUIZoomLevel', this.uiZoomLevel);

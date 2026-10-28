@@ -75,6 +75,39 @@ class AppEvents {
                 return;
             }
 
+            config.previewsLocation = typeof config.previewsLocation === 'string' ? config.previewsLocation.trim() : '';
+            let currentPreviewsLocation = typeof appInstance.appConfig.previewsLocation === 'string' ? appInstance.appConfig.previewsLocation.trim() : '';
+            let previewsLocationChanged = config.previewsLocation !== currentPreviewsLocation;
+
+            if (previewsLocationChanged) {
+                // Previews enabled by other windows are still served from the current location
+                if (otherWindowsOpen) {
+                    event.sender.send('app-config-saved', {
+                        status: false,
+                        message: 'error-save',
+                        reason: 'previews-location-other-windows'
+                    });
+
+                    return;
+                }
+
+                // Subfolders of the websites are created in the selected folder, so it is checked before it is used
+                if (config.previewsLocation !== '') {
+                    let backupsLocation = config.backupsLocation || (appInstance.appDir ? path.join(appInstance.appDir, 'backups') : '');
+                    let check = new AppFiles(appInstance).checkPreviewsLocation(config.previewsLocation, [config.sitesLocation, backupsLocation]);
+
+                    if (!check.status) {
+                        event.sender.send('app-config-saved', {
+                            status: false,
+                            message: 'error-save',
+                            reason: check.reason
+                        });
+
+                        return;
+                    }
+                }
+            }
+
             if (config.sitesLocation !== appInstance.appConfig.sitesLocation) {
                 if (appInstance.appConfig.sitesLocation) {
                     // Other windows keep working on the databases and paths from the current location
@@ -158,7 +191,8 @@ class AppEvents {
             appInstance.appConfig = config;
             appInstance.notifyAppConfigChanged(event.sender.id);
 
-            if (config.previewServerEnabled === false && appInstance.previewServer) {
+            // Enabled previews are served from the previous previews location
+            if ((config.previewServerEnabled === false || previewsLocationChanged) && appInstance.previewServer) {
                 appInstance.previewServer.stop().catch(error => console.log('Unable to stop the local preview:', error));
             }
         });
