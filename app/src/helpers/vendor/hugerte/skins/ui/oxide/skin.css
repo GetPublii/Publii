@@ -3390,14 +3390,14 @@ body.tox-dialog__disable-scroll {
 .tox .tox-split-button:hover {
   box-shadow: 0 0 0 1px #f0f0f0 inset;
 }
-.tox .tox-split-button:focus {
+.tox .tox-split-button:focus-within {
   background: #fff;
   box-shadow: none;
   color: #222f3e;
   position: relative;
   z-index: 1;
 }
-.tox .tox-split-button:focus::after {
+.tox .tox-split-button:focus-within::after {
   border-radius: 3px;
   bottom: 0;
   box-shadow: 0 0 0 2px #006ce7 ;
@@ -3418,6 +3418,18 @@ body.tox-dialog__disable-scroll {
   border-bottom-right-radius: 3px;
   border-top-right-radius: 3px;
 }
+.tox[dir=rtl] .tox-split-button > *:nth-child(1) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 3px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 3px;
+}
+.tox[dir=rtl] .tox-split-button > *:nth-child(2) {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 0;
+}
 .tox .tox-split-button__chevron {
   width: 16px;
 }
@@ -3427,10 +3439,10 @@ body.tox-dialog__disable-scroll {
 .tox .tox-split-button .tox-tbtn {
   margin: 0;
 }
-.tox .tox-split-button.tox-tbtn--disabled:hover,
-.tox .tox-split-button.tox-tbtn--disabled:focus,
-.tox .tox-split-button.tox-tbtn--disabled .tox-tbtn:hover,
-.tox .tox-split-button.tox-tbtn--disabled .tox-tbtn:focus {
+.tox .tox-split-button__main.tox-tbtn--disabled:hover,
+.tox .tox-split-button__main.tox-tbtn--disabled:focus,
+.tox .tox-split-button__chevron.tox-tbtn--disabled:hover,
+.tox .tox-split-button__chevron.tox-tbtn--disabled:focus {
   background: #fff;
   box-shadow: none;
   color: rgba(34, 47, 62, 0.5);
@@ -3444,8 +3456,8 @@ body.tox-dialog__disable-scroll {
 .tox.tox-platform-touch .tox-split-button__chevron {
   width: 20px;
 }
-.tox .tox-split-button.tox-tbtn--disabled svg #tox-icon-text-color__color,
-.tox .tox-split-button.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
+.tox .tox-split-button__main.tox-tbtn--disabled svg #tox-icon-text-color__color,
+.tox .tox-split-button__main.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
   opacity: 0.6;
 }
 .tox .tox-toolbar-overlord {
