@@ -46,7 +46,7 @@
   "keywords": [],
   "devDependencies": {
     "css-loader": "6.8.1",
-    "electron": "43.7.9",
+    "electron": "43.8.4",
     "electron-builder": "26.15.3",
     "file-loader": "6.2.0",
     "glob": "10.3.10",
