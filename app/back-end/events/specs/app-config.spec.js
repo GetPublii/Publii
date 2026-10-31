@@ -250,7 +250,8 @@ describe('Website location settings IPC', function () {
         });
 
         function lastReply () {
-            return replies[replies.length - 1].payload;
+            // The payload comes from the vm context - copy it, so deepEqual does not compare prototypes from different realms
+            return { ...replies[replies.length - 1].payload };
         }
 
         it('saves an empty folder as the previews location', function () {
