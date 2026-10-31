@@ -14,6 +14,8 @@ class GoogleCloud {
         this.deployment = deploymentInstance;
         this.connection = false;
         this.prefix = '';
+        // Buckets with uniform bucket-level access reject the object ACLs - the access is granted through IAM
+        this.uniformAccess = false;
         this.waitForTimeout = false;
         this.errorReported = false;
         this.softUploadErrors = {};
@@ -55,6 +57,7 @@ class GoogleCloud {
     async initConnection() {
         let googleConfig = this.deployment.siteConfig.deployment.google;
         this.prefix = googleConfig.prefix;
+        this.uniformAccess = !!googleConfig.uniformAccess;
         this.waitForTimeout = true;
 
         this.sendProgress(6, false);
@@ -192,11 +195,16 @@ class GoogleCloud {
                 return;
             }
 
+            let uploadOptions = {
+                contentType: mime.getType(fileName) || 'application/octet-stream'
+            };
+
+            if (!this.uniformAccess) {
+                uploadOptions.predefinedAcl = 'publicRead';
+            }
+
             try {
-                await this.connection.uploadObject(fileName, fileContent, {
-                    contentType: mime.getType(fileName) || 'application/octet-stream',
-                    predefinedAcl: 'publicRead'
-                });
+                await this.connection.uploadObject(fileName, fileContent, uploadOptions);
                 this.deployment.currentOperationNumber++;
                 console.log(`[${ new Date().toUTCString() }] UPL ${input} -> ${fileName}`);
                 this.deployment.progressOfUploading += this.deployment.progressPerFile;
@@ -204,6 +212,14 @@ class GoogleCloud {
                 this.deployment.uploadFile();
             } catch (uploadErr) {
                 console.log(`[${ new Date().toUTCString() }] ERROR UPLOAD FILE: ${fileName}`);
+
+                // The ACL will be rejected for every file - the sync ends with a hint to change the settings
+                if (!this.uniformAccess && this.isUniformAccessError(uploadErr)) {
+                    uploadErr.translation = 'sync.googleCloudUniformAccessError';
+                    this.onError(uploadErr);
+                    return;
+                }
+
                 this.onError(uploadErr, true);
 
                 setTimeout(() => {
@@ -286,11 +302,20 @@ class GoogleCloud {
 
         this.errorReported = true;
 
+        let additionalMessage = stripTags(String((err && err.message) || err || ''));
+
+        // The sync popup translates the known errors itself
+        if (err && typeof err.translation === 'string') {
+            additionalMessage = {
+                translation: err.translation
+            };
+        }
+
         process.send({
             type: 'web-contents',
             message: 'app-connection-error',
             value: {
-                additionalMessage: stripTags(String((err && err.message) || err || ''))
+                additionalMessage: additionalMessage
             }
         });
 
@@ -301,6 +326,11 @@ class GoogleCloud {
 
     isNotFoundError (err) {
         return !!err && (err.status === 404 || err.code === 'notFound');
+    }
+
+    // "Cannot insert legacy ACL for an object when uniform bucket-level access is enabled" (HTTP 400)
+    isUniformAccessError (err) {
+        return !!err && err.status === 400 && /uniform bucket-level access/i.test(String(err.message || ''));
     }
 
     // The optional prefix (a directory inside the bucket) is put in front of every object name

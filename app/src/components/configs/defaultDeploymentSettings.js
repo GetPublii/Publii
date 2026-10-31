@@ -37,7 +37,8 @@ export default {
     google: {
         bucket: '',
         key: '',
-        prefix: ''
+        prefix: '',
+        uniformAccess: 0
     },
     manual: {
         output: 'catalog',

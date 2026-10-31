@@ -72,7 +72,8 @@ describe('Google Cloud deployment', function () {
                 google: Object.assign({
                     key: KEY_FILE,
                     bucket: 'demo-bucket',
-                    prefix: 'site'
+                    prefix: 'site',
+                    uniformAccess: 0
                 }, googleOverrides)
             }
         };
@@ -159,6 +160,7 @@ describe('Google Cloud deployment', function () {
         let created = createDeployment(googleOverrides);
         created.googleCloud.connection = new FakeGcsApiClient({});
         created.googleCloud.prefix = created.deployment.siteConfig.deployment.google.prefix;
+        created.googleCloud.uniformAccess = !!created.deployment.siteConfig.deployment.google.uniformAccess;
         created.deployment.operationsCounter = 4;
         created.deployment.progressPerFile = 22.5;
         clients = [];
@@ -464,6 +466,21 @@ describe('Google Cloud deployment', function () {
             assert.deepEqual(apiCalls[2], ['getObject', 'files.publii.json']);
         });
 
+        it('reads the uniform bucket-level access setting', async function () {
+            let fineGrained = createDeployment();
+            let uniform = createDeployment({ uniformAccess: 1 });
+            let legacyConfig = createDeployment();
+            delete legacyConfig.deployment.siteConfig.deployment.google.uniformAccess;
+
+            await fineGrained.googleCloud.initConnection();
+            await uniform.googleCloud.initConnection();
+            await legacyConfig.googleCloud.initConnection();
+
+            assert.equal(fineGrained.googleCloud.uniformAccess, false);
+            assert.equal(uniform.googleCloud.uniformAccess, true);
+            assert.equal(legacyConfig.googleCloud.uniformAccess, false);
+        });
+
         it('continues without the remote files list when it does not exist', async function () {
             apiErrors.getObject = gcsError('notFound', 'No such object: demo-bucket/site/files.publii.json', 404);
             let { deploymentCalls, googleCloud } = createDeployment();
@@ -620,6 +637,56 @@ describe('Google Cloud deployment', function () {
             await settle();
 
             assert.deepEqual(apiCalls, [['uploadObject', 'site/fonts/font.woff2', 'wOF2', { contentType: 'application/octet-stream', predefinedAcl: 'publicRead' }]]);
+        });
+
+        it('uploads the file without the ACL when the bucket uses uniform bucket-level access', async function () {
+            let { deployment, deploymentCalls, googleCloud } = connectedDeployment({ uniformAccess: 1 });
+
+            googleCloud.uploadFile('/sites/demo/output/index.html', 'index.html');
+            await settle();
+
+            assert.deepEqual(apiCalls, [['uploadObject', 'site/index.html', '<html></html>', { contentType: 'text/html' }]]);
+            assert.equal(deployment.currentOperationNumber, 1);
+            assert.deepEqual(progressMessages(), [30]);
+            assert.deepEqual(deploymentCalls, [['uploadFile']]);
+        });
+
+        it('ends the sync with a hint when the bucket rejects the object ACL', async function () {
+            apiErrors['uploadObject:site/index.html'] = gcsError('invalid', 'Cannot insert legacy ACL for an object when uniform bucket-level access is enabled. Read more at https://cloud.google.com/storage/docs/uniform-bucket-level-access', 400);
+            let { deployment, deploymentCalls, googleCloud } = connectedDeployment();
+
+            googleCloud.uploadFile('/sites/demo/output/index.html', 'index.html');
+            await settle();
+
+            assert.equal(apiCalls.length, 1);
+            assert.deepEqual(otherMessages(), [connectionError({ translation: 'sync.googleCloudUniformAccessError' })]);
+            assert.deepEqual(progressMessages(), []);
+            assert.equal(deployment.currentOperationNumber, 0);
+            assert.deepEqual(plain(googleCloud.hardUploadErrors), []);
+            assert.deepEqual(plain(googleCloud.softUploadErrors), {});
+            assert.deepEqual(deploymentCalls, []);
+
+            // The only pending timer ends the process - there is no retry
+            runTimers();
+            await settle();
+
+            assert.equal(apiCalls.length, 1);
+            assert.deepEqual(kills, ['SIGTERM']);
+        });
+
+        it('retries an upload rejected for another reason', async function () {
+            apiErrors['uploadObject:site/index.html'] = gcsError('invalid', 'Invalid argument.', 400);
+            let { deploymentCalls, googleCloud } = connectedDeployment();
+
+            googleCloud.uploadFile('/sites/demo/output/index.html', 'index.html');
+            await settle();
+            runTimers();
+            await settle();
+
+            assert.equal(apiCalls.length, 2);
+            assert.deepEqual(otherMessages(), []);
+            assert.deepEqual(deploymentCalls, []);
+            assert.deepEqual(kills, []);
         });
 
         it('retries a failed upload five times before counting it as a hard error', async function () {
@@ -807,6 +874,14 @@ describe('Google Cloud deployment', function () {
             runTimers();
 
             assert.deepEqual(kills, ['SIGTERM']);
+        });
+
+        it('passes the translation key of a known error to the sync popup', async function () {
+            let { googleCloud } = connectedDeployment();
+
+            googleCloud.onError(Object.assign(new Error('Raw message'), { translation: 'sync.googleCloudUniformAccessError' }));
+
+            assert.deepEqual(otherMessages(), [connectionError({ translation: 'sync.googleCloudUniformAccessError' })]);
         });
     });
 });

@@ -1177,6 +1177,22 @@
 
                 <field
                     v-if="deploymentMethodSelected === 'google-cloud'"
+                    id="google-uniform-access"
+                    :label="$t('sync.googleCloudUniformAccess')">
+                    <switcher
+                        slot="field"
+                        id="google-uniform-access"
+                        key="google-uniform-access"
+                        v-model="deploymentSettings.google.uniformAccess" />
+                    <small
+                        slot="note"
+                        class="note">
+                        {{ $t('sync.googleCloudUniformAccessNote') }}
+                    </small>
+                </field>
+
+                <field
+                    v-if="deploymentMethodSelected === 'google-cloud'"
                     id="google-prefix"
                     :label="$t('sync.prefix')">
                     <text-input
