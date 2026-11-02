@@ -254,14 +254,6 @@
         "homepage": "https://github.com/isaacs/core-util-is",
         "licenseFile": "node_modules/core-util-is/LICENSE"
     },
-    "cpu-features": {
-        "versions": [
-            "0.0.10"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/mscdex/cpu-features",
-        "licenseFile": "node_modules/cpu-features/LICENSE"
-    },
     "crc-32": {
         "versions": [
             "1.2.2"
@@ -320,7 +312,7 @@
     },
     "dompurify": {
         "versions": [
-            "3.4.16"
+            "3.4.17"
         ],
         "license": "(MPL-2.0 OR Apache-2.0)",
         "homepage": "https://github.com/cure53/DOMPurify",
@@ -347,14 +339,6 @@
         "homepage": "https://electronjs.org/",
         "licenseFile": "licenses/electron/license.txt",
         "vendor": true
-    },
-    "@emnapi/runtime": {
-        "versions": [
-            "1.11.3"
-        ],
-        "license": "MIT",
-        "homepage": "https://github.com/toyobayashi/emnapi#readme",
-        "licenseFile": "node_modules/@emnapi/runtime/LICENSE"
     },
     "end-of-stream": {
         "versions": [
@@ -655,14 +639,6 @@
         "license": "MIT",
         "homepage": "https://github.com/lovell/colour",
         "licenseFile": "node_modules/@img/colour/LICENSE.md"
-    },
-    "@img/sharp-wasm32": {
-        "versions": [
-            "0.35.5"
-        ],
-        "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
-        "homepage": "https://sharp.pixelplumbing.com",
-        "licenseFile": "node_modules/@img/sharp-wasm32/LICENSE"
     },
     "inherits": {
         "versions": [
@@ -1349,14 +1325,6 @@
         "homepage": "https://github.com/dzcpy/transliteration",
         "licenseFile": "licenses/transliteration/license.txt",
         "vendor": true
-    },
-    "tslib": {
-        "versions": [
-            "2.6.2"
-        ],
-        "license": "0BSD",
-        "homepage": "https://www.typescriptlang.org/",
-        "licenseFile": "node_modules/tslib/LICENSE.txt"
     },
     "tweetnacl": {
         "versions": [
