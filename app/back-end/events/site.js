@@ -7,7 +7,7 @@ const ipcMain = require('electron').ipcMain;
 const BrowserWindow = require('electron').BrowserWindow;
 const Site = require('../site.js');
 const Themes = require('../themes.js');
-const Database = require('better-sqlite3');
+const openDatabase = require('../helpers/db.connection.js');
 const DBUtils = require('../helpers/db.utils.js');
 const UtilsHelper = require('../helpers/utils.js');
 const normalizePath = require('normalize-path');
@@ -119,7 +119,7 @@ class SiteEvents {
                     );
 
                     let dbPath = path.join(appInstance.sitesDir, config.settings.name, 'input', 'db.sqlite');
-                    appInstance.setDbForSite(config.settings.name, new DBUtils(new Database(dbPath)));
+                    appInstance.setDbForSite(config.settings.name, new DBUtils(openDatabase(dbPath)));
 
                     if (appInstance.windowManager) {
                         appInstance.windowManager.renameSiteLock(config.site, config.settings.name, event.sender.id);
@@ -146,6 +146,9 @@ class SiteEvents {
                             );
                         }
                     }
+
+                    // Rename also the preview directory stored outside of the website
+                    self.renameCustomPreviewFiles(appInstance, config.site, config.settings.name);
                 } else {
                     // If no - return error
                     event.sender.send('app-site-config-saved', {
@@ -555,7 +558,7 @@ class SiteEvents {
                 }
             }
 
-            appInstance.setDbForSite(config.name, new DBUtils(new Database(dbPath)));
+            appInstance.setDbForSite(config.name, new DBUtils(openDatabase(dbPath)));
 
             if (appInstance.windowManager) {
                 appInstance.windowManager.setWindowSite(event.sender.id, config.name);
@@ -724,7 +727,7 @@ class SiteEvents {
                     if (dbWasOpened) {
                         try {
                             let dbPath = path.join(appInstance.sitesDir, siteName, 'input', 'db.sqlite');
-                            appInstance.setDbForSite(siteName, new DBUtils(new Database(dbPath)));
+                            appInstance.setDbForSite(siteName, new DBUtils(openDatabase(dbPath)));
                         } catch (dbError) {
                             console.log('(!) Unable to reopen the database of the website:', dbError);
                         }
@@ -733,6 +736,9 @@ class SiteEvents {
                     sender.send('app-site-deleted', { status: false, error: 'trash-failed' });
                     return;
                 }
+
+                // Preview files stored outside of the website directory do not go to the trash with it
+                self.removeCustomPreviewFiles(appInstance, siteName);
 
                 // Credentials cannot be restored, so they are removed only when the website is already in the trash
                 try {
@@ -1153,6 +1159,50 @@ class SiteEvents {
 
         if (UtilsHelper.dirExists(gitDirPath)) {
             UtilsHelper.removePathRecursively(gitDirPath);
+        }
+    }
+
+    // Previews location selected in the app settings - the preview of the website is stored in its subdirectory
+    getCustomPreviewDir (appInstance, siteName) {
+        let appConfig = appInstance.appConfig || {};
+        let previewsLocation = typeof appConfig.previewsLocation === 'string' ? appConfig.previewsLocation.trim() : '';
+
+        if (previewsLocation === '') {
+            return null;
+        }
+
+        return path.join(previewsLocation, siteName);
+    }
+
+    renameCustomPreviewFiles (appInstance, oldSiteName, newSiteName) {
+        let previewDir = this.getCustomPreviewDir(appInstance, oldSiteName);
+
+        if (!previewDir || !UtilsHelper.dirExists(previewDir)) {
+            return;
+        }
+
+        let newPreviewDir = this.getCustomPreviewDir(appInstance, newSiteName);
+
+        try {
+            // Preview files are regenerated, so a stale directory left by a removed website can be replaced
+            fs.removeSync(newPreviewDir);
+            fs.renameSync(previewDir, newPreviewDir);
+        } catch (error) {
+            console.log('(!) Unable to move the preview files of the renamed website:', error);
+        }
+    }
+
+    removeCustomPreviewFiles (appInstance, siteName) {
+        let previewDir = this.getCustomPreviewDir(appInstance, siteName);
+
+        if (!previewDir) {
+            return;
+        }
+
+        try {
+            fs.removeSync(previewDir);
+        } catch (error) {
+            console.log('(!) Unable to remove the preview files of the deleted website:', error);
         }
     }
 }

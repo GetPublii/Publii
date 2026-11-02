@@ -88,6 +88,25 @@ describe('AVIF responsive image URLs', function () {
         }
     });
 
+    for (const format of ['none', 'webp', 'avif']) {
+        it(`preserves data-responsive="false" and the original src with ${format} conversion`, function () {
+            const context = createContext(format === 'webp');
+            context.siteConfig.advanced.forceAvif = format === 'avif';
+
+            for (const extension of ['jpg', 'png', 'webp', 'avif']) {
+                for (const html of [
+                    `<img data-responsive="false" src="#DOMAIN_NAME#photo.${extension}">`,
+                    `<img src="#DOMAIN_NAME#photo.${extension}" data-responsive="false">`
+                ]) {
+                    const output = renderers.generation(context, html);
+                    assert.match(output, /data-responsive="false"/);
+                    assert.doesNotMatch(output, /\bsrcset=|\bsizes=/);
+                    assert.ok(output.includes(`src="https://example.com/media/posts/1/photo.${extension}"`));
+                }
+            }
+        });
+    }
+
     it('keeps AVIF URLs in template helpers for posts, tags, authors and theme options', function () {
         const context = createContext(true);
 

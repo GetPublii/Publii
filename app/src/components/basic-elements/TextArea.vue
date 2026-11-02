@@ -214,6 +214,10 @@ export default {
                 body_id: 'tinymce',
                 xss_sanitization: false,
                 // Isolate the editor preview without changing published iframe permissions.
+                // Nested embed previews (YouTube, Vimeo) inherit these sandbox flags, so they cannot navigate the app window or open popups.
+                // Chrome logs "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing" - expected:
+                // allow-same-origin is required for HugeRTE to control the iframe document, allow-scripts is required for embed previews to render,
+                // and the content_security_policy below (script-src 'none') prevents any script inside the editor document from removing the sandbox.
                 iframe_attrs: {
                     name: 'publii-wysiwyg-editor',
                     sandbox: 'allow-scripts allow-same-origin allow-forms allow-presentation'

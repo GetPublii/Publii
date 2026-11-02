@@ -133,10 +133,8 @@ describe('Website removal IPC', function () {
                     return value => 'slug-' + value;
                 }
 
-                if (name === 'better-sqlite3') {
-                    return function (dbPath) {
-                        this.path = dbPath;
-                    };
+                if (name === '../helpers/db.connection.js') {
+                    return dbPath => ({ path: dbPath });
                 }
 
                 if (name === '../helpers/db.utils.js') {
@@ -151,6 +149,14 @@ describe('Website removal IPC', function () {
 
                 if (name === '../helpers/path-validator.js') {
                     return require(path.join(__dirname, '..', name));
+                }
+
+                if (name === 'fs-extra') {
+                    return {
+                        removeSync (target) {
+                            calls.push('preview-files:' + target);
+                        }
+                    };
                 }
 
                 return {};
@@ -181,6 +187,30 @@ describe('Website removal IPC', function () {
         await remove({ site: 'legacy' });
 
         assert.equal(calls.includes('passwords:slug-legacy'), true);
+    });
+
+    it('removes the preview files stored in the custom previews location', async function () {
+        application.appConfig = { previewsLocation: ' ' + path.join(path.sep, 'previews') + ' ' };
+        await remove({ site: 'demo' });
+
+        assert.deepEqual(calls, [
+            'preview:demo',
+            'trash:demo',
+            'preview-files:' + path.join(path.sep, 'previews', 'demo'),
+            'passwords:uuid-1',
+            'logs:demo',
+            'lock-released:' + senderId,
+            'notified:' + senderId
+        ]);
+        assert.deepEqual(lastReply().payload, { status: true });
+    });
+
+    it('keeps the preview files of the website which could not be moved to the trash', async function () {
+        application.appConfig = { previewsLocation: path.join(path.sep, 'previews') };
+        trashError = new Error('Trash is not available');
+        await remove({ site: 'demo' });
+
+        assert.equal(calls.some(call => call.startsWith('preview-files:')), false);
     });
 
     it('keeps the website untouched when it cannot be moved to the trash', async function () {

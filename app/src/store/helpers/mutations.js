@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import defaultAstAppConfig from './../../../config/AST.app.config';
 import Utils from './../../helpers/utils.js';
+import MenuStructure from './menu-structure.js';
 
 const editorFontFamilyAliases = {
     'var(--font-base)': 'sans-serif',
@@ -170,7 +171,7 @@ export default {
             themes: data ? data.themes : AST.themes,
             themeHasOverrides: data ? data.themeHasOverrides : false,
             themeSettings: data ? data.themeSettings : {},
-            menuStructure: data ? data.menuStructure : [],
+            menuStructure: MenuStructure.normalizeMenuStructure(data ? data.menuStructure : []),
             siteDir: data ? data.siteDir : '',
             sidebar: {
                 status: state.currentSite.config.synced
@@ -429,133 +430,120 @@ export default {
         state.currentSite.menuStructure[newMenuData.index].name = newMenuData.newName;
     },
     addNewMenuItem (state, data) {
-        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-            if (index === data.menuID) {
-                menu.items.push(data.menuItem);
-            }
+        const menu = state.currentSite.menuStructure[data.menuID];
 
-            return menu;
-        });
+        if (!menu || !data.menuItem) {
+            return;
+        }
+
+        const item = MenuStructure.prepareMenuItem(data.menuItem, state.currentSite.menuStructure);
+
+        if (item) {
+            getMenuItemChildren(menu).push(item);
+        }
     },
     addNewSubmenuItem (state, data) {
-        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-            if (index === data.menuID) {
-                menu.items = insertSubmenuItem(menu.items, data.menuItem, data.parentID);
-            }
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const parent = menu && findMenuItemByID(menu.items, data.parentID);
 
-            return menu;
-        });
+        if (!parent || !data.menuItem) {
+            return;
+        }
+
+        const item = MenuStructure.prepareMenuItem(data.menuItem, state.currentSite.menuStructure);
+
+        if (item) {
+            getMenuItemChildren(parent).push(item);
+        }
     },
     editMenuItem (state, data) {
-        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-            if (index === data.menuID) {
-                menu.items = menu.items.map(item => editMenuItemByID(item, data.menuItem));
-            }
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const editedItem = data.menuItem;
+        const item = menu && editedItem && findMenuItemByID(menu.items, editedItem.id);
 
-            return menu;
-        });
+        if (!item) {
+            return;
+        }
+
+        for (const field of ['label', 'title', 'type', 'link', 'target', 'rel', 'cssClass']) {
+            Vue.set(item, field, editedItem[field]);
+        }
+
+        Vue.set(item, 'isHidden', !!editedItem.isHidden);
     },
     showMenuItem (state, data) {
-        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-            if (index === data.menuID) {
-                menu.items = menu.items.map(item => showMenuItemByID(item, data.itemID));
-            }
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const item = menu && findMenuItemByID(menu.items, data.itemID);
 
-            return menu;
-        });
+        if (item) {
+            Vue.set(item, 'isHidden', false);
+        }
     },
     hideMenuItem (state, data) {
-        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-            if (index === data.menuID) {
-                menu.items = menu.items.map(item => hideMenuItemByID(item, data.itemID));
-            }
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const item = menu && findMenuItemByID(menu.items, data.itemID);
 
-            return menu;
-        });
+        if (item) {
+            Vue.set(item, 'isHidden', true);
+        }
     },
-    deleteMenuItem(state, data) {
-        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-            if(index === data.menuID) {
-                menu.items = menu.items.filter(item => deleteMenuItemByID(item, data.menuItemID));
-            }
+    deleteMenuItem (state, data) {
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const found = menu && findMenuItemByIDwithParent(menu.items, data.menuItemID);
 
-            return menu;
-        });
+        if (found) {
+            found.siblings.splice(found.siblings.indexOf(found.item), 1);
+        }
     },
-    duplicateMenuItem(state, data) {
-        state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-            if (index === data.menuID) {
-                let dataToDuplicate = findMenuItemByIDwithParent(menu.items, data.menuItemID);
-                let itemToDuplicate = dataToDuplicate.item;
+    duplicateMenuItem (state, data) {
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const found = menu && findMenuItemByIDwithParent(menu.items, data.menuItemID);
 
-                if (itemToDuplicate) {
-                    let clone = JSON.parse(JSON.stringify(itemToDuplicate));
-                    let newID = +new Date();
-                    let cloneUpdated = updateMenuItemIDs(clone, newID);
-                    menu.items = insertMenuItem(menu.items, cloneUpdated, dataToDuplicate.parentItemID);
-                }
-            }
+        if (!found) {
+            return;
+        }
 
-            return menu;
-        });
+        const clone = MenuStructure.prepareMenuItem(found.item, state.currentSite.menuStructure, true);
+        found.siblings.push(clone);
     },
     moveMenuItem (state, data) {
+        if (!['before', 'after', 'child'].includes(data.position)) {
+            return;
+        }
+
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const source = menu && findMenuItemByIDwithParent(menu.items, data.targetID);
+        const destination = menu && findMenuItemByIDwithParent(menu.items, data.destinationID);
+
+        if (!source || !destination || source.item === destination.item) {
+            return;
+        }
+
+        // Never detach an item if its destination is inside that item's own subtree.
+        if (findMenuItemByID(source.item.items, data.destinationID)) {
+            return;
+        }
+
+        const siblings = data.position === 'child'
+            ? getMenuItemChildren(destination.item)
+            : destination.siblings;
+
+        source.siblings.splice(source.siblings.indexOf(source.item), 1);
+
         if (data.position === 'child') {
-            let destination = findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.destinationID);
-            let target = JSON.parse(JSON.stringify(findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.targetID)));
-            
-            state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-                if (index === data.menuID) {
-                    menu.items = menu.items.filter(item => deleteMenuItemByID(item, data.targetID));
-                }
-    
-                return menu;
-            });
-
-            destination.items.push(target);
-        } else if (data.position === 'after' || data.position === 'before') {
-            let destination = findMenuItemByIDwithParent(state.currentSite.menuStructure[data.menuID].items, data.destinationID);
-            let target = JSON.parse(JSON.stringify(findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.targetID)));
-            let destinationParent;
-            
-            if (destination.parentItemID) {
-                destinationParent = findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, destination.parentItemID);
-            } else {
-                destinationParent = state.currentSite.menuStructure[data.menuID];
-            }
-            
-            state.currentSite.menuStructure = state.currentSite.menuStructure.map((menu, index) => {
-                if (index === data.menuID) {
-                    menu.items = menu.items.filter(item => deleteMenuItemByID(item, data.targetID));
-                }
-    
-                return menu;
-            });
-
-            let destinationIndex = destinationParent.items.findIndex(item => item.id === destination.item.id);
-
-            if (destinationIndex === -1) {
-                return;
-            }
-
-            if (data.position === 'after') {
-                if (destinationIndex < destinationParent.items.length - 1) {
-                    destinationParent.items.splice(destinationIndex + 1, 0, target);
-                } else {
-                    destinationParent.items.push(target);
-                }
-            } else if (data.position === 'before') {
-                if (destinationIndex > 0) {
-                    destinationParent.items.splice(destinationIndex, 0, target);
-                } else {
-                    destinationParent.items.unshift(target);
-                }
-            }
+            siblings.push(source.item);
+        } else {
+            const index = siblings.indexOf(destination.item);
+            siblings.splice(index + (data.position === 'after' ? 1 : 0), 0, source.item);
         }
     },
     reorderMenuItems (state, data) {
-        let itemToModify = findMenuItemByID(state.currentSite.menuStructure[data.menuID].items, data.itemID);
-        Vue.set(itemToModify, 'items', data.items.slice());
+        const menu = state.currentSite.menuStructure[data.menuID];
+        const item = menu && findMenuItemByID(menu.items, data.itemID);
+
+        if (item && Array.isArray(data.items)) {
+            Vue.set(item, 'items', data.items.slice());
+        }
     },
     refreshAfterPostUpdate (state, data) {
         state.currentSite.posts = data.posts;
@@ -661,130 +649,38 @@ export default {
 };
 
 function findMenuItemByID (items, menuItemID) {
-    if (items) {
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].id == menuItemID) {
-                return items[i];
-            }
-
-            var found = findMenuItemByID(items[i].items, menuItemID);
-
-            if (found) {
-                return found;
-            }
-        }
-    }
+    const found = findMenuItemByIDwithParent(items, menuItemID);
+    return found ? found.item : null;
 }
 
-function findMenuItemByIDwithParent (items, menuItemID, parentItemID = 0) {
-    if (items) {
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].id == menuItemID) {
-                return {
-                    item: items[i],
-                    parentItemID: parentItemID
-                };
-            }
-
-            let found = findMenuItemByIDwithParent(items[i].items, menuItemID, items[i].id);
-
-            if (found) {
-                return found;
-            }
-        }
+function findMenuItemByIDwithParent (items, menuItemID) {
+    if (!Array.isArray(items)) {
+        return null;
     }
-}
 
-function insertSubmenuItem (menuItems, menuItem, parentItemID) {
-    return menuItems.map(item => {
-        if (item.id === parentItemID) {
-            item.items.push(menuItem);
-            return item;
+    for (const item of items) {
+        if (!item || typeof item !== 'object') {
+            continue;
         }
 
-        if (item.items) {
-            item.items = insertSubmenuItem(item.items, menuItem, parentItemID);
+        if (item.id === menuItemID) {
+            return { item, siblings: items };
         }
 
-        return item;
-    });
-}
+        const found = findMenuItemByIDwithParent(item.items, menuItemID);
 
-function insertMenuItem (menuItems, menuItem, parentItemID) {
-    if (parentItemID === 0) {
-        menuItems.push(menuItem);
-        return menuItems;
-    }
-    
-    return menuItems.map(item => {
-        if (item.id === parentItemID) {
-            item.items.push(menuItem);
-            return item;
+        if (found) {
+            return found;
         }
-
-        if (item.items) {
-            item.items = insertMenuItem(item.items, menuItem, parentItemID);
-        }
-
-        return item;
-    });
-}
-
-function editMenuItemByID (item, editedMenuItem) {
-    item.items = item.items.map(item => editMenuItemByID(item, editedMenuItem));
-
-    if (item.id === editedMenuItem.id) {
-        item.label = editedMenuItem.label;
-        item.title = editedMenuItem.title;
-        item.type = editedMenuItem.type;
-        item.link = editedMenuItem.link;
-        item.target = editedMenuItem.target;
-        item.rel = editedMenuItem.rel;
-        item.cssClass = editedMenuItem.cssClass;
-        item.isHidden = editedMenuItem.isHidden || false;
     }
 
-    return item;
+    return null;
 }
 
-function deleteMenuItemByID (item, id) {
-    if(item.id === id) {
-        return false;
+function getMenuItemChildren (item) {
+    if (!Array.isArray(item.items)) {
+        Vue.set(item, 'items', []);
     }
 
-    item.items = item.items.filter(item => deleteMenuItemByID(item, id));
-
-    return item.id !== id;
-}
-
-function updateMenuItemIDs (item, newID) {
-    item = JSON.stringify(item);
-    let offsetIndex = 0;
-
-    item = item.replace(/"id":[0-9]{1,}/g, () => {
-        offsetIndex++;
-        return ('"id":' + newID + offsetIndex);
-    });
-
-    return JSON.parse(item);
-}
-
-function hideMenuItemByID (item, itemID) {
-    item.items = item.items.map(subitem => hideMenuItemByID(subitem, itemID));
-
-    if (item.id === itemID) {
-        item.isHidden = true;
-    }
-
-    return item;
-}
-
-function showMenuItemByID (item, itemID) {
-    item.items = item.items.map(subitem => showMenuItemByID(subitem, itemID));
-
-    if (item.id === itemID) {
-        item.isHidden = false;
-    }
-
-    return item;
+    return item.items;
 }

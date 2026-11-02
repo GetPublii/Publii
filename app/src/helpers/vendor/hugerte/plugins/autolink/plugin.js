@@ -1,5 +1,5 @@
 /**
- * HugeRTE version 1.0.14 (2026-09-05)
+ * HugeRTE version 1.0.15 (2026-10-24)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
  * Copyright (c) 2026 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)

@@ -1,5 +1,10 @@
 /*
  * Builds a Jimp instance with WebP and AVIF (WASM) support.
+ *
+ * Composed from the individual @jimp/* packages instead of the `jimp`
+ * meta-package: Publii only reads JPEG/PNG (WebP/AVIF come from @jsquash)
+ * and only calls resize/scaleToFit/cover, so the remaining codecs
+ * (GIF, BMP, TIFF) and plugins (print, hash, color, ...) are not installed.
  */
 
 const fs = require('fs');
@@ -10,7 +15,10 @@ let customJimpPromise = null;
 
 async function buildJimp() {
     const { createJimp } = await import('@jimp/core');
-    const { defaultFormats, defaultPlugins } = await import('jimp');
+    const { default: jpegFormat } = await import('@jimp/js-jpeg');
+    const { default: pngFormat } = await import('@jimp/js-png');
+    const { methods: resizeMethods } = await import('@jimp/plugin-resize');
+    const { methods: coverMethods } = await import('@jimp/plugin-cover');
     const { simd } = await import('wasm-feature-detect');
     const encoder = await import('@jsquash/webp/encode.js');
     const decoder = await import('@jsquash/webp/decode.js');
@@ -64,8 +72,8 @@ async function buildJimp() {
     });
 
     return createJimp({
-        formats: [...defaultFormats, webpFormat, avifFormat],
-        plugins: defaultPlugins
+        formats: [jpegFormat, pngFormat, webpFormat, avifFormat],
+        plugins: [resizeMethods, coverMethods]
     });
 }
 

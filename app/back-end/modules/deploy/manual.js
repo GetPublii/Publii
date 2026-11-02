@@ -8,6 +8,7 @@ const slug = require('./../../helpers/slug');
 const tarFs = require('tar-fs');
 const ZipHelper = require('./../../helpers/zip.helper.js');
 const Utils = require('./../../helpers/utils');
+const { normalizeTarEntryMode } = require('./../../helpers/tar-entry-mode.js');
 
 class ManualDeployment {
     constructor(deploymentInstance = false) {
@@ -119,7 +120,9 @@ class ManualDeployment {
         }
 
         let output = fs.createWriteStream(backupFile);
-        let archive = tarFs.pack(this.deployment.inputDir);
+        let archive = tarFs.pack(this.deployment.inputDir, {
+            map: normalizeTarEntryMode
+        });
 
         output.on('error', function (err) {
             process.send({

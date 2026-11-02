@@ -87,7 +87,7 @@ class Git {
 
                 this.waitForTimeout = false;
             }
-        }, 20000);
+        }, 15000);
 
         try {
             await gitClient.getRemoteInfo({

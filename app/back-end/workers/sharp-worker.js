@@ -14,7 +14,7 @@ try {
         sharp.concurrency(1);
     }
 } catch (err) {
-    process.send({ type: 'sharp-unavailable', error: err && err.message });
+    process.send({ type: 'engine-unavailable', error: err && err.message });
     setTimeout(() => process.exit(1), 100);
 }
 
@@ -104,7 +104,13 @@ process.on('message', function (msg) {
     }
 
     if (!sharp) {
-        process.send({ type: 'job-result', id: msg.id, success: false, error: 'sharp-unavailable' });
+        process.send({
+            type: 'job-result',
+            id: msg.id,
+            success: false,
+            error: 'sharp-unavailable',
+            code: 'ENGINE_UNAVAILABLE'
+        });
         return;
     }
 

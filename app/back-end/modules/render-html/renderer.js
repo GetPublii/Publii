@@ -23,7 +23,7 @@ const normalizePath = require('normalize-path');
 
 // Internal packages
 const DBUtils = require('./../../helpers/db.utils.js');
-const Database = require('better-sqlite3');
+const openDatabase = require('./../../helpers/db.connection.js');
 const URLHelper = require('./helpers/url.js');
 const ContentHelper = require('./helpers/content.js');
 const FilesHelper = require('./helpers/files.js');
@@ -122,8 +122,10 @@ class Renderer {
     /*
      * Renders the pages
      */
-    async render(previewMode = false, mode = 'full') {
+    async render(previewMode = false, mode = 'full', previewDir = false) {
         this.previewMode = previewMode;
+        // Preview directory selected in the app settings - without it the preview is stored in the directory of the website
+        this.previewDir = typeof previewDir === 'string' && previewDir !== '' ? previewDir : false;
         this.singlePageMode = mode === 'post' || mode === 'page';
         this.itemType = mode;
         this.homepageOnlyMode = mode === 'home';
@@ -487,7 +489,7 @@ class Renderer {
         this.outputDir = path.join(basePath, 'output');
 
         if(this.previewMode) {
-            this.outputDir = path.join(basePath, 'preview');
+            this.outputDir = this.previewDir ? this.previewDir : path.join(basePath, 'preview');
         }
     }
 
@@ -640,7 +642,7 @@ class Renderer {
      */
     loadDataFromDB() {
         const dbPath = path.join(this.inputDir, 'db.sqlite');
-        this.db = new DBUtils(new Database(dbPath));
+        this.db = new DBUtils(openDatabase(dbPath));
     }
 
     /*

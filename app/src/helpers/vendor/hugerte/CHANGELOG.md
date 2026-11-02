@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.15 - 2026-10-24
+
+### Changed
+- Split buttons are now rendered as two independent buttons: a primary action button and a separate chevron button that opens the menu. The `.tox-split-button` element is now a non-interactive, tooltip-labelled `role="group"`, so it no longer carries `role="button"`, `aria-pressed`, `aria-expanded` or `aria-haspopup`; `aria-pressed` moved to the primary button (colour split buttons have none, see below) and `aria-expanded`/`aria-haspopup` to the chevron. #GH-81
+- **Migration note**: `data-mce-name` now lives on the primary button (`<name>`) and the chevron (`<name>-chevron`) instead of the `.tox-split-button` container; the two presentational `span.tox-tbtn` halves are replaced by real `button.tox-tbtn` elements (`tox-split-button__main` / `tox-split-button__chevron`), the hidden "To open the popup, press Shift+Enter" hint (`aria-describedby`) is gone, the two halves are separate tab stops, and the menu is anchored to the chevron. The label/icon `span`s inside the buttons are unchanged. CSS/automation that targeted the container's name, `role`, or the old halves needs updating. #GH-81
+- The primary part of the `forecolor` and `backcolor` split buttons is no longer exposed as a toggle, since applying the last-used colour has no pressed state. #GH-81
+- Split-button corners are now mirrored correctly in right-to-left layouts. #GH-81
+
+### Fixed
+- Clicking the primary part of a split button now runs its action instead of opening the dropdown (Firefox opened the menu for every click), so list buttons can toggle a list off again. #GH-81
+- Storing the selection bookmark no longer throws when the editor's iframe has already been detached from the page, which aborted `editor.remove()` and could leave the editor half-removed (for example with Angular wrappers on Firefox).
+- Applying a format such as italic directly after a line break no longer throws an `IndexSizeError` and no longer moves the caret to the wrong offset. #GH-93
+- DOMPurify no longer tries to register its own `dompurify` Trusted Types policy for every sanitizer instance (including notification and dialog content), which caused a CSP violation under a `trusted-types` CSP. #GH-261
+- Arrow-key navigation between toolbar items now skips disabled buttons, including disabled split-button halves.
+- **Security**: Upgraded DOMPurify from 3.4.14 to 3.4.17. This fixes `IN_PLACE`/hook-removal bypasses (GHSA-p98j-92pf-mc4p and GHSA-6688-9rhm-gjv2, fixed in 3.4.16; GHSA-mrv2-3pqr-j5jr, fixed in 3.4.17) and the SMIL `attributeName` guard being skipped in XHTML mode (GHSA-c6gr-qvv4-5v3f, fixed in 3.4.17).
+
 ## 1.0.14 - 2026-09-05
 
 ### Fixed

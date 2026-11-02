@@ -210,7 +210,7 @@
                                     :itemData="subitem"
                                     :itemMenuID="index"
                                     :itemOrder="subindex"
-                                    :editedID="parseInt(editedID, 10)"
+                                    :editedID="editedID"
                                     :dragging="dragInProgress"
                                     :selectedItem="selectedItemMenuID === index ? selectedItem : null" />
                             </draggable>
@@ -322,8 +322,11 @@ export default {
         showEmptyState: function() {
             return !this.items.length;
         },
+        hasSelectedItem () {
+            return this.selectedItem !== null && this.selectedItem !== undefined;
+        },
         dragOptions () {
-            return menuDragOptions(!!this.selectedItem);
+            return menuDragOptions(this.hasSelectedItem);
         }
     },
     mounted () {
@@ -695,7 +698,7 @@ export default {
             this.selectedItemMenuID = null;
         },
         moveMenuItem (config) {
-            if (!this.selectedItem) {
+            if (!this.hasSelectedItem) {
                 return;
             }
 

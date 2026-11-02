@@ -330,6 +330,41 @@ describe('Local preview files IPC', function () {
         assert.equal(events.clearingSites.has('demo'), false);
     });
 
+    describe('custom previews location', function () {
+        let previewsDir;
+
+        beforeEach(function () {
+            previewsDir = path.join(sitesDir, 'previews');
+            fs.outputFileSync(path.join(previewsDir, 'demo', 'index.html'), '1234567');
+            application.appConfig.previewsLocation = ' ' + previewsDir + ' ';
+        });
+
+        it('stores the preview of every website in its own subdirectory', function () {
+            assert.equal(events.getPreviewDir('demo'), path.join(previewsDir, 'demo'));
+            assert.equal(events.getPreviewDir('blog'), path.join(previewsDir, 'blog'));
+
+            application.appConfig.previewsLocation = '';
+            assert.equal(events.getPreviewDir('demo'), path.join(sitesDir, 'demo', 'preview'));
+
+            delete application.appConfig.previewsLocation;
+            assert.equal(events.getPreviewDir('demo'), path.join(sitesDir, 'demo', 'preview'));
+        });
+
+        it('lists, checks and clears only the preview files from the custom location', async function () {
+            assert.deepEqual(plain(await invoke('app-local-preview:get-files-overview')), [{ name: 'demo', size: null }]);
+
+            let size = plain(await invoke('app-local-preview:get-size', 'demo'));
+            assert.equal(size.status, true);
+            assert.deepEqual(sizeChecks, [path.join(previewsDir, 'demo')]);
+
+            assert.deepEqual(plain(await invoke('app-local-preview:clear', 'demo')), { status: true });
+            assert.equal(fs.existsSync(path.join(previewsDir, 'demo')), false);
+            assert.deepEqual(disabledPreviews, ['demo']);
+            // Files in the directory of the website are not touched
+            assert.equal(fs.existsSync(path.join(sitesDir, 'demo', 'preview', 'index.html')), true);
+        });
+    });
+
     describe('rendering the preview', function () {
         let replies;
         let sender;
@@ -359,6 +394,7 @@ describe('Local preview files IPC', function () {
             assert.equal(workers.length, 1);
             assert.equal(workers[0].messages[0].previewUrl, 'http://127.0.0.1:3000/demo');
             assert.equal(workers[0].messages[0].previewMode, true);
+            assert.equal(workers[0].messages[0].previewDir, path.join(sitesDir, 'demo', 'preview'));
 
             finishRendering();
 
@@ -397,15 +433,71 @@ describe('Local preview files IPC', function () {
             assert.deepEqual(openedUrls, [pathToFileURL(path.join(sitesDir, 'demo', 'preview', 'preview.html')).href]);
         });
 
-        it('generates preview files for the disk without opening the browser', async function () {
+        it('generates preview files for the local server without opening the browser', async function () {
+            await events.renderSite('demo', false, false, false, sender, false);
+
+            assert.equal(enabledPreviews.length, 1);
+            assert.deepEqual(disabledPreviews, []);
+            assert.equal(workers[0].messages[0].previewUrl, 'http://127.0.0.1:3000/demo');
+
+            finishRendering();
+
+            assert.deepEqual(openedUrls, []);
+            assert.deepEqual(plain(replies), [{ channel: 'app-preview-rendered', payload: { status: true } }]);
+            assert.deepEqual(disabledPreviews, []);
+        });
+
+        it('disables the preview enabled only for the generated files which have failed', async function () {
+            await events.renderSite('demo', false, false, false, sender, false);
+
+            workers[0].emit('message', { type: 'app-rendering-results', result: false });
+            workers[0].emit('exit');
+
+            assert.deepEqual(disabledPreviews, ['demo']);
+        });
+
+        it('generates preview files for the disk when the local server is disabled', async function () {
+            application.appConfig.previewServerEnabled = false;
+
             await events.renderSite('demo', false, false, false, sender, false);
 
             assert.deepEqual(enabledPreviews, []);
+            assert.deepEqual(disabledPreviews, ['demo']);
             assert.equal(workers[0].messages[0].previewUrl, false);
 
             finishRendering();
 
             assert.deepEqual(openedUrls, []);
+        });
+
+        it('renders the preview into the custom previews location', async function () {
+            let previewsDir = path.join(sitesDir, 'previews');
+            fs.ensureDirSync(previewsDir);
+            application.appConfig.previewsLocation = previewsDir;
+
+            await events.renderSite('demo', false, false, false, sender, true);
+
+            assert.equal(enabledPreviews[0].dir, path.join(previewsDir, 'demo'));
+            assert.equal(fs.existsSync(path.join(previewsDir, 'demo')), true);
+            assert.equal(workers[0].messages[0].previewDir, path.join(previewsDir, 'demo'));
+
+            finishRendering();
+
+            assert.deepEqual(openedUrls, ['http://127.0.0.1:3000/demo/']);
+        });
+
+        it('opens the preview rendered for the disk from the custom previews location', async function () {
+            let previewsDir = path.join(sitesDir, 'previews');
+            application.appConfig.previewServerEnabled = false;
+            application.appConfig.previewsLocation = previewsDir;
+
+            await events.renderSite('demo', 12, { title: 'Draft' }, 'post', sender, true);
+
+            assert.equal(workers[0].messages[0].previewDir, path.join(previewsDir, 'demo'));
+
+            finishRendering();
+
+            assert.deepEqual(openedUrls, [pathToFileURL(path.join(previewsDir, 'demo', 'preview.html')).href]);
         });
     });
 

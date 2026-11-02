@@ -5,11 +5,11 @@
         <div
             :class="{
                 'menu-item-row': true,
-                'is-dnd-disabled': !!selectedItem
+                'is-dnd-disabled': hasSelectedItem
             }">
             <span
                 class="menu-item-handle"
-                v-tooltip.hover="{ text: $t('menu.dragToReorder'), disabled: !!selectedItem || dragging }"
+                v-tooltip.hover="{ text: $t('menu.dragToReorder'), disabled: hasSelectedItem || dragging }"
                 aria-hidden="true">
                 <icon
                     name="menu-dots"
@@ -21,9 +21,10 @@
             <button
                 type="button"
                 class="menu-item-label"
-                v-tooltip="{ text: isInvalid || isDraft ? itemTooltip : '', disabled: !!selectedItem }"
+                v-tooltip="{ text: isInvalid || isDraft ? itemTooltip : '', disabled: hasSelectedItem }"
                 :title="isInvalid || isDraft ? null : itemTooltip"
-                :disabled="!!selectedItem"
+                :disabled="hasSelectedItem"
+                :aria-label="isHidden ? label + ', ' + $t('menu.menuItemIsHidden') : null"
                 @click="editMenuItem">
                 {{ label }}
             </button>
@@ -31,12 +32,14 @@
             <span
                 v-if="isHidden || isDraft || isInvalid"
                 class="menu-item-badges">
-                <span
+                <icon
                     v-if="isHidden"
-                    class="menu-item-badge"
-                    :title="$t('menu.menuItemIsHidden')">
-                    {{ $t('menu.itemHidden') }}
-                </span>
+                    name="hidden-post"
+                    size="xs"
+                    class="menu-item-status-icon content-status-icon"
+                    v-tooltip.hover="$t('menu.menuItemIsHidden')"
+                    aria-hidden="true"
+                    focusable="false" />
 
                 <span
                     v-if="isDraft"
@@ -54,7 +57,7 @@
             </span>
 
             <div
-                v-if="!selectedItem"
+                v-if="!hasSelectedItem"
                 class="menu-item-actions">
                 <button
                     type="button"
@@ -74,14 +77,14 @@
             </div>
 
             <action-menu
-                v-if="!selectedItem"
+                v-if="!hasSelectedItem"
                 class="menu-item-more"
                 size="small"
                 :items="itemActions"
                 :label="$t('ui.otherOptions') + ': ' + label" />
 
             <div
-                v-if="selectedItem && isSelected"
+                v-if="hasSelectedItem && isSelected"
                 class="menu-item-actions is-move-mode">
                 <button
                     type="button"
@@ -98,7 +101,7 @@
             </div>
 
             <div
-                v-if="selectedItem && !isSelected && !parentIsSelected"
+                v-if="hasSelectedItem && !isSelected && !parentIsSelected"
                 class="menu-item-actions is-move-mode">
                 <span class="menu-item-insert-actions">
                     {{ $t('menu.insertActions') }}
@@ -182,7 +185,7 @@ export default {
     name: 'menu-item',
     props: {
         editedID: {
-            type: [Boolean, Number],
+            type: [Boolean, Number, String],
             required: false
         },
         itemData: {
@@ -251,13 +254,13 @@ export default {
                 'is-edited': this.editedID === this.id,
                 'is-invalid': this.isInvalid,
                 'is-draft': this.isDraft,
-                'is-hidden': this.isHidden,
+                'is-menu-hidden': this.isHidden,
                 'is-selected': this.isSelected,
                 'is-drag-active': this.dragging
             };
         },
         dragOptions () {
-            return menuDragOptions(!!this.selectedItem);
+            return menuDragOptions(this.hasSelectedItem);
         },
         isInvalid () {
             return !this.elementExists();
@@ -290,8 +293,11 @@ export default {
                 this.$bus.$emit('save-new-menu-structure');
             }
         },
+        hasSelectedItem () {
+            return this.selectedItem !== null && this.selectedItem !== undefined;
+        },
         isSelected () {
-            return this.id === this.selectedItem;
+            return this.hasSelectedItem && this.id === this.selectedItem;
         },
         itemActions () {
             return [
@@ -523,6 +529,8 @@ export default {
 </script>
 
 <style scoped>
+@import "../css/content-status-icon.css";
+
 .menu-item {
     margin: 0;
     padding: 0;
@@ -575,7 +583,6 @@ export default {
         border-left-color: var(--color-primary);
     }
 
-    &.is-hidden > .menu-item-row > .menu-item-label,
     &.is-draft > .menu-item-row > .menu-item-label {
         color: var(--text-light-color);
     }
@@ -663,6 +670,10 @@ export default {
     display: inline-flex;
     flex-shrink: 0;
     gap: var(--space-1);
+}
+
+.menu-item-status-icon {
+    flex-shrink: 0;
 }
 
 .menu-item-badge {

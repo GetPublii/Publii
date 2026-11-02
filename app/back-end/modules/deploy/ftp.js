@@ -176,7 +176,7 @@ class FTP {
                     process.kill(process.pid, 'SIGTERM');
                 }, 1000);
             }
-        }, 20000);
+        }, 15000);
     }
 
     downloadFilesList() {

@@ -353,8 +353,8 @@ export default {
         this.$bus.$on('show-menu-item-editor', params => {
             console.log(params);
             this.reset();
-            this.menuItemID = params.menuItemID || '';
-            this.parentID = params.parentID || '';
+            this.menuItemID = params.menuItemID ?? '';
+            this.parentID = params.parentID ?? '';
 
             if(params.menuID || params.menuID === 0) {
                 this.menuID = params.menuID;

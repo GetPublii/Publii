@@ -5,7 +5,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const FileHelper = require('./helpers/file.js');
-const Database = require('better-sqlite3');
+const openDatabase = require('./helpers/db.connection.js');
 const DBUtils = require('./helpers/db.utils.js');
 const Themes = require('./themes.js');
 const Image = require('./image.js');
@@ -131,7 +131,7 @@ class Site {
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
 
         try {
-            let db = new DBUtils(new Database(dbPath));
+            let db = new DBUtils(openDatabase(dbPath));
             db.exec(FileHelper.readFileSync(this.application.basedir + '/back-end/sql/1.0.0.sql', 'utf8'));
             db.close();
         } catch (error) {
@@ -147,7 +147,7 @@ class Site {
      */
     createAuthor(authorName) {
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
-        let db = new DBUtils(new Database(dbPath));
+        let db = new DBUtils(openDatabase(dbPath));
         let sqlQuery = db.prepare(`INSERT INTO authors VALUES(1, @name, @slug, '', '{}', '{}')`);
         sqlQuery.run({
             name: authorName,
@@ -232,7 +232,7 @@ class Site {
         let themesHelper = new Themes(this.application, { site: this.name });
         let themeName = themesHelper.currentTheme();
         let dbPath = path.join(this.siteDir, 'input', 'db.sqlite');
-        let db = new DBUtils(new Database(dbPath));
+        let db = new DBUtils(openDatabase(dbPath));
 
         // If there is no theme selected - abort
         if(themeName === 'not selected') {

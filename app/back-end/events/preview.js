@@ -141,12 +141,12 @@ class PreviewEvents {
         this.invalidatePreviewSize(site);
 
         try {
-            if (showPreview && this.isServerEnabled()) {
-                // Address of the preview is a part of the rendered files, so it must be known before rendering
+            if (this.isServerEnabled()) {
+                // Address of the preview is a part of the rendered files, so it must be known before rendering -
+                // also for the generated preview files, which are refreshed in the already opened browser
                 previewUrl = await this.enablePreview(site);
             } else {
-                // Generated preview files and the preview opened from the disk use file:/// URLs,
-                // which cannot work on the local server
+                // The preview opened from the disk uses file:/// URLs, which cannot work on the local server
                 await this.app.previewServer.disableSite(site);
             }
         } catch (error) {
@@ -185,7 +185,7 @@ class PreviewEvents {
             self.releaseRenderingSite(site);
 
             // Do not keep a preview which was enabled only for the rendering which has failed
-            if (showPreview && !previewRendered && !previewWasEnabled) {
+            if (previewUrl && !previewRendered && !previewWasEnabled) {
                 self.app.previewServer.disableSite(site).catch(error => console.log('Unable to disable the local preview:', error));
             }
         });
@@ -227,6 +227,7 @@ class PreviewEvents {
             postData: postData,
             previewMode: previewMode,
             previewUrl: previewUrl,
+            previewDir: this.getPreviewDir(site),
             mode: mode
         });
 
@@ -551,7 +552,19 @@ class PreviewEvents {
         return isValidDirSegment(siteName) && Object.prototype.hasOwnProperty.call(this.app.sites, siteName);
     }
 
+    // Location selected in the app settings - previews of all websites are stored in its subdirectories
+    getPreviewsLocation () {
+        let location = this.app.appConfig ? this.app.appConfig.previewsLocation : '';
+        return typeof location === 'string' ? location.trim() : '';
+    }
+
     getPreviewDir (siteName) {
+        let previewsLocation = this.getPreviewsLocation();
+
+        if (previewsLocation !== '') {
+            return path.join(previewsLocation, siteName);
+        }
+
         return path.join(this.app.sitesDir, siteName, 'preview');
     }
 }

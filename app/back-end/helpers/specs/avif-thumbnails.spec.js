@@ -7,6 +7,7 @@ const sharp = require('sharp');
 const sizeOf = require('image-size');
 const Image = require('../../image');
 const sharpQueue = require('../sharp-queue');
+const napiImageQueue = require('../napi-image-queue');
 
 const appDirectory = path.resolve(__dirname, '../../..');
 
@@ -125,6 +126,7 @@ describe('AVIF upload and thumbnails', function () {
 
     afterEach(function () {
         sharpQueue.shutdown();
+        napiImageQueue.shutdown();
         fs.rmSync(directory, { recursive: true, force: true });
     });
 
@@ -158,7 +160,7 @@ describe('AVIF upload and thumbnails', function () {
         assert.equal(dimensions.height, height);
     }
 
-    for (const engine of ['sharp', 'jimp']) {
+    for (const engine of ['sharp', 'jimp', 'napi']) {
         for (const forceWebp of [false, true]) {
             it(`${engine}: resizes and crops AVIF without changing its format (forceWebp=${forceWebp})`, async function () {
                 application.appConfig.resizeEngine = engine;
@@ -284,7 +286,7 @@ describe('AVIF upload and thumbnails', function () {
         }
     });
 
-    for (const engine of ['sharp', 'jimp']) {
+    for (const engine of ['sharp', 'jimp', 'napi']) {
         it(`${engine}: converts JPEG, PNG and static WebP thumbnails to AVIF without changing originals`, async function () {
             application.appConfig.resizeEngine = engine;
             siteConfig.advanced.forceAvif = true;
@@ -336,7 +338,8 @@ describe('AVIF upload and thumbnails', function () {
                 const metadata = await sharp(output).metadata();
                 assert.equal(metadata.compression, 'av1');
 
-                if (lossless) {
+                // @napi-rs/image has no lossless AVIF mode; the flag is ignored there.
+                if (lossless && engine !== 'napi') {
                     const decoded = await sharp(output).removeAlpha().raw().toBuffer();
                     assert.deepEqual(decoded, pixels);
                 }

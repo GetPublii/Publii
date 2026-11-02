@@ -1985,10 +1985,17 @@
                                     min="1"
                                     max="100"
                                     step="1"
-                                    :disabled="advanced.forceWebp && advanced.webpLossless"
+                                    :disabled="(advanced.forceWebp && advanced.webpLossless) || usesNapiResizeEngine"
                                     v-model="advanced.alphaQuality" />
                                 %
                             </label>
+
+                            <small
+                                v-if="usesNapiResizeEngine"
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.napiEngineAlphaQualityInfo') }}
+                            </small>
                         </field>
 
                         <field
@@ -1998,7 +2005,16 @@
                             <switcher
                                 slot="field"
                                 id="avif-lossless"
-                                v-model="advanced.avifLossless" />
+                                :disabled="usesNapiResizeEngine"
+                                :value="usesNapiResizeEngine ? false : advanced.avifLossless"
+                                @input="$set(advanced, 'avifLossless', $event)" />
+
+                            <small
+                                v-if="usesNapiResizeEngine"
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.napiEngineAvifLosslessInfo') }}
+                            </small>
                         </field>
 
                         <field
@@ -2434,9 +2450,13 @@ export default {
                 this.$set(this.advanced, 'forceAvif', format === 'avif');
             }
         },
+        usesNapiResizeEngine () {
+            return this.$store.state.app.config.resizeEngine === 'napi';
+        },
         imageQualityDisabled () {
+            // Lossless AVIF is not available with the @napi-rs/image engine, so the quality stays in use.
             return (this.imageConversion === 'webp' && !!this.advanced.webpLossless) ||
-                (this.imageConversion === 'avif' && !!this.advanced.avifLossless);
+                (this.imageConversion === 'avif' && !!this.advanced.avifLossless && !this.usesNapiResizeEngine);
         },
         imageConversionItems () {
             return [

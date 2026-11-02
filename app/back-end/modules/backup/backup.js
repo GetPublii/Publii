@@ -7,6 +7,7 @@ const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const Utils = require('./../../helpers/utils.js');
 const PathValidator = require('./../../helpers/path-validator.js');
+const { normalizeTarEntryMode } = require('./../../helpers/tar-entry-mode.js');
 const moment = require('moment');
 const tar = require('tar-fs');
 const { shell } = require('electron');
@@ -144,7 +145,7 @@ class Backup {
                 let archive = tar.pack(path.join(sourcePath, 'input'), {
                     map: function (header) {
                         header.name = 'input/' + header.name;
-                        return header;
+                        return normalizeTarEntryMode(header);
                     },
                     finalize: false,
                     finish: function (pack) {
@@ -382,6 +383,7 @@ class Backup {
                     });
                 })
                 .pipe(tar.extract(tempDir, {
+                    map: normalizeTarEntryMode,
                     ignore: function (resolvedEntryPath, header) {
                         let entryName = header && header.name ? header.name : '';
 
@@ -403,8 +405,8 @@ class Backup {
                     finish: () => {
                     // Verify the backup
                     let backupTest = Backup.verify(tempDir, siteName);
-        
-                    if(!backupTest) {    
+
+                    if(!backupTest) {
                         resolve({
                             type: 'app-backup-restore-error',
                             status: false,
@@ -413,29 +415,57 @@ class Backup {
 
                         return;
                     }
-        
-                    // Close DB connection and remove site dir contents
-                    if (appInstance) {
-                        appInstance.closeDbForSite(siteName);
+
+                    try {
+                        // Close DB connection and remove site dir contents
+                        if (appInstance) {
+                            appInstance.closeDbForSite(siteName);
+                        }
+
+                        Utils.emptyDirRecursively(destinationPath);
+
+                        // Move files from the temp dir to the site dir
+                        let backupContents = fs.readdirSync(tempDir);
+
+                        for(let content of backupContents) {
+                            fs.moveSync(
+                                path.join(tempDir, content),
+                                path.join(destinationPath, content)
+                            );
+                        }
+                    } catch (err) {
+                        console.log('[BACKUP RESTORE] Unable to move the backup files:', err);
+
+                        resolve({
+                            type: 'app-backup-restore-error',
+                            status: false,
+                            error: 'core.backup.errorDuringReadingBackupFile'
+                        });
+
+                        return;
                     }
-        
-                    Utils.emptyDirRecursively(destinationPath);
-        
-                    // Move files from the temp dir to the site dir
-                    let backupContents = fs.readdirSync(tempDir);
-        
-                    for(let content of backupContents) {
-                        fs.moveSync(
-                            path.join(tempDir, content),
-                            path.join(destinationPath, content)
-                        );
-                    }
-        
+
                     resolve({
                         type: 'app-backup-restore-success',
                         status: true
                     });
-                }}));
+                }}))
+                .on('error', function (err) {
+                    // Without this listener an invalid archive crashes the main process
+                    console.log('[BACKUP RESTORE] Unable to unpack the backup:', err);
+
+                    try {
+                        Utils.emptyDirRecursively(tempDir);
+                    } catch (cleanupErr) {
+                        console.log('[BACKUP RESTORE] Unable to clean the temp directory:', cleanupErr);
+                    }
+
+                    resolve({
+                        type: 'app-backup-restore-error',
+                        status: false,
+                        error: 'core.backup.errorDuringReadingBackupFile'
+                    });
+                });
         });
 
         let results = await restoreOperation;

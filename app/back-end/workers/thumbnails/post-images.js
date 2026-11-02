@@ -15,18 +15,22 @@ process.on('message', async function(msg){
         appInstance = msg.appInstance;
         imageData = msg.imageData;
 
-        const usesSharp = appInstance.appConfig?.resizeEngine !== 'jimp';
+        const resizeEngine = appInstance.appConfig?.resizeEngine;
+        // Native engines validate the contents of image-only uploads; Jimp does not.
+        const validatesUploads = resizeEngine !== 'jimp';
         const imagesOnly = imageData.imagesOnly === true || imageData.imageType === 'galleryImages';
 
-        if (usesSharp && imagesOnly) {
+        if (validatesUploads && imagesOnly) {
             try {
-                await validateImageUpload(imageData.path);
+                await validateImageUpload(imageData.path, resizeEngine);
             } catch (error) {
                 process.send({
                     type: 'finished',
                     result: {
                         error: true,
-                        translation: 'core.images.invalidImageFile',
+                        translation: validateImageUpload.isEngineUnavailable(error)
+                            ? 'core.images.imageUnprocessable'
+                            : 'core.images.invalidImageFile',
                         file: typeof imageData.path === 'string' ? path.basename(imageData.path) : ''
                     }
                 });

@@ -23,13 +23,13 @@ export default {
         user: '',
         repo: '',
         branch: '',
+        folder: '',
         token: '',
         parallelOperations: 1,
         apiRateLimiting: 1
     },
     gitlab: {
         server: 'https://gitlab.com/',
-        rejectUnauthorized: true,
         repo: '',
         branch: '',
         token: ''
@@ -37,7 +37,8 @@ export default {
     google: {
         bucket: '',
         key: '',
-        prefix: ''
+        prefix: '',
+        uniformAccess: 0
     },
     manual: {
         output: 'catalog',

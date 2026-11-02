@@ -7,10 +7,9 @@ const path = require('path');
 const FileHelper = require('./../../helpers/file.js');
 const passwordSafeStorage = require('./../../helpers/password-storage.js');
 const slug = require('./../../helpers/slug');
-const { Octokit } = require("@octokit/rest");
+const GithubApiClient = require('./github-api-client.js');
 const list = require('./../../helpers/files-list.js');
 const crypto = require('crypto');
-const countFiles = require('count-files');
 const moment = require('moment');
 const normalizePath = require('normalize-path');
 const stripTags = require('striptags');
@@ -27,17 +26,16 @@ class GithubPages {
         }
 
         this.connection = false;
-        this.client = new Octokit({
+        this.client = new GithubApiClient({
             baseUrl: `https://${this.serverURL}`,
-            request: {
-                timeout: 30000
-            },
-            userAgent: "Publii"
+            timeout: 30000,
+            userAgent: 'Publii'
         });
         this.token = '';
         this.repository = '';
         this.user = '';
         this.branch = '';
+        this.folder = '';
         this.filesToUpdate = 0;
         this.filesUpdated = 0;
         this.waitForTimeout = false;
@@ -50,6 +48,7 @@ class GithubPages {
         this.repository = this.deployment.siteConfig.deployment.github.repo;
         this.user = this.deployment.siteConfig.deployment.github.user;
         this.branch = 'heads/' + this.deployment.siteConfig.deployment.github.branch;
+        this.folder = this.normalizeFolder(this.deployment.siteConfig.deployment.github.folder);
         this.parallelOperations = parseInt(this.deployment.siteConfig.deployment.github.parallelOperations, 10);
         this.apiRateLimiting = !!this.deployment.siteConfig.deployment.github.apiRateLimiting;
         this.waitForTimeout = true;
@@ -63,13 +62,11 @@ class GithubPages {
             this.token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
-        this.client = new Octokit({
+        this.client = new GithubApiClient({
             auth: this.token,
             baseUrl: `https://${this.serverURL}`,
-            request: {
-                timeout: 30000
-            },
-            userAgent: "Publii"
+            timeout: 30000,
+            userAgent: 'Publii'
         });
 
         process.send({
@@ -110,69 +107,10 @@ class GithubPages {
             );
         }
 
-        countFiles(self.deployment.inputDir, async function (err, results) {
-            let numberOfFiles = parseInt(results.files + results.dirs, 10);
-
-            if(numberOfFiles > 4000) {
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: {
-                            translation: 'core.server.tooManyFilesInfo',
-                            translationVars: {
-                                numberOfFiles: numberOfFiles
-                            }
-                        }
-                    }
-                });
-
-                return;
-            }
-
-            try {
-                if (self.apiRateLimiting) {
-                    let result = await self.getAPIRateLimit();
-
-                    if(result.remaining < 10) {
-                        process.send({
-                            type: 'web-contents',
-                            message: 'app-connection-error',
-                            value: {
-                                additionalMessage: {
-                                    translation: 'core.server.requestLimitExceededInfo',
-                                    translationVars: {
-                                        remaining: parseInt(result.remaining, 10),
-                                        resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
-                                    }
-                                }
-                            }
-                        });
-
-                        return;
-                    }
-                }
-
-                await self.deploy();
-            } catch (err) {
-                console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
-
-                process.send({
-                    type: 'web-contents',
-                    message: 'app-connection-error',
-                    value: {
-                        additionalMessage: 'E2 ' + stripTags((err).toString())
-                    }
-                });
-
-                setTimeout(function () {
-                    process.kill(process.pid, 'SIGTERM');
-                }, 1000);
-            }
-        });
-
-        setTimeout(function() {
+        setTimeout(() => {
             if(this.waitForTimeout === true) {
+                this.waitForTimeout = false;
+
                 process.send({
                     type: 'web-contents',
                     message: 'app-connection-error',
@@ -182,8 +120,107 @@ class GithubPages {
                         }
                     }
                 });
+
+                setTimeout(function () {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
             }
         }, 15000);
+
+        let numberOfFiles = this.countOutputFiles();
+
+        if (numberOfFiles === false) {
+            return;
+        }
+
+        if(numberOfFiles > 4000) {
+            this.waitForTimeout = false;
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: {
+                        translation: 'core.server.tooManyFilesInfo',
+                        translationVars: {
+                            numberOfFiles: numberOfFiles
+                        }
+                    }
+                }
+            });
+
+            return;
+        }
+
+        try {
+            if (self.apiRateLimiting) {
+                let result = await self.getAPIRateLimit();
+
+                if(result.remaining < 10) {
+                    self.waitForTimeout = false;
+
+                    process.send({
+                        type: 'web-contents',
+                        message: 'app-connection-error',
+                        value: {
+                            additionalMessage: {
+                                translation: 'core.server.requestLimitExceededInfo',
+                                translationVars: {
+                                    remaining: parseInt(result.remaining, 10),
+                                    resetTime: moment(parseInt(result.reset * 1000, 10)).format('MMMM Do YYYY, h:mm:ss a')
+                                }
+                            }
+                        }
+                    });
+
+                    return;
+                }
+            }
+
+            await self.deploy();
+        } catch (err) {
+            self.waitForTimeout = false;
+            console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: 'E2 ' + stripTags((err).toString())
+                }
+            });
+
+            setTimeout(function () {
+                process.kill(process.pid, 'SIGTERM');
+            }, 1000);
+        }
+    }
+
+    /*
+     * Counts files and directories in the output directory (without following symlinks),
+     * returns false when the directory cannot be read
+     */
+    countOutputFiles() {
+        try {
+            return fs.readdirSync(this.deployment.inputDir, { recursive: true }).length;
+        } catch (err) {
+            this.waitForTimeout = false;
+            console.log(`[${ new Date().toUTCString() }] ERROR: ${err.toString()}`);
+
+            process.send({
+                type: 'web-contents',
+                message: 'app-connection-error',
+                value: {
+                    additionalMessage: 'E3 ' + stripTags(err.toString())
+                }
+            });
+
+            setTimeout(function () {
+                process.kill(process.pid, 'SIGTERM');
+            }, 1000);
+
+            return false;
+        }
     }
 
     async testConnection(app, deploymentConfig, siteName, uuid, sender) {
@@ -202,13 +239,11 @@ class GithubPages {
             token = await passwordSafeStorage.getPassword('publii-gh-token', account);
         }
 
-        this.client = new Octokit({
+        this.client = new GithubApiClient({
             auth: token,
             baseUrl: `https://${this.serverURL}`,
-            request: {
-                timeout: 30000
-            },
-            userAgent: "Publii"
+            timeout: 30000,
+            userAgent: 'Publii'
         });
 
         this.apiRequest(
@@ -226,8 +261,14 @@ class GithubPages {
                 return null;
             }
         ).then(result => {
+            // The timeout below has already replied
+            if (this.waitForTimeout === false) {
+                return;
+            }
+
+            this.waitForTimeout = false;
+
             if(result === null) {
-                this.waitForTimeout = false;
                 sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.branchDoesNotExist'
@@ -237,24 +278,27 @@ class GithubPages {
                 return;
             }
 
-            this.waitForTimeout = false;
             sender.send('app-deploy-test-success');
         }).catch(async err => {
+            if (this.waitForTimeout === false) {
+                return;
+            }
+
             this.waitForTimeout = false;
             sender.send('app-deploy-test-error', await this.getTestConnectionError(err, user, repository));
         });
 
-        setTimeout(function() {
+        setTimeout(() => {
             if(this.waitForTimeout === true) {
+                this.waitForTimeout = false;
+
                 sender.send('app-deploy-test-error', {
                     message: {
                         translation: 'core.server.requestTimeout'
                     }
                 });
-
-                this.waitForTimeout = false;
             }
-        }, 10000);
+        }, 15000);
     }
 
     async getTestConnectionError(err, user, repository) {
@@ -309,6 +353,31 @@ class GithubPages {
             let remoteTree = await this.getTreeData(treeSHA);
             let trees = await this.listFolderFiles(remoteTree);
             let finalTree = await this.getNewTreeBasedOnDiffs(trees.remoteTree, trees.localTree);
+            let tooBigFiles = this.getTooBigFiles(finalTree);
+
+            if (tooBigFiles.length) {
+                this.waitForTimeout = false;
+
+                process.send({
+                    type: 'web-contents',
+                    message: 'app-connection-error',
+                    value: {
+                        additionalMessage: {
+                            translation: 'core.server.tooBigFilesInfo',
+                            translationVars: {
+                                files: tooBigFiles.join(', ')
+                            }
+                        }
+                    }
+                });
+
+                setTimeout(function () {
+                    process.kill(process.pid, 'SIGTERM');
+                }, 1000);
+
+                return;
+            }
+
             finalTree = await this.createBlobs(finalTree, false);
 
             if (finalTree === false) {
@@ -357,6 +426,7 @@ class GithubPages {
 
             this.finishSync();
         } catch (err) {
+            this.waitForTimeout = false;
             console.log(`[${ new Date().toUTCString() }] ERROR: ${JSON.stringify(err)}`);
 
             process.send({
@@ -543,6 +613,37 @@ class GithubPages {
         return localTree;
     }
 
+    /*
+     * Normalizes the optional repository subfolder: slashes are unified,
+     * empty, "." and ".." segments are removed, so the result is always
+     * a safe, relative path (or an empty string for the repository root)
+     */
+    normalizeFolder(folder) {
+        if (!folder || typeof folder !== 'string') {
+            return '';
+        }
+
+        return folder.split(/[\\/]+/)
+                     .filter(segment => segment !== '' && segment !== '.' && segment !== '..')
+                     .join('/');
+    }
+
+    getRemotePath(relativePath) {
+        if (this.folder) {
+            return this.folder + '/' + relativePath;
+        }
+
+        return relativePath;
+    }
+
+    isInsideFolder(remotePath) {
+        if (!this.folder) {
+            return true;
+        }
+
+        return remotePath.indexOf(this.folder + '/') === 0;
+    }
+
     buildDeltaTree(localTree, remoteTree) {
         let delta = [];
         let localPaths = new Set();
@@ -562,7 +663,8 @@ class GithubPages {
         }
 
         for (let remoteFile of remoteTree) {
-            if (remoteFile.type === 'blob' && !localPaths.has(remoteFile.path)) {
+            // Files outside of the configured folder are not managed by Publii
+            if (remoteFile.type === 'blob' && this.isInsideFolder(remoteFile.path) && !localPaths.has(remoteFile.path)) {
                 delta.push({
                     path: remoteFile.path,
                     mode: remoteFile.mode,
@@ -573,6 +675,18 @@ class GithubPages {
         }
 
         return delta;
+    }
+
+    /*
+     * GitHub API rejects blobs larger than ~40 MB of base64 payload,
+     * which equals ~30 MB of raw file content; only files which would
+     * be uploaded during this sync are checked
+     */
+    getTooBigFiles(files) {
+        const maxFileSize = 30 * 1024 * 1024;
+
+        return files.filter(file => file.getBlob && file.size > maxFileSize)
+                    .map(file => `${file.path} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
     }
 
     findRemoteFile(filePath, remoteTree) {
@@ -605,7 +719,7 @@ class GithubPages {
 
                                      return {
                                          fullPath: normalizePath(file.path),
-                                         path: normalizePath(path.relative(this.deployment.inputDir, file.path)),
+                                         path: this.getRemotePath(normalizePath(path.relative(this.deployment.inputDir, file.path))),
                                          mode: file.mode.exec ? '100755' : '100644',
                                          type: 'blob',
                                          size: fileSize,
