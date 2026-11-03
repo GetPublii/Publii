@@ -14,10 +14,12 @@ npm-debug.log
 /app/dist/*.png
 /app/dist/*.svg
 /app/dist/*.node
+/app/dist/assets/
 !/app/dist/index.html
 !/app/dist/init.js
 !/app/dist/init-post.js
 /app/tree.txt
+config.gypi
 /dist
 /cache/
 /StaticBlog-darwin-x64/

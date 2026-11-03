@@ -1,5 +1,5 @@
 /*
- * Creates standalone editor stylesheets loaded inside the TinyMCE iframe
+ * Creates standalone editor stylesheets loaded inside the editor (HugeRTE) iframe
  */
 const fs = require('fs');
 const path = require('path');
@@ -22,12 +22,20 @@ const targets = {
     ]
 };
 
-fs.mkdirSync(distDir, { recursive: true });
+function prepareEditorCss () {
+    fs.mkdirSync(distDir, { recursive: true });
 
-for (const [output, inputs] of Object.entries(targets)) {
-    const content = inputs
-        .map(file => fs.readFileSync(path.join(srcDir, file), 'utf8'))
-        .join('\n');
-    fs.writeFileSync(path.join(distDir, output), content);
-    console.log('Created: app/dist/css/' + output);
+    for (const [output, inputs] of Object.entries(targets)) {
+        const content = inputs
+            .map(file => fs.readFileSync(path.join(srcDir, file), 'utf8'))
+            .join('\n');
+        fs.writeFileSync(path.join(distDir, output), content);
+        console.log('Created: app/dist/css/' + output);
+    }
 }
+
+if (require.main === module) {
+    prepareEditorCss();
+}
+
+module.exports = prepareEditorCss;
