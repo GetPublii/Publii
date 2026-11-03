@@ -6,6 +6,7 @@ import { applyAppAppearance } from './../../helpers/app-appearance';
 import Utils from './../../helpers/utils';
 import wrapIframes from './../../../shared/iframe-wrapper';
 import registerTocPlugin from './plugins/toc.js';
+import registerPubliiIcons from './icons/publii-icons.js';
 import normalizeLegacyEditorConfig from './legacy-editor-config.js';
 
 class EditorBridge {
@@ -74,6 +75,7 @@ class EditorBridge {
 
     init() {
         registerTocPlugin();
+        registerPubliiIcons();
         this.migrateLegacyAutosaveDraft();
 
         let customFormats = this.loadCustomFormatsFromTheme();

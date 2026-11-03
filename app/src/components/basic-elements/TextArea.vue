@@ -30,6 +30,7 @@ import Vue from 'vue';
 import LinkPopup from './../post-editor/LinkPopup';
 import { createMiniEditorLinkSession } from './../../helpers/mini-editor-link';
 import { registerMiniEditorSelectionToolbar } from './../../helpers/mini-editor-toolbar';
+import registerPubliiIcons from './../post-editor/icons/publii-icons.js';
 
 export default {
     name: 'text-area',
@@ -197,6 +198,8 @@ export default {
             if (this.internalLinks) {
                 firstToolbarStructure = firstToolbarStructure.replace(/\blink\b/, 'publiilink');
             }
+
+            registerPubliiIcons();
 
             hugerte.init({
                 selector: 'textarea[data-id="' + this.editorID + '"]',
