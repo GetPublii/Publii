@@ -14,6 +14,7 @@
     "dev": "webpack --node-env=development --mode=development --progress --watch",
     "prod": "webpack --node-env=production --mode=production --progress",
     "build": "node ./build/scripts/update-build-number.js && electron app/",
+    "build2": "electron app/",
     "notarize": "xcrun notarytool submit ./dist/$npm_config_file --keychain-profile 'Publii' --wait",
     "start": "electron app/main.js --enable-logging",
     "pretest": "node build/scripts/check-test-runtime.js",
