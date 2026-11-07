@@ -94,7 +94,8 @@
       ],
       "category": "Development",
       "description": "Static Site CMS",
-      "executableName": "Publii"
+      "executableName": "Publii",
+      "syncDesktopName": true
     },
     "win": {
       "icon": "build/installation/icon.ico",
@@ -122,18 +123,5 @@
       "icon": "build/installation/volume.icns",
       "title": "Install Publii"
     }
-  },
-  "deb": {
-    "depends": [
-      "gnome-keyring"
-    ]
-  },
-  "rpm": {
-    "depends": [
-      "gnome-keyring"
-    ]
-  },
-  "appImage": {
-    "license": "license.txt"
   }
 }
