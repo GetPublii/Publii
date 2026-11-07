@@ -1,7 +1,7 @@
 {
   "productName": "Publii",
   "name": "Publii",
-  "version": "0.48.2",
+  "version": "0.48.3",
   "description": "Static Site CMS",
   "homepage": "https://getpublii.com",
   "author": {
@@ -11,27 +11,20 @@
   "license": "GPL-3.0",
   "main": "app/main.js",
   "scripts": {
-    "dev": "node_modules/.bin/webpack --node-env=development --mode=development --progress --watch",
-    "prod": "node_modules/.bin/webpack --node-env=production --mode=production --progress",
-    "build": "node ./build/scripts/update-build-number.js && ./node_modules/.bin/electron app/",
-    "build2": "./node_modules/.bin/electron app/",
+    "dev": "webpack --node-env=development --mode=development --progress --watch",
+    "prod": "webpack --node-env=production --mode=production --progress",
+    "build": "node ./build/scripts/update-build-number.js && electron app/",
+    "build2": "electron app/",
     "notarize": "xcrun notarytool submit ./dist/$npm_config_file --keychain-profile 'Publii' --wait",
-    "start": "node_modules/.bin/electron app/main.js --enable-logging",
+    "start": "electron app/main.js --enable-logging",
     "pretest": "node build/scripts/check-test-runtime.js",
-    "test": "npm run audit:design-system && node_modules/.bin/mocha \"build/scripts/specs/**/*.spec.js\" \"app/back-end/**/*.spec.js\" \"app/src/helpers/specs/**/*.spec.js\" \"app/src/components/specs/**/*.spec.js\" --reporter spec",
+    "test": "npm run audit:design-system && mocha \"build/scripts/specs/**/*.spec.js\" \"app/back-end/**/*.spec.js\" \"app/src/helpers/specs/**/*.spec.js\" \"app/src/components/specs/**/*.spec.js\" --reporter spec",
     "audit:design-system": "node build/scripts/audit-design-system.js",
     "licenses": "node build/scripts/generate-licenses.js",
     "licenses:check": "node build/scripts/generate-licenses.js --check",
-    "prepare-editor": "npm run prepare-editor-css && npm run remove-vendor-dist-dir && npm run prepare-vendor-dist-dir && npm run copy-vendor-files",
-    "remove-vendor-dist-dir": "rm -rf app/dist/vendor",
+    "prepare-editor": "node build/scripts/prepare-editor.js",
+    "prepare-editor:win": "npm run prepare-editor",
     "prepare-editor-css": "node build/scripts/prepare-editor-css.js",
-    "prepare-editor-css:win": "node build/scripts/prepare-editor-css.js",
-    "prepare-vendor-dist-dir": "if [ ! -d \"app/dist/vendor\" ]; then mkdir app/dist/vendor; fi && npm run prepare-editor-css",
-    "copy-vendor-files": "cp -r app/src/helpers/vendor/hugerte app/dist/vendor/hugerte && cp -r app/src/helpers/vendor/jquery app/dist/vendor/jquery",
-    "prepare-editor:win": "npm run prepare-editor-css:win && npm run remove-vendor-dist-dir-win && npm run prepare-vendor-dist-dir-win && npm run copy-vendor-files-win",
-    "remove-vendor-dist-dir-win": "if exist app\\dist\\vendor rmdir /s /q app\\dist\\vendor",
-    "prepare-vendor-dist-dir-win": "md app\\dist\\vendor 2>nul || echo Directory already exists && npm run prepare-editor-css",
-    "copy-vendor-files-win": "xcopy /s /i /q app\\src\\helpers\\vendor\\hugerte app\\dist\\vendor\\hugerte && xcopy /s /i /q app\\src\\helpers\\vendor\\jquery app\\dist\\vendor\\jquery",
     "packager:win": "electron-builder build --win --x64",
     "packager:mac-intel": "electron-builder build --mac",
     "packager:mac-m": "electron-builder build --mac --arm64",
@@ -46,13 +39,12 @@
   "keywords": [],
   "devDependencies": {
     "css-loader": "6.8.1",
-    "electron": "43.8.6",
+    "electron": "43.8.7",
     "electron-builder": "26.15.3",
-    "file-loader": "6.2.0",
-    "glob": "10.3.10",
     "mocha": "10.2.0",
     "node-abi": "4.35.0",
     "node-gyp": "12.2.0",
+    "postcss": "8.4.31",
     "vue-loader": "15.11.1",
     "vue-style-loader": "4.1.3",
     "vue-template-compiler": "2.6.14",
@@ -61,7 +53,7 @@
   },
   "build": {
     "appId": "com.tidycustoms.publii",
-    "electronVersion": "43.8.6",
+    "electronVersion": "43.8.7",
     "productName": "Publii",
     "copyright": "Copyright (C) 2016-2026 TidyCustoms. All rights reserved.",
     "asar": true,
@@ -102,7 +94,8 @@
       ],
       "category": "Development",
       "description": "Static Site CMS",
-      "executableName": "Publii"
+      "executableName": "Publii",
+      "syncDesktopName": true
     },
     "win": {
       "icon": "build/installation/icon.ico",
@@ -130,18 +123,5 @@
       "icon": "build/installation/volume.icns",
       "title": "Install Publii"
     }
-  },
-  "deb": {
-    "depends": [
-      "gnome-keyring"
-    ]
-  },
-  "rpm": {
-    "depends": [
-      "gnome-keyring"
-    ]
-  },
-  "appImage": {
-    "license": "license.txt"
   }
 }

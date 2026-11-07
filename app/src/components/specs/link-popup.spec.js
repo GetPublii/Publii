@@ -567,7 +567,8 @@ describe('Mini editor opt-in', () => {
                         },
                         registerMiniEditorSelectionToolbar: (editor, options) => {
                             registeredToolbar = { editor, options };
-                        }
+                        },
+                        registerPubliiIcons: () => {}
                     });
                     const instance = new Vue({
                         ...definition,

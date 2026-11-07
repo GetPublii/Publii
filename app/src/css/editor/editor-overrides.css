@@ -121,7 +121,7 @@
             }
         }
 
-        .tox-tbtn:not(span),
+        .tox-tbtn:not(span, .tox-split-button__main, .tox-split-button__chevron),
         .tox-split-button,
         .tox-tbtn--select {
             background: none;
@@ -155,8 +155,14 @@
 
             &:active,
             &:focus,
+            &:focus-within,
             &:hover {
                 background: none;
+            }
+
+            &:has(> .tox-tbtn--enabled) {
+                background: var(--color-control-surface-hover);
+                border-color: var(--color-border-muted);
             }
         }
 
@@ -498,12 +504,13 @@ body {
             margin: 2px 2px 3px 0;
 
             &:focus,
+            &:focus-within,
             &:hover {
                 background: transparent;
                 box-shadow: none;
             }
 
-            &:not(.tox-tbtn--disabled):hover {
+            &:not(:has(> .tox-tbtn--disabled)):hover {
                 background: var(--color-control-surface-hover);
             }
 
@@ -518,18 +525,23 @@ body {
                 }
             }
 
-            &:not(.tox-tbtn--disabled) > .tox-tbtn {
+            & > .tox-tbtn:not(.tox-tbtn--disabled) {
                 &:hover,
                 &.tox-tbtn--enabled {
                     background: var(--color-control-surface-hover);
                 }
             }
 
-            &.tox-tbtn--disabled > .tox-tbtn {
+            & > .tox-tbtn.tox-tbtn--disabled {
                 &:hover,
                 &:focus {
                     background: transparent;
                 }
+            }
+
+            &:focus-within::after {
+                border-radius: var(--radius-base);
+                box-shadow: none;
             }
         }
 
