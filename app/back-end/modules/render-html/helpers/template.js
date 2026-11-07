@@ -94,7 +94,7 @@ class TemplateHelper {
         }
 
         fs.ensureDirSync(path.parse(filePath).dir);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     saveOutputPostFile (postSlug, content) {
@@ -117,7 +117,7 @@ class TemplateHelper {
             fs.ensureDirSync(dirPath);
         }
 
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     saveOutputHomePaginationFile(pageNumber, content) {
@@ -137,7 +137,7 @@ class TemplateHelper {
         // Create dir for specific page
         fs.ensureDirSync(dirPath);
         // Create index.html file in the created dir
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     saveOutputPageFile (pageID, pageSlug, content, renderer) {
@@ -152,7 +152,7 @@ class TemplateHelper {
         if (this.siteConfig.advanced.usePageAsFrontpage && this.siteConfig.advanced.pageAsFrontpage === pageID) {
             let filePath = path.join(this.outputDir, 'index.html');
             content = this.compressHTML(content);
-            fs.writeFile(filePath, content, {'flags': 'w'});
+            fs.writeFileSync(filePath, content, 'utf8');
             return;
         }
 
@@ -177,7 +177,7 @@ class TemplateHelper {
             fs.ensureDirSync(dirPath);
         }
 
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     /*
@@ -192,7 +192,7 @@ class TemplateHelper {
         let dirPath = path.join(baseDir, tagsPrefix);
         fs.ensureDirSync(dirPath);
         content = this.compressHTML(content);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
     
     /*
@@ -211,7 +211,7 @@ class TemplateHelper {
         if (isTagPreview) {
             filePath = path.join(this.outputDir, 'preview.html');
             content = this.compressHTML(content);
-            fs.writeFile(filePath, content, {'flags': 'w'});
+            fs.writeFileSync(filePath, content, 'utf8');
             return;
         } else if (tagsPrefix) {
             filePath = path.join(baseDir, tagsPrefix, tagSlug, 'index.html');
@@ -225,7 +225,7 @@ class TemplateHelper {
 
         content = this.compressHTML(content);
         fs.ensureDirSync(dirPath);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     saveOutputTagPaginationFile(tagSlug, pageNumber, content) {
@@ -263,7 +263,7 @@ class TemplateHelper {
         }
 
         // Create index.html file in the created dir
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     /*
@@ -280,13 +280,13 @@ class TemplateHelper {
         if (isAuthorPreview) {
             filePath = path.join(this.outputDir, 'preview.html');
             content = this.compressHTML(content);
-            fs.writeFile(filePath, content, {'flags': 'w'});
+            fs.writeFileSync(filePath, content, 'utf8');
             return;
         }
 
         content = this.compressHTML(content);
         fs.ensureDirSync(dirPath);
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     saveOutputAuthorPaginationFile(authorSlug, pageNumber, content) {
@@ -303,7 +303,7 @@ class TemplateHelper {
         // Create dir for specific page
         fs.ensureDirSync(dirPath);
         // Create index.html file in the created dir
-        fs.writeFile(filePath, content, {'flags': 'w'});
+        fs.writeFileSync(filePath, content, 'utf8');
     }
 
     /*
