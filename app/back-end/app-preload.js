@@ -106,7 +106,6 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-set-notifications-center-state',
             'app-get-notifications-file',
             'app-pages-hierarchy-update',
-            'app-content-fields-update',
             'app-focus-window-with-site',
             'app-focus-window-with-view',
             'app-view-unlock',
@@ -236,8 +235,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-site-plugins-state-loaded',
             'app-site-plugin-activated',
             'app-site-plugin-deactivated',
-            'app-site-get-plugin-config-retrieved',
-            'app-content-fields-updated'
+            'app-site-get-plugin-config-retrieved'
         ];
 
         if (validChannels.includes(channel)) {
@@ -289,6 +287,8 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-plugins-api:read-theme-file',
             'app-plugins-api:delete-config-file',
             'app-plugins-api:delete-language-file',
+            'app-content-fields-update',
+            'app-content-fields-batch-update',
             'app-open-new-window',
             'app-view-lock',
             'app-local-preview:get-state',

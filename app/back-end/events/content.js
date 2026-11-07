@@ -1,5 +1,5 @@
 const ipcMain = require('electron').ipcMain;
-const Model = require('../model.js');
+const ContentFields = require('../content-fields.js');
 const PathValidator = require('../helpers/path-validator.js');
 
 const { isValidDirSegment } = PathValidator;
@@ -10,20 +10,48 @@ const { isValidDirSegment } = PathValidator;
 
 class ContentEvents {
     constructor(appInstance) {
-        // Save
-        ipcMain.on('app-content-fields-update', function (event, contentData) {
-            if (!contentData || !isValidDirSegment(contentData.site)) {
-                event.sender.send('app-content-fields-updated', false);
-                return;
-            }
+        // Update fields of a single item
+        ipcMain.handle('app-content-fields-update', function (event, contentData) {
+            return ContentEvents.runUpdate(appInstance, contentData, contentFields => contentFields.update(
+                contentData.table,
+                contentData.itemID,
+                contentData.fieldsToUpdate,
+                contentData.options
+            ));
+        });
 
-            let model = new Model(appInstance, {
+        // Update fields of many items in one transaction
+        ipcMain.handle('app-content-fields-batch-update', function (event, contentData) {
+            return ContentEvents.runUpdate(appInstance, contentData, contentFields => contentFields.updateBatch(
+                contentData.table,
+                contentData.items,
+                contentData.options
+            ));
+        });
+    }
+
+    static runUpdate (appInstance, contentData, callback) {
+        if (!contentData || !isValidDirSegment(contentData.site)) {
+            return {
+                status: 'error',
+                errorCode: 'invalid-site',
+                error: 'Invalid site name'
+            };
+        }
+
+        try {
+            let contentFields = new ContentFields(appInstance, {
                 site: contentData.site
             });
 
-            let result = model.updateField(contentData.table, contentData.itemID, contentData.fieldsToUpdate);
-            event.sender.send('app-content-fields-updated', result);
-        });
+            return callback(contentFields);
+        } catch (e) {
+            return {
+                status: 'error',
+                errorCode: 'unexpected-error',
+                error: e.message
+            };
+        }
     }
 }
 

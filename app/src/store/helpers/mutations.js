@@ -2,6 +2,7 @@ import Vue from 'vue';
 import defaultAstAppConfig from './../../../config/AST.app.config';
 import Utils from './../../helpers/utils.js';
 import MenuStructure from './menu-structure.js';
+import ContentFieldsStore from './../../helpers/content-fields-store.js';
 
 const editorFontFamilyAliases = {
     'var(--font-base)': 'sans-serif',
@@ -602,49 +603,25 @@ export default {
     setNotificationsSeenIDs (state, ids) {
         state.app.notificationsSeenIDs = ids;
     },
-    updateCurrentSiteItem(state, { itemType, itemID, field, value, type, subfield }) {
-        let itemArray;
+    /*
+     * Applies fields saved by the content fields API - fields are normalized by the back-end
+     */
+    updateCurrentSiteItem (state, { itemType, itemID, fields }) {
+        let collection = ContentFieldsStore.getCollectionForItemType(itemType);
 
-        switch (itemType) {
-            case 'post': itemArray = state.currentSite.posts; break;
-            case 'page': itemArray = state.currentSite.pages; break;
-            case 'tag': itemArray = state.currentSite.tags; break;
-            case 'author': itemArray = state.currentSite.authors; break;
-            default: console.error(`[Vuex Mutation] Unknown itemType: ${itemType}`); return;
+        if (!collection) {
+            console.error(`[Vuex Mutation] Unknown itemType: ${itemType}`);
+            return;
         }
 
-        let  item = itemArray.find(i => i.id === itemID);
-        
+        let item = state.currentSite[collection].find(i => i.id === itemID);
+
         if (!item) {
             console.error(`[Vuex Mutation] Element not found: ${itemType} using ID: ${itemID}`);
             return;
         }
 
-        if (type === 'field') {
-            item[field] = value;
-        } else if (type === 'json') {
-            let jsonFieldName = field;
-            
-            if ((itemType === 'post' || itemType === 'page') && field === '_core') {
-                jsonFieldName = 'additional_data';
-            }
-
-            if (typeof item[jsonFieldName] === 'undefined') {
-                console.warn(`[Vuex Mutation] Non-existing JSON field: ${jsonFieldName}`);
-                return;
-            }
-
-            let jsonData = {};
-
-            try {
-                jsonData = JSON.parse(item[jsonFieldName] || '{}');
-            } catch (e) {
-                console.error(`[Vuex Mutation] JSON parsing error in ${itemType} #${itemID}, field ${jsonFieldName}:`, e);
-            }
-            
-            jsonData[subfield] = value;
-            item[jsonFieldName] = JSON.stringify(jsonData);
-        }
+        ContentFieldsStore.applyFieldsToItem(item, itemType, fields || []);
     }
 };
 

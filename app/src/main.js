@@ -5,6 +5,7 @@ import router from './router';
 import VueI18n from 'vue-i18n';
 import App from './components/App';
 import DOMPurify from 'dompurify';
+import ContentFieldsStore from './helpers/content-fields-store.js';
 import {
     DEFAULT_APP_APPEARANCE,
     applyAppAppearance,
@@ -306,7 +307,9 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getCurrentSitePages: () => window.structuredClone(this.$store.state.currentSite.pages),
                 getCurrentSiteTags: () => window.structuredClone(this.$store.state.currentSite.tags),
                 getCurrentSiteAuthors: () => window.structuredClone(this.$store.state.currentSite.authors),
-                setContentElementField: (itemType, itemID, fieldsToUpdate, callback) => this.setContentElementField(itemType, itemID, fieldsToUpdate, callback)
+                getCurrentSiteSeoSettings: () => this.getCurrentSiteSeoSettings(),
+                setContentElementField: (itemType, itemID, fieldsToUpdate, callback, options) => this.setContentElementField(itemType, itemID, fieldsToUpdate, callback, options),
+                setContentElementsFields: (itemType, items, callback, options) => this.setContentElementsFields(itemType, items, callback, options)
             };
 
             // Find issues with loading languages
@@ -535,38 +538,136 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     lifeTime: message.lifeTime || 3
                 });
             },
-            async setContentElementField (itemType, itemID, fieldsToUpdate, callback) {
-                let tableName = 'posts';
+            /*
+             * Returns SEO-related site settings - default values used when the item does not have its own values
+             */
+            getCurrentSiteSeoSettings () {
+                let config = this.$store.state.currentSite.config || {};
+                let advanced = config.advanced || {};
+                let urls = advanced.urls || {};
+                let keys = [
+                    'noIndexThisPage',
+                    'metaTitle',
+                    'metaDescription',
+                    'postMetaTitle',
+                    'postMetaDescription',
+                    'pageMetaTitle',
+                    'pageMetaDescription',
+                    'tagMetaTitle',
+                    'tagMetaDescription',
+                    'metaRobotsTags',
+                    'authorMetaTitle',
+                    'authorMetaDescription',
+                    'metaRobotsAuthors'
+                ];
+                let settings = {
+                    siteName: config.name || '',
+                    displayName: config.displayName || '',
+                    urls: {
+                        cleanUrls: !!urls.cleanUrls,
+                        postsPrefix: urls.postsPrefix || '',
+                        tagsPrefix: urls.tagsPrefix || '',
+                        authorsPrefix: urls.authorsPrefix || '',
+                        pageName: urls.pageName || ''
+                    }
+                };
 
-                if (itemType === 'tag') {
-                    tableName = 'tags';
-                } else if (itemType === 'author') {
-                    tableName = 'authors';
-                }
+                keys.forEach(key => {
+                    settings[key] = typeof advanced[key] === 'undefined' ? '' : advanced[key];
+                });
 
-                await mainProcessAPI.send('app-content-fields-update', {
-                    site: this.$store.state.currentSite.config.name,
-                    table: tableName,
+                settings.noIndexThisPage = !!settings.noIndexThisPage;
+
+                return settings;
+            },
+            /*
+             * Updates fields of a single item:
+             * window.app.setContentElementField('post', 27, [{ field: '_core', subfield: 'metaTitle', value: 'Hello!', type: 'json' }], callback, { updateModificationDate: true })
+             *
+             * options.updateModificationDate - false by default; when true, modified_at of posts and pages is updated
+             *
+             * Returns promise with: { status: 'success', item: { itemID, fields } } or { status: 'error', errorCode, error, itemID, field }
+             */
+            async setContentElementField (itemType, itemID, fieldsToUpdate, callback = null, options = {}) {
+                let result = await this.invokeContentFieldsUpdate(itemType, 'app-content-fields-update', {
                     itemID,
                     fieldsToUpdate
-                });
+                }, options);
 
-                mainProcessAPI.receiveOnce('app-content-fields-updated', (result) => {
-                    if (result.status === 'success') {
-                        fieldsToUpdate.forEach(fieldObj => {
-                            this.$store.commit('updateCurrentSiteItem', {
-                                itemType: itemType,
-                                itemID: itemID,
-                                field: fieldObj.field,
-                                value: fieldObj.value,
-                                type: fieldObj.type,
-                                subfield: fieldObj.subfield
-                            });
-                        });
+                if (result.status === 'success') {
+                    this.applyContentFieldsToStore(itemType, [result.item]);
+                }
+
+                return this.returnContentFieldsResult(result, callback);
+            },
+            /*
+             * Updates fields of many items in one transaction - when any field is invalid, nothing is saved:
+             * window.app.setContentElementsFields('tag', [{ itemID: 3, fieldsToUpdate: [...] }], callback, { updateModificationDate: true })
+             *
+             * Returns promise with: { status: 'success', items: [{ itemID, fields }] } or { status: 'error', errorCode, error, itemID, field }
+             */
+            async setContentElementsFields (itemType, items, callback = null, options = {}) {
+                let result = await this.invokeContentFieldsUpdate(itemType, 'app-content-fields-batch-update', {
+                    items
+                }, options);
+
+                if (result.status === 'success') {
+                    this.applyContentFieldsToStore(itemType, result.items);
+                }
+
+                return this.returnContentFieldsResult(result, callback);
+            },
+            async invokeContentFieldsUpdate (itemType, command, data, options) {
+                let table = ContentFieldsStore.getTableForItemType(itemType);
+
+                if (!table) {
+                    return {
+                        status: 'error',
+                        errorCode: 'invalid-item-type',
+                        error: 'Invalid item type: ' + itemType
+                    };
+                }
+
+                try {
+                    // JSON copy - data can come from the plugin iframe and must be serializable
+                    let payload = JSON.parse(JSON.stringify(Object.assign({}, data, {
+                        site: this.$store.state.currentSite.config.name,
+                        table,
+                        options: {
+                            // Disabled by default - backward compatibility with the API from Publii 0.47.3+
+                            updateModificationDate: !!(options && options.updateModificationDate === true)
+                        }
+                    })));
+                    let result = await mainProcessAPI.invoke(command, payload);
+
+                    if (!result || typeof result !== 'object') {
+                        throw new Error('Invalid response from the main process');
                     }
 
-                    callback(result);
+                    return result;
+                } catch (e) {
+                    return {
+                        status: 'error',
+                        errorCode: 'unexpected-error',
+                        error: e.message
+                    };
+                }
+            },
+            applyContentFieldsToStore (itemType, items) {
+                items.forEach(item => {
+                    this.$store.commit('updateCurrentSiteItem', {
+                        itemType,
+                        itemID: item.itemID,
+                        fields: item.fields
+                    });
                 });
+            },
+            returnContentFieldsResult (result, callback) {
+                if (typeof callback === 'function') {
+                    callback(result);
+                }
+
+                return result;
             }
         },
         beforeDestroy () {
