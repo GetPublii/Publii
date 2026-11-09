@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>net.tidycustoms.Publii</id>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-3.0-or-later</project_license>
+
+    <name>Publii</name>
+    <summary>Static CMS for privacy-focused, SEO-optimized websites</summary>
+
+    <developer id="net.tidycustoms">
+        <name>TidyCustoms</name>
+    </developer>
+
+    <description>
+        <p>
+            Publii is a desktop-based CMS for Windows, Mac and Linux that makes creating static websites fast and hassle-free, even for beginners.
+        </p>
+        <p>
+            Unlike static-site generators that are often unwieldy and difficult to use, Publii provides an easy-to-understand UI much like server-based CMSs such as WordPress or Joomla!, where users can create posts and other site content, and style their site using a variety of built-in themes and options. Users can enjoy the benefits of a super-fast and secure static website, with all the convenience that a CMS provides.
+        </p>
+        <p>
+            What makes Publii even more unique is that the app runs locally on your desktop rather than on the site's server. Available for Windows, Mac, Linux once the app has been installed you can create a site in minutes, even without internet access; since Publii is a desktop app you can create, update and modify your site offline, then upload the site changes to your server at the click of a button. Publii supports multiple upload options, including standard HTTP/HTTPS servers, Netlify, Amazon S3, GitHub Pages and Google Cloud or SFTP.
+        </p>
+    </description>
+
+    <launchable type="desktop-id">net.tidycustoms.Publii.desktop</launchable>
+
+    <screenshots>
+        <screenshot type="default">
+            <image>
+                https://raw.githubusercontent.com/GetPublii/Publii/4efe64c8ffc3c0a113f26e97a156e5faa9574516/build/linux/screenshots/write-a-post.png</image>
+            <caption>Writing a post in the rich text editor</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/GetPublii/Publii/4efe64c8ffc3c0a113f26e97a156e5faa9574516/build/linux/screenshots/choose-an-editor.png</image>
+            <caption>Choosing between the WYSIWYG, block and Markdown editors</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/GetPublii/Publii/4efe64c8ffc3c0a113f26e97a156e5faa9574516/build/linux/screenshots/site-settings.png</image>
+            <caption>Site settings, from language to SEO and privacy</caption>
+        </screenshot>
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/GetPublii/Publii/4efe64c8ffc3c0a113f26e97a156e5faa9574516/build/linux/screenshots/deploy-your-website.png</image>
+            <caption>Choosing where the finished site is uploaded</caption>
+        </screenshot>
+    </screenshots>
+
+    <url type="homepage">https://getpublii.com</url>
+    <url type="help">https://getpublii.com/docs/</url>
+    <url type="bugtracker">https://github.com/GetPublii/Publii/issues</url>
+    <url type="vcs-browser">https://github.com/GetPublii/Publii</url>
+    <url type="donation">https://opencollective.com/publii</url>
+
+    <branding>
+        <color type="primary" scheme_preference="light">#bddffa</color>
+        <color type="primary" scheme_preference="dark">#1c3f5f</color>
+    </branding>
+
+    <content_rating type="oars-1.1" />
+
+    <categories>
+        <category>Office</category>
+        <category>Publishing</category>
+    </categories>
+
+    <keywords>
+        <keyword>CMS</keyword>
+        <keyword>blog</keyword>
+        <keyword>website</keyword>
+        <keyword>static site</keyword>
+        <keyword>publishing</keyword>
+    </keywords>
+
+    <supports>
+        <control>keyboard</control>
+        <control>pointing</control>
+    </supports>
+    <requires>
+        <display_length compare="ge">1200</display_length>
+    </requires>
+
+    <releases>
+        <release version="0.47.9" date="2026-07-23">
+            <description>
+                <p>
+                    This quick maintenance release addresses a few specific regressions
+                    and issues reported after the recent update, including SFTP deployment
+                    problems, slash handling on the blog page, and further refinements to
+                    JSON rendering.
+                </p>
+            </description>
+            <url type="details">https://getpublii.com/blog/release-047.html#hotfix-0-47-9</url>
+        </release>
+    </releases>
+</component>
