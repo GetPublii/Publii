@@ -11,6 +11,12 @@ const ITEM_TYPES = {
     author: { table: 'authors', collection: 'authors' }
 };
 
+// Fields saved outside of the data loaded to the store lists - e.g. the featured image data of posts and pages
+const FIELDS_NOT_IN_STORE = {
+    post: ['featuredImage'],
+    page: ['featuredImage']
+};
+
 // Names of the DB JSON fields which are stored under different keys in the store
 const STORE_JSON_FIELDS = {
     post: { _core: 'additional_data' },
@@ -62,6 +68,10 @@ function parseStoredJson (value) {
  */
 function applyFieldsToItem (item, itemType, fields) {
     for (let fieldObj of fields) {
+        if (FIELDS_NOT_IN_STORE[itemType] && FIELDS_NOT_IN_STORE[itemType].includes(fieldObj.field)) {
+            continue;
+        }
+
         let storeField = getStoreFieldName(itemType, fieldObj.field);
 
         if (fieldObj.type === 'field') {

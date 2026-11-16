@@ -1,5 +1,6 @@
 const ipcMain = require('electron').ipcMain;
 const ContentFields = require('../content-fields.js');
+const ContentDetails = require('../content-details.js');
 const PathValidator = require('../helpers/path-validator.js');
 
 const { isValidDirSegment } = PathValidator;
@@ -28,6 +29,38 @@ class ContentEvents {
                 contentData.options
             ));
         });
+
+        // Read details of posts and pages (featured image, excerpt, images) - nothing is changed
+        ipcMain.handle('app-content-details-read', function (event, contentData) {
+            return ContentEvents.runRead(appInstance, contentData, contentDetails => contentDetails.read(
+                contentData.itemType,
+                contentData.options
+            ));
+        });
+    }
+
+    static runRead (appInstance, contentData, callback) {
+        if (!contentData || !isValidDirSegment(contentData.site)) {
+            return {
+                status: 'error',
+                errorCode: 'invalid-site',
+                error: 'Invalid site name'
+            };
+        }
+
+        try {
+            let contentDetails = new ContentDetails(appInstance, {
+                site: contentData.site
+            });
+
+            return callback(contentDetails);
+        } catch (e) {
+            return {
+                status: 'error',
+                errorCode: 'unexpected-error',
+                error: e.message
+            };
+        }
     }
 
     static runUpdate (appInstance, contentData, callback) {

@@ -289,6 +289,7 @@ contextBridge.exposeInMainWorld('mainProcessAPI', {
             'app-plugins-api:delete-language-file',
             'app-content-fields-update',
             'app-content-fields-batch-update',
+            'app-content-details-read',
             'app-open-new-window',
             'app-view-lock',
             'app-local-preview:get-state',

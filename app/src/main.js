@@ -311,6 +311,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getCurrentSiteSeoSettings: () => this.getCurrentSiteSeoSettings(),
                 setContentElementField: (itemType, itemID, fieldsToUpdate, callback, options) => this.setContentElementField(itemType, itemID, fieldsToUpdate, callback, options),
                 setContentElementsFields: (itemType, items, callback, options) => this.setContentElementsFields(itemType, items, callback, options),
+                getContentElementsDetails: (itemType, options) => this.getContentElementsDetails(itemType, options),
                 // Custom plugin settings pages: true when the page has unsaved changes - Publii asks before leaving the plugin view
                 setPluginUnsavedChanges: (value) => this.$bus.$emit('plugin-settings-unsaved-changes', value === true)
             };
@@ -551,6 +552,10 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
              * Updates fields of a single item:
              * window.app.setContentElementField('post', 27, [{ field: '_core', subfield: 'metaTitle', value: 'Hello!', type: 'json' }], callback, { updateModificationDate: true })
              *
+             * Fields of posts and pages: title, slug, text (type: 'field'), _core (type: 'json'),
+             * featuredImage (type: 'json', subfields: alt, caption, credits) - Publii 0.48.4+, only for items with a featured image
+             * (otherwise the no-featured-image error is returned). Fields of tags and authors: see content-fields.js
+             *
              * options.updateModificationDate - false by default; when true, modified_at of posts and pages is updated
              * options.validateOnly - false by default; when true, nothing is saved - fields are only validated and normalized,
              *                        all errors are returned in the errors array (see setContentElementsFields)
@@ -632,6 +637,48 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                         fields: item.fields
                     });
                 });
+            },
+            /*
+             * Reads details of posts and pages which are not in the lists of the store - nothing is changed:
+             * window.app.getContentElementsDetails('post', { include: ['featuredImage', 'excerpt', 'images'], ids: [27, 31] })
+             *
+             * options.include - featuredImage, excerpt, images (all by default); unknown values are skipped
+             * options.ids - IDs of the items to read (all items of the type by default) - items are returned in the same order
+             *
+             * Large websites: read the items in parts of about 100 IDs - reading the content runs in the main process
+             * (all details of 2000 long posts take about 0.5 s, 100 posts about 30 ms)
+             *
+             * Returns promise with: { status: 'success', items: [{ itemID, editor, featuredImage, excerpt, images, errors }] }
+             *                       or { status: 'error', errorCode, error }
+             *
+             *   featuredImage - null or { file, url, alt, caption, credits } (url is the file on disk, for previews)
+             *   excerpt - { text, source } - source: read-more, auto or empty - the same excerpt as the renderer creates
+             *   images - [{ src, alt, title, caption, width, height, inLink, linkHref, role, ariaHidden, inGallery }]
+             *            alt is null when the attribute is missing and '' when it is empty
+             *   errors - only when something could not be read, e.g. [{ errorCode: 'invalid-content', error, field: 'text' }]
+             */
+            async getContentElementsDetails (itemType, options = {}) {
+                try {
+                    // JSON copy - options can come from the plugin iframe and must be serializable
+                    let payload = JSON.parse(JSON.stringify({
+                        site: this.$store.state.currentSite.config.name,
+                        itemType,
+                        options: options && typeof options === 'object' ? options : {}
+                    }));
+                    let result = await mainProcessAPI.invoke('app-content-details-read', payload);
+
+                    if (!result || typeof result !== 'object') {
+                        throw new Error('Invalid response from the main process');
+                    }
+
+                    return result;
+                } catch (e) {
+                    return {
+                        status: 'error',
+                        errorCode: 'unexpected-error',
+                        error: e.message
+                    };
+                }
             },
             returnContentFieldsResult (result, callback) {
                 if (typeof callback === 'function') {

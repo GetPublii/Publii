@@ -26,6 +26,22 @@ describe('Content fields API - store helpers', function () {
         assert.equal(post.modified_at, 5);
     });
 
+    it('does not add the featured image data to the items of posts and pages', function () {
+        let post = { id: 1, title: 'Post', additional_data: '{"metaTitle":"Old"}' };
+        let page = { id: 2, title: 'Page', additional_data: null };
+        let postBefore = structuredClone(post);
+
+        ContentFieldsStore.applyFieldsToItem(post, 'post', [{ field: 'featuredImage', subfield: 'alt', value: 'Alt', type: 'json' }]);
+        ContentFieldsStore.applyFieldsToItem(page, 'page', [
+            { field: 'featuredImage', subfield: 'caption', value: 'Caption', type: 'json' },
+            { field: '_core', subfield: 'metaTitle', value: 'Title', type: 'json' }
+        ]);
+
+        assert.deepEqual(post, postBefore);
+        assert.deepEqual(Object.keys(page), ['id', 'title', 'additional_data']);
+        assert.deepEqual(JSON.parse(page.additional_data), { metaTitle: 'Title' });
+    });
+
     it('creates _core data for posts without additional data', function () {
         let page = { id: 1, additional_data: null };
 

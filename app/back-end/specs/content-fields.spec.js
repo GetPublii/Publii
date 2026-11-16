@@ -181,6 +181,121 @@ describe('Content fields API (plugins)', function () {
         });
     });
 
+    describe('featured image of posts and pages', function () {
+        function addFeaturedImage(postID, imageID, additionalData) {
+            database.prepare(`INSERT INTO posts_images VALUES(@imageID, @postID, 'photo.jpg', '', '', @additionalData)`).run({ imageID, postID, additionalData });
+            database.prepare(`UPDATE posts SET featured_image_id = @imageID WHERE id = @postID`).run({ imageID, postID });
+        }
+
+        function getImageData(imageID) {
+            let row = database.prepare(`SELECT additional_data FROM posts_images WHERE id = @imageID`).get({ imageID });
+            return row ? JSON.parse(row.additional_data) : null;
+        }
+
+        it('updates alt, caption and credits and keeps the other image data', function () {
+            addPost(1, 'Post', 'post');
+            addFeaturedImage(1, 5, JSON.stringify({ alt: '', caption: 'Old caption', credits: '', custom: 1 }));
+
+            let result = contentFields.update('posts', 1, [
+                { field: 'featuredImage', subfield: 'alt', value: 'Winter moon', type: 'json' },
+                { field: 'featuredImage', subfield: 'credits', value: 'Photo: Bob', type: 'json' }
+            ]);
+
+            assert.equal(result.status, 'success');
+            assert.deepEqual(result.item.fields, [
+                { field: 'featuredImage', subfield: 'alt', value: 'Winter moon', type: 'json' },
+                { field: 'featuredImage', subfield: 'credits', value: 'Photo: Bob', type: 'json' }
+            ]);
+            assert.deepEqual(getImageData(5), { alt: 'Winter moon', caption: 'Old caption', credits: 'Photo: Bob', custom: 1 });
+        });
+
+        it('works for pages and with empty image data', function () {
+            addPost(2, 'About', 'about', 'published,is-page');
+            addFeaturedImage(2, 6, '');
+
+            assert.equal(contentFields.update('posts', 2, [{ field: 'featuredImage', subfield: 'caption', value: 'Our studio', type: 'json' }]).status, 'success');
+            assert.deepEqual(getImageData(6), { caption: 'Our studio' });
+        });
+
+        it('changes only the current featured image of the post', function () {
+            addPost(1, 'Post', 'post');
+            addPost(2, 'Other', 'other');
+            database.prepare(`INSERT INTO posts_images VALUES(4, 1, 'old.jpg', '', '', '{"alt":"Old"}')`).run();
+            addFeaturedImage(1, 5, '{"alt":""}');
+            addFeaturedImage(2, 7, '{"alt":"Other"}');
+
+            contentFields.update('posts', 1, [{ field: 'featuredImage', subfield: 'alt', value: 'New', type: 'json' }]);
+
+            assert.deepEqual(getImageData(4), { alt: 'Old' });
+            assert.deepEqual(getImageData(5), { alt: 'New' });
+            assert.deepEqual(getImageData(7), { alt: 'Other' });
+        });
+
+        it('reports posts without a featured image and saves nothing', function () {
+            addPost(1, 'Post', 'post');
+            addPost(2, 'Other', 'other');
+            database.prepare(`UPDATE posts SET featured_image_id = 99 WHERE id = 2`).run();
+
+            let missing = contentFields.update('posts', 1, [
+                { field: 'title', value: 'Changed', type: 'field' },
+                { field: 'featuredImage', subfield: 'alt', value: 'Text', type: 'json' }
+            ]);
+            let removedImage = contentFields.update('posts', 2, [{ field: 'featuredImage', subfield: 'alt', value: 'Text', type: 'json' }]);
+
+            addPost(3, 'Without file', 'without-file');
+            database.prepare(`INSERT INTO posts_images VALUES(8, 3, '', '', '', '{"alt":""}')`).run();
+            database.prepare(`UPDATE posts SET featured_image_id = 8 WHERE id = 3`).run();
+            let withoutFile = contentFields.update('posts', 3, [{ field: 'featuredImage', subfield: 'alt', value: 'Text', type: 'json' }]);
+
+            assert.equal(missing.status, 'error');
+            assert.equal(missing.errorCode, 'no-featured-image');
+            assert.equal(missing.itemID, 1);
+            assert.equal(missing.field, 'featuredImage');
+            assert.equal(getPost(1).title, 'Post');
+            assert.equal(removedImage.errorCode, 'no-featured-image');
+            assert.equal(withoutFile.errorCode, 'no-featured-image');
+            assert.equal(database.prepare(`SELECT additional_data FROM posts_images WHERE id = 8`).get().additional_data, '{"alt":""}');
+        });
+
+        it('reports a missing image in the validation without saving', function () {
+            addPost(1, 'Post', 'post');
+            addPost(2, 'With image', 'with-image');
+            addFeaturedImage(2, 5, '{"alt":""}');
+
+            let result = contentFields.updateBatch('posts', [
+                { itemID: 1, fieldsToUpdate: [{ field: 'featuredImage', subfield: 'alt', value: 'A', type: 'json' }] },
+                { itemID: 2, fieldsToUpdate: [{ field: 'featuredImage', subfield: 'alt', value: 'B', type: 'json' }] }
+            ], { validateOnly: true });
+
+            assert.deepEqual(result.errors.map(error => [error.errorCode, error.itemID]), [['no-featured-image', 1]]);
+            assert.deepEqual(result.items, [{ itemID: 2, fields: [{ field: 'featuredImage', subfield: 'alt', value: 'B', type: 'json' }] }]);
+            assert.deepEqual(getImageData(5), { alt: '' });
+        });
+
+        it('rejects other subfields, values which are not texts and other ways of saving', function () {
+            addPost(1, 'Post', 'post');
+            addFeaturedImage(1, 5, '{"alt":""}');
+            addTag(1, 'Tag', 'tag');
+
+            assert.equal(contentFields.update('posts', 1, [{ field: 'featuredImage', subfield: 'url', value: 'x.jpg', type: 'json' }]).errorCode, 'invalid-subfield');
+            assert.equal(contentFields.update('posts', 1, [{ field: 'featuredImage', subfield: '__proto__', value: 'x', type: 'json' }]).errorCode, 'invalid-subfield');
+            assert.equal(contentFields.update('posts', 1, [{ field: 'featuredImage', subfield: 'alt', value: 5, type: 'json' }]).errorCode, 'invalid-value');
+            assert.equal(contentFields.update('posts', 1, [{ field: 'featuredImage', value: '{}', type: 'field' }]).errorCode, 'invalid-column');
+            assert.equal(contentFields.update('tags', 1, [{ field: 'featuredImage', subfield: 'alt', value: 'x', type: 'json' }]).errorCode, 'invalid-column');
+            assert.deepEqual(getImageData(5), { alt: '' });
+        });
+
+        it('does not overwrite broken image data', function () {
+            addPost(1, 'Post', 'post');
+            addFeaturedImage(1, 5, '{broken');
+
+            let result = contentFields.update('posts', 1, [{ field: 'featuredImage', subfield: 'alt', value: 'x', type: 'json' }]);
+
+            assert.equal(result.errorCode, 'invalid-json-data');
+            assert.equal(database.prepare(`SELECT additional_data FROM posts_images WHERE id = 5`).get().additional_data, '{broken');
+        });
+    });
+
     describe('tags', function () {
         it('updates JSON data of tags with empty additional data', function () {
             addTag(1, 'Tag', 'tag', '');

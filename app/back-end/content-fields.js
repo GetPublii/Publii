@@ -18,6 +18,15 @@
  *       value: 'New description',
  *       type: 'json'
  *   }]
+ *
+ * Featured image data of posts and pages (stored in the posts_images table):
+ *
+ *   [{
+ *       field: 'featuredImage',
+ *       subfield: 'alt',       // alt, caption or credits
+ *       value: 'Text',
+ *       type: 'json'
+ *   }]
  */
 
 const Model = require('./model.js');
@@ -30,6 +39,8 @@ const TABLES_SCHEMA = {
         columns: ['title', 'slug', 'text'],
         // stored in the posts_additional_data table (key = field name)
         jsonFields: ['_core'],
+        // stored in the additional_data of the posts_images row pointed by posts.featured_image_id
+        featuredImageFields: ['alt', 'caption', 'credits'],
         nameColumn: 'title',
         slugColumn: 'slug',
         uniqueName: false
@@ -369,6 +380,10 @@ class ContentFields extends Model {
         if (fieldObj.type === 'json') {
             let subfield = fieldObj.subfield;
 
+            if (schema.featuredImageFields && field === 'featuredImage') {
+                return this.normalizeFeaturedImageField(schema, itemID, fieldObj);
+            }
+
             if (!schema.jsonFields.includes(field)) {
                 throw new ContentFieldError('invalid-column', 'Invalid table column name: ' + field, { itemID, field });
             }
@@ -388,9 +403,31 @@ class ContentFields extends Model {
     }
 
     /**
+     * Validates the featured image field of posts and pages - only texts of the known subfields can be saved
+     */
+    normalizeFeaturedImageField (schema, itemID, fieldObj) {
+        let subfield = fieldObj.subfield;
+
+        if (typeof subfield !== 'string' || !schema.featuredImageFields.includes(subfield)) {
+            throw new ContentFieldError('invalid-subfield', 'Invalid subfield name: ' + subfield, { itemID, field: 'featuredImage' });
+        }
+
+        if (typeof fieldObj.value !== 'string') {
+            throw new ContentFieldError('invalid-value', 'Value of the subfield ' + subfield + ' must be a string', { itemID, field: 'featuredImage' });
+        }
+
+        return { field: 'featuredImage', subfield, value: fieldObj.value, type: 'json' };
+    }
+
+    /**
      * Saves value of the subfield in the JSON column (or in the posts_additional_data row)
      */
     saveJsonSubfield (table, itemID, fieldObj) {
+        if (table === 'posts' && fieldObj.field === 'featuredImage') {
+            this.saveFeaturedImageSubfield(itemID, fieldObj);
+            return;
+        }
+
         if (table === 'posts') {
             let row = this.db.prepare(`SELECT id, value FROM posts_additional_data WHERE post_id = @id AND key = @key ORDER BY id ASC LIMIT 1`).get({
                 id: itemID,
@@ -422,6 +459,32 @@ class ContentFields extends Model {
         this.db.prepare(`UPDATE ${table} SET ${fieldObj.field} = @value WHERE id = @id`).run({
             value: JSON.stringify(jsonData),
             id: itemID
+        });
+    }
+
+    /**
+     * Saves alt, caption or credits of the featured image - the same data as the featured image fields of the post editor.
+     * Only the row of the current featured image is changed, other keys of its data are kept.
+     */
+    saveFeaturedImageSubfield (itemID, fieldObj) {
+        let post = this.db.prepare(`SELECT featured_image_id AS imageID FROM posts WHERE id = @id`).get({ id: itemID });
+        let imageID = post ? parseInt(post.imageID, 10) : 0;
+        let image = imageID > 0 ? this.db.prepare(`SELECT id, url, additional_data AS value FROM posts_images WHERE id = @imageID AND post_id = @id`).get({
+            imageID,
+            id: itemID
+        }) : null;
+
+        // An image row without a file is not an image - the post editor shows the image fields only for an image with a file
+        if (!image || !image.url) {
+            throw new ContentFieldError('no-featured-image', 'Item ' + itemID + ' does not have a featured image', { itemID, field: 'featuredImage' });
+        }
+
+        let jsonData = this.parseJsonObject(image.value, itemID, 'featuredImage');
+        jsonData[fieldObj.subfield] = fieldObj.value;
+
+        this.db.prepare(`UPDATE posts_images SET additional_data = @value WHERE id = @imageID`).run({
+            value: JSON.stringify(jsonData),
+            imageID: image.id
         });
     }
 
