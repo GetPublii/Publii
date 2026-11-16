@@ -351,6 +351,111 @@ describe('Content fields API (plugins)', function () {
         });
     });
 
+    describe('validation without saving (validateOnly)', function () {
+        it('returns normalized values and saves nothing', function () {
+            addPost(1, 'Post', 'post');
+
+            let result = contentFields.update('posts', 1, [
+                { field: 'title', value: '  New title  ', type: 'field' },
+                { field: 'slug', value: '  Hello   World!  ', type: 'field' },
+                { field: '_core', subfield: 'metaTitle', value: 'Meta', type: 'json' }
+            ], { validateOnly: true, updateModificationDate: true });
+
+            assert.equal(result.status, 'success');
+            assert.equal(result.validateOnly, true);
+            assert.deepEqual(result.item, {
+                itemID: 1,
+                fields: [
+                    { field: 'title', value: 'New title', type: 'field' },
+                    { field: 'slug', value: 'hello-world', type: 'field' },
+                    { field: '_core', subfield: 'metaTitle', value: 'Meta', type: 'json' }
+                ]
+            });
+            assert.equal(getPost(1).title, 'Post');
+            assert.equal(getPost(1).slug, 'post');
+            assert.equal(Number(getPost(1).modified_at), 1000);
+            assert.deepEqual(getPostData(1, '_core'), []);
+        });
+
+        it('returns all errors and the first one in the same top-level fields as a real save', function () {
+            addPost(1, 'First', 'first');
+            addPost(2, 'Second', 'second');
+            addPost(3, 'Taken', 'taken');
+            let items = [
+                { itemID: 1, fieldsToUpdate: [{ field: 'slug', value: 'taken', type: 'field' }] },
+                { itemID: 2, fieldsToUpdate: [{ field: 'title', value: '   ', type: 'field' }] },
+                { itemID: 3, fieldsToUpdate: [{ field: 'title', value: 'Valid', type: 'field' }] }
+            ];
+
+            let validation = contentFields.updateBatch('posts', items, { validateOnly: true });
+            let realSave = contentFields.updateBatch('posts', items);
+
+            assert.equal(validation.status, 'error');
+            assert.equal(validation.validateOnly, true);
+            assert.deepEqual(validation.errors.map(error => [error.errorCode, error.itemID, error.field]), [
+                ['empty-name', 2, 'title'],
+                ['duplicate-slug', 1, 'slug']
+            ]);
+            assert.equal(validation.errors[1].conflictingItemID, 3);
+            assert.equal(validation.errorCode, realSave.errorCode);
+            assert.equal(validation.itemID, realSave.itemID);
+            assert.deepEqual(validation.items.map(item => item.itemID), [1, 3]);
+            assert.equal(getPost(1).slug, 'first');
+            assert.equal(getPost(3).title, 'Taken');
+        });
+
+        it('reports both items of a duplicate inside the batch and allows to swap slugs', function () {
+            addPost(1, 'First', 'first');
+            addPost(2, 'Second', 'second');
+
+            let duplicate = contentFields.updateBatch('posts', [
+                { itemID: 1, fieldsToUpdate: [{ field: 'slug', value: 'same', type: 'field' }] },
+                { itemID: 2, fieldsToUpdate: [{ field: 'slug', value: 'same', type: 'field' }] }
+            ], { validateOnly: true });
+            let swap = contentFields.updateBatch('posts', [
+                { itemID: 1, fieldsToUpdate: [{ field: 'slug', value: 'second', type: 'field' }] },
+                { itemID: 2, fieldsToUpdate: [{ field: 'slug', value: 'first', type: 'field' }] }
+            ], { validateOnly: true });
+
+            assert.deepEqual(duplicate.errors.map(error => [error.errorCode, error.itemID]), [['duplicate-slug', 1], ['duplicate-slug', 2]]);
+            assert.equal(swap.status, 'success');
+            assert.equal(getPost(1).slug, 'first');
+            assert.equal(getPost(2).slug, 'second');
+        });
+
+        it('does not let an invalid item affect the checks of other items', function () {
+            addTag(1, 'Broken', 'broken', '{broken');
+            addTag(2, 'Other', 'other');
+
+            let result = contentFields.updateBatch('tags', [
+                { itemID: 1, fieldsToUpdate: [{ field: 'slug', value: 'shared', type: 'field' }, { field: 'additional_data', subfield: 'metaTitle', value: 'X', type: 'json' }] },
+                { itemID: 2, fieldsToUpdate: [{ field: 'slug', value: 'shared', type: 'field' }] }
+            ], { validateOnly: true });
+
+            assert.deepEqual(result.errors.map(error => [error.errorCode, error.itemID]), [['invalid-json-data', 1]]);
+            assert.equal(getTag(1).slug, 'broken');
+            assert.equal(getTag(2).slug, 'other');
+        });
+
+        it('leaves no open transaction - a real save works after a failed validation', function () {
+            addPost(1, 'First', 'first');
+            addPost(2, 'Second', 'second');
+
+            assert.equal(contentFields.update('posts', 1, [{ field: 'slug', value: 'second', type: 'field' }], { validateOnly: true }).errorCode, 'duplicate-slug');
+            assert.equal(contentFields.update('posts', 1, [{ field: 'slug', value: 'third', type: 'field' }]).status, 'success');
+            assert.equal(getPost(1).slug, 'third');
+        });
+
+        it('returns the standard result when validateOnly is not exactly true', function () {
+            addPost(1, 'First', 'first');
+
+            let result = contentFields.update('posts', 1, [{ field: 'title', value: 'Changed', type: 'field' }], { validateOnly: 'yes' });
+
+            assert.deepEqual(Object.keys(result), ['status', 'item']);
+            assert.equal(getPost(1).title, 'Changed');
+        });
+    });
+
     describe('validation', function () {
         it('rejects invalid tables, items and fields', function () {
             addPost(1, 'First', 'first');
@@ -425,6 +530,24 @@ describe('Content fields API (plugins)', function () {
             assert.equal(single.item.fields[0].value, 'new-slug');
             assert.equal(batch.status, 'success');
             assert.equal(getTag(1).name, 'Renamed');
+        });
+
+        it('passes the validateOnly option to the model', async function () {
+            const handlers = new Map();
+            const ContentEvents = loadContentEvents(handlers);
+            new ContentEvents(application);
+            addTag(1, 'First', 'first');
+
+            let result = await handlers.get('app-content-fields-batch-update')({}, {
+                site: siteName,
+                table: 'tags',
+                items: [{ itemID: 1, fieldsToUpdate: [{ field: 'name', value: 'Renamed', type: 'field' }] }],
+                options: { validateOnly: true }
+            });
+
+            assert.equal(result.status, 'success');
+            assert.equal(result.validateOnly, true);
+            assert.equal(getTag(1).name, 'First');
         });
 
         it('rejects invalid site names', async function () {

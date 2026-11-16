@@ -66,6 +66,14 @@ describe('Content fields API - store helpers', function () {
         assert.deepEqual(author.additionalData, { metaRobots: 'index, follow' });
     });
 
+    it('sends only known options as booleans, disabled by default', function () {
+        assert.deepEqual(ContentFieldsStore.getRequestOptions(), { updateModificationDate: false, validateOnly: false });
+        assert.deepEqual(ContentFieldsStore.getRequestOptions({ updateModificationDate: 'yes', validateOnly: 1, other: true }), { updateModificationDate: false, validateOnly: false });
+        assert.deepEqual(ContentFieldsStore.getRequestOptions({ updateModificationDate: true, validateOnly: true }), { updateModificationDate: true, validateOnly: true });
+        assert.equal(ContentFieldsStore.isValidateOnly(null), false);
+        assert.equal(ContentFieldsStore.isValidateOnly({ validateOnly: true }), true);
+    });
+
     it('keeps parsed JSON objects as objects', function () {
         let tag = { id: 1, additionalData: { isHidden: true } };
 

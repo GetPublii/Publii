@@ -83,7 +83,16 @@ function setup (componentName = 'ToolsPlugin') {
         $nextTick: () => Promise.resolve(),
         $route: { params: { name: 'site-a', pluginname: 'plugin-a' } },
         $t: (key, values) => values ? key + ': ' + (values.sites ?? values.count ?? values.pluginName) : key,
-        $bus: { $emit: (name, data) => events.push({ name, data }) },
+        $bus: {
+            listeners: new Map(),
+            $emit: (name, data) => events.push({ name, data }),
+            $on (name, callback) { this.listeners.set(name, callback); },
+            $off (name, callback) {
+                if (this.listeners.get(name) === callback) {
+                    this.listeners.delete(name);
+                }
+            }
+        },
         $store: { commit: (name, data) => commits.push({ name, data }) }
     };
 
@@ -450,5 +459,98 @@ describe('Plugin settings multi-window guard frontend', () => {
         assert.equal(harness.commits.length, 1);
         assert.equal(harness.commits[0].name, 'replaceAppPlugins');
         assert.equal(harness.events.at(-1).data.type, 'success');
+    });
+});
+
+describe('Plugin settings unsaved changes', () => {
+    function leave (harness) {
+        const results = [];
+        harness.options.beforeRouteLeave.call(harness.instance, {}, {}, value => results.push(value));
+        return results;
+    }
+
+    it('leaves the plugin view without asking when there are no unsaved changes', async () => {
+        const harness = setup();
+        await open(harness, 'lock-a', true);
+
+        assert.deepEqual(leave(harness), [undefined]);
+        assert.equal(harness.events.length, 0);
+    });
+
+    it('asks before leaving when the custom settings page reported unsaved changes', async () => {
+        const harness = setup();
+        await open(harness, 'lock-a', true);
+        harness.instance.setPluginUnsavedChanges(true);
+
+        const cancelled = leave(harness);
+        const confirm = harness.events.at(-1);
+        assert.equal(confirm.name, 'confirm-display');
+        assert.equal(confirm.data.isDanger, true);
+        assert.equal(confirm.data.okLabel, 'core.quitWithoutSaving');
+        assert.equal(confirm.data.cancelLabel, 'ui.keepEditing');
+        assert.deepEqual(cancelled, []);
+        confirm.data.cancelClick();
+        assert.deepEqual(cancelled, [false]);
+        assert.equal(harness.instance.pluginUnsavedChanges, true);
+
+        const confirmed = leave(harness);
+        harness.events.at(-1).data.okClick();
+        assert.deepEqual(confirmed, [undefined]);
+        assert.equal(harness.instance.pluginUnsavedChanges, false);
+    });
+
+    it('accepts the flag only from an open custom settings page and only as true', async () => {
+        const standard = setup();
+        await open(standard, 'lock-a', false);
+        standard.instance.setPluginUnsavedChanges(true);
+        assert.equal(standard.instance.pluginUnsavedChanges, false);
+
+        const notOpened = setup();
+        notOpened.instance.hasPluginCustomOptions = true;
+        notOpened.instance.setPluginUnsavedChanges(true);
+        assert.equal(notOpened.instance.pluginUnsavedChanges, false);
+
+        const custom = setup();
+        await open(custom, 'lock-a', true);
+        custom.instance.setPluginUnsavedChanges('yes');
+        assert.equal(custom.instance.pluginUnsavedChanges, false);
+        custom.instance.setPluginUnsavedChanges(true);
+        assert.equal(custom.instance.pluginUnsavedChanges, true);
+        custom.instance.setPluginUnsavedChanges(false);
+        assert.equal(custom.instance.pluginUnsavedChanges, false);
+    });
+
+    it('forgets unsaved changes when the settings are closed or the page is reloaded', async () => {
+        const harness = setup();
+        await open(harness, 'lock-a', true);
+        harness.instance.setPluginUnsavedChanges(true);
+        harness.instance.closePluginSettings();
+        assert.equal(harness.instance.pluginUnsavedChanges, false);
+
+        await open(harness, 'lock-b', true);
+        harness.instance.setPluginUnsavedChanges(true);
+        // The flag is cleared synchronously, before the appearance of the reloaded page is applied
+        const reload = harness.instance.applyCustomOptionsAppearance({ target: { isConnected: false } });
+        assert.equal(harness.instance.pluginUnsavedChanges, false);
+        await reload.catch(() => {});
+    });
+
+    it('listens to the API event only while the view exists', async () => {
+        const harness = setup();
+        await harness.options.mounted.call(harness.instance);
+        const listener = harness.instance.$bus.listeners.get('plugin-settings-unsaved-changes');
+        assert.equal(listener, harness.instance.setPluginUnsavedChanges);
+
+        harness.options.beforeDestroy.call(harness.instance);
+        assert.equal(harness.instance.$bus.listeners.has('plugin-settings-unsaved-changes'), false);
+    });
+
+    it('uses the same event name in the plugins API', () => {
+        const main = fs.readFileSync(path.resolve(componentsPath, '../main.js'), 'utf8');
+        const component = fs.readFileSync(path.resolve(componentsPath, 'ToolsPlugin.vue'), 'utf8');
+
+        assert.ok(main.includes("setPluginUnsavedChanges: (value) => this.$bus.$emit('plugin-settings-unsaved-changes', value === true)"));
+        assert.ok(component.includes("$on('plugin-settings-unsaved-changes', this.setPluginUnsavedChanges)"));
+        assert.ok(component.includes("$off('plugin-settings-unsaved-changes', this.setPluginUnsavedChanges)"));
     });
 });

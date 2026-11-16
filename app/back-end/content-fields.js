@@ -69,7 +69,7 @@ class ContentFields extends Model {
      * @param {string} table - posts, tags or authors
      * @param {number} itemID
      * @param {Array} fieldsToUpdate
-     * @param {object} options - { updateModificationDate: false } - when true, modified_at of posts and pages is updated
+     * @param {object} options - { updateModificationDate: false, validateOnly: false } - see updateBatch
      *
      * @returns {object} - { status: 'success', item: { itemID, fields } } or { status: 'error', errorCode, error, itemID, field }
      */
@@ -78,6 +78,14 @@ class ContentFields extends Model {
 
         if (result.status !== 'success') {
             return result;
+        }
+
+        if (result.validateOnly) {
+            return {
+                status: 'success',
+                validateOnly: true,
+                item: result.items[0]
+            };
         }
 
         return {
@@ -91,9 +99,13 @@ class ContentFields extends Model {
      *
      * @param {string} table - posts, tags or authors
      * @param {Array} items - [{ itemID, fieldsToUpdate }]
-     * @param {object} options - { updateModificationDate: false } - when true, modified_at of posts and pages is updated
+     * @param {object} options
+     *   - updateModificationDate (false by default) - when true, modified_at of posts and pages is updated
+     *   - validateOnly (false by default) - when true, nothing is saved: all items are validated and all errors are returned
      *
      * @returns {object} - { status: 'success', items: [{ itemID, fields }] } or { status: 'error', errorCode, error, itemID, field }
+     *                     with validateOnly: { status, validateOnly: true, items, errors: [{ errorCode, error, itemID, field, conflictingItemID }] }
+     *                     (the first error is also returned in the top-level fields, like in the standard mode)
      */
     updateBatch (table, items, options = {}) {
         let schema = TABLES_SCHEMA[table];
@@ -108,6 +120,10 @@ class ContentFields extends Model {
 
         if (!Array.isArray(items) || !items.length) {
             return this.errorResult(new ContentFieldError('invalid-data', 'List of items to update is empty'));
+        }
+
+        if (options && options.validateOnly === true) {
+            return this.validateBatch(table, schema, items);
         }
 
         // Disabled by default - the API did not change the modification date before this option was added
@@ -140,6 +156,95 @@ class ContentFields extends Model {
             status: 'success',
             items: results
         };
+    }
+
+    /**
+     * Validates items without saving anything (options.validateOnly of updateBatch)
+     *
+     * Changes are applied inside a transaction exactly like in updateBatch - so normalized values and conflicts
+     * are the same as during a real save - and then the transaction is always rolled back.
+     * Unlike updateBatch, it does not stop at the first error: every item is checked and all errors are returned.
+     */
+    validateBatch (table, schema, items) {
+        let changedUniqueValues = [];
+        let results = [];
+        let errors = [];
+        let unexpectedError = null;
+
+        this.db.exec('BEGIN');
+
+        try {
+            for (let item of items) {
+                let itemUniqueValues = [];
+
+                // Changes of an invalid item are reverted, so they do not affect the checks of the other items
+                this.db.exec('SAVEPOINT content_fields_item');
+
+                try {
+                    results.push(this.updateItem(table, schema, item, itemUniqueValues, false, 0));
+                    changedUniqueValues.push(...itemUniqueValues);
+                    this.db.exec('RELEASE content_fields_item');
+                } catch (e) {
+                    this.db.exec('ROLLBACK TO content_fields_item');
+                    this.db.exec('RELEASE content_fields_item');
+
+                    if (!(e instanceof ContentFieldError)) {
+                        throw e;
+                    }
+
+                    errors.push(this.errorDetails(e));
+                }
+            }
+
+            // Every changed value is checked separately - to report all conflicts, not only the first one
+            for (let change of changedUniqueValues) {
+                try {
+                    this.checkUniqueValues(table, schema, [change]);
+                } catch (e) {
+                    if (!(e instanceof ContentFieldError)) {
+                        throw e;
+                    }
+
+                    errors.push(this.errorDetails(e));
+                }
+            }
+        } catch (e) {
+            unexpectedError = e;
+        } finally {
+            try {
+                this.db.exec('ROLLBACK');
+            } catch (rollbackError) {
+                console.log('[ContentFields] Rollback error:', rollbackError.message);
+            }
+        }
+
+        if (unexpectedError) {
+            errors = [this.errorDetails(unexpectedError)];
+            results = [];
+        }
+
+        if (!errors.length) {
+            return {
+                status: 'success',
+                validateOnly: true,
+                items: results
+            };
+        }
+
+        // The first error is returned in the top-level fields - the same as the result of a real save
+        return Object.assign({ status: 'error', validateOnly: true }, errors[0], {
+            items: results,
+            errors
+        });
+    }
+
+    /**
+     * Returns the error result without the status - used in the list of errors
+     */
+    errorDetails (error) {
+        let details = this.errorResult(error);
+        delete details.status;
+        return details;
     }
 
     /**

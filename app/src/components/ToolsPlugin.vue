@@ -508,7 +508,9 @@ export default {
             settingsPluginName: '',
             settingsLoadSequence: 0,
             settingsDisposed: false,
-            saveTimer: null
+            saveTimer: null,
+            // Reported by the custom settings page via window.app.setPluginUnsavedChanges()
+            pluginUnsavedChanges: false
         };
     },
     computed: {
@@ -583,6 +585,7 @@ export default {
         }
     },
     async mounted () {
+        this.$bus.$on('plugin-settings-unsaved-changes', this.setPluginUnsavedChanges);
         await this.$nextTick();
 
         if (!this.settingsDisposed) {
@@ -665,6 +668,7 @@ export default {
         closePluginSettings () {
             clearTimeout(this.saveTimer);
             this.saveTimer = null;
+            this.pluginUnsavedChanges = false;
             const lockId = this.settingsLockId;
             this.settingsLockId = '';
             this.settingsSiteName = '';
@@ -681,7 +685,15 @@ export default {
                 buttonStyle: 'danger'
             });
         },
+        /*
+         * Only an open custom settings page can report unsaved changes - other callers are ignored
+         */
+        setPluginUnsavedChanges (value) {
+            this.pluginUnsavedChanges = value === true && !!this.settingsLockId && this.hasPluginCustomOptions;
+        },
         async applyCustomOptionsAppearance (event) {
+            // The settings page was (re)loaded - its previous state does not exist anymore
+            this.pluginUnsavedChanges = false;
             const frame = event.target;
             const lockId = this.settingsLockId;
             const theme = await window.app.getCurrentAppTheme();
@@ -966,7 +978,31 @@ export default {
             this.pluginStandardOptionsVisible = true;
         }
     },
+    /*
+     * Asks before leaving the plugin view when its custom settings page reported unsaved changes.
+     * Route updates (another plugin or site in the same view) are handled by the $route watcher.
+     */
+    beforeRouteLeave (to, from, next) {
+        if (!this.pluginUnsavedChanges) {
+            next();
+            return;
+        }
+
+        this.$bus.$emit('confirm-display', {
+            dialogLabel: this.pluginName || this.$t('core.quitWithoutSaving'),
+            message: this.$t('core.sureYouWantQuit'),
+            okLabel: this.$t('core.quitWithoutSaving'),
+            cancelLabel: this.$t('ui.keepEditing'),
+            isDanger: true,
+            okClick: () => {
+                this.pluginUnsavedChanges = false;
+                next();
+            },
+            cancelClick: () => next(false)
+        });
+    },
     beforeDestroy () {
+        this.$bus.$off('plugin-settings-unsaved-changes', this.setPluginUnsavedChanges);
         this.settingsDisposed = true;
         this.settingsLoadSequence++;
         this.closePluginSettings();

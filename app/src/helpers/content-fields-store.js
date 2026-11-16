@@ -89,9 +89,29 @@ function applyFieldsToItem (item, itemType, fields) {
     return item;
 }
 
+/**
+ * Returns true only when the API was called with options.validateOnly === true (nothing is saved then)
+ */
+function isValidateOnly (options) {
+    return !!(options && options.validateOnly === true);
+}
+
+/**
+ * Returns options sent to the back-end - only known options, as booleans
+ */
+function getRequestOptions (options) {
+    return {
+        // Disabled by default - backward compatibility with the API from Publii 0.47.3+
+        updateModificationDate: !!(options && options.updateModificationDate === true),
+        validateOnly: isValidateOnly(options)
+    };
+}
+
 module.exports = {
     getTableForItemType,
     getCollectionForItemType,
     getStoreFieldName,
-    applyFieldsToItem
+    applyFieldsToItem,
+    isValidateOnly,
+    getRequestOptions
 };

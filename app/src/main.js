@@ -6,6 +6,7 @@ import VueI18n from 'vue-i18n';
 import App from './components/App';
 import DOMPurify from 'dompurify';
 import ContentFieldsStore from './helpers/content-fields-store.js';
+import SeoSettings from './helpers/seo-settings.js';
 import {
     DEFAULT_APP_APPEARANCE,
     applyAppAppearance,
@@ -309,7 +310,9 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                 getCurrentSiteAuthors: () => window.structuredClone(this.$store.state.currentSite.authors),
                 getCurrentSiteSeoSettings: () => this.getCurrentSiteSeoSettings(),
                 setContentElementField: (itemType, itemID, fieldsToUpdate, callback, options) => this.setContentElementField(itemType, itemID, fieldsToUpdate, callback, options),
-                setContentElementsFields: (itemType, items, callback, options) => this.setContentElementsFields(itemType, items, callback, options)
+                setContentElementsFields: (itemType, items, callback, options) => this.setContentElementsFields(itemType, items, callback, options),
+                // Custom plugin settings pages: true when the page has unsaved changes - Publii asks before leaving the plugin view
+                setPluginUnsavedChanges: (value) => this.$bus.$emit('plugin-settings-unsaved-changes', value === true)
             };
 
             // Find issues with loading languages
@@ -542,49 +545,15 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
              * Returns SEO-related site settings - default values used when the item does not have its own values
              */
             getCurrentSiteSeoSettings () {
-                let config = this.$store.state.currentSite.config || {};
-                let advanced = config.advanced || {};
-                let urls = advanced.urls || {};
-                let keys = [
-                    'noIndexThisPage',
-                    'metaTitle',
-                    'metaDescription',
-                    'postMetaTitle',
-                    'postMetaDescription',
-                    'pageMetaTitle',
-                    'pageMetaDescription',
-                    'tagMetaTitle',
-                    'tagMetaDescription',
-                    'metaRobotsTags',
-                    'authorMetaTitle',
-                    'authorMetaDescription',
-                    'metaRobotsAuthors'
-                ];
-                let settings = {
-                    siteName: config.name || '',
-                    displayName: config.displayName || '',
-                    urls: {
-                        cleanUrls: !!urls.cleanUrls,
-                        postsPrefix: urls.postsPrefix || '',
-                        tagsPrefix: urls.tagsPrefix || '',
-                        authorsPrefix: urls.authorsPrefix || '',
-                        pageName: urls.pageName || ''
-                    }
-                };
-
-                keys.forEach(key => {
-                    settings[key] = typeof advanced[key] === 'undefined' ? '' : advanced[key];
-                });
-
-                settings.noIndexThisPage = !!settings.noIndexThisPage;
-
-                return settings;
+                return SeoSettings.getSeoSettings(this.$store.state.currentSite);
             },
             /*
              * Updates fields of a single item:
              * window.app.setContentElementField('post', 27, [{ field: '_core', subfield: 'metaTitle', value: 'Hello!', type: 'json' }], callback, { updateModificationDate: true })
              *
              * options.updateModificationDate - false by default; when true, modified_at of posts and pages is updated
+             * options.validateOnly - false by default; when true, nothing is saved - fields are only validated and normalized,
+             *                        all errors are returned in the errors array (see setContentElementsFields)
              *
              * Returns promise with: { status: 'success', item: { itemID, fields } } or { status: 'error', errorCode, error, itemID, field }
              */
@@ -594,7 +563,8 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     fieldsToUpdate
                 }, options);
 
-                if (result.status === 'success') {
+                // Nothing was saved in the validateOnly mode - the store must not be changed
+                if (result.status === 'success' && !ContentFieldsStore.isValidateOnly(options)) {
                     this.applyContentFieldsToStore(itemType, [result.item]);
                 }
 
@@ -605,13 +575,17 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
              * window.app.setContentElementsFields('tag', [{ itemID: 3, fieldsToUpdate: [...] }], callback, { updateModificationDate: true })
              *
              * Returns promise with: { status: 'success', items: [{ itemID, fields }] } or { status: 'error', errorCode, error, itemID, field }
+             *
+             * With options.validateOnly: true nothing is saved and the result contains also validateOnly: true and
+             * on error - errors: [{ errorCode, error, itemID, field, conflictingItemID }] (all errors, the first one is also in the top-level fields)
              */
             async setContentElementsFields (itemType, items, callback = null, options = {}) {
                 let result = await this.invokeContentFieldsUpdate(itemType, 'app-content-fields-batch-update', {
                     items
                 }, options);
 
-                if (result.status === 'success') {
+                // Nothing was saved in the validateOnly mode - the store must not be changed
+                if (result.status === 'success' && !ContentFieldsStore.isValidateOnly(options)) {
                     this.applyContentFieldsToStore(itemType, result.items);
                 }
 
@@ -633,10 +607,7 @@ mainProcessAPI.receive('app-data-loaded', function (initialData) {
                     let payload = JSON.parse(JSON.stringify(Object.assign({}, data, {
                         site: this.$store.state.currentSite.config.name,
                         table,
-                        options: {
-                            // Disabled by default - backward compatibility with the API from Publii 0.47.3+
-                            updateModificationDate: !!(options && options.updateModificationDate === true)
-                        }
+                        options: ContentFieldsStore.getRequestOptions(options)
                     })));
                     let result = await mainProcessAPI.invoke(command, payload);
 
