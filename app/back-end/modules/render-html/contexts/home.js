@@ -70,8 +70,12 @@ class RendererContextHome extends RendererContext {
             this.metaDescription = this.siteConfig.advanced.homepageMetaDescription.replace(/%sitename/g, siteName);
         }
 
+        let homepageMainTagIDs = new Set(this.getAllMainTags(true).map(tag => tag.id));
+
         this.tags = this.renderer.commonData.tags.filter(tag => tag.additionalData.isHidden !== true);
-        this.mainTags = this.renderer.commonData.mainTags.filter(maintag => maintag.additionalData.isHidden !== true);
+        this.mainTags = this.renderer.commonData.mainTags.filter(tag => {
+            return tag.additionalData.isHidden !== true && homepageMainTagIDs.has(tag.id);
+        });
         this.menus = this.renderer.commonData.menus;
         this.unassignedMenus = this.renderer.commonData.unassignedMenus;
         this.authors = this.renderer.commonData.authors;
@@ -81,10 +85,11 @@ class RendererContextHome extends RendererContext {
 
         // mark tags as main tags
         let mainTagsIds = this.mainTags.map(tag => tag.id);
-        this.tags = this.tags.map(tag => {
-            tag.isMainTag = mainTagsIds.includes(tag.id);
-            return tag;
-        });
+        // Homepage-specific flags must not change tags shared with other contexts.
+        this.tags = this.tags.map(tag => ({
+            ...tag,
+            isMainTag: mainTagsIds.includes(tag.id)
+        }));
     }
 
     prepareData() {

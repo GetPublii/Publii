@@ -246,22 +246,35 @@ class RendererContext {
         return tags;
     }
 
-    getAllMainTags() {
-        // Retrieve post main tags
-        let mainTags = this.db.prepare(`
-            SELECT DISTINCT 
-                json_extract(value, '$.mainTag') AS id
-            FROM 
-                posts_additional_data
-            WHERE 
-                key = '_core' AND 
-                json_extract(value, '$.mainTag') IS NOT NULL AND 
-                json_extract(value, '$.mainTag') != '';
-        `).all();
+    getAllMainTags(forHomepage = false) {
+        // Post items already resolve explicit choices and alphabetical fallbacks.
+        let mainTagIDs = new Set();
 
-        mainTags = mainTags.map(mainTag => {
-            if (this.renderer.cachedItems.tags[mainTag.id]) {
-                return JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTag.id]));
+        for (let post of Object.values(this.renderer.cachedItems.posts)) {
+            if (
+                !post ||
+                !post.mainTag ||
+                typeof post.status !== 'string' ||
+                !post.status.includes('published') ||
+                post.status.includes('draft') ||
+                post.status.includes('trashed') ||
+                post.status.includes('hidden') ||
+                post.status.includes('is-page') ||
+                post.isHidden
+            ) {
+                continue;
+            }
+
+            if (forHomepage && (post.isExcludedOnHomepage || post.status.includes('excluded_homepage'))) {
+                continue;
+            }
+
+            mainTagIDs.add(String(post.mainTag.id));
+        }
+
+        let mainTags = Array.from(mainTagIDs).map(mainTagID => {
+            if (this.renderer.cachedItems.tags[mainTagID]) {
+                return JSON.parse(JSON.stringify(this.renderer.cachedItems.tags[mainTagID]));
             }
 
             return false;
