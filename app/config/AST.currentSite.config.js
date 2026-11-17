@@ -162,6 +162,7 @@ const AstCurrentSiteConfig = {
             cookieSettingsRevision: '1',
             cookieSettingsTTL: '90',
             debugMode: false,
+            videoReferrerPolicy: false,
             vimeoNoTrack: false,
             ytNoCookies: false,
             settingsVersion: ''

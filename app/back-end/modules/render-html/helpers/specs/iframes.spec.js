@@ -11,6 +11,7 @@ function createContext () {
             mediaLazyLoad: false,
             gdpr: {
                 enabled: false,
+                videoReferrerPolicy: false,
                 vimeoNoTrack: false,
                 ytNoCookies: false
             }
@@ -27,7 +28,14 @@ function createContext () {
 
 const renderers = {
     generation (context, html) {
-        return ContentHelper.prepareContent(1, html, context.siteConfig.domain, context.themeConfig, context.renderer);
+        return ContentHelper.prepareContent(
+            1,
+            html,
+            context.siteConfig.domain,
+            context.themeConfig,
+            context.renderer,
+            context.editor
+        );
     },
     postPreview (context, html) {
         return PostPreview.prototype.prepareContent.call(context, html, 1);
@@ -93,4 +101,83 @@ describe('Iframe wrappers in generated content and previews', function () {
             });
         });
     }
+});
+
+
+describe('Video compatibility in generated content and previews', function () {
+    const youtube = '<iframe src="https://www.youtube.com/embed/SO4YuDAkplU"></iframe>';
+
+    for (const [name, render] of Object.entries(renderers)) {
+        describe(name, function () {
+            for (const editor of ['tinymce', 'markdown', 'blockeditor']) {
+                it('applies only when enabled and can be disabled again in ' + editor, function () {
+                    const context = createContext();
+                    context.editor = editor;
+                    const input = editor === 'blockeditor' ? JSON.stringify([
+                        {
+                            type: 'publii-html',
+                            content: youtube,
+                            config: {
+                                advanced: {
+                                    id: '',
+                                    cssClasses: ''
+                                }
+                            }
+                        }
+                    ]) : youtube;
+                    const original = render(context, input);
+                    assert.doesNotMatch(original, /referrerpolicy/);
+
+                    context.siteConfig.advanced.gdpr.videoReferrerPolicy = true;
+                    const enabled = render(context, input);
+                    assert.equal(
+                        enabled,
+                        original.replace('<iframe', '<iframe referrerpolicy="strict-origin-when-cross-origin"')
+                    );
+
+                    context.siteConfig.advanced.gdpr.videoReferrerPolicy = false;
+                    assert.equal(render(context, input), original);
+
+                    delete context.siteConfig.advanced.gdpr.videoReferrerPolicy;
+                    assert.equal(render(context, input), original);
+                });
+            }
+        });
+    }
+
+    it('preserves deferred loading and existing YouTube and Vimeo privacy options', function () {
+        const context = createContext();
+        Object.assign(context.siteConfig.advanced.gdpr, {
+            videoReferrerPolicy: true,
+            ytNoCookies: true,
+            vimeoNoTrack: true,
+            enabled: true,
+            allowAdvancedConfiguration: true,
+            embedConsents: [
+                {
+                    rule: 'youtube.com',
+                    cookieGroup: 'video',
+                    text: 'Allow video content',
+                    buttonLabel: 'Allow'
+                },
+                {
+                    rule: 'vimeo.com',
+                    cookieGroup: 'video',
+                    text: 'Allow video content',
+                    buttonLabel: 'Allow'
+                }
+            ]
+        });
+        context.themeConfig.supportedFeatures = { embedConsents: true };
+        const input = youtube + '<iframe src="https://player.vimeo.com/video/12345"></iframe>';
+        const result = renderers.generation(context, input);
+        assert.match(result, /data-consent-src="https:\/\/www.youtube-nocookie.com\/embed\/SO4YuDAkplU"/);
+        assert.match(result, /data-consent-src="https:\/\/player.vimeo.com\/video\/12345\?dnt=1"/);
+        assert.doesNotMatch(result, /\ssrc=/);
+        assert.equal((result.match(/referrerpolicy="strict-origin-when-cross-origin"/g) || []).length, 2);
+        assert.equal((result.match(/class="pec-overlay is-active"/g) || []).length, 2);
+
+        context.siteConfig.advanced.gdpr.videoReferrerPolicy = false;
+        assert.equal(result.replace(/ referrerpolicy="strict-origin-when-cross-origin"/g, ''), renderers.generation(context, input));
+    });
 });

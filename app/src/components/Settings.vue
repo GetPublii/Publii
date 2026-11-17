@@ -1349,6 +1349,23 @@
                             </small>
                         </field>
 
+                        <field
+                            id="video-referrer-policy"
+                            :label="$t('settings.videoReferrerPolicy')">
+                            <switcher
+                                id="video-referrer-policy"
+                                slot="field"
+                                v-model="advanced.gdpr.videoReferrerPolicy"
+                                :accessible-label="$t('settings.videoReferrerPolicy')"
+                                :description="$t('settings.howVideoReferrerPolicyWorks')" />
+
+                            <small
+                                slot="note"
+                                class="note">
+                                {{ $t('settings.howVideoReferrerPolicyWorks') }}
+                            </small>
+                        </field>
+
                         <separator
                             type="big"
                             :is-line="true"

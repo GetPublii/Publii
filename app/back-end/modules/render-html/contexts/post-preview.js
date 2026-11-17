@@ -11,6 +11,7 @@ const RendererContext = require('../renderer-context.js');
 const RendererHelpers = require('./../helpers/helpers.js');
 const URLHelper = require('../helpers/url.js');
 const ContentHelper = require('../helpers/content.js');
+const addVideoReferrerPolicy = require('../helpers/video-referrer-policy');
 
 /**
  * Class used create context
@@ -576,6 +577,11 @@ class RendererContextPostPreview extends RendererContext {
         // Remove CDATA sections inside scripts added by TinyMCE
         preparedText = preparedText.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');
         preparedText = preparedText.replace(/\/\/ \]\]\>\<\/script\>/g, '</script>');
+
+        preparedText = addVideoReferrerPolicy(
+            preparedText,
+            this.siteConfig.advanced.gdpr?.videoReferrerPolicy
+        );
 
         return preparedText;
     }

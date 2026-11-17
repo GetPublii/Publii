@@ -11,6 +11,7 @@ const MarkdownToHtml = require('./../text-renderers/markdown');
 const BlocksToHtml = require('./../text-renderers/blockeditor');
 const normalizePath = require('normalize-path');
 const URLHelper = require('./url');
+const addVideoReferrerPolicy = require('./video-referrer-policy');
 const UtilsHelper = require('./../../../helpers/utils');
 
 /**
@@ -115,6 +116,11 @@ class ContentHelper {
         // Remove CDATA sections inside scripts added by TinyMCE
         preparedText = preparedText.replace(/\<script\>\/\/ \<\!\[CDATA\[/g, '<script>');
         preparedText = preparedText.replace(/\/\/ \]\]\>\<\/script\>/g, '</script>');
+
+        preparedText = addVideoReferrerPolicy(
+            preparedText,
+            renderer.siteConfig.advanced.gdpr.videoReferrerPolicy
+        );
 
         // Add embed consents
         if (
