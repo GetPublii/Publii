@@ -103,11 +103,11 @@ class RendererContextPage extends RendererContext {
         if (this.metaTitle === '') {
             this.metaTitle = this.siteConfig.advanced.pageMetaTitle.replace(/%pagetitle/g, this.page.title)
                                                                    .replace(/%sitename/g, siteName)
-                                                                   .replace(/%authorname/g, this.page.author.name);
+                                                                   .replace(/%authorname/g, this.page.author?.name);
         } else {
             this.metaTitle = this.metaTitle.replace(/%pagetitle/g, this.page.title)
                                            .replace(/%sitename/g, siteName)
-                                           .replace(/%authorname/g, this.page.author.name);
+                                           .replace(/%authorname/g, this.page.author?.name);
         }
 
         // If still meta title is empty - use page title
@@ -117,7 +117,7 @@ class RendererContextPage extends RendererContext {
 
         this.metaDescription = this.metaDescription.replace(/%pagetitle/g, this.page.title)
                                                     .replace(/%sitename/g, siteName)
-                                                    .replace(/%authorname/g, this.page.author.name);
+                                                    .replace(/%authorname/g, this.page.author?.name);
 
         this.context = {
             title: this.metaTitle,
